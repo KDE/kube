@@ -1,0 +1,94 @@
+# Architecture / Design
+
+## Overview
+Kontact Quick is supposed to be a small and concise codebase that is easy to modify and evolve.
+
+It's following a reactive model, where in one direction we have controllers generating modifications, and in the other direction models updating themselves on changes.
+
+The overall architecture is split into three layers; Ui, Domain Logic and Infrastructure.
+
+```
++----------------------------+
+|             UI             |
++----------------------------+
+|                            |
+|        Domain Logic        |
+|                            |
++--------------+------+------+
+|              |      |      |
+| Akonadi Next |Config| ...  |
+|              |      |      |
++--------------+------+------+
+```
+
+The UI Layer consists of views (mostly written in QML), view-models (models that are view specific and potentially implement user interaction details), and the glue code to use various controllers from the interface. Different UI layers may exist for different form factors.
+
+The domain logic layer holds the application state. It povides models to access data and controllers to act upon it. The domain logic is by definition Kontact Quick specific and not sharable with other applications, at it needs to be taylored exactly according to the requirements of Kontact Quick.
+
+The infrastructure layer provides:
+
+* Data access (Akonadi Next)
+* Configuration (Config files, etc.)
+* Various functionality provided by libraries (email sending, ldap, iTip handling, iCal implementation (kcalcore), vCard implementation, ...)
+Various bits of the infrastructure layer may be exchanged on different platforms, to i.e. integrate into native infrastructure providers on a platform.
+
+Note: By using the onion architecture we ensure the infrastructure is exchangable just as well as the UI.
+
+## Domain Logic
+
+### Models
+Self-updating models are used to implement the read-only part of the application.
+By using QAbstractItemModels we can reuse the existing update mechanism, have something that works well with QML, and avoid implementing a boatload of boilerplate code for hand-coded domain objects.
+
+Models should always be reactive and configured with a query, so they are asynchronous.
+
+By implementing everything according to that model we can later on achieve lazy-loading of properties and zero-copy (or at least close to zero-copy) directly from storage without modifying anything besides data access.
+
+### Controllers
+Use-case specific controllers are used to operate on the data. Controllers allow to completely separate the modifications from the view.
+Rather than splitting controllers by domain type (e.g. an email controller, or a calendar controller), we specifically write controllers for specific usecases (e.g. an email editor), that exposes all required actions. That way we ensure that the API's a UI is working with is always clear an consice, and that we have all domain logic captured in the domain logic layer, rather than the UI layer.
+Of course controllers will need to share functionality internally as soon as an action is available from more than one place.
+
+## Infrastructure
+
+The infrastructure layer interfaces with the rest of the system. It is the place where we can integrate with various native infrastructure parts.
+
+### Akonadi Next
+Akonadi Next is used for primary data access and handles all synchronization.
+
+### Configuration
+Configuration as traditionally store in config files in ~/.kde
+
+### Notification
+Notifications for the system.
+
+### Files
+Store/Load/Shared stuff (attachments, events, ....)
+* Additional to the basic store/load stuff that may need further abstraction for mobile platforms beyond what qt provides.
+* Android Intents/Libpurpose (share with various applications etc).
+
+### Import/Export
+Same as files? Import/Export calendar data
+
+### RFC implementations
+* iCal: KCalCore
+* vCard: KContacts
+* iTip: extract from kdepim repo
+
+### Cryptography
+* PGP, PEP
+* ObjectTreeParser
+
+Keyselection, encryption, decryption, signing
+Probably requires access to identities in some way.
+
+### MIME-Message parsing
+* ObjectTreeParser
+* KMime
+
+## Interaction with external applications
+External applications, like the KDE calendar plasmoid, should be able to load parts of Kontact Quick when available. It should for instance be possible to load the Event editor as embeddable QML component, that is fully functional. That way it becomes very easy for third parties to provide extra functionality if Kontact Quick is installed, without having to reimplement the Domain Logic (as is the case if only data access is provided through akonadi).
+
+The same mechanism should probably be used by Kontact Quick itself to ensure loose coupling and allow mashups with various content types.
+
+Note: We'll probably want a component-viewer application to easily load and test individual components (similar to plasmoidviewer).
