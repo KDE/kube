@@ -16,36 +16,12 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.1
 
-ApplicationWindow {
-    id: app
-
-    //FIXME remove fixed pixel hight
-    //for now just convinience during testing
-    width: 1080 / 2.7
-    height: (1920 - 40)/ 2.7
-
-    visible: true
-
-    StackView {
-        id: stack
-
-        anchors.fill: parent
-
-        //TODO set akonadi folderId property
-        initialItem: {"item": Qt.resolvedUrl("FolderListView.qml"),properties: {stack: stack}}
-    }
-
-    //FIXME use whatever the plasma standart is
-    Label {
-        id: unit
-
-        text: " "
-    }
-
-    ColorPalette {
-        id: colorPalette
-    }
+//TODO probably expose it from the Cpp side
+Item {
+    property string background: "#fcfcfc"
+    property string selected: "#3daee9"
+    property string read: "#232629"
+    property string border: "#232629"
 }
+
