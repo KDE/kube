@@ -23,7 +23,7 @@ The overall architecture is split into three layers; Ui, Domain Logic and Infras
 
 The UI Layer consists of views (mostly written in QML), view-models (models that are view specific and potentially implement user interaction details), and the glue code to use various controllers from the interface. Different UI layers may exist for different form factors.
 
-The domain logic layer holds the application state. It povides models to access data and controllers to act upon it. The domain logic is by definition Kontact Quick specific and not sharable with other applications, at it needs to be taylored exactly according to the requirements of Kontact Quick.
+The domain logic layer holds the application state. It povides models to access data and controllers to act upon it. The domain logic is by definition Kontact Quick specific and not sharable with other applications, as it needs to be taylored exactly according to the requirements of Kontact Quick.
 
 The infrastructure layer provides:
 
@@ -52,6 +52,9 @@ Of course controllers will need to share functionality internally as soon as an 
 ## Infrastructure
 
 The infrastructure layer interfaces with the rest of the system. It is the place where we can integrate with various native infrastructure parts.
+The interface of the infrastructure layer, that is used by the domain logic, may not expose any implementation details of any infrastructure part, to ensure that all infrastructure parts are exchangable.
+
+Note: The infrastructure blocks will use only types provided by the domain logic. This means i.e. that no KCalCore containers may be used in such an interface. To avoid hard dependencies on any specific implementation, the infrastructure parts will have to have interfaces, and a factory must be used to supply concrete implementations. That way it is also possible to inject dummy implementations.
 
 ### Akonadi Next
 Akonadi Next is used for primary data access and handles all synchronization.
@@ -92,3 +95,9 @@ External applications, like the KDE calendar plasmoid, should be able to load pa
 The same mechanism should probably be used by Kontact Quick itself to ensure loose coupling and allow mashups with various content types.
 
 Note: We'll probably want a component-viewer application to easily load and test individual components (similar to plasmoidviewer).
+
+## Testing
+
+* Controllers can be tested by providing mock implementations of the relevant infrastructure parts.
+* Models can be tested by providing fake implementations of the relevant infrastructure parts.
+* Infrastructure parts can be tested individually.

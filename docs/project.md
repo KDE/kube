@@ -11,7 +11,7 @@ Kontact Quick aims to be available on various form-factors and platforms.
 # Project Structure
 While this is an open project that welcomes participation from everyone who's interested, we do have an explicit team strucuture to ensure it's clear to everyone who's repsonsible for what. External contributions are alwas welcome and the team is of course open for extension.
 
-Team Lead: Christian Mollekopf
+Team Lead/Maintainer: Christian Mollekopf
 Team Members: Michael Bohlender, Sandro Knauss, Aaron Seigo
 
 It's the team leads responsibility to:
