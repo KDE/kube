@@ -1,0 +1,3 @@
+module org.kde.akonadi2.mail
+
+plugin mailplugin
