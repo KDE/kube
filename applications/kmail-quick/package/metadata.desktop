@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=KMail Quick
+X-KDE-PluginInfo-Name=org.kde.pim.kmail-quick
+Exec=kpackagelauncherqml -a org.kde.pim.kmail-quick
+X-Plasma-MainScript=ui/main.qml
+X-KDE-ServiceTypes=KPackage/GenericQML
+Icon=kmail2
+Type=Service
