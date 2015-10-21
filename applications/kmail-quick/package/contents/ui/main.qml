@@ -28,4 +28,10 @@ ApplicationWindow {
     width: 1920  * 0.7
 
     visible: true
+
+    MailListView {
+
+        anchors.fill: parent
+
+    }
 }
