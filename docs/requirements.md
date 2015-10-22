@@ -83,3 +83,5 @@ Currently available dependencies:
 * Libraries need to be purpose built and with clear responsibilities. No artificial boundaries that don't help something.
 * Modal dialogs should be avoided.
 
+## Coding Guidelines
+* Run the tests before you push

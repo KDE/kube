@@ -49,6 +49,39 @@ Use-case specific controllers are used to operate on the data. Controllers allow
 Rather than splitting controllers by domain type (e.g. an email controller, or a calendar controller), we specifically write controllers for specific usecases (e.g. an email editor), that exposes all required actions. That way we ensure that the API's a UI is working with is always clear an consice, and that we have all domain logic captured in the domain logic layer, rather than the UI layer.
 Of course controllers will need to share functionality internally as soon as an action is available from more than one place.
 
+### Email Domain Logic
+* Folder list
+    * Folder List Controller
+        * Move mail to folder
+        * Move/Copy/Delete folder
+        * Synchronize folder
+    * Folder List Model
+        * Mixes akonadi next queries and subqueries (folder list with smart folders)
+        * name
+        * statistics
+
+* Mail list
+    * MailListController
+        * Mark as read
+        * Flag as important
+        * Move to trash
+    * MailListModel
+        * subject
+        * date
+        * sender
+        * folder
+    * ThreadModel
+        * thread leader (otherwise like maillist model)
+        * number of mails in thread
+
+* Mail Viewer
+    * MailViewController
+        * reply
+        * forward
+        * move to trash
+    * MailModel
+        * subject, date, sender, folder, content, attachments
+
 ## Infrastructure
 
 The infrastructure layer interfaces with the rest of the system. It is the place where we can integrate with various native infrastructure parts.
@@ -59,8 +92,14 @@ Note: The infrastructure blocks will use only types provided by the domain logic
 ### Akonadi Next
 Akonadi Next is used for primary data access and handles all synchronization.
 
+Interactions with Akonadi Next involve:
+* Adding/removing/configuring resources
+* Triggering synchronization
+* Querying of data
+* Creating/Modifying/Removing entities
+
 ### Configuration
-Configuration as traditionally store in config files in ~/.kde
+Configuration as traditionally stored in config files in ~/.kde
 
 ### Notification
 Notifications for the system.
