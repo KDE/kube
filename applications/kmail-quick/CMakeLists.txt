@@ -26,3 +26,5 @@ find_package(KF5 REQUIRED COMPONENTS
 kpackage_install_package(package org.kde.pim.kmail-quick genericqml)
 install(FILES package/metadata.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME org.kde.pim.kmail-quick.desktop)
 
+add_executable(kmail-quick main.cpp)
+qt5_use_modules(kmail-quick Gui Quick)

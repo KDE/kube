@@ -3,7 +3,11 @@
 #include <QAbstractListModel>
 #include <QStringList>
 
-class MailListModel : public QAbstractListModel
+#include <akonadi2common/clientapi.h>
+#include <akonadi2common/query.h>
+#include <akonadi2common/listmodelresult.h>
+
+class MailListModel : public ListModelResult<Akonadi2::ApplicationDomain::Mail::Ptr>
 {
     Q_OBJECT
 
@@ -17,13 +21,6 @@ public:
 
     QHash<int, QByteArray> roleNames() const;
     QVariant data(const QModelIndex &index, int role) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-
-    bool addMails(const QStringList &items);
-    void clearMails();
 
     void runQuery(const QString &query);
-
-private:
-    QStringList m_msgs;
 };

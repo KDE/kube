@@ -2,13 +2,19 @@
 
 #include <QStringList>
 
+#include <akonadi2common/clientapi.h>
+#include <akonadi2common/query.h>
+
+#include "maillistmodel.h"
+
 MailListController::MailListController(QObject *parent) : QObject(parent), m_model(new MailListModel)
 {
 }
 
-MailListModel *MailListController::model() const
+QAbstractItemModel *MailListController::model() const
 {
     return m_model.data();
+
 }
 
 QString MailListController::query() const
@@ -18,18 +24,14 @@ QString MailListController::query() const
 
 void MailListController::setQuery(const QString &query)
 {
-    if ( m_query != query) {
-	m_query = query;
-	m_model->runQuery(query);
-	emit queryChanged();
+    qDebug() << "set query";
+    if (m_query != query) {
+        m_query = query;
+        emit queryChanged();
     }
 }
 
 void MailListController::addMail(QString subject)
 {
-  QStringList list;
-
-  list << subject;
-
-  m_model->addMails(list);
+    qDebug() << "add mail";
 }
