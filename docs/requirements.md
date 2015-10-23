@@ -87,7 +87,6 @@ Currently available dependencies:
 * Run the tests before you push
 
 # Roadmap
-
 The final roadmap lives on phabricator.kde.org. This section tries to outline some of the high level aims that should help form the roadmap.
 
 ## Priorities
@@ -118,7 +117,6 @@ The final roadmap lives on phabricator.kde.org. This section tries to outline so
     * Offline support
 
 ## Features
-
 A list of features that has to be refined and put on the roadmap on phabricator.
 This is very much WIP and the features listed here are largely coming from what is existing in Kontact and the Kolab Groupware Server.
 
@@ -192,6 +190,11 @@ This is very much WIP and the features listed here are largely coming from what 
 * Quick inline reply in mails (what's app style)
 * Note taking/todo management on the run, with categorization workflow on the desktop (or also on mobile)
 
+## Platforms
+Desktop linux is the primary platform that we'll pursue first, because it's the easist target. As soon as we have a viable proof of concept and the architecture is set, Windows and OS X will follow, so we ensure early on that the project works on all platforms.
+
+Android will be tried in the form of a research project, and depending on the difficulties we face the situation will be reevaluated.
+
 # Deliverables
 These are the high-level aims that we have to work towards. This list is not a final list of deliverables, but should convey the areas we need to work on. More detailed information should eventually be available on phabricator.
 
@@ -218,4 +221,3 @@ These are the high-level aims that we have to work towards. This list is not a f
     * Functional blocks: We need to identify the function blocks that we require, see to what extent they are already existing and how we can reuse what's there already. The functinal blocks should largely follow from the identified requirements.
     * Prototype the domain logic: We need to prototype the domain logic as envisioned to see wether that works out. This will be an ongoing process especially while working towards the first milestone.
     * Prototype with domain logic + akonadi next + trivial UI. Show that this can work in it's basics.
-

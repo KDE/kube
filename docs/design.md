@@ -9,7 +9,7 @@ The overall architecture is split into three layers; Ui, Domain Logic and Infras
 
 ```
 +----------------------------+
-|             UI             |
+|      UI / Application      |
 +----------------------------+
 |                            |
 |        Domain Logic        |
@@ -33,6 +33,19 @@ The infrastructure layer provides:
 Various bits of the infrastructure layer may be exchanged on different platforms, to i.e. integrate into native infrastructure providers on a platform.
 
 Note: By using the onion architecture we ensure the infrastructure is exchangable just as well as the UI.
+Note: The domain objects might also be specified in Akonadi Next.
+
+## UI / Application
+The UI / Application layer contains all the views, and their composition, that make up the application.
+All the interactions between the different components are defined here.
+
+### UI Component Interaction
+UI components will have to be able to:
+
+* Load certain views directly inline (e.g. load a calendar into a mail with an invitation, or a maileditor into the maillist)
+* Change the overall application state by i.e. triggering the calendar to show a certain date-range.
+
+This is ideally decoupled in a way that the provider of such a service can be replaced without changing the users of the service. Additionally it should be possible for external applications (such as a plasmoid), to load the same views, possibly through the same mechanism.
 
 ## Domain Logic
 
