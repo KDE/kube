@@ -85,3 +85,137 @@ Currently available dependencies:
 
 ## Coding Guidelines
 * Run the tests before you push
+
+# Roadmap
+
+The final roadmap lives on phabricator.kde.org. This section tries to outline some of the high level aims that should help form the roadmap.
+
+## Priorities
+* High Priority
+    * kolab support
+    * reliability/maintainability (testability)
+    * portability
+    * usability
+    * Mobile
+    * QML interface
+    * Configuration Synchronization
+    * Automatic setup
+    * Enterprise environment support
+    * Professional product, and actual alternative to competitors
+    * Open Protocols/Standards
+    * Multi Accounts & Identities
+    * Crypto / Privacy
+    * Fast at scale
+* Medium Priority
+    * Search / Tags
+    * More integrated with the rest of kolab
+    * Closer integration between mail/tasks/events/addressbook
+    * Well supported
+    * Community
+    * Automation (Wallace)
+    * Extensible / Theming
+    * Multiple open instances
+    * Offline support
+
+## Features
+
+A list of features that has to be refined and put on the roadmap on phabricator.
+This is very much WIP and the features listed here are largely coming from what is existing in Kontact and the Kolab Groupware Server.
+
+### General
+* autoconfiguration/automatic setup/preconfiguration: The complete setup process should require a minimum of configuration and should be fully scriptable.
+
+### Mail
+* folderlist (with search)
+* smart folders
+* multi account & identity
+* threading/conversation view
+* actions
+    * flags: read/unread/important
+    * delete/move/copy
+    * reply to/reply to all/forward
+    * bulk operations on selected/thread
+    * move to special folder
+        * archive
+        * move to trash
+* attachments
+* crypto
+* search
+* tags
+* create event/todo from mail
+* snippets
+* mail composer
+* shared folders / acls
+* undo
+
+### Calendar
+* calendarlist (with search)
+* smart calendars
+* multi account & identity
+* create/edit/modify event/todo (journal?)
+* week/month view
+* ical import/export
+* delegation of events/todos
+* iTip handling
+* freebusy for scheduling
+* tags
+
+### Notes
+* notebooks
+* create/edit/modify note
+* tags
+* note editor
+    * title/content
+
+### Todos
+* todolists
+* create/edit/modify todo
+* tags
+* todo editor
+    * summary/content/start date/due date
+* delegation of todos
+
+## Feature Brainstorming
+* Why is it the sender of a message that dictates how/where I receive/read the message?
+* VOIP system knows when you're away, allows to forward the call to your mobile
+
+### Desktop
+* Autocomplete conversations from sent folder: Automatically merge sent messages that belong to a conversation/thread from the sent folder (making it unnecessary to send a copy to yourself or alike)
+* Inbox for everything: upcoming events, uncategorized todos, open invitations, email, delegated todos. This could either be a mixed inbox for everything (as in what you have to go through), or an overview page with multiple inboxes.
+* No invitation in mail inbox: Mail is a transport mechanism and there is little reason to clutter your mail inbox with invitations. So move invitations to a separate queue.
+* Fuzzy match on folder search: It should be as easy and fast as command-t for vim (meaning as fast as you type)
+
+### Mobile
+* Swipe left right through email inbox (tinder for kolab aka "kinder")
+    * Same works for invitations (accept/decline)
+    * Same for todos, done/do later (if not touched keep for today)
+* Quick inline reply in mails (what's app style)
+* Note taking/todo management on the run, with categorization workflow on the desktop (or also on mobile)
+
+# Deliverables
+These are the high-level aims that we have to work towards. This list is not a final list of deliverables, but should convey the areas we need to work on. More detailed information should eventually be available on phabricator.
+
+* Project Vision
+    * Target Users & Usecases
+        * Personas
+        * Scenarios
+        * Description of environment
+    * UI Mockups for envisioned clients
+    * The target feature-set
+
+* Milestones
+    * First working product: A simple email application for the linux desktop
+        * read-only first
+        * read-write second
+    * Some intermediate releases: Largely depends on what deliverables we want, and wether we can use releases that only contain a subset of the groupware types.
+        * Application by application (calendar, email, ...)
+        * First release on other platforms (e.g. android)
+    * Production ready (1.0): Includes calendar, email, addressbook, notes, tasks with basic functionality (which we need to define)
+    * From here on we implement feature by feature from the roadmap
+
+* Implementation
+    * Inventory of exiting kdepim: This will help to fill the functional blocks, and help in carving out the require featureset.
+    * Functional blocks: We need to identify the function blocks that we require, see to what extent they are already existing and how we can reuse what's there already. The functinal blocks should largely follow from the identified requirements.
+    * Prototype the domain logic: We need to prototype the domain logic as envisioned to see wether that works out. This will be an ongoing process especially while working towards the first milestone.
+    * Prototype with domain logic + akonadi next + trivial UI. Show that this can work in it's basics.
+

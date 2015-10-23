@@ -5,7 +5,37 @@ We want a codebase where it is fast and easy to prototype new features and turn 
 
 Because no existing codebase fullfills those premises or easily allows to reach them, this project started.
 
-# Vision
+
+## Differentiators
+In order to avoid simply replicating what's already existing it's important to know how this product differentiates to other existing solutions.
+This section is supposed to outline that
+
+* To Roundcube Next
+    * Native application
+        * Responsivness of UI (assuming we can't reach that in the browser)
+        * Not in a browser (assuming we can't effectively hide that)
+        * Desktop integration (notifications, startmenu)
+    * Offline capability
+    * Cryptography
+
+* To Kontact/Thunderbird/...
+    * Simple but powerful UI (assuming we can achieve that)
+    * Performance (lower resource usage, quick and responsive operations)
+    * Easy & automated setup (scriptable setup process, syncable configuration, setup can easily be nuked and setup from scratch)
+    * Codebase
+        * Well automated tested
+        * Efficient further development
+        * Codebase can go to mobile platforms as well
+
+* To existing mobile applications
+    * Complementing usecases that make the overall product more useful (A mobile/tablet could even be the preferred interface for some interactions due to additional screen and touch capabilities)
+        * Categorization
+        * What's next, schedule checking
+        * Todolist view
+        * Notification center
+    * Better integration with kolab
+
+# Vision Statement
 Kontact Quick aims to be an enterprise-ready PIM solution, that has a high-quality and rock solid core. The focus of the core is on high-quality code, maintainability, stability and performance.
 
 We strive to keep the core to the necessary minimum, with minimal dependencies and maximum portability, and in a way that it is maintainable by a small team.
