@@ -29,9 +29,44 @@ ApplicationWindow {
 
     visible: true
 
-    MailListView {
-
+    SplitView {
         anchors.fill: parent
 
+        Rectangle {
+            id: folderList
+
+            width: unit.width * 100
+            Layout.maximumWidth: unit.width * 200
+            Layout.minimumWidth: unit.width * 50
+
+            color: "green"
+
+         }
+
+        Rectangle  {
+            id: mailList
+
+            width: unit.width * 150
+            Layout.maximumWidth: unit.width * 300
+            Layout.minimumWidth: unit.width * 50
+
+            color: "red"
+        }
+
+        Rectangle {
+            id: mailView
+
+            Layout.fillWidth: true
+
+            color: "blue"
+        }
+    }
+
+    //TODO find a better way to scale UI
+    Label {
+        id: unit
+
+        text: " "
     }
 }
+
