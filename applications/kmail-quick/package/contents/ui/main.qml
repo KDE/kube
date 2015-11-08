@@ -36,7 +36,7 @@ ApplicationWindow {
     SplitView {
         anchors.fill: parent
 
-        Rectangle {
+        FolderListView {
             id: folderList
 
             width: unit.width * 100
@@ -46,7 +46,7 @@ ApplicationWindow {
             color: "green"
         }
 
-        Rectangle  {
+        MailListView  {
             id: mailList
 
             width: unit.width * 150
@@ -56,7 +56,7 @@ ApplicationWindow {
             color: "red"
         }
 
-        Rectangle {
+        SingleMailView {
             id: mailView
 
             Layout.fillWidth: true
