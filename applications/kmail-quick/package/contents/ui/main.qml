@@ -29,6 +29,10 @@ ApplicationWindow {
 
     visible: true
 
+    toolBar: ToolBar {
+
+    }
+
     SplitView {
         anchors.fill: parent
 
@@ -40,8 +44,7 @@ ApplicationWindow {
             Layout.minimumWidth: unit.width * 50
 
             color: "green"
-
-         }
+        }
 
         Rectangle  {
             id: mailList
