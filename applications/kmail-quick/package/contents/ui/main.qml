@@ -39,37 +39,35 @@ ApplicationWindow {
         FolderListView {
             id: folderList
 
-            width: unit.width * 100
-            Layout.maximumWidth: unit.width * 200
-            Layout.minimumWidth: unit.width * 50
-
-            color: "green"
+            width: unit.size * 55
+            Layout.maximumWidth: unit.size * 150
+            Layout.minimumWidth: unit.size * 30
         }
 
         MailListView  {
             id: mailList
 
-            width: unit.width * 150
-            Layout.maximumWidth: unit.width * 300
-            Layout.minimumWidth: unit.width * 50
-
-            color: "red"
+            width: unit.size * 80
+            Layout.maximumWidth: unit.size * 250
+            Layout.minimumWidth: unit.size * 50
         }
 
         SingleMailView {
             id: mailView
 
             Layout.fillWidth: true
-
-            color: "blue"
         }
     }
 
     //TODO find a better way to scale UI
-    Label {
+    Item {
         id: unit
 
-        text: " "
+        property int size: 5
+    }
+
+    ColorPalette {
+	id: colorPalette
     }
 }
 
