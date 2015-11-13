@@ -19,6 +19,26 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
-Rectangle {
-    color: "blue"
+ListView {
+    id: root
+
+    model: MailListModel {}
+
+    delegate: ListItem {
+
+        width: root.width
+        height: unit.size * 12
+
+        Label {
+	  id: label
+
+	  anchors {
+	    verticalCenter: parent.verticalCenter
+	    left: parent.left
+	    leftMargin: unit.size * 3
+	  }
+
+	  text: model.subject
+	}
+    }
 }
