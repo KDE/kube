@@ -26,9 +26,9 @@ Item {
     width: parent.width
 
     MouseArea {
-      id: mouseArea
+        id: mouseArea
 
-      anchors.fill: parent
+        anchors.fill: parent
     }
 
     Rectangle {
