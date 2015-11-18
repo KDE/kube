@@ -20,11 +20,15 @@ include(KDECompilerSettings)
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui)
 
 set (QT_MIN_VERSION "5.4.0")
-find_package(KF5 REQUIRED COMPONENTS
-                Package)
+find_package(KF5 REQUIRED COMPONENTS Package)
 
+# install UI package
 kpackage_install_package(package org.kde.pim.kmail-quick genericqml)
 install(FILES package/metadata.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME org.kde.pim.kmail-quick.desktop)
 
-add_executable(kmail-quick main.cpp)
-qt5_use_modules(kmail-quick Gui Quick)
+# install executable
+add_executable(${PROJECT_NAME} main.cpp)
+qt5_use_modules(${PROJECT_NAME} Gui Quick)
+target_link_libraries(${PROJECT_NAME} KF5::Package)
+
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
