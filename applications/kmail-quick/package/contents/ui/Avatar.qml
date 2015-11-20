@@ -50,8 +50,6 @@ Rectangle {
 
         text: name.charAt(0)
 
-       font.pointSize: unit.font.pixelSize * 1.2
-
-            color: "#ecf0f1"
+        color: "#ecf0f1"
     }
 }

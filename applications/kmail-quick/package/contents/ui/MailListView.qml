@@ -29,13 +29,28 @@ ListView {
         width: root.width
         height: unit.size * 12
 
+        Avatar {
+            id: avatar
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left
+                leftMargin: unit.size * 2
+            }
+
+            height: unit.size * 9
+            width: height
+
+            name: model.senderName
+        }
+
         Label {
 	  id: label
 
 	  anchors {
-	    verticalCenter: parent.verticalCenter
-	    left: parent.left
-	    leftMargin: unit.size * 3
+	      verticalCenter: parent.verticalCenter
+	      left: avatar.right
+	      leftMargin: unit.size * 3
 	  }
 
 	  text: model.subject
