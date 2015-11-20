@@ -19,6 +19,8 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
+import org.kde.plasma.core 2.0 as PlasmaCore
+
 ListView {
     id: root
 
@@ -29,12 +31,24 @@ ListView {
         width: root.width
         height: unit.size * 10
 
+        PlasmaCore.IconItem {
+            id: iconItem
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left
+                leftMargin: unit.size * 3
+            }
+
+            source: model.icon
+        }
+
         Label {
 	  id: label
 
 	  anchors {
 	    verticalCenter: parent.verticalCenter
-	    left: parent.left
+	    left: iconItem.right
 	    leftMargin: unit.size * 3
 	  }
 
