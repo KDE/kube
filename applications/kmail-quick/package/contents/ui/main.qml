@@ -31,6 +31,17 @@ ApplicationWindow {
 
     toolBar: ToolBar {
 
+        Row {
+            anchors.fill: parent
+
+            ToolButton {
+                iconName: "mail-receive"
+            }
+
+            ToolButton {
+                iconName: "mail-message-new"
+            }
+        }
     }
 
     SplitView {
