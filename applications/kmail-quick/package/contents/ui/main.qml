@@ -42,6 +42,14 @@ ApplicationWindow {
                 iconName: "mail-message-new"
             }
         }
+
+        ToolButton {
+
+            anchors.right: parent.right
+
+            //FIXME: proper item name
+            iconName: "applications-system"
+        }
     }
 
     SplitView {
