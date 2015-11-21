@@ -23,8 +23,7 @@ set (QT_MIN_VERSION "5.4.0")
 find_package(KF5 REQUIRED COMPONENTS Package)
 
 # install UI package
-kpackage_install_package(package org.kde.pim.kmail-quick genericqml)
-install(FILES package/metadata.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME org.kde.pim.kmail-quick.desktop)
+kpackage_install_package(package org.kde.pim.kmail-quick pim)
 
 # install executable
 add_executable(${PROJECT_NAME} main.cpp)
