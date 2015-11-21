@@ -21,38 +21,67 @@ import QtQuick.Layouts 1.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 
-ListView {
-    id: root
 
-    model: FolderModel {}
+Item {
 
-    delegate: ListItem {
+    Item {
+        id: searchBox
 
         width: root.width
-        height: unit.size * 10
+        height: unit.size * 12
 
-        PlasmaCore.IconItem {
-            id: iconItem
+        TextField {
+            anchors. centerIn: parent
 
-            anchors {
-                verticalCenter: parent.verticalCenter
-                left: parent.left
-                leftMargin: unit.size * 3
-            }
+            width: parent.width * 0.9
 
-            source: model.icon
+            placeholderText: "Search email..."
+
+        }
+    }
+
+    ListView {
+        id: root
+
+        clip: true
+
+        anchors {
+            top: searchBox.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
         }
 
-        Label {
-	  id: label
+        model: FolderModel {}
 
-	  anchors {
-	    verticalCenter: parent.verticalCenter
-	    left: iconItem.right
-	    leftMargin: unit.size * 3
-	  }
+        delegate: ListItem {
 
-	  text: model.name
-	}
+            width: root.width
+            height: unit.size * 10
+
+            PlasmaCore.IconItem {
+                id: iconItem
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                    leftMargin: unit.size * 3
+                }
+
+                source: model.icon
+            }
+
+            Label {
+                id: label
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: iconItem.right
+                    leftMargin: unit.size * 3
+                }
+
+                text: model.name
+            }
+        }
     }
 }
