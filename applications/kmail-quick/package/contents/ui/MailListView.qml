@@ -29,6 +29,17 @@ ListView {
         width: root.width
         height: unit.size * 12
 
+        Rectangle {
+            id: unread
+
+            anchors.fill: parent
+
+            color: colorPalette.read
+            opacity: 0.1
+
+            visible: model.unread == false
+        }
+
         Avatar {
             id: avatar
 
