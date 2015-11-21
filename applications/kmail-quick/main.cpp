@@ -3,10 +3,6 @@
 
 #include <QStandardPaths>
 
-#include <KPackage/Package>
-#include <KPackage/PackageLoader>
-#include <KPackage/PackageStructure>
-
 #include <QDebug>
 
 int main(int argc, char *argv[])
