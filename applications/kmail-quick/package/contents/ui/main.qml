@@ -18,6 +18,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 ApplicationWindow {
     id: app
@@ -34,16 +35,18 @@ ApplicationWindow {
         Row {
             anchors.fill: parent
 
-            ToolButton {
-                iconName: "mail-receive"
-            }
 
-            ToolButton {
+            PlasmaComponents.ToolButton {
+
+                height: parent.height
+
                 iconName: "mail-message-new"
+
+                text: "Compose"
             }
         }
 
-        ToolButton {
+        PlasmaComponents.ToolButton {
 
             anchors.right: parent.right
 
@@ -86,7 +89,7 @@ ApplicationWindow {
     }
 
     ColorPalette {
-	id: colorPalette
+        id: colorPalette
     }
 }
 
