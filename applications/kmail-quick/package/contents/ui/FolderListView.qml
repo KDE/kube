@@ -22,7 +22,9 @@ import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 
+
 Item {
+    id: root
 
     Item {
         id: searchBox
@@ -40,10 +42,8 @@ Item {
         }
     }
 
-    ListView {
-        id: root
 
-        clip: true
+    ScrollView {
 
         anchors {
             top: searchBox.bottom
@@ -52,35 +52,40 @@ Item {
             bottom: parent.bottom
         }
 
-        model: FolderModel {}
+        ListView {
 
-        delegate: ListItem {
+            clip: true
 
-            width: root.width
-            height: unit.size * 10
+            model: FolderModel {}
 
-            PlasmaCore.IconItem {
-                id: iconItem
+            delegate: ListItem {
 
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                    leftMargin: unit.size * 3
+                width: root.width
+                height: unit.size * 10
+
+                PlasmaCore.IconItem {
+                    id: iconItem
+
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: parent.left
+                        leftMargin: unit.size * 3
+                    }
+
+                    source: model.icon
                 }
 
-                source: model.icon
-            }
+                Label {
+                    id: label
 
-            Label {
-                id: label
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: iconItem.right
+                        leftMargin: unit.size * 3
+                    }
 
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: iconItem.right
-                    leftMargin: unit.size * 3
+                    text: model.name
                 }
-
-                text: model.name
             }
         }
     }
