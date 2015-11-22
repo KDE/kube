@@ -22,128 +22,128 @@ ListModel {
         sender: "mighty@mail.com"
         senderName: "Mighty Monkey"
         subject: "I feel weak without my bananas"
-        date: "Today 19:21"
+        date: "19:21"
         unread: true
     }
     ListElement {
         sender: "benni@bandana.org"
         senderName: "Ben Bandana"
         subject: "Check this out"
-        date: "Today 16:01"
+        date: "16:01"
         unread: true
     }
     ListElement {
         sender: "alice@mail.com"
         senderName: "Alice Cheng"
         subject: "Re: We need more food"
-        date: "Today 12:55"
+        date: "12:55"
         unread: false
     }
     ListElement {
         sender: "bob@bandana.org"
         senderName: "Bob Ross"
         subject: "KDE Rocks"
-        date: "Today 07:32"
+        date: "Sat"
         unread: true
     }
     ListElement {
         sender: "tiny@mail.com"
         senderName: "Tiny"
         subject: "Huge success!!"
-        date: "Today 00:11"
+        date: "Sat"
         unread: false
     }
     ListElement {
         sender: "bob@bandana.org"
         senderName: "Bob Ross"
         subject: "KDE Rocks"
-        date: "Yesterday 20:54"
+        date: "Fr"
         unread: false
     }
     ListElement {
         sender: "Laura@mail.com"
         senderName: "Laura B"
         subject: ":)"
-        date: "Monday 12:37"
+        date: "Thu"
         unread: false
     }
     ListElement {
         sender: "Andreas@stars.org"
         senderName: "Andreas Rockstar"
         subject: "KDE Rocks"
-        date: "Monday 12:37"
+        date: "Wed"
         unread: false
     }
     ListElement {
         sender: "alice@mail.com"
         senderName: "Alice Cheng"
         subject: "Re: We need more food"
-        date: "Monday 12:37"
+        date: "Wed"
     }
     ListElement {
         sender: "bob@bandana.org"
         senderName: "Bob Ross"
         subject: "KDE Rocks"
-        date: "Monday 12:37"
+        date: "Mon"
     }
     ListElement {
         sender: "mighty@mail.com"
         senderName: "Mighty Monkey"
         subject: "I feel weak without my bananas"
-        date: "2 hours ago"
+        date: "Nov 20"
     }
     ListElement {
         sender: "benni@bandana.org"
         senderName: "Ben Bandana"
         subject: "Check this out"
-        date: "8 hours ago"
+        date: "Nov 15"
     }
     ListElement {
         sender: "alice@mail.com"
         senderName: "Alice Cheng"
         subject: "Re: We need more food"
-        date: "2 hours ago"
+        date: "Sep 29"
     }
     ListElement {
         sender: "bob@bandana.org"
         senderName: "Bob Ross"
         subject: "KDE Rocks"
-        date: "8 hours ago"
+        date: "Sep 14"
     }
     ListElement {
         sender: "tiny@mail.com"
         senderName: "Tiny"
         subject: "Huge success!!"
-        date: "2 hours ago"
+        date: "Sep 14"
     }
     ListElement {
         sender: "bob@bandana.org"
         senderName: "Bob Ross"
         subject: "KDE Rocks"
-        date: "8 hours ago"
+        date: "Sep 5"
     }
     ListElement {
         sender: "Laura@mail.com"
         senderName: "Laura B"
         subject: ":)"
-        date: "2 hours ago"
+        date: "Sep 4"
     }
     ListElement {
         sender: "Andreas@stars.org"
         senderName: "Andreas Rockstar"
         subject: "KDE Rocks"
-        date: "8 hours ago"
+        date: "May 25"
     }
     ListElement {
         sender: "alice@mail.com"
         senderName: "Alice Cheng"
         subject: "Re: We need more food"
-        date: "2 hours ago"
+        date: "May 3"
     }
     ListElement {
         sender: "bob@bandana.org"
         senderName: "Bob Ross"
         subject: "Board Task: Write draft email to people with KDE accounts commiting to Qt repositories"
-        date: "8 hours ago"
+        date: "Dec 2014"
     }
 }

@@ -56,7 +56,7 @@ ListView {
         }
 
         Label {
-            id: sender
+            id: senderName
 
             anchors {
                 top: avatar.top
@@ -69,6 +69,37 @@ ListView {
             font.weight: Font.DemiBold
         }
 
+        Label {
+            id: sender
+
+            anchors {
+                top: avatar.top
+                left: senderName.right
+                leftMargin: unit.size
+                right: date.left
+                rightMargin: unit.size
+            }
+
+            text: "(" + model.sender +")"
+
+            font.weight: Font.ExtraLight
+
+            clip: true
+        }
+
+        Label {
+            id: date
+
+            anchors {
+                top: avatar.top
+                right: parent.right
+                rightMargin: unit.size * 2
+            }
+
+            text: model.date
+
+            font.weight: Font.Light
+        }
 
         Label {
             id: subject
