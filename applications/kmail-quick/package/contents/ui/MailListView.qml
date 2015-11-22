@@ -56,15 +56,30 @@ ListView {
         }
 
         Label {
-	  id: label
+            id: sender
 
-	  anchors {
-	      verticalCenter: parent.verticalCenter
-	      left: avatar.right
-	      leftMargin: unit.size * 3
-	  }
+            anchors {
+                top: avatar.top
+                left: avatar.right
+                leftMargin: unit.size * 3
+            }
 
-	  text: model.subject
-	}
+            text: model.senderName
+
+            font.weight: Font.DemiBold
+        }
+
+
+        Label {
+            id: subject
+
+            anchors {
+                bottom: avatar.bottom
+                left: avatar.right
+                leftMargin: unit.size * 3
+            }
+
+            text: model.subject
+        }
     }
 }
