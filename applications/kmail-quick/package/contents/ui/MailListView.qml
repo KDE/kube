@@ -19,98 +19,101 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
-ListView {
+ScrollView {
     id: root
+    ListView {
+        id: listView
 
-    model: MailListModel {}
+        model: MailListModel {}
 
-    delegate: ListItem {
+        delegate: ListItem {
 
-        width: root.width
-        height: unit.size * 12
+            width: listView.width
+            height: unit.size * 12
 
-        Rectangle {
-            id: unread
+            Rectangle {
+                id: unread
 
-            anchors.fill: parent
+                anchors.fill: parent
 
-            color: colorPalette.read
-            opacity: 0.1
+                color: colorPalette.read
+                opacity: 0.1
 
-            visible: model.unread == false
-        }
-
-        Avatar {
-            id: avatar
-
-            anchors {
-                verticalCenter: parent.verticalCenter
-                left: parent.left
-                leftMargin: unit.size * 2
+                visible: model.unread == false
             }
 
-            height: unit.size * 9
-            width: height
+            Avatar {
+                id: avatar
 
-            name: model.senderName
-        }
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                    leftMargin: unit.size * 2
+                }
 
-        Label {
-            id: senderName
+                height: unit.size * 9
+                width: height
 
-            anchors {
-                top: avatar.top
-                left: avatar.right
-                leftMargin: unit.size * 3
+                name: model.senderName
             }
 
-            text: model.senderName
+            Label {
+                id: senderName
 
-            font.weight: Font.DemiBold
-        }
+                anchors {
+                    top: avatar.top
+                    left: avatar.right
+                    leftMargin: unit.size * 3
+                }
 
-        Label {
-            id: sender
+                text: model.senderName
 
-            anchors {
-                top: avatar.top
-                left: senderName.right
-                leftMargin: unit.size
-                right: date.left
-                rightMargin: unit.size
+                font.weight: Font.DemiBold
             }
 
-            text: "(" + model.sender +")"
+            Label {
+                id: sender
 
-            font.weight: Font.ExtraLight
+                anchors {
+                    top: avatar.top
+                    left: senderName.right
+                    leftMargin: unit.size
+                    right: date.left
+                    rightMargin: unit.size
+                }
 
-            clip: true
-        }
+                text: "(" + model.sender +")"
 
-        Label {
-            id: date
+                font.weight: Font.ExtraLight
 
-            anchors {
-                top: avatar.top
-                right: parent.right
-                rightMargin: unit.size * 2
+                clip: true
             }
 
-            text: model.date
+            Label {
+                id: date
 
-            font.weight: Font.Light
-        }
+                anchors {
+                    top: avatar.top
+                    right: parent.right
+                    rightMargin: unit.size * 2
+                }
 
-        Label {
-            id: subject
+                text: model.date
 
-            anchors {
-                bottom: avatar.bottom
-                left: avatar.right
-                leftMargin: unit.size * 3
+                font.weight: Font.Light
             }
 
-            text: model.subject
+            Label {
+                id: subject
+
+                anchors {
+                    bottom: avatar.bottom
+                    left: avatar.right
+                    leftMargin: unit.size * 3
+                }
+
+                text: model.subject
+            }
         }
     }
 }
