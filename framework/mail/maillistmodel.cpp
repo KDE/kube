@@ -1,12 +1,19 @@
 #include "maillistmodel.h"
+#include <akonadi2common/clientapi.h>
 
-MailListModel::MailListModel(QObject *parent) : ListModelResult<Akonadi2::ApplicationDomain::Mail::Ptr>(QList<QByteArray>() << "subject" << "uid")
+
+MailListModel::MailListModel(QObject *parent)
+    : QIdentityProxyModel()
 {
     Akonadi2::Query query;
     query.syncOnDemand = false;
     query.processAll = false;
     query.liveQuery = true;
-    setEmitter(Akonadi2::Store::load<Akonadi2::ApplicationDomain::Mail>(query));
+    QList<QByteArray> requestedProperties;
+    requestedProperties << "subject";
+    query.requestedProperties = requestedProperties.toSet();
+    mModel = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Mail>(query);
+    setSourceModel(mModel.data());
 }
 
 MailListModel::~MailListModel()
@@ -27,9 +34,9 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
 {
     switch (role) {
         case Subject:
-            return ListModelResult<Akonadi2::ApplicationDomain::Mail::Ptr>::data(index(idx.row(), 0, idx.parent()), Qt::DisplayRole);
+            return mapToSource(idx).data(Qt::DisplayRole).toString();
     }
-    return QVariant();
+    return QIdentityProxyModel::data(idx, role);
 }
 
 void MailListModel::runQuery(const QString& query)
