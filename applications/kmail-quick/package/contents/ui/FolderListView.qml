@@ -37,7 +37,7 @@ Item {
 
             width: parent.width * 0.9
 
-            placeholderText: "Search email..."
+            placeholderText: "Search all email..."
 
         }
     }
