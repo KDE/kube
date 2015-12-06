@@ -4,6 +4,7 @@ set(mailplugin_SRCS
     maillistmodel.cpp
     singlemailcontroller.cpp
     folderlistmodel.cpp
+    folderlistcontroller.cpp
 )
 
 add_library(mailplugin SHARED ${mailplugin_SRCS})
