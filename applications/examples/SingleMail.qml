@@ -42,6 +42,10 @@ Item {
 	      text: singleMail.isImportant ? "important" : "not important"
 	      onClicked: singleMail.markMailImportant(!singleMail.isImportant)
 	  }
+	  Button {
+	    text: "delete"
+	    onClicked: singleMail.deleteMail()
+	  }
 	  Label {
 	      text: singleMail.message
 	  }
