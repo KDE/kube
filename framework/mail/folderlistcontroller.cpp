@@ -25,6 +25,11 @@ void FolderListController::setAccountId(const QString &id)
     }
 }
 
+FolderListModel* FolderListController::model() const
+{
+    return m_model.data();
+}
+
 void FolderListController::loadFolders(const QString &id)
 {
     //load foldermodel from akonadi

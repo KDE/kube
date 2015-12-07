@@ -12,7 +12,6 @@
 void MailPlugin::registerTypes (const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.akonadi2.mail"));
-    qmlRegisterType<QAbstractItemModel>();
 
     qmlRegisterType<FolderListModel>();
     qmlRegisterType<FolderListController>(uri, 1, 0, "FolderList");

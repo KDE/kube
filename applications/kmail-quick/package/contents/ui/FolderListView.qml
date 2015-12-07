@@ -21,10 +21,14 @@ import QtQuick.Layouts 1.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 
-
+import org.kde.akonadi2.mail 1.0 as Mail
 
 Item {
     id: root
+
+    Mail.FolderList {
+        id: folderList
+    }
 
     Item {
         id: searchBox
@@ -56,7 +60,7 @@ Item {
 
             clip: true
 
-            model: FolderModel {}
+            model: folderList.model //FolderModel {}
 
             delegate: ListItem {
 

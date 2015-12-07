@@ -1,15 +1,16 @@
 #pragma once
 
+#include "folderlistmodel.h"
+
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
-#include <QAbstractItemModel>
 
 class FolderListController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
-    Q_PROPERTY (QAbstractItemModel *model READ model CONSTANT)
+    Q_PROPERTY (FolderListModel *model READ model CONSTANT)
 
 public:
     explicit FolderListController(QObject *parent = Q_NULLPTR);
@@ -17,7 +18,7 @@ public:
     QString accountId() const;
     void setAccountId(const QString &id);
 
-    QAbstractItemModel *model() const;
+    FolderListModel *model() const;
 
     void loadFolders(const QString &id);
 
@@ -31,5 +32,5 @@ public slots:
 
 private:
     QString m_accountId;
-    QScopedPointer<QAbstractItemModel> m_model;
+    QScopedPointer<FolderListModel> m_model;
 };

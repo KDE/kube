@@ -10,9 +10,8 @@ FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
     QList<QByteArray> requestedProperties;
     requestedProperties << "name" << "icon";
     query.requestedProperties = requestedProperties.toSet();
-    //TODO
-    //mModel = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Mail>(query);
-    //setSourceModel(mModel.data());
+    mModel = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Folder>(query);
+    setSourceModel(mModel.data());
 }
 
 FolderListModel::~FolderListModel()
