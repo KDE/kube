@@ -84,8 +84,6 @@ ScrollView {
 
                 text: "(" + model.sender +")"
 
-                font.weight: Font.ExtraLight
-
                 clip: true
             }
 
