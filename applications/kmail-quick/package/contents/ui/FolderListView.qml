@@ -26,10 +26,6 @@ import org.kde.akonadi2.mail 1.0 as Mail
 Item {
     id: root
 
-    Mail.FolderList {
-        id: folderList
-    }
-
     Item {
         id: searchBox
 
@@ -45,7 +41,6 @@ Item {
 
         }
     }
-
 
     ScrollView {
 
