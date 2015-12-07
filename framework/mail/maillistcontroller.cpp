@@ -11,7 +11,7 @@ MailListController::MailListController(QObject *parent) : QObject(parent), m_mod
 {
 }
 
-QAbstractItemModel *MailListController::model() const
+MailListModel *MailListController::model() const
 {
     return m_model.data();
 

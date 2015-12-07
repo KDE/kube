@@ -11,14 +11,14 @@ class MailListController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (QString query READ query WRITE setQuery NOTIFY queryChanged)
-    Q_PROPERTY (QAbstractItemModel *model READ model CONSTANT)
+    Q_PROPERTY (MailListModel *model READ model CONSTANT)
 
 public:
     explicit MailListController(QObject *parent = Q_NULLPTR);
 
     QString query() const;
     void setQuery(const QString &query);
-    QAbstractItemModel *model() const;
+    MailListModel *model() const;
 
 signals:
     void queryChanged();
@@ -28,5 +28,5 @@ public slots:
 
 private:
     QString m_query;
-    QScopedPointer<QAbstractItemModel> m_model;
+    QScopedPointer<MailListModel> m_model;
 };
