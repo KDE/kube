@@ -15,7 +15,12 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     enum Roles {
-        Subject  = Qt::UserRole + 1
+        Subject  = Qt::UserRole + 1,
+        Sender,
+        SenderName,
+        Date,
+        Unread,
+        Important
     };
 
     QHash<int, QByteArray> roleNames() const;

@@ -10,7 +10,7 @@ MailListModel::MailListModel(QObject *parent)
     query.processAll = false;
     query.liveQuery = true;
     QList<QByteArray> requestedProperties;
-    requestedProperties << "subject";
+    requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
     query.requestedProperties = requestedProperties.toSet();
     mModel = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Mail>(query);
     setSourceModel(mModel.data());
@@ -26,6 +26,11 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     QHash<int, QByteArray> roles;
 
     roles[Subject] = "subject";
+    roles[Sender] = "sender";
+    roles[SenderName] = "senderName";
+    roles[Date] = "date";
+    roles[Unread] = "unread";
+    roles[Important] = "important";
 
     return roles;
 }
@@ -35,6 +40,16 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
     switch (role) {
         case Subject:
             return mapToSource(idx).data(Qt::DisplayRole).toString();
+	case Sender:
+	    return mapToSource(idx).data(Qt::DisplayRole).toString();
+	case SenderName:
+	    return mapToSource(idx).data(Qt::DisplayRole).toString();
+	case Date:
+	    return mapToSource(idx).data(Qt::DisplayRole).toString();
+	case Unread:
+	    return mapToSource(idx).data(Qt::DisplayRole).toString();
+	case Important:
+	    return mapToSource(idx).data(Qt::DisplayRole).toString();
     }
     return QIdentityProxyModel::data(idx, role);
 }
