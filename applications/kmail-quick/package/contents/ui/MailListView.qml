@@ -24,7 +24,7 @@ ScrollView {
     ListView {
         id: listView
 
-        model: MailListModel {}
+        model: mailList.model //MailListModel {}
 
         delegate: ListItem {
 
