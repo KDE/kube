@@ -20,6 +20,8 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
+import org.kde.akonadi2.mail 1.0 as Mail
+
 ApplicationWindow {
     id: app
 
@@ -30,6 +32,20 @@ ApplicationWindow {
 
     visible: true
 
+    //Controller:
+    Mail.FolderList {
+        id: folderList
+    }
+
+    Mail.MailList {
+        id: mailList
+    }
+
+    Mail.SingleMail{
+        id: singleMail
+    }
+
+    //UI
     toolBar: ToolBar {
 
         Row {
@@ -59,7 +75,7 @@ ApplicationWindow {
         anchors.fill: parent
 
         FolderListView {
-            id: folderList
+            id: folderListView
 
             width: unit.size * 55
             Layout.maximumWidth: unit.size * 150
@@ -67,7 +83,7 @@ ApplicationWindow {
         }
 
         MailListView  {
-            id: mailList
+            id: mailListView
 
             width: unit.size * 80
             Layout.maximumWidth: unit.size * 250
