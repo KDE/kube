@@ -20,6 +20,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kde.akonadi2.mail 1.0 as Mail
 
@@ -52,15 +53,22 @@ Item {
         }
 
         ListView {
+	    id: listView
 
             clip: true
 
             model: folderList.model //FolderModel {}
 
-            delegate: ListItem {
+            delegate: PlasmaComponents.ListItem {
 
                 width: root.width
                 height: unit.size * 10
+
+                enabled: true
+
+                onClicked: {
+                    mailList.folderId = model.id
+                }
 
                 PlasmaCore.IconItem {
                     id: iconItem
