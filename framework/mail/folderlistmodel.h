@@ -17,7 +17,8 @@ public:
 
     enum Roles {
         Name  = Qt::UserRole + 1,
-	Icon
+	Icon,
+	Id
     };
 
     QHash<int, QByteArray> roleNames() const;

@@ -1,5 +1,6 @@
 #include "folderlistmodel.h"
 #include <akonadi2common/clientapi.h>
+#include <akonadi2common/applicationdomaintype.h>
 
 FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
 {
@@ -23,6 +24,7 @@ QHash< int, QByteArray > FolderListModel::roleNames() const
 
     roles[Name] = "name";
     roles[Icon] = "icon";
+    roles[Id] = "id";
 
     return roles;
 }
@@ -35,6 +37,8 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
             return srcIdx.sibling(srcIdx.row(), 0).data(Qt::DisplayRole).toString();
         case Icon:
             return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
+	case Id:
+	    return QString("some id");
     }
     return QIdentityProxyModel::data(idx, role);
 }
