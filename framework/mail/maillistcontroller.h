@@ -10,23 +10,23 @@
 class MailListController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (QString query READ query WRITE setQuery NOTIFY queryChanged)
+    Q_PROPERTY (QString folderId READ folderId WRITE setFolderId NOTIFY folderIdChanged)
     Q_PROPERTY (MailListModel *model READ model CONSTANT)
 
 public:
     explicit MailListController(QObject *parent = Q_NULLPTR);
 
-    QString query() const;
-    void setQuery(const QString &query);
+    QString folderId() const;
+    void setFolderId(const QString &query);
     MailListModel *model() const;
 
 signals:
-    void queryChanged();
+    void folderIdChanged();
 
 public slots:
     void addMail(QString subject);
 
 private:
-    QString m_query;
+    QString m_folderId;
     QScopedPointer<MailListModel> m_model;
 };

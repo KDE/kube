@@ -1,5 +1,7 @@
 #pragma once
 
+#include <akonadi2common/clientapi.h>
+
 #include <QIdentityProxyModel>
 #include <QSharedPointer>
 #include <QStringList>
@@ -25,7 +27,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const;
 
-    void runQuery(const QString &query);
+    void runQuery(const Akonadi2::Query &query);
 private:
-    QSharedPointer<QAbstractItemModel> mModel;
+    QSharedPointer<QAbstractItemModel> m_model;
 };

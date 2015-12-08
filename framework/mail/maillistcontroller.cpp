@@ -3,7 +3,6 @@
 #include <QStringList>
 
 #include <akonadi2common/clientapi.h>
-#include <akonadi2common/query.h>
 
 #include "maillistmodel.h"
 
@@ -17,17 +16,26 @@ MailListModel *MailListController::model() const
 
 }
 
-QString MailListController::query() const
+QString MailListController::folderId() const
 {
-    return m_query;
+    return m_folderId;
 }
 
-void MailListController::setQuery(const QString &query)
+void MailListController::setFolderId(const QString &folderId)
 {
-    qDebug() << "set query";
-    if (m_query != query) {
-        m_query = query;
-        emit queryChanged();
+    if (m_folderId != folderId) {
+        m_folderId = folderId;
+
+
+        Akonadi2::Query query;
+        query.syncOnDemand = false;
+        query.processAll = false;
+        query.liveQuery = true;
+        query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
+        query.ids << folderId.toLatin1();
+        m_model->runQuery(query);
+
+        emit folderIdChanged();
     }
 }
 
