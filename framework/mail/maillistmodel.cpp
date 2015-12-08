@@ -35,19 +35,20 @@ QHash< int, QByteArray > MailListModel::roleNames() const
 
 QVariant MailListModel::data(const QModelIndex &idx, int role) const
 {
+    auto srcIdx = mapToSource(idx);
     switch (role) {
         case Subject:
-            return mapToSource(idx).data(Qt::DisplayRole).toString();
-	case Sender:
-	    return mapToSource(idx).data(Qt::DisplayRole).toString();
-	case SenderName:
-	    return mapToSource(idx).data(Qt::DisplayRole).toString();
-	case Date:
-	    return mapToSource(idx).data(Qt::DisplayRole).toString();
-	case Unread:
-	    return mapToSource(idx).data(Qt::DisplayRole).toString();
-	case Important:
-	    return mapToSource(idx).data(Qt::DisplayRole).toString();
+            return srcIdx.sibling(srcIdx.row(), 0).data(Qt::DisplayRole).toString();
+        case Sender:
+            return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
+        case SenderName:
+            return srcIdx.sibling(srcIdx.row(), 2).data(Qt::DisplayRole).toString();
+        case Date:
+            return srcIdx.sibling(srcIdx.row(), 3).data(Qt::DisplayRole).toString();
+        case Unread:
+            return srcIdx.sibling(srcIdx.row(), 4).data(Qt::DisplayRole).toString();
+        case Important:
+            return srcIdx.sibling(srcIdx.row(), 5).data(Qt::DisplayRole).toString();
     }
     return QIdentityProxyModel::data(idx, role);
 }

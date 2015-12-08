@@ -29,11 +29,12 @@ QHash< int, QByteArray > FolderListModel::roleNames() const
 
 QVariant FolderListModel::data(const QModelIndex &idx, int role) const
 {
+    auto srcIdx = mapToSource(idx);
     switch (role) {
         case Name:
-            return mapToSource(idx).data(Qt::DisplayRole).toString();
-	case Icon:
-	    return mapToSource(idx).data(Qt::DisplayRole).toString();
+            return srcIdx.sibling(srcIdx.row(), 0).data(Qt::DisplayRole).toString();
+        case Icon:
+            return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
     }
     return QIdentityProxyModel::data(idx, role);
 }
