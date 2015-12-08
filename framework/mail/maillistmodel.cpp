@@ -9,9 +9,7 @@ MailListModel::MailListModel(QObject *parent)
     query.syncOnDemand = false;
     query.processAll = false;
     query.liveQuery = true;
-    QList<QByteArray> requestedProperties;
-    requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
-    query.requestedProperties = requestedProperties.toSet();
+    query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
     mModel = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Mail>(query);
     setSourceModel(mModel.data());
 }

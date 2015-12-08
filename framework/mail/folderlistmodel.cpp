@@ -7,9 +7,7 @@ FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
     query.syncOnDemand = false;
     query.processAll = false;
     query.liveQuery = true;
-    QList<QByteArray> requestedProperties;
-    requestedProperties << "name" << "icon";
-    query.requestedProperties = requestedProperties.toSet();
+    query.requestedProperties << "name" << "icon";
     mModel = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Folder>(query);
     setSourceModel(mModel.data());
 }
