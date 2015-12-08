@@ -53,7 +53,7 @@ Item {
         }
 
         ListView {
-	    id: listView
+            id: listView
 
             clip: true
 
