@@ -38,7 +38,7 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
         case Icon:
             return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
         case Id:
-            return QString("some id");
+            return srcIdx.data(Akonadi2::Store::DomainObjectBaseRole).value<Akonadi2::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
     }
     return QIdentityProxyModel::data(idx, role);
 }
