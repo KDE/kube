@@ -67,7 +67,7 @@ Item {
                 enabled: true
 
                 onClicked: {
-                    mailList.folderId = model.id
+                    mailList.folderId.loadMailFolder(model.id)
                 }
 
                 PlasmaCore.IconItem {

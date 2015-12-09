@@ -16,17 +16,18 @@ MailListModel *MailListController::model() const
 
 }
 
-QString MailListController::folderId() const
+void MailListController::loadAllMail()
 {
-    return m_folderId;
+        Akonadi2::Query query;
+        query.syncOnDemand = false;
+        query.processAll = false;
+        query.liveQuery = true;
+        query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
+        m_model->runQuery(query);
 }
 
-void MailListController::setFolderId(const QString &folderId)
+void MailListController::loadMailFolder(const QString &folderId)
 {
-    if (m_folderId != folderId) {
-        m_folderId = folderId;
-
-
         Akonadi2::Query query;
         query.syncOnDemand = false;
         query.processAll = false;
@@ -34,12 +35,26 @@ void MailListController::setFolderId(const QString &folderId)
         query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "folder";
         query.propertyFilter.insert("folder", folderId.toLatin1());
         m_model->runQuery(query);
-
-        emit folderIdChanged();
-    }
 }
 
-void MailListController::addMail(QString subject)
+void MailListController::loadUnreadMail()
 {
-    qDebug() << "add mail";
+        Akonadi2::Query query;
+        query.syncOnDemand = false;
+        query.processAll = false;
+        query.liveQuery = true;
+        query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
+        query.propertyFilter.insert("unread", true);
+        m_model->runQuery(query);
+}
+
+void MailListController::loadImportantMail()
+{
+        Akonadi2::Query query;
+        query.syncOnDemand = false;
+        query.processAll = false;
+        query.liveQuery = true;
+        query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
+        query.propertyFilter.insert("important", true);
+        m_model->runQuery(query);
 }
