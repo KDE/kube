@@ -31,7 +31,7 @@ Item {
         id: searchBox
 
         width: root.width
-        height: unit.size * 12
+        height: unit.size * 10
 
         TextField {
             anchors. centerIn: parent
@@ -39,7 +39,6 @@ Item {
             width: parent.width * 0.9
 
             placeholderText: "Search all email..."
-
         }
     }
 
@@ -67,7 +66,7 @@ Item {
                 enabled: true
 
                 onClicked: {
-                    mailList.folderId.loadMailFolder(model.id)
+                    mailList.loadMailFolder(model.id)
                 }
 
                 PlasmaCore.IconItem {
