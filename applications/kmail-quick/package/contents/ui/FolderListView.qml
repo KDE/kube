@@ -54,6 +54,8 @@ Item {
         ListView {
             id: listView
 
+            currentIndex: -1
+
             clip: true
 
             model: folderList.model //FolderModel {}
@@ -64,9 +66,11 @@ Item {
                 height: unit.size * 10
 
                 enabled: true
+                checked: listView.currentIndex == index
 
                 onClicked: {
                     mailList.loadMailFolder(model.id)
+                    listView.currentIndex = model.index
                 }
 
                 PlasmaCore.IconItem {
