@@ -32,7 +32,7 @@ void MailListController::setFolderId(const QString &folderId)
         query.processAll = false;
         query.liveQuery = true;
         query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
-        query.ids << folderId.toLatin1();
+        query.parentProperty = folderId.toLatin1();
         m_model->runQuery(query);
 
         emit folderIdChanged();
