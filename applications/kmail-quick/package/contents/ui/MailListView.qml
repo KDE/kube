@@ -19,6 +19,8 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
+import org.kde.plasma.components 2.0 as PlasmaComponents
+
 ScrollView {
     id: root
     ListView {
@@ -26,10 +28,21 @@ ScrollView {
 
         model: mailList.model //MailListModel {}
 
-        delegate: ListItem {
+        delegate: PlasmaComponents.ListItem {
 
             width: listView.width
             height: unit.size * 12
+
+            enabled: true
+            checked: listView.currentIndex == index
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked:  {
+                    listView.currentIndex = model.index
+                }
+            }
 
             Rectangle {
                 id: unread
