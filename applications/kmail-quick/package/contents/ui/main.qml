@@ -51,7 +51,6 @@ ApplicationWindow {
         Row {
             anchors.fill: parent
 
-
             PlasmaComponents.ToolButton {
 
                 height: parent.height
@@ -60,14 +59,42 @@ ApplicationWindow {
 
                 text: "Compose"
             }
-        }
 
-        PlasmaComponents.ToolButton {
+            PlasmaComponents.ToolButton {
 
-            anchors.right: parent.right
+                height: parent.height
 
-            //FIXME: proper item name
-            iconName: "applications-system"
+                iconName: "mail-mark-unread"
+                text: "Mark Unread"
+
+                onClicked: {
+                    mailList.markMailUnread(true)
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+
+                height: parent.height
+
+                iconName: "mail-mark-important"
+                text: "Mark Important"
+
+                onClicked: {
+                    mailList.markMailImportant(true)
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+
+                height: parent.height
+
+                iconName: "edit-delete"
+                text: "Delete Mail"
+
+                onClicked: {
+                    mailList.deleteMail()
+                }
+            }
         }
     }
 

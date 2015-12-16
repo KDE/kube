@@ -58,3 +58,32 @@ void MailListController::loadImportantMail()
         query.propertyFilter.insert("important", true);
         m_model->runQuery(query);
 }
+
+QString MailListController::selectedMail() const
+{
+    return m_selectedMail;
+}
+
+void MailListController::setSelectedMail(const QString& id)
+{
+    if (m_selectedMail != id) {
+       m_selectedMail = id;
+       emit selectedMailChanged();
+    }
+}
+
+void MailListController::markMailImportant(bool important)
+{
+    qDebug() << "user action: mark mail important ";
+}
+
+void MailListController::markMailUnread(bool unread)
+{
+    qDebug() << "user action: mark mail unread ";
+}
+
+void MailListController::deleteMail()
+{
+    qDebug() << "user action: delete mail";
+}
+
