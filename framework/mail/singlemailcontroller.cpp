@@ -25,10 +25,4 @@ void SingleMailController::loadMail(const QString &id)
     query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
     query.ids << id.toLatin1();
     m_model->runQuery(query);
-
-    qDebug() << "***";
-    auto srcIdx = m_model->mapToSource(m_model->index(1, 0));
-    auto bla = srcIdx.sibling(srcIdx.row(), 3).data(Qt::DisplayRole);
-    qDebug() << bla;
-    qDebug() << "***";
 }
