@@ -1,71 +1,34 @@
 #include "singlemailcontroller.h"
 
-#include <QDebug>
-
-SingleMailController::SingleMailController(QObject *parent): QObject(parent), m_isImportant(false), m_isUnread(true)
+SingleMailController::SingleMailController(QObject *parent) : QObject(parent), m_model(new MailListModel)
 {
 
 }
 
-QString SingleMailController::akonadiId() const
+SingleMailController::~SingleMailController()
 {
-    return m_akonadiId;
+
 }
 
-void SingleMailController::setAkonadiId(const QString &id)
+MailListModel* SingleMailController::model() const
 {
-    if(m_akonadiId != id) {
-        m_akonadiId = id;
-
-	loadMessage(m_akonadiId);
-
-        emit akonadiIdChanged();
-    }
+    return m_model.data();
 }
 
-QString SingleMailController::message() const
+
+void SingleMailController::loadMail(const QString &id)
 {
-    return m_message;
-}
+    Akonadi2::Query query;
+    query.syncOnDemand = false;
+    query.processAll = false;
+    query.liveQuery = false;
+    query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
+    query.ids << id.toLatin1();
+    m_model->runQuery(query);
 
-bool SingleMailController::isImportant() const
-{
-    return m_isImportant;
-}
-
-bool SingleMailController::isUnread() const
-{
-    return m_isUnread;
-}
-
-void SingleMailController::deleteMail()
-{
-    qDebug() << "UserAction: deleteMail: " << m_akonadiId;
-}
-
-void SingleMailController::markMailImportant(bool important)
-{
-    qDebug() << "UserAction: markMailImportant: " << m_akonadiId;
-
-    if (m_isImportant != important) {
-        m_isImportant = important;
-        emit isImportantChanged();
-    }
-}
-
-void SingleMailController::markMailUnread(bool unread)
-{
-    qDebug() << "UserAction: markMailUnread: " << m_akonadiId;
-
-    if (m_isUnread != unread) {
-        m_isUnread = unread;
-        emit isUnreadChanged();
-    }
-}
-
-void SingleMailController::loadMessage(const QString &id)
-{
-    //load message from akoandi
-    m_message = "The message as HTML";
-    emit messageChanged();
+    qDebug() << "***";
+    auto srcIdx = m_model->mapToSource(m_model->index(1, 0));
+    auto bla = srcIdx.sibling(srcIdx.row(), 3).data(Qt::DisplayRole);
+    qDebug() << bla;
+    qDebug() << "***";
 }

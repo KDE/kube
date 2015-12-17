@@ -4,41 +4,26 @@
 
 #include <QObject>
 #include <QString>
+#include <QDateTime>
+#include <QScopedPointer>
 
 class SingleMailController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (QString akonadiId READ akonadiId WRITE setAkonadiId NOTIFY akonadiIdChanged)
-    Q_PROPERTY (bool isUnread READ isUnread NOTIFY isUnreadChanged)
-    Q_PROPERTY (bool isImportant READ isImportant NOTIFY isImportantChanged)
-    Q_PROPERTY (QString message READ message NOTIFY messageChanged)
+    Q_PROPERTY (MailListModel *model READ model CONSTANT)
 
 public:
     explicit SingleMailController(QObject *parent = Q_NULLPTR);
+    ~SingleMailController();
 
-    QString akonadiId() const;
-    void setAkonadiId(const QString &id);
+    MailListModel *model() const;
 
-    bool isUnread() const;
-    bool isImportant() const;
-    QString message() const;
-
-    void loadMessage(const QString &id);
-
-signals:
-    void akonadiIdChanged();
-    void isUnreadChanged();
-    void isImportantChanged();
+Q_SIGNALS:
     void messageChanged();
 
 public slots:
-    void deleteMail();
-    void markMailImportant(bool important);
-    void markMailUnread(bool unread);
+    void loadMail(const QString &id);
 
 private:
-    QString m_akonadiId;
-    bool m_isImportant;
-    bool m_isUnread;
-    QString m_message;
+    QScopedPointer<MailListModel> m_model;
 };
