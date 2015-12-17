@@ -18,22 +18,42 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
-import QtWebKit 3.0
 
-ScrollView {
-    WebView {
-        url: "http://kolabnow.com"
+Item {
+    id: root
+
+    Rectangle {
+        id: background
+
         anchors.fill: parent
-        onNavigationRequested: {
-            request.action = WebView.IgnoreRequest;
 
-            // detect URL scheme prefix, most likely an external link
-            var schemaRE = /^\w+:/;
-            if (schemaRE.test(request.url)) {
-                request.action = WebView.AcceptRequest;
-            } else {
-                request.action = WebView.IgnoreRequest;
-                // delegate request.url here
+        color: colorPalette.background
+    }
+
+    Repeater {
+        anchors.fill: parent
+
+        model: singleMail.model
+
+        delegate: Item {
+            height: root.height
+            width: root.widht
+
+            ColumnLayout {
+
+                Label {
+                    text: model.id
+                }
+                Label {
+                    text: model.sender
+                }
+                Label {
+                    text: model.senderName
+                }
+
+                Label {
+                    text: model.subject
+                }
             }
         }
     }

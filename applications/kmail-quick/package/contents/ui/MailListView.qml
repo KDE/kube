@@ -41,6 +41,7 @@ ScrollView {
 
                 onClicked:  {
                     listView.currentIndex = model.index
+                    singleMail.loadMail(model.id)
                 }
             }
 
