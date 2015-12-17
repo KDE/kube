@@ -21,6 +21,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Date] = "date";
     roles[Unread] = "unread";
     roles[Important] = "important";
+    roles[Id] = "id";
 
     return roles;
 }
@@ -41,6 +42,8 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return srcIdx.sibling(srcIdx.row(), 4).data(Qt::DisplayRole).toString();
         case Important:
             return srcIdx.sibling(srcIdx.row(), 5).data(Qt::DisplayRole).toString();
+        case Id:
+            return srcIdx.data(Akonadi2::Store::DomainObjectBaseRole).value<Akonadi2::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
     }
     return QIdentityProxyModel::data(idx, role);
 }

@@ -22,7 +22,8 @@ public:
         SenderName,
         Date,
         Unread,
-        Important
+        Important,
+        Id
     };
 
     QHash<int, QByteArray> roleNames() const;
