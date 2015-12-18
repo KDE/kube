@@ -54,6 +54,10 @@ Item {
                 Label {
                     text: model.subject
                 }
+
+                Label {
+                    text: model.mimeMessage
+                }
             }
         }
     }

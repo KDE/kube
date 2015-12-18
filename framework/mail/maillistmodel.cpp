@@ -1,5 +1,7 @@
 #include "maillistmodel.h"
 
+#include <QFile>
+
 MailListModel::MailListModel(QObject *parent)
     : QIdentityProxyModel()
 {
@@ -22,6 +24,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Unread] = "unread";
     roles[Important] = "important";
     roles[Id] = "id";
+    roles[MimeMessage] = "mimeMessage";
 
     return roles;
 }
@@ -44,6 +47,17 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return srcIdx.sibling(srcIdx.row(), 5).data(Qt::DisplayRole).toString();
         case Id:
             return srcIdx.data(Akonadi2::Store::DomainObjectBaseRole).value<Akonadi2::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+        case MimeMessage: {
+            auto filename = srcIdx.sibling(srcIdx.row(), 6).data(Qt::DisplayRole).toString();
+            QFile file(filename);
+            if (file.open(QFile::ReadOnly)) {
+                auto content = file.readAll();
+                return content;
+            } else {
+                qWarning() << "Failed to open the file";
+            }
+            return "Failed to read mail.";
+        }
     }
     return QIdentityProxyModel::data(idx, role);
 }
