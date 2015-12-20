@@ -1,6 +1,8 @@
 set(settingsplugin_SRCS
     settingsplugin.cpp
     maildir_resource.cpp
+    resourcelistmodel.cpp
+    resourcescontroller.cpp
 )
 
 add_library(settingsplugin SHARED ${settingsplugin_SRCS})
