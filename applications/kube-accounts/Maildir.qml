@@ -21,80 +21,80 @@ Item {
             margins: 10
         }
 
-    GridLayout {
-        id: mainContent
-
-        Layout.fillWidth: true
-
-        rows: 2
-        columns: 3
-
-        Label {
-            text: "Name:"
-        }
-
-        TextField {
+        GridLayout {
+            id: mainContent
 
             Layout.fillWidth: true
 
-            placeholderText: "Enter a name to identify the resource"
-            text: maildir.name
-        }
+            rows: 2
+            columns: 3
 
-        Label {
-
-        }
-
-        Label {
-            text: "Location:"
-        }
-
-        TextField {
-
-            Layout.fillWidth: true
-
-            placeholderText: "Click on the folder button to enter the location"
-            text: maildir.folderUrl
-
-            enabled: false
-        }
-
-        Button {
-            iconName: "folder"
-
-            onClicked:  {
-                fileDialog.visible = true
+            Label {
+                text: "Name:"
             }
 
-            FileDialog {
-                id: fileDialog
-                title: "Please choose the maildir folder"
-                folder: shortcuts.home
+            TextField {
 
-                selectFolder: true
+                Layout.fillWidth: true
 
-                onAccepted: {
-                    maildir.folderUrl = fileDialog.fileUrl
-                    visible: false
+                placeholderText: "Enter a name to identify the resource"
+                text: maildir.name
+            }
+
+            Label {
+
+            }
+
+            Label {
+                text: "Location:"
+            }
+
+            TextField {
+
+                Layout.fillWidth: true
+
+                placeholderText: "Click on the folder button to enter the location"
+                text: maildir.folderUrl
+
+                enabled: false
+            }
+
+            Button {
+                iconName: "folder"
+
+                onClicked:  {
+                    fileDialog.visible = true
                 }
-                onRejected: {
-                    visible: false
+
+                FileDialog {
+                    id: fileDialog
+                    title: "Please choose the maildir folder"
+                    folder: shortcuts.home
+
+                    selectFolder: true
+
+                    onAccepted: {
+                        maildir.folderUrl = fileDialog.fileUrl
+                        visible: false
+                    }
+                    onRejected: {
+                        visible: false
+                    }
                 }
             }
         }
-    }
 
-    RowLayout {
-        id: buttons
+        RowLayout {
+            id: buttons
 
-        Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignRight
 
-        Button {
-            text: "Create Resource"
+            Button {
+                text: "Create Resource"
+            }
+            Button {
+                text: "Cancel"
+            }
         }
-        Button {
-            text: "Cancel"
-        }
-    }
     }
 }
