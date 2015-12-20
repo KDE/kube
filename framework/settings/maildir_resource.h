@@ -8,7 +8,7 @@ class MaildirResouceController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY (QUrl fodlerUrl READ folderUrl WRITE setFolderUrl NOTIFY folderUrlChanged);
+    Q_PROPERTY (QUrl folderUrl READ folderUrl WRITE setFolderUrl NOTIFY folderUrlChanged);
 
 public:
     explicit MaildirResouceController(QObject *parent = Q_NULLPTR);
