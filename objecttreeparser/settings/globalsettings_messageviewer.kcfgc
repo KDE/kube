@@ -1,0 +1,10 @@
+File=messageviewer.kcfg
+ClassName=MessageViewerSettingsBase
+NameSpace=MessageViewer
+Visibility=MESSAGEVIEWER_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=qapplication.h,messageviewer_export.h,messageviewer/objecttreeparser.h,messageviewer_debug.h
+CategoryLoggingName=MESSAGEVIEWER_LOG
