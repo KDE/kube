@@ -2,8 +2,8 @@
 Note: This is a draft only
 
 ## Roadwarrior
-* Fires up Kontact quickly to see what's up next (it's not constantly open)
-* Has to deal with bad/intermitted network connection
+* Fires up Kube quickly to see what's up next (it's not constantly open)
+* Has to deal with bad/intermittent network connection
 * Relies on offline capabilities to access content
 * Uses various mobile devices
 

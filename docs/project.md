@@ -36,14 +36,14 @@ This section is supposed to outline that
     * Better integration with kolab
 
 # Vision Statement
-Kontact Quick aims to be an enterprise-ready PIM solution, that has a high-quality and rock solid core. The focus of the core is on high-quality code, maintainability, stability and performance.
+Kube aims to be an enterprise-ready PIM solution, that has a high-quality and rock solid core. The focus of the core is on high-quality code, maintainability, stability and performance.
 
 We strive to keep the core to the necessary minimum, with minimal dependencies and maximum portability, and in a way that it is maintainable by a small team.
 We also strive to keep the solution agile so that work by corporate partners can be executed upstream.
 
 Experimental or advanced features are supported as optional addons, to not affect the high quality of the core product.
 
-Kontact Quick aims to be available on various form-factors and platforms.
+Kube aims to be available on various form-factors and platforms.
 
 # Project Structure
 While this is an open project that welcomes participation from everyone who's interested, we do have an explicit team strucuture to ensure it's clear to everyone who's repsonsible for what. External contributions are always welcome and the team is of course open for extension.

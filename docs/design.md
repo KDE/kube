@@ -1,7 +1,7 @@
 # Architecture / Design
 
 ## Overview
-Kontact Quick is supposed to be a small and concise codebase that is easy to modify and evolve.
+Kube is supposed to be a small and concise codebase that is easy to modify and evolve.
 
 It's following a reactive model, where in one direction we have controllers generating modifications, and in the other direction models updating themselves on changes.
 
@@ -23,7 +23,7 @@ The overall architecture is split into three layers; Ui, Domain Logic and Infras
 
 The UI Layer consists of views (mostly written in QML), view-models (models that are view specific and potentially implement user interaction details), and the glue code to use various controllers from the interface. Different UI layers may exist for different form factors.
 
-The domain logic layer holds the application state. It povides models to access data and controllers to act upon it. The domain logic is by definition Kontact Quick specific and not sharable with other applications, as it needs to be taylored exactly according to the requirements of Kontact Quick.
+The domain logic layer holds the application state. It povides models to access data and controllers to act upon it. The domain logic is by definition Kube specific and not sharable with other applications, as it needs to be taylored exactly according to the requirements of Kube.
 
 The infrastructure layer provides:
 
@@ -142,9 +142,9 @@ Probably requires access to identities in some way.
 * KMime
 
 ## Interaction with external applications
-External applications, like the KDE calendar plasmoid, should be able to load parts of Kontact Quick when available. It should for instance be possible to load the Event editor as embeddable QML component, that is fully functional. That way it becomes very easy for third parties to provide extra functionality if Kontact Quick is installed, without having to reimplement the Domain Logic (as is the case if only data access is provided through akonadi).
+External applications, like the KDE calendar plasmoid, should be able to load parts of Kube when available. It should for instance be possible to load the Event editor as embeddable QML component, that is fully functional. That way it becomes very easy for third parties to provide extra functionality if Kube is installed, without having to reimplement the Domain Logic (as is the case if only data access is provided through akonadi).
 
-The same mechanism should probably be used by Kontact Quick itself to ensure loose coupling and allow mashups with various content types.
+The same mechanism should probably be used by Kube itself to ensure loose coupling and allow mashups with various content types.
 
 Note: We'll probably want a component-viewer application to easily load and test individual components (similar to plasmoidviewer).
 
