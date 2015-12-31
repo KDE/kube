@@ -24,12 +24,18 @@
 #ifndef MESSAGEVIEWER_MESSAGEVIEWERSETTINGS_H
 #define MESSAGEVIEWER_MESSAGEVIEWERSETTINGS_H
 
-#include "globalsettings_messageviewer.h"
+#include "messageviewer_export.h"
+#include <QObject>
+// #include "globalsettings_messageviewer.h"
 
 class QTimer;
 
 namespace MessageViewer
 {
+
+class MessageViewerSettingsBase {
+
+};
 
 class MESSAGEVIEWER_EXPORT MessageViewerSettings : public MessageViewer::MessageViewerSettingsBase
 {

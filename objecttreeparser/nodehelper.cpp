@@ -19,16 +19,16 @@
 
 #include "nodehelper.h"
 #include "messageviewer_debug.h"
-#include "utils/iconnamecache.h"
+#include "iconnamecache.h"
 #include "settings/messageviewersettings.h"
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"
 #include "messageviewerutil.h"
-#include "PimCommon/AttachmentTemporaryFilesDirs"
+// #include "PimCommon/AttachmentTemporaryFilesDirs"
 
-#include <MessageCore/NodeHelper>
-#include <MessageCore/StringUtil>
-#include "MessageCore/MessageCoreSettings"
+#include <messagecore/nodehelper.h>
+#include <messagecore/stringutil.h>
+// #include "MessageCore/MessageCoreSettings"
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
@@ -37,7 +37,7 @@
 #include <QTemporaryFile>
 #include <KLocalizedString>
 #include <kcharsets.h>
-#include <kde_file.h>
+// #include <kde_file.h>
 
 #include <QUrl>
 #include <QDir>
@@ -57,8 +57,8 @@ namespace MessageViewer
 QStringList replySubjPrefixes(QStringList() << QStringLiteral("Re\\s*:") << QStringLiteral("Re\\[\\d+\\]:") << QStringLiteral("Re\\d+:"));
 QStringList forwardSubjPrefixes(QStringList() << QStringLiteral("Fwd:") << QStringLiteral("FW:"));
 
-NodeHelper::NodeHelper() :
-    mAttachmentFilesDir(new PimCommon::AttachmentTemporaryFilesDirs())
+NodeHelper::NodeHelper()
+    //: mAttachmentFilesDir(new PimCommon::AttachmentTemporaryFilesDirs())
 {
     //TODO(Andras) add methods to modify these prefixes
 
@@ -89,10 +89,10 @@ NodeHelper::NodeHelper() :
 NodeHelper::~NodeHelper()
 {
     //Don't delete it it will delete in class with a deleteLater;
-    if (mAttachmentFilesDir) {
-        mAttachmentFilesDir->removeTempFiles();
-        mAttachmentFilesDir = 0;
-    }
+    // if (mAttachmentFilesDir) {
+    //     mAttachmentFilesDir->removeTempFiles();
+    //     mAttachmentFilesDir = 0;
+    // }
 }
 
 void NodeHelper::setNodeProcessed(KMime::Content *node, bool recurse)
@@ -255,7 +255,7 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content *node)
         return QString();
     }
     f.write(data);
-    mAttachmentFilesDir->addTempFile(fname);
+    // mAttachmentFilesDir->addTempFile(fname);
     // make file read-only so that nobody gets the impression that he might
     // edit attached files (cf. bug #52813)
     f.setPermissions(QFileDevice::ReadUser);
@@ -272,18 +272,18 @@ QUrl NodeHelper::tempFileUrlFromNode(const KMime::Content *node)
 
     const QString index = persistentIndex(node);
 
-    foreach (const QString &path, mAttachmentFilesDir->temporaryFiles()) {
-        const int right = path.lastIndexOf(QLatin1Char('/'));
-        int left = path.lastIndexOf(QLatin1String(".index."), right);
-        if (left != -1) {
-            left += 7;
-        }
-
-        QStringRef storedIndex(&path, left, right - left);
-        if (left != -1 && storedIndex == index) {
-            return QUrl::fromLocalFile(path);
-        }
-    }
+    // foreach (const QString &path, mAttachmentFilesDir->temporaryFiles()) {
+    //     const int right = path.lastIndexOf(QLatin1Char('/'));
+    //     int left = path.lastIndexOf(QLatin1String(".index."), right);
+    //     if (left != -1) {
+    //         left += 7;
+    //     }
+    //
+    //     QStringRef storedIndex(&path, left, right - left);
+    //     if (left != -1 && storedIndex == index) {
+    //         return QUrl::fromLocalFile(path);
+    //     }
+    // }
     return QUrl();
 }
 
@@ -296,35 +296,35 @@ QString NodeHelper::createTempDir(const QString &param)
 
     if (::access(QFile::encodeName(fname), W_OK) != 0) {
         // Not there or not writable
-        if (KDE_mkdir(QFile::encodeName(fname), 0) != 0 ||
-                ::chmod(QFile::encodeName(fname), S_IRWXU) != 0) {
-            return QString(); //failed create
-        }
+        // if (KDE_mkdir(QFile::encodeName(fname), 0) != 0 ||
+        //         ::chmod(QFile::encodeName(fname), S_IRWXU) != 0) {
+        //     return QString(); //failed create
+        // }
     }
 
     Q_ASSERT(!fname.isNull());
 
-    mAttachmentFilesDir->addTempDir(fname);
+    // mAttachmentFilesDir->addTempDir(fname);
     return fname;
 }
 
 void NodeHelper::forceCleanTempFiles()
 {
-    mAttachmentFilesDir->forceCleanTempFiles();
-    delete mAttachmentFilesDir;
-    mAttachmentFilesDir = 0;
+    // mAttachmentFilesDir->forceCleanTempFiles();
+    // delete mAttachmentFilesDir;
+    // mAttachmentFilesDir = 0;
 }
 
 void NodeHelper::removeTempFiles()
 {
     //Don't delete it it will delete in class
-    mAttachmentFilesDir->removeTempFiles();
-    mAttachmentFilesDir = new PimCommon::AttachmentTemporaryFilesDirs();
+    // mAttachmentFilesDir->removeTempFiles();
+    // mAttachmentFilesDir = new PimCommon::AttachmentTemporaryFilesDirs();
 }
 
 void NodeHelper::addTempFile(const QString &file)
 {
-    mAttachmentFilesDir->addTempFile(file);
+    // mAttachmentFilesDir->addTempFile(file);
 }
 
 bool NodeHelper::isInEncapsulatedMessage(KMime::Content *node)
@@ -870,7 +870,7 @@ KMime::Message *NodeHelper::messageWithExtraContent(KMime::Content *topLevelNode
 NodeHelper::AttachmentDisplayInfo NodeHelper::attachmentDisplayInfo(KMime::Content *node)
 {
     AttachmentDisplayInfo info;
-    info.icon = iconName(node, KIconLoader::Small);
+    // info.icon = iconName(node, KIconLoader::Small);
     const QString name = node->contentType()->name();
     info.label = name.isEmpty() ? fileName(node) : name;
     if (info.label.isEmpty()) {

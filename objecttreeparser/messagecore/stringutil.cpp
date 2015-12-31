@@ -18,8 +18,8 @@
 */
 #include "stringutil.h"
 
-#include "config-enterprise.h"
-#include "MessageCore/MessageCoreSettings"
+// #include "config-enterprise.h"
+// #include "MessageCore/MessageCoreSettings"
 
 #include <kmime/kmime_header_parsing.h>
 #include <kmime/kmime_headers.h>
@@ -27,14 +27,20 @@
 #include <KEmailAddress>
 
 #include <KConfigGroup>
-#include "messagecore_debug.h"
+// #include "messagecore_debug.h"
 #include <KUser>
 
 #include <QHostInfo>
 #include <QRegExp>
 #include <QStringList>
 #include <QUrlQuery>
-#include <kpimtextedit/textutils.h>
+#include <QDebug>
+#include <QLoggingCategory>
+
+// #include <kpimtextedit/textutils.h>
+Q_DECLARE_LOGGING_CATEGORY(MESSAGECORE_LOG)
+    // in one source file
+Q_LOGGING_CATEGORY(MESSAGECORE_LOG, "messagecore.usb")
 
 using namespace KMime;
 using namespace KMime::Types;
@@ -135,36 +141,36 @@ static bool flushPart(QString &msg, QStringList &textParts,
         textParts.removeLast();
     }
 
-    QString text;
-    foreach (const QString &line, textParts) {
-
-        // An empty line in the input means that an empty line should be in the output as well.
-        // Therefore, we write all of our text so far to the msg.
-        if (line.isEmpty()) {
-            if (!text.isEmpty()) {
-                msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength) + QLatin1Char('\n');
-            }
-            msg += indent + QLatin1Char('\n');
-        } else {
-            if (text.isEmpty()) {
-                text = line;
-            } else {
-                text += QLatin1Char(' ') + line.trimmed();
-            }
-            // If the line doesn't need to be wrapped at all, just write it out as-is.
-            // When a line exceeds the maximum length and therefore needs to be broken, this statement
-            // if false, and therefore we keep adding lines to our text, so they get ran together in the
-            // next flowText call, as "text" contains several text parts/lines then.
-            if ((text.length() < maxLength) || (line.length() < (maxLength - 10))) {
-                msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength) + QLatin1Char('\n');
-            }
-        }
-    }
-
-    // Write out pending text to the msg
-    if (!text.isEmpty()) {
-        msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength);
-    }
+    // QString text;
+    // foreach (const QString &line, textParts) {
+    //
+    //     // An empty line in the input means that an empty line should be in the output as well.
+    //     // Therefore, we write all of our text so far to the msg.
+    //     if (line.isEmpty()) {
+    //         if (!text.isEmpty()) {
+    //             msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength) + QLatin1Char('\n');
+    //         }
+    //         msg += indent + QLatin1Char('\n');
+    //     } else {
+    //         if (text.isEmpty()) {
+    //             text = line;
+    //         } else {
+    //             text += QLatin1Char(' ') + line.trimmed();
+    //         }
+    //         // If the line doesn't need to be wrapped at all, just write it out as-is.
+    //         // When a line exceeds the maximum length and therefore needs to be broken, this statement
+    //         // if false, and therefore we keep adding lines to our text, so they get ran together in the
+    //         // next flowText call, as "text" contains several text parts/lines then.
+    //         if ((text.length() < maxLength) || (line.length() < (maxLength - 10))) {
+    //             msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength) + QLatin1Char('\n');
+    //         }
+    //     }
+    // }
+    //
+    // // Write out pending text to the msg
+    // if (!text.isEmpty()) {
+    //     msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength);
+    // }
 
     const bool appendEmptyLine = !textParts.isEmpty();
     textParts.clear();
@@ -813,12 +819,12 @@ QString stripOffPrefixes(const QString &subject)
     static QStringList defaultForwardPrefixes = QStringList() << QStringLiteral("Fwd:")
             << QStringLiteral("FW:");
 
-    QStringList replyPrefixes = MessageCoreSettings::self()->replyPrefixes();
+    QStringList replyPrefixes; // = MessageCoreSettings::self()->replyPrefixes();
     if (replyPrefixes.isEmpty()) {
         replyPrefixes = defaultReplyPrefixes;
     }
 
-    QStringList forwardPrefixes = MessageCoreSettings::self()->forwardPrefixes();
+    QStringList forwardPrefixes; // = MessageCoreSettings::self()->forwardPrefixes();
     if (forwardPrefixes.isEmpty()) {
         forwardPrefixes = defaultForwardPrefixes;
     }
@@ -856,7 +862,7 @@ QString stripOffPrefixes(const QString &subject)
 
 void setEncodingFile(QUrl &url, const QString &encoding)
 {
-    url.addQueryItem(QStringLiteral("charset"), encoding);
+    // url.addQueryItem(QStringLiteral("charset"), encoding);
 }
 
 }

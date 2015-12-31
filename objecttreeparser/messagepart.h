@@ -26,7 +26,7 @@
 
 #include <Libkleo/CryptoBackend>
 #include <gpgme++/verificationresult.h>
-#include <importresult.h>
+#include <gpgme++/importresult.h>
 
 #include <QString>
 #include <QSharedPointer>

@@ -26,13 +26,13 @@
 #include "csshelper.h"
 #include "cryptohelper.h"
 
-#include <MessageCore/StringUtil>
+#include <messagecore/stringutil.h>
 
 #include <libkleo/importjob.h>
 #include <libkleo/cryptobackendfactory.h>
 
 #include <interfaces/htmlwriter.h>
-#include <htmlwriter/queuehtmlwriter.h>
+#include "htmlwriter/queuehtmlwriter.h"
 #include <job/kleojobexecutor.h>
 #include <settings/messageviewersettings.h>
 #include <kmime/kmime_content.h>
@@ -524,7 +524,7 @@ void HtmlMessagePart::html(bool decorate)
     if (mSource->htmlMail()) {
         QString bodyText = mBodyHTML;
         HTMLQuoteColorer colorer;
-        colorer.setEnableHtmlQuoteColorer(MessageViewer::MessageViewerSettings::self()->htmlQuoteColorerEnabled());
+        colorer.setEnableHtmlQuoteColorer(true/* MessageViewer::MessageViewerSettings::self()->htmlQuoteColorerEnabled() */);
         QString extraHead;
         for (int i = 0; i < 3; ++i) {
             colorer.setQuoteColor(i, mSource->cssHelper()->quoteColor(i));
@@ -879,17 +879,17 @@ void CryptoMessagePart::writeDeferredDecryptionBlock() const
         return;
     }
 
-    const QString iconName = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("document-decrypt"),
-                             KIconLoader::Small);
-    writer->queue(QLatin1String("<div style=\"font-size:large; text-align:center;"
-                                "padding-top:20pt;\">")
-                  + i18n("This message is encrypted.")
-                  + QLatin1String("</div>"
-                                  "<div style=\"text-align:center; padding-bottom:20pt;\">"
-                                  "<a href=\"kmail:decryptMessage\">"
-                                  "<img src=\"") + iconName + QLatin1String("\"/>")
-                  + i18n("Decrypt Message")
-                  + QLatin1String("</a></div>"));
+    // const QString iconName = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("document-decrypt"),
+    //                          KIconLoader::Small);
+    // writer->queue(QLatin1String("<div style=\"font-size:large; text-align:center;"
+    //                             "padding-top:20pt;\">")
+    //               + i18n("This message is encrypted.")
+    //               + QLatin1String("</div>"
+    //                               "<div style=\"text-align:center; padding-bottom:20pt;\">"
+    //                               "<a href=\"kmail:decryptMessage\">"
+    //                               "<img src=\"") + iconName + QLatin1String("\"/>")
+    //               + i18n("Decrypt Message")
+    //               + QLatin1String("</a></div>"));
 }
 
 void CryptoMessagePart::html(bool decorate)

@@ -26,7 +26,7 @@
 
 #include <KMime/Message>
 
-#include <KIconLoader>
+// #include <KIconLoader>
 
 #include <QList>
 #include <QMap>
@@ -97,7 +97,7 @@ public:
     void setPartMetaData(KMime::Content *node, const PartMetaData &metaData);
     PartMetaData partMetaData(KMime::Content *node);
 
-    static QString iconName(KMime::Content *node, int size = KIconLoader::Desktop);
+    static QString iconName(KMime::Content *node, int size = 0/* = KIconLoader::Desktop */);
 
     /**
      *  Set the 'Content-Type' by mime-magic from the contents of the body.
@@ -270,7 +270,7 @@ public:
     QVector<KMime::Content *> attachmentsOfExtraContents() const;
 
 Q_SIGNALS:
-    void update(MessageViewer::Viewer::UpdateMode);
+    void update(/* MessageViewer::Viewer::UpdateMode */);
 
 private:
     Q_DISABLE_COPY(NodeHelper)

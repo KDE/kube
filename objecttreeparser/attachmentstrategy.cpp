@@ -33,7 +33,7 @@
 
 #include "attachmentstrategy.h"
 
-#include "messageviewer/nodehelper.h"
+#include "nodehelper.h"
 
 #include <kmime/kmime_content.h>
 

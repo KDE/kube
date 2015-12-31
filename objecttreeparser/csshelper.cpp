@@ -32,11 +32,11 @@
 #include "csshelper.h"
 #include "settings/messageviewersettings.h"
 
-#include "MessageCore/MessageCoreSettings"
+// #include "MessageCore/MessageCoreSettings"
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <KColorScheme>
+// #include <KColorScheme>
 
 #include <QColor>
 #include <QFont>
@@ -48,58 +48,58 @@ namespace MessageViewer
 CSSHelper::CSSHelper(const QPaintDevice *pd) :
     CSSHelperBase(pd)
 {
-    KConfig *config = MessageViewer::MessageViewerSettings::self()->config();
-
-    KConfigGroup reader(config, "Reader");
-    KConfigGroup fonts(config, "Fonts");
-    KConfigGroup pixmaps(config, "Pixmaps");
-
-    mRecycleQuoteColors = reader.readEntry("RecycleQuoteColors", false);
-
-    mForegroundColor = KColorScheme(QPalette::Active).foreground().color();
-    if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
-        mLinkColor =
-            reader.readEntry("LinkColor", mLinkColor);
-        mVisitedLinkColor =
-            reader.readEntry("FollowedColor", mVisitedLinkColor);
-        cPgpEncrH =
-            reader.readEntry("PGPMessageEncr", cPgpEncrH);
-        cPgpOk1H  =
-            reader.readEntry("PGPMessageOkKeyOk", cPgpOk1H);
-        cPgpOk0H  =
-            reader.readEntry("PGPMessageOkKeyBad", cPgpOk0H);
-        cPgpWarnH =
-            reader.readEntry("PGPMessageWarn", cPgpWarnH);
-        cPgpErrH  =
-            reader.readEntry("PGPMessageErr", cPgpErrH);
-        cHtmlWarning =
-            reader.readEntry("HTMLWarningColor", cHtmlWarning);
-        for (int i = 0; i < 3; ++i) {
-            const QString key = QLatin1String("QuotedText") + QString::number(i + 1);
-            mQuoteColor[i] = reader.readEntry(key, mQuoteColor[i]);
-        }
-        mBackgroundColor = reader.readEntry("BackgroundColor", mBackgroundColor);
-    }
-
-    if (!MessageCore::MessageCoreSettings::self()->useDefaultFonts()) {
-        mBodyFont = fonts.readEntry("body-font",  mBodyFont);
-        mPrintFont = fonts.readEntry("print-font", mPrintFont);
-        mFixedFont = fonts.readEntry("fixed-font", mFixedFont);
-        mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
-        QFont defaultFont = mBodyFont;
-        defaultFont.setItalic(true);
-        for (int i = 0; i < 3; ++i) {
-            const QString key = QStringLiteral("quote%1-font").arg(i + 1);
-            mQuoteFont[i] = fonts.readEntry(key, defaultFont);
-        }
-    }
-
-    mShrinkQuotes = MessageViewer::MessageViewerSettings::self()->shrinkQuotes();
-
-    mBackingPixmapStr = pixmaps.readPathEntry("Readerwin", QString());
-    mBackingPixmapOn = !mBackingPixmapStr.isEmpty();
-
-    recalculatePGPColors();
+    // KConfig *config = MessageViewer::MessageViewerSettings::self()->config();
+    //
+    // KConfigGroup reader(config, "Reader");
+    // KConfigGroup fonts(config, "Fonts");
+    // KConfigGroup pixmaps(config, "Pixmaps");
+    //
+    // mRecycleQuoteColors = reader.readEntry("RecycleQuoteColors", false);
+    //
+    // mForegroundColor = KColorScheme(QPalette::Active).foreground().color();
+    // if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
+    //     mLinkColor =
+    //         reader.readEntry("LinkColor", mLinkColor);
+    //     mVisitedLinkColor =
+    //         reader.readEntry("FollowedColor", mVisitedLinkColor);
+    //     cPgpEncrH =
+    //         reader.readEntry("PGPMessageEncr", cPgpEncrH);
+    //     cPgpOk1H  =
+    //         reader.readEntry("PGPMessageOkKeyOk", cPgpOk1H);
+    //     cPgpOk0H  =
+    //         reader.readEntry("PGPMessageOkKeyBad", cPgpOk0H);
+    //     cPgpWarnH =
+    //         reader.readEntry("PGPMessageWarn", cPgpWarnH);
+    //     cPgpErrH  =
+    //         reader.readEntry("PGPMessageErr", cPgpErrH);
+    //     cHtmlWarning =
+    //         reader.readEntry("HTMLWarningColor", cHtmlWarning);
+    //     for (int i = 0; i < 3; ++i) {
+    //         const QString key = QLatin1String("QuotedText") + QString::number(i + 1);
+    //         mQuoteColor[i] = reader.readEntry(key, mQuoteColor[i]);
+    //     }
+    //     mBackgroundColor = reader.readEntry("BackgroundColor", mBackgroundColor);
+    // }
+    //
+    // if (!MessageCore::MessageCoreSettings::self()->useDefaultFonts()) {
+    //     mBodyFont = fonts.readEntry("body-font",  mBodyFont);
+    //     mPrintFont = fonts.readEntry("print-font", mPrintFont);
+    //     mFixedFont = fonts.readEntry("fixed-font", mFixedFont);
+    //     mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
+    //     QFont defaultFont = mBodyFont;
+    //     defaultFont.setItalic(true);
+    //     for (int i = 0; i < 3; ++i) {
+    //         const QString key = QStringLiteral("quote%1-font").arg(i + 1);
+    //         mQuoteFont[i] = fonts.readEntry(key, defaultFont);
+    //     }
+    // }
+    //
+    // mShrinkQuotes = MessageViewer::MessageViewerSettings::self()->shrinkQuotes();
+    //
+    // mBackingPixmapStr = pixmaps.readPathEntry("Readerwin", QString());
+    // mBackingPixmapOn = !mBackingPixmapStr.isEmpty();
+    //
+    // recalculatePGPColors();
 }
 
 QString CSSHelper::htmlHead(bool fixed) const

@@ -32,12 +32,13 @@
 */
 
 #include "partnodebodypart.h"
-#include "messageviewer/nodehelper.h"
-#include "messageviewer/objecttreeparser.h"
+#include "nodehelper.h"
+#include "objecttreeparser.h"
 #include "messageviewer_debug.h"
 #include <kmime/kmime_content.h>
 
 #include <QTextCodec>
+#include <QUrl>
 
 using namespace MessageViewer;
 

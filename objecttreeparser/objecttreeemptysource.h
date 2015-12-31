@@ -21,7 +21,7 @@
 #define MAILVIEWER_OBJECTTREEEMPTYSOURCE_H
 
 #include "objecttreesourceif.h"
-#include "messageviewer/messageviewerutil.h"
+// #include "messageviewerutil.h"
 
 class QString;
 

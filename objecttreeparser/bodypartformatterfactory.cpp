@@ -37,7 +37,7 @@
 
 #include "interfaces/bodypartformatter.h"
 #include "pluginloader.h"
-#include "urlhandlermanager.h"
+// #include "urlhandlermanager.h"
 
 // KDE
 
@@ -143,7 +143,7 @@ static void loadPlugins()
         }
         const Interface::BodyPartURLHandler *handler;
         for (int i = 0; (handler = plugin->urlHandler(i)); ++i) {
-            URLHandlerManager::instance()->registerHandler(handler);
+            // URLHandlerManager::instance()->registerHandler(handler);
         }
     }
 }

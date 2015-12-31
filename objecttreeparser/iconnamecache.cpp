@@ -19,7 +19,7 @@
 
 #include "iconnamecache.h"
 
-#include <KIconLoader>
+// #include <KIconLoader>
 
 namespace MessageViewer
 {
@@ -50,8 +50,9 @@ QString IconNameCache::iconPath(const QString &name, int size) const
         return mCachedEntries.value(entry);
     }
 
-    const QString fileName = KIconLoader::global()->iconPath(name, size);
-    mCachedEntries.insert(entry, fileName);
-    return fileName;
+    // const QString fileName = KIconLoader::global()->iconPath(name, size);
+    // mCachedEntries.insert(entry, fileName);
+    // return fileName;
+    return QString();
 }
 }

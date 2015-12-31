@@ -43,26 +43,26 @@
 #include "messagepart.h"
 #include "objecttreesourceif.h"
 
-#include "viewer/viewer_p.h"
+// #include "viewer/viewer_p.h"
 #include "partmetadata.h"
 #include "attachmentstrategy.h"
 #include "interfaces/htmlwriter.h"
-#include "widgets/htmlstatusbar.h"
+// #include "widgets/htmlstatusbar.h"
 #include "csshelper.h"
-#include "viewer/bodypartformatterfactory.h"
-#include "viewer/partnodebodypart.h"
+#include "bodypartformatterfactory.h"
+#include "partnodebodypart.h"
 #include "interfaces/bodypartformatter.h"
-#include "settings/messageviewersettings.h"
-#include "messageviewer/messageviewerutil.h"
+// #include "settings/messageviewersettings.h"
+// #include "messageviewer/messageviewerutil.h"
 #include "job/kleojobexecutor.h"
-#include "messageviewer/nodehelper.h"
-#include "utils/iconnamecache.h"
-#include "viewer/htmlquotecolorer.h"
-#include "messageviewer_debug.h"
+#include "nodehelper.h"
+#include "iconnamecache.h"
+#include "htmlquotecolorer.h"
+// #include "messageviewer_debug.h"
 #include "converthtmltoplaintext.h"
 
 // KDEPIM includes
-#include <MessageCore/StringUtil>
+#include <messagecore/stringutil.h>
 #include <Libkleo/SpecialJob>
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/DecryptVerifyJob>
@@ -88,7 +88,7 @@
 #include <QTemporaryFile>
 
 #include <kcodecs.h>
-#include <kconfiggroup.h>
+#include <KConfigGroup>
 
 #include <KEmailAddress>
 #include <KTextToHTML>
@@ -114,8 +114,16 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <memory>
-#include <MessageCore/NodeHelper>
+#include <messagecore/nodehelper.h>
 #include <qtextdocument.h>
+#include <qdebug.h>
+#include <QLoggingCategory>
+
+// #define MESSAGEVIEWER_LOG "messageviewer"
+Q_DECLARE_LOGGING_CATEGORY(MESSAGEVIEWER_LOG)
+
+    // in one source file
+Q_LOGGING_CATEGORY(MESSAGEVIEWER_LOG, "messageviewer.usb")
 
 using namespace MessageViewer;
 using namespace MessageCore;
@@ -1156,7 +1164,7 @@ MessagePart::Ptr ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Con
     if (smimeType == QLatin1String("certs-only")) {
         result.setNeverDisplayInline(true);
 
-        CertMessagePart::Ptr mp(new CertMessagePart(this, node, smimeCrypto, MessageViewer::MessageViewerSettings::self()->autoImportKeys()));
+        CertMessagePart::Ptr mp(new CertMessagePart(this, node, smimeCrypto, true));
         return mp;
     }
 
@@ -2202,7 +2210,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     assert(cssHelper());
 
     KTextToHTML::Options convertFlags = KTextToHTML::PreserveSpaces | KTextToHTML::HighlightText;
-    if (decorate && MessageViewer::MessageViewerSettings::self()->showEmoticons()) {
+    if (decorate) {
         convertFlags |= KTextToHTML::ReplaceSmileys;
     }
     QString htmlStr;
@@ -2232,7 +2240,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     int currQuoteLevel = -2; // -2 == no previous lines
     bool curHidden = false; // no hide any block
 
-    if (MessageViewer::MessageViewerSettings::self()->showExpandQuotesMark()) {
+    if (true) {
         // Cache Icons
         if (mCollapseIcon.isEmpty()) {
             mCollapseIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QStringLiteral("quotecollapse"), 0));
@@ -2274,7 +2282,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
         bool actHidden = false;
 
         // This quoted line needs be hidden
-        if (MessageViewer::MessageViewerSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
+        if (true && mSource->levelQuote() >= 0
                 && mSource->levelQuote() <= (actQuoteLevel)) {
             actHidden = true;
         }
@@ -2291,7 +2299,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
             if (actQuoteLevel == -1) {
                 htmlStr += normalStartTag;
             } else {
-                if (MessageViewer::MessageViewerSettings::self()->showExpandQuotesMark()) {
+                if (true) {
                     if (actHidden) {
                         //only show the QuoteMark when is the first line of the level hidden
                         if (!curHidden) {
