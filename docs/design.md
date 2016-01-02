@@ -153,3 +153,59 @@ Note: We'll probably want a component-viewer application to easily load and test
 * Controllers can be tested by providing mock implementations of the relevant infrastructure parts.
 * Models can be tested by providing fake implementations of the relevant infrastructure parts.
 * Infrastructure parts can be tested individually.
+
+# The new design
+
+The application consists of various application components. A component could be a maillist, an event-editor or the complete kube-mail application. Each component is instantiable on it's own, and has an API to interact with it. The API i.e. allows to set a folder for the maillist, or an event for the event-editor. Components can be nested (a component can instantiate another component)
+
+Components are requested from a factory, allowing to return different versions depending on modifiers passed in, or the global application context (i.e. mobile variants of the UI).
+
+A component primarily is a QML UI.
+The QML UI is built on top of:
+* One or more models that are instantiated to provide the data.
+* Actions that are instatiated in QML.
+
+## Models
+
+Models are self contained and have an API to set i.e. a query for what to load. Models can load data from anywhere.
+
+
+## Actions
+
+An action represents something that can be done, such as "mark as read", "delete", "move somewhere".
+
+An action has:
+* an id (org.kube.mail.make-as-read)
+* an active state (a property for the UI to know when the action can be triggered, that changes depending on the context)
+* an action context, which contains everything the action needs to execute.
+* an action icon
+* an action name
+
+The action context contains the dataset the action works upon plus any additional information that is required. A mark-as-read action for instance only requires the mail-set to work on, while a tag-with action requires any entity (mail, event, ...) and a tag (unless there is one action per tag...).
+The action can through property-binding reevaluate its active state based on the currently set context that the UI continuously updates through property binding. Context objects can be shared by various actions.
+
+### Automatic action discovery
+While in may places explicit instantiation of actions is desirable, sometimes we may want to offer all available actions for a certain type. For this it should be possible to i.e. query for all actions that apply to a mail. That way it is possible to centrally add a new action that automatically becomes available everywhere. Note that this only works for actions that don't require an additional UI, since the components would have to embedd that somewhere.
+
+### Implementation
+
+Actions could be simply objects that provide the API, and that QML can instantiate directly with it's id. The C++ implementation of the action can then lookup the action implementation using the id and call it with it's context when executed.
+
+## Component interaction
+
+The application is made up of various nested components that sometimes need to interact with each other.
+
+If we look at the example of the org.kube.mail component:
+1. The folderlist-component current-folder property is connected to maillist parentFolder property to display the mails of the currently selected folder.
+2. The "add-note" action might either switch the application state to the org.kube.note application, or it might just display a quick-note widget directly inline.
+
+The first usecase can be achieved by the parent component doing a property binding to connect the different components together as desired.
+
+The second usecase requires actions to interact with 'a' parent component, but without knowing with which one. Actions can thus post requests for application state changes, that bubble up through the components and can be catched by any of the parent components.
+
+This makes it possible for i.e. a maillist to display a note-widget directly inline, or handing the request up to the parent component which could show a full note editor.
+And if nothing handles the request it bubbles up to the root component (the shell), which can then switch to the note application component.
+
+### Application state changes requests
+
+A request always requires a context that tells the handler what to do. This could be the note to edit, or the date-range to display in the calendar, or the recepient for the mail composer.
