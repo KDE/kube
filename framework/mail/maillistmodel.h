@@ -24,7 +24,8 @@ public:
         Unread,
         Important,
         Id,
-        MimeMessage
+        MimeMessage,
+        DomainObject
     };
 
     QHash<int, QByteArray> roleNames() const;
