@@ -19,8 +19,11 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
+import org.kde.kube.mail 1.0 as Mail
+
 Item {
     id: root
+    property variant mail;
 
     Rectangle {
         id: background
@@ -33,7 +36,9 @@ Item {
     Repeater {
         anchors.fill: parent
 
-        model: singleMail.model
+        model: Mail.MailListModel {
+            mail: root.mail
+        }
 
         delegate: Item {
             height: root.height

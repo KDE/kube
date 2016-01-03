@@ -22,10 +22,11 @@ import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-import org.kde.akonadi2.mail 1.0 as Mail
+import org.kde.kube.mail 1.0 as Mail
 
 Item {
     id: root
+    property variant currentFolder
 
     Item {
         id: searchBox
@@ -58,7 +59,7 @@ Item {
 
             clip: true
 
-            model: folderList.model //FolderModel {}
+            model: Mail.FolderListModel {}
 
             delegate: PlasmaComponents.ListItem {
 
@@ -69,8 +70,8 @@ Item {
                 checked: listView.currentIndex == index
 
                 onClicked: {
-                    mailList.loadMailFolder(model.id)
                     listView.currentIndex = model.index
+                    root.currentFolder = model.domainObject
                 }
 
                 PlasmaCore.IconItem {

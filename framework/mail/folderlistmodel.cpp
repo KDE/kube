@@ -25,6 +25,7 @@ QHash< int, QByteArray > FolderListModel::roleNames() const
     roles[Name] = "name";
     roles[Icon] = "icon";
     roles[Id] = "id";
+    roles[DomainObject] = "domainObject";
 
     return roles;
 }
@@ -39,6 +40,8 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
             return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
         case Id:
             return srcIdx.data(Akonadi2::Store::DomainObjectBaseRole).value<Akonadi2::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+        case DomainObject:
+            return srcIdx.data(Akonadi2::Store::DomainObjectRole);
     }
     return QIdentityProxyModel::data(idx, role);
 }

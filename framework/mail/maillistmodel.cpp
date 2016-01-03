@@ -25,6 +25,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Important] = "important";
     roles[Id] = "id";
     roles[MimeMessage] = "mimeMessage";
+    roles[DomainObject] = "domainObject";
 
     return roles;
 }
@@ -69,4 +70,51 @@ void MailListModel::runQuery(const Akonadi2::Query &query)
     m_model = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Mail>(query);
     setSourceModel(m_model.data());
 }
+
+void MailListModel::setParentFolder(const QVariant &parentFolder)
+{
+    auto folder = parentFolder.value<Akonadi2::ApplicationDomain::Folder::Ptr>();
+    if (!folder) {
+        qWarning() << "No folder: " << parentFolder;
+        return;
+    }
+    Akonadi2::Query query;
+    query.syncOnDemand = false;
+    query.processAll = false;
+    query.liveQuery = true;
+    query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "folder";
+    query.propertyFilter.insert("folder", folder->identifier());
+    query.resources << folder->resourceInstanceIdentifier();
+    qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
+    runQuery(query);
+}
+
+QVariant MailListModel::parentFolder() const
+{
+    return QVariant();
+}
+
+void MailListModel::setMail(const QVariant &variant)
+{
+    auto mail = variant.value<Akonadi2::ApplicationDomain::Mail::Ptr>();
+    if (!mail) {
+        qWarning() << "No mail: " << mail;
+        return;
+    }
+    Akonadi2::Query query;
+    query.syncOnDemand = false;
+    query.processAll = false;
+    query.liveQuery = false;
+    query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "mimeMessage";
+    query.ids << mail->identifier();
+    query.resources << mail->resourceInstanceIdentifier();
+    qWarning() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
+    runQuery(query);
+}
+
+QVariant MailListModel::mail() const
+{
+    return QVariant();
+}
+
 

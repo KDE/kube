@@ -21,12 +21,19 @@ import QtQuick.Layouts 1.1
 
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
+import org.kde.kube.mail 1.0 as Mail
+
 ScrollView {
     id: root
+    property variant parentFolder
+    property variant currentMail
+
     ListView {
         id: listView
 
-        model: mailList.model //MailListModel {}
+        model: Mail.MailListModel {
+            parentFolder: root.parentFolder
+        }
 
         delegate: PlasmaComponents.ListItem {
 
@@ -41,7 +48,7 @@ ScrollView {
 
                 onClicked:  {
                     listView.currentIndex = model.index
-                    singleMail.loadMail(model.id)
+                    root.currentMail = model.domainObject
                 }
             }
 

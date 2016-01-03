@@ -9,6 +9,8 @@
 class MailListModel : public QIdentityProxyModel
 {
     Q_OBJECT
+    Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
+    Q_PROPERTY (QVariant mail READ mail WRITE setMail)
 
 public:
     MailListModel(QObject *parent = Q_NULLPTR);
@@ -31,6 +33,12 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     void runQuery(const Akonadi2::Query &query);
+
+    void setParentFolder(const QVariant &parentFolder);
+    QVariant parentFolder() const;
+
+    void setMail(const QVariant &mail);
+    QVariant mail() const;
 private:
     QSharedPointer<QAbstractItemModel> m_model;
 };
