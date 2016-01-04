@@ -20,6 +20,8 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
+import org.kde.kube.actions 1.0 as Action
+
 ApplicationWindow {
     id: app
 
@@ -29,6 +31,29 @@ ApplicationWindow {
     width: 1920  * 0.7
 
     visible: true
+
+    Action.ActionHandler {
+        actionId: "org.kde.kube.actions.mark-as-read"
+        function isReady(context) {
+            return context.mail ? true : false;
+        }
+
+        function handler(context) {
+            console.warn("Got message:", context.mail)
+        }
+    }
+
+    Action.Context {
+        id: "maillistcontext"
+        property variant mail
+        mail: mailListView.currentMail
+    }
+
+    Action.Action {
+        id: "markAsReadAction"
+        actionId: "org.kde.kube.actions.mark-as-read"
+        context: maillistcontext
+    }
 
     //UI
     toolBar: ToolBar {
@@ -51,9 +76,10 @@ ApplicationWindow {
 
                 iconName: "mail-mark-unread"
                 text: "Mark Unread"
+                enabled: markAsReadAction.ready
 
                 onClicked: {
-                    mailList.markMailUnread(true)
+                    markAsReadAction.execute()
                 }
             }
 
@@ -109,6 +135,7 @@ ApplicationWindow {
 
             Layout.fillWidth: true
         }
+
     }
 
     //TODO find a better way to scale UI

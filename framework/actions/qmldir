@@ -1,0 +1,3 @@
+module org.kde.kube.actions
+
+plugin actionplugin

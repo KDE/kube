@@ -27,5 +27,6 @@ enable_testing()
 set(AKONADI2_RESOURCE_PLUGINS_PATH ${QT_PLUGIN_INSTALL_DIR}/akonadi2/resources)
 
 add_subdirectory(mail)
+add_subdirectory(actions)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
