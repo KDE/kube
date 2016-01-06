@@ -32,16 +32,16 @@ ApplicationWindow {
 
     visible: true
 
-    Action.ActionHandler {
-        actionId: "org.kde.kube.actions.mark-as-read"
-        function isReady(context) {
-            return context.mail ? true : false;
-        }
-
-        function handler(context) {
-            console.warn("Got message:", context.mail)
-        }
-    }
+    // Action.ActionHandler {
+    //     actionId: "org.kde.kube.actions.mark-as-read"
+    //     function isReady(context) {
+    //         return context.mail ? true : false;
+    //     }
+    //
+    //     function handler(context) {
+    //         console.warn("Got message:", context.mail)
+    //     }
+    // }
 
     Action.Context {
         id: "maillistcontext"
@@ -55,6 +55,12 @@ ApplicationWindow {
         context: maillistcontext
     }
 
+    Action.Action {
+        id: "deleteAction"
+        actionId: "org.kde.kube.actions.delete"
+        context: maillistcontext
+    }
+
     //UI
     toolBar: ToolBar {
 
@@ -62,48 +68,38 @@ ApplicationWindow {
             anchors.fill: parent
 
             PlasmaComponents.ToolButton {
-
                 height: parent.height
-
                 iconName: "mail-message-new"
-
                 text: "Compose"
+                enabled: false
             }
 
             PlasmaComponents.ToolButton {
-
                 height: parent.height
-
                 iconName: "mail-mark-unread"
-                text: "Mark Unread"
+                text: "Mark As Read"
                 enabled: markAsReadAction.ready
-
                 onClicked: {
                     markAsReadAction.execute()
                 }
             }
 
             PlasmaComponents.ToolButton {
-
                 height: parent.height
-
                 iconName: "mail-mark-important"
                 text: "Mark Important"
-
+                enabled: false
                 onClicked: {
-                    mailList.markMailImportant(true)
                 }
             }
 
             PlasmaComponents.ToolButton {
-
                 height: parent.height
-
                 iconName: "edit-delete"
                 text: "Delete Mail"
-
+                enabled: deleteAction.ready
                 onClicked: {
-                    mailList.deleteMail()
+                    deleteAction.execute()
                 }
             }
         }
@@ -114,7 +110,6 @@ ApplicationWindow {
 
         FolderListView {
             id: folderListView
-
             width: unit.size * 55
             Layout.maximumWidth: unit.size * 150
             Layout.minimumWidth: unit.size * 30
@@ -123,7 +118,6 @@ ApplicationWindow {
         MailListView  {
             id: mailListView
             parentFolder: folderListView.currentFolder
-
             width: unit.size * 80
             Layout.maximumWidth: unit.size * 250
             Layout.minimumWidth: unit.size * 50
@@ -132,7 +126,6 @@ ApplicationWindow {
         SingleMailView {
             id: mailView
             mail: mailListView.currentMail
-
             Layout.fillWidth: true
         }
 
@@ -141,7 +134,6 @@ ApplicationWindow {
     //TODO find a better way to scale UI
     Item {
         id: unit
-
         property int size: 5
     }
 

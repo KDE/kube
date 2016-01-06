@@ -18,6 +18,7 @@ find_package(Qt5 COMPONENTS REQUIRED Core Qml)
 
 set(CMAKE_AUTOMOC ON)
 add_definitions("-Wall -std=c++0x -g")
+include_directories(.)
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/common)
 include_directories(SYSTEM /work/install/include/)
 include_directories(SYSTEM /work/install/include/KF5/)
