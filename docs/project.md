@@ -1,14 +1,14 @@
 # Why?
 This project started with the aim to produce a product that doesn't cater to all usecases, but does what it does well.
 We want a codebase that is well maintainable by a small team, and that can move fast.
-We want a codebase where it is fast and easy to prototype new features and turn them eventually into full implementations, without compromising the quality of the rest of the system. Additionaly the product should be portable accross a variety of platforms, including mobile, not only due to a portable codebase, but also due to different interfaces for the various formfactors.
+We want a codebase where it is fast and easy to prototype new features and turn them eventually into full implementations, without compromising the quality of the rest of the system. Additionaly the product should be portable accross a variety of platforms, including mobile, not only due to a portable codebase, but also due to different UI's for the various formfactors.
 
 Because no existing codebase fullfills those premises or easily allows to reach them, this project started.
 
 
 ## Differentiators
 In order to avoid simply replicating what's already existing it's important to know how this product differentiates to other existing solutions.
-This section is supposed to outline that
+This section is supposed to outline that.
 
 * To Roundcube Next
     * Native application
@@ -53,7 +53,7 @@ Team Members: Michael Bohlender, Sandro Knauss, Aaron Seigo
 
 It's the team leads responsibility to:
 
-* Organize regular online meetings (medium yet unknown)
+* Organize regular online meetings (so far on google hangouts)
 * Give direction to the product and ensure it's followed
 * Direct development and oversee decisions
 * Ensure documentation of decisions
@@ -66,10 +66,17 @@ Should the team not be able to reach consensus, the team lead makes the final de
 NOTE: We should probably have a phabricator board for open decisions.
 
 ## Planning
-All planning happens on the KDE Phabricator instance: https://phabricator.kde.org/project/view/43/
+All planning happens on the [KDE Phabricator instance](https://phabricator.kde.org/project/view/43/).
 
 ## Releases / Milestones
 Releases will follow achieved milestones. Milestones are assembled from tasks on the roadmap.
 
 ## Versioning
 The product will follow the semantic versioning scheme (semver.org), with each feature release corresponding to a milestone on phabricator.
+
+## Git repository
+The git repository can be found here: [git://anongit.kde.org/kontact-quick](git://anongit.kde.org/kontact-quick)
+
+The "development" branch is used for the latest development version, master is always stable and always releasable. Branches for specific versions that receive patch releases may be created as required.
+
+For new developments use feature branches prefixed with "feature/" or simply use the "git flow" tool.
