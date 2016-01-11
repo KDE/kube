@@ -1,1 +1,7 @@
-site_name: Kontact Quick
+site_name: Kube
+pages:
+- Index: index.md
+- Project: project.md
+- Design: design.md
+- Requirements: requirements.md
+theme: readthedocs
