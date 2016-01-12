@@ -16,6 +16,9 @@ include(KDEInstallDirs)
 
 find_package(Qt5 COMPONENTS REQUIRED Core Qml)
 
+find_package(Akonadi2Common CONFIG REQUIRED)
+find_package(KF5Async)
+
 set(CMAKE_AUTOMOC ON)
 add_definitions("-Wall -std=c++0x -g")
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/common)
