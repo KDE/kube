@@ -1,6 +1,12 @@
 #include "maillistmodel.h"
 
+#include "filehtmlwriter.h"
+#include "objecttreesource.h"
+
 #include <QFile>
+#include <QImage>
+#include <KF5/MessageViewer/ObjectTreeParser>
+#include <KF5/MessageViewer/CSSHelper>
 
 MailListModel::MailListModel(QObject *parent)
     : QIdentityProxyModel()
@@ -25,6 +31,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Important] = "important";
     roles[Id] = "id";
     roles[MimeMessage] = "mimeMessage";
+    roles[RenderedMessage] = "renderedMessage";
     roles[DomainObject] = "domainObject";
 
     return roles;
@@ -56,6 +63,45 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             if (file.open(QFile::ReadOnly)) {
                 auto content = file.readAll();
                 return content;
+            } else {
+                qWarning() << "Failed to open the file";
+            }
+            return "Failed to read mail.";
+        }
+        case RenderedMessage: {
+            auto filename = srcIdx.sibling(srcIdx.row(), 6).data(Qt::DisplayRole).toString();
+            QFile file(filename);
+            if (file.open(QFile::ReadOnly)) {
+                const auto mailData = KMime::CRLFtoLF(file.readAll());
+                KMime::Message::Ptr msg(new KMime::Message);
+                msg->setContent(mailData);
+                msg->parse();
+
+                // render the mail
+                const QString fname("/tmp/test.html");
+                FileHtmlWriter htmlWriter(fname);
+                QImage paintDevice;
+                MessageViewer::CSSHelper cssHelper(&paintDevice);
+                MessageViewer::NodeHelper nodeHelper;
+                ObjectTreeSource source(&htmlWriter, &cssHelper);
+                MessageViewer::ObjectTreeParser otp(&source, &nodeHelper);
+
+                htmlWriter.begin(QString());
+                htmlWriter.queue(cssHelper.htmlHead(false));
+
+                otp.parseObjectTree(msg.data());
+
+                htmlWriter.queue(QStringLiteral("</body></html>"));
+                htmlWriter.flush();
+                htmlWriter.end();
+
+                QFile file(fname);
+                if (file.open(QFile::ReadOnly)) {
+                    const auto content = file.readAll();
+                    return content;
+                } else {
+                    qWarning() << "Failed to open the file";
+                }
             } else {
                 qWarning() << "Failed to open the file";
             }
