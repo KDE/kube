@@ -1,14 +1,12 @@
 /*  -*- c++ -*-
-    filehtmlwriter.h
 
-    This file is part of KMail, the KDE mail client.
-    Copyright (c) 2003 Marc Mutz <mutz@kde.org>
+    Copyright (c) 2016 Sandro Knauß <sknauss@kde.org>
 
-    KMail is free software; you can redistribute it and/or modify it
+    Kube is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
 
-    KMail is distributed in the hope that it will be useful, but
+    Kube is distributed in the hope that it will be useful, but
     WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
@@ -29,8 +27,8 @@
     your version.
 */
 
-#ifndef __MESSAGEVIEWER_FILEHTMLWRITER_H__
-#define __MESSAGEVIEWER_FILEHTMLWRITER_H__
+#ifndef __KUBE_FRAMEWORK_MAIL_STRINGHTMLWRITER_H__
+#define __KUBE_FRAMEWORK_MAIL_STRINGHTMLWRITER_H__
 
 #include <MessageViewer/HtmlWriter>
 
@@ -39,11 +37,11 @@
 
 class QString;
 
-class FileHtmlWriter : public MessageViewer::HtmlWriter
+class StringHtmlWriter : public MessageViewer::HtmlWriter
 {
 public:
-    explicit FileHtmlWriter(const QString &filename);
-    virtual ~FileHtmlWriter();
+    explicit StringHtmlWriter();
+    virtual ~StringHtmlWriter();
 
     void begin(const QString &cssDefs) Q_DECL_OVERRIDE;
     void end() Q_DECL_OVERRIDE;
@@ -53,12 +51,18 @@ public:
     void flush() Q_DECL_OVERRIDE;
     void embedPart(const QByteArray &contentId, const QString &url) Q_DECL_OVERRIDE;
     void extraHead(const QString &str) Q_DECL_OVERRIDE;
-private:
-    void openOrWarn();
 
+    QString html() const;
 private:
-    QFile mFile;
-    QTextStream mStream;
+    void insertExtraHead();
+
+    QString mHtml;
+    QString mExtraHead;
+    enum State {
+        Begun,
+        Queued,
+        Ended
+    } mState;
 };
 
 #endif // __MESSAGEVIEWER_FILEHTMLWRITER_H__

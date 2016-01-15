@@ -1,6 +1,6 @@
 #include "maillistmodel.h"
 
-#include "filehtmlwriter.h"
+#include "stringhtmlwriter.h"
 #include "objecttreesource.h"
 
 #include <QFile>
@@ -78,8 +78,7 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
                 msg->parse();
 
                 // render the mail
-                const QString fname("/tmp/test.html");
-                FileHtmlWriter htmlWriter(fname);
+                StringHtmlWriter htmlWriter;
                 QImage paintDevice;
                 MessageViewer::CSSHelper cssHelper(&paintDevice);
                 MessageViewer::NodeHelper nodeHelper;
@@ -92,16 +91,9 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
                 otp.parseObjectTree(msg.data());
 
                 htmlWriter.queue(QStringLiteral("</body></html>"));
-                htmlWriter.flush();
                 htmlWriter.end();
 
-                QFile file(fname);
-                if (file.open(QFile::ReadOnly)) {
-                    const auto content = file.readAll();
-                    return content;
-                } else {
-                    qWarning() << "Failed to open the file";
-                }
+                return htmlWriter.html();
             } else {
                 qWarning() << "Failed to open the file";
             }
