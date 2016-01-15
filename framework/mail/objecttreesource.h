@@ -29,7 +29,7 @@ class ObjectTreeSource : public MessageViewer::ObjectTreeSourceIf
 {
 public:
     ObjectTreeSource(MessageViewer::HtmlWriter *writer,
-                     MessageViewer::CSSHelper *cssHelper);
+                     MessageViewer::CSSHelperBase *cssHelper);
     virtual ~ObjectTreeSource();
     void setHtmlLoadExternal(bool loadExternal);
     void setHtmlMail(bool htmlMail);
@@ -44,9 +44,11 @@ public:
     QString createMessageHeader(KMime::Message *message) Q_DECL_OVERRIDE;
     const MessageViewer::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
     MessageViewer::HtmlWriter *htmlWriter() Q_DECL_OVERRIDE;
-    MessageViewer::CSSHelper *cssHelper() Q_DECL_OVERRIDE;
+    MessageViewer::CSSHelperBase *cssHelper() Q_DECL_OVERRIDE;
     QObject *sourceObject() Q_DECL_OVERRIDE;
-
+    bool autoImportKeys() Q_DECL_OVERRIDE;
+    bool showEmoticons() Q_DECL_OVERRIDE;
+    bool showExpandQuotesMark() Q_DECL_OVERRIDE;
 private:
     ObjectSourcePrivate *const d;
 };

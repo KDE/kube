@@ -34,14 +34,14 @@ public:
 
     }
     MessageViewer::HtmlWriter *mWriter;
-    MessageViewer::CSSHelper *mCSSHelper;
+    MessageViewer::CSSHelperBase *mCSSHelper;
     bool mAllowDecryption;
     bool mHtmlLoadExternal;
     bool mHtmlMail;
 };
 
 ObjectTreeSource::ObjectTreeSource(MessageViewer::HtmlWriter *writer,
-                                   MessageViewer::CSSHelper *cssHelper)
+                                   MessageViewer::CSSHelperBase *cssHelper)
         : MessageViewer::ObjectTreeSourceIf()
         , d(new ObjectSourcePrivate)
     {
@@ -63,7 +63,7 @@ MessageViewer::HtmlWriter *ObjectTreeSource::htmlWriter()
 {
     return d->mWriter;
 }
-MessageViewer::CSSHelper *ObjectTreeSource::cssHelper()
+MessageViewer::CSSHelperBase *ObjectTreeSource::cssHelper()
 {
     return d->mCSSHelper;
 }
@@ -126,4 +126,19 @@ QObject *ObjectTreeSource::sourceObject()
 void ObjectTreeSource::setHtmlMode(MessageViewer::Util::HtmlMode mode)
 {
       Q_UNUSED(mode);
+}
+
+bool ObjectTreeSource::autoImportKeys()
+{
+    return false;
+}
+
+bool ObjectTreeSource::showEmoticons()
+{
+    return false;
+}
+
+bool ObjectTreeSource::showExpandQuotesMark()
+{
+    return false;
 }
