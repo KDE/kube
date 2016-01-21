@@ -16,12 +16,22 @@ include(KDEInstallDirs)
 
 find_package(Qt5 COMPONENTS REQUIRED Core Qml)
 
+find_package(KF5Otp "5.1.42" CONFIG REQUIRED)
+find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
+find_package(Akonadi2Common CONFIG REQUIRED)
+find_package(KF5Async)
+find_package(KF5Libkleo)
+
 set(CMAKE_AUTOMOC ON)
 add_definitions("-Wall -std=c++0x -g")
 include_directories(.)
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/common)
 include_directories(SYSTEM /work/install/include/)
 include_directories(SYSTEM /work/install/include/KF5/)
+include_directories(SYSTEM /work/install/include/KF5/KIconThemes)
+include_directories(SYSTEM /work/install/include/KF5/KMime)
+include_directories(SYSTEM /work/install/include/KF5/KService)
+include_directories(SYSTEM /work/install/include/KF5/KCoreAddons)
 
 enable_testing()
 

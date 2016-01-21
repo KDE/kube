@@ -60,8 +60,11 @@ Item {
                     text: model.subject
                 }
 
-                Label {
+                /*Label {
                     text: model.mimeMessage
+                }*/
+                Label {
+                    text: model.renderedMessage
                 }
             }
         }
