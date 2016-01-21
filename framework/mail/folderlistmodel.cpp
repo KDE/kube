@@ -19,17 +19,17 @@
 */
 
 #include "folderlistmodel.h"
-#include <akonadi2common/clientapi.h>
-#include <akonadi2common/applicationdomaintype.h>
+#include <sinkcommon/clientapi.h>
+#include <sinkcommon/applicationdomaintype.h>
 
 FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
 {
-    Akonadi2::Query query;
+    Sink::Query query;
     query.syncOnDemand = false;
     query.processAll = false;
     query.liveQuery = true;
     query.requestedProperties << "name" << "icon";
-    mModel = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Folder>(query);
+    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::Folder>(query);
     setSourceModel(mModel.data());
 }
 
@@ -59,9 +59,9 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
         case Icon:
             return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
         case Id:
-            return srcIdx.data(Akonadi2::Store::DomainObjectBaseRole).value<Akonadi2::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
         case DomainObject:
-            return srcIdx.data(Akonadi2::Store::DomainObjectRole);
+            return srcIdx.data(Sink::Store::DomainObjectRole);
     }
     return QIdentityProxyModel::data(idx, role);
 }

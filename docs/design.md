@@ -17,7 +17,7 @@ The overall architecture is split into three layers; Ui, Domain Logic and Infras
 |                            |
 +--------------+------+------+
 |              |      |      |
-| Akonadi Next |Config| ...  |
+|    Sink      |Config| ...  |
 |              |      |      |
 +--------------+------+------+
 ```
@@ -28,7 +28,7 @@ The domain logic layer holds the application state. It povides models to access 
 
 The infrastructure layer provides:
 
-* Data access (Akonadi Next)
+* Data access (Sink)
 * Configuration (Config files, etc.)
 * Various functionality provided by libraries (email sending, ldap, iTip handling, iCal implementation (kcalcore), vCard implementation, ...)
 Various bits of the infrastructure layer may be exchanged on different platforms, to i.e. integrate into native infrastructure providers on a platform.
@@ -64,7 +64,7 @@ If nothing handles the action, the root component (the shell)can switch to the n
 ## Third party users of components
 Since components are self contained and made available throuh the KPackage sytem, external applications can load fully functional Kube components.
 
-For example, the KDE calendar plasmoid could load the Kube Event Viewer component when available, and thus provide Kube's full functionality of that component, including all actions etc, without having to reimplement the Domain Logic (as is the case if only data access is provided through akonadi).
+For example, the KDE calendar plasmoid could load the Kube Event Viewer component when available, and thus provide Kube's full functionality of that component, including all actions etc, without having to reimplement the Domain Logic (as is the case if only data access is provided through Sink).
 
 ## Domain Logic
 
@@ -123,10 +123,10 @@ Notifications can be displayed in various places of the application.
 The infrastructure layer interfaces with the rest of the system. It is the place where we can integrate with various native infrastructure parts.
 The interface of the infrastructure layer, that is used by the domain logic, may not expose any implementation details of any infrastructure part, to ensure that all infrastructure parts are exchangable.
 
-### Akonadi Next
-Akonadi Next is used for primary data access and handles all synchronization.
+### Sink
+Sink is used for primary data access and handles all synchronization.
 
-Interactions with Akonadi Next involve:
+Interactions with Sink involve:
 
 * Adding/removing/configuring resources
 * Triggering synchronization
@@ -223,7 +223,7 @@ KubeComponents.MailView {
         * Move/Copy/Delete folder
         * Synchronize folder
     * Folder List Model
-        * Mixes akonadi next queries and subqueries (folder list with smart folders)
+        * Mixes Sink queries and subqueries (folder list with smart folders)
         * name
         * statistics
 

@@ -16,11 +16,11 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "akonadiactions.h"
+#include "sinkactions.h"
 
 #include <actions/context.h>
 
-#include <akonadi2common/clientapi.h>
+#include <sinkcommon/clientapi.h>
 
 using namespace Kube;
 
@@ -47,14 +47,14 @@ static ActionHandlerHelper markAsReadHandler("org.kde.kube.actions.mark-as-read"
         return context->property("mail").isValid();
     },
     [](Context *context) {
-        auto mail = context->property("mail").value<Akonadi2::ApplicationDomain::Mail::Ptr>();
+        auto mail = context->property("mail").value<Sink::ApplicationDomain::Mail::Ptr>();
         if (!mail) {
             qWarning() << "Failed to get the mail mail: " << context->property("mail");
             return;
         }
         mail->setProperty("unread", false);
         qDebug() << "Mark as read " << mail->identifier();
-        Akonadi2::Store::modify(*mail).exec();
+        Sink::Store::modify(*mail).exec();
     }
 );
 
@@ -63,13 +63,13 @@ static ActionHandlerHelper deleteHandler("org.kde.kube.actions.delete",
         return context->property("mail").isValid();
     },
     [](Context *context) {
-        auto mail = context->property("mail").value<Akonadi2::ApplicationDomain::Mail::Ptr>();
+        auto mail = context->property("mail").value<Sink::ApplicationDomain::Mail::Ptr>();
         if (!mail) {
             qWarning() << "Failed to get the mail mail: " << context->property("mail");
             return;
         }
         mail->setProperty("unread", false);
         qDebug() << "Remove " << mail->identifier();
-        Akonadi2::Store::remove(*mail).exec();
+        Sink::Store::remove(*mail).exec();
     }
 );

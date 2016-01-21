@@ -3,7 +3,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0
 
-import org.kde.akonadi2.settings 1.0 as Settings
+import org.kde.sink.settings 1.0 as Settings
 
 Item {
     id: root

@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <akonadi2common/clientapi.h>
+#include <sinkcommon/clientapi.h>
 
 #include <QIdentityProxyModel>
 #include <QSharedPointer>
@@ -53,7 +53,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const;
 
-    void runQuery(const Akonadi2::Query &query);
+    void runQuery(const Sink::Query &query);
 
     void setParentFolder(const QVariant &parentFolder);
     QVariant parentFolder() const;

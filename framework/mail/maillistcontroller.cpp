@@ -22,7 +22,7 @@
 
 #include <QStringList>
 
-#include <akonadi2common/clientapi.h>
+#include <sinkcommon/clientapi.h>
 
 #include "maillistmodel.h"
 
@@ -38,7 +38,7 @@ MailListModel *MailListController::model() const
 
 void MailListController::loadAllMail()
 {
-        Akonadi2::Query query;
+        Sink::Query query;
         query.syncOnDemand = false;
         query.processAll = false;
         query.liveQuery = true;
@@ -48,7 +48,7 @@ void MailListController::loadAllMail()
 
 void MailListController::loadMailFolder(const QString &folderId)
 {
-        Akonadi2::Query query;
+        Sink::Query query;
         query.syncOnDemand = false;
         query.processAll = false;
         query.liveQuery = true;
@@ -59,7 +59,7 @@ void MailListController::loadMailFolder(const QString &folderId)
 
 void MailListController::loadUnreadMail()
 {
-        Akonadi2::Query query;
+        Sink::Query query;
         query.syncOnDemand = false;
         query.processAll = false;
         query.liveQuery = true;
@@ -70,7 +70,7 @@ void MailListController::loadUnreadMail()
 
 void MailListController::loadImportantMail()
 {
-        Akonadi2::Query query;
+        Sink::Query query;
         query.syncOnDemand = false;
         query.processAll = false;
         query.liveQuery = true;

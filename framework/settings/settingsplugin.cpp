@@ -8,7 +8,7 @@
 
 void SettingsPlugin::registerTypes (const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.akonadi2.settings"));
+    Q_ASSERT(uri == QLatin1String("org.kde.sink.settings"));
 
     qmlRegisterType<ResourceListModel>();
     qmlRegisterType<ResourcesController>(uri, 1, 0, "Resources");

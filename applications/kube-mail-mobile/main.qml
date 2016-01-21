@@ -34,7 +34,7 @@ ApplicationWindow {
 
         anchors.fill: parent
 
-        //TODO set akonadi folderId property
+        //TODO set sink folderId property
         initialItem: {"item": Qt.resolvedUrl("FolderListView.qml"),properties: {stack: stack}}
     }
 

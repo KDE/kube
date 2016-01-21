@@ -38,7 +38,7 @@ MailListModel* SingleMailController::model() const
 
 void SingleMailController::loadMail(const QString &id)
 {
-    Akonadi2::Query query;
+    Sink::Query query;
     query.syncOnDemand = false;
     query.processAll = false;
     query.liveQuery = false;

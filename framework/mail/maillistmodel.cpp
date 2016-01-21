@@ -74,9 +74,9 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
         case Important:
             return srcIdx.sibling(srcIdx.row(), 5).data(Qt::DisplayRole).toString();
         case Id:
-            return srcIdx.data(Akonadi2::Store::DomainObjectBaseRole).value<Akonadi2::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
         case DomainObject:
-            return srcIdx.data(Akonadi2::Store::DomainObjectRole);
+            return srcIdx.data(Sink::Store::DomainObjectRole);
         case MimeMessage: {
             auto filename = srcIdx.sibling(srcIdx.row(), 6).data(Qt::DisplayRole).toString();
             QFile file(filename);
@@ -123,20 +123,20 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
     return QIdentityProxyModel::data(idx, role);
 }
 
-void MailListModel::runQuery(const Akonadi2::Query &query)
+void MailListModel::runQuery(const Sink::Query &query)
 {
-    m_model = Akonadi2::Store::loadModel<Akonadi2::ApplicationDomain::Mail>(query);
+    m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
     setSourceModel(m_model.data());
 }
 
 void MailListModel::setParentFolder(const QVariant &parentFolder)
 {
-    auto folder = parentFolder.value<Akonadi2::ApplicationDomain::Folder::Ptr>();
+    auto folder = parentFolder.value<Sink::ApplicationDomain::Folder::Ptr>();
     if (!folder) {
         qWarning() << "No folder: " << parentFolder;
         return;
     }
-    Akonadi2::Query query;
+    Sink::Query query;
     query.syncOnDemand = false;
     query.processAll = false;
     query.liveQuery = true;
@@ -154,12 +154,12 @@ QVariant MailListModel::parentFolder() const
 
 void MailListModel::setMail(const QVariant &variant)
 {
-    auto mail = variant.value<Akonadi2::ApplicationDomain::Mail::Ptr>();
+    auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>();
     if (!mail) {
         qWarning() << "No mail: " << mail;
         return;
     }
-    Akonadi2::Query query;
+    Sink::Query query;
     query.syncOnDemand = false;
     query.processAll = false;
     query.liveQuery = false;

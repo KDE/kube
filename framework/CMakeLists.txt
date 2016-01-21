@@ -18,7 +18,7 @@ find_package(Qt5 COMPONENTS REQUIRED Core Qml)
 
 find_package(KF5Otp "5.1.42" CONFIG REQUIRED)
 find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
-find_package(Akonadi2Common CONFIG REQUIRED)
+find_package(SinkCommon CONFIG REQUIRED)
 find_package(KF5Async)
 find_package(KF5Libkleo)
 
@@ -35,7 +35,7 @@ include_directories(SYSTEM /work/install/include/KF5/KCoreAddons)
 
 enable_testing()
 
-set(AKONADI2_RESOURCE_PLUGINS_PATH ${QT_PLUGIN_INSTALL_DIR}/akonadi2/resources)
+set(SINK_RESOURCE_PLUGINS_PATH ${QT_PLUGIN_INSTALL_DIR}/sink/resources)
 
 add_subdirectory(mail)
 add_subdirectory(actions)

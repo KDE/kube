@@ -63,7 +63,7 @@ Currently available dependencies:
 ## Requirements
 * Each module has at least rudimentary tests that can then be extended
     * Tests need to be deterministic, no random timeouts to check if something already happened, only `QTRY_VERIFY` and alike is allowed.
-* Clear layering. No depending on akonadi from everywhere.
+* Clear layering. No depending on Sink from everywhere.
 * Each module comes with a clear set of justified dependencies.
 * Commented code is only allowed in conjunction with a task in phabricator. No dead/commented code.
 * Each module requires a clear interface that allows the module internals to be replaced eventually.
@@ -220,4 +220,4 @@ These are the high-level aims that we have to work towards. This list is not a f
     * Inventory of exiting kdepim: This will help to fill the functional blocks, and help in carving out the require featureset.
     * Functional blocks: We need to identify the function blocks that we require, see to what extent they are already existing and how we can reuse what's there already. The functinal blocks should largely follow from the identified requirements.
     * Prototype the domain logic: We need to prototype the domain logic as envisioned to see wether that works out. This will be an ongoing process especially while working towards the first milestone.
-    * Prototype with domain logic + akonadi next + trivial UI. Show that this can work in it's basics.
+    * Prototype with domain logic + Sink + trivial UI. Show that this can work in it's basics.

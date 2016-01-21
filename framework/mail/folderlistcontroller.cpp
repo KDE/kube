@@ -52,7 +52,7 @@ FolderListModel* FolderListController::model() const
 
 void FolderListController::loadFolders(const QString &id)
 {
-    //load foldermodel from akonadi
+    //load foldermodel from sink
 
 }
 
