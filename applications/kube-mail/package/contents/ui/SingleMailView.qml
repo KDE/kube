@@ -41,17 +41,19 @@ Item {
         }
 
         delegate: Item {
-            height: root.height
-            width: root.widht
+            anchors.fill: parent
 
             ColumnLayout {
+                anchors.fill: parent
 
                 Label {
                     text: model.id
                 }
+
                 Label {
                     text: model.sender
                 }
+
                 Label {
                     text: model.senderName
                 }
@@ -60,12 +62,12 @@ Item {
                     text: model.subject
                 }
 
-                /*Label {
-                    text: model.mimeMessage
-                }*/
-                Label {
-                    text: model.renderedMessage
+                MailViewer {
+                    html: model.renderedMessage
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
                 }
+
             }
         }
     }
