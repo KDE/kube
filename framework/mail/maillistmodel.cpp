@@ -22,11 +22,12 @@
 
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
+#include "csshelper.h"
 
 #include <QFile>
 #include <QImage>
-#include <KF5/MessageViewer/ObjectTreeParser>
-#include <KF5/MessageViewer/CSSHelperBase>
+#include <MessageViewer/ObjectTreeParser>
+
 
 MailListModel::MailListModel(QObject *parent)
     : QIdentityProxyModel()
@@ -100,7 +101,7 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
                 // render the mail
                 StringHtmlWriter htmlWriter;
                 QImage paintDevice;
-                MessageViewer::CSSHelperBase cssHelper(&paintDevice);
+                CSSHelper cssHelper(&paintDevice);
                 MessageViewer::NodeHelper nodeHelper;
                 ObjectTreeSource source(&htmlWriter, &cssHelper);
                 MessageViewer::ObjectTreeParser otp(&source, &nodeHelper);

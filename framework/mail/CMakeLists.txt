@@ -8,7 +8,9 @@ set(mailplugin_SRCS
     actions/sinkactions.cpp
     objecttreesource.cpp
     stringhtmlwriter.cpp
+    csshelper.cpp
 )
+add_definitions(-DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
 add_library(mailplugin SHARED ${mailplugin_SRCS})
 
