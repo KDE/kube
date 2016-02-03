@@ -158,12 +158,12 @@ tr.rfc822H {
 }
 
 table.encr {
-  background-color: #cc0000 ! important;
+  background-color: #0010cc ! important;
 }
 
 tr.encrH {
-  background-color: #ff0000 ! important;
-  color: #000000 ! important;
+  background-color: #1010ee ! important;
+  color: #aaaaaa ! important;
   font-family: "Helvetica" ! important;
   font-size: 12pt;
 }
