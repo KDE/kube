@@ -27,9 +27,9 @@ public:
     ObjectSourcePrivate()
         : mWriter(0)
         , mCSSHelper(0)
-        , mAllowDecryption(false)
-        , mHtmlLoadExternal(false)
-        , mHtmlMail(false)
+        , mAllowDecryption(true)
+        , mHtmlLoadExternal(true)
+        , mHtmlMail(true)
     {
 
     }
