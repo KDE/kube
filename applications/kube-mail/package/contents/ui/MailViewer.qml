@@ -28,6 +28,6 @@ Item {
 
     onHtmlChanged: {
         // console.warn("HTML is ", html);
-        webview.loadHtml(html);
+        webview.loadHtml(html, "file:///usr/share/icons/breeze/mimetypes/32/");
     }
 }
