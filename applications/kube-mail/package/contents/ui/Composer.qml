@@ -17,11 +17,23 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
 Item {
     id: root
+
+    function send() {
+
+    }
+
+    function saveAsDraft() {
+
+    }
+
+    function clear() {
+
+    }
 
     ColumnLayout {
 
@@ -30,6 +42,16 @@ Item {
         GridLayout {
 
             columns: 2
+
+            Label {
+                text: "From"
+            }
+
+            ComboBox {
+                model: ["Kuberich <kuberich@kolabnow.com>", "Uni <kuberich@university.edu>", "Spam <hello.spam@spam.to>"]
+
+                Layout.fillWidth: true
+            }
 
             Label {
                 text: "To"
@@ -76,12 +98,6 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-        }
-
-        RowLayout {
-            Button {
-                text: "Send"
-            }
         }
     }
 }

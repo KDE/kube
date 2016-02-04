@@ -71,7 +71,9 @@ ApplicationWindow {
                 height: parent.height
                 iconName: "mail-message-new"
                 text: "Compose"
-                enabled: false
+                onClicked: {
+                    composer.visible = true
+                }
             }
 
             PlasmaComponents.ToolButton {
@@ -129,6 +131,12 @@ ApplicationWindow {
             Layout.fillWidth: true
         }
 
+    }
+
+    FocusComposer {
+        id: composer
+
+        anchors.fill: parent
     }
 
     //TODO find a better way to scale UI
