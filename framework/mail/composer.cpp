@@ -22,7 +22,7 @@
 
 Composer::Composer(QObject *parent) : QObject(parent)
 {
-
+    m_identityModel << "Kuberich <kuberich@kolabnow.com>" << "Uni <kuberich@university.edu>" << "Spam <hello.spam@spam.to>";
 }
 
 QString Composer::to() const
@@ -90,6 +90,24 @@ void Composer::setBody(const QString &body)
     }
 }
 
+QStringList Composer::identityModel() const
+{
+    return m_identityModel;
+}
+
+int Composer::fromIndex() const
+{
+    return m_fromIndex;
+}
+
+void Composer::setFromIndex(int fromIndex)
+{
+    if(m_fromIndex != fromIndex) {
+        m_fromIndex = fromIndex;
+        emit fromIndexChanged();
+    }
+}
+
 void Composer::send()
 {
     //TODO
@@ -106,4 +124,8 @@ void Composer::clear()
 {
     setSubject("");
     setBody("");
+    setTo("");
+    setCc("");
+    setBcc("");
+    setFromIndex(-1);
 }

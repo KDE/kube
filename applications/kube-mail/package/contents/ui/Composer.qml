@@ -54,9 +54,15 @@ Item {
             }
 
             ComboBox {
-                model: ["Kuberich <kuberich@kolabnow.com>", "Uni <kuberich@university.edu>", "Spam <hello.spam@spam.to>"]
+                model: composer.identityModel
 
                 Layout.fillWidth: true
+
+                currentIndex: composer.fromIndex
+
+                onCurrentIndexChanged: {
+                    composer.fromIndex = currentIndex
+                }
             }
 
             Label {

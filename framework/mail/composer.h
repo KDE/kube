@@ -21,7 +21,7 @@
 
 #include <QObject>
 #include <QString>
-
+#include <QStringList>
 
 class Composer : public QObject
 {
@@ -31,6 +31,8 @@ class Composer : public QObject
     Q_PROPERTY (QString bcc READ bcc WRITE setBcc NOTIFY bccChanged)
     Q_PROPERTY (QString subject READ subject WRITE setSubject NOTIFY subjectChanged)
     Q_PROPERTY (QString body READ body WRITE setBody NOTIFY bodyChanged)
+    Q_PROPERTY (QStringList identityModel READ identityModel)
+    Q_PROPERTY (int fromIndex READ fromIndex WRITE setFromIndex NOTIFY fromIndexChanged)
 
 public:
     explicit Composer(QObject *parent = Q_NULLPTR);
@@ -50,12 +52,18 @@ public:
     QString body() const;
     void setBody(const QString &body);
 
+    QStringList identityModel() const;
+
+    int fromIndex() const;
+    void setFromIndex(int fromIndex);
+
 signals:
     void subjectChanged();
     void bodyChanged();
     void toChanged();
     void ccChanged();
     void bccChanged();
+    void fromIndexChanged();
 
 public slots:
     void send();
@@ -68,4 +76,6 @@ private:
     QString m_bcc;
     QString m_subject;
     QString m_body;
+    QStringList m_identityModel;
+    int m_fromIndex;
 };
