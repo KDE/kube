@@ -20,19 +20,25 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
+import org.kde.kube.mail 1.0 as Mail
+
 Item {
     id: root
 
     function send() {
-
+        composer.send()
     }
 
     function saveAsDraft() {
-
+        composer.saveAsDraft()
     }
 
     function clear() {
+        composer.clear();
+    }
 
+    Mail.Composer {
+        id: composer
     }
 
     ColumnLayout {
@@ -61,6 +67,12 @@ Item {
                 id: to
 
                 Layout.fillWidth: true
+
+                text: composer.to
+
+                onTextChanged: {
+                        composer.to = text;
+                }
             }
 
             Label {
@@ -71,6 +83,12 @@ Item {
                 id: cc
 
                 Layout.fillWidth: true
+
+                text: composer.cc
+
+                onTextChanged: {
+                        composer.cc = text;
+                }
             }
 
             Label {
@@ -81,6 +99,12 @@ Item {
                 id: bcc
 
                 Layout.fillWidth: true
+
+                text: composer.bcc
+
+                onTextChanged: {
+                        composer.bcc = text;
+                }
             }
         }
 
@@ -89,11 +113,23 @@ Item {
 
             Layout.fillWidth: true
 
-            placeholderText: "Subject"
+            placeholderText: "Enter Subject"
+
+            text: composer.subject
+
+            onTextChanged: {
+                composer.subject = text;
+            }
         }
 
         TextArea {
             id: content
+
+            text: composer.body
+
+            onTextChanged: {
+                composer.body = text;
+            }
 
             Layout.fillWidth: true
             Layout.fillHeight: true
