@@ -22,11 +22,11 @@
 
 #include <sinkcommon/clientapi.h>
 
-#include <QIdentityProxyModel>
+#include <QSortFilterProxyModel>
 #include <QSharedPointer>
 #include <QStringList>
 
-class MailListModel : public QIdentityProxyModel
+class MailListModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
@@ -36,7 +36,9 @@ public:
     MailListModel(QObject *parent = Q_NULLPTR);
     ~MailListModel();
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 
     enum Roles {
         Subject  = Qt::UserRole + 1,

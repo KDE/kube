@@ -30,9 +30,10 @@
 
 
 MailListModel::MailListModel(QObject *parent)
-    : QIdentityProxyModel()
+    : QSortFilterProxyModel()
 {
-
+    setDynamicSortFilter(true);
+    sort(0, Qt::DescendingOrder);
 }
 
 MailListModel::~MailListModel()
@@ -121,7 +122,14 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return "Failed to read mail.";
         }
     }
-    return QIdentityProxyModel::data(idx, role);
+    return QSortFilterProxyModel::data(idx, role);
+}
+
+bool MailListModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+    const QVariant leftData = left.sibling(left.row(), 3).data(Qt::DisplayRole);
+    const QVariant rightData = right.sibling(right.row(), 3).data(Qt::DisplayRole);
+    return leftData.toDateTime() < rightData.toDateTime();
 }
 
 void MailListModel::runQuery(const Sink::Query &query)
