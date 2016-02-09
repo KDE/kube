@@ -71,9 +71,9 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
         case Date:
             return srcIdx.sibling(srcIdx.row(), 3).data(Qt::DisplayRole).toString();
         case Unread:
-            return srcIdx.sibling(srcIdx.row(), 4).data(Qt::DisplayRole).toString();
+            return srcIdx.sibling(srcIdx.row(), 4).data(Qt::DisplayRole).toBool();
         case Important:
-            return srcIdx.sibling(srcIdx.row(), 5).data(Qt::DisplayRole).toString();
+            return srcIdx.sibling(srcIdx.row(), 5).data(Qt::DisplayRole).toBool();
         case Id:
             return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
         case DomainObject:

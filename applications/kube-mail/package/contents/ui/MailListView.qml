@@ -19,6 +19,8 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
+import QtQml 2.2
+
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kde.kube.mail 1.0 as Mail
@@ -57,10 +59,11 @@ ScrollView {
 
                 anchors.fill: parent
 
-                color: colorPalette.read
+                // color: colorPalette.read
+                color: "steelblue"
                 opacity: 0.1
 
-                visible: model.unread == false
+                visible: model.unread
             }
 
             Avatar {
@@ -92,21 +95,22 @@ ScrollView {
                 font.weight: Font.DemiBold
             }
 
-            Label {
-                id: sender
-
-                anchors {
-                    top: avatar.top
-                    left: senderName.right
-                    leftMargin: unit.size
-                    right: date.left
-                    rightMargin: unit.size
-                }
-
-                text: "(" + model.sender +")"
-
-                clip: true
-            }
+            //The name currently contains both name and address
+            // Label {
+            //     id: sender
+            //
+            //     anchors {
+            //         top: avatar.top
+            //         left: senderName.right
+            //         leftMargin: unit.size
+            //         right: date.left
+            //         rightMargin: unit.size
+            //     }
+            //
+            //     text: "(" + model.sender +")"
+            //
+            //     clip: true
+            // }
 
             Label {
                 id: date
@@ -117,7 +121,7 @@ ScrollView {
                     rightMargin: unit.size * 2
                 }
 
-                text: model.date
+                text: Qt.formatDateTime(model.date)
 
                 font.weight: Font.Light
             }
