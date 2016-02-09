@@ -73,3 +73,17 @@ static ActionHandlerHelper deleteHandler("org.kde.kube.actions.delete",
         Sink::Store::remove(*mail).exec();
     }
 );
+
+static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize",
+    [](Context *context) -> bool {
+        return context->property("folder").isValid();
+    },
+    [](Context *context) {
+        auto folder = context->property("folder").value<Sink::ApplicationDomain::Folder::Ptr>();
+        if (!folder) {
+            qWarning() << "Failed to get the folder: " << context->property("folder");
+            return;
+        }
+        Sink::Store::synchronize(Sink::Query::ResourceFilter(folder->resourceInstanceIdentifier())).exec();
+    }
+);
