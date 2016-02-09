@@ -11,7 +11,6 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
  *
-//import org.kde.kube.mail 1.0 as Mail
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -77,7 +76,7 @@ Item {
                 text: composer.to
 
                 onTextChanged: {
-                        composer.to = text;
+                    composer.to = text;
                 }
             }
 
