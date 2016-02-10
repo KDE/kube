@@ -20,7 +20,7 @@
 
 #include <actions/context.h>
 
-#include <sink/clientapi.h>
+#include <sink/store.h>
 
 using namespace Kube;
 

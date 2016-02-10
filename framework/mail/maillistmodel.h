@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <sink/clientapi.h>
+#include <sink/store.h>
 
 #include <QSortFilterProxyModel>
 #include <QSharedPointer>
