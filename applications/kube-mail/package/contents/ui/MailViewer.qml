@@ -28,6 +28,7 @@ Item {
 
     onHtmlChanged: {
         // console.warn("HTML is ", html);
-        webview.loadHtml(html, "file:///usr/share/icons/breeze/mimetypes/32/");
+        // The file:/// argument is necessary so local icons are found
+        webview.loadHtml(html, "file:///");
     }
 }
