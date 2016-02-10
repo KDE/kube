@@ -1,6 +1,6 @@
 #include "resourcelistmodel.h"
 
-#include <sinkcommon/clientapi.h>
+#include <sink/clientapi.h>
 
 ResourceListModel::ResourceListModel(QObject *parent) : QIdentityProxyModel()
 {

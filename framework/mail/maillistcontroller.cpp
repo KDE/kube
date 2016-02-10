@@ -22,7 +22,7 @@
 
 #include <QStringList>
 
-#include <sinkcommon/clientapi.h>
+#include <sink/clientapi.h>
 
 #include "maillistmodel.h"
 

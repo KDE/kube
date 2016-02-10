@@ -19,8 +19,8 @@
 */
 
 #include "folderlistmodel.h"
-#include <sinkcommon/clientapi.h>
-#include <sinkcommon/applicationdomaintype.h>
+#include <sink/clientapi.h>
+#include <sink/applicationdomaintype.h>
 
 FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
 {
