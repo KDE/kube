@@ -20,7 +20,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-import org.kde.kube.actions 1.0 as Action
+import org.kde.kube.actions 1.0 as KubeAction
 
 ApplicationWindow {
     id: app
@@ -43,19 +43,19 @@ ApplicationWindow {
     //     }
     // }
 
-    Action.Context {
+    KubeAction.Context {
         id: "maillistcontext"
         property variant mail
         mail: mailListView.currentMail
     }
 
-    Action.Action {
+    KubeAction.Action {
         id: "markAsReadAction"
         actionId: "org.kde.kube.actions.mark-as-read"
         context: maillistcontext
     }
 
-    Action.Action {
+    KubeAction.Action {
         id: "deleteAction"
         actionId: "org.kde.kube.actions.delete"
         context: maillistcontext
