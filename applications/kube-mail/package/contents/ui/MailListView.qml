@@ -16,7 +16,7 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
 import QtQml 2.2
@@ -37,20 +37,33 @@ ScrollView {
             parentFolder: root.parentFolder
         }
 
-        delegate: PlasmaComponents.ListItem {
+        Keys.onDownPressed: {
+            incrementCurrentIndex()
+        }
+        Keys.onUpPressed: {
+            decrementCurrentIndex()
+        }
+        focus: true
 
+        delegate: PlasmaComponents.ListItem {
             width: listView.width
             height: unit.size * 12
 
             enabled: true
             checked: listView.currentIndex == index
 
+            Binding {
+                target: root
+                property: "currentMail"
+                when: listView.currentIndex == index
+                value: model.domainObject
+            }
+
             MouseArea {
                 anchors.fill: parent
 
                 onClicked:  {
                     listView.currentIndex = model.index
-                    root.currentMail = model.domainObject
                 }
             }
 

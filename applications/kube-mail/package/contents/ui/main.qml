@@ -123,6 +123,7 @@ ApplicationWindow {
             width: unit.size * 80
             Layout.maximumWidth: unit.size * 250
             Layout.minimumWidth: unit.size * 50
+            focus: true
         }
 
         SingleMailView {
