@@ -146,8 +146,6 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
         return;
     }
     Sink::Query query;
-    query.syncOnDemand = false;
-    query.processAll = false;
     query.liveQuery = true;
     query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "folder";
     query.propertyFilter.insert("folder", folder->identifier());
@@ -169,8 +167,6 @@ void MailListModel::setMail(const QVariant &variant)
         return;
     }
     Sink::Query query;
-    query.syncOnDemand = false;
-    query.processAll = false;
     query.liveQuery = false;
     query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "mimeMessage";
     query.ids << mail->identifier();

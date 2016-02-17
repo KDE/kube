@@ -39,8 +39,6 @@ MailListModel* SingleMailController::model() const
 void SingleMailController::loadMail(const QString &id)
 {
     Sink::Query query;
-    query.syncOnDemand = false;
-    query.processAll = false;
     query.liveQuery = false;
     query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "mimeMessage";
     query.ids << id.toLatin1();

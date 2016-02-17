@@ -39,8 +39,6 @@ MailListModel *MailListController::model() const
 void MailListController::loadAllMail()
 {
         Sink::Query query;
-        query.syncOnDemand = false;
-        query.processAll = false;
         query.liveQuery = true;
         query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
         m_model->runQuery(query);
@@ -49,8 +47,6 @@ void MailListController::loadAllMail()
 void MailListController::loadMailFolder(const QString &folderId)
 {
         Sink::Query query;
-        query.syncOnDemand = false;
-        query.processAll = false;
         query.liveQuery = true;
         query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "folder";
         query.propertyFilter.insert("folder", folderId.toLatin1());
@@ -60,8 +56,6 @@ void MailListController::loadMailFolder(const QString &folderId)
 void MailListController::loadUnreadMail()
 {
         Sink::Query query;
-        query.syncOnDemand = false;
-        query.processAll = false;
         query.liveQuery = true;
         query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
         query.propertyFilter.insert("unread", true);
@@ -71,8 +65,6 @@ void MailListController::loadUnreadMail()
 void MailListController::loadImportantMail()
 {
         Sink::Query query;
-        query.syncOnDemand = false;
-        query.processAll = false;
         query.liveQuery = true;
         query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important";
         query.propertyFilter.insert("important", true);
