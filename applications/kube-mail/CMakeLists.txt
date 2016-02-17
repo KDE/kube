@@ -23,7 +23,7 @@ set (QT_MIN_VERSION "5.4.0")
 find_package(KF5 REQUIRED COMPONENTS Package)
 
 # install UI package
-kpackage_install_package(package org.kde.kube.mail pim)
+kpackage_install_package(package org.kde.kube.mail "genericqml")
 
 # install executable
 add_executable(${PROJECT_NAME} main.cpp)

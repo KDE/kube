@@ -2,13 +2,15 @@
 #include <QQmlApplicationEngine>
 
 #include <QStandardPaths>
+#include <KPackage/PackageLoader>
 
 #include <QDebug>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    auto mainFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kpackage/pim/org.kde.kube.mail/contents/ui/main.qml", QStandardPaths::LocateFile);
-    QQmlApplicationEngine engine(QUrl::fromLocalFile(mainFile));
+    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kde.kube.mail");
+    Q_ASSERT(package.isValid());
+    QQmlApplicationEngine engine(QUrl::fromLocalFile(package.filePath("mainscript")));
     return app.exec();
 }
