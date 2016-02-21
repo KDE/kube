@@ -41,6 +41,7 @@ public:
         Id,
         DomainObject
     };
+    Q_ENUMS(Roles)
 
     QHash<int, QByteArray> roleNames() const;
 

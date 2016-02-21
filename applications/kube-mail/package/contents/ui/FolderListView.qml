@@ -16,7 +16,8 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -27,6 +28,7 @@ import org.kde.kube.mail 1.0 as Mail
 Item {
     id: root
     property variant currentFolder
+    SystemPalette { id: colorPalette; colorGroup: SystemPalette.Active }
 
     Item {
         id: searchBox
@@ -43,59 +45,70 @@ Item {
         }
     }
 
-    ScrollView {
-
+    TreeView {
+        id: treeView
         anchors {
             top: searchBox.bottom
             left: parent.left
             right: parent.right
             bottom: parent.bottom
         }
-
-        ListView {
-            id: listView
-
-            currentIndex: -1
-
-            clip: true
-
-            model: Mail.FolderListModel {}
-
-            delegate: PlasmaComponents.ListItem {
-
-                width: root.width
+        TableViewColumn {
+            title: "Name"
+            role: "name"
+            width: treeView.width - 5
+        }
+        model: Mail.FolderListModel { id: folderListModel }
+        onCurrentIndexChanged: {
+            model.fetchMore(currentIndex)
+            root.currentFolder = model.data(currentIndex, Mail.FolderListModel.DomainObject)
+        }
+        backgroundVisible: false
+        headerVisible: false
+        style: TreeViewStyle {
+            activateItemOnSingleClick: true
+            rowDelegate: Rectangle {
                 height: unit.size * 10
-
-                enabled: true
-                checked: listView.currentIndex == index
-
-                onClicked: {
-                    listView.currentIndex = model.index
-                    root.currentFolder = model.domainObject
-                }
-
+                color: "transparent"
+            }
+            itemDelegate: Rectangle {
+                radius: 5
+                border.width: 1
+                border.color: "lightgrey"
+                color: styleData.selected ? colorPalette.highlight : colorPalette.button
                 PlasmaCore.IconItem {
                     id: iconItem
-
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
                         leftMargin: unit.size * 3
                     }
-
                     source: model.icon
                 }
-
                 Label {
-                    id: label
-
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: iconItem.right
                         leftMargin: unit.size * 3
                     }
-
-                    text: model.name
+                    renderType: Text.NativeRendering
+                    text: styleData.value
+                    font.pixelSize: 16
+                    font.bold: true
+                    color: styleData.selected ? colorPalette.highlightedText : colorPalette.text
+                }
+            }
+            branchDelegate: Item {
+                width: 16
+                height: 16
+                Text {
+                    visible: styleData.column === 0 && styleData.hasChildren
+                    text: styleData.isExpanded ? "\u25bc" : "\u25b6"
+                    color: !control.activeFocus || styleData.selected ? styleData.textColor : "#666"
+                    font.pointSize: 10
+                    renderType: Text.NativeRendering
+                    anchors.centerIn: parent
+                    anchors.verticalCenterOffset: styleData.isExpanded ? 2 : 0
                 }
             }
         }

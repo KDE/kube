@@ -25,7 +25,8 @@ FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
 {
     Sink::Query query;
     query.liveQuery = true;
-    query.requestedProperties << "name" << "icon";
+    query.requestedProperties << "name" << "icon" << "parent";
+    query.parentProperty = "parent";
     mModel = Sink::Store::loadModel<Sink::ApplicationDomain::Folder>(query);
     setSourceModel(mModel.data());
 }
