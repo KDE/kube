@@ -150,6 +150,8 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "folder";
     query.propertyFilter.insert("folder", folder->identifier());
     query.resources << folder->resourceInstanceIdentifier();
+    query.sortProperty = "date";
+    query.limit = 100;
     qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
     runQuery(query);
 }
