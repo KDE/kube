@@ -68,7 +68,7 @@ MessageViewer::CSSHelperBase *ObjectTreeSource::cssHelper()
     return d->mCSSHelper;
 }
 
-bool ObjectTreeSource::htmlLoadExternal()
+bool ObjectTreeSource::htmlLoadExternal() const
 {
     return d->mHtmlLoadExternal;
 }
@@ -78,7 +78,7 @@ void ObjectTreeSource::setHtmlLoadExternal(bool loadExternal)
     d->mHtmlLoadExternal = loadExternal;
 }
 
-bool ObjectTreeSource::htmlMail()
+bool ObjectTreeSource::htmlMail() const
 {
     return d->mHtmlMail;
 }
@@ -88,17 +88,17 @@ void ObjectTreeSource::setHtmlMail(bool htmlMail)
     d->mHtmlMail = htmlMail;
 }
 
-bool ObjectTreeSource::decryptMessage()
+bool ObjectTreeSource::decryptMessage() const
 {
     return d->mAllowDecryption;
 }
 
-bool ObjectTreeSource::showSignatureDetails() 
+bool ObjectTreeSource::showSignatureDetails() const
 {
     return true;
 }
 
-int ObjectTreeSource::levelQuote() 
+int ObjectTreeSource::levelQuote() const
 {
     return 1;
 }
@@ -108,7 +108,7 @@ const QTextCodec *ObjectTreeSource::overrideCodec()
     return Q_NULLPTR;
 }
 
-QString ObjectTreeSource::createMessageHeader(KMime::Message *message) 
+QString ObjectTreeSource::createMessageHeader(KMime::Message *message)
 {
     return QString();
 }
@@ -118,7 +118,7 @@ const MessageViewer::AttachmentStrategy *ObjectTreeSource::attachmentStrategy()
     return MessageViewer::AttachmentStrategy::smart();
 }
 
-QObject *ObjectTreeSource::sourceObject() 
+QObject *ObjectTreeSource::sourceObject()
 {
     return Q_NULLPTR;
 }
@@ -128,17 +128,17 @@ void ObjectTreeSource::setHtmlMode(MessageViewer::Util::HtmlMode mode)
       Q_UNUSED(mode);
 }
 
-bool ObjectTreeSource::autoImportKeys()
+bool ObjectTreeSource::autoImportKeys() const
 {
     return false;
 }
 
-bool ObjectTreeSource::showEmoticons()
+bool ObjectTreeSource::showEmoticons() const
 {
     return false;
 }
 
-bool ObjectTreeSource::showExpandQuotesMark()
+bool ObjectTreeSource::showExpandQuotesMark() const
 {
     return false;
 }
