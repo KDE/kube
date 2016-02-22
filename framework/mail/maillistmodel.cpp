@@ -21,6 +21,7 @@
 #include "maillistmodel.h"
 
 #include <QFile>
+#include <QDateTime>
 
 
 MailListModel::MailListModel(QObject *parent)
@@ -77,6 +78,7 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             QFile file(filename);
             if (file.open(QFile::ReadOnly)) {
                 auto content = file.readAll();
+                qWarning() << filename << content;
                 return content;
             } else {
                 qWarning() << "Failed to open the file";
