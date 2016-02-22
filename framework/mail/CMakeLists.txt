@@ -10,6 +10,7 @@ set(mailplugin_SRCS
     stringhtmlwriter.cpp
     csshelper.cpp
     composer.cpp
+    messageparser.cpp
 )
 add_definitions(-DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 

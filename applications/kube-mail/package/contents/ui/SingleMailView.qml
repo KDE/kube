@@ -63,7 +63,7 @@ Item {
                 }
 
                 MailViewer {
-                    html: model.renderedMessage
+                    message: model.mimeMessage
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }

@@ -3,8 +3,11 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtWebKit 3.0
 
+import org.kde.kube.mail 1.0 as Mail
+
 Item {
     id: root
+    property variant message;
     property string html;
 
     WebView {
@@ -31,4 +34,10 @@ Item {
         // The file:/// argument is necessary so local icons are found
         webview.loadHtml(html, "file:///");
     }
+
+    Mail.MessageParser {
+        id: messageParser
+        message: root.message
+    }
+    html: messageParser.html
 }

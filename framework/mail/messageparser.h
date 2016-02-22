@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
     Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,21 +17,29 @@
     02110-1301, USA.
 */
 
-#include "mailplugin.h"
+#pragma once
 
-#include "maillistmodel.h"
-#include "folderlistmodel.h"
-#include "composer.h"
-#include "messageparser.h"
+#include <QObject>
+#include <QString>
+#include <QStringList>
 
-#include <QtQml>
-
-void MailPlugin::registerTypes (const char *uri)
+class MessageParser : public QObject
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.kube.mail"));
+    Q_OBJECT
+    Q_PROPERTY (QVariant message READ message WRITE setMessage)
+    Q_PROPERTY (QString html READ html NOTIFY htmlChanged)
 
-    qmlRegisterType<FolderListModel>(uri, 1, 0, "FolderListModel");
-    qmlRegisterType<MailListModel>(uri, 1, 0, "MailListModel");
-    qmlRegisterType<Composer>(uri, 1, 0, "Composer");
-    qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");
-}
+public:
+    explicit MessageParser(QObject *parent = Q_NULLPTR);
+
+    QString html() const;
+
+    QVariant message() const;
+    void setMessage(const QVariant &to);
+
+signals:
+    void htmlChanged();
+
+private:
+    QString mHtml;
+};

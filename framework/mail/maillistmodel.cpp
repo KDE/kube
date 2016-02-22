@@ -20,13 +20,7 @@
 
 #include "maillistmodel.h"
 
-#include "stringhtmlwriter.h"
-#include "objecttreesource.h"
-#include "csshelper.h"
-
 #include <QFile>
-#include <QImage>
-#include <MessageViewer/ObjectTreeParser>
 
 
 MailListModel::MailListModel(QObject *parent)
@@ -53,7 +47,6 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Important] = "important";
     roles[Id] = "id";
     roles[MimeMessage] = "mimeMessage";
-    roles[RenderedMessage] = "renderedMessage";
     roles[DomainObject] = "domainObject";
 
     return roles;
@@ -85,37 +78,6 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             if (file.open(QFile::ReadOnly)) {
                 auto content = file.readAll();
                 return content;
-            } else {
-                qWarning() << "Failed to open the file";
-            }
-            return "Failed to read mail.";
-        }
-        case RenderedMessage: {
-            auto filename = srcIdx.sibling(srcIdx.row(), 6).data(Qt::DisplayRole).toString();
-            QFile file(filename);
-            if (file.open(QFile::ReadOnly)) {
-                const auto mailData = KMime::CRLFtoLF(file.readAll());
-                KMime::Message::Ptr msg(new KMime::Message);
-                msg->setContent(mailData);
-                msg->parse();
-
-                // render the mail
-                StringHtmlWriter htmlWriter;
-                QImage paintDevice;
-                CSSHelper cssHelper(&paintDevice);
-                MessageViewer::NodeHelper nodeHelper;
-                ObjectTreeSource source(&htmlWriter, &cssHelper);
-                MessageViewer::ObjectTreeParser otp(&source, &nodeHelper);
-
-                htmlWriter.begin(QString());
-                htmlWriter.queue(cssHelper.htmlHead(false));
-
-                otp.parseObjectTree(msg.data());
-
-                htmlWriter.queue(QStringLiteral("</body></html>"));
-                htmlWriter.end();
-
-                return htmlWriter.html();
             } else {
                 qWarning() << "Failed to open the file";
             }
