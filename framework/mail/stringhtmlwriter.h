@@ -55,6 +55,7 @@ public:
     QString html() const;
 private:
     void insertExtraHead();
+    void resolveCidUrls();
 
     QString mHtml;
     QString mExtraHead;
@@ -63,6 +64,7 @@ private:
         Queued,
         Ended
     } mState;
+    QMap<QByteArray, QUrl> mEmbeddedPartMap;
 };
 
 #endif // __MESSAGEVIEWER_FILEHTMLWRITER_H__

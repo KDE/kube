@@ -33,6 +33,7 @@
 
 #include <QDebug>
 #include <QTextStream>
+#include <QUrl>
 
 StringHtmlWriter::StringHtmlWriter()
     : MessageViewer::HtmlWriter()
@@ -70,6 +71,7 @@ void StringHtmlWriter::end()
         insertExtraHead();
         mExtraHead.clear();
     }
+    resolveCidUrls();
     mState = Ended;
 }
 
@@ -106,7 +108,16 @@ void StringHtmlWriter::flush()
 void StringHtmlWriter::embedPart(const QByteArray &contentId, const QString &url)
 {
     write("<!-- embedPart(contentID=" + contentId + ", url=" + url + ") -->\n");
+    mEmbeddedPartMap.insert(contentId, url);
 }
+
+void StringHtmlWriter::resolveCidUrls()
+{
+    for (const auto &cid : mEmbeddedPartMap.keys()) {
+        mHtml.replace(QString("src=\"cid:%1\"").arg(QString(cid)), QString("src=\"%1\"").arg(mEmbeddedPartMap.value(cid).toString()));
+    }
+}
+
 void StringHtmlWriter::extraHead(const QString &extraHead)
 {
     if (mState != Ended) {
