@@ -67,24 +67,6 @@ ApplicationWindow {
         Row {
             anchors.fill: parent
 
-            Rectangle {
-                height: parent.height
-                color: "transparent"
-                Image {
-                    id: img
-                    height: parent.height
-                    fillMode: Image.PreserveAspectCrop
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        left: parent.left
-                        leftMargin: -20
-                    }
-                    source: "image://kube/kube_logo"
-                    sourceSize.height: parent.height * 2.5
-                }
-                width: img.width * 0.7
-            }
-
             PlasmaComponents.ToolButton {
                 height: parent.height
                 iconName: "mail-message-new"
@@ -122,6 +104,28 @@ ApplicationWindow {
                     deleteAction.execute()
                 }
             }
+
+
+        }
+        Rectangle {
+            anchors {
+                right: parent.right
+            }
+            height: parent.height
+            color: "transparent"
+            Image {
+                id: img
+                height: parent.height
+                fillMode: Image.PreserveAspectCrop
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                    leftMargin: -20
+                }
+                source: "image://kube/kube_logo"
+                sourceSize.height: parent.height * 2.5
+            }
+            width: img.width * 0.7
         }
     }
 
