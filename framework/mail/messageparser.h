@@ -22,6 +22,11 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <memory>
+
+namespace MessageViewer {
+    class NodeHelper;
+};
 
 class MessageParser : public QObject
 {
@@ -42,4 +47,5 @@ signals:
 
 private:
     QString mHtml;
+    std::shared_ptr<MessageViewer::NodeHelper> mNodeHelper;
 };

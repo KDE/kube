@@ -53,15 +53,15 @@ void MessageParser::setMessage(const QVariant &message)
     msg->setContent(mailData);
     msg->parse();
     qWarning() << "parsed: " << time.elapsed();
-    qWarning() << "parsed: " << message.toByteArray();
 
     // render the mail
     StringHtmlWriter htmlWriter;
     QImage paintDevice;
     CSSHelper cssHelper(&paintDevice);
-    MessageViewer::NodeHelper nodeHelper;
+    //temporary files only have the lifetime of the nodehelper, so we keep it around until the mail changes.
+    mNodeHelper = std::make_shared<MessageViewer::NodeHelper>();
     ObjectTreeSource source(&htmlWriter, &cssHelper);
-    MessageViewer::ObjectTreeParser otp(&source, &nodeHelper);
+    MessageViewer::ObjectTreeParser otp(&source, mNodeHelper.get());
 
     htmlWriter.begin(QString());
     htmlWriter.queue(cssHelper.htmlHead(false));
