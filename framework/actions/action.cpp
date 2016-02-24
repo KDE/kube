@@ -35,6 +35,14 @@ Action::Action(QObject *parent)
 {
 }
 
+Action::Action(const QByteArray &actionId, Context &context, QObject *parent)
+    : QObject(parent),
+    mContext(&context),
+    mActionId(actionId)
+{
+
+}
+
 void Action::setContext(Context *context)
 {
     //Get notified when any property changes

@@ -33,6 +33,7 @@ class Action : public QObject
 
 public:
     Action(QObject *parent = 0);
+    Action(const QByteArray &actionId, Context &context, QObject *parent = 0);
 
     void setContext(Context *);
     Context *context() const;

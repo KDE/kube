@@ -22,6 +22,7 @@ find_package(Sink CONFIG REQUIRED)
 find_package(KF5Async CONFIG REQUIRED)
 find_package(KF5Libkleo CONFIG REQUIRED)
 find_package(KF5IconThemes CONFIG REQUIRED)
+find_package(KF5Codecs CONFIG REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 add_definitions("-Wall -std=c++0x -g")

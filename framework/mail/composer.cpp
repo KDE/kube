@@ -19,6 +19,12 @@
 
 
 #include "composer.h"
+#include <actions/context.h>
+#include <actions/action.h>
+#include <KMime/Message>
+#include <KCodecs/KEmailAddress>
+#include <QVariant>
+#include <QDebug>
 
 Composer::Composer(QObject *parent) : QObject(parent)
 {
@@ -110,7 +116,25 @@ void Composer::setFromIndex(int fromIndex)
 
 void Composer::send()
 {
-    //TODO
+    auto mail = KMime::Message::Ptr::create();
+    for (const auto &to : KEmailAddress::splitAddressList(m_to)) {
+        QByteArray displayName;
+        QByteArray addrSpec;
+        QByteArray comment;
+        KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
+        mail->to(true)->addAddress(addrSpec, displayName);
+    }
+    mail->subject(true)->fromUnicodeString(m_subject, "utf-8");
+    mail->setBody(m_body.toUtf8());
+    mail->assemble();
+    Kube::Context context;
+    context.setProperty("message", QVariant::fromValue(mail));
+    //TODO get from somewhere
+    context.setProperty("username", QVariant::fromValue(QByteArray("test@test.com")));
+    context.setProperty("password", QVariant::fromValue(QByteArray("pass")));
+    context.setProperty("server", QVariant::fromValue(QByteArray("smtp://smtp.gmail.com:587")));
+
+    Kube::Action("org.kde.kube.actions.sendmail", context).execute();
     clear();
 }
 

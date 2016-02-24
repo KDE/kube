@@ -24,7 +24,7 @@ add_library(mailplugin SHARED ${mailplugin_SRCS})
 
 qt5_use_modules(mailplugin Core Quick Qml)
 
-target_link_libraries(mailplugin actionplugin sink KF5::Otp ${CURL_LIBRARIES})
+target_link_libraries(mailplugin actionplugin sink KF5::Otp KF5::Codecs ${CURL_LIBRARIES})
 
 install(TARGETS mailplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/mail)
 install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/mail)
