@@ -68,3 +68,23 @@ QByteArray ActionHandler::actionId() const
 {
     return mActionId;
 }
+
+
+
+ActionHandlerHelper::ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &isReady, const Handler &handler)
+    : ActionHandler(nullptr),
+    isReadyFunction(isReady),
+    handlerFunction(handler)
+{
+    setActionId(actionId);
+}
+
+bool ActionHandlerHelper::isActionReady(Context *context)
+{
+    return isReadyFunction(context);
+}
+
+void ActionHandlerHelper::execute(Context *context)
+{
+    handlerFunction(context);
+}

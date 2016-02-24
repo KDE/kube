@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QMultiMap>
+#include <functional>
 
 namespace Kube {
 class Context;
@@ -43,6 +44,22 @@ public:
 
 private:
     QByteArray mActionId;
+};
+
+class ActionHandlerHelper : public ActionHandler
+{
+    Q_OBJECT
+public:
+    typedef std::function<bool(Context*)> IsReadyFunction;
+    typedef std::function<void(Context*)> Handler;
+
+    ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &, const Handler &);
+
+    bool isActionReady(Context *context) Q_DECL_OVERRIDE;
+    void execute(Context *context) Q_DECL_OVERRIDE;
+private:
+    const std::function<bool(Context*)> isReadyFunction;
+    const std::function<void(Context*)> handlerFunction;
 };
 
 }

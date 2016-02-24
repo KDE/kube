@@ -16,31 +16,12 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "sinkactions.h"
-
 #include <actions/context.h>
+#include <actions/actionhandler.h>
 
 #include <sink/store.h>
 
 using namespace Kube;
-
-ActionHandlerHelper::ActionHandlerHelper(const QByteArray &actionId, const std::function<bool(Context*)> &isReady, const std::function<void(Context*)> &handler)
-    : ActionHandler(nullptr),
-    isReadyFunction(isReady),
-    handlerFunction(handler)
-{
-    setActionId(actionId);
-}
-
-bool ActionHandlerHelper::isActionReady(Context *context)
-{
-    return isReadyFunction(context);
-}
-
-void ActionHandlerHelper::execute(Context *context)
-{
-    handlerFunction(context);
-}
 
 static ActionHandlerHelper markAsReadHandler("org.kde.kube.actions.mark-as-read",
     [](Context *context) -> bool {
