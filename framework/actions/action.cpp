@@ -48,7 +48,7 @@ void Action::setContext(Context *context)
     //Get notified when any property changes
     for (int i = 0; i < context->metaObject()->propertyCount(); i++) {
         auto property = context->metaObject()->property(i) ;
-        qWarning() << "Property " << property.name() << property.hasNotifySignal() << property.notifySignal().name();
+        // qWarning() << "Property " << property.name() << property.hasNotifySignal() << property.notifySignal().name();
         if (QString(property.name()) != "objectName") {
             //We do what SIGNAL does to connect to the changed signal automatically
             QObject::connect(context, "2"+property.notifySignal().name()+"()", this, SLOT(contextChanged()));

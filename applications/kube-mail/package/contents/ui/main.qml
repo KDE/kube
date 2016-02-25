@@ -44,19 +44,19 @@ ApplicationWindow {
     // }
 
     KubeAction.Context {
-        id: "maillistcontext"
+        id: maillistcontext
         property variant mail
         mail: mailListView.currentMail
     }
 
     KubeAction.Action {
-        id: "markAsReadAction"
+        id: markAsReadAction
         actionId: "org.kde.kube.actions.mark-as-read"
         context: maillistcontext
     }
 
     KubeAction.Action {
-        id: "deleteAction"
+        id: deleteAction
         actionId: "org.kde.kube.actions.delete"
         context: maillistcontext
     }
