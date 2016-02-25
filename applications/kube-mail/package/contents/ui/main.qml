@@ -78,6 +78,15 @@ ApplicationWindow {
 
             PlasmaComponents.ToolButton {
                 height: parent.height
+                iconName: "mail-message-reply"
+                text: "Reply"
+                onClicked: {
+                    composer.visible = true
+                }
+            }
+
+            PlasmaComponents.ToolButton {
+                height: parent.height
                 iconName: "mail-mark-unread"
                 text: "Mark As Read"
                 enabled: markAsReadAction.ready
