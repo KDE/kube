@@ -46,7 +46,7 @@ Action::Action(const QByteArray &actionId, Context &context, QObject *parent)
 void Action::setContext(Context *context)
 {
     //Get notified when any property changes
-    for (int i = 0; i < context->metaObject()->propertyCount(); i++) {
+    for (int i = context->metaObject()->propertyOffset(); i < context->metaObject()->propertyCount(); i++) {
         auto property = context->metaObject()->property(i) ;
         // qWarning() << "Property " << property.name() << property.hasNotifySignal() << property.notifySignal().name();
         if (QString(property.name()) != "objectName") {
