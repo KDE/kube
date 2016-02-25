@@ -21,6 +21,7 @@
 #include "composer.h"
 #include <actions/context.h>
 #include <actions/action.h>
+#include <settings/settings.h>
 #include <KMime/Message>
 #include <KCodecs/KEmailAddress>
 #include <QVariant>
@@ -127,12 +128,18 @@ void Composer::send()
     mail->subject(true)->fromUnicodeString(m_subject, "utf-8");
     mail->setBody(m_body.toUtf8());
     mail->assemble();
+
+    Kube::ApplicationContext settings;
+    auto account = settings.currentAccount();
+    auto identity = account.primaryIdentity();
+    auto transport = identity.transport();
+
     Kube::Context context;
     context.setProperty("message", QVariant::fromValue(mail));
-    //TODO get from somewhere
-    context.setProperty("username", QVariant::fromValue(QByteArray("test@test.com")));
-    context.setProperty("password", QVariant::fromValue(QByteArray("pass")));
-    context.setProperty("server", QVariant::fromValue(QByteArray("smtp://smtp.gmail.com:587")));
+
+    context.setProperty("username", transport.username());
+    context.setProperty("password", transport.password());
+    context.setProperty("server", transport.server());
 
     Kube::Action("org.kde.kube.actions.sendmail", context).execute();
     clear();

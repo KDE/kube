@@ -36,5 +36,6 @@ set(SINK_RESOURCE_PLUGINS_PATH ${QT_PLUGIN_INSTALL_DIR}/sink/resources)
 
 add_subdirectory(mail)
 add_subdirectory(actions)
+add_subdirectory(settings)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

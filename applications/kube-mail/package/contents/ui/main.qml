@@ -21,6 +21,7 @@ import QtQuick.Layouts 1.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kde.kube.actions 1.0 as KubeAction
+import org.kde.kube.settings 1.0 as KubeSettings
 
 ApplicationWindow {
     id: app
@@ -66,6 +67,14 @@ ApplicationWindow {
 
         Row {
             anchors.fill: parent
+
+            PlasmaComponents.ToolButton {
+                height: parent.height
+                text: "Settings"
+                onClicked: {
+                    settings.visible = true
+                }
+            }
 
             PlasmaComponents.ToolButton {
                 height: parent.height
@@ -163,6 +172,12 @@ ApplicationWindow {
             Layout.fillWidth: true
         }
 
+    }
+
+    Settings {
+        id: settings
+
+        anchors.fill: parent
     }
 
     FocusComposer {
