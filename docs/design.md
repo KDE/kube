@@ -83,13 +83,23 @@ An action represents something that can be done, such as "mark as read", "delete
 
 An action has:
 * an id (i.e. org.kube.actions.make-as-read)
-* an active state (a property for the UI to know when the action can be triggered, that changes depending on the context)
+* an ready state (a property for the UI to know when the action can be triggered, that changes depending on the context)
 * an action context, which contains everything the action needs to execute.
 * an icon
 * a name
 
 The action context contains the dataset the action works upon plus any additional information that is required. A mark-as-read action for instance only requires the mail-set to work on, while a tag-with action requires any entity (mail, event, ...) and a tag (unless there is one action per tag...).
-The action can, through property-binding, reevaluate its active state based on the currently set context that the UI continuously updates through property binding. Context objects can be shared by various actions.
+The action can, through property-binding, reevaluate its ready state based on the currently set context that the UI continuously updates through property binding. Context objects can be shared by various actions.
+
+#### Pre-action handler
+A pre-action handler can be used to supply additional context information for the action to execute. This can be used to i.e. retrieve configuration information or resolve a user uid over ldap.
+
+An action can be executed if a set of available pre-action handlers plus the initially supplied informatin can complete the context so the target action-handler can be executed.
+
+#### Selecting action handlers out of candidates.
+It is possible that multiple action handlers are avialable for the same action, i.e. because different accounts supplied an action handler for the same action. In such a case it is necessary to select the right action handler based on the context.
+
+A simple criteria could be the currently selected account.
 
 #### Automatic action discovery
 While in many places explicit instantiation of actions is desirable, sometimes we may want to offer all available actions for a certain type. For this it should be possible to i.e. query for all actions that apply to a mail. That way it is possible to centrally add a new action that automatically becomes available everywhere. Note that this only works for actions that don't require an additional UI, since the components would have to embedd that somewhere.
@@ -99,13 +109,18 @@ Actions are objects that provide the API, and that QML can instantiate directly 
 
 * Action: The interface to execute/launch the action. Forwards request and context to broker.
 * ActionHandler: A handler for a specific action. Registers itself with the broker.
-* ActionBroker: Forwards action requests to handlers.
+* PreActionHandler: A handler that runs before the action and supplies additional information.
+* ActionBroker: Forwards action requests to handlers. Selects and executes suitable pre-action handlers.
 * Context: The context containing everything the handler needs to execute the action.
 
 ### Controller
-For every domain object a controller is implemented to be able to edit the domain object. The domain object is a QObject with a QObject-property for every property of th edomain object and a QValidator, so editors can easily be build using property binding while providing property-level validation and feedback.
+Controllers are used to interact with the system. The controller is a QObject with a QObject-property every property that should be editable, and a QValidator for every property, so editors can easily be built using property binding while providing property-level validation and feedback.
 
 The domain object is exposed as an opaque QVariant that can i.e. be used in an action-context. This way details from the infrastructure layer don't leak to the UI layer
+
+Controllers may execute actions or directly interact with infrastructure where suitable.
+
+TODO: we need to find a solution for autocompletion for individual properties. This could be something like a plasma-components specific completer class that is supported by a text component (QCompleter only works for widgets).
 
 ### Notifications
 The system will provide notifications from various sources. 
@@ -151,6 +166,7 @@ Same as files? Import/Export calendar data
 * iCal: KCalCore
 * vCard: KContacts
 * iTip: extract from kdepim repo
+* SMTP: based on libcurl
 
 ### Cryptography
 * PGP, PEP
@@ -169,8 +185,6 @@ TBD
 
 ## Problems/Notes:
 * Dynamic switching between various component UI's can be solved using KPackage
-* change-requests sometimes also need to be handled by sub-components
-** If you hit the reply button in the main view, but replies always work inline in the messagelist, the messagelist should still be able to capture the request and handle it. But if the request only goes to parent objects, that is not possible. Perhaps we need a pub-sub mechanism.
 
 ## Example usage in QML
 
@@ -249,3 +263,34 @@ KubeComponents.MailView {
     * MailModel
         * subject, date, sender, folder, content, attachments
 
+## Configuration and Accounts
+Kube is a groupware application, so one of its most important features is being able to work with various remote backends. We live in a world of multiple devies and applications, so it is interesting to share as much state and configuration accross all different devices and applications, which is why we try to store as much of that in the backend.
+
+From the perspective of Kube we are working with different "Accounts". Each account represents a different backend, such as your personal IMAP or Kolab server, or a hosted offering such as GMail or KOLAB NOW. Each of those accounts may interact with various protocols such as imap, smtp, ldap, caldav etc.
+
+To add support for a new backend thus means that a new account type has to be added to Kube.
+
+An account consists of:
+
+* One or more sink resources to access the remote data
+* A configuration UI in QML that can be embedded in the accounts setup
+* Potentially custom action handlers if the default action handlers are not sufficient.
+* A configuration controller to modify and access the data
+* A set of action pre-handler to supply the configuration to actions
+
+### Configuration Controller
+The configuraton controller is not only used in the configuration UI to provide the data, but it is also used by the rest of the system to access configuration of this account.
+
+This allows the account to retrieve configruation data on a property-by-property basis i.e. from Sink or a local config file.
+
+### Accounts-Plugin
+The account is supplied as a kpackage based plugin. The plugin is loaded into kube directly from QML. The plugin registers it's configuration controller and potentially actions.
+
+Note: We could have a plugin mechanism that discovers account-plugins should that become necessary at some point.
+
+## Application Context
+Various parts of the system are context sensitive. I.e. the currently selected account affects which transport is used to send an email, or which folders are currently visble.
+
+In future iterations that context can be expanded i.e. with projects that affect prioritization of various data items.
+
+The application context is globally available, although it may be altered locally.
