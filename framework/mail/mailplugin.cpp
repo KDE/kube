@@ -24,6 +24,7 @@
 #include "folderlistmodel.h"
 #include "composer.h"
 #include "messageparser.h"
+#include "retriever.h"
 
 #include <QtQml>
 
@@ -35,4 +36,5 @@ void MailPlugin::registerTypes (const char *uri)
     qmlRegisterType<MailListModel>(uri, 1, 0, "MailListModel");
     qmlRegisterType<Composer>(uri, 1, 0, "Composer");
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");
+    qmlRegisterType<Retriever>(uri, 1, 0, "Retriever");
 }

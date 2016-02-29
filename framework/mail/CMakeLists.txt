@@ -13,6 +13,7 @@ set(mailplugin_SRCS
     composer.cpp
     messageparser.cpp
     mailtransport.cpp
+    retriever.cpp
 )
 add_definitions(-DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
