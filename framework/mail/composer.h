@@ -22,10 +22,12 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QVariant>
 
 class Composer : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY (QVariant originalMessage READ originalMessage WRITE setOriginalMessage)
     Q_PROPERTY (QString to READ to WRITE setTo NOTIFY toChanged)
     Q_PROPERTY (QString cc READ cc WRITE setCc NOTIFY ccChanged)
     Q_PROPERTY (QString bcc READ bcc WRITE setBcc NOTIFY bccChanged)
@@ -57,6 +59,9 @@ public:
     int fromIndex() const;
     void setFromIndex(int fromIndex);
 
+    QVariant originalMessage() const;
+    void setOriginalMessage(const QVariant &originalMessage);
+
 signals:
     void subjectChanged();
     void bodyChanged();
@@ -78,4 +83,6 @@ private:
     QString m_body;
     QStringList m_identityModel;
     int m_fromIndex;
+    QVariant m_originalMessage;
+    QVariant m_msg;
 };

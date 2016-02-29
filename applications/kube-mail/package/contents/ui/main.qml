@@ -90,6 +90,7 @@ ApplicationWindow {
                 iconName: "mail-message-reply"
                 text: "Reply"
                 onClicked: {
+                    composer.originalMessage = mailListView.currentMail
                     composer.visible = true
                 }
             }

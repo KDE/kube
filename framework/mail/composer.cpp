@@ -27,6 +27,8 @@
 #include <QVariant>
 #include <QDebug>
 
+#include "mailtemplates.h"
+
 Composer::Composer(QObject *parent) : QObject(parent)
 {
     m_identityModel << "Kuberich <kuberich@kolabnow.com>" << "Uni <kuberich@university.edu>" << "Spam <hello.spam@spam.to>";
@@ -115,9 +117,36 @@ void Composer::setFromIndex(int fromIndex)
     }
 }
 
+QVariant Composer::originalMessage() const
+{
+    return m_originalMessage;
+}
+
+void Composer::setOriginalMessage(const QVariant &originalMessage)
+{
+    const auto mailData = KMime::CRLFtoLF(originalMessage.toByteArray());
+    if (!mailData.isEmpty()) {
+        KMime::Message::Ptr mail(new KMime::Message);
+        mail->setContent(mailData);
+        mail->parse();
+        auto reply = MailTemplates::reply(mail);
+        //We assume reply
+        setTo(reply->to(true)->asUnicodeString());
+        setCc(reply->cc(true)->asUnicodeString());
+        setSubject(reply->subject(true)->asUnicodeString());
+        setBody(reply->body());
+        m_msg = QVariant::fromValue(reply);
+    } else {
+        m_msg = QVariant();
+    }
+}
+
 void Composer::send()
 {
-    auto mail = KMime::Message::Ptr::create();
+    auto mail = m_msg.value<KMime::Message::Ptr>();
+    if (!mail) {
+        mail = KMime::Message::Ptr::create();
+    }
     for (const auto &to : KEmailAddress::splitAddressList(m_to)) {
         QByteArray displayName;
         QByteArray addrSpec;

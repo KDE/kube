@@ -13,6 +13,7 @@ set(mailplugin_SRCS
     composer.cpp
     messageparser.cpp
     mailtransport.cpp
+    mailtemplates.cpp
     retriever.cpp
 )
 add_definitions(-DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
@@ -23,7 +24,7 @@ include_directories(${CURL_INCLUDE_DIRS})
 
 add_library(mailplugin SHARED ${mailplugin_SRCS})
 
-qt5_use_modules(mailplugin Core Quick Qml)
+qt5_use_modules(mailplugin Core Quick Qml WebKitWidgets)
 
 target_link_libraries(mailplugin actionplugin settingsplugin sink KF5::Otp KF5::Codecs ${CURL_LIBRARIES})
 

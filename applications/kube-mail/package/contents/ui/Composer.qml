@@ -23,6 +23,7 @@ import org.kde.kube.mail 1.0 as Mail
 
 Item {
     id: root
+    property variant originalMessage
 
     function send() {
         composer.send()
@@ -36,8 +37,18 @@ Item {
         composer.clear();
     }
 
+    Mail.Retriever {
+        id: retriever
+        propertyName: "mimeMessage"
+        model: Mail.MailListModel {
+            id: mailListModel
+            mail: root.originalMessage
+        }
+    }
+
     Mail.Composer {
         id: composer
+        originalMessage: retriever.value
     }
 
     ColumnLayout {
