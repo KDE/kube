@@ -266,7 +266,7 @@ KubeComponents.MailView {
 ## Configuration and Accounts
 Kube is a groupware application, so one of its most important features is being able to work with various remote backends. We live in a world of multiple devies and applications, so it is interesting to share as much state and configuration accross all different devices and applications, which is why we try to store as much of that in the backend.
 
-From the perspective of Kube we are working with different "Accounts". Each account represents a different backend, such as your personal IMAP or Kolab server, or a hosted offering such as GMail or KOLAB NOW. Each of those accounts may interact with various protocols such as imap, smtp, ldap, caldav etc.
+From the perspective of Kube we are working with different "Accounts". Each account represents a different backend, such as your personal IMAP or Kolab server, or a hosted offering such as GMail or Kolab Now. Each of those accounts may interact with various protocols such as imap, smtp, ldap, caldav etc.
 
 To add support for a new backend thus means that a new account type has to be added to Kube.
 
