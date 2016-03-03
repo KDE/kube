@@ -28,6 +28,7 @@
 #include <QWebFrame>
 #include <QSysInfo>
 #include <QTextCodec>
+#include <QApplication>
 
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
@@ -366,6 +367,8 @@ QString htmlMessageText(MessageViewer::ObjectTreeParser &otp, bool aStripSignatu
         htmlElement = QStringLiteral("<html><head></head><body>%1</body></html>\n").arg(htmlReplace);
     }
 
+    //QWebPage relies on this
+    Q_ASSERT(QApplication::style());
     QWebPage page;
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
     page.settings()->setAttribute(QWebSettings::JavaEnabled, false);

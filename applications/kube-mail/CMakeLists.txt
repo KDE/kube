@@ -17,7 +17,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
 
-find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui)
+find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets)
 
 set (QT_MIN_VERSION "5.4.0")
 find_package(KF5 REQUIRED COMPONENTS Package)
@@ -27,7 +27,7 @@ kpackage_install_package(package org.kde.kube.mail "genericqml")
 
 # install executable
 add_executable(${PROJECT_NAME} main.cpp)
-qt5_use_modules(${PROJECT_NAME} Gui Quick)
+qt5_use_modules(${PROJECT_NAME} Gui Quick Widgets)
 target_link_libraries(${PROJECT_NAME} KF5::Package)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

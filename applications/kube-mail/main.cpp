@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 
 #include <QStandardPaths>
@@ -33,7 +33,7 @@ public:
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kde.kube.mail");
     Q_ASSERT(package.isValid());
     QQmlApplicationEngine engine;
