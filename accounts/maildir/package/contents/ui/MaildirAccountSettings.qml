@@ -20,12 +20,12 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
 import org.kde.kube.settings 1.0 as KubeSettings
-// import org.kde.kube.accounts.maildir 1.0 as MaildirAccount
+import org.kde.kube.accounts.maildir 1.0 as MaildirAccount
 
 Rectangle {
     id: root
     property string accountId
-    property string accountName
+    property string accountName: "Maildir"
 
     color: colorPalette.background
 
@@ -40,35 +40,45 @@ Rectangle {
             text: "Account: " + accountName
         }
 
+        Label { text: "Path" }
+        TextField {
+            id: path
+            placeholderText: "path"
+            Layout.fillWidth: true
+        }
+
+        Text {
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+            text: "Smtp:"
+        }
+
         Label { text: "Username" }
         TextField {
             id: username
-            text: "username"
+            placeholderText: "username"
             Layout.fillWidth: true
         }
 
         Label { text: "Password" }
         TextField {
             id: password
-            text: "password"
+            placeholderText: "password"
             Layout.fillWidth: true
         }
 
         Label { text: "Server" }
         TextField {
             id: server
-            text: "server"
+            placeholderText: "server"
             Layout.fillWidth: true
         }
 
-        //If we had a settings controller
-        // MaildirAccount.SmtpSettings {
-        //     id: smtpSettings
-        //     identifier: accountId
-        //     property alias username: username.text
-        //     property alias password: password.text
-        //     property alias server: server.text
-        // }
+        MaildirAccount.MaildirSettings {
+            id: maildirSettings
+            identifier: "org.kde.maildir.instance1"
+            property alias path: path.text
+        }
 
         KubeSettings.Settings {
             id: accountSettings
@@ -92,8 +102,8 @@ Rectangle {
             id: button
             text: "Save"
             onClicked: {
-                smtpSettings.save();
-                root.visible = false;
+                transportSettings.save();
+                maildirSettings.save();
             }
         }
     }

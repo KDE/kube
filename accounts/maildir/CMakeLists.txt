@@ -20,8 +20,21 @@ include(KDECompilerSettings)
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui)
 
 set (QT_MIN_VERSION "5.4.0")
-find_package(KF5 REQUIRED COMPONENTS Package)
+find_package(Sink CONFIG REQUIRED)
+find_package(KF5Async CONFIG REQUIRED)
 
+include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/)
+
+set(SRCS
+    maildirsettings.cpp
+    maildiraccountplugin.cpp
+)
+
+add_library(maildiraccountplugin SHARED ${SRCS})
+qt5_use_modules(maildiraccountplugin Core Quick Qml)
+target_link_libraries(maildiraccountplugin sink)
+
+install(TARGETS maildiraccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/accounts/maildir)
 install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/accounts/maildir)
 install(FILES package/contents/ui/MaildirAccountSettings.qml DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/accounts/maildir)
 

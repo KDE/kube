@@ -1,3 +1,5 @@
 module org.kde.kube.accounts.maildir
 
 AccountSettings 1.0 MaildirAccountSettings.qml
+
+plugin maildiraccountplugin

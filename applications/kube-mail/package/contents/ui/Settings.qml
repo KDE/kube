@@ -55,19 +55,20 @@ Rectangle {
             id: contextSettings
             identifier: "applicationcontext"
             property string currentAccountId: "current"
+            property var availableAccountTypes: ["maildir"]
+            property var accounts: ["current"]
         }
 
         Column {
             spacing: 5
             Repeater {
-                model: ["current"] //Get from context settings
+                model: contextSettings.accounts
                 delegate: Maildir.AccountSettings { //This should be retrieved from the accounts plugin: KubeAccounts { identifier: modelData }.settingsUi
                     accountId: modelData
-                    accountName: "Maildir"
                 }
             }
         }
 
-        //Add possibility to add more accounts
+        //TODO: Add possibility to add more accounts
     }
 }
