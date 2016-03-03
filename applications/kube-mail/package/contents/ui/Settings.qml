@@ -20,6 +20,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
 import org.kde.kube.settings 1.0 as KubeSettings
+import org.kde.kube.accounts.maildir 1.0 as Maildir
 
 Rectangle {
     id: root
@@ -60,7 +61,7 @@ Rectangle {
             spacing: 5
             Repeater {
                 model: ["current"] //Get from context settings
-                delegate: MaildirAccountSettings { //This should be retrieved from the accounts plugin: KubeAccounts { identifier: modelData }.settingsUi
+                delegate: Maildir.AccountSettings { //This should be retrieved from the accounts plugin: KubeAccounts { identifier: modelData }.settingsUi
                     accountId: modelData
                     accountName: "Maildir"
                 }
