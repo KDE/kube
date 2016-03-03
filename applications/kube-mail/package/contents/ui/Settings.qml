@@ -50,74 +50,23 @@ Rectangle {
             anchors.fill: parent
         }
 
-        GridLayout {
-            columns: 2
-            anchors.fill: parent
-            anchors.margins: 10
-            rowSpacing: 10
-            columnSpacing: 10
+        KubeSettings.Settings {
+            id: contextSettings
+            identifier: "applicationcontext"
+            property string currentAccountId: "current"
+        }
 
-            Label { text: "Username" }
-            TextField {
-                id: username
-                text: "username"
-                Layout.fillWidth: true
-            }
-
-            Label { text: "Password" }
-            TextField {
-                id: password
-                text: "password"
-                Layout.fillWidth: true
-            }
-
-            Label { text: "Server" }
-            TextField {
-                id: server
-                text: "server"
-                Layout.fillWidth: true
-            }
-
-            KubeSettings.Settings {
-                id: contextSettings
-                identifier: "applicationcontext"
-                property string currentAccountId: "current"
-            }
-            KubeSettings.Settings {
-                id: accountSettings
-                identifier: "account.current"
-                property string primaryIdentity: "current"
-            }
-            KubeSettings.Settings {
-                id: identitySettings
-                identifier: "identity.current"
-                property string transport: "current"
-            }
-            KubeSettings.Settings {
-                id: transportSettings
-                identifier: "transport.current"
-                property alias username: username.text
-                property alias password: password.text
-                property alias server: server.text
-            }
-
-            Item {
-                Layout.columnSpan: 2
-                Layout.fillWidth: true
-                Button {
-                    id: button
-                    anchors.centerIn: parent
-                    text: "Save"
-                    onClicked: {
-                        contextSettings.save();
-                        accountSettings.save();
-                        identitySettings.save();
-                        transportSettings.save();
-                        root.visible = false;
-                    }
+        Column {
+            spacing: 5
+            Repeater {
+                model: ["current"] //Get from context settings
+                delegate: MaildirAccountSettings { //This should be retrieved from the accounts plugin: KubeAccounts { identifier: modelData }.settingsUi
+                    accountId: modelData
+                    accountName: "Maildir"
                 }
             }
-
         }
+
+        //Add possibility to add more accounts
     }
 }
