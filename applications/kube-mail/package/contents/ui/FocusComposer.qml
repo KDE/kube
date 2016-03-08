@@ -65,31 +65,13 @@ Rectangle {
             }
 
             RowLayout {
-                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignRight
 
                 Button {
                     text: "Send"
 
                     onClicked: {
                         composer.send()
-                        root.visible = false
-                    }
-                }
-
-                Button {
-                    text: "Save Draft"
-
-                    onClicked: {
-                        composer.saveAsDraft()
-                        root.visible = false
-                    }
-                }
-
-                Button {
-                    text: "Discard"
-
-                    onClicked: {
-                        composer.clear()
                         root.visible = false
                     }
                 }
