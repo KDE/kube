@@ -187,15 +187,20 @@ Item {
                 }
 
                 text: "Save as Draft"
+
+                onClicked: {
+                    composer.saveAsDraft()
+                }
             }
 
             PlasmaComponents.Button {
-                text: "Attach"
 
                 anchors {
                     bottom: parent.bottom
                     right: parent.right
                 }
+
+                text: "Attach"
             }
         }
 
