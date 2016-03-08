@@ -18,8 +18,10 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kde.kube.mail 1.0 as Mail
+
 
 Item {
     id: root
@@ -79,26 +81,56 @@ Item {
                 text: "To"
             }
 
-            TextField {
-                id: to
-
+            RowLayout {
                 Layout.fillWidth: true
 
-                text: composer.to
+                TextField {
+                    id: to
 
-                onTextChanged: {
-                    composer.to = text;
+                    Layout.fillWidth: true
+
+                    text: composer.to
+
+                    onTextChanged: {
+                        composer.to = text;
+                    }
+                }
+
+                PlasmaComponents.Button {
+                    id: ccButton
+
+                    text: "Cc"
+
+                    onClicked: {
+                        cc.visible = true
+                        ccButton.visible = false
+                    }
+                }
+
+                PlasmaComponents.Button {
+                    id: bccButton
+
+                    text: "Bcc"
+
+                    onClicked: {
+                        bcc.visible = true
+                        bccButton.visible = false
+                    }
                 }
             }
 
             Label {
                 text: "Cc"
+
+                visible: cc.visible
             }
 
             TextField {
                 id: cc
 
                 Layout.fillWidth: true
+
+                visible: false
 
                 text: composer.cc
 
@@ -109,12 +141,16 @@ Item {
 
             Label {
                 text: "Bcc"
+
+                visible: bcc.visible
             }
 
             TextField {
                 id: bcc
 
                 Layout.fillWidth: true
+
+                visible : false
 
                 text: composer.bcc
 
