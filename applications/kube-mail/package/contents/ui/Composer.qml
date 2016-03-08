@@ -174,6 +174,31 @@ Item {
             }
         }
 
+        Item {
+
+            Layout.fillWidth: true
+
+            height: subject.height * 1.5
+
+            PlasmaComponents.Button {
+
+                anchors {
+                    bottom: parent.bottom
+                }
+
+                text: "Save as Draft"
+            }
+
+            PlasmaComponents.Button {
+                text: "Attach"
+
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                }
+            }
+        }
+
         TextArea {
             id: content
 
