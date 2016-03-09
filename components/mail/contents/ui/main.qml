@@ -20,8 +20,8 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-import org.kde.kube.actions 1.0 as KubeAction
-import org.kde.kube.settings 1.0 as KubeSettings
+import org.kube.framework.actions 1.0 as KubeAction
+import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.components 1.0 as KubeComponents
 
 ApplicationWindow {

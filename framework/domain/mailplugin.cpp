@@ -30,7 +30,7 @@
 
 void MailPlugin::registerTypes (const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.kube.mail"));
+    Q_ASSERT(uri == QLatin1String("org.kube.framework.domain"));
 
     qmlRegisterType<FolderListModel>(uri, 1, 0, "FolderListModel");
     qmlRegisterType<MailListModel>(uri, 1, 0, "MailListModel");

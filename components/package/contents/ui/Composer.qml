@@ -20,7 +20,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-import org.kde.kube.mail 1.0 as Mail
+import org.kube.framework.domain 1.0 as Mail
 
 
 Item {

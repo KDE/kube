@@ -10,5 +10,5 @@ add_library(actionplugin SHARED ${SRCS})
 
 qt5_use_modules(actionplugin Core Quick Qml)
 
-install(TARGETS actionplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/actions)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/actions)
+install(TARGETS actionplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/actions)
+install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/actions)

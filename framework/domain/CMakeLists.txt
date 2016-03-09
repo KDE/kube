@@ -28,5 +28,5 @@ qt5_use_modules(mailplugin Core Quick Qml WebKitWidgets)
 
 target_link_libraries(mailplugin actionplugin settingsplugin sink KF5::Otp KF5::Codecs ${CURL_LIBRARIES})
 
-install(TARGETS mailplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/mail)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/mail)
+install(TARGETS mailplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/domain)
+install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/domain)

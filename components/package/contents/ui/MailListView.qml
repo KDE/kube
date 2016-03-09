@@ -23,7 +23,7 @@ import QtQml 2.2
 
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-import org.kde.kube.mail 1.0 as Mail
+import org.kube.framework.domain 1.0 as Mail
 
 ScrollView {
     id: root

@@ -3,7 +3,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtWebKit 3.0
 
-import org.kde.kube.mail 1.0 as Mail
+import org.kube.framework.domain 1.0 as Mail
 
 Item {
     id: root

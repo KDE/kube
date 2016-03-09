@@ -9,7 +9,7 @@
 
 void SettingsPlugin::registerTypes (const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.kube.settings"));
+    Q_ASSERT(uri == QLatin1String("org.kube.framework.settings"));
 
     // qmlRegisterType<ResourceListModel>();
     // qmlRegisterType<ResourcesController>(uri, 1, 0, "Resources");

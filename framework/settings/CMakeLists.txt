@@ -12,5 +12,5 @@ qt5_use_modules(settingsplugin Core Quick Qml)
 
 target_link_libraries(settingsplugin)
 
-install(TARGETS settingsplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/settings)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/kube/settings)
+install(TARGETS settingsplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/settings)
+install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/settings)

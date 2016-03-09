@@ -8,7 +8,7 @@
 
 void KubePlugin::registerTypes (const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.kube.actions"));
+    Q_ASSERT(uri == QLatin1String("org.kube.framework.actions"));
     qmlRegisterType<Kube::Context>(uri, 1, 0, "Context");
     qmlRegisterType<Kube::Action>(uri, 1, 0, "Action");
     qmlRegisterType<Kube::ActionHandler>(uri, 1, 0, "ActionHandler");
