@@ -1,10 +1,7 @@
 set(mailplugin_SRCS
     mailplugin.cpp
-    maillistcontroller.cpp
     maillistmodel.cpp
-    singlemailcontroller.cpp
     folderlistmodel.cpp
-    folderlistcontroller.cpp
     actions/sinkactions.cpp
     actions/mailactions.cpp
     objecttreesource.cpp
