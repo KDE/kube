@@ -23,7 +23,7 @@ import QtQml 2.2
 
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-import org.kube.framework.domain 1.0 as Mail
+import org.kube.framework.domain 1.0 as KubeFramework
 
 ScrollView {
     id: root
@@ -33,7 +33,7 @@ ScrollView {
     ListView {
         id: listView
 
-        model: Mail.MailListModel {
+        model: KubeFramework.MailListModel {
             parentFolder: root.parentFolder
         }
 

@@ -20,7 +20,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-import org.kube.framework.domain 1.0 as Mail
+import org.kube.framework.domain 1.0 as KubeFramework
 
 
 Item {
@@ -39,16 +39,16 @@ Item {
         composer.clear();
     }
 
-    Mail.Retriever {
+    KubeFramework.Retriever {
         id: retriever
         propertyName: "mimeMessage"
-        model: Mail.MailListModel {
+        model: KubeFramework.MailListModel {
             id: mailListModel
             mail: root.originalMessage
         }
     }
 
-    Mail.Composer {
+    KubeFramework.Composer {
         id: composer
         originalMessage: retriever.value
     }

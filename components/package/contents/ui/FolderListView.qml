@@ -23,7 +23,7 @@ import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-import org.kube.framework.domain 1.0 as Mail
+import org.kube.framework.domain 1.0 as KubeFramework
 
 Item {
     id: root
@@ -58,10 +58,10 @@ Item {
             role: "name"
             width: treeView.width - 5
         }
-        model: Mail.FolderListModel { id: folderListModel }
+        model: KubeFramework.FolderListModel { id: folderListModel }
         onCurrentIndexChanged: {
             model.fetchMore(currentIndex)
-            root.currentFolder = model.data(currentIndex, Mail.FolderListModel.DomainObject)
+            root.currentFolder = model.data(currentIndex, KubeFramework.FolderListModel.DomainObject)
         }
         backgroundVisible: false
         headerVisible: false
