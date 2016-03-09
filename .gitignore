@@ -1,5 +1,6 @@
 *.kdev4
 *.kate-swap
+*.kate-swp
 *.diff
 *.patch
 *.swp
