@@ -68,3 +68,39 @@ static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize"
         Sink::Store::synchronize(Sink::Query::ResourceFilter(folder->resourceInstanceIdentifier())).exec();
     }
 );
+
+// static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
+//     [](Context *context) -> bool {
+//         return context->property("mail").isValid();
+//     },
+//     [](Context *context) {
+//         Sink::Query query;
+//         query += Sink::Query::RequestedProperties(QByteArrayList() << "name")
+//         //FIXME do something like specialuse?
+//         query += Sink::Query::PropertyFilter("name", "Drafts");
+//         // query += Sink::Query::PropertyContainsFilter("specialuser", "drafts");
+//         query += Sink::Query::PropertyFilter("drafts", true);
+//         //TODO Use drafts folder of that specific account
+//         Sink::Store::fetchAll<Sink::ApplicationDomain::Folder>(query)
+//             .then<void, QList<Sink::ApplicationDomain::Folder>>([](const QList<Sink::ApplicationDomain::Folder> folders) {
+//                 if (folders.isEmpty()) {
+//                     return KAsync::start([]() {
+//                         //If message is already existing, modify, otherwise create
+//                     });
+//                 }
+//             });
+//         //TODO
+//         // * Find drafts folder
+//         // * Store KMime::Message on disk for use in blob property
+//         // * Check if message is already existing and either create or update
+//         // * 
+//         // auto mail = context->property("mail").value<Sink::ApplicationDomain::Mail::Ptr>();
+//         // if (!mail) {
+//         //     qWarning() << "Failed to get the mail mail: " << context->property("mail");
+//         //     return;
+//         // }
+//         // mail->setProperty("unread", false);
+//         // qDebug() << "Mark as read " << mail->identifier();
+//         // Sink::Store::modify(*mail).exec();
+//     }
+// );

@@ -141,7 +141,7 @@ void Composer::setOriginalMessage(const QVariant &originalMessage)
     }
 }
 
-void Composer::send()
+KMime::Message::Ptr Composer::assembleMessage()
 {
     auto mail = m_msg.value<KMime::Message::Ptr>();
     if (!mail) {
@@ -157,7 +157,12 @@ void Composer::send()
     mail->subject(true)->fromUnicodeString(m_subject, "utf-8");
     mail->setBody(m_body.toUtf8());
     mail->assemble();
+    return mail;
+}
 
+void Composer::send()
+{
+    auto mail = assembleMessage();
     Kube::ApplicationContext settings;
     auto account = settings.currentAccount();
     auto identity = account.primaryIdentity();
@@ -176,7 +181,10 @@ void Composer::send()
 
 void Composer::saveAsDraft()
 {
-    //TODO
+    auto mail = assembleMessage();
+    Kube::Context context;
+    context.setProperty("message", QVariant::fromValue(mail));
+    Kube::Action("org.kde.kube.actions.saveasdraft", context).execute();
     clear();
 }
 

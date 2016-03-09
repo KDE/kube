@@ -24,6 +24,10 @@
 #include <QStringList>
 #include <QVariant>
 
+namespace KMime {
+class Message;
+}
+
 class Composer : public QObject
 {
     Q_OBJECT
@@ -76,6 +80,7 @@ public slots:
     void clear();
 
 private:
+    QSharedPointer<KMime::Message> assembleMessage();
     QString m_to;
     QString m_cc;
     QString m_bcc;
