@@ -22,5 +22,8 @@ find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets)
 set (QT_MIN_VERSION "5.4.0")
 find_package(KF5 REQUIRED COMPONENTS Package)
 
+install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
+install(DIRECTORY package/contents/ui/ DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
+
 # install UI package
-kpackage_install_package(package org.kde.kube.mail "genericqml")
+kpackage_install_package(mail org.kube.components.mail "genericqml")

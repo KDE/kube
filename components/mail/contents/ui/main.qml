@@ -22,6 +22,7 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kde.kube.actions 1.0 as KubeAction
 import org.kde.kube.settings 1.0 as KubeSettings
+import org.kube.components 1.0 as KubeComponents
 
 ApplicationWindow {
     id: app
@@ -151,14 +152,14 @@ ApplicationWindow {
     SplitView {
         anchors.fill: parent
 
-        FolderListView {
+        KubeComponents.FolderListView {
             id: folderListView
             width: unit.size * 55
             Layout.maximumWidth: unit.size * 150
             Layout.minimumWidth: unit.size * 30
         }
 
-        MailListView  {
+        KubeComponents.MailListView  {
             id: mailListView
             parentFolder: folderListView.currentFolder
             width: unit.size * 80
@@ -167,7 +168,7 @@ ApplicationWindow {
             focus: true
         }
 
-        SingleMailView {
+        KubeComponents.SingleMailView {
             id: mailView
             mail: mailListView.currentMail
             Layout.fillWidth: true
@@ -175,13 +176,13 @@ ApplicationWindow {
 
     }
 
-    Settings {
+    KubeComponents.Settings {
         id: settings
 
         anchors.fill: parent
     }
 
-    FocusComposer {
+    KubeComponents.FocusComposer {
         id: composer
 
         anchors.fill: parent
@@ -193,7 +194,7 @@ ApplicationWindow {
         property int size: 5
     }
 
-    ColorPalette {
+    KubeComponents.ColorPalette {
         id: colorPalette
     }
 }

@@ -34,7 +34,7 @@ public:
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kde.kube.mail");
+    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.mail");
     Q_ASSERT(package.isValid());
     QQmlApplicationEngine engine;
     engine.addImageProvider(QLatin1String("kube"), new KubeImageProvider);
