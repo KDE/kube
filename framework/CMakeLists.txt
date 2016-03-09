@@ -34,8 +34,11 @@ enable_testing()
 
 set(SINK_RESOURCE_PLUGINS_PATH ${QT_PLUGIN_INSTALL_DIR}/sink/resources)
 
-add_subdirectory(mail)
+# The actions framework
 add_subdirectory(actions)
+# The settings framework
 add_subdirectory(settings)
+# Domain specific domain logic
+add_subdirectory(domain)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
