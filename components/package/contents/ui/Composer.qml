@@ -48,7 +48,7 @@ Item {
         }
     }
 
-    KubeFramework.Composer {
+    KubeFramework.ComposerController {
         id: composer
         originalMessage: retriever.value
     }

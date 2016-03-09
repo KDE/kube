@@ -7,7 +7,7 @@ set(mailplugin_SRCS
     objecttreesource.cpp
     stringhtmlwriter.cpp
     csshelper.cpp
-    composer.cpp
+    composercontroller.cpp
     messageparser.cpp
     mailtransport.cpp
     mailtemplates.cpp

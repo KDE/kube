@@ -22,7 +22,7 @@
 
 #include "maillistmodel.h"
 #include "folderlistmodel.h"
-#include "composer.h"
+#include "composercontroller.h"
 #include "messageparser.h"
 #include "retriever.h"
 
@@ -34,7 +34,7 @@ void MailPlugin::registerTypes (const char *uri)
 
     qmlRegisterType<FolderListModel>(uri, 1, 0, "FolderListModel");
     qmlRegisterType<MailListModel>(uri, 1, 0, "MailListModel");
-    qmlRegisterType<Composer>(uri, 1, 0, "Composer");
+    qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");
     qmlRegisterType<Retriever>(uri, 1, 0, "Retriever");
 }

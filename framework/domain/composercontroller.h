@@ -28,7 +28,7 @@ namespace KMime {
 class Message;
 }
 
-class Composer : public QObject
+class ComposerController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (QVariant originalMessage READ originalMessage WRITE setOriginalMessage)
@@ -41,7 +41,7 @@ class Composer : public QObject
     Q_PROPERTY (int fromIndex READ fromIndex WRITE setFromIndex NOTIFY fromIndexChanged)
 
 public:
-    explicit Composer(QObject *parent = Q_NULLPTR);
+    explicit ComposerController(QObject *parent = Q_NULLPTR);
 
     QString to() const;
     void setTo(const QString &to);

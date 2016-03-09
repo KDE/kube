@@ -18,7 +18,7 @@
 */
 
 
-#include "composer.h"
+#include "composercontroller.h"
 #include <actions/context.h>
 #include <actions/action.h>
 #include <settings/settings.h>
@@ -29,17 +29,17 @@
 
 #include "mailtemplates.h"
 
-Composer::Composer(QObject *parent) : QObject(parent)
+ComposerController::ComposerController(QObject *parent) : QObject(parent)
 {
     m_identityModel << "Kuberich <kuberich@kolabnow.com>" << "Uni <kuberich@university.edu>" << "Spam <hello.spam@spam.to>";
 }
 
-QString Composer::to() const
+QString ComposerController::to() const
 {
     return m_to;
 }
 
-void Composer::setTo(const QString &to)
+void ComposerController::setTo(const QString &to)
 {
     if(m_to != to) {
         m_to = to;
@@ -47,12 +47,12 @@ void Composer::setTo(const QString &to)
     }
 }
 
-QString Composer::cc() const
+QString ComposerController::cc() const
 {
     return m_cc;
 }
 
-void Composer::setCc(const QString &cc)
+void ComposerController::setCc(const QString &cc)
 {
     if(m_cc != cc) {
         m_cc = cc;
@@ -60,12 +60,12 @@ void Composer::setCc(const QString &cc)
     }
 }
 
-QString Composer::bcc() const
+QString ComposerController::bcc() const
 {
     return m_bcc;
 }
 
-void Composer::setBcc(const QString &bcc)
+void ComposerController::setBcc(const QString &bcc)
 {
     if(m_bcc != bcc) {
         m_bcc = bcc;
@@ -73,12 +73,12 @@ void Composer::setBcc(const QString &bcc)
     }
 }
 
-QString Composer::subject() const
+QString ComposerController::subject() const
 {
     return m_subject;
 }
 
-void Composer::setSubject(const QString &subject)
+void ComposerController::setSubject(const QString &subject)
 {
     if(m_subject != subject) {
         m_subject = subject;
@@ -86,12 +86,12 @@ void Composer::setSubject(const QString &subject)
     }
 }
 
-QString Composer::body() const
+QString ComposerController::body() const
 {
     return m_body;
 }
 
-void Composer::setBody(const QString &body)
+void ComposerController::setBody(const QString &body)
 {
     if(m_body != body) {
         m_body = body;
@@ -99,17 +99,17 @@ void Composer::setBody(const QString &body)
     }
 }
 
-QStringList Composer::identityModel() const
+QStringList ComposerController::identityModel() const
 {
     return m_identityModel;
 }
 
-int Composer::fromIndex() const
+int ComposerController::fromIndex() const
 {
     return m_fromIndex;
 }
 
-void Composer::setFromIndex(int fromIndex)
+void ComposerController::setFromIndex(int fromIndex)
 {
     if(m_fromIndex != fromIndex) {
         m_fromIndex = fromIndex;
@@ -117,12 +117,12 @@ void Composer::setFromIndex(int fromIndex)
     }
 }
 
-QVariant Composer::originalMessage() const
+QVariant ComposerController::originalMessage() const
 {
     return m_originalMessage;
 }
 
-void Composer::setOriginalMessage(const QVariant &originalMessage)
+void ComposerController::setOriginalMessage(const QVariant &originalMessage)
 {
     const auto mailData = KMime::CRLFtoLF(originalMessage.toByteArray());
     if (!mailData.isEmpty()) {
@@ -141,7 +141,7 @@ void Composer::setOriginalMessage(const QVariant &originalMessage)
     }
 }
 
-KMime::Message::Ptr Composer::assembleMessage()
+KMime::Message::Ptr ComposerController::assembleMessage()
 {
     auto mail = m_msg.value<KMime::Message::Ptr>();
     if (!mail) {
@@ -160,7 +160,7 @@ KMime::Message::Ptr Composer::assembleMessage()
     return mail;
 }
 
-void Composer::send()
+void ComposerController::send()
 {
     auto mail = assembleMessage();
     Kube::ApplicationContext settings;
@@ -179,7 +179,7 @@ void Composer::send()
     clear();
 }
 
-void Composer::saveAsDraft()
+void ComposerController::saveAsDraft()
 {
     auto mail = assembleMessage();
     Kube::Context context;
@@ -188,7 +188,7 @@ void Composer::saveAsDraft()
     clear();
 }
 
-void Composer::clear()
+void ComposerController::clear()
 {
     setSubject("");
     setBody("");
