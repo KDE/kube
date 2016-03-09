@@ -1,2 +1,2 @@
-add_subdirectory(kube-mail)
-add_subdirectory(kube-accounts)
+add_subdirectory(mail)
+#add_subdirectory(kube-accounts)

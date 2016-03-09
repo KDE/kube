@@ -1,4 +1,4 @@
-project(kube-mail)
+project(kube-components)
 
 cmake_minimum_required(VERSION 2.8.10.1)
 
@@ -24,10 +24,3 @@ find_package(KF5 REQUIRED COMPONENTS Package)
 
 # install UI package
 kpackage_install_package(package org.kde.kube.mail "genericqml")
-
-# install executable
-add_executable(${PROJECT_NAME} main.cpp)
-qt5_use_modules(${PROJECT_NAME} Gui Quick Widgets)
-target_link_libraries(${PROJECT_NAME} KF5::Package)
-
-install(TARGETS ${PROJECT_NAME} DESTINATION bin)
