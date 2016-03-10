@@ -18,11 +18,11 @@
 */
 #include "accountfactory.h"
 
-#include <QQmlComponent>
-#include <QQmlEngine>
 #include <QDebug>
 
 #include <KPackage/PackageLoader>
+#include <KPackage/Package>
+#include <KPluginMetaData>
 
 AccountFactory::AccountFactory(QObject *parent)
     : QObject(parent)
@@ -30,19 +30,11 @@ AccountFactory::AccountFactory(QObject *parent)
 
 }
 
-QString AccountFactory::name() const
+void AccountFactory::setAccountId(const QString &accountId)
 {
-    return "Maildir";
-}
-
-QString AccountFactory::icon() const
-{
-    return "icon";
-}
-
-QVariant AccountFactory::ui() const
-{
-    return createComponent(getAccountType());
+    qWarning() << "setting account id: " << accountId;
+    mAccountId = accountId;
+    loadPackage();
 }
 
 QByteArray AccountFactory::getAccountType() const
@@ -50,23 +42,13 @@ QByteArray AccountFactory::getAccountType() const
     return "maildir";
 }
 
-QString AccountFactory::uiPath() const
+void AccountFactory::loadPackage()
 {
     auto accountType = getAccountType();
     auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.accounts." + accountType);
     Q_ASSERT(package.isValid());
-    return package.filePath("mainscript");
-}
-
-QVariant AccountFactory::createComponent(const QByteArray &accountType) const const
-{
-    qWarning() << "Trying to load accounts package " << accountType << mAccountId;
-    auto engine = qmlEngine(this);
-    Q_ASSERT(engine);
-    auto component = new QQmlComponent(engine, QUrl::fromLocalFile(uiPath()), QQmlComponent::PreferSynchronous);
-    for (const auto &error : component->errors()) {
-        qWarning() << error.toString();
-    }
-    Q_ASSERT(component->isReady());
-    return QVariant::fromValue(component);
+    mUiPath = package.filePath("mainscript");
+    mName = package.metadata().name();
+    mIcon = package.metadata().iconName();
+    emit accountLoaded();
 }

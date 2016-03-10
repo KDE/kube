@@ -28,21 +28,23 @@
 class AccountFactory : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString accountId MEMBER mAccountId);
-    Q_PROPERTY(QString name READ name);
-    Q_PROPERTY(QString icon READ icon);
-    Q_PROPERTY(QVariant ui READ ui);
-    Q_PROPERTY(QString uiPath READ uiPath);
+    Q_PROPERTY(QString accountId MEMBER mAccountId WRITE setAccountId);
+    Q_PROPERTY(QString name MEMBER mName NOTIFY accountLoaded);
+    Q_PROPERTY(QString icon MEMBER mIcon NOTIFY accountLoaded);
+    Q_PROPERTY(QString uiPath MEMBER mUiPath NOTIFY accountLoaded);
 public:
     explicit AccountFactory(QObject *parent = Q_NULLPTR);
 
-    QString name() const;
-    QString icon() const;
-    QVariant ui() const;
-    QString uiPath() const;
+    void setAccountId(const QString &);
 
-    Q_INVOKABLE QVariant createComponent(const QByteArray &accountType) const;
+signals:
+    void accountLoaded();
+
 private:
+    void loadPackage();
     QByteArray getAccountType() const;
     QString mAccountId;
+    QString mName;
+    QString mIcon;
+    QString mUiPath;
 };
