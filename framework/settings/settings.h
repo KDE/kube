@@ -42,6 +42,7 @@ private:
     void load();
     QSharedPointer<QSettings> getSettings();
     QByteArray mIdentifier;
+    bool mLoaded;
 };
 
 class Account;
@@ -63,6 +64,7 @@ class Account : public Settings
 public:
     Account(const QByteArray &identifier);
     Identity primaryIdentity() const;
+    QByteArray type() const;
 };
 
 class Identity : public Settings

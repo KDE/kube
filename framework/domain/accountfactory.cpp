@@ -24,28 +24,30 @@
 #include <KPackage/Package>
 #include <KPluginMetaData>
 
+#include "settings/settings.h"
+
 AccountFactory::AccountFactory(QObject *parent)
     : QObject(parent)
 {
-
 }
 
 void AccountFactory::setAccountId(const QString &accountId)
 {
-    qWarning() << "setting account id: " << accountId;
     mAccountId = accountId;
-    loadPackage();
-}
 
-QByteArray AccountFactory::getAccountType() const
-{
-    return "maildir";
+    Kube::Account account(mAccountId.toUtf8());
+    mAccountType = account.type();
+
+    loadPackage();
 }
 
 void AccountFactory::loadPackage()
 {
-    auto accountType = getAccountType();
-    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.accounts." + accountType);
+    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.accounts." + mAccountType);
+    if (!package.isValid()) {
+        qWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
+        return;
+    }
     Q_ASSERT(package.isValid());
     mUiPath = package.filePath("mainscript");
     mName = package.metadata().name();

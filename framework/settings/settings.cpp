@@ -26,21 +26,24 @@
 using namespace Kube;
 
 Settings::Settings(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+    mLoaded(false)
 {
 
 }
 
 Settings::Settings(const QByteArray &id, QObject *parent)
     : QObject(parent),
-    mIdentifier(id)
+    mIdentifier(id),
+    mLoaded(false)
 {
     load();
 }
 
 Settings::Settings(const Settings &other)
     : QObject(other.parent()),
-    mIdentifier(other.mIdentifier)
+    mIdentifier(other.mIdentifier),
+    mLoaded(false)
 {
     load();
 }
@@ -59,8 +62,19 @@ void Settings::save()
 {
     qWarning() << "Saving" << mIdentifier;
     auto settings = getSettings();
+
+    for (const auto &p : dynamicPropertyNames()) {
+        qWarning() << "setting " << p << property(p);
+        if (p == "identifier") {
+            continue;
+        }
+        settings->setValue(p, property(p));
+    }
     for (int i = metaObject()->propertyOffset(); i < metaObject()->propertyCount(); i++) {
         const auto p = metaObject()->property(i).name();
+        if (p == QByteArray("identifier")) {
+            continue;
+        }
         qWarning() << "setting " << p << property(p);
         settings->setValue(p, property(p));
     }
@@ -69,7 +83,10 @@ void Settings::save()
 
 void Settings::load()
 {
-    qWarning() << "loading" << mIdentifier;
+    if (mLoaded) {
+        return;
+    }
+    mLoaded = true;
     for (int i = metaObject()->propertyOffset(); i < metaObject()->propertyCount(); i++) {
         auto p = metaObject()->property(i).name();
         setProperty(p, QVariant());
@@ -112,6 +129,11 @@ Account::Account(const QByteArray &identifier)
 Identity Account::primaryIdentity() const
 {
     return Identity(property("primaryIdentityId").toByteArray());
+}
+
+QByteArray Account::type() const
+{
+    return property("type").toByteArray();
 }
 
 Identity::Identity(const QByteArray &identifier)

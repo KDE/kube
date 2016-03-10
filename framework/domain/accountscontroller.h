@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsystems.com>
+    Copyright (c) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,31 +20,24 @@
 #pragma once
 
 #include <QObject>
+#include <QString>
+#include <QStringList>
 #include <QVariant>
 
-/**
- * A factory to instantiate accountp plugins.
- */
-class AccountFactory : public QObject
+class AccountsController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString accountId MEMBER mAccountId WRITE setAccountId);
-    Q_PROPERTY(QString name MEMBER mName NOTIFY accountLoaded);
-    Q_PROPERTY(QString icon MEMBER mIcon NOTIFY accountLoaded);
-    Q_PROPERTY(QString uiPath MEMBER mUiPath NOTIFY accountLoaded);
-public:
-    explicit AccountFactory(QObject *parent = Q_NULLPTR);
+    Q_PROPERTY (QStringList accounts MEMBER mAccounts NOTIFY accountsChanged)
 
-    void setAccountId(const QString &);
+public:
+    explicit AccountsController(QObject *parent = Q_NULLPTR);
 
 signals:
-    void accountLoaded();
+    void accountsChanged();
+
+public slots:
+    void createAccount(const QString &accountId);
 
 private:
-    void loadPackage();
-    QString mAccountId;
-    QString mName;
-    QString mIcon;
-    QString mUiPath;
-    QByteArray mAccountType;
+    QStringList mAccounts;
 };

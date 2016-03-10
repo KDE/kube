@@ -26,6 +26,7 @@
 #include "messageparser.h"
 #include "retriever.h"
 #include "accountfactory.h"
+#include "accountscontroller.h"
 
 #include <QtQml>
 
@@ -39,4 +40,5 @@ void MailPlugin::registerTypes (const char *uri)
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");
     qmlRegisterType<Retriever>(uri, 1, 0, "Retriever");
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
+    qmlRegisterType<AccountsController>(uri, 1, 0, "AccountsController");
 }

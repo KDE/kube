@@ -57,15 +57,19 @@ Rectangle {
             id: contextSettings
             identifier: "applicationcontext"
             property string currentAccountId: "current"
-            property var availableAccountTypes: ["maildir"]
-            property var accounts: ["current"]
         }
 
-        Column {
+        KubeFramework.AccountsController {
+            id: accountsController
+        }
+
+        ColumnLayout {
             spacing: 5
             Repeater {
-                model: contextSettings.accounts
-                delegate: Rectangle {
+                model: accountsController.accounts
+                delegate: ColumnLayout {
+                    height: 100
+                    width: 100
                     KubeFramework.AccountFactory {
                         id: accountFactory
                         accountId: modelData
@@ -81,8 +85,16 @@ Rectangle {
                     Label {
                         text: accountFactory.name
                     }
-                    Loader { source: accountFactory.uiPath }
+                    // Loader { source: accountFactory.uiPath }
                 }
+            }
+        }
+
+        Button {
+            id: button
+            text: "Create New"
+            onClicked: {
+                accountsController.createAccount("maildir");
             }
         }
 
