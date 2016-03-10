@@ -24,6 +24,7 @@ import QtQml 2.2
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework.theme 1.0
 
 ScrollView {
     id: root
@@ -47,7 +48,7 @@ ScrollView {
 
         delegate: PlasmaComponents.ListItem {
             width: listView.width
-            height: unit.size * 12
+            height: Unit.size * 12
 
             enabled: true
             checked: listView.currentIndex == index
@@ -84,10 +85,10 @@ ScrollView {
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
-                    leftMargin: unit.size * 2
+                    leftMargin: Unit.size * 2
                 }
 
-                height: unit.size * 9
+                height: Unit.size * 9
                 width: height
 
                 name: model.senderName
@@ -99,7 +100,7 @@ ScrollView {
                 anchors {
                     top: avatar.top
                     left: avatar.right
-                    leftMargin: unit.size * 3
+                    leftMargin: Unit.size * 3
                 }
 
                 text: model.senderName
@@ -114,9 +115,9 @@ ScrollView {
             //     anchors {
             //         top: avatar.top
             //         left: senderName.right
-            //         leftMargin: unit.size
+            //         leftMargin: Unit.size
             //         right: date.left
-            //         rightMargin: unit.size
+            //         rightMargin: Unit.size
             //     }
             //
             //     text: "(" + model.sender +")"
@@ -130,7 +131,7 @@ ScrollView {
                 anchors {
                     top: avatar.top
                     right: parent.right
-                    rightMargin: unit.size * 2
+                    rightMargin: Unit.size * 2
                 }
 
                 text: Qt.formatDateTime(model.date)
@@ -144,7 +145,7 @@ ScrollView {
                 anchors {
                     bottom: avatar.bottom
                     left: avatar.right
-                    leftMargin: unit.size * 3
+                    leftMargin: Unit.size * 3
                 }
 
                 text: model.subject

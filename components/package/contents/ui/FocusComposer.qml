@@ -55,7 +55,7 @@ Rectangle {
 
             anchors {
                 fill: parent
-                margins: unit.size * 3
+                margins: Unit.size * 3
             }
 
             Composer {

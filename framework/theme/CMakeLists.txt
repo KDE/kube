@@ -1,6 +1,7 @@
 set(themeplugin_SRCS
     themeplugin.cpp
     colorpalette.cpp
+    unit.cpp
 )
 
 add_library(themeplugin SHARED ${themeplugin_SRCS})

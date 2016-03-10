@@ -16,35 +16,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "themeplugin.h"
-
-#include <QtQml>
-#include <QQmlEngine>
-
-#include "colorpalette.h"
 #include "unit.h"
 
-static QObject *colorpaletteInstace(QQmlEngine *engine, QJSEngine *scriptEngine)
+Unit::Unit(QObject *parent) : QObject(parent), m_size(5)
 {
-    Q_UNUSED(engine);
-    Q_UNUSED(scriptEngine);
 
-    return new ColorPalette;
 }
 
-static QObject *unitInstace(QQmlEngine *engine, QJSEngine *scriptEngine)
+int Unit::size() const
 {
-    Q_UNUSED(engine);
-    Q_UNUSED(scriptEngine);
-
-    return new Unit;
-}
-
-void ThemePlugin::registerTypes (const char *uri)
-{
-    Q_ASSERT(uri == QLatin1String("org.kube.framework.theme"));
-
-    qmlRegisterSingletonType<ColorPalette>(uri, 1, 0, "ColorPalette", colorpaletteInstace);
-    qmlRegisterSingletonType<Unit>(uri, 1, 0, "Unit", unitInstace);
-
+    return m_size;
 }

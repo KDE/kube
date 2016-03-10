@@ -24,6 +24,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework.theme 1.0
 
 Item {
     id: root
@@ -34,7 +35,7 @@ Item {
         id: searchBox
 
         width: root.width
-        height: unit.size * 10
+        height: Unit.size * 10
 
         TextField {
             anchors. centerIn: parent
@@ -68,7 +69,7 @@ Item {
         style: TreeViewStyle {
             activateItemOnSingleClick: true
             rowDelegate: Rectangle {
-                height: unit.size * 10
+                height: Unit.size * 10
                 color: "transparent"
             }
             itemDelegate: Rectangle {
@@ -81,7 +82,7 @@ Item {
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
-                        leftMargin: unit.size * 3
+                        leftMargin: Unit.size * 3
                     }
                     source: model.icon
                 }
@@ -89,7 +90,7 @@ Item {
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: iconItem.right
-                        leftMargin: unit.size * 3
+                        leftMargin: Unit.size * 3
                     }
                     renderType: Text.NativeRendering
                     text: styleData.value

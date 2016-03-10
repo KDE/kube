@@ -16,35 +16,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "themeplugin.h"
+#include <QObject>
 
-#include <QtQml>
-#include <QQmlEngine>
 
-#include "colorpalette.h"
-#include "unit.h"
-
-static QObject *colorpaletteInstace(QQmlEngine *engine, QJSEngine *scriptEngine)
+class Unit : public QObject
 {
-    Q_UNUSED(engine);
-    Q_UNUSED(scriptEngine);
+    Q_OBJECT
+    Q_PROPERTY (int size READ size NOTIFY unitChanged)
 
-    return new ColorPalette;
-}
 
-static QObject *unitInstace(QQmlEngine *engine, QJSEngine *scriptEngine)
-{
-    Q_UNUSED(engine);
-    Q_UNUSED(scriptEngine);
+public:
+    explicit Unit(QObject *parent = Q_NULLPTR);
 
-    return new Unit;
-}
+    int size() const;
 
-void ThemePlugin::registerTypes (const char *uri)
-{
-    Q_ASSERT(uri == QLatin1String("org.kube.framework.theme"));
+signals:
+    void unitChanged();
 
-    qmlRegisterSingletonType<ColorPalette>(uri, 1, 0, "ColorPalette", colorpaletteInstace);
-    qmlRegisterSingletonType<Unit>(uri, 1, 0, "Unit", unitInstace);
-
-}
+private:
+    int m_size;
+};

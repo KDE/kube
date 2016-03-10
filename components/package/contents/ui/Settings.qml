@@ -75,7 +75,7 @@ Rectangle {
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: parent.left
-                            // leftMargin: unit.size * 3
+                            // leftMargin: Unit.size * 3
                         }
                         source: accountFactory.icon
                     }
