@@ -20,6 +20,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components  2.0 as PlasmaComponents
 
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
@@ -64,33 +65,65 @@ Rectangle {
             id: accountsController
         }
 
-        ColumnLayout {
-            spacing: 5
-            Repeater {
+        SplitView {
+            anchors.fill: parent
+
+            ListView {
+                id: accountsList
+
+                width: Unit.size * 55
+                Layout.maximumWidth: Unit.size * 150
+                Layout.minimumWidth: Unit.size * 30
+
                 model: accountsController.accounts
-                delegate: ColumnLayout {
-                    height: 100
-                    width: 100
+
+                delegate: PlasmaComponents.ListItem {
+                    width: accountsList.width
+
+                    height: Unit.size * 10
+
+                    enabled: true
+                    checked: accountsList.currentIndex == index
+
                     KubeFramework.AccountFactory {
                         id: accountFactory
                         accountId: modelData
                     }
-                    PlasmaCore.IconItem {
+
+                    MouseArea {
                         anchors {
-                            verticalCenter: parent.verticalCenter
-                            left: parent.left
-                            // leftMargin: Unit.size * 3
+                            fill: parent
                         }
-                        source: accountFactory.icon
+
+                        onClicked: {
+                            accountDetails.source = accountFactory.uiPath
+
+                            accountsList.currentIndex = model.index
+                        }
                     }
-                    Label {
-                        text: accountFactory.name
+
+                    RowLayout {
+                        anchors.fill: parent
+
+                        PlasmaCore.IconItem {
+                            source: accountFactory.icon
+                        }
+
+                        Label {
+                            text: accountFactory.name
+                        }
                     }
-                    // Loader { source: accountFactory.uiPath }
                 }
+            }
+
+            Loader {
+                id: accountDetails
+
+                Layout.fillWidth: true
             }
         }
 
+ /*
         Button {
             id: button
             text: "Create New"
@@ -100,5 +133,8 @@ Rectangle {
         }
 
         //TODO: Add possibility to add more accounts
+
+        */
     }
+
 }
