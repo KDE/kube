@@ -193,9 +193,5 @@ ApplicationWindow {
         id: unit
         property int size: 5
     }
-
-    KubeComponents.ColorPalette {
-        id: colorPalette
-    }
 }
 

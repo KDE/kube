@@ -72,7 +72,6 @@ ScrollView {
 
                 anchors.fill: parent
 
-                // color: colorPalette.read
                 color: "steelblue"
                 opacity: 0.1
 

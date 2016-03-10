@@ -23,13 +23,14 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework.theme 1.0
 
 Rectangle {
     id: root
 
     visible: false
 
-    color: colorPalette.border
+    color: ColorPalette.border
 
     opacity: 0.9
 
@@ -47,7 +48,7 @@ Rectangle {
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: colorPalette.background
+        color: ColorPalette.background
 
         MouseArea {
             anchors.fill: parent

@@ -20,6 +20,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework.theme 1.0
 
 Item {
     id: root
@@ -30,7 +31,7 @@ Item {
 
         anchors.fill: parent
 
-        color: colorPalette.background
+        color: ColorPalette.background
     }
 
     Repeater {

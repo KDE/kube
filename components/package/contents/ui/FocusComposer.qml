@@ -45,7 +45,7 @@ Rectangle {
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: colorPalette.background
+        color: ColorPalette.background
 
         MouseArea {
             anchors.fill: parent
