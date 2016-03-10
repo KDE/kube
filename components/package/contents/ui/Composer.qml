@@ -18,6 +18,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
+import QtQuick.Dialogs 1.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kube.framework.domain 1.0 as KubeFramework
@@ -201,6 +202,33 @@ Item {
                 }
 
                 text: "Attach"
+
+                onClicked: {
+                    fileDialog.open();
+                }
+            }
+        }
+
+        RowLayout {
+
+            Layout.fillWidth: true
+
+            Repeater {
+
+                model: composer.attachments
+
+                delegate: PlasmaComponents.Label {
+                    id: name
+
+                    text: modelData
+
+                    Rectangle {
+
+                        anchors.fill: parent
+
+                        color: "lightsteelblue"
+                    }
+                }
             }
         }
 
@@ -215,7 +243,18 @@ Item {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+        }
+    }
 
+    FileDialog {
+        id: fileDialog
+
+        title: "Please choose a file"
+        folder: shortcuts.home
+
+        onAccepted: {
+            console.log("You chose: " + fileDialog.fileUrl)
+            composer.addAttachment(fileDialog.fileUrl);
         }
     }
 }

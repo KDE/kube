@@ -39,6 +39,7 @@ class ComposerController : public QObject
     Q_PROPERTY (QString body READ body WRITE setBody NOTIFY bodyChanged)
     Q_PROPERTY (QStringList identityModel READ identityModel)
     Q_PROPERTY (int fromIndex READ fromIndex WRITE setFromIndex NOTIFY fromIndexChanged)
+    Q_PROPERTY (QStringList attachments READ attachemts NOTIFY attachmentsChanged)
 
 public:
     explicit ComposerController(QObject *parent = Q_NULLPTR);
@@ -63,6 +64,8 @@ public:
     int fromIndex() const;
     void setFromIndex(int fromIndex);
 
+    QStringList attachemts() const;
+
     QVariant originalMessage() const;
     void setOriginalMessage(const QVariant &originalMessage);
 
@@ -73,11 +76,13 @@ signals:
     void ccChanged();
     void bccChanged();
     void fromIndexChanged();
+    void attachmentsChanged();
 
 public slots:
     void send();
     void saveAsDraft();
     void clear();
+    void addAttachment(const QUrl &fileUrl);
 
 private:
     QSharedPointer<KMime::Message> assembleMessage();
@@ -88,6 +93,7 @@ private:
     QString m_body;
     QStringList m_identityModel;
     int m_fromIndex;
+    QStringList m_attachments;
     QVariant m_originalMessage;
     QVariant m_msg;
 };
