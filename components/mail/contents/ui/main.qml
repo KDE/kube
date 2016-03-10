@@ -22,6 +22,7 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.settings 1.0 as KubeSettings
+import org.kube.framework.theme 1.0
 import org.kube.components 1.0 as KubeComponents
 
 ApplicationWindow {
@@ -154,17 +155,17 @@ ApplicationWindow {
 
         KubeComponents.FolderListView {
             id: folderListView
-            width: unit.size * 55
-            Layout.maximumWidth: unit.size * 150
-            Layout.minimumWidth: unit.size * 30
+            width: Unit.size * 55
+            Layout.maximumWidth: Unit.size * 150
+            Layout.minimumWidth: Unit.size * 30
         }
 
         KubeComponents.MailListView  {
             id: mailListView
             parentFolder: folderListView.currentFolder
-            width: unit.size * 80
-            Layout.maximumWidth: unit.size * 250
-            Layout.minimumWidth: unit.size * 50
+            width: Unit.size * 80
+            Layout.maximumWidth: Unit.size * 250
+            Layout.minimumWidth: Unit.size * 50
             focus: true
         }
 
@@ -186,16 +187,6 @@ ApplicationWindow {
         id: composer
 
         anchors.fill: parent
-    }
-
-    //TODO find a better way to scale UI
-    Item {
-        id: unit
-        property int size: 5
-    }
-
-    KubeComponents.ColorPalette {
-        id: colorPalette
     }
 }
 

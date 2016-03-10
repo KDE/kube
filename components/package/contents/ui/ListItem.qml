@@ -16,13 +16,14 @@
  */
 
 import QtQuick 2.4
+import org.kube.framework.theme 1.0
 
 Item {
     id: delegateRoot
 
     readonly property bool isCurrentItem: ListView.isCurrentItem
 
-    height: unit.width * 25
+    height: Unit.width * 25
     width: parent.width
 
     MouseArea {

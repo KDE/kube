@@ -19,13 +19,15 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
+import org.kube.framework.theme 1.0
+
 Rectangle {
     id: root
     property variant originalMessage
 
     visible: false
 
-    color: colorPalette.border
+    color: ColorPalette.border
 
     opacity: 0.9
 
@@ -43,7 +45,7 @@ Rectangle {
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: colorPalette.background
+        color: ColorPalette.background
 
         MouseArea {
             anchors.fill: parent
@@ -53,7 +55,7 @@ Rectangle {
 
             anchors {
                 fill: parent
-                margins: unit.size * 3
+                margins: Unit.size * 3
             }
 
             Composer {

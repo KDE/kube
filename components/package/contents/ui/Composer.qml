@@ -97,7 +97,7 @@ Item {
                     }
                 }
 
-                PlasmaComponents.Button {
+                Button {
                     id: ccButton
 
                     text: "Cc"
@@ -108,7 +108,7 @@ Item {
                     }
                 }
 
-                PlasmaComponents.Button {
+                Button {
                     id: bccButton
 
                     text: "Bcc"
@@ -181,7 +181,7 @@ Item {
 
             height: subject.height * 1.5
 
-            PlasmaComponents.Button {
+            Button {
 
                 anchors {
                     bottom: parent.bottom
@@ -194,7 +194,7 @@ Item {
                 }
             }
 
-            PlasmaComponents.Button {
+            Button {
 
                 anchors {
                     bottom: parent.bottom
@@ -217,7 +217,7 @@ Item {
 
                 model: composer.attachments
 
-                delegate: PlasmaComponents.Label {
+                delegate: Label {
                     id: name
 
                     text: modelData
