@@ -1,0 +1,3 @@
+module org.kube.framework.theme
+
+plugin themeplugin
