@@ -68,49 +68,55 @@ Rectangle {
         SplitView {
             anchors.fill: parent
 
-            ListView {
+            ScrollView {
                 id: accountsList
 
-                width: Unit.size * 55
-                Layout.maximumWidth: Unit.size * 150
-                Layout.minimumWidth: Unit.size * 30
+                    width: Unit.size * 55
+                    Layout.maximumWidth: Unit.size * 150
+                    Layout.minimumWidth: Unit.size * 30
 
-                model: accountsController.accounts
+                ListView {
+                    id: listView
 
-                delegate: PlasmaComponents.ListItem {
-                    width: accountsList.width
+                    model: accountsController.accounts
 
-                    height: Unit.size * 10
+                    currentIndex: -1
 
-                    enabled: true
-                    checked: accountsList.currentIndex == index
+                    delegate: PlasmaComponents.ListItem {
 
-                    KubeFramework.AccountFactory {
-                        id: accountFactory
-                        accountId: modelData
-                    }
+                        width: listView.width
+                        height: Unit.size * 10
 
-                    MouseArea {
-                        anchors {
-                            fill: parent
+                        enabled: true
+                        checked: listView.currentIndex == index
+
+                        KubeFramework.AccountFactory {
+                            id: accountFactory
+                            accountId: modelData
                         }
 
-                        onClicked: {
-                            accountDetails.source = accountFactory.uiPath
+                        MouseArea {
+                            anchors {
+                                fill: parent
+                            }
 
-                            accountsList.currentIndex = model.index
-                        }
-                    }
+                            onClicked: {
+                                accountDetails.source = accountFactory.uiPath
 
-                    RowLayout {
-                        anchors.fill: parent
-
-                        PlasmaCore.IconItem {
-                            source: accountFactory.icon
+                                listView.currentIndex = model.index
+                            }
                         }
 
-                        Label {
-                            text: accountFactory.name
+                        RowLayout {
+                            anchors.fill: parent
+
+                            PlasmaCore.IconItem {
+                                source: accountFactory.icon
+                            }
+
+                            Label {
+                                text: accountFactory.name
+                            }
                         }
                     }
                 }
