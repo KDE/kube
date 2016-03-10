@@ -117,9 +117,20 @@ void ComposerController::setFromIndex(int fromIndex)
     }
 }
 
+QStringList ComposerController::attachemts() const
+{
+    return m_attachments;
+}
+
 QVariant ComposerController::originalMessage() const
 {
     return m_originalMessage;
+}
+
+void ComposerController::addAttachment(const QUrl &fileUrl)
+{
+    m_attachments.append(fileUrl.toString());
+    emit attachmentsChanged();
 }
 
 void ComposerController::setOriginalMessage(const QVariant &originalMessage)
