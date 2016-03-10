@@ -19,8 +19,10 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
+import org.kde.plasma.core 2.0 as PlasmaCore
+
 import org.kube.framework.settings 1.0 as KubeSettings
-import org.kde.kube.accounts.maildir 1.0 as Maildir
+import org.kube.framework.domain 1.0 as KubeFramework
 
 Rectangle {
     id: root
@@ -63,8 +65,23 @@ Rectangle {
             spacing: 5
             Repeater {
                 model: contextSettings.accounts
-                delegate: Maildir.AccountSettings { //This should be retrieved from the accounts plugin: KubeAccounts { identifier: modelData }.settingsUi
-                    accountId: modelData
+                delegate: Rectangle {
+                    KubeFramework.AccountFactory {
+                        id: accountFactory
+                        accountId: modelData
+                    }
+                    PlasmaCore.IconItem {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            // leftMargin: unit.size * 3
+                        }
+                        source: accountFactory.icon
+                    }
+                    Label {
+                        text: accountFactory.name
+                    }
+                    Loader { source: accountFactory.uiPath }
                 }
             }
         }

@@ -19,14 +19,18 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
-import org.kde.kube.settings 1.0 as KubeSettings
+import org.kube.framework.settings 1.0 as KubeSettings
 import org.kde.kube.accounts.maildir 1.0 as MaildirAccount
+import org.kube.components 1.0 as KubeComponents
 
 Rectangle {
     id: root
     property string accountId
     property string accountName: "Maildir"
 
+    KubeComponents.ColorPalette {
+        id: colorPalette
+    }
     color: colorPalette.background
 
     GridLayout {
@@ -82,7 +86,7 @@ Rectangle {
 
         KubeSettings.Settings {
             id: accountSettings
-            identifier: "account." + modelData
+            identifier: "account." + accountId
             property string primaryIdentity: "current"
         }
         KubeSettings.Settings {
