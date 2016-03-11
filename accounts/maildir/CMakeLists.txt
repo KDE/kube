@@ -25,6 +25,8 @@ find_package(KF5Async CONFIG REQUIRED)
 find_package(KF5 REQUIRED COMPONENTS Package)
 
 include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/)
+#FIXME
+include_directories(../../framework/)
 
 set(SRCS
     maildirsettings.cpp
@@ -33,7 +35,7 @@ set(SRCS
 
 add_library(maildiraccountplugin SHARED ${SRCS})
 qt5_use_modules(maildiraccountplugin Core Quick Qml)
-target_link_libraries(maildiraccountplugin sink)
+target_link_libraries(maildiraccountplugin sink settingsplugin)
 
 kpackage_install_package(package org.kube.accounts.maildir "genericqml")
 

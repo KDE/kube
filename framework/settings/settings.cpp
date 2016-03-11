@@ -22,6 +22,7 @@
 #include <QStandardPaths>
 #include <QMetaObject>
 #include <QMetaProperty>
+#include <QFile>
 
 using namespace Kube;
 
@@ -50,7 +51,6 @@ Settings::Settings(const Settings &other)
 
 Settings::~Settings()
 {
-    // save();
 }
 
 QSharedPointer<QSettings> Settings::getSettings()
@@ -79,6 +79,11 @@ void Settings::save()
         settings->setValue(p, property(p));
     }
     settings->sync();
+}
+
+void Settings::remove()
+{
+    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/%1.ini").arg(QString::fromLatin1(mIdentifier)));
 }
 
 void Settings::load()

@@ -21,7 +21,7 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.theme 1.0
-import org.kde.kube.accounts.maildir 1.0 as MaildirAccount
+import org.kube.accounts.maildir 1.0 as MaildirAccount
 
 
 Rectangle {
@@ -47,6 +47,8 @@ Rectangle {
             id: path
             placeholderText: "path"
             Layout.fillWidth: true
+            text: maildirSettings.path
+            onTextChanged: { maildirSettings.path = text; }
         }
 
         Text {
@@ -60,6 +62,8 @@ Rectangle {
             id: username
             placeholderText: "username"
             Layout.fillWidth: true
+            text: transportSettings.username
+            onTextChanged: { transportSettings.username = text; }
         }
 
         Label { text: "Password" }
@@ -67,6 +71,8 @@ Rectangle {
             id: password
             placeholderText: "password"
             Layout.fillWidth: true
+            text: transportSettings.password
+            onTextChanged: { transportSettings.password = text; }
         }
 
         Label { text: "Server" }
@@ -74,38 +80,35 @@ Rectangle {
             id: server
             placeholderText: "server"
             Layout.fillWidth: true
+            text: transportSettings.server
+            onTextChanged: { transportSettings.server = text; }
         }
 
         MaildirAccount.MaildirSettings {
             id: maildirSettings
-            identifier: "org.kde.maildir.instance1"
-            property alias path: path.text
+            accountIdentifier: accountId
         }
 
         KubeSettings.Settings {
-            id: accountSettings
-            identifier: "account." + accountId
-            property string primaryIdentity: "current"
-        }
-        KubeSettings.Settings {
-            id: identitySettings
-            identifier: "identity.current"
-            property string transport: "current"
-        }
-        KubeSettings.Settings {
             id: transportSettings
+            //TODO set a proper identifier
             identifier: "transport.current"
-            property alias username: username.text
-            property alias password: password.text
-            property alias server: server.text
+            property string server;
+            property string username;
+            property string password;
         }
 
         Button {
-            id: button
             text: "Save"
             onClicked: {
                 transportSettings.save();
                 maildirSettings.save();
+            }
+        }
+        Button {
+            text: "Remove"
+            onClicked: {
+                maildirSettings.remove();
             }
         }
     }

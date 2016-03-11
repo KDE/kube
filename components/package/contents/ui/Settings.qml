@@ -68,56 +68,66 @@ Rectangle {
         SplitView {
             anchors.fill: parent
 
-            ScrollView {
-                id: accountsList
+            ColumnLayout {
+                ScrollView {
+                    id: accountsList
 
                     width: Unit.size * 55
                     Layout.maximumWidth: Unit.size * 150
                     Layout.minimumWidth: Unit.size * 30
 
-                ListView {
-                    id: listView
+                    ListView {
+                        id: listView
 
-                    model: accountsController.accounts
+                        model: accountsController.accounts
 
-                    currentIndex: -1
+                        currentIndex: -1
 
-                    delegate: PlasmaComponents.ListItem {
+                        delegate: PlasmaComponents.ListItem {
 
-                        width: listView.width
-                        height: Unit.size * 10
+                            width: listView.width
+                            height: Unit.size * 10
 
-                        enabled: true
-                        checked: listView.currentIndex == index
+                            enabled: true
+                            checked: listView.currentIndex == index
 
-                        KubeFramework.AccountFactory {
-                            id: accountFactory
-                            accountId: modelData
+                            KubeFramework.AccountFactory {
+                                id: accountFactory
+                                accountId: modelData
+                            }
+
+                            MouseArea {
+                                anchors {
+                                    fill: parent
+                                }
+
+                                onClicked: {
+                                    console.warn("Loading module is ", accountFactory.acountId);
+                                    accountDetails.source = accountFactory.uiPath
+                                    listView.currentIndex = model.index
+                                }
+                            }
+
+                            RowLayout {
+                                anchors.fill: parent
+
+                                PlasmaCore.IconItem {
+                                    source: accountFactory.icon
+                                }
+
+                                Label {
+                                    text: accountFactory.name
+                                }
+                            }
                         }
+                    }
 
-                        MouseArea {
-                            anchors {
-                                fill: parent
-                            }
-
-                            onClicked: {
-                                accountDetails.source = accountFactory.uiPath
-
-                                listView.currentIndex = model.index
-                            }
-                        }
-
-                        RowLayout {
-                            anchors.fill: parent
-
-                            PlasmaCore.IconItem {
-                                source: accountFactory.icon
-                            }
-
-                            Label {
-                                text: accountFactory.name
-                            }
-                        }
+                }
+                Button {
+                    id: button
+                    text: "Create New"
+                    onClicked: {
+                        accountsController.createAccount("maildir");
                     }
                 }
             }
@@ -128,19 +138,5 @@ Rectangle {
                 Layout.fillWidth: true
             }
         }
-
- /*
-        Button {
-            id: button
-            text: "Create New"
-            onClicked: {
-                accountsController.createAccount("maildir");
-            }
-        }
-
-        //TODO: Add possibility to add more accounts
-
-        */
     }
-
 }

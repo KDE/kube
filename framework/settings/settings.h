@@ -38,6 +38,7 @@ public:
     QByteArray identifier() const;
 
     Q_INVOKABLE void save();
+    Q_INVOKABLE void remove();
 private:
     void load();
     QSharedPointer<QSettings> getSettings();

@@ -18,8 +18,11 @@
 */
 #include "maildirsettings.h"
 
+#include <settings/settings.h>
+
 #include <sink/store.h>
 #include <QDebug>
+#include <QUuid>
 
 MaildirSettings::MaildirSettings(QObject *parent)
     : QObject(parent)
@@ -31,7 +34,11 @@ void MaildirSettings::setIdentifier(const QByteArray &id)
     mIdentifier = id;
     Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::IdentityFilter(mIdentifier) + Sink::Query::RequestedProperties(QList<QByteArray>() << "path"))
         .then<void, Sink::ApplicationDomain::SinkResource>([this](const Sink::ApplicationDomain::SinkResource &resource) {
-            setProperty("path", resource.getProperty("path"));
+            auto path = resource.getProperty("path").toString();
+            if (mPath != path) {
+                mPath = path;
+                emit pathChanged();
+            }
         }).exec();
 }
 
@@ -40,16 +47,70 @@ QByteArray MaildirSettings::identifier() const
     return mIdentifier;
 }
 
+void MaildirSettings::setAccountIdentifier(const QByteArray &id)
+{
+    mAccountIdentifier = id;
+    Kube::Account account(id);
+    account.property("maildirResource").toByteArray();
+    setIdentifier(account.property("maildirResource").toByteArray());
+}
+
+QByteArray MaildirSettings::accountIdentifier() const
+{
+    return mAccountIdentifier;
+}
+
+void MaildirSettings::setPath(const QString &path)
+{
+    if (mPath != path) {
+        mPath = path;
+        emit pathChanged();
+    }
+}
+
+QString MaildirSettings::path() const
+{
+    return mPath;
+}
+
 void MaildirSettings::save()
 {
     if (!mIdentifier.isEmpty()) {
         Sink::ApplicationDomain::SinkResource resource(mIdentifier);
-        resource.setProperty("path", property("path"));
+        resource.setProperty("path", mPath);
         Sink::Store::modify(resource).exec();
     } else {
+        const auto resourceIdentifier = "org.kde.maildir." + QUuid::createUuid().toByteArray();
+        mIdentifier = resourceIdentifier;
+
         Sink::ApplicationDomain::SinkResource resource;
         resource.setProperty("path", property("path"));
+        resource.setProperty("identifier", resourceIdentifier);
+        resource.setProperty("type", "org.kde.maildir");
         Sink::Store::create(resource).exec();
+        Kube::Account account(mAccountIdentifier);
+        account.setProperty("maildirResource", resourceIdentifier);
+        account.save();
+        //TODO deal with errors while creating
+    }
+}
+
+void MaildirSettings::remove()
+{
+    if (!mIdentifier.isEmpty()) {
+        qWarning() << "We're missing an identifier";
+    } else {
+        Sink::ApplicationDomain::SinkResource resource(mIdentifier);
+        Sink::Store::remove(resource).exec();
+        Kube::Account account(mAccountIdentifier);
+        account.remove();
+
+        Kube::Settings settings("accounts");
+        auto accounts = settings.property("accounts").toStringList();
+        accounts.removeAll(mAccountIdentifier);
+        settings.setProperty("accounts", accounts);
+        settings.save();
+        //TODO deal with errors while removing
     }
 }
 
