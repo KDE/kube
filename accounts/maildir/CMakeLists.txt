@@ -1,6 +1,6 @@
 project(kube-accounts-maildir)
 
-cmake_minimum_required(VERSION 2.8.10.1)
+cmake_minimum_required(VERSION 2.8.12)
 
 include(CPack)
 include(FeatureSummary)

@@ -1,6 +1,7 @@
 project(kube-mail)
 
-cmake_minimum_required(VERSION 2.8.10.1)
+cmake_minimum_required(VERSION 2.8.12)
+cmake_policy(SET CMP0063 NEW)
 
 include(CPack)
 include(FeatureSummary)
