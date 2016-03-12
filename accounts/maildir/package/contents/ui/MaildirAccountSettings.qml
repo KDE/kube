@@ -18,6 +18,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
+import QtQuick.Dialogs 1.0
 
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.theme 1.0
@@ -43,12 +44,40 @@ Rectangle {
         }
 
         Label { text: "Path" }
-        TextField {
-            id: path
-            placeholderText: "path"
-            Layout.fillWidth: true
-            text: maildirSettings.path
-            onTextChanged: { maildirSettings.path = text; }
+        RowLayout {
+            TextField {
+                id: path
+                placeholderText: "path"
+                Layout.fillWidth: true
+                text: maildirSettings.path
+                onTextChanged: { maildirSettings.path = text; }
+            }
+
+            Button {
+                iconName: "folder"
+                onClicked:  {
+                    fileDialogComponent.createObject(parent);
+                }
+
+                Component {
+                    id: fileDialogComponent
+                    FileDialog {
+                        id: fileDialog
+                        visible: true
+                        title: "Please choose the maildir folder"
+
+                        selectFolder: true
+
+                        onAccepted: {
+                            maildirSettings.path = fileDialog.fileUrl
+                            fileDialogComponent.destroy()
+                        }
+                        onRejected: {
+                            fileDialogComponent.destroy()
+                        }
+                    }
+                }
+            }
         }
 
         Text {
