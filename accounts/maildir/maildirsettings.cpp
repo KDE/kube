@@ -49,10 +49,14 @@ QByteArray MaildirSettings::identifier() const
 
 void MaildirSettings::setAccountIdentifier(const QByteArray &id)
 {
+    if (id.isEmpty()) {
+        return;
+    }
     mAccountIdentifier = id;
+    Q_ASSERT(!id.isEmpty());
     Kube::Account account(id);
-    account.property("maildirResource").toByteArray();
-    setIdentifier(account.property("maildirResource").toByteArray());
+    auto maildirResource = account.property("maildirResource").toByteArray();
+    setIdentifier(maildirResource);
 }
 
 QByteArray MaildirSettings::accountIdentifier() const
@@ -88,6 +92,7 @@ void MaildirSettings::save()
         resource.setProperty("identifier", resourceIdentifier);
         resource.setProperty("type", "org.kde.maildir");
         Sink::Store::create(resource).exec();
+        Q_ASSERT(!mAccountIdentifier.isEmpty());
         Kube::Account account(mAccountIdentifier);
         account.setProperty("maildirResource", resourceIdentifier);
         account.save();

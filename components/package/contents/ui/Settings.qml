@@ -99,8 +99,9 @@ Rectangle {
                                 }
 
                                 onClicked: {
-                                    console.warn("Loading module is ", accountFactory.acountId);
+                                    console.warn("Loading module is ", accountFactory.accountId);
                                     accountDetails.source = accountFactory.uiPath
+                                    accountDetails.item.accountId = accountFactory.accountId
                                     listView.currentIndex = model.index
                                 }
                             }
