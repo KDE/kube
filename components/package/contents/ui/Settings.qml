@@ -29,17 +29,14 @@ import org.kube.framework.theme 1.0
 Rectangle {
     id: root
 
-    visible: false
-
     color: ColorPalette.border
 
     opacity: 0.9
 
     MouseArea {
         anchors.fill: parent
-
         onClicked: {
-            root.visible = false
+            root.destroy()
         }
     }
 

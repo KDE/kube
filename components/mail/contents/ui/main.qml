@@ -74,7 +74,14 @@ ApplicationWindow {
                 height: parent.height
                 text: "Settings"
                 onClicked: {
-                    settings.visible = true
+                    settingsComponent.createObject(app)
+                }
+                Component {
+                    id: settingsComponent
+                    KubeComponents.Settings {
+                        id: settings
+                        anchors.fill: parent
+                    }
                 }
             }
 
@@ -83,7 +90,7 @@ ApplicationWindow {
                 iconName: "mail-message-new"
                 text: "Compose"
                 onClicked: {
-                    composer.visible = true
+                    composerComponent.createObject(app)
                 }
             }
 
@@ -92,8 +99,15 @@ ApplicationWindow {
                 iconName: "mail-message-reply"
                 text: "Reply"
                 onClicked: {
+                    composerComponent.createObject(app)
                     composer.originalMessage = mailListView.currentMail
-                    composer.visible = true
+                }
+            }
+            Component {
+                id: composerComponent
+                KubeComponents.FocusComposer {
+                    id: composer
+                    anchors.fill: parent
                 }
             }
 
@@ -177,16 +191,5 @@ ApplicationWindow {
 
     }
 
-    KubeComponents.Settings {
-        id: settings
-
-        anchors.fill: parent
-    }
-
-    KubeComponents.FocusComposer {
-        id: composer
-
-        anchors.fill: parent
-    }
 }
 

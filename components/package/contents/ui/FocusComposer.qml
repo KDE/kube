@@ -25,8 +25,6 @@ Rectangle {
     id: root
     property variant originalMessage
 
-    visible: false
-
     color: ColorPalette.border
 
     opacity: 0.9
@@ -35,7 +33,7 @@ Rectangle {
         anchors.fill: parent
 
         onClicked: {
-            root.visible = false
+            root.destroy()
         }
     }
 
@@ -74,7 +72,7 @@ Rectangle {
 
                     onClicked: {
                         composer.send()
-                        root.visible = false
+                        root.destroy()
                     }
                 }
             }
