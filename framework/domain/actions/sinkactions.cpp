@@ -57,15 +57,16 @@ static ActionHandlerHelper deleteHandler("org.kde.kube.actions.delete",
 
 static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize",
     [](Context *context) -> bool {
-        return context->property("folder").isValid();
+        return true;
     },
     [](Context *context) {
-        auto folder = context->property("folder").value<Sink::ApplicationDomain::Folder::Ptr>();
-        if (!folder) {
-            qWarning() << "Failed to get the folder: " << context->property("folder");
-            return;
+        if (auto folder = context->property("folder").value<Sink::ApplicationDomain::Folder::Ptr>()) {
+            qDebug() << "Synchronizing resource " << folder->resourceInstanceIdentifier();
+            Sink::Store::synchronize(Sink::Query::ResourceFilter(folder->resourceInstanceIdentifier())).exec();
+        } else {
+            qDebug() << "Synchronizing all";
+            Sink::Store::synchronize(Sink::Query()).exec();
         }
-        Sink::Store::synchronize(Sink::Query::ResourceFilter(folder->resourceInstanceIdentifier())).exec();
     }
 );
 

@@ -52,6 +52,12 @@ ApplicationWindow {
         mail: mailListView.currentMail
     }
 
+    KubeAction.Context {
+        id: folderListContext
+        property variant folder
+        folder: folderListView.currentFolder
+    }
+
     KubeAction.Action {
         id: markAsReadAction
         actionId: "org.kde.kube.actions.mark-as-read"
@@ -62,6 +68,12 @@ ApplicationWindow {
         id: deleteAction
         actionId: "org.kde.kube.actions.delete"
         context: maillistcontext
+    }
+
+    KubeAction.Action {
+        id: syncAction
+        actionId: "org.kde.kube.actions.synchronize"
+        context: folderListContext
     }
 
     //UI
@@ -140,6 +152,15 @@ ApplicationWindow {
                 }
             }
 
+            PlasmaComponents.ToolButton {
+                height: parent.height
+                iconName: "view-refresh"
+                text: "Sync"
+                enabled: syncAction.ready
+                onClicked: {
+                    syncAction.execute()
+                }
+            }
 
         }
         Rectangle {
