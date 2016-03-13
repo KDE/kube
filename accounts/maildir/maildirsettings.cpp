@@ -23,6 +23,7 @@
 #include <sink/store.h>
 #include <QDebug>
 #include <QUuid>
+#include <QDir>
 
 MaildirSettings::MaildirSettings(QObject *parent)
     : QObject(parent)
@@ -77,8 +78,28 @@ QString MaildirSettings::path() const
     return mPath;
 }
 
+QValidator *MaildirSettings::pathValidator() const
+{
+    class PathValidator : public QValidator {
+        State validate(QString &input, int &pos) const {
+            Q_UNUSED(pos);
+            if (QDir(input).exists()) {
+                return Acceptable;
+            } else {
+                return Intermediate;
+            }
+        }
+    };
+    static PathValidator *pathValidator = new PathValidator;
+    return pathValidator;
+}
+
 void MaildirSettings::save()
 {
+    if (!QDir(mPath).exists()) {
+        qWarning() << "The path doesn't exist: " << mPath;
+        return;
+    }
     if (!mIdentifier.isEmpty()) {
         Sink::ApplicationDomain::SinkResource resource(mIdentifier);
         resource.setProperty("path", mPath);

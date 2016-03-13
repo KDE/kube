@@ -19,6 +19,7 @@
 #pragma once
 
 #include <QObject>
+#include <QValidator>
 
 class MaildirSettings : public QObject
 {
@@ -26,6 +27,7 @@ class MaildirSettings : public QObject
     Q_PROPERTY(QByteArray identifier READ identifier WRITE setIdentifier)
     Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
+    Q_PROPERTY(QValidator* pathValidator READ pathValidator)
 
 public:
     MaildirSettings(QObject *parent = 0);
@@ -38,6 +40,7 @@ public:
 
     void setPath(const QString &);
     QString path() const;
+    QValidator *pathValidator() const;
 
     Q_INVOKABLE void save();
     Q_INVOKABLE void remove();

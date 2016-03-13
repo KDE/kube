@@ -51,6 +51,12 @@ Rectangle {
                 Layout.fillWidth: true
                 text: maildirSettings.path
                 onTextChanged: { maildirSettings.path = text; }
+                validator: maildirSettings.pathValidator
+                Rectangle {
+                    anchors.fill: parent
+                    opacity: 0.2
+                    color: path.acceptableInput ? "green" : "yellow"
+                }
             }
 
             Button {
