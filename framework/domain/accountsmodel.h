@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
     Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
@@ -21,40 +20,29 @@
 #pragma once
 
 #include <QObject>
-#include <QIdentityProxyModel>
+#include <QAbstractListModel>
 #include <QSharedPointer>
 #include <QStringList>
 
-namespace Sink {
-    class Query;
-}
-
-class FolderListModel : public QIdentityProxyModel
+class AccountsModel : public QAbstractListModel
 {
     Q_OBJECT
 
-    Q_PROPERTY (QVariant accountId READ accountId WRITE setAccountId)
-
 public:
-    FolderListModel(QObject *parent = Q_NULLPTR);
-    ~FolderListModel();
+    AccountsModel(QObject *parent = Q_NULLPTR);
+    ~AccountsModel();
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     enum Roles {
         Name  = Qt::UserRole + 1,
         Icon,
-        Id,
-        DomainObject
+        AccountId
     };
     Q_ENUMS(Roles)
 
-    QHash<int, QByteArray> roleNames() const;
-
-    void setAccountId(const QVariant &accountId);
-    QVariant accountId() const;
-
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 private:
-    void runQuery(const Sink::Query &query);
-    QSharedPointer<QAbstractItemModel> mModel;
+    QStringList mAccounts;
 };

@@ -102,6 +102,8 @@ Rectangle {
                                     console.warn("Loading module is ", accountFactory.accountId);
                                     accountDetails.source = accountFactory.uiPath
                                     accountDetails.item.accountId = accountFactory.accountId
+                                    accountDetails.item.icon = accountFactory.icon
+                                    accountDetails.item.accountName = accountFactory.name
                                     listView.currentIndex = model.index
                                 }
                             }

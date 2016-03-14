@@ -28,7 +28,8 @@ import org.kube.accounts.maildir 1.0 as MaildirAccount
 Rectangle {
     id: root
     property string accountId
-    property string accountName: "Maildir"
+    property string accountName
+    property string icon
 
     color: ColorPalette.background
 
@@ -40,7 +41,22 @@ Rectangle {
         Text {
             Layout.columnSpan: 2
             Layout.fillWidth: true
-            text: "Account: " + accountName
+            text: "General:"
+        }
+
+        Label { text: "Account Name" }
+        TextField {
+            id: name
+            placeholderText: accountName
+            Layout.fillWidth: true
+            text: accountSettings.name
+            onTextChanged: { accountSettings.name = text; }
+        }
+
+        Text {
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+            text: "Maildir:"
         }
 
         Label { text: "Path" }
@@ -133,11 +149,19 @@ Rectangle {
             property string password;
         }
 
+        KubeSettings.Settings {
+            id: accountSettings
+            identifier: "account." + accountId
+            property string name;
+            property string icon: root.icon;
+        }
+
         Button {
             text: "Save"
             onClicked: {
                 transportSettings.save();
                 maildirSettings.save();
+                accountSettings.save();
             }
         }
         Button {

@@ -20,6 +20,7 @@
 
 #include "folderlistmodel.h"
 #include <sink/store.h>
+#include <settings/settings.h>
 
 FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
 {
@@ -27,8 +28,7 @@ FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
     query.liveQuery = true;
     query.requestedProperties << "name" << "icon" << "parent";
     query.parentProperty = "parent";
-    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::Folder>(query);
-    setSourceModel(mModel.data());
+    runQuery(query);
 }
 
 FolderListModel::~FolderListModel()
@@ -63,3 +63,33 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
     }
     return QIdentityProxyModel::data(idx, role);
 }
+
+void FolderListModel::runQuery(const Sink::Query &query)
+{
+    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::Folder>(query);
+    setSourceModel(mModel.data());
+}
+
+void FolderListModel::setAccountId(const QVariant &accountId)
+{
+    const auto account = accountId.toString();
+    Kube::Account accountSettings(account.toUtf8());
+    //FIXME maildirResource is obviously not good. We need a way to find resources that belong to the account and provide folders.
+    const auto resourceId = accountSettings.property("maildirResource").toString();
+    qDebug() << "Running query for account " << account;
+    qDebug() << "Found resources " << resourceId;
+
+    Sink::Query query;
+    query.liveQuery = true;
+    query.requestedProperties << "name" << "icon" << "parent";
+    query.parentProperty = "parent";
+    query.resources << resourceId.toUtf8();
+
+    runQuery(query);
+}
+
+QVariant FolderListModel::accountId() const
+{
+    return QVariant();
+}
+

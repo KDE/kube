@@ -14,6 +14,7 @@ set(mailplugin_SRCS
     retriever.cpp
     accountfactory.cpp
     accountscontroller.cpp
+    accountsmodel.cpp
 )
 add_definitions(-DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
