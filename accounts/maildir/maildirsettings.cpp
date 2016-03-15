@@ -105,7 +105,10 @@ void MaildirSettings::save()
     if (!mIdentifier.isEmpty()) {
         Sink::ApplicationDomain::SinkResource resource(mIdentifier);
         resource.setProperty("path", mPath);
-        Sink::Store::modify(resource).exec();
+        Sink::Store::modify(resource).then<void>([](){}, [](int errorCode, const QString &errorMessage) {
+            qWarning() << "Error while modifying resource: " << errorMessage;
+        })
+        .exec();
     } else {
         const auto resourceIdentifier = "org.kde.maildir." + QUuid::createUuid().toByteArray();
         mIdentifier = resourceIdentifier;
@@ -114,31 +117,39 @@ void MaildirSettings::save()
         resource.setProperty("path", property("path"));
         resource.setProperty("identifier", resourceIdentifier);
         resource.setProperty("type", "org.kde.maildir");
-        Sink::Store::create(resource).exec();
-        Q_ASSERT(!mAccountIdentifier.isEmpty());
-        Kube::Account account(mAccountIdentifier);
-        account.setProperty("maildirResource", resourceIdentifier);
-        account.save();
-        //TODO deal with errors while creating
+        Sink::Store::create(resource).then<void>([this, resourceIdentifier]() {
+            Q_ASSERT(!mAccountIdentifier.isEmpty());
+            Kube::Account account(mAccountIdentifier);
+            account.setProperty("maildirResource", resourceIdentifier);
+            account.save();
+        },
+        [](int errorCode, const QString &errorMessage) {
+            qWarning() << "Error while creating resource: " << errorMessage;
+        })
+        .exec();
     }
 }
 
 void MaildirSettings::remove()
 {
-    if (!mIdentifier.isEmpty()) {
+    if (mIdentifier.isEmpty()) {
         qWarning() << "We're missing an identifier";
     } else {
-        Sink::ApplicationDomain::SinkResource resource(mIdentifier);
-        Sink::Store::remove(resource).exec();
-        Kube::Account account(mAccountIdentifier);
-        account.remove();
+        Sink::ApplicationDomain::SinkResource resource("", mIdentifier, 0, QSharedPointer<Sink::ApplicationDomain::MemoryBufferAdaptor>::create());
+        Sink::Store::remove(resource).then<void>([this]() {
+            Kube::Account account(mAccountIdentifier);
+            account.remove();
 
-        Kube::Settings settings("accounts");
-        auto accounts = settings.property("accounts").toStringList();
-        accounts.removeAll(mAccountIdentifier);
-        settings.setProperty("accounts", accounts);
-        settings.save();
-        //TODO deal with errors while removing
+            Kube::Settings settings("accounts");
+            auto accounts = settings.property("accounts").toStringList();
+            accounts.removeAll(mAccountIdentifier);
+            settings.setProperty("accounts", accounts);
+            settings.save();
+        },
+        [](int errorCode, const QString &errorMessage) {
+            qWarning() << "Error while removing resource: " << errorMessage;
+        })
+        .exec();
     }
 }
 

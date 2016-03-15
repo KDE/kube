@@ -1,6 +1,11 @@
-#include <QtTest>
+#include <QTest>
 #include <QDebug>
+#include <QSignalSpy>
 #include <functional>
+#include <QStandardPaths>
+#include <QDir>
+#include <sink/test.h>
+#include <sink/store.h>
 
 #include "maildirsettings.h"
 
@@ -11,9 +16,7 @@ private slots:
 
     void initTestCase()
     {
-        // Sink::FacadeFactory::instance().resetFactory();
-        // ResourceConfig::clear();
-        // Sink::Log::setDebugOutputLevel(Sink::Log::Trace);
+        Sink::Test::initTest();
     }
 
     void testLoad()
@@ -26,10 +29,33 @@ private slots:
         settings.setPath(maildirPath);
         settings.save();
 
-        //TODO ensure the maildir resource has been created
-        //TODO ensure the path has been setup correctly
-        //Ensure we can read the configuration correctly
-        //Ensure we can remove the account again
+        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).then<void, QList<Sink::ApplicationDomain::SinkResource>>([](const QList<Sink::ApplicationDomain::SinkResource> &resources) {
+            QCOMPARE(resources.size(), 1);
+        })
+        .exec().waitForFinished();
+
+        //Ensure we can read back all the information using the accountid
+        {
+            MaildirSettings readSettings;
+            QSignalSpy spy(&readSettings, &MaildirSettings::pathChanged);
+            readSettings.setAccountIdentifier(accountId);
+            QTRY_VERIFY(spy.count());
+            QVERIFY(!readSettings.identifier().isEmpty());
+            QCOMPARE(readSettings.path().toString(), maildirPath);
+        }
+
+        {
+            MaildirSettings settings;
+            QSignalSpy spy(&settings, &MaildirSettings::pathChanged);
+            settings.setAccountIdentifier(accountId);
+            QTRY_VERIFY(spy.count());
+            settings.remove();
+        }
+
+        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).then<void, QList<Sink::ApplicationDomain::SinkResource>>([](const QList<Sink::ApplicationDomain::SinkResource> &resources) {
+            QCOMPARE(resources.size(), 0);
+        })
+        .exec().waitForFinished();
     }
 };
 
