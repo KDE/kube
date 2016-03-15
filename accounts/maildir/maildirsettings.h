@@ -26,8 +26,8 @@ class MaildirSettings : public QObject
     Q_OBJECT
     Q_PROPERTY(QByteArray identifier READ identifier WRITE setIdentifier)
     Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
-    Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
-    Q_PROPERTY(QValidator* pathValidator READ pathValidator)
+    Q_PROPERTY(QUrl path READ path WRITE setPath NOTIFY pathChanged)
+    Q_PROPERTY(QValidator* pathValidator READ pathValidator CONSTANT)
 
 public:
     MaildirSettings(QObject *parent = 0);
@@ -38,8 +38,8 @@ public:
     void setAccountIdentifier(const QByteArray &);
     QByteArray accountIdentifier() const;
 
-    void setPath(const QString &);
-    QString path() const;
+    void setPath(const QUrl &);
+    QUrl path() const;
     QValidator *pathValidator() const;
 
     Q_INVOKABLE void save();

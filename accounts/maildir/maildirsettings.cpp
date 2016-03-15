@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <QUuid>
 #include <QDir>
+#include <QUrl>
 
 MaildirSettings::MaildirSettings(QObject *parent)
     : QObject(parent)
@@ -65,17 +66,18 @@ QByteArray MaildirSettings::accountIdentifier() const
     return mAccountIdentifier;
 }
 
-void MaildirSettings::setPath(const QString &path)
+void MaildirSettings::setPath(const QUrl &path)
 {
-    if (mPath != path) {
-        mPath = path;
+    auto normalizedPath = path.path();
+    if (mPath != normalizedPath) {
+        mPath = normalizedPath;
         emit pathChanged();
     }
 }
 
-QString MaildirSettings::path() const
+QUrl MaildirSettings::path() const
 {
-    return mPath;
+    return QUrl(mPath);
 }
 
 QValidator *MaildirSettings::pathValidator() const
@@ -83,7 +85,7 @@ QValidator *MaildirSettings::pathValidator() const
     class PathValidator : public QValidator {
         State validate(QString &input, int &pos) const {
             Q_UNUSED(pos);
-            if (QDir(input).exists()) {
+            if (!input.isEmpty() && QDir(input).exists()) {
                 return Acceptable;
             } else {
                 return Intermediate;
