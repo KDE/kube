@@ -37,6 +37,11 @@ add_library(maildiraccountplugin SHARED ${SRCS})
 qt5_use_modules(maildiraccountplugin Core Quick Qml)
 target_link_libraries(maildiraccountplugin sink settingsplugin)
 
+add_library(maildiraccount_static STATIC ${SRCS})
+qt5_use_modules(maildiraccount_static Core Quick Qml)
+target_link_libraries(maildiraccount_static sink settingsplugin)
+add_subdirectory(tests)
+
 kpackage_install_package(package org.kube.accounts.maildir "genericqml")
 
 install(TARGETS maildiraccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/maildir)
