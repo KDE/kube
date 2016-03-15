@@ -49,8 +49,8 @@ Rectangle {
             id: name
             placeholderText: accountName
             Layout.fillWidth: true
-            text: accountSettings.name
-            onTextChanged: { accountSettings.name = text; }
+            text: accountSettings.accountName
+            onTextChanged: { accountSettings.accountName = text; }
         }
 
         Text {
@@ -152,7 +152,7 @@ Rectangle {
         KubeSettings.Settings {
             id: accountSettings
             identifier: "account." + accountId
-            property string name;
+            property string accountName;
             property string icon: root.icon;
         }
 

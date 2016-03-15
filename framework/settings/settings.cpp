@@ -65,14 +65,14 @@ void Settings::save()
 
     for (const auto &p : dynamicPropertyNames()) {
         qWarning() << "setting " << p << property(p);
-        if (p == "identifier") {
+        if (p == "identifier" || p == "name") {
             continue;
         }
         settings->setValue(p, property(p));
     }
     for (int i = metaObject()->propertyOffset(); i < metaObject()->propertyCount(); i++) {
         const auto p = metaObject()->property(i).name();
-        if (p == QByteArray("identifier")) {
+        if (p == QByteArray("identifier") || p == QByteArray("name")) {
             continue;
         }
         qWarning() << "setting " << p << property(p);
@@ -88,7 +88,7 @@ void Settings::remove()
 
 void Settings::load()
 {
-    if (mLoaded) {
+    if (mLoaded || mIdentifier.isEmpty() || mIdentifier.endsWith(".")) {
         return;
     }
     mLoaded = true;

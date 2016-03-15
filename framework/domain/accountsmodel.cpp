@@ -50,7 +50,7 @@ QVariant AccountsModel::data(const QModelIndex &idx, int role) const
     Kube::Account accountSettings(identifier.toLatin1());
     switch (role) {
         case Name:
-            return accountSettings.property("name").toString();
+            return accountSettings.property("accountName").toString();
         case Icon:
             return accountSettings.property("icon").toString();
         case AccountId:
