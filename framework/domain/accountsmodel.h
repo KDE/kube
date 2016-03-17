@@ -20,11 +20,15 @@
 #pragma once
 
 #include <QObject>
-#include <QAbstractListModel>
+#include <QIdentityProxyModel>
 #include <QSharedPointer>
 #include <QStringList>
 
-class AccountsModel : public QAbstractListModel
+namespace Sink {
+    class Query;
+}
+
+class AccountsModel : public QIdentityProxyModel
 {
     Q_OBJECT
 
@@ -32,8 +36,7 @@ public:
     AccountsModel(QObject *parent = Q_NULLPTR);
     ~AccountsModel();
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     enum Roles {
         Name  = Qt::UserRole + 1,
@@ -42,7 +45,9 @@ public:
     };
     Q_ENUMS(Roles)
 
-    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    QHash<int, QByteArray> roleNames() const;
+
 private:
-    QStringList mAccounts;
+    void runQuery(const Sink::Query &query);
+    QSharedPointer<QAbstractItemModel> mModel;
 };

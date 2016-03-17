@@ -21,6 +21,7 @@
 #include "accountscontroller.h"
 
 #include <settings/settings.h>
+#include <sink/store.h>
 
 #include <QVariant>
 #include <QUuid>
@@ -28,27 +29,17 @@
 
 AccountsController::AccountsController(QObject *parent) : QObject(parent)
 {
-    Kube::Settings settings("accounts");
-    mAccounts = settings.property("accounts").toStringList();
-    qWarning() << "Loaded accounts" << mAccounts;
 }
 
 void AccountsController::createAccount(const QString &accountType)
 {
-    auto identifier = QUuid::createUuid().toByteArray();
-    Kube::Account accountSettings(identifier);
-    accountSettings.setProperty("type", accountType);
-    accountSettings.save();
-
-    Kube::Settings settings("accounts");
-    auto accounts = settings.property("accounts").toStringList();
-    accounts.append(identifier);
-    settings.setProperty("accounts", accounts);
-    settings.save();
-
-    //TODO setup sink resources etc via plugin
-
-    qWarning() << "Created account " << identifier;
-    mAccounts.append(identifier);
-    emit accountsChanged();
+    const auto identifier = QUuid::createUuid().toByteArray();
+    Sink::ApplicationDomain::SinkAccount account;
+    account.setProperty("identifier", identifier);
+    account.setProperty("type", accountType);
+    Sink::Store::create(account).then<void>([]() {},
+    [](int errorCode, const QString &errorMessage) {
+        qWarning() << "Error while creating account: " << errorMessage;
+    })
+    .exec();
 }

@@ -25,20 +25,29 @@
 #include <KPluginMetaData>
 
 #include "settings/settings.h"
+#include <sink/store.h>
 
 AccountFactory::AccountFactory(QObject *parent)
     : QObject(parent)
 {
 }
 
+QString AccountFactory::name() const
+{
+    if (mName.isEmpty()) {
+        return tr("Account");
+    }
+    return mName;
+}
+
 void AccountFactory::setAccountId(const QString &accountId)
 {
     mAccountId = accountId;
-
-    Kube::Account account(mAccountId.toUtf8());
-    mAccountType = account.type();
-
-    loadPackage();
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkAccount>(Sink::Query::IdentityFilter(accountId.toUtf8()))
+        .then<void, Sink::ApplicationDomain::SinkAccount>([this](const Sink::ApplicationDomain::SinkAccount &account) {
+            mAccountType = account.getProperty("type").toByteArray();
+            loadPackage();
+        }).exec();
 }
 
 void AccountFactory::loadPackage()

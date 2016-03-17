@@ -24,16 +24,14 @@
 class MaildirSettings : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QByteArray identifier READ identifier WRITE setIdentifier)
     Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
     Q_PROPERTY(QUrl path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(QValidator* pathValidator READ pathValidator CONSTANT)
+    Q_PROPERTY(QString icon MEMBER mIcon NOTIFY changed)
+    Q_PROPERTY(QString accountName MEMBER mName NOTIFY changed)
 
 public:
     MaildirSettings(QObject *parent = 0);
-
-    void setIdentifier(const QByteArray &);
-    QByteArray identifier() const;
 
     void setAccountIdentifier(const QByteArray &);
     QByteArray accountIdentifier() const;
@@ -47,9 +45,12 @@ public:
 
 signals:
     void pathChanged();
+    void changed();
 
 private:
     QByteArray mIdentifier;
     QByteArray mAccountIdentifier;
     QString mPath;
+    QString mIcon;
+    QString mName;
 };

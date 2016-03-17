@@ -49,8 +49,8 @@ Rectangle {
             id: name
             placeholderText: accountName
             Layout.fillWidth: true
-            text: accountSettings.accountName
-            onTextChanged: { accountSettings.accountName = text; }
+            text: maildirSettings.accountName
+            onTextChanged: { maildirSettings.accountName = text; }
         }
 
         Text {
@@ -149,19 +149,11 @@ Rectangle {
             property string password;
         }
 
-        KubeSettings.Settings {
-            id: accountSettings
-            identifier: "account." + accountId
-            property string accountName;
-            property string icon: root.icon;
-        }
-
         Button {
             text: "Save"
             onClicked: {
                 transportSettings.save();
                 maildirSettings.save();
-                accountSettings.save();
             }
         }
         Button {

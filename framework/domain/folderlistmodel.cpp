@@ -72,20 +72,19 @@ void FolderListModel::runQuery(const Sink::Query &query)
 
 void FolderListModel::setAccountId(const QVariant &accountId)
 {
-    const auto account = accountId.toString();
-    Kube::Account accountSettings(account.toUtf8());
-    //FIXME maildirResource is obviously not good. We need a way to find resources that belong to the account and provide folders.
-    const auto resourceId = accountSettings.property("maildirResource").toString();
-    qDebug() << "Running query for account " << account;
-    qDebug() << "Found resources " << resourceId;
-
-    Sink::Query query;
-    query.liveQuery = true;
-    query.requestedProperties << "name" << "icon" << "parent";
-    query.parentProperty = "parent";
-    query.resources << resourceId.toUtf8();
-
-    runQuery(query);
+    const auto account = accountId.toString().toUtf8();
+    Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query::PropertyFilter("account", QVariant::fromValue(account)))
+        .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([this, account](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
+            Sink::Query query;
+            query.liveQuery = true;
+            query.requestedProperties << "name" << "icon" << "parent";
+            query.parentProperty = "parent";
+            for (const auto &r : resources) {
+                qDebug() << "Found resources for account: " << r->identifier() << account;
+                query.resources << r->identifier();
+            }
+            runQuery(query);
+        }).exec();
 }
 
 QVariant FolderListModel::accountId() const

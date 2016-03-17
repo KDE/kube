@@ -17,15 +17,14 @@
     02110-1301, USA.
 */
 #include "accountsmodel.h"
+#include <sink/store.h>
 
-#include <settings/settings.h>
-
-#include <QVariant>
-
-AccountsModel::AccountsModel(QObject *parent) : QAbstractListModel()
+AccountsModel::AccountsModel(QObject *parent) : QIdentityProxyModel()
 {
-    Kube::Settings settings("accounts");
-    mAccounts = settings.property("accounts").toStringList();
+    Sink::Query query;
+    query.liveQuery = true;
+    query.requestedProperties << "name" << "icon";
+    runQuery(query);
 }
 
 AccountsModel::~AccountsModel()
@@ -46,20 +45,20 @@ QHash< int, QByteArray > AccountsModel::roleNames() const
 
 QVariant AccountsModel::data(const QModelIndex &idx, int role) const
 {
-    const auto identifier = mAccounts.at(idx.row());
-    Kube::Account accountSettings(identifier.toLatin1());
+    auto srcIdx = mapToSource(idx);
     switch (role) {
         case Name:
-            return accountSettings.property("accountName").toString();
+            return srcIdx.sibling(srcIdx.row(), 0).data(Qt::DisplayRole).toString();
         case Icon:
-            return accountSettings.property("icon").toString();
+            return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
         case AccountId:
-            return identifier;
+            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
     }
-    return QVariant();
+    return QIdentityProxyModel::data(idx, role);
 }
 
-int AccountsModel::rowCount(const QModelIndex &idx) const
+void AccountsModel::runQuery(const Sink::Query &query)
 {
-    return mAccounts.size();
+    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::SinkAccount>(query);
+    setSourceModel(mModel.data());
 }

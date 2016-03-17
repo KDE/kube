@@ -21,23 +21,13 @@
 
 #include <QObject>
 #include <QString>
-#include <QStringList>
-#include <QVariant>
 
 class AccountsController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (QStringList accounts MEMBER mAccounts NOTIFY accountsChanged)
-
 public:
     explicit AccountsController(QObject *parent = Q_NULLPTR);
 
-signals:
-    void accountsChanged();
-
 public slots:
     void createAccount(const QString &accountId);
-
-private:
-    QStringList mAccounts;
 };

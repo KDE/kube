@@ -61,6 +61,9 @@ Rectangle {
         KubeFramework.AccountsController {
             id: accountsController
         }
+        KubeFramework.AccountsModel {
+            id: accountsModel
+        }
 
         SplitView {
             anchors.fill: parent
@@ -76,7 +79,7 @@ Rectangle {
                     ListView {
                         id: listView
 
-                        model: accountsController.accounts
+                        model: accountsModel
 
                         currentIndex: -1
 
@@ -90,7 +93,7 @@ Rectangle {
 
                             KubeFramework.AccountFactory {
                                 id: accountFactory
-                                accountId: modelData
+                                accountId: model.accountId
                             }
 
                             MouseArea {
