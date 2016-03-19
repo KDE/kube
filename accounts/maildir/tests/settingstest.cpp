@@ -40,7 +40,7 @@ private slots:
             QSignalSpy spy(&readSettings, &MaildirSettings::pathChanged);
             readSettings.setAccountIdentifier(accountId);
             QTRY_VERIFY(spy.count());
-            QVERIFY(!readSettings.identifier().isEmpty());
+            QVERIFY(!readSettings.accountIdentifier().isEmpty());
             QCOMPARE(readSettings.path().toString(), maildirPath);
         }
 
