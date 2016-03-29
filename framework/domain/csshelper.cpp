@@ -39,7 +39,7 @@
 #include <QPalette>
 
 CSSHelper::CSSHelper(const QPaintDevice *pd) :
-    MessageViewer::CSSHelperBase(pd)
+    MimeTreeParser::CSSHelperBase(pd)
 {
 
 }

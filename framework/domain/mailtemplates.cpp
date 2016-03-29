@@ -37,7 +37,7 @@
 #include "objecttreesource.h"
 #include "csshelper.h"
 
-#include <MessageViewer/ObjectTreeParser>
+#include <MimeTreeParser/ObjectTreeParser>
 
 namespace KMime {
     namespace Types {
@@ -341,7 +341,7 @@ QString stripSignature(const QString &msg)
     return res;
 }
 
-QString plainMessageText(MessageViewer::ObjectTreeParser &otp, bool aStripSignature)
+QString plainMessageText(MimeTreeParser::ObjectTreeParser &otp, bool aStripSignature)
 {
     QString result = otp.plainTextContent();
     if (result.isEmpty()) {   //HTML-only mails
@@ -357,7 +357,7 @@ QString plainMessageText(MessageViewer::ObjectTreeParser &otp, bool aStripSignat
     return result;
 }
 
-QString htmlMessageText(MessageViewer::ObjectTreeParser &otp, bool aStripSignature, QString &headElement)
+QString htmlMessageText(MimeTreeParser::ObjectTreeParser &otp, bool aStripSignature, QString &headElement)
 {
     QString htmlElement = otp.htmlContent();
 
@@ -759,9 +759,9 @@ KMime::Message::Ptr MailTemplates::reply(const KMime::Message::Ptr &origMsg)
     StringHtmlWriter htmlWriter;
     QImage paintDevice;
     CSSHelper cssHelper(&paintDevice);
-    MessageViewer::NodeHelper nodeHelper;
+    MimeTreeParser::NodeHelper nodeHelper;
     ObjectTreeSource source(&htmlWriter, &cssHelper);
-    MessageViewer::ObjectTreeParser otp(&source, &nodeHelper);
+    MimeTreeParser::ObjectTreeParser otp(&source, &nodeHelper);
     otp.setAllowAsync(false);
     otp.parseObjectTree(origMsg.data());
 

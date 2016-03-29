@@ -24,7 +24,7 @@
 #include <QStringList>
 #include <memory>
 
-namespace MessageViewer {
+namespace MimeTreeParser {
     class NodeHelper;
 };
 
@@ -47,5 +47,5 @@ signals:
 
 private:
     QString mHtml;
-    std::shared_ptr<MessageViewer::NodeHelper> mNodeHelper;
+    std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
 };

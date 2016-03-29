@@ -30,14 +30,14 @@
 #ifndef __KUBE_FRAMEWORK_MAIL_STRINGHTMLWRITER_H__
 #define __KUBE_FRAMEWORK_MAIL_STRINGHTMLWRITER_H__
 
-#include <MessageViewer/HtmlWriter>
+#include <MimeTreeParser/HtmlWriter>
 
 #include <QFile>
 #include <QTextStream>
 
 class QString;
 
-class StringHtmlWriter : public MessageViewer::HtmlWriter
+class StringHtmlWriter : public MimeTreeParser::HtmlWriter
 {
 public:
     explicit StringHtmlWriter();
