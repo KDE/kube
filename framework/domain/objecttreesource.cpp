@@ -19,7 +19,8 @@
 
 #include "objecttreesource.h"
 
-#include <MessageViewer/AttachmentStrategy>
+#include <MimeTreeParser/AttachmentStrategy>
+#include <MimeTreeParser/BodyPartFormatterBaseFactory>
 
 class ObjectSourcePrivate
 {
@@ -33,16 +34,17 @@ public:
     {
 
     }
-    MessageViewer::HtmlWriter *mWriter;
-    MessageViewer::CSSHelperBase *mCSSHelper;
+    MimeTreeParser::HtmlWriter *mWriter;
+    MimeTreeParser::CSSHelperBase *mCSSHelper;
+    MimeTreeParser::BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     bool mAllowDecryption;
     bool mHtmlLoadExternal;
     bool mHtmlMail;
 };
 
-ObjectTreeSource::ObjectTreeSource(MessageViewer::HtmlWriter *writer,
-                                   MessageViewer::CSSHelperBase *cssHelper)
-        : MessageViewer::ObjectTreeSourceIf()
+ObjectTreeSource::ObjectTreeSource(MimeTreeParser::HtmlWriter *writer,
+                                   MimeTreeParser::CSSHelperBase *cssHelper)
+        : MimeTreeParser::ObjectTreeSourceIf()
         , d(new ObjectSourcePrivate)
     {
         d->mWriter = writer;
@@ -59,11 +61,11 @@ void ObjectTreeSource::setAllowDecryption(bool allowDecryption)
     d->mAllowDecryption = allowDecryption;
 }
 
-MessageViewer::HtmlWriter *ObjectTreeSource::htmlWriter()
+MimeTreeParser::HtmlWriter *ObjectTreeSource::htmlWriter()
 {
     return d->mWriter;
 }
-MessageViewer::CSSHelperBase *ObjectTreeSource::cssHelper()
+MimeTreeParser::CSSHelperBase *ObjectTreeSource::cssHelper()
 {
     return d->mCSSHelper;
 }
@@ -113,9 +115,9 @@ QString ObjectTreeSource::createMessageHeader(KMime::Message *message)
     return QString();
 }
 
-const MessageViewer::AttachmentStrategy *ObjectTreeSource::attachmentStrategy()
+const MimeTreeParser::AttachmentStrategy *ObjectTreeSource::attachmentStrategy()
 {
-    return MessageViewer::AttachmentStrategy::smart();
+    return MimeTreeParser::AttachmentStrategy::smart();
 }
 
 QObject *ObjectTreeSource::sourceObject()
@@ -123,7 +125,7 @@ QObject *ObjectTreeSource::sourceObject()
     return Q_NULLPTR;
 }
 
-void ObjectTreeSource::setHtmlMode(MessageViewer::Util::HtmlMode mode)
+void ObjectTreeSource::setHtmlMode(MimeTreeParser::Util::HtmlMode mode)
 {
       Q_UNUSED(mode);
 }
@@ -141,4 +143,9 @@ bool ObjectTreeSource::showEmoticons() const
 bool ObjectTreeSource::showExpandQuotesMark() const
 {
     return false;
+}
+
+const MimeTreeParser::BodyPartFormatterBaseFactory *ObjectTreeSource::bodyPartFormatterFactory()
+{
+    return &(d->mBodyPartFormatterBaseFactory);
 }

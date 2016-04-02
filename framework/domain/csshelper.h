@@ -31,9 +31,9 @@
 
 #pragma once
 
-#include <MessageViewer/CSSHelperBase>
+#include <MimeTreeParser/CSSHelperBase>
 
-class CSSHelper : public MessageViewer::CSSHelperBase
+class CSSHelper : public MimeTreeParser::CSSHelperBase
 {
 public:
     explicit CSSHelper(const QPaintDevice *pd);

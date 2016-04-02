@@ -36,7 +36,7 @@
 #include <QUrl>
 
 StringHtmlWriter::StringHtmlWriter()
-    : MessageViewer::HtmlWriter()
+    : MimeTreeParser::HtmlWriter()
     , mState(Ended)
 {
 }

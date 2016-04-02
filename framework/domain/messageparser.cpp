@@ -26,7 +26,7 @@
 #include <QImage>
 #include <QDebug>
 #include <QTime>
-#include <MessageViewer/ObjectTreeParser>
+#include <MimeTreeParser/ObjectTreeParser>
 
 MessageParser::MessageParser(QObject *parent)
     : QObject(parent)
@@ -59,9 +59,9 @@ void MessageParser::setMessage(const QVariant &message)
     QImage paintDevice;
     CSSHelper cssHelper(&paintDevice);
     //temporary files only have the lifetime of the nodehelper, so we keep it around until the mail changes.
-    mNodeHelper = std::make_shared<MessageViewer::NodeHelper>();
+    mNodeHelper = std::make_shared<MimeTreeParser::NodeHelper>();
     ObjectTreeSource source(&htmlWriter, &cssHelper);
-    MessageViewer::ObjectTreeParser otp(&source, mNodeHelper.get());
+    MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
     htmlWriter.begin(QString());
     htmlWriter.queue(cssHelper.htmlHead(false));

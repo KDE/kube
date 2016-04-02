@@ -20,16 +20,16 @@
 #ifndef MAILVIEWER_OBJECTTREEEMPTYSOURCE_H
 #define MAILVIEWER_OBJECTTREEEMPTYSOURCE_H
 
-#include <MessageViewer/ObjectTreeSourceIf>
+#include <MimeTreeParser/ObjectTreeSourceIf>
 
 class QString;
 
 class ObjectSourcePrivate;
-class ObjectTreeSource : public MessageViewer::ObjectTreeSourceIf
+class ObjectTreeSource : public MimeTreeParser::ObjectTreeSourceIf
 {
 public:
-    ObjectTreeSource(MessageViewer::HtmlWriter *writer,
-                     MessageViewer::CSSHelperBase *cssHelper);
+    ObjectTreeSource(MimeTreeParser::HtmlWriter *writer,
+                     MimeTreeParser::CSSHelperBase *cssHelper);
     virtual ~ObjectTreeSource();
     void setHtmlLoadExternal(bool loadExternal);
     void setHtmlMail(bool htmlMail);
@@ -37,18 +37,19 @@ public:
     bool decryptMessage() const Q_DECL_OVERRIDE;
     bool htmlLoadExternal() const Q_DECL_OVERRIDE;
     bool showSignatureDetails() const Q_DECL_OVERRIDE;
-    void setHtmlMode(MessageViewer::Util::HtmlMode mode) Q_DECL_OVERRIDE;
+    void setHtmlMode(MimeTreeParser::Util::HtmlMode mode) Q_DECL_OVERRIDE;
     void setAllowDecryption(bool allowDecryption);
     int levelQuote() const Q_DECL_OVERRIDE;
     const QTextCodec *overrideCodec() Q_DECL_OVERRIDE;
     QString createMessageHeader(KMime::Message *message) Q_DECL_OVERRIDE;
-    const MessageViewer::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
-    MessageViewer::HtmlWriter *htmlWriter() Q_DECL_OVERRIDE;
-    MessageViewer::CSSHelperBase *cssHelper() Q_DECL_OVERRIDE;
+    const MimeTreeParser::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
+    MimeTreeParser::HtmlWriter *htmlWriter() Q_DECL_OVERRIDE;
+    MimeTreeParser::CSSHelperBase *cssHelper() Q_DECL_OVERRIDE;
     QObject *sourceObject() Q_DECL_OVERRIDE;
     bool autoImportKeys() const Q_DECL_OVERRIDE;
     bool showEmoticons() const Q_DECL_OVERRIDE;
     bool showExpandQuotesMark() const Q_DECL_OVERRIDE;
+    const MimeTreeParser::BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE;
 private:
     ObjectSourcePrivate *const d;
 };
