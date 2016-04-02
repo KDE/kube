@@ -78,7 +78,7 @@ Rectangle {
             Button {
                 iconName: "folder"
                 onClicked:  {
-                    fileDialogComponent.createObject(parent);
+                    fileDialogObject = fileDialogComponent.createObject(parent);
                 }
 
                 Component {
@@ -92,10 +92,10 @@ Rectangle {
 
                         onAccepted: {
                             maildirSettings.path = fileDialog.fileUrl
-                            fileDialogComponent.destroy()
+                            fileDialogObject.destroy()
                         }
                         onRejected: {
-                            fileDialogComponent.destroy()
+                            fileDialogObject.destroy()
                         }
                     }
                 }
