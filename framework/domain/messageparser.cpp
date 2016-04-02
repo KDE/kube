@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <QTime>
 #include <MimeTreeParser/ObjectTreeParser>
+#include <MimeTreeParser/MessagePart>
 
 MessageParser::MessageParser(QObject *parent)
     : QObject(parent)
@@ -63,10 +64,16 @@ void MessageParser::setMessage(const QVariant &message)
     ObjectTreeSource source(&htmlWriter, &cssHelper);
     MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
+    const auto partTree = otp.parseToTree(msg.data()).dynamicCast<MimeTreeParser::MessagePartList>();
+
     htmlWriter.begin(QString());
     htmlWriter.queue(cssHelper.htmlHead(false));
 
-    otp.parseObjectTree(msg.data());
+    if (partTree) {
+        partTree->fix();
+        partTree->copyContentFrom();
+        partTree->html(false);
+    }
 
     htmlWriter.queue(QStringLiteral("</body></html>"));
     htmlWriter.end();
