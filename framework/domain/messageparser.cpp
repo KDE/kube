@@ -25,10 +25,10 @@
 #include <QFile>
 #include <QImage>
 #include <QDebug>
+#include <QQmlEngine>
 #include <QTime>
 #include <MimeTreeParser/ObjectTreeParser>
 #include <MimeTreeParser/MessagePart>
-
 MessageParser::MessageParser(QObject *parent)
     : QObject(parent)
 {
@@ -64,15 +64,15 @@ void MessageParser::setMessage(const QVariant &message)
     ObjectTreeSource source(&htmlWriter, &cssHelper);
     MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
-    const auto partTree = otp.parseToTree(msg.data()).dynamicCast<MimeTreeParser::MessagePartList>();
+    mPartTree = otp.parseToTree(msg.data()).dynamicCast<MimeTreeParser::MessagePartList>();
 
     htmlWriter.begin(QString());
     htmlWriter.queue(cssHelper.htmlHead(false));
 
-    if (partTree) {
-        partTree->fix();
-        partTree->copyContentFrom();
-        partTree->html(false);
+    if (mPartTree) {
+        mPartTree->fix();
+        mPartTree->copyContentFrom();
+        mPartTree->html(false);
     }
 
     htmlWriter.queue(QStringLiteral("</body></html>"));
@@ -81,3 +81,11 @@ void MessageParser::setMessage(const QVariant &message)
     mHtml = htmlWriter.html();
     emit htmlChanged();
 }
+
+QAbstractItemModel *MessageParser::partTree() const
+{
+    qDebug() << "Getting partTree";
+    qDebug() << "Row count " << mPartTree->messageParts().size();
+    return new PartModel(mPartTree);
+}
+
