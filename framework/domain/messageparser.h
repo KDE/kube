@@ -101,7 +101,6 @@ public:
         qDebug() << "Getting data for index";
         if (index.isValid()) {
             auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
-            auto foo = index.internalPointer();
             switch (role) {
                 case Text: {
                     QString text = part->property("htmlContent").toString();
