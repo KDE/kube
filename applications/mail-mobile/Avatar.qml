@@ -16,36 +16,39 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.1
 
-ApplicationWindow {
-    id: app
+Rectangle {
 
-    //FIXME remove fixed pixel hight
-    //for now just convinience during testing
-    width: 1080 / 2.7
-    height: (1920 - 40)/ 2.7
+    property string name;
 
-    visible: true
-
-    StackView {
-        id: stack
-
-        anchors.fill: parent
-
-        //TODO set sink folderId property
-        initialItem: {"item": Qt.resolvedUrl("FolderListView.qml"),properties: {stack: stack}}
+    //TODO should we make this themeable ?
+    function calcColor(x)
+    {
+        switch (x % 5) {
+        case 0:
+            return "#16a085"
+        case 1:
+            return "#27ae60"
+        case 2:
+            return "#2980b9"
+        case 3:
+            return "#8e44ad"
+        case 4:
+            return "#c0392b"
+        }
     }
 
-    //FIXME use whatever the plasma standart is
-    Label {
-        id: unit
+    radius: 100
 
-        text: " "
-    }
+    color: calcColor(name.length)
 
-    ColorPalette {
-        id: colorPalette
+    Text {
+        anchors.centerIn: parent
+
+        text: name.charAt(0)
+
+        color: "#ecf0f1"
+
+        font.capitalization: Font.AllUppercase
     }
 }

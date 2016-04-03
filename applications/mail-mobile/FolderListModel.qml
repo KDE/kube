@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Michael Bohlender <michael.bohlender@kdemail.net>
+ * Copyright (C) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,11 +18,6 @@
 import QtQuick 2.4
 
 ListModel {
-    ListElement {
-        icon: ""
-        name: " kolabnow"
-        topLvl: true
-    }
     ListElement {
         icon: "mail-folder-inbox"
         name: "Inbox"
@@ -50,27 +45,6 @@ ListModel {
     }
 
     ListElement {
-        icon: ""
-        name: " campus.lmu.de"
-        topLvl: true
-    }
-    ListElement {
-        icon: "mail-folder-inbox"
-        name: "Inbox"
-    }
-    ListElement {
-        icon: "mail-folder-sent"
-        name: "Sent"
-    }
-    ListElement {
-        icon: "user-trash"
-        name:  "Trash"
-    }
-    ListElement {
-        icon: "document-edit"
-        name: "Drafts"
-    }
-    ListElement {
         icon: "folder"
         name: "pim"
     }
@@ -78,4 +52,5 @@ ListModel {
         icon: "folder"
         name: "vdg"
     }
+
 }

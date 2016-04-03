@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Michael Bohlender <michael.bohlender@kdemail.net>
+ * Copyright (C) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -16,39 +16,41 @@
  */
 
 import QtQuick 2.4
+import QtQuick.Controls 1.4 as Controls
+import QtQuick.Layouts 1.2
 
-Rectangle {
+import org.kde.kirigami 1.0 as Kirigami
 
-    property string name;
+Kirigami.Page {
+    id: root
 
-    //TODO should we make this themeable ?
-    function calcColor(x)
-    {
-        switch (x % 5) {
-        case 0:
-            return "#16a085"
-        case 1:
-            return "#27ae60"
-        case 2:
-            return "#2980b9"
-        case 3:
-            return "#8e44ad"
-        case 4:
-            return "#c0392b"
+    anchors.fill: parent
+
+    background: Rectangle {
+        color: Kirigami.Theme.viewBackgroundColor
+    }
+
+    title: "Compose"
+
+    ColumnLayout {
+        anchors.fill: parent
+
+        Controls.TextField {
+            Layout.fillWidth: true
+
+            placeholderText: "To"
+        }
+
+        Controls.TextField {
+            Layout.fillWidth: true
+
+            placeholderText: "Subject"
+        }
+
+        Controls.TextArea {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 
-    radius: 2
-
-    color: calcColor(name.length)
-
-    Text {
-        anchors.centerIn: parent
-
-        text: name.charAt(0)
-
-        font.pointSize: unit.font.pixelSize * 1.2
-
-        color: "#ecf0f1"
-    }
 }
