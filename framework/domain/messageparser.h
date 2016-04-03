@@ -68,13 +68,21 @@ public:
 
 public:
     enum Roles {
-        Text  = Qt::UserRole + 1
+        Text  = Qt::UserRole + 1,
+        IsHtml,
+        IsEncrypted,
+        IsAttachment,
+        HasContent
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE
     {
         QHash<int, QByteArray> roles;
         roles[Text] = "text";
+        roles[IsHtml] = "isHtml";
+        roles[IsEncrypted] = "isEncrypted";
+        roles[IsAttachment] = "isAttachment";
+        roles[HasContent] = "hasContent";
         return roles;
     }
 
@@ -108,6 +116,14 @@ public:
                 case Text:
                     // qDebug() << "Getting text: " << part->property("text").toString();
                     return part->property("htmlContent").toString();
+                case IsAttachment:
+                    return part->property("attachment").toBool();
+                case IsEncrypted:
+                    return part->property("isEncrypted").toBool();
+                case IsHtml:
+                    return part->property("isHtml").toBool();
+                case HasContent:
+                    return !part->property("htmlContent").toString().isEmpty();
             }
         }
         return QVariant();
