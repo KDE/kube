@@ -64,7 +64,7 @@ void MessageParser::setMessage(const QVariant &message)
     ObjectTreeSource source(&htmlWriter, &cssHelper);
     MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
-    mPartTree = otp.parseToTree(msg.data()).dynamicCast<MimeTreeParser::MessagePartList>();
+    mPartTree = otp.parseToTree(msg.data()).dynamicCast<MimeTreeParser::MessagePart>();
 
     htmlWriter.begin(QString());
     htmlWriter.queue(cssHelper.htmlHead(false));

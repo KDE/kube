@@ -50,7 +50,7 @@ signals:
     void htmlChanged();
 
 private:
-    QSharedPointer<MimeTreeParser::MessagePartList> mPartTree;
+    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
     QString mHtml;
     std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
 };
@@ -62,7 +62,7 @@ private:
 class PartModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    PartModel(QSharedPointer<MimeTreeParser::MessagePartList> partTree) : mPartTree(partTree)
+    PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree) : mPartTree(partTree)
     {
     }
 
@@ -72,7 +72,8 @@ public:
         IsHtml,
         IsEncrypted,
         IsAttachment,
-        HasContent
+        HasContent,
+        Type
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE
@@ -83,6 +84,7 @@ public:
         roles[IsEncrypted] = "isEncrypted";
         roles[IsAttachment] = "isAttachment";
         roles[HasContent] = "hasContent";
+        roles[Type] = "type";
         return roles;
     }
 
@@ -92,17 +94,12 @@ public:
         if (!parent.isValid()) {
             if (row < mPartTree->messageParts().size()) {
                 auto part = mPartTree->messageParts().at(row);
-                qDebug() << "creating index " << row;
-                // qDebug() << "part text: " << part->property("text").toString();
                 return createIndex(row, column, part.data());
             }
         } else {
             auto part = static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer());
-            auto subListPart = part->subMessagePart();
-            if (subListPart) {
-                auto subPart = subListPart->messageParts().at(row);
-                return createIndex(row, column, subPart.data());
-            }
+            auto subPart = part->messageParts().at(row);
+            return createIndex(row, column, subPart.data());
         }
         return QModelIndex();
     }
@@ -124,6 +121,8 @@ public:
                     return part->property("isHtml").toBool();
                 case HasContent:
                     return !part->property("htmlContent").toString().isEmpty();
+                case Type:
+                    return part->metaObject()->className();
             }
         }
         return QVariant();
@@ -134,28 +133,20 @@ public:
         qDebug() << "parent " << index;
         if (index.isValid()) {
             auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
-            auto parentListPart = part->parentPart();
-            if (parentListPart) {
-                auto parentPart = parentListPart->parentPart();
-                if (parentPart) {
-                    auto row = 0;//get the parents parent to find the index
-                    MimeTreeParser::MessagePartList *parentList;
-                    if (parentPart->parentPart()) {
-                        parentList = static_cast<MimeTreeParser::MessagePartList*>(parentPart->parentPart());
-                    } else {
-                        parentList = mPartTree.data();
-                    }
-                    int i = 0;
-                    for (const auto &p : parentList->messageParts()) {
-                        if (p.data() == parentPart) {
-                            row = i;
-                            break;
-                        }
-                        i++;
-                    }
-                    return createIndex(row, index.column(), parentPart);
-                }
+            auto parentPart = static_cast<MimeTreeParser::MessagePart*>(part->parentPart());
+            auto row = 0;//get the parents parent to find the index
+            if (!parentPart) {
+                parentPart = mPartTree.data();
             }
+            int i = 0;
+            for (const auto &p : parentPart->messageParts()) {
+                if (p.data() == part) {
+                    row = i;
+                    break;
+                }
+                i++;
+            }
+            return createIndex(row, index.column(), parentPart);
         }
         return QModelIndex();
     }
@@ -168,9 +159,8 @@ public:
             return mPartTree->messageParts().size();
         } else {
             auto part = static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer());
-            auto subListPart = part->subMessagePart();
-            if (subListPart) {
-                return subListPart->messageParts().size();
+            if (part) {
+                return part->messageParts().size();
             }
         }
         return 0;
@@ -183,6 +173,6 @@ public:
     }
 
 private:
-    QSharedPointer<MimeTreeParser::MessagePartList> mPartTree;
+    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
 };
 
