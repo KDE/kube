@@ -1,12 +1,9 @@
-
 import QtQuick 2.4
 import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.1
-import QtWebKit 3.0
 
 Item {
     id: root
-    property alias  rootIndex: visualModel.rootIndex
+    property alias rootIndex: visualModel.rootIndex
     property int nestingLevel: 0
     property int desiredHeight: messagePartRect.height
     Rectangle {
@@ -22,7 +19,7 @@ Item {
                 property var countForHeight: true
                 width: childrenRect.width
                 height: childrenRect.height
-                color: Qt.rgba(Math.random(),Math.random(),Math.random(),1)
+                // color: Qt.rgba(Math.random(),Math.random(),Math.random(),1)
                 ContentView {
                     id: contentView
                     anchors.top: delegateRect.top
@@ -46,7 +43,7 @@ Item {
                     width: messagePartRect.width
                     anchors.top: contentView.bottom
                     anchors.left: contentView.left
-                    anchors.leftMargin: nestingLevel * 5
+                    // anchors.leftMargin: nestingLevel * 5
                     Loader {
                         id: partLoader
                         anchors.top: nestedLoaderRect.top

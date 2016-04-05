@@ -1,6 +1,5 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.1
 import QtWebKit 3.0
 
 Item {
@@ -12,11 +11,13 @@ Item {
     height: contentRect.height
     Rectangle {
         id: contentRect
-        border.width: 2
-        border.color: "black"
-        anchors.leftMargin: nestingLevel * 5
-        // color: Qt.rgba(Math.random(),Math.random(),Math.random(),1)
-        color: "green"
+
+        //Only for development
+        // border.width: 1
+        // border.color: "black"
+        // radius: 5
+        // anchors.leftMargin: nestingLevel * 5
+
         height: contentLoader.height
         width: root.width
 
@@ -26,7 +27,6 @@ Item {
             anchors.left: contentRect.left
             width: contentRect.width
             sourceComponent: isHtml ? htmlComponent : textComponent
-            //The webview doesn't resize to the content, so set a fixed size
             height: isHtml ? item.flickableItem.contentHeight : text.height
             onStatusChanged: {
                 if (isHtml) {
