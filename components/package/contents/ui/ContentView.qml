@@ -27,10 +27,10 @@ Item {
             width: contentRect.width
             sourceComponent: isHtml ? htmlComponent : textComponent
             //The webview doesn't resize to the content, so set a fixed size
-            height: isHtml ? 600 : text.height
+            height: isHtml ? item.flickableItem.contentHeight : text.height
             onStatusChanged: {
                 if (isHtml) {
-                    item.loadHtml(root.content, "file:///");
+                    item.flickableItem.loadHtml(root.content, "file:///");
                 }
             }
         }
@@ -44,28 +44,34 @@ Item {
         }
         Component {
             id: htmlComponent
-            WebView {
-                id: htmlView
-                onNavigationRequested: {
-                    // detect URL scheme prefix, most likely an external link
-                    var schemaRE = /^\w+:/;
-                    if (schemaRE.test(request.url)) {
-                        request.action = WebView.AcceptRequest;
-                    } else {
-                        request.action = WebView.IgnoreRequest;
-                        // delegate request.url here
+            //We need the scrollview so the WebView can fully expand so we have access to the contentHeight
+            //Otherwise it would just scale the content.
+            ScrollView {
+                horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+                verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+                WebView {
+                    id: htmlView
+                    onNavigationRequested: {
+                        // detect URL scheme prefix, most likely an external link
+                        var schemaRE = /^\w+:/;
+                        if (schemaRE.test(request.url)) {
+                            request.action = WebView.AcceptRequest;
+                        } else {
+                            request.action = WebView.IgnoreRequest;
+                            // delegate request.url here
+                        }
                     }
-                }
-                onLoadingChanged: {
-                    console.warn("Error is ", loadRequest.errorString);
-                    console.warn("Status is ", loadRequest.status);
+                    onLoadingChanged: {
+                        console.warn("Error is ", loadRequest.errorString);
+                        console.warn("Status is ", loadRequest.status);
+                    }
                 }
             }
         }
     }
     onContentChanged: {
         if (isHtml) {
-            contentLoader.item.loadHtml(content, "file:///");
+            contentLoader.item.flickableItem.loadHtml(content, "file:///");
         }
     }
 }
