@@ -21,35 +21,36 @@ Item {
         VisualDataModel {
             id: visualModel
             model: messageParser.partTree
-            onRootIndexChanged: {
-                console.warn('Got root index ' + rootIndex)
-                console.warn('Got children ' + model.hasModelChildren)
-            }
             delegate: Rectangle {
                 id: delegateRect
                 // visible: !model.isAttachment
                 property var countForHeight: true
-                // width: column.width
-                // height: column.height
                 width: childrenRect.width
                 height: childrenRect.height
                 color: Qt.rgba(Math.random(),Math.random(),Math.random(),1)
                 ContentView {
-                    id: contentLoader
+                    id: contentView
                     anchors.top: delegateRect.top
                     anchors.left: delegateRect.left
                     width: messagePartRect.width
                     content: model.text
                     isHtml: model.isHtml
                     visible: model.hasContent
+                    onVisibleChanged: {
+                        //Resize to 0 if it is not visible so the nestedLoaderRect has the right offset
+                        if (!visible) {
+                            height = 0
+                        }
+                    }
+                    contentType: model.type
                 }
                 Rectangle {
                     id: nestedLoaderRect
                     visible: model.hasModelChildren
                     height: partLoader.height
                     width: messagePartRect.width
-                    anchors.top: contentLoader.bottom
-                    anchors.left: contentLoader.left
+                    anchors.top: contentView.bottom
+                    anchors.left: contentView.left
                     anchors.leftMargin: nestingLevel * 5
                     onHeightChanged: {
                         console.warn("Nested loader rect changed: " + height)

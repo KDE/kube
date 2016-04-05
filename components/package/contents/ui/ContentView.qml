@@ -8,54 +8,64 @@ Item {
     property int nestingLevel;
     property bool isHtml;
     property string content;
+    property string contentType;
     height: contentRect.height
     Rectangle {
-        //FIXME use something that can cleanly switch between plaintext and html view instead of trying to hide the right thing
         id: contentRect
         border.width: 2
         border.color: "black"
-        // visible: model.hasContent
         anchors.leftMargin: nestingLevel * 5
         // color: Qt.rgba(Math.random(),Math.random(),Math.random(),1)
         color: "green"
-        height: childrenRect.height
+        height: contentLoader.height
         width: root.width
 
-        Text {
+        Loader {
+            id: contentLoader
             anchors.top: contentRect.top
             anchors.left: contentRect.left
-            id: text
-            visible: !isHtml
-            //FIXME doesn't work, so childrenRect above is to large in the html case
-            // height: model.isHtml ? 0 : height
-            text: content
             width: contentRect.width
-        }
-        WebView {
-            id: htmlView
+            sourceComponent: isHtml ? htmlComponent : textComponent
             //The webview doesn't resize to the content, so set a fixed size
-            anchors.top: contentRect.top
-            anchors.left: contentRect.left
-            width: root.width - 100
-            height: isHtml ? 600 : 0
-            visible: isHtml
-            onNavigationRequested: {
-                // detect URL scheme prefix, most likely an external link
-                var schemaRE = /^\w+:/;
-                if (schemaRE.test(request.url)) {
-                    request.action = WebView.AcceptRequest;
-                } else {
-                    request.action = WebView.IgnoreRequest;
-                    // delegate request.url here
+            height: isHtml ? 600 : text.height
+            onStatusChanged: {
+                if (isHtml) {
+                    item.loadHtml(root.content, "file:///");
                 }
             }
-            onLoadingChanged: {
-                console.warn("Error is ", loadRequest.errorString);
-                console.warn("Status is ", loadRequest.status);
+        }
+
+        Component {
+            id: textComponent
+            Text {
+                id: text
+                text: content
+            }
+        }
+        Component {
+            id: htmlComponent
+            WebView {
+                id: htmlView
+                onNavigationRequested: {
+                    // detect URL scheme prefix, most likely an external link
+                    var schemaRE = /^\w+:/;
+                    if (schemaRE.test(request.url)) {
+                        request.action = WebView.AcceptRequest;
+                    } else {
+                        request.action = WebView.IgnoreRequest;
+                        // delegate request.url here
+                    }
+                }
+                onLoadingChanged: {
+                    console.warn("Error is ", loadRequest.errorString);
+                    console.warn("Status is ", loadRequest.status);
+                }
             }
         }
     }
     onContentChanged: {
-        htmlView.loadHtml(content, "file:///");
+        if (isHtml) {
+            contentLoader.item.loadHtml(content, "file:///");
+        }
     }
 }

@@ -19,7 +19,7 @@ Item {
             Rectangle {
                 id: toplevelRectangle
                 width: scrollView.viewport.width
-                height: topPartLoader.item.height
+                height: topPartLoader.height
                 onHeightChanged: {
                     console.warn("toplevel component size updated: " + width + "*"+ height)
                 }
@@ -27,12 +27,6 @@ Item {
                 MessagePartTree {
                     id: topPartLoader
                     anchors.fill: parent
-                    // sourceComponent: messagePartComponent
-                    // onStatusChanged: {
-                    //     console.warn('Loaded')
-                    //     if (topPartLoader.status == Loader.Ready) console.warn('Loaded and ready')
-                    //     console.warn('size' + item.height)
-                    // }
                 }
             }
         }
