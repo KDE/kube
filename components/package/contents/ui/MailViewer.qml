@@ -18,7 +18,7 @@ Item {
             anchors.fill: parent
             MessagePartTree {
                 id: topPartLoader
-                width: scrollView.viewport.width
+                width: rootRectangle.width
                 height: topPartLoader.desiredHeight
             }
         }

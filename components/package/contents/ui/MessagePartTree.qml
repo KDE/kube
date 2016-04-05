@@ -11,7 +11,6 @@ Item {
     property int desiredHeight: messagePartRect.height
     Rectangle {
         id: messagePartRect
-        color: "red"
         height: partListView.contentHeight
         width: root.width
         VisualDataModel {
