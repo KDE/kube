@@ -8,16 +8,12 @@ Item {
     id: root
     property alias  rootIndex: visualModel.rootIndex
     property int nestingLevel: 0
-    height: partListView.height
+    property int desiredHeight: messagePartRect.height
     Rectangle {
         id: messagePartRect
         color: "red"
-        height: partListView.height
+        height: partListView.contentHeight
         width: root.width
-        // implicitHeight: partListView.height
-        onHeightChanged: {
-            console.warn("component size updated: " + width + "*"+ height)
-        }
         VisualDataModel {
             id: visualModel
             model: messageParser.partTree
@@ -52,16 +48,13 @@ Item {
                     anchors.top: contentView.bottom
                     anchors.left: contentView.left
                     anchors.leftMargin: nestingLevel * 5
-                    onHeightChanged: {
-                        console.warn("Nested loader rect changed: " + height)
-                    }
-                    color: "yellow"
                     Loader {
                         id: partLoader
                         anchors.top: nestedLoaderRect.top
                         anchors.left: nestedLoaderRect.left
                         width: messagePartRect.width
                         active: model.hasModelChildren
+                        height: item ? item.desiredHeight : 0
                     }
                 }
                 Component.onCompleted: {
@@ -82,7 +75,7 @@ Item {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.right: parent.right
-            height: contentHeight
+            height: parent.height
         }
     }
 }

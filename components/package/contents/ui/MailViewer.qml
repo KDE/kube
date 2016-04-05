@@ -16,18 +16,10 @@ Item {
         ScrollView {
             id: scrollView
             anchors.fill: parent
-            Rectangle {
-                id: toplevelRectangle
+            MessagePartTree {
+                id: topPartLoader
                 width: scrollView.viewport.width
-                height: topPartLoader.height
-                onHeightChanged: {
-                    console.warn("toplevel component size updated: " + width + "*"+ height)
-                }
-                color: "red"
-                MessagePartTree {
-                    id: topPartLoader
-                    anchors.fill: parent
-                }
+                height: topPartLoader.desiredHeight
             }
         }
     }
