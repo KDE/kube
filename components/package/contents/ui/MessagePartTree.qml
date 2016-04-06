@@ -16,7 +16,6 @@ Item {
             delegate: Rectangle {
                 id: delegateRect
                 // visible: !model.isAttachment
-                property var countForHeight: true
                 width: childrenRect.width
                 height: childrenRect.height
                 // color: Qt.rgba(Math.random(),Math.random(),Math.random(),1)
@@ -29,34 +28,24 @@ Item {
                     isHtml: model.isHtml
                     visible: model.hasContent
                     onVisibleChanged: {
-                        //Resize to 0 if it is not visible so the nestedLoaderRect has the right offset
+                        //Resize to 0 if it is not visible so the partLoader has the right offset
                         if (!visible) {
                             height = 0
                         }
                     }
                     contentType: model.type
                 }
-                Rectangle {
-                    id: nestedLoaderRect
-                    visible: model.hasModelChildren
-                    height: partLoader.height
-                    width: messagePartRect.width
+                Loader {
+                    id: partLoader
                     anchors.top: contentView.bottom
                     anchors.left: contentView.left
-                    // anchors.leftMargin: nestingLevel * 5
-                    Loader {
-                        id: partLoader
-                        anchors.top: nestedLoaderRect.top
-                        anchors.left: nestedLoaderRect.left
-                        width: messagePartRect.width
-                        active: model.hasModelChildren
-                        height: item ? item.desiredHeight : 0
-                    }
+                    width: messagePartRect.width
+                    visible: model.hasModelChildren
+                    active: model.hasModelChildren
+                    height: item ? item.desiredHeight : 0
                 }
                 Component.onCompleted: {
-                    console.warn("Completed loading part " + text);
                     if (model.hasModelChildren) {
-                        console.warn("Loading a new subpart");
                         partLoader.source = "MessagePartTree.qml"
                         partLoader.item.rootIndex = visualModel.modelIndex(index)
                         partLoader.item.nestingLevel = root.nestingLevel + 1
