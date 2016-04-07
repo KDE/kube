@@ -1,7 +1,6 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
-import QtWebKit 3.0
 
 import org.kube.framework.domain 1.0 as KubeFramework
 
@@ -10,29 +9,18 @@ Item {
     property variant message;
     property string html;
 
-    WebView {
-        id: webview
+    Rectangle {
+        id: rootRectangle
         anchors.fill: parent
-        onNavigationRequested: {
-            // detect URL scheme prefix, most likely an external link
-            var schemaRE = /^\w+:/;
-            if (schemaRE.test(request.url)) {
-                request.action = WebView.AcceptRequest;
-            } else {
-                request.action = WebView.IgnoreRequest;
-                // delegate request.url here
+        ScrollView {
+            id: scrollView
+            anchors.fill: parent
+            MessagePartTree {
+                id: topPartLoader
+                width: rootRectangle.width
+                height: topPartLoader.desiredHeight
             }
         }
-        onLoadingChanged: {
-            console.warn("Error is ", loadRequest.errorString);
-            console.warn("Status is ", loadRequest.status);
-        }
-    }
-
-    onHtmlChanged: {
-        // console.warn("HTML is ", html);
-        // The file:/// argument is necessary so local icons are found
-        webview.loadHtml(html, "file:///");
     }
 
     KubeFramework.MessageParser {

@@ -136,6 +136,11 @@ void StringHtmlWriter::insertExtraHead()
     }
 }
 
+QMap<QByteArray, QUrl> StringHtmlWriter::embeddedParts() const
+{
+    return mEmbeddedPartMap;
+}
+
 QString StringHtmlWriter::html() const
 {
     if (mState != Ended) {

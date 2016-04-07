@@ -22,17 +22,24 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+
+#include <QAbstractItemModel>
+#include <QModelIndex>
+
 #include <memory>
+#include <MimeTreeParser/MessagePart>
 
 namespace MimeTreeParser {
     class NodeHelper;
 };
+class QAbstractItemModel;
 
 class MessageParser : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (QVariant message READ message WRITE setMessage)
     Q_PROPERTY (QString html READ html NOTIFY htmlChanged)
+    Q_PROPERTY (QAbstractItemModel* partTree READ partTree NOTIFY htmlChanged)
 
 public:
     explicit MessageParser(QObject *parent = Q_NULLPTR);
@@ -41,11 +48,42 @@ public:
 
     QVariant message() const;
     void setMessage(const QVariant &to);
+    QAbstractItemModel *partTree() const;
 
 signals:
     void htmlChanged();
 
 private:
+    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
     QString mHtml;
+    QMap<QByteArray, QUrl> mEmbeddedPartMap;
     std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
 };
+
+class PartModel : public QAbstractItemModel {
+    Q_OBJECT
+public:
+    PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, QMap<QByteArray, QUrl> embeddedPartMap);
+
+public:
+    enum Roles {
+        Text  = Qt::UserRole + 1,
+        IsHtml,
+        IsEncrypted,
+        IsAttachment,
+        HasContent,
+        Type
+    };
+
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+
+private:
+    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
+    QMap<QByteArray, QUrl> mEmbeddedPartMap;
+};
+

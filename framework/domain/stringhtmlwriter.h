@@ -53,6 +53,7 @@ public:
     void extraHead(const QString &str) Q_DECL_OVERRIDE;
 
     QString html() const;
+    QMap<QByteArray, QUrl> embeddedParts() const;
 private:
     void insertExtraHead();
     void resolveCidUrls();
