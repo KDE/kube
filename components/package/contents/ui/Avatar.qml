@@ -41,7 +41,7 @@ Rectangle {
         }
     }
 
-    radius: 2
+    radius: 100
 
     color: calcColor(name.length)
 
