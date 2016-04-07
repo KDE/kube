@@ -51,5 +51,7 @@ Rectangle {
         text: name.charAt(0)
 
         color: "#ecf0f1"
+
+        font.capitalization: Font.AllUppercase
     }
 }
