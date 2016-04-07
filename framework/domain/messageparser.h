@@ -52,6 +52,7 @@ signals:
 private:
     QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
     QString mHtml;
+    QMap<QByteArray, QUrl> mEmbeddedPartMap;
     std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
 };
 
@@ -62,9 +63,7 @@ private:
 class PartModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree) : mPartTree(partTree)
-    {
-    }
+    PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, QMap<QByteArray, QUrl> embeddedPartMap);
 
 public:
     enum Roles {
@@ -76,103 +75,15 @@ public:
         Type
     };
 
-    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE
-    {
-        QHash<int, QByteArray> roles;
-        roles[Text] = "text";
-        roles[IsHtml] = "isHtml";
-        roles[IsEncrypted] = "isEncrypted";
-        roles[IsAttachment] = "isAttachment";
-        roles[HasContent] = "hasContent";
-        roles[Type] = "type";
-        return roles;
-    }
-
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
-    {
-        qDebug() << "index " << parent << row << column << mPartTree->messageParts().size();
-        if (!parent.isValid()) {
-            if (row < mPartTree->messageParts().size()) {
-                auto part = mPartTree->messageParts().at(row);
-                return createIndex(row, column, part.data());
-            }
-        } else {
-            auto part = static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer());
-            auto subPart = part->messageParts().at(row);
-            return createIndex(row, column, subPart.data());
-        }
-        return QModelIndex();
-    }
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
-    {
-        qDebug() << "Getting data for index";
-        if (index.isValid()) {
-            auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
-            switch (role) {
-                case Text:
-                    // qDebug() << "Getting text: " << part->property("text").toString();
-                    return part->property("htmlContent").toString();
-                case IsAttachment:
-                    return part->property("attachment").toBool();
-                case IsEncrypted:
-                    return part->property("isEncrypted").toBool();
-                case IsHtml:
-                    return part->property("isHtml").toBool();
-                case HasContent:
-                    return !part->property("htmlContent").toString().isEmpty();
-                case Type:
-                    return part->metaObject()->className();
-            }
-        }
-        return QVariant();
-    }
-
-    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE
-    {
-        qDebug() << "parent " << index;
-        if (index.isValid()) {
-            auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
-            auto parentPart = static_cast<MimeTreeParser::MessagePart*>(part->parentPart());
-            auto row = 0;//get the parents parent to find the index
-            if (!parentPart) {
-                parentPart = mPartTree.data();
-            }
-            int i = 0;
-            for (const auto &p : parentPart->messageParts()) {
-                if (p.data() == part) {
-                    row = i;
-                    break;
-                }
-                i++;
-            }
-            return createIndex(row, index.column(), parentPart);
-        }
-        return QModelIndex();
-    }
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
-    {
-        qDebug() << "Row count " << parent;
-        if (!parent.isValid()) {
-            qDebug() << "Row count " << mPartTree->messageParts().size();
-            return mPartTree->messageParts().size();
-        } else {
-            auto part = static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer());
-            if (part) {
-                return part->messageParts().size();
-            }
-        }
-        return 0;
-    }
-
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
-    {
-        qDebug() << "Column count " << parent;
-        return 1;
-    }
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
 private:
     QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
+    QMap<QByteArray, QUrl> mEmbeddedPartMap;
 };
 
