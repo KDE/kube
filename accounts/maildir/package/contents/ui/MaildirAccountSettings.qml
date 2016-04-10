@@ -78,7 +78,7 @@ Rectangle {
             Button {
                 iconName: "folder"
                 onClicked:  {
-                    fileDialogObject = fileDialogComponent.createObject(parent);
+                    fileDialogComponent.createObject(parent);
                 }
 
                 Component {
@@ -92,10 +92,8 @@ Rectangle {
 
                         onAccepted: {
                             maildirSettings.path = fileDialog.fileUrl
-                            fileDialogObject.destroy()
                         }
                         onRejected: {
-                            fileDialogObject.destroy()
                         }
                     }
                 }
@@ -110,29 +108,33 @@ Rectangle {
 
         Label { text: "Username" }
         TextField {
-            id: username
-            placeholderText: "username"
+            placeholderText: "Username"
             Layout.fillWidth: true
-            text: transportSettings.username
-            onTextChanged: { transportSettings.username = text; }
+            text: maildirSettings.smtpUsername
+            onTextChanged: { maildirSettings.smtpUsername = text; }
         }
 
         Label { text: "Password" }
         TextField {
-            id: password
-            placeholderText: "password"
+            placeholderText: "Password"
             Layout.fillWidth: true
-            text: transportSettings.password
-            onTextChanged: { transportSettings.password = text; }
+            text: maildirSettings.smtpPassword
+            onTextChanged: { maildirSettings.smtpPassword = text; }
         }
 
         Label { text: "Server" }
         TextField {
             id: server
-            placeholderText: "server"
+            placeholderText: "smtps://mainserver.example.net:465"
             Layout.fillWidth: true
-            text: transportSettings.server
-            onTextChanged: { transportSettings.server = text; }
+            text: maildirSettings.smtpServer
+            onTextChanged: { maildirSettings.smtpServer = text; }
+            validator: maildirSettings.smtpServerValidator
+            Rectangle {
+                anchors.fill: parent
+                opacity: 0.2
+                color: server.acceptableInput ? "green" : "yellow"
+            }
         }
 
         MaildirAccount.MaildirSettings {
@@ -140,19 +142,9 @@ Rectangle {
             accountIdentifier: accountId
         }
 
-        KubeSettings.Settings {
-            id: transportSettings
-            //TODO set a proper identifier
-            identifier: "transport.current"
-            property string server;
-            property string username;
-            property string password;
-        }
-
         Button {
             text: "Save"
             onClicked: {
-                transportSettings.save();
                 maildirSettings.save();
             }
         }

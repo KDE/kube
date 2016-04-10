@@ -23,14 +23,20 @@ private slots:
     {
         auto accountId = "accountid";
         auto maildirPath = QDir::tempPath();
+        auto smtpServer = QString("smtpserver");
+        auto smtpUsername = QString("username");
+        auto smtpPassword = QString("password");
 
         MaildirSettings settings;
         settings.setAccountIdentifier(accountId);
         settings.setPath(maildirPath);
+        settings.setProperty("smtpServer", smtpServer);
+        settings.setProperty("smtpUsername", smtpUsername);
+        settings.setProperty("smtpPassword", smtpPassword);
         settings.save();
 
         Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).then<void, QList<Sink::ApplicationDomain::SinkResource>>([](const QList<Sink::ApplicationDomain::SinkResource> &resources) {
-            QCOMPARE(resources.size(), 1);
+            QCOMPARE(resources.size(), 2);
         })
         .exec().waitForFinished();
 
@@ -38,10 +44,15 @@ private slots:
         {
             MaildirSettings readSettings;
             QSignalSpy spy(&readSettings, &MaildirSettings::pathChanged);
+            QSignalSpy spy1(&readSettings, &MaildirSettings::smtpResourceChanged);
             readSettings.setAccountIdentifier(accountId);
             QTRY_VERIFY(spy.count());
+            QTRY_VERIFY(spy1.count());
             QVERIFY(!readSettings.accountIdentifier().isEmpty());
             QCOMPARE(readSettings.path().toString(), maildirPath);
+            QCOMPARE(readSettings.property("smtpServer").toString(), smtpServer);
+            QCOMPARE(readSettings.property("smtpUsername").toString(), smtpUsername);
+            QCOMPARE(readSettings.property("smtpPassword").toString(), smtpPassword);
         }
 
         {

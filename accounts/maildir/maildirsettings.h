@@ -29,6 +29,10 @@ class MaildirSettings : public QObject
     Q_PROPERTY(QValidator* pathValidator READ pathValidator CONSTANT)
     Q_PROPERTY(QString icon MEMBER mIcon NOTIFY changed)
     Q_PROPERTY(QString accountName MEMBER mName NOTIFY changed)
+    Q_PROPERTY(QString smtpServer MEMBER mSmtpServer NOTIFY smtpResourceChanged)
+    Q_PROPERTY(QValidator* smtpServerValidator READ smtpServerValidator CONSTANT)
+    Q_PROPERTY(QString smtpUsername MEMBER mSmtpUsername NOTIFY smtpResourceChanged)
+    Q_PROPERTY(QString smtpPassword MEMBER mSmtpPassword NOTIFY smtpResourceChanged)
 
 public:
     MaildirSettings(QObject *parent = 0);
@@ -40,17 +44,24 @@ public:
     QUrl path() const;
     QValidator *pathValidator() const;
 
+    QValidator *smtpServerValidator() const;
+
     Q_INVOKABLE void save();
     Q_INVOKABLE void remove();
 
 signals:
     void pathChanged();
+    void smtpResourceChanged();
     void changed();
 
 private:
     QByteArray mIdentifier;
     QByteArray mAccountIdentifier;
+    QByteArray mMailtransportIdentifier;
     QString mPath;
     QString mIcon;
     QString mName;
+    QString mSmtpServer;
+    QString mSmtpUsername;
+    QString mSmtpPassword;
 };

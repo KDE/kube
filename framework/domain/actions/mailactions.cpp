@@ -27,22 +27,3 @@
 
 using namespace Kube;
 
-static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
-    [](Context *context) -> bool {
-        auto username = context->property("username").value<QByteArray>();
-        auto password = context->property("password").value<QByteArray>();
-        auto server = context->property("server").value<QByteArray>();
-        auto message = context->property("message").value<KMime::Message::Ptr>();
-        return !username.isEmpty() && !password.isEmpty() && !server.isEmpty() && message;
-    },
-    [](Context *context) {
-        auto username = context->property("username").value<QByteArray>();
-        auto password = context->property("password").value<QByteArray>();
-        auto server = context->property("server").value<QByteArray>();
-        //For ssl use "smtps://mainserver.example.net
-        QByteArray cacert; // = "/path/to/certificate.pem";
-        auto message = context->property("message").value<KMime::Message::Ptr>();
-        qWarning() << "Sending a mail: ";
-        MailTransport::sendMessage(message, server, username, password, cacert);
-    }
-);

@@ -19,6 +19,9 @@
 #include <actions/context.h>
 #include <actions/actionhandler.h>
 
+#include <KMime/Message>
+#include <QFile>
+
 #include <sink/store.h>
 
 using namespace Kube;
@@ -67,6 +70,46 @@ static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize"
             qDebug() << "Synchronizing all";
             Sink::Store::synchronize(Sink::Query()).exec();
         }
+    }
+);
+
+static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
+    [](Context *context) -> bool {
+        auto accountId = context->property("accountId").value<QByteArray>();
+        auto message = context->property("message").value<KMime::Message::Ptr>();
+        return !accountId.isEmpty() && message;
+    },
+    [](Context *context) {
+        auto accountId = context->property("accountId").value<QByteArray>();
+        //For ssl use "smtps://mainserver.example.net
+        // QByteArray cacert; // = "/path/to/certificate.pem";
+        auto message = context->property("message").value<KMime::Message::Ptr>();
+        auto mimeMessage = Sink::Store::getTemporaryFilePath();
+        QFile file(mimeMessage);
+        if (!file.open(QIODevice::ReadWrite)) {
+            qWarning() << "Failed to open the file: " << file.errorString() << mimeMessage;
+            return;
+        }
+        file.write(message->encodedContent());
+        qWarning() << "Sending a mail: ";
+
+        Sink::Query query;
+        query += Sink::Query::PropertyFilter("type", "org.kde.mailtransport");
+        query += Sink::Query::PropertyFilter("account", QVariant::fromValue(accountId));
+        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(query)
+            .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([=](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
+                if (resources.isEmpty()) {
+                    qWarning() << "Failed to find a mailtransport resource";
+                } else {
+                    auto resourceId = resources[0]->identifier();
+                    qDebug() << "Sending message via resource: " << resourceId;
+                    Sink::ApplicationDomain::Mail mail(resourceId);
+                    mail.setProperty("mimeMessage", mimeMessage);
+                    Sink::Store::create(mail).exec();
+                    // return Sink::Store::create(mail);
+                }
+                return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
+            }).exec();
     }
 );
 

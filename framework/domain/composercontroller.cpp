@@ -26,12 +26,13 @@
 #include <KCodecs/KEmailAddress>
 #include <QVariant>
 #include <QDebug>
+#include <QQmlEngine>
 
+#include "accountsmodel.h"
 #include "mailtemplates.h"
 
 ComposerController::ComposerController(QObject *parent) : QObject(parent)
 {
-    m_identityModel << "Kuberich <kuberich@kolabnow.com>" << "Uni <kuberich@university.edu>" << "Spam <hello.spam@spam.to>";
 }
 
 QString ComposerController::to() const
@@ -99,22 +100,11 @@ void ComposerController::setBody(const QString &body)
     }
 }
 
-QStringList ComposerController::identityModel() const
+QAbstractItemModel *ComposerController::identityModel() const
 {
-    return m_identityModel;
-}
-
-int ComposerController::fromIndex() const
-{
-    return m_fromIndex;
-}
-
-void ComposerController::setFromIndex(int fromIndex)
-{
-    if(m_fromIndex != fromIndex) {
-        m_fromIndex = fromIndex;
-        emit fromIndexChanged();
-    }
+    static auto accountsModel = new AccountsModel();
+    QQmlEngine::setObjectOwnership(accountsModel, QQmlEngine::CppOwnership);
+    return accountsModel;;
 }
 
 QStringList ComposerController::attachemts() const
@@ -165,6 +155,8 @@ KMime::Message::Ptr ComposerController::assembleMessage()
         KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
         mail->to(true)->addAddress(addrSpec, displayName);
     }
+    //FIXME set "from" from identity (or do that in the action directly?)
+    // mail->from(true)->addAddress("test@example.com", "John Doe");
     mail->subject(true)->fromUnicodeString(m_subject, "utf-8");
     mail->setBody(m_body.toUtf8());
     mail->assemble();
@@ -174,17 +166,13 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 void ComposerController::send()
 {
     auto mail = assembleMessage();
-    Kube::ApplicationContext settings;
-    auto account = settings.currentAccount();
-    auto identity = account.primaryIdentity();
-    auto transport = identity.transport();
+    auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(AccountsModel::AccountId).toByteArray();
 
     Kube::Context context;
     context.setProperty("message", QVariant::fromValue(mail));
+    context.setProperty("accountId", QVariant::fromValue(currentAccountId));
 
-    context.setProperty("username", transport.username());
-    context.setProperty("password", transport.password());
-    context.setProperty("server", transport.server());
+    qDebug() << "Current account " << currentAccountId;
 
     Kube::Action("org.kde.kube.actions.sendmail", context).execute();
     clear();
@@ -206,5 +194,4 @@ void ComposerController::clear()
     setTo("");
     setCc("");
     setBcc("");
-    setFromIndex(-1);
 }

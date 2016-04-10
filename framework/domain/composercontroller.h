@@ -23,6 +23,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVariant>
+#include <QAbstractItemModel>
 
 namespace KMime {
 class Message;
@@ -37,8 +38,8 @@ class ComposerController : public QObject
     Q_PROPERTY (QString bcc READ bcc WRITE setBcc NOTIFY bccChanged)
     Q_PROPERTY (QString subject READ subject WRITE setSubject NOTIFY subjectChanged)
     Q_PROPERTY (QString body READ body WRITE setBody NOTIFY bodyChanged)
-    Q_PROPERTY (QStringList identityModel READ identityModel)
-    Q_PROPERTY (int fromIndex READ fromIndex WRITE setFromIndex NOTIFY fromIndexChanged)
+    Q_PROPERTY (QAbstractItemModel* identityModel READ identityModel CONSTANT)
+    Q_PROPERTY (int currentIdentityIndex MEMBER m_currentAccountIndex)
     Q_PROPERTY (QStringList attachments READ attachemts NOTIFY attachmentsChanged)
 
 public:
@@ -59,10 +60,7 @@ public:
     QString body() const;
     void setBody(const QString &body);
 
-    QStringList identityModel() const;
-
-    int fromIndex() const;
-    void setFromIndex(int fromIndex);
+    QAbstractItemModel *identityModel() const;
 
     QStringList attachemts() const;
 
@@ -91,9 +89,8 @@ private:
     QString m_bcc;
     QString m_subject;
     QString m_body;
-    QStringList m_identityModel;
-    int m_fromIndex;
     QStringList m_attachments;
     QVariant m_originalMessage;
     QVariant m_msg;
+    int m_currentAccountIndex;
 };

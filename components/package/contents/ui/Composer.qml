@@ -67,14 +67,14 @@ Item {
             }
 
             ComboBox {
+                id: identityCombo
                 model: composer.identityModel
+                textRole: "name"
 
                 Layout.fillWidth: true
 
-                currentIndex: composer.fromIndex
-
                 onCurrentIndexChanged: {
-                    composer.fromIndex = currentIndex
+                    composer.currentIdentityIndex = currentIndex
                 }
             }
 
