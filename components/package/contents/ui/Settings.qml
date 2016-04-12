@@ -19,7 +19,7 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami 1.0 as Kirigami
 import org.kde.plasma.components  2.0 as PlasmaComponents
 
 import org.kube.framework.settings 1.0 as KubeSettings
@@ -114,7 +114,7 @@ Rectangle {
                             RowLayout {
                                 anchors.fill: parent
 
-                                PlasmaCore.IconItem {
+                                Kirigami.Icon {
                                     source: accountFactory.icon
                                 }
 
