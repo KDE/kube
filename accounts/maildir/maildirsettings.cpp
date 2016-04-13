@@ -82,6 +82,18 @@ void MaildirSettings::setAccountIdentifier(const QByteArray &id)
         [](int errorCode, const QString &errorMessage) {
             qWarning() << "Failed to find the maildir resource: " << errorMessage;
         }).exec();
+
+    //FIXME this assumes that we only ever have one identity per account
+    Sink::Store::fetchOne<Sink::ApplicationDomain::Identity>(Sink::Query::PropertyFilter("account", QVariant::fromValue(id)))
+        .then<void, Sink::ApplicationDomain::Identity>([this](const Sink::ApplicationDomain::Identity &identity) {
+            mIdentityIdentifier = identity.identifier();
+            mUsername = identity.getProperty("username").toString();
+            mEmailAddress = identity.getProperty("address").toString();
+            emit identityChanged();
+        },
+        [](int errorCode, const QString &errorMessage) {
+            qWarning() << "Failed to find the identity resource: " << errorMessage;
+        }).exec();
 }
 
 QByteArray MaildirSettings::accountIdentifier() const
@@ -204,6 +216,27 @@ void MaildirSettings::save()
         Sink::Store::create(resource).then<void>([]() {},
         [](int errorCode, const QString &errorMessage) {
             qWarning() << "Error while creating resource: " << errorMessage;
+        })
+        .exec();
+    }
+
+    if (!mIdentityIdentifier.isEmpty()) {
+        Sink::ApplicationDomain::Identity identity(mMailtransportIdentifier);
+        identity.setProperty("username", mUsername);
+        identity.setProperty("address", mEmailAddress);
+        Sink::Store::modify(identity).then<void>([](){}, [](int errorCode, const QString &errorMessage) {
+            qWarning() << "Error while modifying identity: " << errorMessage;
+        })
+        .exec();
+    } else {
+        auto identity = Sink::ApplicationDomain::ApplicationDomainType::createEntity<Sink::ApplicationDomain::Identity>();
+        mIdentityIdentifier = identity.identifier();
+        identity.setProperty("account", mAccountIdentifier);
+        identity.setProperty("username", mUsername);
+        identity.setProperty("address", mEmailAddress);
+        Sink::Store::create(identity).then<void>([]() {},
+        [](int errorCode, const QString &errorMessage) {
+            qWarning() << "Error while creating identity: " << errorMessage;
         })
         .exec();
     }

@@ -26,6 +26,8 @@ private slots:
         auto smtpServer = QString("smtpserver");
         auto smtpUsername = QString("username");
         auto smtpPassword = QString("password");
+        auto username = QString("username");
+        auto emailAddress = QString("emailAddress");
 
         MaildirSettings settings;
         settings.setAccountIdentifier(accountId);
@@ -33,6 +35,8 @@ private slots:
         settings.setProperty("smtpServer", smtpServer);
         settings.setProperty("smtpUsername", smtpUsername);
         settings.setProperty("smtpPassword", smtpPassword);
+        settings.setProperty("username", username);
+        settings.setProperty("emailAddress", emailAddress);
         settings.save();
 
         Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).then<void, QList<Sink::ApplicationDomain::SinkResource>>([](const QList<Sink::ApplicationDomain::SinkResource> &resources) {
@@ -46,20 +50,23 @@ private slots:
             QSignalSpy spy(&readSettings, &MaildirSettings::pathChanged);
             QSignalSpy spy1(&readSettings, &MaildirSettings::smtpResourceChanged);
             readSettings.setAccountIdentifier(accountId);
-            QTRY_VERIFY(spy.count());
-            QTRY_VERIFY(spy1.count());
+            //Once for clear and once for once for the new setting
+            QTRY_COMPARE(spy.count(), 2);
+            QTRY_COMPARE(spy1.count(), 2);
             QVERIFY(!readSettings.accountIdentifier().isEmpty());
             QCOMPARE(readSettings.path().toString(), maildirPath);
             QCOMPARE(readSettings.property("smtpServer").toString(), smtpServer);
             QCOMPARE(readSettings.property("smtpUsername").toString(), smtpUsername);
             QCOMPARE(readSettings.property("smtpPassword").toString(), smtpPassword);
+            QCOMPARE(readSettings.property("username").toString(), smtpUsername);
+            QCOMPARE(readSettings.property("emailAddress").toString(), smtpPassword);
         }
 
         {
             MaildirSettings settings;
             QSignalSpy spy(&settings, &MaildirSettings::pathChanged);
             settings.setAccountIdentifier(accountId);
-            QTRY_VERIFY(spy.count());
+            QTRY_COMPARE(spy.count(), 2);
             settings.remove();
         }
 

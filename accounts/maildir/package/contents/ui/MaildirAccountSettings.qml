@@ -53,6 +53,22 @@ Rectangle {
             onTextChanged: { maildirSettings.accountName = text; }
         }
 
+        Label { text: "User Name" }
+        TextField {
+            placeholderText: "Your Name"
+            Layout.fillWidth: true
+            text: maildirSettings.userName
+            onTextChanged: { maildirSettings.userName = text; }
+        }
+
+        Label { text: "Email Address" }
+        TextField {
+            placeholderText: "Your EMail Address"
+            Layout.fillWidth: true
+            text: maildirSettings.emailAddress
+            onTextChanged: { maildirSettings.emailAddress = text; }
+        }
+
         Text {
             Layout.columnSpan: 2
             Layout.fillWidth: true
