@@ -29,6 +29,7 @@
 #include <QQmlEngine>
 
 #include "accountsmodel.h"
+#include "identitiesmodel.h"
 #include "mailtemplates.h"
 
 ComposerController::ComposerController(QObject *parent) : QObject(parent)
@@ -102,9 +103,9 @@ void ComposerController::setBody(const QString &body)
 
 QAbstractItemModel *ComposerController::identityModel() const
 {
-    static auto accountsModel = new AccountsModel();
-    QQmlEngine::setObjectOwnership(accountsModel, QQmlEngine::CppOwnership);
-    return accountsModel;;
+    static auto model = new IdentitiesModel();
+    QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+    return model;
 }
 
 QStringList ComposerController::attachemts() const
@@ -155,8 +156,11 @@ KMime::Message::Ptr ComposerController::assembleMessage()
         KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
         mail->to(true)->addAddress(addrSpec, displayName);
     }
-    //FIXME set "from" from identity (or do that in the action directly?)
-    // mail->from(true)->addAddress("test@example.com", "John Doe");
+    auto currentIndex = identityModel()->index(m_currentAccountIndex, 0);
+    KMime::Types::Mailbox mb;
+    mb.setName(currentIndex.data(IdentitiesModel::Username).toString());
+    mb.setAddress(currentIndex.data(IdentitiesModel::Address).toString().toUtf8());
+    mail->from(true)->addAddress(mb);
     mail->subject(true)->fromUnicodeString(m_subject, "utf-8");
     mail->setBody(m_body.toUtf8());
     mail->assemble();
@@ -166,7 +170,7 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 void ComposerController::send()
 {
     auto mail = assembleMessage();
-    auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(AccountsModel::AccountId).toByteArray();
+    auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(IdentitiesModel::AccountId).toByteArray();
 
     Kube::Context context;
     context.setProperty("message", QVariant::fromValue(mail));

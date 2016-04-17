@@ -69,7 +69,7 @@ Item {
             ComboBox {
                 id: identityCombo
                 model: composer.identityModel
-                textRole: "name"
+                textRole: "displayName"
 
                 Layout.fillWidth: true
 
