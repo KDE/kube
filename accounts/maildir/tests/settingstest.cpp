@@ -35,7 +35,7 @@ private slots:
         settings.setProperty("smtpServer", smtpServer);
         settings.setProperty("smtpUsername", smtpUsername);
         settings.setProperty("smtpPassword", smtpPassword);
-        settings.setProperty("username", username);
+        settings.setProperty("userName", username);
         settings.setProperty("emailAddress", emailAddress);
         settings.save();
 
@@ -58,8 +58,8 @@ private slots:
             QCOMPARE(readSettings.property("smtpServer").toString(), smtpServer);
             QCOMPARE(readSettings.property("smtpUsername").toString(), smtpUsername);
             QCOMPARE(readSettings.property("smtpPassword").toString(), smtpPassword);
-            QCOMPARE(readSettings.property("username").toString(), smtpUsername);
-            QCOMPARE(readSettings.property("emailAddress").toString(), smtpPassword);
+            QCOMPARE(readSettings.property("userName").toString(), smtpUsername);
+            QCOMPARE(readSettings.property("emailAddress").toString(), emailAddress);
         }
 
         {
