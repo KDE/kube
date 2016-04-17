@@ -20,8 +20,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.theme 1.0
@@ -86,7 +85,7 @@ Item {
 
                 color: "#333"
                 border.color: Qt.lighter(color, 1.2)
-                PlasmaCore.IconItem {
+                Kirigami.Icon {
                     id: iconItem
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
@@ -155,7 +154,7 @@ Item {
                                 border.width: 1
                                 border.color: "lightgrey"
                                 color: styleData.selected ? colorPalette.highlight : colorPalette.button
-                                PlasmaCore.IconItem {
+                                Kirigami.Icon {
                                     id: iconItem
                                     anchors {
                                         verticalCenter: parent.verticalCenter
