@@ -20,7 +20,6 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
-import org.kde.plasma.components  2.0 as PlasmaComponents
 
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
@@ -83,36 +82,27 @@ Rectangle {
 
                         currentIndex: -1
 
-                        delegate: PlasmaComponents.ListItem {
-
-                            width: listView.width
-                            height: Unit.size * 10
+                        delegate:  Kirigami.AbstractListItem {
 
                             enabled: true
+                            supportsMouseEvents: true
                             checked: listView.currentIndex == index
 
-                            KubeFramework.AccountFactory {
-                                id: accountFactory
-                                accountId: model.accountId
+                            onClicked: {
+                                console.warn("Loading module is ", accountFactory.accountId);
+                                accountDetails.source = accountFactory.uiPath
+                                accountDetails.item.accountId = accountFactory.accountId
+                                accountDetails.item.icon = accountFactory.icon
+                                accountDetails.item.accountName = accountFactory.name
+                                listView.currentIndex = model.index
                             }
 
-                            MouseArea {
-                                anchors {
-                                    fill: parent
-                                }
+                            contentItem: RowLayout {
 
-                                onClicked: {
-                                    console.warn("Loading module is ", accountFactory.accountId);
-                                    accountDetails.source = accountFactory.uiPath
-                                    accountDetails.item.accountId = accountFactory.accountId
-                                    accountDetails.item.icon = accountFactory.icon
-                                    accountDetails.item.accountName = accountFactory.name
-                                    listView.currentIndex = model.index
+                                KubeFramework.AccountFactory {
+                                        id: accountFactory
+                                        accountId: model.accountId
                                 }
-                            }
-
-                            RowLayout {
-                                anchors.fill: parent
 
                                 Kirigami.Icon {
                                     source: accountFactory.icon
