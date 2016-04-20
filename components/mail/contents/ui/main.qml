@@ -18,7 +18,6 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
-import org.kde.plasma.components 2.0 as PlasmaComponents
 
 import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.settings 1.0 as KubeSettings
@@ -34,17 +33,6 @@ ApplicationWindow {
     width: 1920  * 0.7
 
     visible: true
-
-    // Action.ActionHandler {
-    //     actionId: "org.kde.kube.actions.mark-as-read"
-    //     function isReady(context) {
-    //         return context.mail ? true : false;
-    //     }
-    //
-    //     function handler(context) {
-    //         console.warn("Got message:", context.mail)
-    //     }
-    // }
 
     KubeAction.Context {
         id: maillistcontext
@@ -82,7 +70,7 @@ ApplicationWindow {
         Row {
             anchors.fill: parent
 
-            PlasmaComponents.ToolButton {
+            ToolButton {
                 height: parent.height
                 text: "Settings"
                 onClicked: {
@@ -97,7 +85,7 @@ ApplicationWindow {
                 }
             }
 
-            PlasmaComponents.ToolButton {
+            ToolButton {
                 height: parent.height
                 iconName: "mail-message-new"
                 text: "Compose"
@@ -106,7 +94,7 @@ ApplicationWindow {
                 }
             }
 
-            PlasmaComponents.ToolButton {
+            ToolButton {
                 height: parent.height
                 iconName: "mail-message-reply"
                 text: "Reply"
@@ -123,7 +111,7 @@ ApplicationWindow {
                 }
             }
 
-            PlasmaComponents.ToolButton {
+            ToolButton {
                 height: parent.height
                 iconName: "mail-mark-unread"
                 text: "Mark As Read"
@@ -133,7 +121,7 @@ ApplicationWindow {
                 }
             }
 
-            PlasmaComponents.ToolButton {
+            ToolButton {
                 height: parent.height
                 iconName: "mail-mark-important"
                 text: "Mark Important"
@@ -142,7 +130,7 @@ ApplicationWindow {
                 }
             }
 
-            PlasmaComponents.ToolButton {
+            ToolButton {
                 height: parent.height
                 iconName: "edit-delete"
                 text: "Delete Mail"
@@ -152,7 +140,7 @@ ApplicationWindow {
                 }
             }
 
-            PlasmaComponents.ToolButton {
+            ToolButton {
                 height: parent.height
                 iconName: "view-refresh"
                 text: "Sync"
