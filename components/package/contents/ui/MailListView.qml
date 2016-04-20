@@ -16,17 +16,15 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
-import QtQml 2.2
-
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.theme 1.0
 
-ScrollView {
+Controls.ScrollView {
     id: root
     property variant parentFolder
     property variant currentMail
@@ -46,37 +44,17 @@ ScrollView {
         }
         focus: true
 
-        delegate: PlasmaComponents.ListItem {
+        delegate: Kirigami.AbstractListItem {
             width: listView.width
             height: Unit.size * 12
 
             enabled: true
+            supportsMouseEvents: true
             checked: listView.currentIndex == index
 
-            Binding {
-                target: root
-                property: "currentMail"
-                when: listView.currentIndex == index
-                value: model.domainObject
-            }
-
-            MouseArea {
-                anchors.fill: parent
-
-                onClicked:  {
-                    listView.currentIndex = model.index
-                }
-            }
-
-            Rectangle {
-                id: unread
-
-                anchors.fill: parent
-
-                color: "steelblue"
-                opacity: 0.1
-
-                visible: model.unread
+            onClicked:  {
+                listView.currentIndex = model.index
+                root.currentMail = model.domainObject
             }
 
             Avatar {
@@ -94,7 +72,7 @@ ScrollView {
                 name: model.senderName
             }
 
-            Label {
+            Controls.Label {
                 id: senderName
 
                 anchors {
@@ -108,24 +86,7 @@ ScrollView {
                 font.weight: Font.DemiBold
             }
 
-            //The name currently contains both name and address
-            // Label {
-            //     id: sender
-            //
-            //     anchors {
-            //         top: avatar.top
-            //         left: senderName.right
-            //         leftMargin: Unit.size
-            //         right: date.left
-            //         rightMargin: Unit.size
-            //     }
-            //
-            //     text: "(" + model.sender +")"
-            //
-            //     clip: true
-            // }
-
-            Label {
+            Controls.Label {
                 id: date
 
                 anchors {
@@ -139,7 +100,7 @@ ScrollView {
                 font.weight: Font.Light
             }
 
-            Label {
+            Controls.Label {
                 id: subject
 
                 anchors {
