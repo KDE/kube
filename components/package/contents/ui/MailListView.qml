@@ -57,59 +57,35 @@ Controls.ScrollView {
                 root.currentMail = model.domainObject
             }
 
-            Avatar {
-                id: avatar
+            RowLayout {
+                Avatar {
+                    id: avatar
 
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                    leftMargin: Unit.size * 2
+                    height: Unit.size * 9
+                    width: height
+
+                    name: model.senderName
                 }
 
-                height: Unit.size * 9
-                width: height
+                ColumnLayout {
 
-                name: model.senderName
-            }
+                    Controls.Label {
+                        text: model.senderName
 
-            Controls.Label {
-                id: senderName
+                        font.weight: Font.DemiBold
+                    }
 
-                anchors {
-                    top: avatar.top
-                    left: avatar.right
-                    leftMargin: Unit.size * 3
+                    Controls.Label {
+                        text: model.subject
+                    }
+
+                    Controls.Label {
+                        text: Qt.formatDateTime(model.date)
+
+                        font.weight: Font.Light
+                    }
                 }
 
-                text: model.senderName
-
-                font.weight: Font.DemiBold
-            }
-
-            Controls.Label {
-                id: date
-
-                anchors {
-                    top: avatar.top
-                    right: parent.right
-                    rightMargin: Unit.size * 2
-                }
-
-                text: Qt.formatDateTime(model.date)
-
-                font.weight: Font.Light
-            }
-
-            Controls.Label {
-                id: subject
-
-                anchors {
-                    bottom: avatar.bottom
-                    left: avatar.right
-                    leftMargin: Unit.size * 3
-                }
-
-                text: model.subject
             }
         }
     }
