@@ -69,17 +69,17 @@ Controls.ScrollView {
 
                 ColumnLayout {
 
-                    Controls.Label {
+                    Kirigami.Label {
                         text: model.senderName
 
                         font.weight: Font.DemiBold
                     }
 
-                    Controls.Label {
+                    Kirigami.Label {
                         text: model.subject
                     }
 
-                    Controls.Label {
+                    Kirigami.Label {
                         text: Qt.formatDateTime(model.date)
 
                         font.weight: Font.Light
