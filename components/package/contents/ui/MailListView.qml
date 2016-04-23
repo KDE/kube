@@ -45,47 +45,92 @@ Controls.ScrollView {
         focus: true
 
         delegate: Kirigami.AbstractListItem {
+            id: mailListDelegate
+
             width: listView.width
-            height: Unit.size * 12
 
             enabled: true
             supportsMouseEvents: true
-            checked: listView.currentIndex == index
 
+            checked: listView.currentIndex == index
             onClicked:  {
                 listView.currentIndex = model.index
                 root.currentMail = model.domainObject
             }
 
-            RowLayout {
-                Avatar {
-                    id: avatar
+            //Content
+            Item {
+                width: parent.width
+                height: Kirigami.Units.gridUnit * 4
 
-                    height: Unit.size * 9
+                RowLayout {
+
+                    anchors {
+                        top: parent.top
+                        bottom: parent.bottom
+                        left: parent.left
+                    }
+
+                    Avatar {
+                        id: avatar
+
+                        height: textItem.height
+                        width: height
+
+                        name: model.senderName
+                    }
+
+                    ColumnLayout {
+                        id: textItem
+                        height: Kirigami.Units.gridUnit * 3
+
+                        Text{
+                            text: model.subject
+
+                            color: mailListDelegate.checked ? Kirigami.Theme.textColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
+                            font.weight: model.unread || model.important ? Font.DemiBold : Font.Normal
+                        }
+
+                        Text {
+                            text: model.senderName
+
+                            color:  Kirigami.Theme.textColor
+                        }
+
+                        Text {
+                            text: Qt.formatDateTime(model.date)
+
+                            font.weight: Font.Light
+
+                            opacity: 0.5
+                        }
+                    }
+                }
+
+                Rectangle {
+
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                        bottomMargin: 5
+                    }
+
+                    color: "lightgrey" //TODO wait for Kirigami pallete update
+
+                    height: Kirigami.Units.gridUnit * 2
                     width: height
 
-                    name: model.senderName
-                }
+                    visible: mailListDelegate.checked ? false : model.unread
 
-                ColumnLayout {
+                    radius: 100
 
-                    Kirigami.Label {
-                        text: model.senderName
-
+                    Text {
+                        anchors.centerIn: parent
+                        text: "+1" //TODO wait for thread implementation
+                        color: Kirigami.Theme.complementaryTextColor
                         font.weight: Font.DemiBold
                     }
-
-                    Kirigami.Label {
-                        text: model.subject
-                    }
-
-                    Kirigami.Label {
-                        text: Qt.formatDateTime(model.date)
-
-                        font.weight: Font.Light
-                    }
                 }
-
             }
         }
     }
