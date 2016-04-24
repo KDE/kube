@@ -18,6 +18,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.settings 1.0 as KubeSettings
@@ -64,50 +65,41 @@ ApplicationWindow {
         context: folderListContext
     }
 
-    //UI
-    toolBar: ToolBar {
+
+    ToolBar {
+        id: toolbar
+
+        anchors {
+            top: app.top
+            left: app.left
+        }
+
+        height: Kirigami.Units.iconSizes.medium
+        width: app.width
+
 
         Row {
-            anchors.fill: parent
-
-            ToolButton {
-                height: parent.height
-                text: "Settings"
-                onClicked: {
-                    settingsComponent.createObject(app)
-                }
-                Component {
-                    id: settingsComponent
-                    KubeComponents.Settings {
-                        id: settings
-                        anchors.fill: parent
-                    }
-                }
+            anchors {
+                left: parent.left
+                top: parent.top
+                bottom: parent.bottom
             }
 
-            ToolButton {
-                height: parent.height
-                iconName: "mail-message-new"
-                text: "Compose"
-                onClicked: {
-                    composerComponent.createObject(app)
-                }
-            }
-
-            ToolButton {
-                height: parent.height
-                iconName: "mail-message-reply"
-                text: "Reply"
-                onClicked: {
-                    composerComponent.createObject(app)
-                    composer.originalMessage = mailListView.currentMail
-                }
-            }
             Component {
                 id: composerComponent
                 KubeComponents.FocusComposer {
                     id: composer
                     anchors.fill: parent
+                }
+            }
+
+            ToolButton {
+                height: parent.height
+                iconName: "view-refresh"
+                text: "Sync"
+                enabled: syncAction.ready
+                onClicked: {
+                    syncAction.execute()
                 }
             }
 
@@ -142,39 +134,69 @@ ApplicationWindow {
 
             ToolButton {
                 height: parent.height
-                iconName: "view-refresh"
-                text: "Sync"
-                enabled: syncAction.ready
+                iconName: "mail-message-new"
+                text: "Compose"
                 onClicked: {
-                    syncAction.execute()
+                    composerComponent.createObject(app)
                 }
             }
 
+            ToolButton {
+                height: parent.height
+                iconName: "mail-message-reply"
+                text: "Reply"
+                onClicked: {
+                    composerComponent.createObject(app)
+                    composer.originalMessage = mailListView.currentMail
+                }
+            }
         }
-        Rectangle {
+
+        RowLayout {
             anchors {
                 right: parent.right
+                verticalCenter: parent.verticalCenter
             }
-            height: parent.height
-            color: "transparent"
-            Image {
-                id: img
-                height: parent.height
-                fillMode: Image.PreserveAspectCrop
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                    leftMargin: -20
+
+            width: Kirigami.Units.gridUnit * 40
+            height: Kirigami.Units.iconSizes.medium
+
+            TextField {
+
+                Layout.fillWidth: true
+
+                placeholderText: "Search..."
+            }
+
+            ToolButton {
+
+                height: Kirigami.Units.iconSizes.medium
+
+                iconName: "application-menu"
+                text: "Settings"
+
+                onClicked: {
+                    settingsComponent.createObject(app)
                 }
-                source: "image://kube/kube_logo"
-                sourceSize.height: parent.height * 2.5
+                Component {
+                    id: settingsComponent
+                    KubeComponents.Settings {
+                        id: settings
+                        anchors.fill: parent
+                    }
+                }
             }
-            width: img.width * 0.7
         }
     }
 
     SplitView {
-        anchors.fill: parent
+        anchors {
+            top: toolbar.bottom
+            left: app.left
+        }
+
+        height: app.height - toolbar.height
+        width: app.width
 
         KubeComponents.FolderListView {
             id: folderListView

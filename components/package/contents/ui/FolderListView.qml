@@ -30,28 +30,9 @@ Item {
     property variant currentFolder
     SystemPalette { id: colorPalette; colorGroup: SystemPalette.Active }
 
-    Item {
-        id: searchBox
-
-        width: root.width
-        height: Unit.size * 10
-
-        TextField {
-            anchors. centerIn: parent
-
-            width: parent.width * 0.9
-
-            placeholderText: "Search all email..."
-        }
-    }
-
     Rectangle {
-        anchors {
-            top: searchBox.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
+        anchors.fill: parent
+
         color: "white"
         ScrollView {
             anchors.fill: parent
