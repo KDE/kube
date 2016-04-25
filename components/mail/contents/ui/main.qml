@@ -65,10 +65,8 @@ ApplicationWindow {
         context: folderListContext
     }
 
-
-    ToolBar {
+    Item {
         id: toolbar
-
         anchors {
             top: app.top
             left: app.left
@@ -77,112 +75,150 @@ ApplicationWindow {
         height: Kirigami.Units.iconSizes.medium
         width: app.width
 
-
-        Row {
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-            }
-
-            Component {
-                id: composerComponent
-                KubeComponents.FocusComposer {
-                    id: composer
-                    anchors.fill: parent
-                }
-            }
-
-            ToolButton {
-                height: parent.height
-                iconName: "view-refresh"
-                text: "Sync"
-                enabled: syncAction.ready
-                onClicked: {
-                    syncAction.execute()
-                }
-            }
-
-            ToolButton {
-                height: parent.height
-                iconName: "mail-mark-unread"
-                text: "Mark As Read"
-                enabled: markAsReadAction.ready
-                onClicked: {
-                    markAsReadAction.execute()
-                }
-            }
-
-            ToolButton {
-                height: parent.height
-                iconName: "mail-mark-important"
-                text: "Mark Important"
-                enabled: false
-                onClicked: {
-                }
-            }
-
-            ToolButton {
-                height: parent.height
-                iconName: "edit-delete"
-                text: "Delete Mail"
-                enabled: deleteAction.ready
-                onClicked: {
-                    deleteAction.execute()
-                }
-            }
-
-            ToolButton {
-                height: parent.height
-                iconName: "mail-message-new"
-                text: "Compose"
-                onClicked: {
-                    composerComponent.createObject(app)
-                }
-            }
-
-            ToolButton {
-                height: parent.height
-                iconName: "mail-message-reply"
-                text: "Reply"
-                onClicked: {
-                    composerComponent.createObject(app)
-                    composer.originalMessage = mailListView.currentMail
-                }
-            }
+        Rectangle {
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: 1
+            color: "grey"
         }
 
-        RowLayout {
-            anchors {
-                right: parent.right
-                verticalCenter: parent.verticalCenter
-            }
+        Row {
+            anchors.fill: parent
 
-            width: Kirigami.Units.gridUnit * 40
-            height: Kirigami.Units.iconSizes.medium
+            spacing: 1 //to account for the SplitView borders
 
-            TextField {
+            RowLayout {
+                height: parent.height
+                width: folderListView.width
+                clip: true
 
-                Layout.fillWidth: true
+                ToolButton {
+                    Layout.fillHeight: true
+                    text: "Account/Project/Activity Switch"
 
-                placeholderText: "Search..."
-            }
-
-            ToolButton {
-
-                height: Kirigami.Units.iconSizes.medium
-
-                iconName: "application-menu"
-                text: "Settings"
-
-                onClicked: {
-                    settingsComponent.createObject(app)
+                    onClicked: {
+                        //TODO
+                    }
                 }
+
+                ToolButton {
+                    Layout.fillHeight: true
+                    iconName: "view-refresh"
+                    text: "Sync"
+                    enabled: syncAction.ready
+
+                    onClicked: {
+                        syncAction.execute()
+                    }
+                }
+            }
+
+            RowLayout {
+                height: parent.height
+                width: mailListView.width
+                clip: true
+
+                ToolButton {
+                    Layout.fillHeight: true
+                    iconName: "mail-mark-unread"
+                    text: "Mark As Read"
+                    enabled: markAsReadAction.ready
+                    onClicked: {
+                        markAsReadAction.execute()
+                    }
+                }
+
+                ToolButton {
+                    Layout.fillHeight: true
+                    iconName: "mail-mark-important"
+                    text: "Mark Important"
+                    enabled: false
+                    onClicked: {
+                    }
+                }
+
+                ToolButton {
+                    Layout.fillHeight: true
+                    iconName: "edit-delete"
+                    text: "Delete Mail"
+                    enabled: deleteAction.ready
+                    onClicked: {
+                        deleteAction.execute()
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+            }
+
+
+            RowLayout{
+                height: parent.height
+                width: mailView.width
+                clip: true
+
                 Component {
-                    id: settingsComponent
-                    KubeComponents.Settings {
-                        id: settings
+                    id: composerComponent
+
+                    KubeComponents.FocusComposer {
+                        id: composer
                         anchors.fill: parent
+                    }
+                }
+
+                ToolButton {
+                    id: newMailButton
+
+                    Layout.fillHeight: true
+
+                    iconName: "mail-message-new"
+                    text: "Compose"
+                    onClicked: {
+                        composerComponent.createObject(app)
+                    }
+                }
+
+                ToolButton {
+                    Layout.fillHeight: true
+                    iconName: "mail-message-reply"
+                    text: "Reply"
+                    onClicked: {
+                        composerComponent.createObject(app)
+                        composer.originalMessage = mailListView.currentMail
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                TextField {
+                    id: searchBar
+
+                    Layout.minimumWidth: Kirigami.Units.gridUnit * 25
+
+                    placeholderText: "Search..."
+                }
+
+                ToolButton {
+                    id: settingsButton
+
+                    Layout.fillHeight: true
+
+                    iconName: "application-menu"
+                    text: "Settings"
+
+                    onClicked: {
+                        settingsComponent.createObject(app)
+                    }
+
+                    Component {
+                        id: settingsComponent
+                        KubeComponents.Settings {
+                            id: settings
+                            anchors.fill: parent
+                        }
                     }
                 }
             }
