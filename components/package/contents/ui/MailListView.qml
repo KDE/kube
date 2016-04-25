@@ -18,6 +18,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
+import QtQml 2.2 as QtQml
 
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -55,13 +56,19 @@ Controls.ScrollView {
             checked: listView.currentIndex == index
             onClicked:  {
                 listView.currentIndex = model.index
-                root.currentMail = model.domainObject
             }
 
             //Content
             Item {
                 width: parent.width
                 height: Kirigami.Units.gridUnit * 4
+
+                QtQml.Binding {
+                    target: root
+                    property: "currentMail"
+                    when: listView.currentIndex == index
+                    value: model.domainObject
+                }
 
                 RowLayout {
 
