@@ -18,57 +18,179 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.theme 1.0
 
-Item {
+Rectangle {
     id: root
     property variant mail;
 
-    Rectangle {
-        id: background
+    color: "grey"
 
+    ScrollView {
         anchors.fill: parent
 
-        color: ColorPalette.background
-    }
+    ListView {
+        anchors.verticalCenter: parent.verticalCenter
 
-    Repeater {
-        anchors.fill: parent
+        width: parent.width
+
+        header: Item {
+            height: Kirigami.Units.largeSpacing
+        }
+
+        footer: Item {
+            height: Kirigami.Units.largeSpacing * 3
+        }
 
         model: KubeFramework.MailListModel {
             mail: root.mail
         }
 
         delegate: Item {
-            anchors.fill: parent
 
-            ColumnLayout {
-                anchors.fill: parent
+            width: root.width
+            implicitHeight: content.height
 
-                Label {
-                    text: model.id
+            Rectangle {
+                id: content
+                anchors.centerIn: parent
+
+                width: parent.width * 0.9
+                implicitHeight: header.height + body.height + footer.height + Kirigami.Units.gridUnit * 8
+
+                    Item {
+                        id: header
+
+                        anchors {
+                            top: parent.top
+                            topMargin: Kirigami.Units.largeSpacing
+                            horizontalCenter: parent.horizontalCenter
+                        }
+
+                        width: parent.width - Kirigami.Units.largeSpacing * 2
+                        height: Kirigami.Units.gridUnit * 6
+
+
+                        Avatar  {
+                            id: avatar
+
+                            height: Kirigami.Units.gridUnit * 4
+                            width: height
+
+                            name: model.senderName
+                        }
+
+                        Text {
+
+                            anchors {
+                                bottom: parent.bottom
+                                left: parent.left
+                                bottomMargin: Kirigami.Units.smallSpacing
+                            }
+
+                            text: model.subject
+                            renderType: Text.NativeRendering
+                            color: Kirigami.Theme.textColor
+                        }
+
+                        Text {
+
+                            anchors {
+                                top: avatar.top
+                                left: avatar.right
+                                leftMargin: Kirigami.Units.smallSpacing
+                            }
+
+                            text: model.senderName
+
+                            renderType: Text.NativeRendering
+                            color: Kirigami.Theme.textColor
+                        }
+
+                        Text {
+
+                            anchors {
+                                right: parent.right
+                            }
+                            text: Qt.formatDateTime(model.date)
+
+                            renderType: Text.NativeRendering
+                            color: Kirigami.Theme.textColor
+                        }
+
+                        Rectangle {
+
+                            anchors {
+                                bottom: border.top
+                                right: border.right
+                            }
+
+                            height: Kirigami.Units.iconSizes.small
+                            width: height
+
+                            color: Kirigami.Theme.complementaryBackgroundColor
+                            opacity: 0.5
+                        }
+
+                        Rectangle {
+                            id: border
+
+                            anchors.bottom: parent.bottom
+                            width: parent.width
+                            height: 1
+
+                            color: Kirigami.Theme.complementaryBackgroundColor
+
+                            opacity: 0.5
+                        }
+                    }
+
+                    Text {
+                        id: body
+
+                        anchors {
+                            top: header.bottom
+                            topMargin: Kirigami.Units.largeSpacing * 2
+                            left: header.left
+                            leftMargin: Kirigami.Units.largeSpacing
+                        }
+
+                        width: header.width - Kirigami.Units.largeSpacing * 2
+
+                        text: model.mimeMessage
+
+                        clip: true
+                        wrapMode: Text.WordWrap
+                        renderType: Text.NativeRendering
+                        color: Kirigami.Theme.textColor
+                    }
+
+                    /*
+                    MailViewer {
+                        message: model.mimeMessage
+                    }
+                    */
+
+                    Item {
+                        id: footer
+
+                        anchors {
+                            bottom: parent.bottom
+                            bottomMargin: Kirigami.Units.largeSpacing
+                            horizontalCenter: parent.horizontalCenter
+                        }
+
+                        width: header.width
+                        height: Kirigami.Units.gridUnit
+
+                        ToolButton {
+                            text: "Delete Email"
+                        }
+                    }
                 }
-
-                Label {
-                    text: model.sender
-                }
-
-                Label {
-                    text: model.senderName
-                }
-
-                Label {
-                    text: model.subject
-                }
-
-                MailViewer {
-                    message: model.mimeMessage
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                }
-
             }
         }
     }
