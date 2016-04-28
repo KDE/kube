@@ -8,13 +8,18 @@ Item {
     id: root
     property variant message;
     property string html;
+    property int desiredHeight: topPartLoader.height;
 
     Rectangle {
         id: rootRectangle
         anchors.fill: parent
+        anchors.margins: 0
         ScrollView {
             id: scrollView
             anchors.fill: parent
+            anchors.margins: 0
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+            verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             MessagePartTree {
                 id: topPartLoader
                 width: rootRectangle.width

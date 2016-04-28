@@ -148,7 +148,7 @@ Rectangle {
                         }
                     }
 
-                    Text {
+                    MailViewer {
                         id: body
 
                         anchors {
@@ -159,20 +159,10 @@ Rectangle {
                         }
 
                         width: header.width - Kirigami.Units.largeSpacing * 2
+                        height: desiredHeight
 
-                        text: model.mimeMessage
-
-                        clip: true
-                        wrapMode: Text.WordWrap
-                        renderType: Text.NativeRendering
-                        color: Kirigami.Theme.textColor
-                    }
-
-                    /*
-                    MailViewer {
                         message: model.mimeMessage
                     }
-                    */
 
                     Item {
                         id: footer
