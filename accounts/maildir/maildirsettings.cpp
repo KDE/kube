@@ -22,7 +22,6 @@
 
 #include <sink/store.h>
 #include <QDebug>
-#include <QUuid>
 #include <QDir>
 #include <QUrl>
 
@@ -177,12 +176,9 @@ void MaildirSettings::save()
         })
         .exec();
     } else {
-        const auto resourceIdentifier = "org.kde.maildir." + QUuid::createUuid().toByteArray();
-        mIdentifier = resourceIdentifier;
-
-        Sink::ApplicationDomain::SinkResource resource;
+        auto resource = Sink::ApplicationDomain::ApplicationDomainType::createEntity<Sink::ApplicationDomain::SinkResource>();
+        mIdentifier = resource.identifier();
         resource.setProperty("path", property("path"));
-        resource.setProperty("identifier", resourceIdentifier);
         resource.setProperty("type", "org.kde.maildir");
         resource.setProperty("account", mAccountIdentifier);
         Sink::Store::create(resource).then<void>([]() {},
@@ -202,12 +198,8 @@ void MaildirSettings::save()
         })
         .exec();
     } else {
-        //FIXME we shouldn't have to do this magic
-        const auto resourceIdentifier = "org.kde.mailtransport." + QUuid::createUuid().toByteArray();
-        mMailtransportIdentifier = resourceIdentifier;
-
-        Sink::ApplicationDomain::SinkResource resource;
-        resource.setProperty("identifier", resourceIdentifier);
+        auto resource = Sink::ApplicationDomain::ApplicationDomainType::createEntity<Sink::ApplicationDomain::SinkResource>();
+        mMailtransportIdentifier = resource.identifier();
         resource.setProperty("type", "org.kde.mailtransport");
         resource.setProperty("account", mAccountIdentifier);
         resource.setProperty("server", mSmtpServer);

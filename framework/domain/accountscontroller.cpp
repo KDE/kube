@@ -24,7 +24,6 @@
 #include <sink/store.h>
 
 #include <QVariant>
-#include <QUuid>
 #include <QDebug>
 
 AccountsController::AccountsController(QObject *parent) : QObject(parent)
@@ -33,9 +32,7 @@ AccountsController::AccountsController(QObject *parent) : QObject(parent)
 
 void AccountsController::createAccount(const QString &accountType)
 {
-    const auto identifier = QUuid::createUuid().toByteArray();
-    Sink::ApplicationDomain::SinkAccount account;
-    account.setProperty("identifier", identifier);
+    auto account = Sink::ApplicationDomain::ApplicationDomainType::createEntity<Sink::ApplicationDomain::SinkAccount>();
     account.setProperty("type", accountType);
     Sink::Store::create(account).then<void>([]() {},
     [](int errorCode, const QString &errorMessage) {
