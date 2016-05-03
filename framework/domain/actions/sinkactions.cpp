@@ -81,16 +81,7 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
     },
     [](Context *context) {
         auto accountId = context->property("accountId").value<QByteArray>();
-        //For ssl use "smtps://mainserver.example.net
-        // QByteArray cacert; // = "/path/to/certificate.pem";
         auto message = context->property("message").value<KMime::Message::Ptr>();
-        auto mimeMessage = Sink::Store::getTemporaryFilePath();
-        QFile file(mimeMessage);
-        if (!file.open(QIODevice::ReadWrite)) {
-            qWarning() << "Failed to open the file: " << file.errorString() << mimeMessage;
-            return;
-        }
-        file.write(message->encodedContent());
         qWarning() << "Sending a mail: ";
 
         Sink::Query query;
@@ -98,53 +89,63 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
         query += Sink::Query::PropertyFilter("account", QVariant::fromValue(accountId));
         Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(query)
             .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([=](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
-                if (resources.isEmpty()) {
-                    qWarning() << "Failed to find a mailtransport resource";
-                } else {
+                if (!resources.isEmpty()) {
                     auto resourceId = resources[0]->identifier();
                     qDebug() << "Sending message via resource: " << resourceId;
                     Sink::ApplicationDomain::Mail mail(resourceId);
-                    mail.setProperty("mimeMessage", mimeMessage);
-                    Sink::Store::create(mail).exec();
-                    // return Sink::Store::create(mail);
+                    mail.setBlobProperty("mimeMessage", message->encodedContent());
+                    return Sink::Store::create(mail);
                 }
+                qWarning() << "Failed to find a mailtransport resource";
                 return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
             }).exec();
     }
 );
 
-// static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
-//     [](Context *context) -> bool {
-//         return context->property("mail").isValid();
-//     },
-//     [](Context *context) {
-//         Sink::Query query;
-//         query += Sink::Query::RequestedProperties(QByteArrayList() << "name")
-//         //FIXME do something like specialuse?
-//         query += Sink::Query::PropertyFilter("name", "Drafts");
-//         // query += Sink::Query::PropertyContainsFilter("specialuser", "drafts");
-//         query += Sink::Query::PropertyFilter("drafts", true);
-//         //TODO Use drafts folder of that specific account
-//         Sink::Store::fetchAll<Sink::ApplicationDomain::Folder>(query)
-//             .then<void, QList<Sink::ApplicationDomain::Folder>>([](const QList<Sink::ApplicationDomain::Folder> folders) {
-//                 if (folders.isEmpty()) {
-//                     return KAsync::start([]() {
-//                         //If message is already existing, modify, otherwise create
-//                     });
-//                 }
-//             });
-//         //TODO
-//         // * Find drafts folder
-//         // * Store KMime::Message on disk for use in blob property
-//         // * Check if message is already existing and either create or update
-//         // * 
-//         // auto mail = context->property("mail").value<Sink::ApplicationDomain::Mail::Ptr>();
-//         // if (!mail) {
-//         //     qWarning() << "Failed to get the mail mail: " << context->property("mail");
-//         //     return;
-//         // }
-//         // mail->setProperty("unread", false);
-//         // qDebug() << "Mark as read " << mail->identifier();
-//         // Sink::Store::modify(*mail).exec();
-//     }
-// );
+static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
+    [](Context *context) -> bool {
+        auto accountId = context->property("accountId").value<QByteArray>();
+        auto message = context->property("message").value<KMime::Message::Ptr>();
+        return !accountId.isEmpty() && message;
+    },
+    ActionHandlerHelper::JobHandler([](Context *context) -> KAsync::Job<void> {
+        qWarning() << "executing save as draft";
+        const auto accountId = context->property("accountId").value<QByteArray>();
+        const auto message = context->property("message").value<KMime::Message::Ptr>();
+        auto existingMail = context->property("existingMail").value<Sink::ApplicationDomain::Mail>();
+        if (!message) {
+            qWarning() << "Failed to get the mail: " << context->property("mail");
+            return KAsync::error<void>(1, "Failed to get the mail: " + context->property("mail").toString());
+        }
+
+        if (existingMail.identifier().isEmpty()) {
+            Sink::Query query;
+            query += Sink::Query::RequestedProperties(QByteArrayList() << "name");
+            query += Sink::Query::PropertyContainsFilter("specialpurpose", "drafts");
+            query += Sink::Query::AccountFilter(accountId);
+            qWarning() << "fetching the drafts folder";
+            return Sink::Store::fetchAll<Sink::ApplicationDomain::Folder>(query)
+                .then<void, QList<Sink::ApplicationDomain::Folder::Ptr>>([=](const QList<Sink::ApplicationDomain::Folder::Ptr> folders) {
+                    qWarning() << "fetched a drafts folder" << folders.size();
+                    if (folders.isEmpty()) {
+                        return KAsync::error<void>(1, "Failed to find a drafts folder.");
+                    }
+                    if (folders.size() > 1) {
+                        qWarning() << "Found too many draft folders (taking the first): " << folders;
+                    }
+                    const auto folder = folders.first();
+                    Sink::ApplicationDomain::Mail mail(folder->resourceInstanceIdentifier());
+                    mail.setProperty("folder", folder->identifier());
+                    mail.setBlobProperty("mimeMessage", message->encodedContent());
+                    return Sink::Store::create(mail);
+                })
+                .then<void>([](){
+                    qWarning() << "done";
+                });
+        } else {
+            qWarning() << "Modifying an existing mail";
+            existingMail.setBlobProperty("mimeMessage", message->encodedContent());
+            return Sink::Store::modify(existingMail);
+        }
+    })
+);

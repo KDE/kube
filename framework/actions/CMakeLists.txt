@@ -3,6 +3,7 @@ set(SRCS
     action.cpp
     actionhandler.cpp
     actionbroker.cpp
+    actionresult.cpp
     context.cpp
 )
 

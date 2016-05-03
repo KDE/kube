@@ -21,6 +21,9 @@
 #include <QObject>
 #include <QMultiMap>
 #include <functional>
+#include <Async/Async>
+
+#include "actionresult.h"
 
 namespace Kube {
 class Context;
@@ -36,7 +39,7 @@ public:
     virtual bool isActionReady(Context *context);
 
     // void pre(Context *context);
-    virtual void execute(Context *context);
+    virtual ActionResult execute(Context *context);
     // void post(Context *context);
  
     void setActionId(const QByteArray &);
@@ -52,14 +55,17 @@ class ActionHandlerHelper : public ActionHandler
 public:
     typedef std::function<bool(Context*)> IsReadyFunction;
     typedef std::function<void(Context*)> Handler;
+    typedef std::function<KAsync::Job<void>(Context*)> JobHandler;
 
     ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &, const Handler &);
+    ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &, const JobHandler &);
 
     bool isActionReady(Context *context) Q_DECL_OVERRIDE;
-    void execute(Context *context) Q_DECL_OVERRIDE;
+    ActionResult execute(Context *context) Q_DECL_OVERRIDE;
 private:
-    const std::function<bool(Context*)> isReadyFunction;
-    const std::function<void(Context*)> handlerFunction;
+    const IsReadyFunction isReadyFunction;
+    const Handler handlerFunction;
+    const JobHandler jobHandlerFunction;
 };
 
 }

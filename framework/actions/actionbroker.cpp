@@ -54,17 +54,22 @@ bool ActionBroker::isActionReady(const QByteArray &actionId, Context *context)
     return false;
 }
 
-void ActionBroker::executeAction(const QByteArray &actionId, Context *context)
+ActionResult ActionBroker::executeAction(const QByteArray &actionId, Context *context)
 {
     if (context) {
         for (const auto handler : mHandler.values(actionId)) {
             if (handler) {
-                handler->execute(context);
+                //FIXME All handler together return one result
+                return handler->execute(context);
             }
         }
     } else {
         qWarning() << "Can't execute without context";
     }
+    ActionResult result;
+    result.setDone();
+    result.setError(1);
+    return result;
 }
 
 void ActionBroker::registerHandler(const QByteArray &actionId, ActionHandler *handler)

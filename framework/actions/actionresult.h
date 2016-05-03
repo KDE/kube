@@ -19,42 +19,48 @@
 #pragma once
 
 #include <QObject>
-#include "context.h"
-#include "actionresult.h"
+#include <QSharedPointer>
 
 namespace Kube {
 
-class Action : public QObject
+struct ActionResultData
+{
+    ActionResultData() : mError(0), mDone(false) {}
+    int mError;
+    bool mDone;
+};
+
+class ActionResult : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QByteArray actionId READ actionId WRITE setActionId)
-    //FIXME if I set the property to Context* qml fails to assign the registered type which is calle Kube::Context_QML_90 in QML...
-    Q_PROPERTY(Context* context READ context WRITE setContext)
-    Q_PROPERTY(bool ready READ ready NOTIFY readyChanged)
-
 public:
-    Action(QObject *parent = 0);
-    Action(const QByteArray &actionId, Context &context, QObject *parent = 0);
+    ActionResult() : QObject(), mData(new ActionResultData()) {}
+    ActionResult(const ActionResult &rhs) : QObject(), mData(rhs.mData) {}
+    ActionResult &operator=(const ActionResult &rhs)
+    {
+        mData = rhs.mData;
+        return *this;
+    }
+    virtual ~ActionResult() {}
 
-    void setContext(Context *);
-    Context *context() const;
+    void setDone() {
+        mData->mDone = true;
+    }
 
-    void setActionId(const QByteArray &);
-    QByteArray actionId() const;
+    bool isDone() const {
+        return mData->mDone;
+    }
 
-    bool ready() const;
+    void setError(int error) {
+        mData->mError = error;
+    }
 
-    Q_INVOKABLE ActionResult execute();
-
-Q_SIGNALS:
-    void readyChanged();
-
-private Q_SLOTS:
-    void contextChanged();
+    int error() const {
+        return mData->mError;
+    }
 
 private:
-    Context *mContext;
-    QByteArray mActionId;
+    QSharedPointer<ActionResultData> mData;
 };
 
 }

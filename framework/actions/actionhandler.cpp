@@ -45,17 +45,24 @@ bool ActionHandler::isActionReady(Context *context)
     return false;
 }
 
-void ActionHandler::execute(Context *context)
+ActionResult ActionHandler::execute(Context *context)
 {
+    ActionResult result;
     QVariant returnedValue;
     qWarning() << "Executing the handler";
     if (context) {
+        //The base implementation to call the handler in QML
         QMetaObject::invokeMethod(this, "handler",
                                 Q_RETURN_ARG(QVariant, returnedValue),
                                 Q_ARG(QVariant, QVariant::fromValue(context)));
+        //TODO: support async handlers in QML
+        result.setDone();
     } else {
         qWarning() << "The handler didn't get a context";
+        result.setDone();
+        result.setError(1);
     }
+    return result;
 }
 
 void ActionHandler::setActionId(const QByteArray &actionId)
@@ -79,12 +86,36 @@ ActionHandlerHelper::ActionHandlerHelper(const QByteArray &actionId, const IsRea
     setActionId(actionId);
 }
 
+ActionHandlerHelper::ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &isReady, const JobHandler &handler)
+    : ActionHandler(nullptr),
+    isReadyFunction(isReady),
+    jobHandlerFunction(handler)
+{
+    setActionId(actionId);
+}
+
 bool ActionHandlerHelper::isActionReady(Context *context)
 {
     return isReadyFunction(context);
 }
 
-void ActionHandlerHelper::execute(Context *context)
+ActionResult ActionHandlerHelper::execute(Context *context)
 {
-    handlerFunction(context);
+    ActionResult result;
+    if (handlerFunction) {
+        handlerFunction(context);
+        result.setDone();
+    } else {
+        jobHandlerFunction(context).then<void>([=]() {
+            auto modifyableResult = result;
+            modifyableResult.setDone();
+        },
+        [=](int errorCode, const QString &string) {
+            qWarning() << "Job failed: " << errorCode << string;
+            auto modifyableResult = result;
+            modifyableResult.setError(1);
+            modifyableResult.setDone();
+        }).exec();
+    }
+    return result;
 }

@@ -16,33 +16,5 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#pragma once
+#include "actionresult.h"
 
-#include <QObject>
-#include <QMultiMap>
-
-namespace Kube {
-class Context;
-class ActionHandler;
-class ActionResult;
-
-class ActionBroker : public QObject
-{
-    Q_OBJECT
-public:
-    static ActionBroker &instance();
-
-    bool isActionReady(const QByteArray &actionId, Context *context);
-    ActionResult executeAction(const QByteArray &actionId, Context *context);
-
-    void registerHandler(const QByteArray &actionId, ActionHandler *handler);
-
-Q_SIGNALS:
-    void readyChanged();
-
-private:
-    ActionBroker(QObject *parent = 0);
-    QMultiMap<QByteArray, ActionHandler*> mHandler;
-};
-
-}

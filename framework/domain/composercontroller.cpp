@@ -185,9 +185,12 @@ void ComposerController::send()
 void ComposerController::saveAsDraft()
 {
     auto mail = assembleMessage();
+    auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(IdentitiesModel::AccountId).toByteArray();
+
     Kube::Context context;
     context.setProperty("message", QVariant::fromValue(mail));
-    Kube::Action("org.kde.kube.actions.saveasdraft", context).execute();
+    context.setProperty("accountId", QVariant::fromValue(currentAccountId));
+    Kube::Action("org.kde.kube.actions.save-as-draft", context).execute();
     clear();
 }
 

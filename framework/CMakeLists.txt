@@ -27,6 +27,7 @@ find_package(KF5Codecs CONFIG REQUIRED)
 set(CMAKE_AUTOMOC ON)
 add_definitions("-Wall -std=c++0x -g")
 include_directories(.)
+include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/)
 include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/KMime)
 include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/KIconThemes)
 
