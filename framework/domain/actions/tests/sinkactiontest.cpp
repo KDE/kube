@@ -25,7 +25,7 @@ private slots:
     void testSaveAsDraftFail()
     {
         Kube::Context context;
-        auto future = Kube::Action("org.kde.kube.actions.save-as-draft", context).execute();
+        auto future = Kube::Action("org.kde.kube.actions.save-as-draft", context).executeWithResult();
 
         QTRY_VERIFY(future.isDone());
         //because of empty context
@@ -45,7 +45,7 @@ private slots:
         Kube::Context context;
         context.setProperty("message", QVariant::fromValue(message));
         context.setProperty("accountId", QVariant::fromValue(account.identifier));
-        auto future = Kube::Action("org.kde.kube.actions.save-as-draft", context).execute();
+        auto future = Kube::Action("org.kde.kube.actions.save-as-draft", context).executeWithResult();
 
         QTRY_VERIFY(future.isDone());
         QVERIFY(!future.error());

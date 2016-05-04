@@ -85,7 +85,12 @@ bool Action::ready() const
     return ActionBroker::instance().isActionReady(mActionId, mContext);
 }
 
-ActionResult Action::execute()
+void Action::execute()
+{
+    ActionBroker::instance().executeAction(mActionId, mContext);
+}
+
+ActionResult Action::executeWithResult()
 {
     return ActionBroker::instance().executeAction(mActionId, mContext);
 }

@@ -44,7 +44,8 @@ public:
 
     bool ready() const;
 
-    Q_INVOKABLE ActionResult execute();
+    Q_INVOKABLE void execute();
+    ActionResult executeWithResult();
 
 Q_SIGNALS:
     void readyChanged();

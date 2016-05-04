@@ -64,3 +64,5 @@ private:
 };
 
 }
+
+Q_DECLARE_METATYPE(Kube::ActionResult);
