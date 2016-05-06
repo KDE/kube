@@ -94,7 +94,7 @@ ApplicationWindow {
 
                 KubeComponents.AccountSwitcher {
                     Layout.fillHeight: true
-
+                    Layout.fillWidth: true
                 }
 
                 ToolButton {
@@ -106,10 +106,6 @@ ApplicationWindow {
                     onClicked: {
                         syncAction.execute()
                     }
-                }
-
-                Item {
-                    Layout.fillWidth: true
                 }
             }
 
