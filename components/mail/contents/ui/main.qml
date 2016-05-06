@@ -92,13 +92,9 @@ ApplicationWindow {
                 width: folderListView.width
                 clip: true
 
-                ToolButton {
+                KubeComponents.AccountSwitcher {
                     Layout.fillHeight: true
-                    text: "Account/Project/Activity Switch"
 
-                    onClicked: {
-                        //TODO
-                    }
                 }
 
                 ToolButton {
@@ -110,6 +106,10 @@ ApplicationWindow {
                     onClicked: {
                         syncAction.execute()
                     }
+                }
+
+                Item {
+                    Layout.fillWidth: true
                 }
             }
 
