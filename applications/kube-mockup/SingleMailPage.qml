@@ -16,44 +16,16 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3 as Controls
+import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
 Item {
     id: conversations
 
-    Rectangle {
-        id: subjectHeader
-
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-        }
-
-        width: parent.width - Kirigami.Units.gridUnit * 4
-        implicitHeight: subject.height
-
-        Kirigami.Heading {
-            id: subject
-
-            anchors {
-                left: parent.left
-            }
-
-            width: parent.width
-
-            text: "We need to talk about Kube"
-        }
-    }
-
-    Controls.ScrollView {
-
-        anchors {
-            top: subjectHeader.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
+    ScrollView {
+        
+        anchors.fill: parent
 
         ListView {
             anchors.fill: parent
@@ -68,6 +40,203 @@ Item {
             }
 
             delegate: Item {
+                
+                height: 800
+                width: parent.width
+                
+                Rectangle {
+                    anchors.centerIn: parent
+                    height: 600
+                    width: parent.width * 0.9
+                    
+                    
+                    Rectangle {
+                        id: header
+                        
+                        height: 100
+                        width: parent.width
+            
+                        color: "lightgrey"
+                        
+                        
+                        Rectangle {
+                            
+                            anchors {
+                                bottom: parent.bottom
+                                horizontalCenter: parent.horizontalCenter
+                            }
+                            
+                            width: parent.width - Kirigami.Units.gridUnit * 4
+                            height: 1
+                            
+                            color: "black"
+                        }
+                        
+                    }
+                    
+                    Rectangle {
+                        
+                        anchors {
+                            top: header.bottom
+                            bottom: footer.top
+                            left: parent.left
+                            right: parent.right
+                            margins: Kirigami.Units.gridUnit * 4
+                        }
+                        
+                        color: "blue"
+                        
+                        
+                    }
+                    
+                    Rectangle {
+                        id: footer
+                        
+                        anchors.bottom: parent.bottom
+                        
+                        height: 100
+                        width: parent.width
+                        
+                        color: "red"
+                    }
+                    
+                }
+            }
+        }
+    }
+}
+            
+            
+            /*
+            
+            Item {
+
+            width: root.width
+            implicitHeight: content.height
+
+            Rectangle {
+                id: content
+                anchors.centerIn: parent
+
+                width: parent.width * 0.9
+                implicitHeight: header.height + body.height + footer.height + Kirigami.Units.gridUnit * 8
+
+                    Item {
+                        id: header
+
+                        anchors {
+                            top: parent.top
+                            topMargin: Kirigami.Units.largeSpacing
+                            horizontalCenter: parent.horizontalCenter
+                        }
+
+                        width: parent.width - Kirigami.Units.largeSpacing * 2
+                        height: Kirigami.Units.gridUnit * 6
+
+
+                        Avatar  {
+                            id: avatar
+
+                            height: Kirigami.Units.gridUnit * 4
+                            width: height
+
+                            name: model.senderName
+                        }
+
+                        Text {
+
+                            anchors {
+                                bottom: parent.bottom
+                                left: parent.left
+                                bottomMargin: Kirigami.Units.smallSpacing
+                            }
+
+                            text: model.subject
+                            renderType: Text.NativeRendering
+                            color: Kirigami.Theme.textColor
+                        }
+
+                        Text {
+
+                            anchors {
+                                top: avatar.top
+                                left: avatar.right
+                                leftMargin: Kirigami.Units.smallSpacing
+                            }
+
+                            text: model.senderName
+
+                            renderType: Text.NativeRendering
+                            color: Kirigami.Theme.textColor
+                        }
+
+                        Text {
+
+                            anchors {
+                                right: parent.right
+                            }
+                            text: Qt.formatDateTime(model.date)
+
+                            renderType: Text.NativeRendering
+                            color: Kirigami.Theme.textColor
+                        }
+
+                        Rectangle {
+
+                            anchors {
+                                bottom: border.top
+                                right: border.right
+                            }
+
+                            height: Kirigami.Units.iconSizes.small
+                            width: height
+
+                            color: Kirigami.Theme.complementaryBackgroundColor
+                            opacity: 0.5
+                        }
+
+                        Rectangle {
+                            id: border
+
+                            anchors.bottom: parent.bottom
+                            width: parent.width
+                            height: 1
+
+                            color: Kirigami.Theme.complementaryBackgroundColor
+
+                            opacity: 0.5
+                        }
+                    }
+
+                    Text {
+                        
+                        text: model.text
+                    }
+
+                    Item {
+                        id: footer
+
+                        anchors {
+                            bottom: parent.bottom
+                            bottomMargin: Kirigami.Units.largeSpacing
+                            horizontalCenter: parent.horizontalCenter
+                        }
+
+                        width: header.width
+                        height: Kirigami.Units.gridUnit
+
+                        ToolButton {
+                            text: "Delete Email"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+            
+            /*
+            Item {
 
 
                     width: parent.width
@@ -138,7 +307,8 @@ Item {
 
                     }
             }
+         
         }
     }
 }
-
+   */
