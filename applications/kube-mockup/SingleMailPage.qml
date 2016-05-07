@@ -24,7 +24,7 @@ Item {
     id: conversations
 
     ScrollView {
-        
+
         anchors.fill: parent
 
         ListView {
@@ -32,83 +32,236 @@ Item {
 
             model: ListModel {
                 ListElement {
-                    sender: "Migthy Monkey mighty@mail.com"
+                    sender: "Sender McSenderson sender@sentmail.com"
+                    senderName: "Sender McSenderson"
+                    senderAd: "<sender@sentmail.com>"
+                    receivers: "Me, Van Receiverson, Alice A."
                     subject: "I feel Week without my bananas"
                     date: "Yesterday 20:37"
                     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean mattis nisi purus, sit amet hendrerit erat ornare et. Praesent eu risus iaculis, sollicitudin turpis vitae, cursus elit. Sed vehicula, lectus in blandit sagittis, lacus tortor finibus dui, blandit aliquet felis purus quis neque. Nunc luctus tempor venenatis. Phasellus lobortis vel sapien vitae tempus. Morbi mi diam, dictum vitae placerat vel, hendrerit quis elit. Mauris ultricies sit amet massa at aliquet. Sed ac vulputate velit. Duis malesuada quam eget nunc sollicitudin, id sollicitudin diam egestas. Integer maximus facilisis ipsum sed egestas. Donec scelerisque, felis id tincidunt tempus, sem mauris malesuada lectus, nec aliquet mauris lorem fermentum nibh. Vestibulum aliquam dui mi, eget pulvinar orci tempor eget. In dui erat, pharetra vitae lorem vitae, congue sollicitudin nunc. Maecenas sit amet metus ac neque laoreet tempor. Pellentesque euismod congue lacinia. Duis sagittis arcu ac felis fringilla, ac tempor leo convallis."
                 }
+                ListElement {
+                    sender: "Sender McSenderson sender@sentmail.com"
+                    senderName: "Sender McSenderson"
+                    senderAd: "<sender@sentmail.com>"
+                    receivers: "Me, Van Receiverson, Alice A."
+                    subject: "I feel Week without my bananas"
+                    date: "Yesterday 20:37"
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean mattis nisi purus, sit amet hendrerit erat ornare et. Praesent eu risus iaculis, sollicitudin turpis vitae, cursus ."
+                }
+            }
+
+            header: Item {
+                height: Kirigami.Units.gridUnit * 3
+                width: parent.width
+
+                 Kirigami.Heading {
+
+                                     anchors {
+                    left: parent.left
+                    leftMargin: Kirigami.Units.gridUnit * 2
+                    bottom: parent.bottom
+                }
+
+                    text: "I feel Week without my bananas" + ":"
+
+                    level: 2
+                 }
+            }
+
+            footer: Item {
+                 height: Kirigami.Units.gridUnit * 2
+                 width: parent.width
             }
 
             delegate: Item {
-                
-                height: 800
+
+                height: sheet.height + Kirigami.Units.gridUnit * 2
                 width: parent.width
-                
+
                 Rectangle {
+                    id: sheet
                     anchors.centerIn: parent
-                    height: 600
+                    implicitHeight: header.height + body.height + (Kirigami.Units.gridUnit * 2.5) * 2 + footer.height
                     width: parent.width * 0.9
-                    
-                    
-                    Rectangle {
+
+                    //TODO bookmark
+                    /*
+                    ToolButton {
+                        iconName: "bookmark-new"
+
+                    }
+                    */
+                    Item {
                         id: header
-                        
-                        height: 100
+
+                        height: Kirigami.Units.gridUnit * 5
                         width: parent.width
-            
-                        color: "lightgrey"
-                        
-                        
+
+                        Row {
+                            id: headerContent
+                            anchors {
+                                left: seperator.left
+                                bottom: seperator.top
+                                bottomMargin: height * 0.25
+                            }
+
+                            spacing: Kirigami.Units.largeSpacing / 2
+
+                            Avatar {
+                                id: avatar
+
+                                height: Kirigami.Units.gridUnit * 2.5
+                                width: height
+
+                                name: model.sender
+                            }
+
+                            ColumnLayout {
+
+                                RowLayout {
+
+                                    Text {
+                                        text: model.senderName
+
+                                        font.weight: Font.DemiBold
+                                        color: Kirigami.Theme.textColor
+                                        opacity: 0.75
+                                    }
+
+                                    Text {
+                                        text: model.senderAd
+
+                                        color: Kirigami.Theme.textColor
+                                        opacity: 0.75
+                                    }
+                                }
+
+                                RowLayout {
+                                    Kirigami.Label {
+                                        text: "To:"
+                                    }
+                                Text {
+                                    text: model.receivers
+
+                                    color: Kirigami.Theme.textColor
+                                    opacity: 0.75
+                                }
+                                }
+                            }
+                        }
+
+                        Text {
+
+                            anchors {
+                                right: seperator.right
+                                bottom: headerContent.top
+                            }
+
+                            text: model.date
+
+                            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.75
+                        }
+
                         Rectangle {
-                            
+                            id: seperator
+
                             anchors {
                                 bottom: parent.bottom
                                 horizontalCenter: parent.horizontalCenter
                             }
-                            
-                            width: parent.width - Kirigami.Units.gridUnit * 4
+
+                            width: parent.width - Kirigami.Units.gridUnit * 2
                             height: 1
-                            
-                            color: "black"
+
+                            color: Kirigami.Theme.complementaryBackgroundColor
+                            opacity: 0.5
                         }
-                        
+
+                        Rectangle {
+                            anchors {
+                                bottom: seperator.top
+                                right: seperator.right
+                            }
+
+                            height: Kirigami.Units.gridUnit
+                            width: height
+
+                            color: Kirigami.Theme.complementaryBackgroundColor
+                            opacity: 0.5
+                        }
+
                     }
-                    
-                    Rectangle {
-                        
+
+                    Item {
+                        id: body
                         anchors {
                             top: header.bottom
-                            bottom: footer.top
                             left: parent.left
                             right: parent.right
-                            margins: Kirigami.Units.gridUnit * 4
+                            leftMargin: avatar.height + Kirigami.Units.gridUnit
+                            rightMargin: avatar.height + Kirigami.Units.gridUnit
+                            topMargin: avatar.height
                         }
-                        
-                        color: "blue"
-                        
-                        
+
+                        implicitHeight: textContent.height
+
+                        Text {
+                            id: textContent
+                            width: parent.width
+
+                            text: model.text
+                            wrapMode: Text.WordWrap
+                            color: Kirigami.Theme.complementaryBackgroundColor
+                        }
+
                     }
-                    
+
                     Rectangle {
                         id: footer
-                        
+
                         anchors.bottom: parent.bottom
-                        
-                        height: 100
+
+                        height: Kirigami.Units.gridUnit * 3
                         width: parent.width
-                        
-                        color: "red"
+
+                        //color:"lightgrey"
+
+                        Text {
+
+                            anchors{
+                                verticalCenter: parent.verticalCenter
+                                left: parent.left
+                                leftMargin: Kirigami.Units.gridUnit
+                            }
+
+                            text: "Delete Mail"
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.5
+                        }
+
+                        ToolButton {
+                            anchors{
+                                verticalCenter: parent.verticalCenter
+                                right: parent.right
+                                rightMargin: Kirigami.Units.gridUnit
+                            }
+
+                            iconName: "mail-reply-sender"
+                        }
                     }
-                    
+
                 }
             }
         }
     }
 }
-            
-            
+
+
             /*
-            
+
             Item {
 
             width: root.width
@@ -209,7 +362,7 @@ Item {
                     }
 
                     Text {
-                        
+
                         text: model.text
                     }
 
@@ -234,7 +387,7 @@ Item {
         }
     }
 }
-            
+
             /*
             Item {
 
@@ -307,7 +460,7 @@ Item {
 
                     }
             }
-         
+
         }
     }
 }
