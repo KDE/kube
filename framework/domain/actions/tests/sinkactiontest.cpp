@@ -39,8 +39,6 @@ private slots:
         message->assemble();
 
         auto &&account = Test::TestAccount::registerAccount();
-        auto folder = account.createEntity<ApplicationDomain::Folder>();
-        folder->setProperty("specialpurpose", QVariant::fromValue(QByteArrayList() << "drafts"));
 
         Kube::Context context;
         context.setProperty("message", QVariant::fromValue(message));
@@ -52,7 +50,7 @@ private slots:
         auto mails = account.entities<Sink::ApplicationDomain::Mail>();
         QCOMPARE(mails.size(), 1);
         auto mail = mails.first();
-        QCOMPARE(mail->getProperty("folder").toByteArray(), folder->identifier());
+        QVERIFY(mail->getProperty("draft").toBool());
     }
 };
 

@@ -120,27 +120,15 @@ static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
 
         if (existingMail.identifier().isEmpty()) {
             Sink::Query query;
-            query += Sink::Query::RequestedProperties(QByteArrayList() << "name");
-            query += Sink::Query::PropertyContainsFilter("specialpurpose", "drafts");
+            //TODO replace with capability filter
+            query += Sink::Query::PropertyFilter("type", "org.kde.maildir");
             query += Sink::Query::AccountFilter(accountId);
-            qWarning() << "fetching the drafts folder";
-            return Sink::Store::fetchAll<Sink::ApplicationDomain::Folder>(query)
-                .then<void, QList<Sink::ApplicationDomain::Folder::Ptr>>([=](const QList<Sink::ApplicationDomain::Folder::Ptr> folders) {
-                    qWarning() << "fetched a drafts folder" << folders.size();
-                    if (folders.isEmpty()) {
-                        return KAsync::error<void>(1, "Failed to find a drafts folder.");
-                    }
-                    if (folders.size() > 1) {
-                        qWarning() << "Found too many draft folders (taking the first): " << folders;
-                    }
-                    const auto folder = folders.first();
-                    Sink::ApplicationDomain::Mail mail(folder->resourceInstanceIdentifier());
-                    mail.setProperty("folder", folder->identifier());
+            return Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(query)
+                .then<void, KAsync::Job<void>, Sink::ApplicationDomain::SinkResource>([=](const Sink::ApplicationDomain::SinkResource &resource) -> KAsync::Job<void> {
+                    Sink::ApplicationDomain::Mail mail(resource.identifier());
+                    mail.setProperty("draft", true);
                     mail.setBlobProperty("mimeMessage", message->encodedContent());
                     return Sink::Store::create(mail);
-                })
-                .then<void>([](){
-                    qWarning() << "done";
                 });
         } else {
             qWarning() << "Modifying an existing mail";
