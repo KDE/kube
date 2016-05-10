@@ -57,7 +57,7 @@ void MaildirSettings::setAccountIdentifier(const QByteArray &id)
             emit changed();
         }).exec();
 
-    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::PropertyFilter("account", QVariant::fromValue(id)) + Sink::Query::PropertyFilter("type", QString("org.kde.maildir")))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(id) + Sink::Query::CapabilityFilter("storage"))
         .then<void, Sink::ApplicationDomain::SinkResource>([this](const Sink::ApplicationDomain::SinkResource &resource) {
             mIdentifier = resource.identifier();
             auto path = resource.getProperty("path").toString();
@@ -70,7 +70,7 @@ void MaildirSettings::setAccountIdentifier(const QByteArray &id)
             qWarning() << "Failed to find the maildir resource: " << errorMessage;
         }).exec();
 
-    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::PropertyFilter("account", QVariant::fromValue(id)) + Sink::Query::PropertyFilter("type", QString("org.kde.mailtransport")))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(id) + Sink::Query::CapabilityFilter("transport"))
         .then<void, Sink::ApplicationDomain::SinkResource>([this](const Sink::ApplicationDomain::SinkResource &resource) {
             mMailtransportIdentifier = resource.identifier();
             mSmtpServer = resource.getProperty("server").toString();
@@ -83,7 +83,7 @@ void MaildirSettings::setAccountIdentifier(const QByteArray &id)
         }).exec();
 
     //FIXME this assumes that we only ever have one identity per account
-    Sink::Store::fetchOne<Sink::ApplicationDomain::Identity>(Sink::Query::PropertyFilter("account", QVariant::fromValue(id)))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::Identity>(Sink::Query::AccountFilter(id))
         .then<void, Sink::ApplicationDomain::Identity>([this](const Sink::ApplicationDomain::Identity &identity) {
             mIdentityIdentifier = identity.identifier();
             mUsername = identity.getProperty("username").toString();
@@ -176,11 +176,9 @@ void MaildirSettings::save()
         })
         .exec();
     } else {
-        auto resource = Sink::ApplicationDomain::ApplicationDomainType::createEntity<Sink::ApplicationDomain::SinkResource>();
-        mIdentifier = resource.identifier();
+        auto resource = Sink::ApplicationDomain::MaildirResource::create(mAccountIdentifier);
         resource.setProperty("path", property("path"));
-        resource.setProperty("type", "org.kde.maildir");
-        resource.setProperty("account", mAccountIdentifier);
+        mIdentifier = resource.identifier();
         Sink::Store::create(resource).then<void>([]() {},
         [](int errorCode, const QString &errorMessage) {
             qWarning() << "Error while creating resource: " << errorMessage;
@@ -198,10 +196,8 @@ void MaildirSettings::save()
         })
         .exec();
     } else {
-        auto resource = Sink::ApplicationDomain::ApplicationDomainType::createEntity<Sink::ApplicationDomain::SinkResource>();
+        auto resource = Sink::ApplicationDomain::MailtransportResource::create(mAccountIdentifier);
         mMailtransportIdentifier = resource.identifier();
-        resource.setProperty("type", "org.kde.mailtransport");
-        resource.setProperty("account", mAccountIdentifier);
         resource.setProperty("server", mSmtpServer);
         resource.setProperty("username", mSmtpUsername);
         resource.setProperty("password", mSmtpPassword);
