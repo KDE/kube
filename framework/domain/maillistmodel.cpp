@@ -83,8 +83,8 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
 
 bool MailListModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-    const QVariant leftData = left.sibling(left.row(), 3).data(Qt::DisplayRole);
-    const QVariant rightData = right.sibling(right.row(), 3).data(Qt::DisplayRole);
+    const QVariant leftData = left.sibling(left.row(), Date).data(Qt::DisplayRole);
+    const QVariant rightData = right.sibling(right.row(), Date).data(Qt::DisplayRole);
     return leftData.toDateTime() < rightData.toDateTime();
 }
 
@@ -96,18 +96,25 @@ void MailListModel::runQuery(const Sink::Query &query)
 
 void MailListModel::setParentFolder(const QVariant &parentFolder)
 {
-    auto folder = parentFolder.value<Sink::ApplicationDomain::Folder::Ptr>();
+    using namespace Sink::ApplicationDomain;
+    auto folder = parentFolder.value<Folder::Ptr>();
     if (!folder) {
         qWarning() << "No folder: " << parentFolder;
         return;
     }
     Sink::Query query;
     query.liveQuery = true;
-    query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "folder";
     query.resources << folder->resourceInstanceIdentifier();
-    query.sortProperty = "date";
+    query.sort<Mail::Date>();
     query.limit = 100;
-    query += Sink::Query::PropertyFilter("folder", *folder);
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::SenderName>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::Folder>();
+    query.filter<Mail::Folder>(*folder);
     qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
     runQuery(query);
 }
@@ -119,16 +126,21 @@ QVariant MailListModel::parentFolder() const
 
 void MailListModel::setMail(const QVariant &variant)
 {
+    using namespace Sink::ApplicationDomain;
     auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>();
     if (!mail) {
         qWarning() << "No mail: " << mail;
         return;
     }
-    Sink::Query query;
+    Sink::Query query(*mail);
     query.liveQuery = false;
-    query.requestedProperties << "subject" << "sender" << "senderName" << "date" << "unread" << "important" << "mimeMessage";
-    query.ids << mail->identifier();
-    query.resources << mail->resourceInstanceIdentifier();
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::SenderName>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::MimeMessage>();
     qWarning() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
     runQuery(query);
 }
