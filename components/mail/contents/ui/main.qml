@@ -48,6 +48,12 @@ ApplicationWindow {
     }
 
     KubeAction.Action {
+        id: replyAction
+        actionId: "org.kde.kube.actions.reply"
+        context: maillistcontext
+    }
+
+    KubeAction.Action {
         id: markAsReadAction
         actionId: "org.kde.kube.actions.mark-as-read"
         context: maillistcontext
@@ -163,6 +169,17 @@ ApplicationWindow {
                     }
                 }
 
+                KubeAction.ActionHandler {
+                    actionId: "org.kde.kube.actions.reply"
+                    function isReady(context) {
+                        return context.mail ? true : false;
+                    }
+
+                    function handler(context) {
+                        composerComponent.createObject(app, {"originalMessage": context.mail})
+                    }
+                }
+
                 ToolButton {
                     id: newMailButton
 
@@ -179,9 +196,9 @@ ApplicationWindow {
                     Layout.fillHeight: true
                     iconName: "mail-message-reply"
                     text: "Reply"
+                    enabled: replyAction.ready
                     onClicked: {
-                        composerComponent.createObject(app)
-                        composer.originalMessage = mailListView.currentMail
+                        replyAction.execute()
                     }
                 }
 
