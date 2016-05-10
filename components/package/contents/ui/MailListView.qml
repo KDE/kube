@@ -29,6 +29,7 @@ Controls.ScrollView {
     id: root
     property variant parentFolder
     property variant currentMail
+    property bool isDraft : false
 
     ListView {
         id: listView
@@ -68,6 +69,12 @@ Controls.ScrollView {
                     property: "currentMail"
                     when: listView.currentIndex == index
                     value: model.domainObject
+                }
+                QtQml.Binding {
+                    target: root
+                    property: "isDraft"
+                    when: listView.currentIndex == index
+                    value: model.draft
                 }
 
                 RowLayout {

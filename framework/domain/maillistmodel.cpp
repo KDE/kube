@@ -46,6 +46,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Date] = "date";
     roles[Unread] = "unread";
     roles[Important] = "important";
+    roles[Draft] = "draft";
     roles[Id] = "id";
     roles[MimeMessage] = "mimeMessage";
     roles[DomainObject] = "domainObject";
@@ -70,6 +71,8 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return mail->getUnread();
         case Important:
             return mail->getImportant();
+        case Draft:
+            return mail->getDraft();
         case Id:
             return mail->identifier();
         case DomainObject:
@@ -113,6 +116,7 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.request<Mail::Date>();
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
+    query.request<Mail::Draft>();
     query.request<Mail::Folder>();
     query.filter<Mail::Folder>(*folder);
     qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
@@ -140,6 +144,7 @@ void MailListModel::setMail(const QVariant &variant)
     query.request<Mail::Date>();
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
+    query.request<Mail::Draft>();
     query.request<Mail::MimeMessage>();
     qWarning() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
     runQuery(query);

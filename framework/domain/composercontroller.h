@@ -32,7 +32,8 @@ class Message;
 class ComposerController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (QVariant originalMessage READ originalMessage WRITE setOriginalMessage)
+    Q_PROPERTY (QVariant originalMessage WRITE setOriginalMessage)
+    Q_PROPERTY (QVariant draftMessage WRITE setDraftMessage)
     Q_PROPERTY (QString to READ to WRITE setTo NOTIFY toChanged)
     Q_PROPERTY (QString cc READ cc WRITE setCc NOTIFY ccChanged)
     Q_PROPERTY (QString bcc READ bcc WRITE setBcc NOTIFY bccChanged)
@@ -64,8 +65,8 @@ public:
 
     QStringList attachemts() const;
 
-    QVariant originalMessage() const;
     void setOriginalMessage(const QVariant &originalMessage);
+    void setDraftMessage(const QVariant &draft);
 
 signals:
     void subjectChanged();
@@ -83,6 +84,7 @@ public slots:
     void addAttachment(const QUrl &fileUrl);
 
 private:
+    void setMessage(const QSharedPointer<KMime::Message> &msg);
     QSharedPointer<KMime::Message> assembleMessage();
     QString m_to;
     QString m_cc;
@@ -90,7 +92,6 @@ private:
     QString m_subject;
     QString m_body;
     QStringList m_attachments;
-    QVariant m_originalMessage;
     QVariant m_msg;
     int m_currentAccountIndex;
 };

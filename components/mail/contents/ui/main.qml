@@ -38,7 +38,9 @@ ApplicationWindow {
     KubeAction.Context {
         id: maillistcontext
         property variant mail
+        property bool isDraft
         mail: mailListView.currentMail
+        isDraft: mailListView.isDraft
     }
 
     KubeAction.Context {
@@ -50,6 +52,12 @@ ApplicationWindow {
     KubeAction.Action {
         id: replyAction
         actionId: "org.kde.kube.actions.reply"
+        context: maillistcontext
+    }
+
+    KubeAction.Action {
+        id: editAction
+        actionId: "org.kde.kube.actions.edit"
         context: maillistcontext
     }
 
@@ -180,6 +188,17 @@ ApplicationWindow {
                     }
                 }
 
+                KubeAction.ActionHandler {
+                    actionId: "org.kde.kube.actions.edit"
+                    function isReady(context) {
+                        return context.mail && context.isDraft;
+                    }
+
+                    function handler(context) {
+                        composerComponent.createObject(app, {"draftMessage": context.mail})
+                    }
+                }
+
                 ToolButton {
                     id: newMailButton
 
@@ -199,6 +218,16 @@ ApplicationWindow {
                     enabled: replyAction.ready
                     onClicked: {
                         replyAction.execute()
+                    }
+                }
+
+                ToolButton {
+                    Layout.fillHeight: true
+                    iconName: "mail-message-edit"
+                    text: "Edit"
+                    enabled: editAction.ready
+                    onClicked: {
+                        editAction.execute()
                     }
                 }
 

@@ -24,6 +24,7 @@ import org.kube.framework.theme 1.0
 Rectangle {
     id: root
     property variant originalMessage
+    property variant draftMessage
 
     color: ColorPalette.border
 
@@ -62,6 +63,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 originalMessage: root.originalMessage
+                draftMessage: root.draftMessage
             }
 
             RowLayout {

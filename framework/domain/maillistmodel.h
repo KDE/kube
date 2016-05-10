@@ -47,6 +47,7 @@ public:
         Date,
         Unread,
         Important,
+        Draft,
         Id,
         MimeMessage,
         DomainObject

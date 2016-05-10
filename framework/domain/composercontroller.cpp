@@ -113,15 +113,19 @@ QStringList ComposerController::attachemts() const
     return m_attachments;
 }
 
-QVariant ComposerController::originalMessage() const
-{
-    return m_originalMessage;
-}
-
 void ComposerController::addAttachment(const QUrl &fileUrl)
 {
     m_attachments.append(fileUrl.toString());
     emit attachmentsChanged();
+}
+
+void ComposerController::setMessage(const KMime::Message::Ptr &msg)
+{
+    setTo(msg->to(true)->asUnicodeString());
+    setCc(msg->cc(true)->asUnicodeString());
+    setSubject(msg->subject(true)->asUnicodeString());
+    setBody(msg->body());
+    m_msg = QVariant::fromValue(msg);
 }
 
 void ComposerController::setOriginalMessage(const QVariant &originalMessage)
@@ -133,11 +137,20 @@ void ComposerController::setOriginalMessage(const QVariant &originalMessage)
         mail->parse();
         auto reply = MailTemplates::reply(mail);
         //We assume reply
-        setTo(reply->to(true)->asUnicodeString());
-        setCc(reply->cc(true)->asUnicodeString());
-        setSubject(reply->subject(true)->asUnicodeString());
-        setBody(reply->body());
-        m_msg = QVariant::fromValue(reply);
+        setMessage(reply);
+    } else {
+        m_msg = QVariant();
+    }
+}
+
+void ComposerController::setDraftMessage(const QVariant &originalMessage)
+{
+    const auto mailData = KMime::CRLFtoLF(originalMessage.toByteArray());
+    if (!mailData.isEmpty()) {
+        KMime::Message::Ptr mail(new KMime::Message);
+        mail->setContent(mailData);
+        mail->parse();
+        setMessage(mail);
     } else {
         m_msg = QVariant();
     }
