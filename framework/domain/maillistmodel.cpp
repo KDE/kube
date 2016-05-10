@@ -56,33 +56,26 @@ QHash< int, QByteArray > MailListModel::roleNames() const
 QVariant MailListModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
+    auto mail = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
     switch (role) {
         case Subject:
-            return srcIdx.sibling(srcIdx.row(), 0).data(Qt::DisplayRole).toString();
+            return mail->getSubject();
         case Sender:
-            return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
+            return mail->getSender();
         case SenderName:
-            return srcIdx.sibling(srcIdx.row(), 2).data(Qt::DisplayRole).toString();
+            return mail->getSenderName();
         case Date:
-            return srcIdx.sibling(srcIdx.row(), 3).data(Qt::DisplayRole).toString();
+            return mail->getDate();
         case Unread:
-            return srcIdx.sibling(srcIdx.row(), 4).data(Qt::DisplayRole).toBool();
+            return mail->getUnread();
         case Important:
-            return srcIdx.sibling(srcIdx.row(), 5).data(Qt::DisplayRole).toBool();
+            return mail->getImportant();
         case Id:
-            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+            return mail->identifier();
         case DomainObject:
-            return srcIdx.data(Sink::Store::DomainObjectRole);
+            return QVariant::fromValue(mail);
         case MimeMessage: {
-            auto filename = srcIdx.sibling(srcIdx.row(), 6).data(Qt::DisplayRole).toString();
-            QFile file(filename);
-            if (file.open(QFile::ReadOnly)) {
-                auto content = file.readAll();
-                return content;
-            } else {
-                qWarning() << "Failed to open the file";
-            }
-            return "Failed to read mail.";
+            return mail->getMimeMessage();
         }
     }
     return QSortFilterProxyModel::data(idx, role);
