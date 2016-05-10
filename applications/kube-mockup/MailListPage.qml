@@ -115,7 +115,7 @@ Controls.ScrollView {
                     Text {
                         anchors.centerIn: parent
                         text: "+4"
-                        color: Kirigami.Theme.complementaryTextColor
+                        color: Kirigami.Theme.textColor
                         font.weight: Font.DemiBold
                     }
                 }

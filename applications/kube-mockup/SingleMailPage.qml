@@ -176,7 +176,7 @@ Item {
                             width: parent.width - Kirigami.Units.gridUnit * 2
                             height: 1
 
-                            color: Kirigami.Theme.complementaryBackgroundColor
+                            color: Kirigami.Theme.textColor
                             opacity: 0.5
                         }
 
@@ -189,7 +189,7 @@ Item {
                             height: Kirigami.Units.gridUnit
                             width: height
 
-                            color: Kirigami.Theme.complementaryBackgroundColor
+                            color: Kirigami.Theme.textColor
                             opacity: 0.5
                         }
 
@@ -214,7 +214,7 @@ Item {
 
                             text: model.text
                             wrapMode: Text.WordWrap
-                            color: Kirigami.Theme.complementaryBackgroundColor
+                            color: Kirigami.Theme.textColor
                         }
 
                     }

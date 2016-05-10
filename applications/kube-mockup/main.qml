@@ -68,7 +68,7 @@ Controls.ApplicationWindow {
         height: parent.height
         width: Kirigami.Units.iconSizes.large + Kirigami.Units.gridUnit * 2
 
-        color: Kirigami.Theme.complementaryBackgroundColor
+        color: Kirigami.Theme.viewBackgroundColor
 
         ColumnLayout{
 
@@ -110,7 +110,7 @@ Controls.ApplicationWindow {
 
                         iconName: model.icon
 
-                        enabled: false
+                        //enabled: false
                     }
 
                     Kirigami.Label {
@@ -121,7 +121,7 @@ Controls.ApplicationWindow {
                         }
 
                         text: model.name
-                        color: Kirigami.Theme.complementaryTextColor
+                        color: Kirigami.Theme.viewTextColor
 
                         opacity: 0.5
                     }
