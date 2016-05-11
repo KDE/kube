@@ -117,7 +117,7 @@ Rectangle {
                                 }
 
                                 Label {
-                                    text: accountFactory.name
+                                    text: model.name === "" ? accountFactory.name : model.name
                                 }
                             }
                         }

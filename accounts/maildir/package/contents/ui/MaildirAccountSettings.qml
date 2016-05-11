@@ -50,7 +50,7 @@ Rectangle {
             placeholderText: accountName
             Layout.fillWidth: true
             text: maildirSettings.accountName
-            onTextChanged: { maildirSettings.accountName = text; }
+            onTextChanged: { maildirSettings.accountName = text; root.accountName = text; }
         }
 
         Label { text: "User Name" }
