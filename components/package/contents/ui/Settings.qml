@@ -82,26 +82,34 @@ Rectangle {
 
                         currentIndex: -1
 
-                        delegate:  Kirigami.AbstractListItem {
+                        onCountChanged: {
+                            listView.currentIndex = count - 1
+                        }
 
+                        delegate:  Kirigami.AbstractListItem {
                             enabled: true
                             supportsMouseEvents: true
                             checked: listView.currentIndex == index
 
+                            onCheckedChanged: {
+                                if (checked) {
+                                    console.warn("Current index changed ", accountFactory.accountId);
+                                    accountDetails.source = accountFactory.uiPath
+                                    accountDetails.item.accountId = accountFactory.accountId
+                                    accountDetails.item.icon = accountFactory.icon
+                                    accountDetails.item.accountName = accountFactory.name
+                                }
+                            }
+
                             onClicked: {
-                                console.warn("Loading module is ", accountFactory.accountId);
-                                accountDetails.source = accountFactory.uiPath
-                                accountDetails.item.accountId = accountFactory.accountId
-                                accountDetails.item.icon = accountFactory.icon
-                                accountDetails.item.accountName = accountFactory.name
                                 listView.currentIndex = model.index
                             }
 
                             contentItem: RowLayout {
 
                                 KubeFramework.AccountFactory {
-                                        id: accountFactory
-                                        accountId: model.accountId
+                                    id: accountFactory
+                                    accountId: model.accountId
                                 }
 
                                 Kirigami.Icon {
