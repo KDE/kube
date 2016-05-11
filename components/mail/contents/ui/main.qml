@@ -184,7 +184,8 @@ ApplicationWindow {
                     }
 
                     function handler(context) {
-                        composerComponent.createObject(app, {"originalMessage": context.mail})
+                        var component = composerComponent.createObject(app)
+                        component.loadMessage(context.mail, false)
                     }
                 }
 
@@ -195,7 +196,8 @@ ApplicationWindow {
                     }
 
                     function handler(context) {
-                        composerComponent.createObject(app, {"draftMessage": context.mail})
+                        var component= composerComponent.createObject(app, {"draftMessage": context.mail})
+                        component.loadMessage(context.mail, true)
                     }
                 }
 

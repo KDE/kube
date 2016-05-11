@@ -25,8 +25,10 @@ import org.kube.framework.domain 1.0 as KubeFramework
 
 Item {
     id: root
-    property variant originalMessage
-    property variant draftMessage
+
+    function loadMessage(message, loadAsDraft) {
+        composer.loadMessage(message, loadAsDraft)
+    }
 
     function send() {
         composer.send()
@@ -40,26 +42,8 @@ Item {
         composer.clear();
     }
 
-    KubeFramework.Retriever {
-        id: originalMessageRetriever
-        propertyName: "mimeMessage"
-        model: KubeFramework.MailListModel {
-            mail: root.originalMessage
-        }
-    }
-
-    KubeFramework.Retriever {
-        id: draftMessageRetriever
-        propertyName: "mimeMessage"
-        model: KubeFramework.MailListModel {
-            mail: root.draftMessage
-        }
-    }
-
     KubeFramework.ComposerController {
         id: composer
-        originalMessage: originalMessageRetriever.value
-        draftMessage: draftMessageRetriever.value
     }
 
     ColumnLayout {

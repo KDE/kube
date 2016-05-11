@@ -27,6 +27,7 @@
 #include <QVariant>
 #include <QDebug>
 #include <QQmlEngine>
+#include <sink/store.h>
 
 #include "accountsmodel.h"
 #include "identitiesmodel.h"
@@ -128,32 +129,28 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
     m_msg = QVariant::fromValue(msg);
 }
 
-void ComposerController::setOriginalMessage(const QVariant &originalMessage)
+void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
 {
-    const auto mailData = KMime::CRLFtoLF(originalMessage.toByteArray());
-    if (!mailData.isEmpty()) {
-        KMime::Message::Ptr mail(new KMime::Message);
-        mail->setContent(mailData);
-        mail->parse();
-        auto reply = MailTemplates::reply(mail);
-        //We assume reply
-        setMessage(reply);
-    } else {
-        m_msg = QVariant();
-    }
-}
-
-void ComposerController::setDraftMessage(const QVariant &originalMessage)
-{
-    const auto mailData = KMime::CRLFtoLF(originalMessage.toByteArray());
-    if (!mailData.isEmpty()) {
-        KMime::Message::Ptr mail(new KMime::Message);
-        mail->setContent(mailData);
-        mail->parse();
-        setMessage(mail);
-    } else {
-        m_msg = QVariant();
-    }
+    Sink::Query query(*message.value<Sink::ApplicationDomain::Mail::Ptr>());
+    query.request<Sink::ApplicationDomain::Mail::MimeMessage>();
+    Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).then<void, Sink::ApplicationDomain::Mail>([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
+        m_existingMail = mail;
+        const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
+        if (!mailData.isEmpty()) {
+            KMime::Message::Ptr mail(new KMime::Message);
+            mail->setContent(mailData);
+            mail->parse();
+            if (loadAsDraft) {
+                auto reply = MailTemplates::reply(mail);
+                //We assume reply
+                setMessage(reply);
+            } else {
+                setMessage(mail);
+            }
+        } else {
+            qWarning() << "Retrieved empty message";
+        }
+    }).exec();
 }
 
 KMime::Message::Ptr ComposerController::assembleMessage()
@@ -203,6 +200,7 @@ void ComposerController::saveAsDraft()
     Kube::Context context;
     context.setProperty("message", QVariant::fromValue(mail));
     context.setProperty("accountId", QVariant::fromValue(currentAccountId));
+    context.setProperty("existingMail", QVariant::fromValue(m_existingMail));
     Kube::Action("org.kde.kube.actions.save-as-draft", context).execute();
     clear();
 }

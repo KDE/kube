@@ -24,6 +24,7 @@
 #include <QStringList>
 #include <QVariant>
 #include <QAbstractItemModel>
+#include <sink/applicationdomaintype.h>
 
 namespace KMime {
 class Message;
@@ -32,8 +33,6 @@ class Message;
 class ComposerController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (QVariant originalMessage WRITE setOriginalMessage)
-    Q_PROPERTY (QVariant draftMessage WRITE setDraftMessage)
     Q_PROPERTY (QString to READ to WRITE setTo NOTIFY toChanged)
     Q_PROPERTY (QString cc READ cc WRITE setCc NOTIFY ccChanged)
     Q_PROPERTY (QString bcc READ bcc WRITE setBcc NOTIFY bccChanged)
@@ -64,9 +63,7 @@ public:
     QAbstractItemModel *identityModel() const;
 
     QStringList attachemts() const;
-
-    void setOriginalMessage(const QVariant &originalMessage);
-    void setDraftMessage(const QVariant &draft);
+    Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
 
 signals:
     void subjectChanged();
@@ -92,6 +89,7 @@ private:
     QString m_subject;
     QString m_body;
     QStringList m_attachments;
+    Sink::ApplicationDomain::Mail m_existingMail;
     QVariant m_msg;
     int m_currentAccountIndex;
 };

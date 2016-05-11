@@ -130,7 +130,7 @@ static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
                     return Sink::Store::create(mail);
                 });
         } else {
-            qWarning() << "Modifying an existing mail";
+            qWarning() << "Modifying an existing mail" << existingMail.identifier();
             existingMail.setBlobProperty("mimeMessage", message->encodedContent());
             return Sink::Store::modify(existingMail);
         }
