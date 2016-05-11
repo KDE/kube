@@ -20,130 +20,157 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
+import QtQml 2.2 as QtQml
+
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.theme 1.0
 
-Rectangle {
+Item {
     id: root
+
     property variant mail;
 
-    color: "grey"
-
     ScrollView {
+
         anchors.fill: parent
 
-    ListView {
-        anchors.verticalCenter: parent.verticalCenter
+        ListView {
+            anchors.fill: parent
 
-        width: parent.width
+            model: KubeFramework.MailListModel {
+                mail: root.mail
+            }
 
-        header: Item {
-            height: Kirigami.Units.largeSpacing
-        }
+            header: Item {
+                height: Kirigami.Units.gridUnit
+                width: parent.width
 
-        footer: Item {
-            height: Kirigami.Units.largeSpacing * 3
-        }
+            }
 
-        model: KubeFramework.MailListModel {
-            mail: root.mail
-        }
+            footer: Item {
+                 height: Kirigami.Units.gridUnit * 2
+                 width: parent.width
+            }
 
-        delegate: Item {
+            delegate: Item {
 
-            width: root.width
-            implicitHeight: content.height
+                height: sheet.height + Kirigami.Units.gridUnit * 2
+                width: parent.width
 
-            Rectangle {
-                id: content
-                anchors.centerIn: parent
+                Rectangle {
+                    id: sheet
+                    anchors.centerIn: parent
+                    implicitHeight: header.height + body.height + (Kirigami.Units.gridUnit * 2.5) * 2 + footer.height
+                    width: parent.width - Kirigami.Units.gridUnit * 4
 
-                width: parent.width * 0.9
-                implicitHeight: header.height + body.height + footer.height + Kirigami.Units.gridUnit * 8
+                    //TODO bookmark
+                    /*
+                    ToolButton {
+                        iconName: "bookmark-new"
 
+                    }
+                    */
                     Item {
                         id: header
 
-                        anchors {
-                            top: parent.top
-                            topMargin: Kirigami.Units.largeSpacing
-                            horizontalCenter: parent.horizontalCenter
-                        }
+                        height: Kirigami.Units.gridUnit * 5
+                        width: parent.width
 
-                        width: parent.width - Kirigami.Units.largeSpacing * 2
-                        height: Kirigami.Units.gridUnit * 6
+                        Row {
+                            id: headerContent
+                            anchors {
+                                left: seperator.left
+                                bottom: seperator.top
+                                bottomMargin: height * 0.25
+                            }
 
+                            spacing: Kirigami.Units.largeSpacing / 2
 
-                        Avatar  {
-                            id: avatar
+                            Avatar {
+                                id: avatar
 
-                            height: Kirigami.Units.gridUnit * 4
-                            width: height
+                                height: Kirigami.Units.gridUnit * 2.5
+                                width: height
 
-                            name: model.senderName
+                                name: model.sender
+                            }
+
+                            ColumnLayout {
+
+                                RowLayout {
+
+                                    Text {
+                                        text: model.senderName
+
+                                        font.weight: Font.DemiBold
+                                        color: Kirigami.Theme.textColor
+                                        opacity: 0.75
+                                    }
+
+                                    //TODO not yet in model
+                                    /*
+                                    Text {
+                                        text: model.senderAd
+
+                                        color: Kirigami.Theme.textColor
+                                        opacity: 0.75
+                                    }
+                                    */
+                                }
+
+                                RowLayout {
+                                    Kirigami.Label {
+                                        text: "To:"
+                                    }
+                                    Text {
+                                        text: "TODO TODO TODO"//model.receivers TODO not yet in model
+
+                                        color: Kirigami.Theme.textColor
+                                        opacity: 0.75
+                                    }
+                                }
+                            }
                         }
 
                         Text {
 
                             anchors {
-                                bottom: parent.bottom
-                                left: parent.left
-                                bottomMargin: Kirigami.Units.smallSpacing
+                                right: seperator.right
+                                bottom: headerContent.top
                             }
 
-                            text: model.subject
-                            renderType: Text.NativeRendering
-                            color: Kirigami.Theme.textColor
-                        }
-
-                        Text {
-
-                            anchors {
-                                top: avatar.top
-                                left: avatar.right
-                                leftMargin: Kirigami.Units.smallSpacing
-                            }
-
-                            text: model.senderName
-
-                            renderType: Text.NativeRendering
-                            color: Kirigami.Theme.textColor
-                        }
-
-                        Text {
-
-                            anchors {
-                                right: parent.right
-                            }
                             text: Qt.formatDateTime(model.date)
 
-                            renderType: Text.NativeRendering
+                            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
                             color: Kirigami.Theme.textColor
+                            opacity: 0.75
                         }
 
                         Rectangle {
+                            id: seperator
 
                             anchors {
-                                bottom: border.top
-                                right: border.right
+                                bottom: parent.bottom
+                                horizontalCenter: parent.horizontalCenter
                             }
 
-                            height: Kirigami.Units.iconSizes.small
-                            width: height
+                            width: parent.width - Kirigami.Units.gridUnit * 2
+                            height: 1
 
                             color: Kirigami.Theme.textColor
                             opacity: 0.5
                         }
 
                         Rectangle {
-                            id: border
+                            anchors {
+                                bottom: seperator.top
+                                right: seperator.right
+                            }
 
-                            anchors.bottom: parent.bottom
-                            width: parent.width
-                            height: 1
+                            height: Kirigami.Units.gridUnit
+                            width: height
 
                             color: Kirigami.Theme.textColor
-
                             opacity: 0.5
                         }
                     }
@@ -153,9 +180,11 @@ Rectangle {
 
                         anchors {
                             top: header.bottom
-                            topMargin: Kirigami.Units.largeSpacing * 2
-                            left: header.left
-                            leftMargin: Kirigami.Units.largeSpacing
+                            left: parent.left
+                            right: parent.right
+                            leftMargin: avatar.height + Kirigami.Units.gridUnit
+                            rightMargin: avatar.height + Kirigami.Units.gridUnit
+                            topMargin: avatar.height
                         }
 
                         width: header.width - Kirigami.Units.largeSpacing * 2
@@ -167,19 +196,35 @@ Rectangle {
                     Item {
                         id: footer
 
-                        anchors {
-                            bottom: parent.bottom
-                            bottomMargin: Kirigami.Units.largeSpacing
-                            horizontalCenter: parent.horizontalCenter
-                        }
+                        anchors.bottom: parent.bottom
 
-                        width: header.width
-                        height: Kirigami.Units.gridUnit
+                        height: Kirigami.Units.gridUnit * 3
+                        width: parent.width
+
+                        Text {
+
+                            anchors{
+                                verticalCenter: parent.verticalCenter
+                                left: parent.left
+                                leftMargin: Kirigami.Units.gridUnit
+                            }
+
+                            text: "Delete Mail"
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.5
+                        }
 
                         ToolButton {
-                            text: "Delete Email"
+                            anchors{
+                                verticalCenter: parent.verticalCenter
+                                right: parent.right
+                                rightMargin: Kirigami.Units.gridUnit
+                            }
+
+                            iconName: "mail-reply-sender"
                         }
                     }
+
                 }
             }
         }
