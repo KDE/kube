@@ -131,7 +131,7 @@ Rectangle {
                             height: Kirigami.Units.iconSizes.small
                             width: height
 
-                            color: Kirigami.Theme.complementaryBackgroundColor
+                            color: Kirigami.Theme.textColor
                             opacity: 0.5
                         }
 
@@ -142,7 +142,7 @@ Rectangle {
                             width: parent.width
                             height: 1
 
-                            color: Kirigami.Theme.complementaryBackgroundColor
+                            color: Kirigami.Theme.textColor
 
                             opacity: 0.5
                         }
