@@ -79,22 +79,16 @@ ApplicationWindow {
         context: folderListContext
     }
 
-    Item {
+    ToolBar {
         id: toolbar
         anchors {
             top: app.top
             left: app.left
+            right: app.right
         }
 
         height: Kirigami.Units.iconSizes.medium
-        width: app.width
-
-        Rectangle {
-            anchors.bottom: parent.bottom
-            width: parent.width
-            height: 1
-            color: "grey"
-        }
+        //width: app.width
 
         Row {
             anchors.fill: parent
@@ -103,7 +97,7 @@ ApplicationWindow {
 
             RowLayout {
                 height: parent.height
-                width: folderListView.width
+                width: folderListView.width - 5 //to adjust for the toolbar spacing
                 clip: true
 
                 KubeComponents.AccountSwitcher {
@@ -165,7 +159,7 @@ ApplicationWindow {
 
             RowLayout{
                 height: parent.height
-                width: mailView.width
+                width: mailView.width - 5 //to adjust for the toolbar spacing
                 clip: true
 
                 Component {
