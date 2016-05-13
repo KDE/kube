@@ -110,6 +110,14 @@ Rectangle {
                                 KubeFramework.AccountFactory {
                                     id: accountFactory
                                     accountId: model.accountId
+                                    onAccountLoaded: {
+                                        if (listView.currentIndex == model.index) {
+                                            accountDetails.source = accountFactory.uiPath
+                                            accountDetails.item.accountId = accountFactory.accountId
+                                            accountDetails.item.icon = accountFactory.icon
+                                            accountDetails.item.accountNam = accountFactory.name
+                                        }
+                                    }
                                 }
 
                                 Kirigami.Icon {
