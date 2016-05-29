@@ -106,7 +106,8 @@ ApplicationWindow {
                 }
 
                 ToolButton {
-                    Layout.fillHeight: true
+                    height: toolbar.height
+                    width: toolbar.width
                     iconName: "view-refresh"
                     text: "Sync"
                     enabled: syncAction.ready
@@ -123,7 +124,8 @@ ApplicationWindow {
                 clip: true
 
                 ToolButton {
-                    Layout.fillHeight: true
+                    height: toolbar.height
+                    width: toolbar.width
                     iconName: "mail-mark-unread"
                     text: "Mark As Read"
                     enabled: markAsReadAction.ready
@@ -133,7 +135,8 @@ ApplicationWindow {
                 }
 
                 ToolButton {
-                    Layout.fillHeight: true
+                    height: toolbar.height
+                    width: toolbar.width
                     iconName: "mail-mark-important"
                     text: "Mark Important"
                     enabled: false
@@ -142,7 +145,8 @@ ApplicationWindow {
                 }
 
                 ToolButton {
-                    Layout.fillHeight: true
+                    height: toolbar.height
+                    width: toolbar.width
                     iconName: "edit-delete"
                     text: "Delete Mail"
                     enabled: deleteAction.ready
@@ -198,7 +202,8 @@ ApplicationWindow {
                 ToolButton {
                     id: newMailButton
 
-                    Layout.fillHeight: true
+                    height: toolbar.height
+                    width: toolbar.width
 
                     iconName: "mail-message-new"
                     text: "Compose"
@@ -208,7 +213,8 @@ ApplicationWindow {
                 }
 
                 ToolButton {
-                    Layout.fillHeight: true
+                    height: toolbar.height
+                    width: toolbar.width
                     iconName: "mail-message-reply"
                     text: "Reply"
                     enabled: replyAction.ready
@@ -218,7 +224,8 @@ ApplicationWindow {
                 }
 
                 ToolButton {
-                    Layout.fillHeight: true
+                    height: toolbar.height
+                    width: toolbar.width
                     iconName: "mail-message-edit"
                     text: "Edit"
                     enabled: editAction.ready
@@ -235,6 +242,7 @@ ApplicationWindow {
                     id: searchBar
 
                     Layout.minimumWidth: Kirigami.Units.gridUnit * 25
+                    height: toolbar.height
 
                     placeholderText: "Search..."
                 }
@@ -242,7 +250,8 @@ ApplicationWindow {
                 ToolButton {
                     id: settingsButton
 
-                    Layout.fillHeight: true
+                    height: toolbar.height
+                    width: toolbar.width
 
                     iconName: "application-menu"
                     text: "Settings"
