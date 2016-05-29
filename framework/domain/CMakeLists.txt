@@ -27,7 +27,7 @@ include_directories(${CURL_INCLUDE_DIRS})
 add_library(mailplugin SHARED ${mailplugin_SRCS})
 
 qt5_use_modules(mailplugin Core Quick Qml WebKitWidgets)
-target_link_libraries(mailplugin actionplugin settingsplugin sink KF5::MimeTreeParser KF5::Codecs KF5::Package KF5::Async ${CURL_LIBRARIES})
+target_link_libraries(mailplugin actionplugin settingsplugin sink KF5::MimeTreeParser KF5::Codecs KF5::Package KF5::Async KF5::IconThemes ${CURL_LIBRARIES})
 
 add_subdirectory(actions/tests)
 
