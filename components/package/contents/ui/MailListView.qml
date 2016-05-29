@@ -123,31 +123,6 @@ Controls.ScrollView {
                         }
                     }
                 }
-
-                Rectangle {
-
-                    anchors {
-                        right: parent.right
-                        bottom: parent.bottom
-                        bottomMargin: 5
-                    }
-
-                    color: "lightgrey" //TODO wait for Kirigami pallete update
-
-                    height: Kirigami.Units.gridUnit * 2
-                    width: height
-
-                    visible: mailListDelegate.checked ? false : model.unread
-
-                    radius: 100
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "+1" //TODO wait for thread implementation
-                        color: Kirigami.Theme.complementaryTextColor
-                        font.weight: Font.DemiBold
-                    }
-                }
             }
         }
     }
