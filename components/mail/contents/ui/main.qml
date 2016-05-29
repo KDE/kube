@@ -118,48 +118,47 @@ ApplicationWindow {
                 }
             }
 
-            RowLayout {
+            Item {
                 height: parent.height
                 width: mailListView.width
                 clip: true
 
-                ToolButton {
-                    height: toolbar.height
-                    width: toolbar.width
-                    iconName: "mail-mark-unread"
-                    text: "Mark As Read"
-                    enabled: markAsReadAction.ready
-                    onClicked: {
-                        markAsReadAction.execute()
-                    }
-                }
+                RowLayout {
+                    anchors.centerIn: parent
 
-                ToolButton {
-                    height: toolbar.height
-                    width: toolbar.width
-                    iconName: "mail-mark-important"
-                    text: "Mark Important"
-                    enabled: false
-                    onClicked: {
+                    ToolButton {
+                        height: toolbar.height
+                        width: toolbar.width
+                        iconName: "mail-mark-unread"
+                        text: "Mark As Read"
+                        enabled: markAsReadAction.ready
+                        onClicked: {
+                            markAsReadAction.execute()
+                        }
                     }
-                }
 
-                ToolButton {
-                    height: toolbar.height
-                    width: toolbar.width
-                    iconName: "edit-delete"
-                    text: "Delete Mail"
-                    enabled: deleteAction.ready
-                    onClicked: {
-                        deleteAction.execute()
+                    ToolButton {
+                        height: toolbar.height
+                        width: toolbar.width
+                        iconName: "mail-mark-important"
+                        text: "Mark Important"
+                        enabled: false
+                        onClicked: {
+                        }
                     }
-                }
 
-                Item {
-                    Layout.fillWidth: true
+                    ToolButton {
+                        height: toolbar.height
+                        width: toolbar.width
+                        iconName: "edit-delete"
+                        text: "Delete Mail"
+                        enabled: deleteAction.ready
+                        onClicked: {
+                            deleteAction.execute()
+                        }
+                    }
                 }
             }
-
 
             RowLayout{
                 height: parent.height
