@@ -48,15 +48,15 @@ QHash<int, QByteArray> PartModel::roleNames() const
 
 QModelIndex PartModel::index(int row, int column, const QModelIndex &parent) const
 {
-    // qDebug() << "index " << parent << row << column << mPartTree->messageParts().size();
+    // qDebug() << "index " << parent << row << column << mPartTree->subParts().size();
     if (!parent.isValid()) {
-        if (row < mPartTree->messageParts().size()) {
-            auto part = mPartTree->messageParts().at(row);
+        if (row < mPartTree->subParts().size()) {
+            auto part = mPartTree->subParts().at(row);
             return createIndex(row, column, part.data());
         }
     } else {
         auto part = static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer());
-        auto subPart = part->messageParts().at(row);
+        auto subPart = part->subParts().at(row);
         return createIndex(row, column, subPart.data());
     }
     return QModelIndex();
@@ -103,7 +103,7 @@ QModelIndex PartModel::parent(const QModelIndex &index) const
             parentPart = mPartTree.data();
         }
         int i = 0;
-        for (const auto &p : parentPart->messageParts()) {
+        for (const auto &p : parentPart->subParts()) {
             if (p.data() == part) {
                 row = i;
                 break;
@@ -119,12 +119,12 @@ int PartModel::rowCount(const QModelIndex &parent) const
 {
     // qDebug() << "Row count " << parent;
     if (!parent.isValid()) {
-        // qDebug() << "Row count " << mPartTree->messageParts().size();
-        return mPartTree->messageParts().size();
+        // qDebug() << "Row count " << mPartTree->subParts().size();
+        return mPartTree->subParts().size();
     } else {
         auto part = static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer());
         if (part) {
-            return part->messageParts().size();
+            return part->subParts().size();
         }
     }
     return 0;
@@ -172,16 +172,11 @@ void MessageParser::setMessage(const QVariant &message)
     ObjectTreeSource source(&htmlWriter, &cssHelper);
     MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
-    mPartTree = otp.parseToTree(msg.data()).dynamicCast<MimeTreeParser::MessagePart>();
+    otp.parseObjectTree(msg.data());
+    mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
 
     htmlWriter.begin(QString());
     htmlWriter.queue(cssHelper.htmlHead(false));
-
-    if (mPartTree) {
-        mPartTree->fix();
-        mPartTree->copyContentFrom();
-        mPartTree->html(false);
-    }
 
     htmlWriter.queue(QStringLiteral("</body></html>"));
     htmlWriter.end();
@@ -194,7 +189,7 @@ void MessageParser::setMessage(const QVariant &message)
 QAbstractItemModel *MessageParser::partTree() const
 {
     qDebug() << "Getting partTree";
-    qDebug() << "Row count " << mPartTree->messageParts().size();
+    qDebug() << "Row count " << mPartTree->subParts().size();
     return new PartModel(mPartTree, mEmbeddedPartMap);
 }
 

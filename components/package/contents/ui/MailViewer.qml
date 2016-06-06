@@ -32,5 +32,5 @@ Item {
         id: messageParser
         message: root.message
     }
-    html: messageParser.html
+    html: "XXX"+messageParser.html
 }

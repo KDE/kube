@@ -21,6 +21,8 @@
 
 #include <MimeTreeParser/AttachmentStrategy>
 #include <MimeTreeParser/BodyPartFormatterBaseFactory>
+#include <MimeTreeParser/MessagePart>
+#include <MimeTreeParser/MessagePartRenderer>
 
 class ObjectSourcePrivate
 {
@@ -44,7 +46,7 @@ public:
 
 ObjectTreeSource::ObjectTreeSource(MimeTreeParser::HtmlWriter *writer,
                                    MimeTreeParser::CSSHelperBase *cssHelper)
-        : MimeTreeParser::ObjectTreeSourceIf()
+        : MimeTreeParser::Interface::ObjectTreeSource()
         , d(new ObjectSourcePrivate)
     {
         d->mWriter = writer;
@@ -148,4 +150,10 @@ bool ObjectTreeSource::showExpandQuotesMark() const
 const MimeTreeParser::BodyPartFormatterBaseFactory *ObjectTreeSource::bodyPartFormatterFactory()
 {
     return &(d->mBodyPartFormatterBaseFactory);
+}
+
+MimeTreeParser::Interface::MessagePartRenderer::Ptr ObjectTreeSource::messagePartTheme(MimeTreeParser::Interface::MessagePart::Ptr msgPart)
+{
+    Q_UNUSED(msgPart);
+    return MimeTreeParser::Interface::MessagePartRenderer::Ptr();
 }

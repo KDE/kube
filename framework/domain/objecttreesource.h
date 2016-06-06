@@ -20,12 +20,12 @@
 #ifndef MAILVIEWER_OBJECTTREEEMPTYSOURCE_H
 #define MAILVIEWER_OBJECTTREEEMPTYSOURCE_H
 
-#include <MimeTreeParser/ObjectTreeSourceIf>
+#include <MimeTreeParser/ObjectTreeSource>
 
 class QString;
 
 class ObjectSourcePrivate;
-class ObjectTreeSource : public MimeTreeParser::ObjectTreeSourceIf
+class ObjectTreeSource : public MimeTreeParser::Interface::ObjectTreeSource
 {
 public:
     ObjectTreeSource(MimeTreeParser::HtmlWriter *writer,
@@ -50,6 +50,7 @@ public:
     bool showEmoticons() const Q_DECL_OVERRIDE;
     bool showExpandQuotesMark() const Q_DECL_OVERRIDE;
     const MimeTreeParser::BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE;
+    MimeTreeParser::Interface::MessagePartRendererPtr messagePartTheme(MimeTreeParser::Interface::MessagePartPtr msgPart) Q_DECL_OVERRIDE;
 private:
     ObjectSourcePrivate *const d;
 };
