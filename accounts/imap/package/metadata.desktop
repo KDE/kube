@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Kube Imap Accounts Plugin
+X-KDE-PluginInfo-Name=org.kube.accounts.imap
+Exec=kpackagelauncherqml -a org.kube.accounts.imap
+X-Plasma-MainScript=ui/ImapAccountSettings.qml
+X-KDE-ServiceTypes=KPackage/GenericQML
+Icon=folder
+Type=Service
