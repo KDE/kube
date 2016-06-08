@@ -27,173 +27,23 @@ import org.kube.framework.theme 1.0
 
 Item {
     id: root
+
     property variant currentFolder
-    SystemPalette { id: colorPalette; colorGroup: SystemPalette.Active }
+    property variant accountId
 
-    Rectangle {
+    TreeView {
         anchors.fill: parent
-
-        color: "white"
-        ScrollView {
-            anchors.fill: parent
-            ListView {
-                id: listView
-                anchors.fill: parent
-                delegate: accountDelegate
-                model: KubeFramework.AccountsModel { id: accountsModel }
-            }
+        id: treeView
+        TableViewColumn {
+            title: "Name"
+            role: "name"
         }
-    }
-
-    Component {
-        id: accountDelegate
-
-        Item {
-            id: wrapper
-
-            property var accountId: model.accountId
-
-            width: listView.width
-            height: 30
-
-            Rectangle {
-                id: headerView
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-
-                height: 30
-
-                color: "#333"
-                border.color: Qt.lighter(color, 1.2)
-                Kirigami.Icon {
-                    id: iconItem
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 4
-                    source: model.icon
-                }
-                Text {
-                    anchors.left: iconItem.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 4
-
-                    font.pixelSize: parent.height-4
-                    color: '#fff'
-
-                    text: name
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    if (parent.state != "expanded") {
-                        parent.state = "expanded";
-                    } else {
-                        parent.state = ""
-                    }
-                }
-            }
-
-            Item {
-                id: folderView
-
-                anchors.top: headerView.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-
-                opacity: 0
-                visible: false
-
-                Rectangle {
-                    anchors.fill: parent
-                    TreeView {
-                        anchors.fill: parent
-                        id: treeView
-                        TableViewColumn {
-                            title: "Name"
-                            role: "name"
-                            width: treeView.width - 5
-                        }
-                        model: KubeFramework.FolderListModel { id: folderListModel; accountId: wrapper.accountId }
-                        onCurrentIndexChanged: {
-                            model.fetchMore(currentIndex)
-                            root.currentFolder = model.data(currentIndex, KubeFramework.FolderListModel.DomainObject)
-                        }
-                        backgroundVisible: false
-                        headerVisible: false
-                        style: TreeViewStyle {
-                            activateItemOnSingleClick: true
-                            rowDelegate: Rectangle {
-                                height: Unit.size * 10
-                                color: "transparent"
-                            }
-                            itemDelegate: Rectangle {
-                                radius: 5
-                                border.width: 1
-                                border.color: "lightgrey"
-                                color: styleData.selected ? colorPalette.highlight : colorPalette.button
-                                Kirigami.Icon {
-                                    id: iconItem
-                                    anchors {
-                                        verticalCenter: parent.verticalCenter
-                                        left: parent.left
-                                        leftMargin: Unit.size * 3
-                                    }
-                                    source: model.icon
-                                }
-                                Label {
-                                    anchors {
-                                        verticalCenter: parent.verticalCenter
-                                        left: iconItem.right
-                                        leftMargin: Unit.size * 3
-                                    }
-                                    renderType: Text.NativeRendering
-                                    text: styleData.value
-                                    font.pixelSize: 16
-                                    font.bold: true
-                                    color: styleData.selected ? colorPalette.highlightedText : colorPalette.text
-                                }
-                            }
-                            branchDelegate: Item {
-                                width: 16
-                                height: 16
-                                Text {
-                                    visible: styleData.column === 0 && styleData.hasChildren
-                                    text: styleData.isExpanded ? "\u25bc" : "\u25b6"
-                                    color: !control.activeFocus || styleData.selected ? styleData.textColor : "#666"
-                                    font.pointSize: 10
-                                    renderType: Text.NativeRendering
-                                    anchors.centerIn: parent
-                                    anchors.verticalCenterOffset: styleData.isExpanded ? 2 : 0
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            states: [
-                State {
-                    name: "expanded"
-
-                    PropertyChanges { target: wrapper; height: listView.height - accountsModel.rowCount() * 30 }
-                    PropertyChanges { target: folderView; opacity: 1; visible: true }
-                    PropertyChanges { target: wrapper.ListView.view; contentY: wrapper.y; interactive: false }
-                }
-            ]
-
-            transitions: [
-                Transition {
-                    NumberAnimation {
-                        duration: 150;
-                        properties: "height,width,anchors.rightMargin,anchors.topMargin,opacity,contentY"
-                    }
-                }
-            ]
+        model: KubeFramework.FolderListModel { id: folderListModel} //; accountId: wrapper.accountId }
+        onCurrentIndexChanged: {
+            model.fetchMore(currentIndex)
+            root.currentFolder = model.data(currentIndex, KubeFramework.FolderListModel.DomainObject)
         }
+        alternatingRowColors: false
+        headerVisible: false
     }
-
 }
