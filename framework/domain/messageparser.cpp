@@ -180,12 +180,6 @@ void MessageParser::setMessage(const QVariant &message)
     otp.parseObjectTree(msg.data());
     mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
 
-    htmlWriter.begin(QString());
-    htmlWriter.queue(cssHelper.htmlHead(false));
-
-    htmlWriter.queue(QStringLiteral("</body></html>"));
-    htmlWriter.end();
-
     mEmbeddedPartMap = htmlWriter.embeddedParts();
     mHtml = htmlWriter.html();
     emit htmlChanged();
