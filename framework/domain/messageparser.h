@@ -72,7 +72,8 @@ public:
         IsEncrypted,
         IsAttachment,
         HasContent,
-        Type
+        Type,
+        IsHidden
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;

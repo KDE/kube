@@ -39,10 +39,12 @@ QHash<int, QByteArray> PartModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[Text] = "text";
     roles[IsHtml] = "isHtml";
+    roles[IsHidden] = "isHidden";
     roles[IsEncrypted] = "isEncrypted";
     roles[IsAttachment] = "isAttachment";
     roles[HasContent] = "hasContent";
     roles[Type] = "type";
+    roles[IsHidden] = "isHidden";
     return roles;
 }
 
@@ -87,6 +89,9 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 return !part->property("htmlContent").toString().isEmpty();
             case Type:
                 return part->metaObject()->className();
+            case IsHidden:
+                return part->property("isHidden").toBool();
+
         }
     }
     return QVariant();
