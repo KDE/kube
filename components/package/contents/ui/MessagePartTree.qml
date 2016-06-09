@@ -15,7 +15,7 @@ Item {
             model: messageParser.partTree
             delegate: Rectangle {
                 id: delegateRect
-                // visible: !model.isAttachment
+                visible: !model.isHidden
                 width: childrenRect.width
                 height: childrenRect.height
                 // color: Qt.rgba(Math.random(),Math.random(),Math.random(),1)
