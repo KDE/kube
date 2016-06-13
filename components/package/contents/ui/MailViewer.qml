@@ -9,7 +9,8 @@ Item {
     id: root
     property variant message;
     property string html;
-    property int desiredHeight: topPartLoader.height+450;
+    property bool enablePartTreeView : false
+    property int desiredHeight: enablePartTreeView ? topPartLoader.height+450 : topPartLoader.height;
 
     Rectangle {
         id: rootRectangle
@@ -29,6 +30,7 @@ Item {
                     height: topPartLoader.desiredHeight
                 }
                 TreeView {
+                    visible: enablePartTreeView
                     width: 500
                     height: 400
                     TableViewColumn {
