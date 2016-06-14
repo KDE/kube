@@ -87,7 +87,7 @@ ApplicationWindow {
             right: app.right
         }
 
-        height: Kirigami.Units.iconSizes.medium
+        height: Kirigami.Units.iconSizes.medium + Kirigami.Units.smallSpacing * 2
         //width: app.width
 
         Row {
