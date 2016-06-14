@@ -115,7 +115,7 @@ Rectangle {
                                             accountDetails.source = accountFactory.uiPath
                                             accountDetails.item.accountId = accountFactory.accountId
                                             accountDetails.item.icon = accountFactory.icon
-                                            accountDetails.item.accountNam = accountFactory.name
+                                            accountDetails.item.accountName = accountFactory.name
                                         }
                                     }
                                 }
