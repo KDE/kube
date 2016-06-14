@@ -35,6 +35,7 @@ ApplicationWindow {
 
     visible: true
 
+    //BEGIN Actions
     KubeAction.Context {
         id: maillistcontext
         property variant mail
@@ -78,7 +79,9 @@ ApplicationWindow {
         actionId: "org.kde.kube.actions.synchronize"
         context: folderListContext
     }
+    //END Actions
 
+    //BEGIN Main content
     SplitView {
         anchors {
             top: toolbar.bottom
@@ -93,6 +96,7 @@ ApplicationWindow {
             width: Kirigami.Units.gridUnit * 10
             Layout.maximumWidth: app.width * 0.25
             Layout.minimumWidth: Kirigami.Units.gridUnit * 5
+            focus: true
         }
 
         KubeComponents.MailListView  {
@@ -110,7 +114,9 @@ ApplicationWindow {
             Layout.fillWidth: true
         }
     }
+    //END Main content
 
+    //BEGIN Toolbar
     ToolBar {
         id: toolbar
 
@@ -127,6 +133,7 @@ ApplicationWindow {
 
             spacing: 1 //to account for the SplitView borders
 
+            //BEGIN Folderlist section
             RowLayout {
                 height: parent.height
                 width: folderListView.width - 5 //to adjust for the toolbar spacing
@@ -146,14 +153,15 @@ ApplicationWindow {
                     }
                 }
             }
+            //END Folderlist section
 
+            //BEGIN MailList section
             Item {
 
                 height: parent.height
                 width: mailListView.width
 
                 Row {
-
                     anchors.centerIn: parent
 
                     spacing: Kirigami.Units.smallSpacing
@@ -185,7 +193,9 @@ ApplicationWindow {
                     }
                 }
             }
+            //END MailList section
 
+            //BEGIN MailView sections
             RowLayout{
 
                 height: parent.height
@@ -285,6 +295,8 @@ ApplicationWindow {
                     }
                 }
             }
+            //END MailView section
         }
     }
+    //END ToolBar
 }
