@@ -79,26 +79,57 @@ ApplicationWindow {
         context: folderListContext
     }
 
-    ToolBar {
-        id: toolbar
+    SplitView {
         anchors {
-            top: app.top
+            top: toolbar.bottom
             left: app.left
-            right: app.right
         }
 
+        height: app.height - toolbar.height
+        width: app.width
+
+        KubeComponents.FolderListView {
+            id: folderListView
+            width: Kirigami.Units.gridUnit * 10
+            Layout.maximumWidth: app.width * 0.25
+            Layout.minimumWidth: Kirigami.Units.gridUnit * 5
+        }
+
+        KubeComponents.MailListView  {
+            id: mailListView
+            parentFolder: folderListView.currentFolder
+            width: Kirigami.Units.gridUnit * 20
+            Layout.maximumWidth: app.width * 0.4
+            Layout.minimumWidth: Kirigami.Units.gridUnit * 10
+            focus: true
+        }
+
+        KubeComponents.SingleMailView {
+            id: mailView
+            mail: mailListView.currentMail
+            Layout.fillWidth: true
+        }
+    }
+
+    ToolBar {
+        id: toolbar
+
+        anchors {
+            top: app.top
+        }
+
+        width: app.width
         height: Kirigami.Units.iconSizes.medium + Kirigami.Units.smallSpacing * 2
-        //width: app.width
 
         Row {
-            anchors.fill: parent
+            width: parent.width
+            height: parent.height
 
             spacing: 1 //to account for the SplitView borders
 
             RowLayout {
                 height: parent.height
                 width: folderListView.width - 5 //to adjust for the toolbar spacing
-                clip: true
 
                 KubeComponents.AccountSwitcher {
                     Layout.fillHeight: true
@@ -106,8 +137,6 @@ ApplicationWindow {
                 }
 
                 ToolButton {
-                    height: toolbar.height
-                    width: toolbar.width
                     iconName: "view-refresh"
                     text: "Sync"
                     enabled: syncAction.ready
@@ -119,16 +148,17 @@ ApplicationWindow {
             }
 
             Item {
+
                 height: parent.height
                 width: mailListView.width
-                clip: true
 
-                RowLayout {
+                Row {
+
                     anchors.centerIn: parent
 
+                    spacing: Kirigami.Units.smallSpacing
+
                     ToolButton {
-                        height: toolbar.height
-                        width: toolbar.width
                         iconName: "mail-mark-unread"
                         text: "Mark As Read"
                         enabled: markAsReadAction.ready
@@ -138,8 +168,6 @@ ApplicationWindow {
                     }
 
                     ToolButton {
-                        height: toolbar.height
-                        width: toolbar.width
                         iconName: "mail-mark-important"
                         text: "Mark Important"
                         enabled: false
@@ -148,8 +176,6 @@ ApplicationWindow {
                     }
 
                     ToolButton {
-                        height: toolbar.height
-                        width: toolbar.width
                         iconName: "edit-delete"
                         text: "Delete Mail"
                         enabled: deleteAction.ready
@@ -161,9 +187,9 @@ ApplicationWindow {
             }
 
             RowLayout{
+
                 height: parent.height
-                width: mailView.width - 5 //to adjust for the toolbar spacing
-                clip: true
+                width: mailView.width
 
                 Component {
                     id: composerComponent
@@ -191,7 +217,6 @@ ApplicationWindow {
                     function isReady(context) {
                         return context.mail && context.isDraft;
                     }
-
                     function handler(context) {
                         var component= composerComponent.createObject(app, {"draftMessage": context.mail})
                         component.loadMessage(context.mail, true)
@@ -201,9 +226,6 @@ ApplicationWindow {
                 ToolButton {
                     id: newMailButton
 
-                    height: toolbar.height
-                    width: toolbar.width
-
                     iconName: "mail-message-new"
                     text: "Compose"
                     onClicked: {
@@ -212,8 +234,6 @@ ApplicationWindow {
                 }
 
                 ToolButton {
-                    height: toolbar.height
-                    width: toolbar.width
                     iconName: "mail-message-reply"
                     text: "Reply"
                     enabled: replyAction.ready
@@ -222,9 +242,8 @@ ApplicationWindow {
                     }
                 }
 
+                /*
                 ToolButton {
-                    height: toolbar.height
-                    width: toolbar.width
                     iconName: "mail-message-edit"
                     text: "Edit"
                     enabled: editAction.ready
@@ -232,6 +251,7 @@ ApplicationWindow {
                         editAction.execute()
                     }
                 }
+                */
 
                 Item {
                     Layout.fillWidth: true
@@ -240,7 +260,7 @@ ApplicationWindow {
                 TextField {
                     id: searchBar
 
-                    Layout.minimumWidth: Kirigami.Units.gridUnit * 25
+                    Layout.minimumWidth: Kirigami.Units.gridUnit * 10
                     height: toolbar.height
 
                     placeholderText: "Search..."
@@ -248,9 +268,6 @@ ApplicationWindow {
 
                 ToolButton {
                     id: settingsButton
-
-                    height: toolbar.height
-                    width: toolbar.width
 
                     iconName: "application-menu"
                     text: "Settings"
@@ -270,39 +287,4 @@ ApplicationWindow {
             }
         }
     }
-
-    SplitView {
-        anchors {
-            top: toolbar.bottom
-            left: app.left
-        }
-
-        height: app.height - toolbar.height
-        width: app.width
-
-        KubeComponents.FolderListView {
-            id: folderListView
-            width: Unit.size * 55
-            Layout.maximumWidth: Unit.size * 150
-            Layout.minimumWidth: Unit.size * 30
-        }
-
-        KubeComponents.MailListView  {
-            id: mailListView
-            parentFolder: folderListView.currentFolder
-            width: Unit.size * 80
-            Layout.maximumWidth: Unit.size * 250
-            Layout.minimumWidth: Unit.size * 50
-            focus: true
-        }
-
-        KubeComponents.SingleMailView {
-            id: mailView
-            mail: mailListView.currentMail
-            Layout.fillWidth: true
-        }
-
-    }
-
 }
-
