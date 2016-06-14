@@ -29,3 +29,6 @@ qt5_use_modules(${PROJECT_NAME} Gui Quick Widgets)
 target_link_libraries(${PROJECT_NAME} KF5::Package)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+install(PROGRAMS org.kde.kube.desktop DESTINATION ${KDE_INSTALL_APPDIR} )
+install(FILES org.kde.kube.appdata.xml DESTINATION ${KDE_INSTALL_DATAROOTDIR}/appdata/)

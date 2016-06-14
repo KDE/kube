@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop">
+  <id>org.kde.kube.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <name>Kube</name>
+  <summary>E-mail client</summary>
+  <description>
+    <p>A modern groupware client based on QtQuick and Sink.
+
+    The code can be found at: git://anongit.kde.org/kube
+
+    The documentation can be found at: http://api.kde.org/doc/kube/.</p>
+  </description>
+  <url type="homepage">https://phabricator.kde.org/project/view/43/</url>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kube</url>
+  <screenshots>
+  </screenshots>
+  <project_group>KDE</project_group>
+  <provides>
+    <binary>kube-mail</binary>
+  </provides>
+</component>
