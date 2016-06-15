@@ -21,7 +21,130 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework.domain 1.0 as KubeFramework
 
-ComboBox {
-    model: KubeFramework.AccountsModel { }
-    textRole: "name"
+/*
+ C omboBox {     **  *
+ model: KubeFramework.AccountsModel { }
+ textRole: "name"
+ } */
+
+Button {
+    id: accountSwitcher
+
+    Layout.fillWidth: true
+    Layout.fillHeight: true
+
+    text: "Account Switcher"
+
+    Rectangle {
+        anchors {
+            top: parent.bottom
+            left: parent.left
+        }
+
+        height: 300
+        width: 600
+
+        color: "lightgrey" //FIXME create a propper dialog thingy
+        clip: true
+
+        Item {
+            id: footer
+
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+                margins: Kirigami.Units.largeSpacing
+            }
+
+            height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
+            width: listView.width
+
+            Button {
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    right: parent.right
+                }
+
+                text: "Create new Account"
+            }
+
+            Button {
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                }
+
+                iconName: "view-refresh"
+                text: "Sync"
+                enabled: syncAction.ready
+
+                onClicked: {
+                    syncAction.execute()
+                }
+            }
+        }
+
+        ListView {
+            id: listView
+
+            anchors {
+                top: parent.top
+                bottom: footer.top
+                left: parent.left
+                right: parent.right
+            }
+
+            clip: true
+
+            model: KubeFramework.AccountsModel {  }
+
+            delegate: Kirigami.AbstractListItem {
+                id: accountDelegate
+
+                enabled: true
+                supportsMouseEvents: true
+
+                contentItem: Item {
+                    height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
+                    width: listView.width
+
+                    RowLayout {
+                        anchors {
+                            left: parent.left
+                            margins: Kirigami.Units.smallSpacing
+                        }
+
+                        Layout.fillHeight: true
+
+
+                        KubeFramework.AccountFactory {
+                            id: accountFactory
+                            accountId: model.accountId
+                        }
+
+                        Kirigami.Icon {
+                            source: accountFactory.icon
+                        }
+
+                        Label {
+                            text: model.name === "" ? accountFactory.name : model.name
+                        }
+                    }
+                    Button {
+
+                        anchors {
+                            right: parent.right
+                            margins: Kirigami.Units.largeSpacing
+                        }
+
+                        visible: accountDelegate.containsMouse
+                        text: "edit"
+                    }
+                }
+            }
+        }
+    }
 }

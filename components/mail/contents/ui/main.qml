@@ -157,21 +157,65 @@ ApplicationWindow {
                         width: 600
 
                         color: "lightgrey" //FIXME create a propper dialog thingy
-
                         clip: true
+
+                        Item {
+                            id: footer
+
+                            anchors {
+                                bottom: parent.bottom
+                                left: parent.left
+                                right: parent.right
+                                margins: Kirigami.Units.largeSpacing
+                            }
+
+                                height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
+                                width: listView.width
+
+                                Button {
+
+                                    anchors {
+                                        verticalCenter: parent.verticalCenter
+                                        right: parent.right
+                                    }
+
+                                    text: "Create new Account"
+                                }
+
+                                Button {
+
+                                    anchors {
+                                        verticalCenter: parent.verticalCenter
+                                        left: parent.left
+                                    }
+
+                                    iconName: "view-refresh"
+                                    text: "Sync"
+                                    enabled: syncAction.ready
+
+                                    onClicked: {
+                                        syncAction.execute()
+                                    }
+                                }
+                            }
 
                         ListView {
                             id: listView
 
-                            anchors.fill: parent
-
-                            footer: Button {
-                                text: "Create new Account"
+                            anchors {
+                                top: parent.top
+                                bottom: footer.top
+                                left: parent.left
+                                right: parent.right
                             }
+
+                            clip: true
 
                             model: KubeFramework.AccountsModel {  }
 
                             delegate: Kirigami.AbstractListItem {
+                                id: accountDelegate
+
                                 enabled: true
                                 supportsMouseEvents: true
 
@@ -200,8 +244,6 @@ ApplicationWindow {
                                         Label {
                                             text: model.name === "" ? accountFactory.name : model.name
                                         }
-
-
                                     }
                                     Button {
 
@@ -210,34 +252,18 @@ ApplicationWindow {
                                             margins: Kirigami.Units.largeSpacing
                                         }
 
-
+                                        visible: accountDelegate.containsMouse
                                         text: "edit"
                                     }
                                 }
                             }
                         }
-
                     }
-
                 }
 
                 /*
-                 *               KubeComponents.AccountSwitcher {
-                 *                   Layout.fillHeight: true
-                 *                   Layout.fillWidth: true
-            }
-
-
-            ToolButton {
-            iconName: "view-refresh"
-            text: "Sync"
-            enabled: syncAction.ready
-
-            onClicked: {
-            syncAction.execute()
-            }
-            }
-            */
+                 *
+                 */
             }
             //END Folderlist section
 
