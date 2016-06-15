@@ -22,6 +22,7 @@ import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.settings 1.0 as KubeSettings
+import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.theme 1.0
 import org.kube.components 1.0 as KubeComponents
 
@@ -138,20 +139,105 @@ ApplicationWindow {
                 height: parent.height
                 width: folderListView.width - 5 //to adjust for the toolbar spacing
 
-                KubeComponents.AccountSwitcher {
-                    Layout.fillHeight: true
+                Button {
+                    id: accountSwitcher
+
                     Layout.fillWidth: true
-                }
+                    Layout.fillHeight: true
 
-                ToolButton {
-                    iconName: "view-refresh"
-                    text: "Sync"
-                    enabled: syncAction.ready
+                    text: "Account Switcher"
 
-                    onClicked: {
-                        syncAction.execute()
+                    Rectangle {
+                        anchors {
+                            top: parent.bottom
+                            left: parent.left
+                        }
+
+                        height: 300
+                        width: 600
+
+                        color: "lightgrey" //FIXME create a propper dialog thingy
+
+                        clip: true
+
+                        ListView {
+                            id: listView
+
+                            anchors.fill: parent
+
+                            footer: Button {
+                                text: "Create new Account"
+                            }
+
+                            model: KubeFramework.AccountsModel {  }
+
+                            delegate: Kirigami.AbstractListItem {
+                                enabled: true
+                                supportsMouseEvents: true
+
+                                contentItem: Item {
+                                    height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
+                                    width: listView.width
+
+                                    RowLayout {
+                                        anchors {
+                                            left: parent.left
+                                            margins: Kirigami.Units.smallSpacing
+                                        }
+
+                                        Layout.fillHeight: true
+
+
+                                        KubeFramework.AccountFactory {
+                                            id: accountFactory
+                                            accountId: model.accountId
+                                        }
+
+                                        Kirigami.Icon {
+                                            source: accountFactory.icon
+                                        }
+
+                                        Label {
+                                            text: model.name === "" ? accountFactory.name : model.name
+                                        }
+
+
+                                    }
+                                    Button {
+
+                                        anchors {
+                                            right: parent.right
+                                            margins: Kirigami.Units.largeSpacing
+                                        }
+
+
+                                        text: "edit"
+                                    }
+                                }
+                            }
+                        }
+
                     }
+
                 }
+
+                /*
+                 *               KubeComponents.AccountSwitcher {
+                 *                   Layout.fillHeight: true
+                 *                   Layout.fillWidth: true
+            }
+
+
+            ToolButton {
+            iconName: "view-refresh"
+            text: "Sync"
+            enabled: syncAction.ready
+
+            onClicked: {
+            syncAction.execute()
+            }
+            }
+            */
             }
             //END Folderlist section
 
@@ -253,15 +339,15 @@ ApplicationWindow {
                 }
 
                 /*
-                ToolButton {
-                    iconName: "mail-message-edit"
-                    text: "Edit"
-                    enabled: editAction.ready
-                    onClicked: {
-                        editAction.execute()
-                    }
-                }
-                */
+                 *               ToolButton {
+                 *                   iconName: "mail-message-edit"
+                 *                   text: "Edit"
+                 *                   enabled: editAction.ready
+                 *                   onClicked: {
+                 *                       editAction.execute()
+            }
+            }
+            */
 
                 Item {
                     Layout.fillWidth: true
