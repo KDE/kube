@@ -37,7 +37,13 @@ Button {
 
     text: "Account Switcher"
 
+    onClicked: {
+        dialog.visible = dialog.visible ? false : true
+    }
+
     Rectangle {
+        id: dialog
+
         anchors {
             top: parent.bottom
             left: parent.left
@@ -48,6 +54,7 @@ Button {
 
         color: "lightgrey" //FIXME create a propper dialog thingy
         clip: true
+        visible: false
 
         Item {
             id: footer
