@@ -130,7 +130,6 @@ Button {
 
                         Layout.fillHeight: true
 
-
                         KubeFramework.AccountFactory {
                             id: accountFactory
                             accountId: model.accountId
@@ -151,6 +150,7 @@ Button {
                             margins: Kirigami.Units.largeSpacing
                         }
 
+                        opacity: hovered ? 1 : 0.7
                         visible: accountDelegate.containsMouse
                         text: "edit"
                     }
