@@ -53,6 +53,7 @@ Button {
         width: 600
 
         color: "lightgrey" //FIXME create a propper dialog thingy
+        radius: 3
         clip: true
         visible: false
 
@@ -104,6 +105,7 @@ Button {
                 bottom: footer.top
                 left: parent.left
                 right: parent.right
+                margins: Kirigami.Units.smallSpacing
             }
 
             clip: true
