@@ -59,7 +59,7 @@ void ImapSettings::setAccountIdentifier(const QByteArray &id)
             emit changed();
         }).exec();
 
-    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(id) + Sink::Query::CapabilityFilter("storage"))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(id) + Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::storage))
         .then<void, Sink::ApplicationDomain::SinkResource>([this](const Sink::ApplicationDomain::SinkResource &resource) {
             mIdentifier = resource.identifier();
             mImapServer = resource.getProperty("server").toString();
@@ -71,7 +71,7 @@ void ImapSettings::setAccountIdentifier(const QByteArray &id)
             qWarning() << "Failed to find the imap resource: " << errorMessage;
         }).exec();
 
-    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(id) + Sink::Query::CapabilityFilter("transport"))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(id) + Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport))
         .then<void, Sink::ApplicationDomain::SinkResource>([this](const Sink::ApplicationDomain::SinkResource &resource) {
             mMailtransportIdentifier = resource.identifier();
             mSmtpServer = resource.getProperty("server").toString();

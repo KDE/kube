@@ -85,7 +85,7 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
         qWarning() << "Sending a mail: ";
 
         Sink::Query query;
-        query += Sink::Query::CapabilityFilter("transport");
+        query += Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport);
         query += Sink::Query::AccountFilter(accountId);
         Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(query)
             .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([=](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
@@ -120,7 +120,7 @@ static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
 
         if (existingMail.identifier().isEmpty()) {
             Sink::Query query;
-            query += Sink::Query::CapabilityFilter("drafts");
+            query += Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::drafts);
             query += Sink::Query::AccountFilter(accountId);
             return Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(query)
                 .then<void, KAsync::Job<void>, Sink::ApplicationDomain::SinkResource>([=](const Sink::ApplicationDomain::SinkResource &resource) -> KAsync::Job<void> {
