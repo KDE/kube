@@ -105,6 +105,10 @@ Rectangle {
                             width: pageRoot.width * 0.4
 
                             text: "kolabnow"
+
+                            onClicked: {
+                                stack.push(kolabnow)
+                            }
                         }
 
                         Button {
@@ -138,7 +142,44 @@ Rectangle {
                     width: dialog.width
                 }
             }
-        }
 
+            Component {
+                id: kolabnow
+
+                Item {
+                    id: pageRoot
+
+                    height: dialog.height
+                    width: dialog.width
+
+                    Column {
+                        anchors.centerIn: parent
+
+                        spacing: Kirigami.Units.largeSpacing
+
+                        TextField {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: pageRoot.width * 0.4
+
+                            placeholderText: "Title of Account (e.g. work, private, kolabnow...)"
+                        }
+
+                        TextField {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: pageRoot.width * 0.4
+
+                            placeholderText: "Email (e.g. jens.moep@kolabnow.com)"
+                        }
+
+                        TextField {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: pageRoot.width * 0.4
+
+                            placeholderText: "Password"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
