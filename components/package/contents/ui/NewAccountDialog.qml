@@ -67,6 +67,7 @@ Rectangle {
                     verticalCenter: parent.verticalCenter
                 }
 
+                visible: stack.depth > 1
                 iconName: "go-previous"
 
                 onClicked: stack.pop()
