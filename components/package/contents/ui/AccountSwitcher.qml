@@ -22,12 +22,7 @@ import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
-
-/*
- C omboBox {     **  *
- model: KubeFramework.AccountsModel { }
- textRole: "name"
- } */
+import org.kube.components 1.0 as KubeComponents
 
 Button {
     id: accountSwitcher
@@ -78,6 +73,18 @@ Button {
                 }
 
                 text: "Create new Account"
+
+                  onClicked: {
+                        newAccountComponent.createObject(app)
+                    }
+
+                    Component {
+                        id: newAccountComponent
+                        KubeComponents.NewAccountDialog {
+                            id: settings
+                            anchors.fill: parent
+                        }
+                    }
             }
 
             Button {

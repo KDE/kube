@@ -6,3 +6,4 @@ FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml
 Settings 1.0 Settings.qml
 AccountSwitcher 1.0 AccountSwitcher.qml
+NewAccountDialog 1.0 NewAccountDialog.qml
