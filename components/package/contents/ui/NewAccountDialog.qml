@@ -119,7 +119,7 @@ Rectangle {
                             text: "imap"
 
                             onClicked: {
-                                stack.push(test)
+                                stack.push(imap)
                             }
                         }
 
@@ -128,16 +128,31 @@ Rectangle {
                              width: pageRoot.width * 0.4
 
                             text: "maildir"
+
+                            onClicked: {
+                                stack.push(maildir)
+                            }
                         }
                     }
                 }
             }
 
             Component {
-                id: test
+                id: imap
 
                 Rectangle {
                     color: "green"
+
+                    height: dialog.height
+                    width: dialog.width
+                }
+            }
+
+            Component {
+                id: maildir
+
+                Rectangle {
+                    color: "blue"
 
                     height: dialog.height
                     width: dialog.width
