@@ -74,17 +74,17 @@ Button {
 
                 text: "Create new Account"
 
-                  onClicked: {
-                        newAccountComponent.createObject(app)
-                    }
+                onClicked: {
+                    newAccountComponent.createObject(app)
+                }
 
-                    Component {
-                        id: newAccountComponent
-                        KubeComponents.NewAccountDialog {
-                            id: settings
-                            anchors.fill: parent
-                        }
+                Component {
+                    id: newAccountComponent
+                    KubeComponents.NewAccountDialog {
+                        id: settings
+                        anchors.fill: parent
                     }
+                }
             }
 
             Button {
@@ -160,7 +160,20 @@ Button {
                         opacity: hovered ? 1 : 0.7
                         visible: accountDelegate.containsMouse
                         text: "edit"
+
+                        onClicked: {
+                            editAccountComponent.createObject(app)
+                        }
                     }
+                }
+            }
+
+            Component {
+                id: editAccountComponent
+
+                KubeComponents.EditAccountDialog {
+                    id: editAccount
+                    anchors.fill: parent
                 }
             }
         }
