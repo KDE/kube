@@ -31,7 +31,7 @@ Rectangle {
     property variant uiSource
     property variant accountId
 
-    color: ColorPalette.border
+    color: Kirigami.Theme.textColor
     opacity: 0.9
 
     MouseArea {
@@ -48,7 +48,7 @@ Rectangle {
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: ColorPalette.background
+        color: Kirigami.Theme.backgroundColor
 
         MouseArea {
             anchors.fill: parent
@@ -60,7 +60,5 @@ Rectangle {
             source: root.uiSource
              onLoaded: item.accountId = root.accountId
         }
-
-        Component.onCompleted: console.log(uiSource)
     }
 }
