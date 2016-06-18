@@ -29,6 +29,7 @@ Rectangle {
     id: root
 
     property variant uiSource
+    property variant accountId
 
     color: ColorPalette.border
     opacity: 0.9
@@ -54,10 +55,10 @@ Rectangle {
         }
 
         Loader {
-
             anchors.fill: parent
 
-            source: uiSource
+            source: root.uiSource
+             onLoaded: item.accountId = root.accountId
         }
 
         Component.onCompleted: console.log(uiSource)
