@@ -28,8 +28,9 @@ import org.kube.framework.theme 1.0
 Rectangle {
     id: root
 
-    color: ColorPalette.border
+    property variant uiSource
 
+    color: ColorPalette.border
     opacity: 0.9
 
     MouseArea {
@@ -50,6 +51,10 @@ Rectangle {
 
         MouseArea {
             anchors.fill: parent
+        }
+
+        Loader {
+            source: uiSource
         }
     }
 }

@@ -165,16 +165,20 @@ Button {
                         onClicked: {
                             editAccountComponent.createObject(app)
                         }
+
+                        Component {
+                            id: editAccountComponent
+
+                            KubeComponents.EditAccountDialog {
+                                id: editAccount
+
+                                anchors.fill: parent
+
+                                //accountId: accountFactory.accountId
+                                uiSource: accountFactory.uiPath
+                            }
+                        }
                     }
-                }
-            }
-
-            Component {
-                id: editAccountComponent
-
-                KubeComponents.EditAccountDialog {
-                    id: editAccount
-                    anchors.fill: parent
                 }
             }
         }
