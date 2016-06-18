@@ -36,6 +36,11 @@ Item {
 
     anchors.fill: parent
 
+    MaildirAccount.MaildirSettings {
+            id: maildirSettings
+            accountIdentifier: accountId
+    }
+
     GridLayout {
         id: gridLayout
 
@@ -159,11 +164,6 @@ Item {
                 opacity: 0.2
                 color: server.acceptableInput ? "green" : "yellow"
             }
-        }
-
-        MaildirAccount.MaildirSettings {
-            id: maildirSettings
-            accountIdentifier: accountId
         }
 
         Button {
