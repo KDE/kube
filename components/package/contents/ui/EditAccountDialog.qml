@@ -54,7 +54,12 @@ Rectangle {
         }
 
         Loader {
+
+            anchors.fill: parent
+
             source: uiSource
         }
+
+        Component.onCompleted: console.log(uiSource)
     }
 }

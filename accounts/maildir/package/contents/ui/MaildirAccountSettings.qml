@@ -20,23 +20,31 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0
 
+import org.kde.kirigami 1.0 as Kirigami
+
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.theme 1.0
 import org.kube.accounts.maildir 1.0 as MaildirAccount
 
 
-Rectangle {
+Item {
     id: root
+
     property string accountId
     property string accountName
     property string icon
 
-    color: ColorPalette.background
+    anchors.fill: parent
 
     GridLayout {
         id: gridLayout
+
+        anchors {
+            fill: parent
+            margins: Kirigami.Units.largeSpacing
+        }
+
         columns: 2
-        Layout.fillWidth: true
 
         Text {
             Layout.columnSpan: 2
