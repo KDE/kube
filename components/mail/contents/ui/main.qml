@@ -159,6 +159,7 @@ ApplicationWindow {
                         iconName: "mail-mark-unread"
                         text: "Mark As Read"
                         enabled: markAsReadAction.ready
+                        tooltip: "mark mail as read"
                         onClicked: {
                             markAsReadAction.execute()
                         }
@@ -168,6 +169,7 @@ ApplicationWindow {
                         iconName: "mail-mark-important"
                         text: "Mark Important"
                         enabled: false
+                        tooltip: "mark mail as important"
                         onClicked: {
                         }
                     }
@@ -176,6 +178,7 @@ ApplicationWindow {
                         iconName: "edit-delete"
                         text: "Delete Mail"
                         enabled: deleteAction.ready
+                        tooltip: "delete email"
                         onClicked: {
                             deleteAction.execute()
                         }
@@ -227,11 +230,12 @@ ApplicationWindow {
 
                     iconName: "mail-message-new"
                     text: "Compose"
+                    tooltip: "compose new email"
                     onClicked: {
                         composerComponent.createObject(app)
                     }
                 }
-
+/*
                 ToolButton {
                     iconName: "mail-message-reply"
                     text: "Reply"
@@ -241,7 +245,7 @@ ApplicationWindow {
                     }
                 }
 
-                /*
+
                  *               ToolButton {
                  *                   iconName: "mail-message-edit"
                  *                   text: "Edit"

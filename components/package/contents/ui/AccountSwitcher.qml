@@ -31,6 +31,7 @@ Button {
     Layout.fillHeight: true
 
     text: "Account Switcher"
+    tooltip: "switch accounts, edit them and add new ones"
 
     onClicked: {
         dialog.visible = dialog.visible ? false : true
