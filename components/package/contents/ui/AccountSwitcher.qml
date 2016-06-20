@@ -48,7 +48,7 @@ Button {
         height: 300
         width: 600
 
-        color: "lightgrey" //FIXME create a propper dialog thingy
+        color: Kirigami.Theme.textColor
         radius: 3
         clip: true
         visible: false
