@@ -30,10 +30,9 @@ Item {
 
 
     Rectangle {
-
         anchors.fill: parent
 
-        color: "black"//Kirigami.Theme.textColor
+        color: "black"
         opacity: 0.6
     }
 

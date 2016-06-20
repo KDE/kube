@@ -25,14 +25,20 @@ import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.theme 1.0
 
-Rectangle {
+Item {
     id: root
 
     property variant uiSource
     property variant accountId
 
-    color: Kirigami.Theme.textColor
-    opacity: 0.9
+    Rectangle {
+        id: background
+
+        anchors.fill: parent
+
+        color: "black"
+        opacity: 0.9
+    }
 
     MouseArea {
         anchors.fill: parent
