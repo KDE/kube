@@ -20,6 +20,8 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0
 
+import org.kde.kirigami 1.0 as Kirigami
+
 import org.kube.framework.domain 1.0 as KubeFramework
 
 
@@ -54,7 +56,7 @@ Item {
 
             columns: 2
 
-            Label {
+            Kirigami.Label {
                 text: "From"
             }
 
@@ -70,7 +72,7 @@ Item {
                 }
             }
 
-            Label {
+            Kirigami.Label {
                 text: "To"
             }
 
@@ -112,7 +114,7 @@ Item {
                 }
             }
 
-            Label {
+            Kirigami.Label {
                 text: "Cc"
 
                 visible: cc.visible
@@ -132,7 +134,7 @@ Item {
                 }
             }
 
-            Label {
+            Kirigami.Label {
                 text: "Bcc"
 
                 visible: bcc.visible
@@ -209,7 +211,7 @@ Item {
 
                 model: composer.attachments
 
-                delegate: Label {
+                delegate: Kirigami.Label {
                     id: name
 
                     text: modelData

@@ -19,7 +19,7 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
-import org.kube.framework.theme 1.0
+import org.kde.kirigami 1.0 as Kirigami
 
 Rectangle {
     id: root
@@ -28,7 +28,7 @@ Rectangle {
         composer.loadMessage(message, loadAsDraft);
     }
 
-    color: ColorPalette.border
+    color: Kirigami.Theme.textColor
 
     opacity: 0.9
 
@@ -46,7 +46,7 @@ Rectangle {
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: ColorPalette.background
+        color: Kirigami.Theme.backgroundColor
 
         MouseArea {
             anchors.fill: parent
@@ -56,7 +56,7 @@ Rectangle {
 
             anchors {
                 fill: parent
-                margins: Unit.size * 3
+                margins: Kirigami.Units.largeSpacing
             }
 
             Composer {
