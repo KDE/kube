@@ -21,16 +21,21 @@ import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
 
-Rectangle {
+Item {
     id: root
 
     function loadMessage(message, loadAsDraft) {
         composer.loadMessage(message, loadAsDraft);
     }
 
-    color: Kirigami.Theme.textColor
 
-    opacity: 0.9
+    Rectangle {
+
+        anchors.fill: parent
+
+        color: "black"//Kirigami.Theme.textColor
+        opacity: 0.6
+    }
 
     MouseArea {
         anchors.fill: parent
