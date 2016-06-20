@@ -51,13 +51,13 @@ Item {
 
         columns: 2
 
-        Text {
+        Kirigami.Label {
             Layout.columnSpan: 2
             Layout.fillWidth: true
             text: "General:"
         }
 
-        Label { text: "Account Name" }
+        Kirigami.Label { text: "Account Name" }
         TextField {
             id: name
             placeholderText: accountName
@@ -66,7 +66,7 @@ Item {
             onTextChanged: { maildirSettings.accountName = text; root.accountName = text; }
         }
 
-        Label { text: "User Name" }
+        Kirigami.Label { text: "User Name" }
         TextField {
             placeholderText: "Your Name"
             Layout.fillWidth: true
@@ -74,7 +74,7 @@ Item {
             onTextChanged: { maildirSettings.userName = text; }
         }
 
-        Label { text: "Email Address" }
+        Kirigami.Label { text: "Email Address" }
         TextField {
             placeholderText: "Your EMail Address"
             Layout.fillWidth: true
@@ -82,13 +82,13 @@ Item {
             onTextChanged: { maildirSettings.emailAddress = text; }
         }
 
-        Text {
+        Kirigami.Label {
             Layout.columnSpan: 2
             Layout.fillWidth: true
             text: "Maildir:"
         }
 
-        Label { text: "Path" }
+        Kirigami.Label { text: "Path" }
         RowLayout {
             TextField {
                 id: path
@@ -129,13 +129,13 @@ Item {
             }
         }
 
-        Text {
+        Kirigami.Label {
             Layout.columnSpan: 2
             Layout.fillWidth: true
             text: "Smtp:"
         }
 
-        Label { text: "Username" }
+        Kirigami.Label { text: "Username" }
         TextField {
             placeholderText: "Username"
             Layout.fillWidth: true
@@ -151,7 +151,7 @@ Item {
             onTextChanged: { maildirSettings.smtpPassword = text; }
         }
 
-        Label { text: "Server" }
+        Kirigami.Label { text: "Server" }
         TextField {
             id: server
             placeholderText: "smtps://mainserver.example.net:465"
