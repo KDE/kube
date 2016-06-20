@@ -23,12 +23,11 @@ import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.framework.theme 1.0
 
 Rectangle {
     id: root
 
-    color: ColorPalette.border
+    color: Kirigami.Theme.textColor
 
     opacity: 0.9
 
@@ -46,7 +45,7 @@ Rectangle {
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: ColorPalette.background
+        color: Kirigami.Theme.backgroundColor
 
         MouseArea {
             anchors.fill: parent
