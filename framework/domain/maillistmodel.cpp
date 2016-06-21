@@ -86,9 +86,9 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
 
 bool MailListModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-    const QVariant leftData = left.sibling(left.row(), Date).data(Qt::DisplayRole);
-    const QVariant rightData = right.sibling(right.row(), Date).data(Qt::DisplayRole);
-    return leftData.toDateTime() < rightData.toDateTime();
+    const auto leftDate = left.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>()->getDate();
+    const auto rightDate = right.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>()->getDate();
+    return leftDate < rightDate;
 }
 
 void MailListModel::runQuery(const Sink::Query &query)
