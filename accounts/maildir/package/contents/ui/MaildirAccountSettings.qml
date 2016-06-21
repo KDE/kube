@@ -81,7 +81,7 @@ Item {
             rowSpacing: Kirigami.Units.largeSpacing
 
             Kirigami.Label {
-                text: "Display tilte"
+                text: "Title of account"
                 Layout.alignment: Qt.AlignRight
             }
             TextField {
