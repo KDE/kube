@@ -18,146 +18,203 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
-import QtQuick.Dialogs 1.0
+
+import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.settings 1.0 as KubeSettings
-import org.kube.framework.theme 1.0
 import org.kube.accounts.imap 1.0 as ImapAccount
 
 
-Rectangle {
-    id: root
+Item {
+
     property string accountId
-    property string accountName
-    property string icon
 
-    color: ColorPalette.background
+    ImapAccount.ImapSettings {
+             id: imapSettings
+             accountIdentifier: accountId
+    }
 
-    GridLayout {
-        id: gridLayout
-        columns: 2
-        Layout.fillWidth: true
+    anchors.fill: parent
 
-        Text {
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            text: "General:"
+    Item {
+        anchors {
+            fill: parent
+            margins: Kirigami.Units.largeSpacing * 2
         }
 
-        Label { text: "Account Name" }
-        TextField {
-            id: name
-            placeholderText: accountName
-            Layout.fillWidth: true
-            text: imapSettings.accountName
-            onTextChanged: { imapSettings.accountName = text; root.accountName = text; }
+        Kirigami.Heading {
+            id: heading
+            text: "Connect your IMAP account"
+
+            color: Kirigami.Theme.highlightColor
         }
 
-        Label { text: "User Name" }
-        TextField {
-            placeholderText: "Your Name"
-            Layout.fillWidth: true
-            text: imapSettings.userName
-            onTextChanged: { imapSettings.userName = text; }
-        }
+        Label {
+            id: subHeadline
 
-        Label { text: "Email Address" }
-        TextField {
-            placeholderText: "Your EMail Address"
-            Layout.fillWidth: true
-            text: imapSettings.emailAddress
-            onTextChanged: { imapSettings.emailAddress = text; }
-        }
-
-        Text {
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            text: "Imap:"
-        }
-
-        Label { text: "Username" }
-        TextField {
-            placeholderText: "Username"
-            Layout.fillWidth: true
-            text: imapSettings.imapUsername
-            onTextChanged: { imapSettings.imapUsername = text; }
-        }
-
-        Label { text: "Password" }
-        TextField {
-            placeholderText: "Password"
-            Layout.fillWidth: true
-            text: imapSettings.imapPassword
-            onTextChanged: { imapSettings.imapPassword = text; }
-        }
-
-        Label { text: "Server" }
-        TextField {
-            id: server
-            placeholderText: "imaps://mainserver.example.net:993"
-            Layout.fillWidth: true
-            text: imapSettings.imapServer
-            onTextChanged: { imapSettings.imapServer = text; }
-            validator: imapSettings.imapServerValidator
-            Rectangle {
-                anchors.fill: parent
-                opacity: 0.2
-                color: server.acceptableInput ? "green" : "yellow"
+            anchors {
+                left: heading.left
+                top: heading.bottom
             }
+
+            width: parent.width
+
+            text: "To let Kube access your account, fill in email adress, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP server, which authentification and port to be used, please contact your email provider"
+            //TODO wait for kirgami theme disabled text color
+            opacity: 0.5
+            wrapMode: Text.Wrap
         }
 
-        Text {
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            text: "Smtp:"
-        }
 
-        Label { text: "Username" }
-        TextField {
-            placeholderText: "Username"
-            Layout.fillWidth: true
-            text: imapSettings.smtpUsername
-            onTextChanged: { imapSettings.smtpUsername = text; }
-        }
-
-        Label { text: "Password" }
-        TextField {
-            placeholderText: "Password"
-            Layout.fillWidth: true
-            text: imapSettings.smtpPassword
-            onTextChanged: { imapSettings.smtpPassword = text; }
-        }
-
-        Label { text: "Server" }
-        TextField {
-            id: server
-            placeholderText: "smtps://mainserver.example.net:465"
-            Layout.fillWidth: true
-            text: imapSettings.smtpServer
-            onTextChanged: { imapSettings.smtpServer = text; }
-            validator: imapSettings.smtpServerValidator
-            Rectangle {
-                anchors.fill: parent
-                opacity: 0.2
-                color: server.acceptableInput ? "green" : "yellow"
+        GridLayout {
+            anchors {
+                top:subHeadline.bottom
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+                topMargin: Kirigami.Units.largeSpacing
+                bottomMargin: Kirigami.Units.largeSpacing * 2
             }
-        }
 
-        ImapAccount.ImapSettings {
-            id: imapSettings
-            accountIdentifier: accountId
-        }
+            columns: 2
+            columnSpacing: Kirigami.Units.largeSpacing
+            rowSpacing: Kirigami.Units.largeSpacing
 
-        Button {
-            text: "Save"
-            onClicked: {
-                imapSettings.save();
+            Kirigami.Label {
+                text: "Title of Acocunt"
+                Layout.alignment: Qt.AlignRight
             }
-        }
-        Button {
-            text: "Remove"
-            onClicked: {
-                imapSettings.remove();
+            TextField {
+                Layout.fillWidth: true
+
+                text: imapSettings.accountName
+                onTextChanged: {
+                    imapSettings.accountName = text
+                }
+            }
+
+            Kirigami.Label {
+                text: "Email adress"
+                Layout.alignment: Qt.AlignRight
+            }
+            TextField {
+                Layout.fillWidth: true
+
+                text: imapSettings.emailAddress
+                onTextChanged: {
+                    imapSettings.emailAddress = text
+                }
+            }
+
+            Kirigami.Label {
+                text: "Username"
+                Layout.alignment: Qt.AlignRight
+            }
+            TextField {
+                Layout.fillWidth: true
+
+                text: imapSettings.imapUsername
+                onTextChanged: {
+                    imapSettings.imapUsername = text
+                    imapSettings.smtpUsername = text
+                }
+            }
+
+            Kirigami.Label {
+                text: "Password"
+                Layout.alignment: Qt.AlignRight
+            }
+            TextField {
+                Layout.fillWidth: true
+
+               text: imapSettings.imapPassword
+               onTextChanged: {
+                   imapSettings.imapPassword = text
+                   imapSettings.smtpPassword = text
+                }
+            }
+
+            Kirigami.Label {
+                text: "IMAP adress"
+                Layout.alignment: Qt.AlignRight
+            }
+            TextField {
+                id: imapServer
+
+                Layout.fillWidth: true
+
+                placeholderText: "imaps://mainserver.example.net:993"
+                text: imapSettings.imapServer
+                onTextChanged: {
+                    imapSettings.imapServer = text
+                }
+                validator: imapSettings.imapServerValidator
+
+                Rectangle {
+                    anchors.fill: parent
+                    opacity: 0.2
+                    color: "yellow"
+                    visible: imapServer.acceptableInput
+                }
+            }
+
+            Kirigami.Label {
+                text: "Smtp adress"
+                Layout.alignment: Qt.AlignRight
+            }
+            TextField {
+                id: smtpServer
+                Layout.fillWidth: true
+
+                placeholderText: "smtps://mainserver.example.net:993"
+                text: imapSettings.smtpServer
+                onTextChanged: {
+                    imapSettings.smtpServer = text
+                }
+                validator: imapSettings.smtpServerValidator
+
+                Rectangle {
+                    anchors.fill: parent
+                    opacity: 0.2
+                    color: "yellow"
+                    visible: smtpServer.acceptableInput
+                }
+            }
+
+            Label {
+                text: ""
+                Layout.fillHeight: ture
+            }
+            Label {
+                text: ""
+            }
+
+            Label {
+                text: ""
+            }
+            Item {
+                Layout.fillWidth: true
+
+                Button {
+                    text: "Delete"
+
+                    onClicked: {
+                        imapSettings.remove()
+                        root.closeDialog()
+                    }
+                }
+
+                Button {
+                    anchors.right: parent.right
+
+                    text: "Save"
+
+                    onClicked: {
+                        focus: true
+                        imapSettings.save()
+                        root.closeDialog()
+                    }
+                }
             }
         }
     }
