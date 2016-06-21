@@ -183,7 +183,7 @@ Item {
 
             Label {
                 text: ""
-                Layout.fillHeight: ture
+                Layout.fillHeight: true
             }
             Label {
                 text: ""
