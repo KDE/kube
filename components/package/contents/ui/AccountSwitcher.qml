@@ -50,7 +50,7 @@ Button {
 
         color: Kirigami.Theme.backgroundColor
         border.width: 1
-        border.color: Kirigami.Theme.textColor //TODO change to Kirigami inactive text color once it is available
+        border.color: Kirigami.Theme.highlightColor //TODO change to Kirigami inactive text color once it is available
         radius: 3
         clip: true
         visible: false
