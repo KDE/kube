@@ -27,6 +27,10 @@ import org.kube.framework.domain 1.0 as KubeFramework
 Item {
     id: root
 
+     function closeDialog() {
+         root.destroy();
+     }
+
     Rectangle {
         id: background
         anchors.fill: parent
@@ -38,7 +42,7 @@ Item {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            root.destroy()
+            root.closeDialog()
         }
     }
 

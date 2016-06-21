@@ -28,154 +28,164 @@ import org.kube.accounts.maildir 1.0 as MaildirAccount
 
 
 Item {
-    id: root
-
     property string accountId
-    property string accountName
-    property string icon
+
+    MaildirAccount.MaildirSettings {
+        id: maildirSettings
+        accountIdentifier: accountId
+    }
 
     anchors.fill: parent
 
-    MaildirAccount.MaildirSettings {
-            id: maildirSettings
-            accountIdentifier: accountId
-    }
-
-    GridLayout {
-        id: gridLayout
-
+    Item {
         anchors {
             fill: parent
-            margins: Kirigami.Units.largeSpacing
+            margins: Kirigami.Units.largeSpacing * 2
         }
 
-        columns: 2
+        Kirigami.Heading {
+            id: heading
+            text: "Add your Maildir archive"
 
-        Kirigami.Label {
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            text: "General:"
+            color: Kirigami.Theme.highlightColor
         }
 
-        Kirigami.Label { text: "Account Name" }
-        TextField {
-            id: name
-            placeholderText: accountName
-            Layout.fillWidth: true
-            text: maildirSettings.accountName
-            onTextChanged: { maildirSettings.accountName = text; root.accountName = text; }
+        Label {
+            id: subHeadline
+
+            anchors {
+                left: heading.left
+                top: heading.bottom
+            }
+
+            width: parent.width
+
+            text: "To let Kube access your maildir archive, add the path to your archive and give the account a title that will be displayed inside Kube"
+            //TODO wait for kirgami theme disabled text color
+            opacity: 0.5
+            wrapMode: Text.Wrap
         }
 
-        Kirigami.Label { text: "User Name" }
-        TextField {
-            placeholderText: "Your Name"
-            Layout.fillWidth: true
-            text: maildirSettings.userName
-            onTextChanged: { maildirSettings.userName = text; }
-        }
+        GridLayout {
+            anchors {
+                top:subHeadline.bottom
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+                topMargin: Kirigami.Units.largeSpacing * 2
+                bottomMargin: Kirigami.Units.largeSpacing * 2
+            }
 
-        Kirigami.Label { text: "Email Address" }
-        TextField {
-            placeholderText: "Your EMail Address"
-            Layout.fillWidth: true
-            text: maildirSettings.emailAddress
-            onTextChanged: { maildirSettings.emailAddress = text; }
-        }
+            columns: 2
+            columnSpacing: Kirigami.Units.largeSpacing
+            rowSpacing: Kirigami.Units.largeSpacing
 
-        Kirigami.Label {
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            text: "Maildir:"
-        }
-
-        Kirigami.Label { text: "Path" }
-        RowLayout {
+            Kirigami.Label {
+                text: "Display tilte"
+                Layout.alignment: Qt.AlignRight
+            }
             TextField {
-                id: path
-                placeholderText: "path"
                 Layout.fillWidth: true
-                text: maildirSettings.path
-                onTextChanged: { maildirSettings.path = text; }
-                validator: maildirSettings.pathValidator
-                Rectangle {
-                    anchors.fill: parent
-                    opacity: 0.2
-                    color: path.acceptableInput ? "green" : "yellow"
+
+                text: maildirSettings.accountName
+                onTextChanged: {
+                    maildirSettings.accountName = text
                 }
             }
 
-            Button {
-                iconName: "folder"
-                onClicked:  {
-                    fileDialogComponent.createObject(parent);
+            Kirigami.Label {
+                text: "Path"
+                Layout.alignment: Qt.AlignRight
+            }
+            RowLayout {
+                Layout.fillWidth: true
+
+                TextField {
+                    id: path
+                    Layout.fillWidth: true
+
+                    text: maildirSettings.path
+                    onTextChanged: {
+                        maildirSettings.path = text
+                    }
+                    validator: maildirSettings.pathValidator
+
+                    Rectangle {
+                        anchors.fill: parent
+                        opacity: 0.2
+                        color: "yellow"
+                        visible: path.acceptableInput == false
+                    }
                 }
 
-                Component {
-                    id: fileDialogComponent
-                    FileDialog {
-                        id: fileDialog
-                        visible: true
-                        title: "Please choose the maildir folder"
+                Button {
+                    iconName: "folder"
 
-                        selectFolder: true
+                    onClicked: {
+                        fileDialogComponent.createObject(parent)
+                    }
 
-                        onAccepted: {
-                            maildirSettings.path = fileDialog.fileUrl
-                        }
-                        onRejected: {
+                    Component {
+                        id: fileDialogComponent
+                        FileDialog {
+                            id: fileDialog
+
+                            visible: true
+                            title: "Choose the maildir folder"
+
+                            selectFolder: true
+
+                            onAccepted: {
+                                maildirSettings.path = fileDialog.fileUrl
+                            }
                         }
                     }
                 }
             }
-        }
 
-        Kirigami.Label {
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            text: "Smtp:"
-        }
-
-        Kirigami.Label { text: "Username" }
-        TextField {
-            placeholderText: "Username"
-            Layout.fillWidth: true
-            text: maildirSettings.smtpUsername
-            onTextChanged: { maildirSettings.smtpUsername = text; }
-        }
-
-        Label { text: "Password" }
-        TextField {
-            placeholderText: "Password"
-            Layout.fillWidth: true
-            text: maildirSettings.smtpPassword
-            onTextChanged: { maildirSettings.smtpPassword = text; }
-        }
-
-        Kirigami.Label { text: "Server" }
-        TextField {
-            id: server
-            placeholderText: "smtps://mainserver.example.net:465"
-            Layout.fillWidth: true
-            text: maildirSettings.smtpServer
-            onTextChanged: { maildirSettings.smtpServer = text; }
-            validator: maildirSettings.smtpServerValidator
-            Rectangle {
-                anchors.fill: parent
-                opacity: 0.2
-                color: server.acceptableInput ? "green" : "yellow"
+            Label {
+                text: ""
             }
-        }
-
-        Button {
-            text: "Save"
-            onClicked: {
-                maildirSettings.save();
+            CheckBox {
+                text: "Read only"
             }
-        }
-        Button {
-            text: "Remove"
-            onClicked: {
-                maildirSettings.remove();
+
+            Label {
+                text:  ""
+                Layout.fillHeight: true
+            }
+            Label {
+                text: ""
+            }
+
+            Label {
+                text: ""
+            }
+            Item {
+                Layout.fillWidth: true
+
+                Button {
+                    text: "Delete"
+
+                    onClicked: {
+                        maildirSettings.remove()
+                        root.closeDialog()
+                    }
+                }
+
+                Button {
+                    id: saveButton
+
+                    anchors.right: parent.right
+
+                    text: "Save"
+
+                    onClicked: {
+                        focus: true
+                        maildirSettings.save()
+                        root.closeDialog()
+                    }
+                }
             }
         }
     }
