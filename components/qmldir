@@ -8,3 +8,4 @@ Settings 1.0 Settings.qml
 AccountSwitcher 1.0 AccountSwitcher.qml
 NewAccountDialog 1.0 NewAccountDialog.qml
 EditAccountDialog 1.0 EditAccountDialog.qml
+OverlayDialog 1.0 OverlayDialog.qml

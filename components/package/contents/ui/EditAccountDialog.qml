@@ -23,48 +23,26 @@ import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.framework.theme 1.0
+import org.kube.components 1.0 as KubeComponents
 
-Item {
+KubeComponents.OverlayDialog {
     id: root
 
     property variant uiSource
     property variant accountId
 
-    Rectangle {
-        id: background
-
-        anchors.fill: parent
-
-        color: "black"
-        opacity: 0.9
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            root.destroy()
-        }
-    }
-
-    Rectangle {
+    Item {
         id: dialog
         anchors.centerIn: parent
 
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: Kirigami.Theme.backgroundColor
-
-        MouseArea {
-            anchors.fill: parent
-        }
-
         Loader {
             anchors.fill: parent
 
             source: root.uiSource
-             onLoaded: item.accountId = root.accountId
+            onLoaded: item.accountId = root.accountId
         }
     }
 }

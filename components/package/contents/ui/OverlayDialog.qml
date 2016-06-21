@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
+ *   Copyright (C) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,47 +21,38 @@ import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
 
-import org.kube.components 1.0 as KubeComponents
+import org.kube.framework.settings 1.0 as KubeSettings
+import org.kube.framework.domain 1.0 as KubeFramework
 
-KubeComponents.OverlayDialog {
+Item {
     id: root
 
-    function loadMessage(message, loadAsDraft) {
-        composer.loadMessage(message, loadAsDraft);
+    Rectangle {
+        id: background
+        anchors.fill: parent
+
+        color: "black"
+        opacity: 0.6
     }
 
-    Item {
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            root.destroy()
+        }
+    }
+
+    Rectangle {
+        id: dialog
         anchors.centerIn: parent
 
         height: root.height * 0.8
         width: root.width * 0.8
 
-        ColumnLayout {
+        color: Kirigami.Theme.backgroundColor
 
-            anchors {
-                fill: parent
-                margins: Kirigami.Units.largeSpacing
-            }
-
-            Composer {
-                id: composer
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-            }
-
-            RowLayout {
-                Layout.alignment: Qt.AlignRight
-
-                Button {
-                    text: "Send"
-
-                    onClicked: {
-                        composer.send()
-                        root.destroy()
-                    }
-                }
-            }
+        MouseArea {
+            anchors.fill: parent
         }
     }
 }
