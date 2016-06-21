@@ -4,7 +4,6 @@ FocusComposer 1.0 FocusComposer.qml
 SingleMailView 1.0 SingleMailView.qml
 FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml
-Settings 1.0 Settings.qml
 AccountSwitcher 1.0 AccountSwitcher.qml
 NewAccountDialog 1.0 NewAccountDialog.qml
 EditAccountDialog 1.0 EditAccountDialog.qml

@@ -28,6 +28,10 @@ import org.kube.components 1.0 as KubeComponents
 KubeComponents.OverlayDialog {
     id: root
 
+    KubeFramework.AccountsController {
+        id: accountsController
+    }
+
     Item {
         id: dialog
 
@@ -103,7 +107,8 @@ KubeComponents.OverlayDialog {
                             text: "imap"
 
                             onClicked: {
-                                stack.push(imap)
+                                accountsController.createAccount("imap");
+                                //stack.push(imap)
                             }
                         }
 
@@ -114,7 +119,8 @@ KubeComponents.OverlayDialog {
                             text: "maildir"
 
                             onClicked: {
-                                stack.push(maildir)
+                                accountsController.createAccount("maildir");
+                                //stack.push(maildir)
                             }
                         }
                     }

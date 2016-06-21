@@ -263,29 +263,14 @@ ApplicationWindow {
                 TextField {
                     id: searchBar
 
-                    Layout.minimumWidth: Kirigami.Units.gridUnit * 10
+                    Layout.minimumWidth: Kirigami.Units.gridUnit * 15
                     height: toolbar.height
 
                     placeholderText: "Search..."
                 }
 
-                ToolButton {
-                    id: settingsButton
-
-                    iconName: "application-menu"
-                    text: "Settings"
-
-                    onClicked: {
-                        settingsComponent.createObject(app)
-                    }
-
-                    Component {
-                        id: settingsComponent
-                        KubeComponents.Settings {
-                            id: settings
-                            anchors.fill: parent
-                        }
-                    }
+                Item  {
+                    width: Kirigami.Units.smallSpacing
                 }
             }
             //END MailView section
