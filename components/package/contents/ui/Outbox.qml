@@ -28,11 +28,13 @@ ToolButton {
     id: root
 
     iconName: "mail-folder-outbox"
+    tooltip: "outbox"
 
     onClicked: {
         dialog.visible = dialog.visible ? false : true
     }
 
+    //BEGIN Dialog
     Rectangle {
         id: dialog
 
@@ -41,8 +43,8 @@ ToolButton {
             horizontalCenter: parent.horizontalCenter
         }
 
-        height: 600
-        width: 400
+        height: Kirigami.Units.gridUnit * 15
+        width: Kirigami.Units.gridUnit * 12
 
         color: Kirigami.Theme.backgroundColor
         border.width: 1
@@ -50,5 +52,27 @@ ToolButton {
         radius: 3
         clip: true
         visible: false
+
+        //BEGIN Dialog Content
+        ScrollView {
+            anchors {
+                fill: parent
+                margins: 1
+            }
+            ListView {
+                id: listView
+
+                model: 3
+
+                delegate: Kirigami.AbstractListItem {
+                    Kirigami.Label {
+                        anchors.centerIn: parent
+                        text: "Subjext subxetson"
+                    }
+                }
+            }
+        }
+        //END Dialog Content
     }
+    //END Dialog
 }
