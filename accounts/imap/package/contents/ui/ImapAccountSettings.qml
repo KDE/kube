@@ -183,14 +183,6 @@ Item {
 
             Label {
                 text: ""
-                Layout.fillHeight: true
-            }
-            Label {
-                text: ""
-            }
-
-            Label {
-                text: ""
             }
             Item {
                 Layout.fillWidth: true
