@@ -79,6 +79,7 @@ Button {
 
                 onClicked: {
                     newAccountComponent.createObject(app)
+                    dialog.visible = false
                 }
 
                 Component {
@@ -103,6 +104,7 @@ Button {
 
                 onClicked: {
                     syncAction.execute()
+                    dialog.visible = false
                 }
             }
         }
@@ -166,6 +168,7 @@ Button {
 
                         onClicked: {
                             editAccountComponent.createObject(app)
+                            dialog.visible = false
                         }
 
                         Component {

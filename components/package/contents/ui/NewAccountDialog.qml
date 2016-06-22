@@ -37,8 +37,8 @@ KubeComponents.OverlayDialog {
 
         anchors.centerIn: parent
 
-        height: root.height * 0.8
-        width: root.width * 0.8
+        height: parent.height * 0.8
+        width: parent.width * 0.8
 
         ToolBar {
             id: toolBar
@@ -108,6 +108,7 @@ KubeComponents.OverlayDialog {
 
                             onClicked: {
                                 accountsController.createAccount("imap");
+                                root.closeDialog()
                                 //stack.push(imap)
                             }
                         }
@@ -120,6 +121,7 @@ KubeComponents.OverlayDialog {
 
                             onClicked: {
                                 accountsController.createAccount("maildir");
+                                root.closeDialog()
                                 //stack.push(maildir)
                             }
                         }
