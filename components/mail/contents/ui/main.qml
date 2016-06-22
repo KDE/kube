@@ -225,15 +225,18 @@ ApplicationWindow {
                     }
                 }
 
-                ToolButton {
+                Button {
                     id: newMailButton
 
-                    iconName: "mail-message-new"
-                    text: "Compose"
+                    //iconName: "mail-message-new"
+                    text: "New Email"
                     tooltip: "compose new email"
                     onClicked: {
                         composerComponent.createObject(app)
                     }
+                }
+
+                KubeComponents.Outbox {
                 }
 /*
                 ToolButton {
