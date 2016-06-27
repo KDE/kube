@@ -42,6 +42,22 @@ static ActionHandlerHelper markAsReadHandler("org.kde.kube.actions.mark-as-read"
     }
 );
 
+static ActionHandlerHelper moveToTrashHandler("org.kde.kube.actions.move-to-trash",
+    [](Context *context) -> bool {
+        return context->property("mail").isValid();
+    },
+    [](Context *context) {
+        auto mail = context->property("mail").value<Sink::ApplicationDomain::Mail::Ptr>();
+        if (!mail) {
+            qWarning() << "Failed to get the mail mail: " << context->property("mail");
+            return;
+        }
+        mail->setTrash(true);
+        qDebug() << "Move to trash " << mail->identifier();
+        Sink::Store::modify(*mail).exec();
+    }
+);
+
 static ActionHandlerHelper deleteHandler("org.kde.kube.actions.delete",
     [](Context *context) -> bool {
         return context->property("mail").isValid();
@@ -52,7 +68,6 @@ static ActionHandlerHelper deleteHandler("org.kde.kube.actions.delete",
             qWarning() << "Failed to get the mail mail: " << context->property("mail");
             return;
         }
-        mail->setProperty("unread", false);
         qDebug() << "Remove " << mail->identifier();
         Sink::Store::remove(*mail).exec();
     }

@@ -71,7 +71,7 @@ ApplicationWindow {
 
     KubeAction.Action {
         id: deleteAction
-        actionId: "org.kde.kube.actions.delete"
+        actionId: "org.kde.kube.actions.move-to-trash"
         context: maillistcontext
     }
 
