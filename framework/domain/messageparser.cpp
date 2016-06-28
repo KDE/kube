@@ -187,8 +187,6 @@ void MessageParser::setMessage(const QVariant &message)
 
 QAbstractItemModel *MessageParser::partTree() const
 {
-    qDebug() << "Getting partTree";
-    qDebug() << "Row count " << mPartTree->subParts().size();
     return new PartModel(mPartTree, mEmbeddedPartMap);
 }
 
