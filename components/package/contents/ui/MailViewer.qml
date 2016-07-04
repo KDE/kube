@@ -9,7 +9,7 @@ Item {
     id: root
     property variant message;
     property string html;
-    property bool enablePartTreeView : false
+    property bool enablePartTreeView : true
     property int desiredHeight: enablePartTreeView ? topPartLoader.height+450 : topPartLoader.height;
 
     Rectangle {
@@ -44,11 +44,25 @@ Item {
                         width: 60
                     }
                     TableViewColumn {
-                        role: "text"
-                        title: "Text"
-                        width: 600
+                        role: "isAttachment"
+                        title: "Attachment"
+                        width: 60
                     }
+                    TableViewColumn {
+                        role: "contentType"
+                        title: "ContentType"
+                        width: 60
+                    }
+                    // TableViewColumn {
+                    //     role: "text"
+                    //     title: "Text"
+                    //     width: 600
+                    // }
                     model: messageParser.partTree
+                    onClicked: {
+                        console.log("test")
+                        console.log(index.type, ": ", index.text)
+                    }
                 }
             }
        }

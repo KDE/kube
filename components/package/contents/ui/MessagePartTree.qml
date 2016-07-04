@@ -12,7 +12,7 @@ Item {
         width: root.width
         VisualDataModel {
             id: visualModel
-            model: messageParser.partTree
+            model: messageParser.messageModel
             delegate: Rectangle {
                 id: delegateRect
                 visible: !model.isHidden

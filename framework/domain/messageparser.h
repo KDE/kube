@@ -40,6 +40,7 @@ class MessageParser : public QObject
     Q_PROPERTY (QVariant message READ message WRITE setMessage)
     Q_PROPERTY (QString html READ html NOTIFY htmlChanged)
     Q_PROPERTY (QAbstractItemModel* partTree READ partTree NOTIFY htmlChanged)
+    Q_PROPERTY (QAbstractItemModel* messageModel READ messageModel NOTIFY htmlChanged)
 
 public:
     explicit MessageParser(QObject *parent = Q_NULLPTR);
@@ -48,13 +49,19 @@ public:
 
     QVariant message() const;
     void setMessage(const QVariant &to);
+    //Exposes a tree of parts, useful for debugging
     QAbstractItemModel *partTree() const;
+    //Exposes a list of parts to be displayed
+    QAbstractItemModel *messageModel() const;
+    //Exposes a list of attachments
+    QAbstractItemModel *attachmentModel() const;
 
 signals:
     void htmlChanged();
 
 private:
     QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
+    KMime::Message::Ptr mMsg;
     QString mHtml;
     QMap<QByteArray, QUrl> mEmbeddedPartMap;
     std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
@@ -64,6 +71,36 @@ class PartModel : public QAbstractItemModel {
     Q_OBJECT
 public:
     PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, QMap<QByteArray, QUrl> embeddedPartMap);
+
+public:
+    enum Roles {
+        Text  = Qt::UserRole + 1,
+        IsHtml,
+        IsEncrypted,
+        IsAttachment,
+        HasContent,
+        Type,
+        IsHidden,
+        ContentType
+    };
+
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+
+private:
+    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
+    QMap<QByteArray, QUrl> mEmbeddedPartMap;
+};
+
+
+class MessageModel : public QAbstractItemModel {
+    Q_OBJECT
+public:
+    MessageModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, QMap<QByteArray, QUrl> embeddedPartMap);
 
 public:
     enum Roles {
@@ -84,7 +121,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
 private:
-    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
+    QVector<QSharedPointer<MimeTreeParser::Interface::MessagePart>> mParts;
     QMap<QByteArray, QUrl> mEmbeddedPartMap;
 };
 
