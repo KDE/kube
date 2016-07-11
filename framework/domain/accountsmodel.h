@@ -41,7 +41,10 @@ public:
     enum Roles {
         Name  = Qt::UserRole + 1,
         Icon,
-        AccountId
+        AccountId,
+        Status,
+        StatusIcon,
+        ShowStatus
     };
     Q_ENUMS(Roles)
 

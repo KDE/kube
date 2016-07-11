@@ -154,6 +154,10 @@ Button {
                         Label {
                             text: model.name === "" ? accountFactory.name : model.name
                         }
+                        Button {
+                            visible: model.showStatus
+                            iconName: model.statusIcon
+                        }
                     }
                     Button {
 

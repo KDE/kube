@@ -23,7 +23,9 @@ AccountsModel::AccountsModel(QObject *parent) : QIdentityProxyModel()
 {
     Sink::Query query;
     query.liveQuery = true;
-    query.requestedProperties << "name" << "icon";
+    query.request<Sink::ApplicationDomain::SinkAccount::Name>();
+    query.request<Sink::ApplicationDomain::SinkAccount::Icon>();
+    query.request<Sink::ApplicationDomain::SinkAccount::Status>();
     runQuery(query);
 }
 
@@ -39,6 +41,9 @@ QHash< int, QByteArray > AccountsModel::roleNames() const
     roles[Name] = "name";
     roles[Icon] = "icon";
     roles[AccountId] = "accountId";
+    roles[Status] = "status";
+    roles[StatusIcon] = "statusIcon";
+    roles[ShowStatus] = "showStatus";
 
     return roles;
 }
@@ -46,13 +51,26 @@ QHash< int, QByteArray > AccountsModel::roleNames() const
 QVariant AccountsModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
+    auto account = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::SinkAccount::Ptr>();
     switch (role) {
         case Name:
-            return srcIdx.sibling(srcIdx.row(), 0).data(Qt::DisplayRole).toString();
+            return account->getName();
         case Icon:
-            return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
+            return account->getIcon();
         case AccountId:
-            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+            return account->identifier();
+        case Status:
+            return account->getStatus();
+        case StatusIcon:
+            if (account->getStatus() == Sink::ApplicationDomain::ErrorStatus) {
+                return "emblem-error";
+            } else if (account->getStatus() == Sink::ApplicationDomain::BusyStatus) {
+                return "view-refresh";
+            } else if (account->getStatus() == Sink::ApplicationDomain::ConnectedStatus) {
+                return "checkmark";
+            }
+        case ShowStatus:
+            return (account->getStatus() != Sink::ApplicationDomain::OfflineStatus);
     }
     return QIdentityProxyModel::data(idx, role);
 }
