@@ -8,7 +8,7 @@ See doc/project.md for more information.
 
 ## License
 
-TBD
+GPLV2+
 
 ## Getting involved
 
