@@ -222,7 +222,7 @@ void ImapSettings::save()
 
 void ImapSettings::remove()
 {
-    if (mIdentifier.isEmpty()) {
+    if (mMailtransportIdentifier.isEmpty()) {
         qWarning() << "We're missing an identifier";
     } else {
         Sink::ApplicationDomain::SinkResource mailTransportResource("", mMailtransportIdentifier, 0, QSharedPointer<Sink::ApplicationDomain::MemoryBufferAdaptor>::create());
@@ -231,14 +231,22 @@ void ImapSettings::remove()
             qWarning() << "Error while removing resource: " << errorMessage;
         })
         .exec();
+    }
 
+    if (mIdentifier.isEmpty()) {
+        qWarning() << "We're missing an identifier";
+    } else {
         Sink::ApplicationDomain::SinkResource resource("", mIdentifier, 0, QSharedPointer<Sink::ApplicationDomain::MemoryBufferAdaptor>::create());
         Sink::Store::remove(resource).then<void>([]() {},
         [](int errorCode, const QString &errorMessage) {
             qWarning() << "Error while removing resource: " << errorMessage;
         })
         .exec();
+    }
 
+    if (mAccountIdentifier.isEmpty()) {
+        qWarning() << "We're missing an identifier";
+    } else {
         Sink::ApplicationDomain::SinkAccount account("", mAccountIdentifier, 0, QSharedPointer<Sink::ApplicationDomain::MemoryBufferAdaptor>::create());
         Sink::Store::remove(account).then<void>([]() {},
         [](int errorCode, const QString &errorMessage) {
