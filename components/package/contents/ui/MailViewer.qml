@@ -26,12 +26,13 @@ Item {
                 spacing:2
                 MessagePartTree {
                     id: topPartLoader
-                    width: rootRectangle.width
-                    height: topPartLoader.desiredHeight
+                    // width: rootRectangle.width
+                    height: topPartLoader.contentHeight
+                    width: topPartLoader.contentWidth >= rootRectangle.width ? topPartLoader.contentWidth : rootRectangle.width
                 }
                 TreeView {
                     visible: enablePartTreeView
-                    width: 500
+                    width: rootRectangle.width
                     height: 400
                     TableViewColumn {
                         role: "type"

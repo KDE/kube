@@ -31,6 +31,10 @@ Controls.ScrollView {
     property variant currentMail
     property bool isDraft : false
 
+    onParentFolderChanged: {
+        currentMail = null
+    }
+
     ListView {
         id: listView
 

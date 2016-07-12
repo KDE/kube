@@ -5,7 +5,8 @@ Item {
     id: root
     property alias rootIndex: visualModel.rootIndex
     property int nestingLevel: 0
-    property int desiredHeight: messagePartRect.height
+    property int contentHeight: messagePartRect.height
+    property int contentWidth: 0
     Rectangle {
         id: messagePartRect
         height: partListView.contentHeight
@@ -24,6 +25,7 @@ Item {
                     anchors.top: delegateRect.top
                     anchors.left: delegateRect.left
                     width: messagePartRect.width
+                    height: contentHeight
                     content: model.text
                     isHtml: model.isHtml
                     visible: model.hasContent
@@ -33,16 +35,19 @@ Item {
                             height = 0
                         }
                     }
+                    onContentWidthChanged: {
+                        root.contentWidth = contentWidth > root.contentWidth ? contentWidth : root.contentWidth
+                    }
                     contentType: model.type
                 }
                 Loader {
                     id: partLoader
                     anchors.top: contentView.bottom
                     anchors.left: contentView.left
-                    width: messagePartRect.width
                     visible: model.hasModelChildren
                     active: model.hasModelChildren
-                    height: item ? item.desiredHeight : 0
+                    height: item ? item.contentHeight : 0
+                    width: messagePartRect.width
                 }
                 Component.onCompleted: {
                     if (model.hasModelChildren) {

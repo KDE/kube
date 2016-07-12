@@ -5,6 +5,7 @@
 #include <KPackage/PackageLoader>
 #include <QQuickImageProvider>
 #include <QIcon>
+#include <QtWebEngine>
 
 #include <QDebug>
 
@@ -34,6 +35,7 @@ public:
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    QtWebEngine::initialize();
     auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.mail");
     Q_ASSERT(package.isValid());
     QQmlApplicationEngine engine;
