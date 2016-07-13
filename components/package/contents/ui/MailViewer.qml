@@ -20,7 +20,6 @@ Item {
             id: scrollView
             anchors.fill: parent
             anchors.margins: 0
-            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             Column {
                 spacing:2
