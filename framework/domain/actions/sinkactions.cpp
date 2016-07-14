@@ -106,7 +106,7 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
         query += Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport);
         query += Sink::Query::AccountFilter(accountId);
         Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(query)
-            .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([=](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
+            .then<void, KAsync::Job<void>, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([=](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
                 if (!resources.isEmpty()) {
                     auto resourceId = resources[0]->identifier();
                     SinkTrace() << "Sending message via resource: " << resourceId;
