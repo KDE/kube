@@ -23,24 +23,27 @@ ap1 == getPart("cid:12345678")
 (Html) == cp1.availableContent()
 
 # alternative msg + attachment
-* ContentPart(html="HTML", plaintext="Text") => cp1
+* ContentPart(html=[TextPart("HTML"),], plaintext=[TextPart("Text"),]) => cp1
 * AttachmentPart => ap1
 
 (cp1) == collect<ContentPart>(select=NoEncapsulatedMessages)
 (ap1) == collect<AttachmentParts>(select=NoEncapsulatedMessages)
 
 (Html, PlainText) == cp1.availableContent()
-"HTML" == cp1.content(Html)
-"text" == cp1.content(Plaintext)
+[TextPart("HTML"),] == cp1.content(Html)
+[TextPart("Text"),] == cp1.content(Plaintext)
 
-# alternative msg with GPGInline
-* ContentPart(html="HTML", plaintext="Text cypted<foo>") => cp1
-    * TextPart(text="Text")
-    * TextPart(text=foo, encryption=(enc1)
+# alternative msg with GPGInlin
+* ContentPart(
+    plaintext=[TextPart("Text"), TextPart("foo", encryption=(enc1))],
+    html=[TextPart("HTML"),]
+  ) => cp1
 
 (Html, PlainText) == cp1.availableContent()
 
-TODO: but how to get plaintext/html content?
+[TextPart("HTML"),] == cp1.content(Html)
+[TextPart("Text"),TextPart("foo", encryption=(enc1))] == cp1.content(Plaintext)
+
 
 # encrypted msg (not encrypted/error) with unencrypted attachment
 * EncryptionErrorPart => cp1
@@ -59,15 +62,14 @@ TODO: but how to get plaintext/html content?
 (ap1, ap2) == collect<AttachmentParts>(select=NoEncapsulatedMessages)
 
 #INLINE GPG encrypted msg + attachment
-* ContentPart => cp1
-  * TextPart
-  * TextPart(encrytion = (enc1(rec1,rec2),))
-  * TextPart(signed = (sig1,))
-  * TextPart
+* ContentPart => cp1 with
+  plaintext=[TextPart, TextPart(encrytion = (enc1(rec1,rec2),)), TextPart(signed = (sig1,)), TextPart]
 * AttachmentPart => ap1
 
 (cp1) == collect<ContentPart>(select=NoEncapsulatedMessages)
 (ap1) == collect<AttachmentParts>(select=NoEncapsulatedMessages)
+
+[TextPart, TextPart(encrytion = (enc1(rec1,rec2),)), TextPart(signed = (sig1,)), TextPart] == cp1.content(Plaintext)
 
 #forwared encrypted msg + attachments
 * ContentPart => cp1
@@ -87,7 +89,7 @@ TODO: but how to get plaintext/html content?
 (ap1) = collect<AttachmentParts>(ep1, select=NoEncapsulatedMessages)
 
 (cp1, cp2) == collect<ContentPart>()
-(ap1, ap2) == collect<AttachmentParts>()
+(ap1, ap2) == collect<AttachmentParts>()[TextPart, TextPart(encrytion = (enc1(rec1,rec2),)), TextPart(signed = (sig1,)), TextPart]
 
 
 # plaintext msg + attachment + cert

@@ -23,32 +23,41 @@
 #include <QMimeType>
 
 class Part;
+typedef std::shared_ptr<Part> Part::Ptr;
 class EncryptionPart;
+typedef std::shared_ptr<Part> EncryptionPart::Ptr;
 class SignaturePart;
+typedef std::shared_ptr<Part> SignaturePart::Ptr;
 
 class MimePart;
+typedef std::shared_ptr<Part> MimePart::Ptr;
 class MimePartPrivate;
 
 class ContentPart;
+typedef std::shared_ptr<Part> ContentPart::Ptr;
 class ContentPartPrivate;
 
 class EncryptionErrorPart;
+typedef std::shared_ptr<Part> EncryptionErrorPart::Ptr;
 class EncryptionErrorPartPrivate;
 
 class AttachmentPart;
+typedef std::shared_ptr<Part> AttachmentPart::Ptr;
 class AttachmentPartPrivate;
 
 class EncapsulatedPart;
+typedef std::shared_ptr<Part> EncapsulatedPart::Ptr;
 class EncapsulatedPart;
 
 class CertPart;
-class CertPart;
+typedef std::shared_ptr<Part> CertPart::Ptr;
 
 class Key;
 class Signature;
 class Encryption;
 
 class Parser;
+typedef std::shared_ptr<Parser> Parser::Ptr;
 class ParserPrivate;
 
 class Parser
@@ -56,15 +65,16 @@ class Parser
 public:
     Parser(const QByteArray &mimeMessage);
 
-    std::shared_ptr<Part> getPart(QUrl url);
+    Part::Ptr getPart(QUrl url);
 
-    QVector<std::shared_ptr<AttachmentPart>> collect<AttachmentPart>() const;
-    QVector<std::shared_ptr<ContentPart>> collect<ContentPart>() const;
-    QVector<std::shared_ptr<T>> collect<T>(Part start, std::function<bool(const Part &)> select, std::function<bool(const std::shared_ptr<T> &)> filter) const;
+    QVector<AttachmentPart::Ptr> collect<AttachmentPart>() const;
+    QVector<ContentPart:Ptr> collect<ContentPart>() const;
+    QVector<T::Ptr> collect<T>(Part start, std::function<bool(const Part &)> select, std::function<bool(const T::Ptr &)> filter) const;
 
 private:
     std::unique_ptr<ParserPrivate> d;
 };
+
 
 class Part
 {
@@ -72,14 +82,54 @@ public:
     virtual QByteArray type() const = 0;
 
     bool hasSubParts() const;
-    QList<Part> subParts() const;
-    Part partent() const;
+    QList<Part::Ptr> subParts() const;
+    Part parent() const;
+
+    virtual QVector<Signature> signatures() const;
+    virtual QVector<Encryption> encryptions() const;
 };
+
+//A structure element, that we need to reflect, that there is a Encryption starts
+// only add a new Encrption block to encryptions block
+class EncryptionPart : public Part
+{
+public:
+    QVector<Encryption> encryptions() const Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
+};
+
+// A structure element, that we need to reflect, that there is a Signature starts
+// only add a new Signature block to signature block
+// With this we can a new Singature type like pep aka
+/*
+ * add a bodypartformatter, that returns a PEPSignaturePart with all signed subparts that are signed with pep.
+ * subclass Signature aka PEPSignature to reflect different way of properties of PEPSignatures.
+ */
+class SignaturePart : public Part
+{
+public:
+    QVector<Signature> signatures() const Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
+};
+
+
+
+class TextPart : public Part
+{
+public:
+    QByteArray content() const;
+
+    //Use default charset
+    QString encodedContent() const;
+
+    // overwrite default charset with given charset
+    QString encodedContent(QByteArray charset) const;
+}
 
 /* 
  * A MessagePart that is based on a KMime::Content
  */
-class MimePart : public Part
+class MimePart : public TextPart
 {
 public:
     /**
@@ -88,14 +138,12 @@ public:
     enum Disposition {
         Invalid,           ///< Default, invalid value
         Inline,            ///< inline
-        Attachment,        ///< attachment
-        Parallel           ///< parallel (invalid, do not use)
+        Attachment        ///< attachment
     };
 
     // interessting header parts of a KMime::Content
-    QByteArray content() const;
     QMimeType mimetype() const;
-    Disposition dispossition() const
+    Disposition disposition() const;
     QUrl label() const;
     QByteArray cid() const;
     QByteArray charset() const;
@@ -123,7 +171,7 @@ private:
  * for alternative, we are represating three messageparts
  *   - "headers" do we return?, we can use setType to make it possible to select and than return these headers
  */
-class ContentPart : public MimePart
+class MainContentPart : public MimePart
 {
 public:
     enum Types {
@@ -132,14 +180,9 @@ public:
     };
     Q_DECLARE_FLAGS(Types, Type)
 
-    QByteArray content(Content::Type ct) const;
-
-    // convert content with charset
-    QString content(Content::Type ct) const;
+    QVector<TextPart> content(Content::Type ct) const;
 
     Content::Types availableContent() const;
-    QVector<Signature> signature() const;
-    QVector<Encryption> encryption() const;
 
     QByteArray type() const Q_DECL_OVERRIDE;
 
