@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Kube Kolabnow Accounts Plugin
+X-KDE-PluginInfo-Name=org.kube.accounts.kolabnow
+Exec=kpackagelauncherqml -a org.kube.accounts.kolabnow
+X-Plasma-MainScript=ui/KolabnowAccountSettings.qml
+X-KDE-ServiceTypes=KPackage/GenericQML
+Icon=folder
+Type=Service
