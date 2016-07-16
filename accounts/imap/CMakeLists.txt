@@ -35,11 +35,11 @@ set(SRCS
 
 add_library(imapaccountplugin SHARED ${SRCS})
 qt5_use_modules(imapaccountplugin Core Quick Qml)
-target_link_libraries(imapaccountplugin sink settingsplugin)
+target_link_libraries(imapaccountplugin sink settingsplugin mailplugin)
 
 add_library(imapaccount_static STATIC ${SRCS})
 qt5_use_modules(imapaccount_static Core Quick Qml)
-target_link_libraries(imapaccount_static sink settingsplugin)
+target_link_libraries(imapaccount_static sink settingsplugin mailplugin)
 add_subdirectory(tests)
 
 kpackage_install_package(package org.kube.accounts.imap "genericqml")

@@ -1,0 +1,110 @@
+/*
+    Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsys.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+#pragma once
+
+#include <QObject>
+#include <QValidator>
+
+class AccountSettings : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
+    Q_PROPERTY(QString icon MEMBER mIcon NOTIFY changed)
+    Q_PROPERTY(QString accountName MEMBER mName NOTIFY changed)
+
+    Q_PROPERTY(QString userName MEMBER mUsername NOTIFY identityChanged)
+    Q_PROPERTY(QString emailAddress MEMBER mEmailAddress NOTIFY identityChanged)
+
+    Q_PROPERTY(QString imapServer MEMBER mImapServer NOTIFY imapResourceChanged)
+    Q_PROPERTY(QValidator* imapServerValidator READ imapServerValidator CONSTANT)
+    Q_PROPERTY(QString imapUsername MEMBER mImapUsername NOTIFY imapResourceChanged)
+    Q_PROPERTY(QString imapPassword MEMBER mImapPassword NOTIFY imapResourceChanged)
+
+    Q_PROPERTY(QString smtpServer MEMBER mSmtpServer NOTIFY smtpResourceChanged)
+    Q_PROPERTY(QValidator* smtpServerValidator READ smtpServerValidator CONSTANT)
+    Q_PROPERTY(QString smtpUsername MEMBER mSmtpUsername NOTIFY smtpResourceChanged)
+    Q_PROPERTY(QString smtpPassword MEMBER mSmtpPassword NOTIFY smtpResourceChanged)
+
+    Q_PROPERTY(QUrl path READ path WRITE setPath NOTIFY pathChanged)
+    Q_PROPERTY(QValidator* pathValidator READ pathValidator CONSTANT)
+
+public:
+    AccountSettings(QObject *parent = 0);
+
+    void setAccountIdentifier(const QByteArray &);
+    QByteArray accountIdentifier() const;
+
+    void setPath(const QUrl &);
+    QUrl path() const;
+
+    virtual QValidator *imapServerValidator() const;
+    virtual QValidator *smtpServerValidator() const;
+    virtual QValidator *pathValidator() const;
+
+    Q_INVOKABLE virtual void load() = 0;
+    Q_INVOKABLE virtual void save() = 0;
+    Q_INVOKABLE virtual void remove() = 0;
+
+signals:
+    void imapResourceChanged();
+    void smtpResourceChanged();
+    void identityChanged();
+    void pathChanged();
+    void changed();
+
+protected:
+    void saveAccount();
+    void saveImapResource();
+    void saveMaildirResource();
+    void saveMailtransportResource();
+    void saveIdentity();
+
+    void loadAccount();
+    void loadImapResource();
+    void loadMaildirResource();
+    void loadMailtransportResource();
+    void loadIdentity();
+
+    void removeAccount();
+    void removeResource(const QByteArray &identifier);
+
+    void removeIdentity();
+
+    QByteArray mAccountIdentifier;
+    QString mIcon;
+    QString mName;
+
+    QByteArray mImapIdentifier;
+    QString mImapServer;
+    QString mImapUsername;
+    QString mImapPassword;
+
+    QByteArray mMaildirIdentifier;
+    QString mPath;
+
+    QByteArray mMailtransportIdentifier;
+    QString mSmtpServer;
+    QString mSmtpUsername;
+    QString mSmtpPassword;
+
+    QByteArray mIdentityIdentifier;
+    QString mUsername;
+    QString mEmailAddress;
+};
+

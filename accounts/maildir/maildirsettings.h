@@ -18,56 +18,15 @@
 */
 #pragma once
 
-#include <QObject>
-#include <QValidator>
+#include <domain/settings/accountsettings.h>
 
-class MaildirSettings : public QObject
+class MaildirSettings : public AccountSettings
 {
     Q_OBJECT
-    Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
-    Q_PROPERTY(QUrl path READ path WRITE setPath NOTIFY pathChanged)
-    Q_PROPERTY(QValidator* pathValidator READ pathValidator CONSTANT)
-    Q_PROPERTY(QString icon MEMBER mIcon NOTIFY changed)
-    Q_PROPERTY(QString accountName MEMBER mName NOTIFY changed)
-    Q_PROPERTY(QString userName MEMBER mUsername NOTIFY identityChanged)
-    Q_PROPERTY(QString emailAddress MEMBER mEmailAddress NOTIFY identityChanged)
-    Q_PROPERTY(QString smtpServer MEMBER mSmtpServer NOTIFY smtpResourceChanged)
-    Q_PROPERTY(QValidator* smtpServerValidator READ smtpServerValidator CONSTANT)
-    Q_PROPERTY(QString smtpUsername MEMBER mSmtpUsername NOTIFY smtpResourceChanged)
-    Q_PROPERTY(QString smtpPassword MEMBER mSmtpPassword NOTIFY smtpResourceChanged)
-
 public:
     MaildirSettings(QObject *parent = 0);
 
-    void setAccountIdentifier(const QByteArray &);
-    QByteArray accountIdentifier() const;
-
-    void setPath(const QUrl &);
-    QUrl path() const;
-    QValidator *pathValidator() const;
-
-    QValidator *smtpServerValidator() const;
-
-    Q_INVOKABLE void save();
-    Q_INVOKABLE void remove();
-
-signals:
-    void pathChanged();
-    void smtpResourceChanged();
-    void identityChanged();
-    void changed();
-
-private:
-    QByteArray mIdentifier;
-    QByteArray mAccountIdentifier;
-    QByteArray mMailtransportIdentifier;
-    QByteArray mIdentityIdentifier;
-    QString mPath;
-    QString mIcon;
-    QString mName;
-    QString mUsername;
-    QString mEmailAddress;
-    QString mSmtpServer;
-    QString mSmtpUsername;
-    QString mSmtpPassword;
+    Q_INVOKABLE virtual void load() Q_DECL_OVERRIDE;
+    Q_INVOKABLE virtual void save() Q_DECL_OVERRIDE;
+    Q_INVOKABLE virtual void remove() Q_DECL_OVERRIDE;
 };

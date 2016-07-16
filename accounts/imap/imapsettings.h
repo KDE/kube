@@ -18,57 +18,16 @@
 */
 #pragma once
 
-#include <QObject>
-#include <QValidator>
+#include <domain/settings/accountsettings.h>
 
-class ImapSettings : public QObject
+class ImapSettings : public AccountSettings
 {
     Q_OBJECT
-    Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
-    Q_PROPERTY(QString icon MEMBER mIcon NOTIFY changed)
-    Q_PROPERTY(QString accountName MEMBER mName NOTIFY changed)
-    Q_PROPERTY(QString userName MEMBER mUsername NOTIFY identityChanged)
-    Q_PROPERTY(QString emailAddress MEMBER mEmailAddress NOTIFY identityChanged)
-    Q_PROPERTY(QString imapServer MEMBER mImapServer NOTIFY imapResourceChanged)
-    Q_PROPERTY(QValidator* imapServerValidator READ imapServerValidator CONSTANT)
-    Q_PROPERTY(QString imapUsername MEMBER mImapUsername NOTIFY imapResourceChanged)
-    Q_PROPERTY(QString imapPassword MEMBER mImapPassword NOTIFY imapResourceChanged)
-    Q_PROPERTY(QString smtpServer MEMBER mSmtpServer NOTIFY smtpResourceChanged)
-    Q_PROPERTY(QValidator* smtpServerValidator READ smtpServerValidator CONSTANT)
-    Q_PROPERTY(QString smtpUsername MEMBER mSmtpUsername NOTIFY smtpResourceChanged)
-    Q_PROPERTY(QString smtpPassword MEMBER mSmtpPassword NOTIFY smtpResourceChanged)
 
 public:
     ImapSettings(QObject *parent = 0);
 
-    void setAccountIdentifier(const QByteArray &);
-    QByteArray accountIdentifier() const;
-
-    QValidator *imapServerValidator() const;
-    QValidator *smtpServerValidator() const;
-
-    Q_INVOKABLE void save();
-    Q_INVOKABLE void remove();
-
-signals:
-    void imapResourceChanged();
-    void smtpResourceChanged();
-    void identityChanged();
-    void changed();
-
-private:
-    QByteArray mIdentifier;
-    QByteArray mAccountIdentifier;
-    QByteArray mMailtransportIdentifier;
-    QByteArray mIdentityIdentifier;
-    QString mIcon;
-    QString mName;
-    QString mUsername;
-    QString mEmailAddress;
-    QString mImapServer;
-    QString mImapUsername;
-    QString mImapPassword;
-    QString mSmtpServer;
-    QString mSmtpUsername;
-    QString mSmtpPassword;
+    Q_INVOKABLE virtual void load() Q_DECL_OVERRIDE;
+    Q_INVOKABLE virtual void save() Q_DECL_OVERRIDE;
+    Q_INVOKABLE virtual void remove() Q_DECL_OVERRIDE;
 };
