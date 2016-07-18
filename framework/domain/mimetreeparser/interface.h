@@ -19,104 +19,70 @@
 
 #pragma once
 
+#include <functional>
+#include <memory>
+
+#include <QDateTime>
 #include <QUrl>
 #include <QMimeType>
 
 class Part;
-typedef std::shared_ptr<Part> Part::Ptr;
-class EncryptionPart;
-typedef std::shared_ptr<Part> EncryptionPart::Ptr;
-class SignaturePart;
-typedef std::shared_ptr<Part> SignaturePart::Ptr;
+class PartPrivate;
 
 class MimePart;
-typedef std::shared_ptr<Part> MimePart::Ptr;
 class MimePartPrivate;
 
 class ContentPart;
-typedef std::shared_ptr<Part> ContentPart::Ptr;
 class ContentPartPrivate;
 
-class EncryptionErrorPart;
-typedef std::shared_ptr<Part> EncryptionErrorPart::Ptr;
-class EncryptionErrorPartPrivate;
+class EncryptionPart;
+class EncryptionPartPrivate;
 
 class AttachmentPart;
-typedef std::shared_ptr<Part> AttachmentPart::Ptr;
 class AttachmentPartPrivate;
 
 class EncapsulatedPart;
-typedef std::shared_ptr<Part> EncapsulatedPart::Ptr;
-class EncapsulatedPart;
+class EncapsulatedPartPrivate;
 
 class CertPart;
-typedef std::shared_ptr<Part> CertPart::Ptr;
+class CertPartPrivate;
+
+class Content;
+class ContentPrivate;
 
 class Key;
 class Signature;
 class Encryption;
 
 class Parser;
-typedef std::shared_ptr<Parser> Parser::Ptr;
 class ParserPrivate;
-
-class Parser
-{
-public:
-    Parser(const QByteArray &mimeMessage);
-
-    Part::Ptr getPart(QUrl url);
-
-    QVector<AttachmentPart::Ptr> collect<AttachmentPart>() const;
-    QVector<ContentPart:Ptr> collect<ContentPart>() const;
-    QVector<T::Ptr> collect<T>(Part start, std::function<bool(const Part &)> select, std::function<bool(const T::Ptr &)> filter) const;
-
-private:
-    std::unique_ptr<ParserPrivate> d;
-};
-
 
 class Part
 {
 public:
-    virtual QByteArray type() const = 0;
+    typedef std::shared_ptr<Part> Ptr;
+    Part();
+    virtual QByteArray type() const;
 
     bool hasSubParts() const;
-    QList<Part::Ptr> subParts() const;
-    Part parent() const;
+    QVector<Part::Ptr> subParts() const;
+    Part::Ptr parent() const;
 
     virtual QVector<Signature> signatures() const;
     virtual QVector<Encryption> encryptions() const;
+private:
+    std::unique_ptr<PartPrivate> d;
+    friend class ParserPrivate;
+    friend class PartPrivate;
 };
 
-//A structure element, that we need to reflect, that there is a Encryption starts
-// only add a new Encrption block to encryptions block
-class EncryptionPart : public Part
+class Content
 {
 public:
-    QVector<Encryption> encryptions() const Q_DECL_OVERRIDE;
-    QByteArray type() const Q_DECL_OVERRIDE;
-};
+    typedef std::shared_ptr<Content> Ptr;
+    Content(const QByteArray &content, ContentPart *parent);
+    virtual ~Content();
 
-// A structure element, that we need to reflect, that there is a Signature starts
-// only add a new Signature block to signature block
-// With this we can a new Singature type like pep aka
-/*
- * add a bodypartformatter, that returns a PEPSignaturePart with all signed subparts that are signed with pep.
- * subclass Signature aka PEPSignature to reflect different way of properties of PEPSignatures.
- */
-class SignaturePart : public Part
-{
-public:
-    QVector<Signature> signatures() const Q_DECL_OVERRIDE;
-    QByteArray type() const Q_DECL_OVERRIDE;
-};
-
-
-
-class TextPart : public Part
-{
-public:
     QByteArray content() const;
 
     //Use default charset
@@ -124,14 +90,20 @@ public:
 
     // overwrite default charset with given charset
     QString encodedContent(QByteArray charset) const;
-}
+
+    virtual QVector<Signature> signatures() const;
+    virtual QVector<Encryption> encryptions() const;
+private:
+    std::unique_ptr<ContentPrivate> d;
+};
 
 /* 
  * A MessagePart that is based on a KMime::Content
  */
-class MimePart : public TextPart
+class MimePart : public Part
 {
 public:
+    typedef std::shared_ptr<MimePart> Ptr;
     /**
      *  Various possible values for the "Content-Disposition" header.
      */
@@ -154,6 +126,13 @@ public:
     // Unique identifier to ecactly this KMime::Content
     QByteArray link() const;
 
+    QByteArray content() const;
+
+    //Use default charset
+    QString encodedContent() const;
+
+    // overwrite default charset with given charset
+    QString encodedContent(QByteArray charset) const;
 
     QByteArray type() const Q_DECL_OVERRIDE;
 private:
@@ -171,77 +150,84 @@ private:
  * for alternative, we are represating three messageparts
  *   - "headers" do we return?, we can use setType to make it possible to select and than return these headers
  */
-class MainContentPart : public MimePart
+class ContentPart : public Part
 {
 public:
-    enum Types {
-        PlainText,
-        Html
+    typedef std::shared_ptr<ContentPart> Ptr;
+    enum Type {
+        PlainText = 0x0001,
+        Html      = 0x0002
     };
     Q_DECLARE_FLAGS(Types, Type)
 
-    QVector<TextPart> content(Content::Type ct) const;
+    ContentPart();
+    virtual ~ContentPart();
+    
+    QVector<Content> content(Type ct) const;
 
-    Content::Types availableContent() const;
+    Types availableContents() const;
 
     QByteArray type() const Q_DECL_OVERRIDE;
 
 private:
     std::unique_ptr<ContentPartPrivate> d;
+
+    friend class ParserPrivate;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(ContentPart::Type)
+Q_DECLARE_OPERATORS_FOR_FLAGS(ContentPart::Types);
 
 class AttachmentPart : public MimePart
 {
 public:
+    typedef std::shared_ptr<AttachmentPart> Ptr;
     QByteArray type() const Q_DECL_OVERRIDE;
 
 private:
     std::unique_ptr<AttachmentPartPrivate> d;
+    friend class ParserPrivate;
 };
 
 /*
- * Faild to decrypt part
- * thigs liks this can happen:
- * decryption in progress
- * have not tried at all to decrypt
- * wrong passphrase
- * no private key
- * cryptobackend is not configured correctly (no gpg available) 
- *  -> S/Mime and PGP have different meaning in their errors
- * 
  * Open Questions:
  * - How to make the string translateable for multiple clients, so that multiple clients can show same error messages,
  * that helps users to understand what is going on ?
  * - Does openpgp have translations already?
  */
-class EncryptionErrorPart : public Part
+class EncryptionError
 {
 public:
-    Error errorId() const;
+    int errorId() const;
+    QString errorString() const;
+};
 
-    CryptoBackend cryptoBackend();
-
+class EncryptionPart : public MimePart
+{
+public:
+    typedef std::shared_ptr<EncryptionPart> Ptr;
     QByteArray type() const Q_DECL_OVERRIDE;
 
+    EncryptionError error() const;
+
 private:
-    std::unique_ptr<EncryptionErrorPartPrivate> d;
+    std::unique_ptr<EncryptionPartPrivate> d;    
 };
+
 
 /*
  * we want to request complete headers like:
  * from/to...
  */
 
-class EncapsulatedPart :: public AttachmentPart
+class EncapsulatedPart : public AttachmentPart
 {
 public:
+    typedef std::shared_ptr<EncapsulatedPart> Ptr;
     QByteArray type() const Q_DECL_OVERRIDE;
 
-    QByteArray header<Type>();
+    //template <class T> QByteArray header<T>();
 private:
-    std::unique_ptr<EncryptionErrorPartPrivate> d;    
+    std::unique_ptr<EncapsulatedPartPrivate> d;    
 };
 
 /*
@@ -249,64 +235,31 @@ private:
  * checking a cert (if it is a valid cert)
  */
 
-class CertPart :: public AttachmentPart
+class CertPart : public AttachmentPart
 {
 public:
+    typedef std::shared_ptr<CertPart> Ptr;
     QByteArray type() const Q_DECL_OVERRIDE;
 
-    bool checkCert() const;
-    Status importCert() const;
+    enum CertType {
+        Pgp,
+        SMime
+    };
+
+    enum CertSubType {
+        Public,
+        Private
+    };
+
+    CertType certType() const;
+    CertSubType certSubType() const;
+    int keyLength() const;
 
 private:
     std::unique_ptr<CertPartPrivate> d;    
 };
 
-/*
-the ggme error class
 
-// class GPGMEPP_EXPORT ErrorImportResult
-{
-public:
-    Error() : mErr(0), mMessage() {}
-    explicit Error(unsigned int e) : mErr(e), mMessage() {}
-
-    const char *source() const;
-    const char *asString() const;
-
-    int code() const;
-    int sourceID() const;
-
-    bool isCanceled() const;
-
-    unsigned int encodedError() const
-    {
-        return mErr;
-    }
-    int toErrno() const;
-
-    static bool hasSystemError();
-    static Error fromSystemError(unsigned int src = GPGMEPP_ERR_SOURCE_DEFAULT);
-    static void setSystemError(gpg_err_code_t err);
-    static void setErrno(int err);
-    static Error fromErrno(int err, unsigned int src = GPGMEPP_ERR_SOURCE_DEFAULT);
-    static Error fromCode(unsigned int err, unsigned int src = GPGMEPP_ERR_SOURCE_DEFAULT);
-
-    GPGMEPP_MAKE_SAFE_BOOL_OPERATOR(mErr  &&!isCanceled())
-private:
-    unsigned int mErr;
-    mutable std::string mMessage;
-};
-*/
-
-/*
- * a used smime/PGP key
- * in the end we also need things like:
-   bool isRevokation() const;
-   bool isInvalid() const;
-   bool isExpired() const;
-
-   -> so we end up wrapping GpgME::Key
- */
 class Key
 {
     QString keyid() const;
@@ -314,8 +267,14 @@ class Key
     QString email() const;
     QString comment() const;
     QVector<QString> emails() const;
+    enum KeyTrust {
+        Unknown, Undefined, Never, Marginal, Full, Ultimate
+    };
     KeyTrust keyTrust() const;
-    CryptoBackend cryptoBackend() const;
+
+    bool isRevokation() const;
+    bool isInvalid() const;
+    bool isExpired() const;
 
     std::vector<Key> subkeys();
     Key parentkey() const;
@@ -328,35 +287,7 @@ class Signature
     QDateTime expirationTime() const;
     bool neverExpires() const;
 
-    bool inProgress();      //if the verfication is inProgress
-
-    enum Validity {
-        Unknown, Undefined, Never, Marginal, Full, Ultimate
-    };
-    Validity validity() const;
-
-    // to determine if we need this in our usecase (email)
-    // GpgME::VerificationResult
-    enum Summary {
-        None       = 0x000,
-        Valid      = 0x001,
-        Green      = 0x002,
-        Red        = 0x004,
-        KeyRevoked = 0x008,
-        KeyExpired = 0x010,
-        SigExpired = 0x020,
-        KeyMissing = 0x040,
-        CrlMissing = 0x080,
-        CrlTooOld  = 0x100,
-        BadPolicy  = 0x200,
-        SysError   = 0x400
-    };
-    Summary summary() const;
-
-    const char *policyURL() const;
-    GpgME::Notation notation(unsigned int index) const;
-    std::vector<GpgME::Notation> notations() const;
-
+    //template <> StatusObject<SignatureVerificationResult> verify() const;
 };
 
 /*
@@ -367,4 +298,30 @@ class Signature
 class Encryption
 {
     std::vector<Key> recipients() const;
+};
+
+class Parser
+{
+public:
+    typedef std::shared_ptr<Parser> Ptr;
+    Parser(const QByteArray &mimeMessage);
+    ~Parser();
+
+    Part::Ptr getPart(QUrl url);
+
+    //template <typename T> QVector<T::Ptr> collect<T>(Part start, std::function<bool(const Part &)> select, std::function<bool(const T::Ptr &)> filter) const;
+    QVector<AttachmentPart::Ptr> collectAttachments(Part::Ptr start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const AttachmentPart::Ptr &)> filter) const;
+    ContentPart::Ptr collectContentPart(Part::Ptr start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const ContentPart::Ptr &)> filter) const;
+    ContentPart::Ptr collectContentPart(const Part::Ptr& start) const;
+    ContentPart::Ptr collectContentPart() const;
+    //template <> QVector<ContentPart::Ptr> collect<ContentPart>() const;
+
+    //template <> static StatusObject<SignatureVerificationResult> verifySignature(const Signature signature) const;
+    //template <> static StatusObject<Part> decrypt(const EncryptedPart part) const;
+
+signals:
+    void partsChanged();
+
+private:
+    std::unique_ptr<ParserPrivate> d;
 };

@@ -23,26 +23,26 @@ ap1 == getPart("cid:12345678")
 (Html) == cp1.availableContent()
 
 # alternative msg + attachment
-* ContentPart(html=[TextPart("HTML"),], plaintext=[TextPart("Text"),]) => cp1
+* ContentPart(html=[Content("HTML"),], plaintext=[Content("Text"),]) => cp1
 * AttachmentPart => ap1
 
 (cp1) == collect<ContentPart>(select=NoEncapsulatedMessages)
 (ap1) == collect<AttachmentParts>(select=NoEncapsulatedMessages)
 
 (Html, PlainText) == cp1.availableContent()
-[TextPart("HTML"),] == cp1.content(Html)
-[TextPart("Text"),] == cp1.content(Plaintext)
+[Content("HTML"),] == cp1.content(Html)
+[Content("Text"),] == cp1.content(Plaintext)
 
 # alternative msg with GPGInlin
 * ContentPart(
-    plaintext=[TextPart("Text"), TextPart("foo", encryption=(enc1))],
-    html=[TextPart("HTML"),]
+    plaintext=[Content("Text"), Content("foo", encryption=(enc1))],
+    html=[Content("HTML"),]
   ) => cp1
 
 (Html, PlainText) == cp1.availableContent()
 
-[TextPart("HTML"),] == cp1.content(Html)
-[TextPart("Text"),TextPart("foo", encryption=(enc1))] == cp1.content(Plaintext)
+[Content("HTML"),] == cp1.content(Html)
+[Content("Text"),Content("foo", encryption=(enc1))] == cp1.content(Plaintext)
 
 
 # encrypted msg (not encrypted/error) with unencrypted attachment
@@ -63,13 +63,13 @@ ap1 == getPart("cid:12345678")
 
 #INLINE GPG encrypted msg + attachment
 * ContentPart => cp1 with
-  plaintext=[TextPart, TextPart(encrytion = (enc1(rec1,rec2),)), TextPart(signed = (sig1,)), TextPart]
+  plaintext=[Content, Content(encrytion = (enc1(rec1,rec2),)), Content(signed = (sig1,)), Content]
 * AttachmentPart => ap1
 
 (cp1) == collect<ContentPart>(select=NoEncapsulatedMessages)
 (ap1) == collect<AttachmentParts>(select=NoEncapsulatedMessages)
 
-[TextPart, TextPart(encrytion = (enc1(rec1,rec2),)), TextPart(signed = (sig1,)), TextPart] == cp1.content(Plaintext)
+[Content, Content(encrytion = (enc1(rec1,rec2),)), Content(signed = (sig1,)), Content] == cp1.content(Plaintext)
 
 #forwared encrypted msg + attachments
 * ContentPart => cp1
@@ -77,8 +77,8 @@ ap1 == getPart("cid:12345678")
     * Encrytion=(rec1,rec2) => enc1
         * Signature => sig1
             * ContentPart(encrytion = (enc1,), signature = (sig1,)) => cp2
-                * TextPart(encrytion = (enc1,), signature = (sig1,))
-                * TextPart(encrytion = (enc1, enc2(rec3,rec4),), signature = (sig1,))
+                * Content(encrytion = (enc1,), signature = (sig1,))
+                * Content(encrytion = (enc1, enc2(rec3,rec4),), signature = (sig1,))
             * AttachmentPart(encrytion = (enc1,), signature = (sig1,)) => ap1
 * AttachmentPart => ap2
 
@@ -89,7 +89,7 @@ ap1 == getPart("cid:12345678")
 (ap1) = collect<AttachmentParts>(ep1, select=NoEncapsulatedMessages)
 
 (cp1, cp2) == collect<ContentPart>()
-(ap1, ap2) == collect<AttachmentParts>()[TextPart, TextPart(encrytion = (enc1(rec1,rec2),)), TextPart(signed = (sig1,)), TextPart]
+(ap1, ap2) == collect<AttachmentParts>()[Content, Content(encrytion = (enc1(rec1,rec2),)), Content(signed = (sig1,)), Content]
 
 
 # plaintext msg + attachment + cert
