@@ -28,8 +28,7 @@ class ObjectSourcePrivate;
 class ObjectTreeSource : public MimeTreeParser::Interface::ObjectTreeSource
 {
 public:
-    ObjectTreeSource(MimeTreeParser::HtmlWriter *writer,
-                     MimeTreeParser::CSSHelperBase *cssHelper);
+    ObjectTreeSource(MimeTreeParser::HtmlWriter *writer);
     virtual ~ObjectTreeSource();
     void setHtmlLoadExternal(bool loadExternal);
     void setHtmlMail(bool htmlMail);
@@ -44,7 +43,6 @@ public:
     QString createMessageHeader(KMime::Message *message) Q_DECL_OVERRIDE;
     const MimeTreeParser::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
     MimeTreeParser::HtmlWriter *htmlWriter() Q_DECL_OVERRIDE;
-    MimeTreeParser::CSSHelperBase *cssHelper() Q_DECL_OVERRIDE;
     QObject *sourceObject() Q_DECL_OVERRIDE;
     bool autoImportKeys() const Q_DECL_OVERRIDE;
     bool showEmoticons() const Q_DECL_OVERRIDE;

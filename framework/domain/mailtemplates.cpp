@@ -35,7 +35,6 @@
 
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
-#include "csshelper.h"
 
 #include <MimeTreeParser/ObjectTreeParser>
 
@@ -757,10 +756,8 @@ KMime::Message::Ptr MailTemplates::reply(const KMime::Message::Ptr &origMsg)
 
     //TODO set empty source instead
     StringHtmlWriter htmlWriter;
-    QImage paintDevice;
-    CSSHelper cssHelper(&paintDevice);
     MimeTreeParser::NodeHelper nodeHelper;
-    ObjectTreeSource source(&htmlWriter, &cssHelper);
+    ObjectTreeSource source(&htmlWriter);
     MimeTreeParser::ObjectTreeParser otp(&source, &nodeHelper);
     otp.setAllowAsync(false);
     otp.parseObjectTree(origMsg.data());

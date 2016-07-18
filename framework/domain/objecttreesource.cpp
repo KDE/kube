@@ -29,7 +29,6 @@ class ObjectSourcePrivate
 public:
     ObjectSourcePrivate()
         : mWriter(0)
-        , mCSSHelper(0)
         , mAllowDecryption(true)
         , mHtmlLoadExternal(true)
         , mHtmlMail(true)
@@ -37,20 +36,17 @@ public:
 
     }
     MimeTreeParser::HtmlWriter *mWriter;
-    MimeTreeParser::CSSHelperBase *mCSSHelper;
     MimeTreeParser::BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     bool mAllowDecryption;
     bool mHtmlLoadExternal;
     bool mHtmlMail;
 };
 
-ObjectTreeSource::ObjectTreeSource(MimeTreeParser::HtmlWriter *writer,
-                                   MimeTreeParser::CSSHelperBase *cssHelper)
+ObjectTreeSource::ObjectTreeSource(MimeTreeParser::HtmlWriter *writer)
         : MimeTreeParser::Interface::ObjectTreeSource()
         , d(new ObjectSourcePrivate)
     {
         d->mWriter = writer;
-        d->mCSSHelper = cssHelper;
     }
 
 ObjectTreeSource::~ObjectTreeSource()
@@ -66,10 +62,6 @@ void ObjectTreeSource::setAllowDecryption(bool allowDecryption)
 MimeTreeParser::HtmlWriter *ObjectTreeSource::htmlWriter()
 {
     return d->mWriter;
-}
-MimeTreeParser::CSSHelperBase *ObjectTreeSource::cssHelper()
-{
-    return d->mCSSHelper;
 }
 
 bool ObjectTreeSource::htmlLoadExternal() const

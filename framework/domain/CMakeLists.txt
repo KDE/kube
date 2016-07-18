@@ -5,7 +5,6 @@ set(mailplugin_SRCS
     actions/sinkactions.cpp
     objecttreesource.cpp
     stringhtmlwriter.cpp
-    csshelper.cpp
     composercontroller.cpp
     messageparser.cpp
     mailtemplates.cpp

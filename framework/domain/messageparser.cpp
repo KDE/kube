@@ -20,7 +20,6 @@
 
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
-#include "csshelper.h"
 
 #include <QFile>
 #include <QImage>
@@ -170,11 +169,9 @@ void MessageParser::setMessage(const QVariant &message)
 
     // render the mail
     StringHtmlWriter htmlWriter;
-    QImage paintDevice;
-    CSSHelper cssHelper(&paintDevice);
     //temporary files only have the lifetime of the nodehelper, so we keep it around until the mail changes.
     mNodeHelper = std::make_shared<MimeTreeParser::NodeHelper>();
-    ObjectTreeSource source(&htmlWriter, &cssHelper);
+    ObjectTreeSource source(&htmlWriter);
     MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
     otp.parseObjectTree(msg.data());
