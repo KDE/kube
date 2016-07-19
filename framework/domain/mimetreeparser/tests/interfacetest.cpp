@@ -39,7 +39,30 @@ private slots:
     {
         Parser parser(readMailFromFile("plaintext.mbox"));
         auto contentPart = parser.collectContentPart();
-        //QVERIFY((bool)contentPart);
+        QVERIFY((bool)contentPart);
+        QCOMPARE(contentPart->availableContents(), ContentPart::PlainText);
+        auto contentList = contentPart->content(ContentPart::PlainText);
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n\n- GOG.com Team\n\n").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->encryptions().size(), 0);
+        QCOMPARE(contentList[0]->signatures().size(), 0);
+    }
+
+    void testTextAlternative()
+    {
+        Parser parser(readMailFromFile("alternative.mbox"));
+        auto contentPart = parser.collectContentPart();
+        QVERIFY((bool)contentPart);
+        QCOMPARE(contentPart->availableContents(), ContentPart::PlainText | ContentPart::Html);
+    }
+
+     void testTextHtml()
+    {
+        Parser parser(readMailFromFile("html.mbox"));
+        auto contentPart = parser.collectContentPart();
+        QVERIFY((bool)contentPart);
+        QCOMPARE(contentPart->availableContents(), ContentPart::Html);
     }
 };
 

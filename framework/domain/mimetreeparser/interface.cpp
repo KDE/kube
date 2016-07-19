@@ -38,26 +38,27 @@ public:
 
     QVector<Part::Ptr> subParts();
 
-    const std::weak_ptr<Part> &parent() const;
+    Part *parent() const;
 private:
     Part *q;
-    std::weak_ptr<Part> mParent;
+    Part *mParent;
     QVector<Part::Ptr> mSubParts;
 };
 
 PartPrivate::PartPrivate(Part* part)
-    :q(part)
+    : q(part)
+    , mParent(Q_NULLPTR)
 {
 
 }
 
 void PartPrivate::appendSubPart(Part::Ptr subpart)
 {
-    subpart->d->mParent = Part::Ptr(q);
+    subpart->d->mParent = q;
     mSubParts.append(subpart);
 }
 
-const std::weak_ptr<Part> &PartPrivate::parent() const
+Part *PartPrivate::parent() const
 {
     return mParent;
 }
@@ -90,7 +91,7 @@ QByteArray Part::type() const
 
 QVector<Encryption> Part::encryptions() const
 {
-    auto parent = d->parent().lock();
+    auto parent = d->parent();
     if (parent) {
         return parent->encryptions();
     } else {
@@ -100,7 +101,7 @@ QVector<Encryption> Part::encryptions() const
 
 QVector<Signature> Part::signatures() const
 {
-    auto parent = d->parent().lock();
+    auto parent = d->parent();
     if (parent) {
         return parent->signatures();
     } else {
@@ -146,6 +147,16 @@ QVector< Signature > Content::signatures() const
     return QVector<Signature>();
 }
 
+QByteArray Content::content() const
+{
+    return d->mContent;
+}
+
+QByteArray Content::charset() const
+{
+    return d->mCodec;
+}
+
 class ContentPartPrivate
 {
 public:
@@ -153,12 +164,14 @@ public:
     void fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part);
     void fillFrom(MimeTreeParser::AlternativeMessagePart::Ptr part);
 
-    QVector<Content::Ptr> contents() const;
+    QVector<Content::Ptr> content() const;
 
     ContentPart *q;
+
+    ContentPart::Types types() const;
     
 private:
-    QVector<Content::Ptr> mContents;
+    QVector<Content::Ptr> mContent;
     ContentPart::Types mTypes;
 };
 
@@ -167,7 +180,7 @@ void ContentPartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
     mTypes = ContentPart::PlainText;
     foreach (const auto &mp, part->subParts()) {
         auto content = std::make_shared<Content>(mp->text().toLocal8Bit(), q);
-        mContents.append(content);
+        mContent.append(content);
     }
 }
 
@@ -180,6 +193,22 @@ void ContentPartPrivate::fillFrom(MimeTreeParser::AlternativeMessagePart::Ptr pa
 {
     mTypes = ContentPart::Html | ContentPart::PlainText;
 }
+
+ContentPart::Types ContentPartPrivate::types() const
+{
+    return mTypes;
+}
+
+QVector<Content::Ptr> ContentPartPrivate::content() const
+{
+    return mContent;
+}
+
+QVector<Content::Ptr> ContentPart::content(ContentPart::Type ct) const
+{
+    return d->content();
+}
+
 
 ContentPart::ContentPart()
     : d(std::unique_ptr<ContentPartPrivate>(new ContentPartPrivate))
@@ -195,6 +224,11 @@ ContentPart::~ContentPart()
 QByteArray ContentPart::type() const
 {
     return "ContentPart";
+}
+
+ContentPart::Types ContentPart::availableContents() const
+{
+    return d->types();
 }
 
 class MimePartPrivate
@@ -230,7 +264,7 @@ public:
     ParserPrivate(Parser *parser);
 
     void setMessage(const QByteArray &mimeMessage);
-    void createTree(MimeTreeParser::MessagePart::Ptr start, Part::Ptr tree);
+    void createTree(const MimeTreeParser::MessagePart::Ptr& start, const Part::Ptr& tree);
 
     Part::Ptr mTree;
 private:
@@ -273,9 +307,8 @@ void ParserPrivate::setMessage(const QByteArray& mimeMessage)
 }
 
 
-void ParserPrivate::createTree(MimeTreeParser::MessagePart::Ptr start, Part::Ptr tree)
+void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, const Part::Ptr &tree)
 {
-
     foreach (const auto &mp, start->subParts()) {
         const auto m = mp.dynamicCast<MimeTreeParser::MessagePart>();
         const auto text = mp.dynamicCast<MimeTreeParser::TextMessagePart>();
@@ -316,20 +349,30 @@ Parser::~Parser()
 
 ContentPart::Ptr Parser::collectContentPart(const Part::Ptr &start) const
 {
-    foreach (const auto &part, start->subParts()) {
-        if (part->type() == "ContentPart") {
-            return std::dynamic_pointer_cast<ContentPart>(part);
-        } else {
-            auto ret = collectContentPart(part);
-            if (ret) {
-                return ret;
-            }
-        }
-    }
+    const auto ret = collect<ContentPart>(start,  [](const Part::Ptr &p){return p->type() == "ContentPart";}, [](const ContentPart::Ptr &p){return true;});
+    if (ret.size() > 0) {
+        return ret[0];
+    };
     return ContentPart::Ptr();
 }
 
 ContentPart::Ptr Parser::collectContentPart() const
 {
     return collectContentPart(d->mTree);
+}
+
+template <typename T>
+QVector<typename T::Ptr> Parser::collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const typename T::Ptr &)> filter) const
+{
+    QVector<typename T::Ptr> ret;
+    foreach (const auto &part, start->subParts()) {
+        if (select(part)){
+            const auto p = std::dynamic_pointer_cast<T>(part);
+            if (p && filter(p)) {
+                ret.append(p);
+            }
+            ret += collect<T>(part, select, filter);
+        }
+    }
+    return ret;
 }

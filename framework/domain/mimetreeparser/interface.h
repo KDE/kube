@@ -66,7 +66,7 @@ public:
 
     bool hasSubParts() const;
     QVector<Part::Ptr> subParts() const;
-    Part::Ptr parent() const;
+    Part *parent() const;
 
     virtual QVector<Signature> signatures() const;
     virtual QVector<Encryption> encryptions() const;
@@ -84,6 +84,8 @@ public:
     virtual ~Content();
 
     QByteArray content() const;
+
+    QByteArray charset() const;
 
     //Use default charset
     QString encodedContent() const;
@@ -162,8 +164,8 @@ public:
 
     ContentPart();
     virtual ~ContentPart();
-    
-    QVector<Content> content(Type ct) const;
+
+    QVector<Content::Ptr> content(Type ct) const;
 
     Types availableContents() const;
 
@@ -259,7 +261,6 @@ private:
     std::unique_ptr<CertPartPrivate> d;    
 };
 
-
 class Key
 {
     QString keyid() const;
@@ -309,7 +310,7 @@ public:
 
     Part::Ptr getPart(QUrl url);
 
-    //template <typename T> QVector<T::Ptr> collect<T>(Part start, std::function<bool(const Part &)> select, std::function<bool(const T::Ptr &)> filter) const;
+    template <typename T> QVector<typename T::Ptr> collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const typename T::Ptr &)> filter) const;
     QVector<AttachmentPart::Ptr> collectAttachments(Part::Ptr start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const AttachmentPart::Ptr &)> filter) const;
     ContentPart::Ptr collectContentPart(Part::Ptr start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const ContentPart::Ptr &)> filter) const;
     ContentPart::Ptr collectContentPart(const Part::Ptr& start) const;
@@ -325,3 +326,4 @@ signals:
 private:
     std::unique_ptr<ParserPrivate> d;
 };
+
