@@ -18,6 +18,7 @@
 */
 
 #include "interface.h"
+#include "interface_p.h"
 
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
@@ -28,7 +29,6 @@
 #include <MimeTreeParser/NodeHelper>
 
 #include <QDebug>
-#include <QImage>
 
 class PartPrivate
 {
@@ -164,34 +164,42 @@ public:
     void fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part);
     void fillFrom(MimeTreeParser::AlternativeMessagePart::Ptr part);
 
-    QVector<Content::Ptr> content() const;
+    QVector<Content::Ptr> content(ContentPart::Type ct) const;
 
     ContentPart *q;
 
     ContentPart::Types types() const;
-    
+
 private:
-    QVector<Content::Ptr> mContent;
+    QMap<ContentPart::Type, QVector<Content::Ptr>> mContent;
     ContentPart::Types mTypes;
 };
 
 void ContentPartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
 {
+    qDebug() << "jepp";
     mTypes = ContentPart::PlainText;
     foreach (const auto &mp, part->subParts()) {
         auto content = std::make_shared<Content>(mp->text().toLocal8Bit(), q);
-        mContent.append(content);
+        mContent[ContentPart::PlainText].append(content);
     }
 }
 
 void ContentPartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
 {
     mTypes = ContentPart::Html;
+    auto content = std::make_shared<Content>(part->text().toLocal8Bit(), q);
+    mContent[ContentPart::Html].append(content);
 }
 
 void ContentPartPrivate::fillFrom(MimeTreeParser::AlternativeMessagePart::Ptr part)
 {
     mTypes = ContentPart::Html | ContentPart::PlainText;
+
+    auto content = std::make_shared<Content>(part->htmlContent().toLocal8Bit(), q);
+    mContent[ContentPart::Html].append(content);
+    content = std::make_shared<Content>(part->plaintextContent().toLocal8Bit(), q);
+    mContent[ContentPart::PlainText].append(content);
 }
 
 ContentPart::Types ContentPartPrivate::types() const
@@ -199,14 +207,14 @@ ContentPart::Types ContentPartPrivate::types() const
     return mTypes;
 }
 
-QVector<Content::Ptr> ContentPartPrivate::content() const
+QVector<Content::Ptr> ContentPartPrivate::content(ContentPart::Type ct) const
 {
-    return mContent;
+    return mContent[ct];
 }
 
 QVector<Content::Ptr> ContentPart::content(ContentPart::Type ct) const
 {
-    return d->content();
+    return d->content(ct);
 }
 
 
@@ -258,24 +266,6 @@ QByteArray AttachmentPart::type() const
     return "AttachmentPart";
 }
 
-class ParserPrivate
-{
-public:
-    ParserPrivate(Parser *parser);
-
-    void setMessage(const QByteArray &mimeMessage);
-    void createTree(const MimeTreeParser::MessagePart::Ptr& start, const Part::Ptr& tree);
-
-    Part::Ptr mTree;
-private:
-    Parser *q;
-
-    MimeTreeParser::MessagePart::Ptr mPartTree;
-    std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
-    QString mHtml;
-    QMap<QByteArray, QUrl> mEmbeddedPartMap;
-};
-
 ParserPrivate::ParserPrivate(Parser* parser)
     : q(parser)
     , mNodeHelper(std::make_shared<MimeTreeParser::NodeHelper>())
@@ -292,7 +282,6 @@ void ParserPrivate::setMessage(const QByteArray& mimeMessage)
 
     // render the mail
     StringHtmlWriter htmlWriter;
-    QImage paintDevice;
     ObjectTreeSource source(&htmlWriter);
     MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
@@ -315,7 +304,11 @@ void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, co
         const auto alternative = mp.dynamicCast<MimeTreeParser::AlternativeMessagePart>();
         const auto html = mp.dynamicCast<MimeTreeParser::HtmlMessagePart>();
         const auto attachment = mp.dynamicCast<MimeTreeParser::AttachmentMessagePart>();
-        if (text) {
+         if (attachment) {
+            auto part = std::make_shared<AttachmentPart>();
+            part->d->fillFrom(attachment);
+            mTree->d->appendSubPart(part);
+         } else if (text) {
             auto part = std::make_shared<ContentPart>();
             part->d->fillFrom(text);
             mTree->d->appendSubPart(part);
@@ -326,10 +319,6 @@ void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, co
         } else if (html) {
             auto part = std::make_shared<ContentPart>();
             part->d->fillFrom(html);
-            mTree->d->appendSubPart(part);
-        } else if (attachment) {
-            auto part = std::make_shared<AttachmentPart>();
-            part->d->fillFrom(attachment);
             mTree->d->appendSubPart(part);
         } else {
             createTree(m, tree);
@@ -349,7 +338,7 @@ Parser::~Parser()
 
 ContentPart::Ptr Parser::collectContentPart(const Part::Ptr &start) const
 {
-    const auto ret = collect<ContentPart>(start,  [](const Part::Ptr &p){return p->type() == "ContentPart";}, [](const ContentPart::Ptr &p){return true;});
+    const auto ret = collect<ContentPart>(start, [](const Part::Ptr &p){return p->type() == "ContentPart";}, [](const ContentPart::Ptr &p){return true;});
     if (ret.size() > 0) {
         return ret[0];
     };

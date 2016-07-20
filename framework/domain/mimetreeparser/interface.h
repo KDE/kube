@@ -187,6 +187,7 @@ public:
 
 private:
     std::unique_ptr<AttachmentPartPrivate> d;
+
     friend class ParserPrivate;
 };
 
@@ -325,5 +326,7 @@ signals:
 
 private:
     std::unique_ptr<ParserPrivate> d;
+
+    friend class InterfaceTest;
 };
 

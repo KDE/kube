@@ -18,6 +18,7 @@
 */
 
 #include "interface.h"
+#include "interface_p.h"
 
 #include <QTest>
 
@@ -33,6 +34,15 @@ QByteArray readMailFromFile(const QString &mailFile)
 class InterfaceTest : public QObject
 {
     Q_OBJECT
+private:
+    void printTree(const Part::Ptr &start, QString pre)
+    {
+        foreach (const auto &part, start->subParts()) {
+            qWarning() << QStringLiteral("%1* %2").arg(pre).arg(QString::fromLatin1(part->type()));
+            printTree(part,pre + QStringLiteral("  "));
+        }
+    }
+
 private slots:
 
     void testTextMail()
@@ -43,10 +53,13 @@ private slots:
         QCOMPARE(contentPart->availableContents(), ContentPart::PlainText);
         auto contentList = contentPart->content(ContentPart::PlainText);
         QCOMPARE(contentList.size(), 1);
-        QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n\n- GOG.com Team\n\n").toLocal8Bit());
+        QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/").toLocal8Bit());
         QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
         QCOMPARE(contentList[0]->encryptions().size(), 0);
         QCOMPARE(contentList[0]->signatures().size(), 0);
+
+        contentList = contentPart->content(ContentPart::Html);
+        QCOMPARE(contentList.size(), 0);
     }
 
     void testTextAlternative()
@@ -55,6 +68,19 @@ private slots:
         auto contentPart = parser.collectContentPart();
         QVERIFY((bool)contentPart);
         QCOMPARE(contentPart->availableContents(), ContentPart::PlainText | ContentPart::Html);
+        auto contentList = contentPart->content(ContentPart::PlainText);
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->encryptions().size(), 0);
+        QCOMPARE(contentList[0]->signatures().size(), 0);
+
+        contentList = contentPart->content(ContentPart::Html);
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->content(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>\n\n").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->encryptions().size(), 0);
+        QCOMPARE(contentList[0]->signatures().size(), 0);
     }
 
      void testTextHtml()
@@ -63,6 +89,55 @@ private slots:
         auto contentPart = parser.collectContentPart();
         QVERIFY((bool)contentPart);
         QCOMPARE(contentPart->availableContents(), ContentPart::Html);
+
+        auto contentList = contentPart->content(ContentPart::PlainText);
+        QCOMPARE(contentList.size(), 0);
+
+        contentList = contentPart->content(ContentPart::Html);
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->content(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->encryptions().size(), 0);
+        QCOMPARE(contentList[0]->signatures().size(), 0);
+    }
+
+    void testSMimeEncrypted()
+    {
+        Parser parser(readMailFromFile("smime-encrypted.mbox"));
+        printTree(parser.d->mTree,QString());
+        auto contentPart = parser.collectContentPart();
+        QVERIFY((bool)contentPart);
+        QCOMPARE(contentPart->availableContents(), ContentPart::PlainText);
+        auto contentList = contentPart->content(ContentPart::PlainText);
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->content(), QStringLiteral("The quick brown fox jumped over the lazy dog.").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+    }
+
+    void testOpenPGPEncryptedAttachment()
+    {
+        Parser parser(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
+        printTree(parser.d->mTree,QString());
+        auto contentPart = parser.collectContentPart();
+        QVERIFY((bool)contentPart);
+        QCOMPARE(contentPart->availableContents(), ContentPart::PlainText);
+        auto contentList = contentPart->content(ContentPart::PlainText);
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->content(), QStringLiteral("test text").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+    }
+
+    void testOpenPPGInline()
+    {
+        Parser parser(readMailFromFile("openpgp-inline-charset-encrypted.mbox"));
+        printTree(parser.d->mTree,QString());
+        auto contentPart = parser.collectContentPart();
+        QVERIFY((bool)contentPart);
+        QCOMPARE(contentPart->availableContents(), ContentPart::PlainText);
+        auto contentList = contentPart->content(ContentPart::PlainText);
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->content(), QStringLiteral("asdasd asd asd asdf sadf sdaf sadf äöü").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
     }
 };
 
