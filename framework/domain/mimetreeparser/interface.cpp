@@ -89,6 +89,16 @@ QByteArray Part::type() const
     return "Part";
 }
 
+QVector<QByteArray> Part::availableContents() const
+{
+    return QVector<QByteArray>();
+}
+
+QVector<Content::Ptr> Part::content() const
+{
+    return QVector<Content::Ptr>();
+}
+
 QVector<Encryption> Part::encryptions() const
 {
     auto parent = d->parent();
@@ -118,7 +128,7 @@ public:
     Content *q;
 };
 
-Content::Content(const QByteArray& content, ContentPart *parent)
+Content::Content(const QByteArray& content, Part *parent)
     : d(std::unique_ptr<ContentPrivate>(new ContentPrivate))
 {
     d->q = this;
@@ -157,86 +167,130 @@ QByteArray Content::charset() const
     return d->mCodec;
 }
 
-class ContentPartPrivate
+class AlternativePartPrivate
 {
 public:
-    void fillFrom(MimeTreeParser::TextMessagePart::Ptr part);
-    void fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part);
     void fillFrom(MimeTreeParser::AlternativeMessagePart::Ptr part);
 
-    QVector<Content::Ptr> content(ContentPart::Type ct) const;
+    QVector<Content::Ptr> content(const QByteArray &ct) const;
 
-    ContentPart *q;
+    AlternativePart *q;
 
-    ContentPart::Types types() const;
+    QVector<QByteArray> types() const;
 
 private:
-    QMap<ContentPart::Type, QVector<Content::Ptr>> mContent;
-    ContentPart::Types mTypes;
+    QMap<QByteArray, QVector<Content::Ptr>> mContent;
+    QVector<QByteArray> mTypes;
 };
 
-void ContentPartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
+void AlternativePartPrivate::fillFrom(MimeTreeParser::AlternativeMessagePart::Ptr part)
 {
-    qDebug() << "jepp";
-    mTypes = ContentPart::PlainText;
-    foreach (const auto &mp, part->subParts()) {
-        auto content = std::make_shared<Content>(mp->text().toLocal8Bit(), q);
-        mContent[ContentPart::PlainText].append(content);
-    }
+    mTypes = QVector<QByteArray>() << "html" << "plaintext";
+
+    auto content = std::make_shared<HtmlContent>(part->htmlContent().toLocal8Bit(), q);
+    mContent["html"].append(content);
+    content = std::make_shared<PlainTextContent>(part->plaintextContent().toLocal8Bit(), q);
+    mContent["plaintext"].append(content);
 }
 
-void ContentPartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
-{
-    mTypes = ContentPart::Html;
-    auto content = std::make_shared<Content>(part->text().toLocal8Bit(), q);
-    mContent[ContentPart::Html].append(content);
-}
-
-void ContentPartPrivate::fillFrom(MimeTreeParser::AlternativeMessagePart::Ptr part)
-{
-    mTypes = ContentPart::Html | ContentPart::PlainText;
-
-    auto content = std::make_shared<Content>(part->htmlContent().toLocal8Bit(), q);
-    mContent[ContentPart::Html].append(content);
-    content = std::make_shared<Content>(part->plaintextContent().toLocal8Bit(), q);
-    mContent[ContentPart::PlainText].append(content);
-}
-
-ContentPart::Types ContentPartPrivate::types() const
+QVector<QByteArray> AlternativePartPrivate::types() const
 {
     return mTypes;
 }
 
-QVector<Content::Ptr> ContentPartPrivate::content(ContentPart::Type ct) const
+QVector<Content::Ptr> AlternativePartPrivate::content(const QByteArray& ct) const
 {
     return mContent[ct];
 }
 
-QVector<Content::Ptr> ContentPart::content(ContentPart::Type ct) const
-{
-    return d->content(ct);
-}
-
-
-ContentPart::ContentPart()
-    : d(std::unique_ptr<ContentPartPrivate>(new ContentPartPrivate))
+AlternativePart::AlternativePart()
+    : d(std::unique_ptr<AlternativePartPrivate>(new AlternativePartPrivate))
 {
     d->q = this;
 }
 
-ContentPart::~ContentPart()
+AlternativePart::~AlternativePart()
 {
 
 }
 
-QByteArray ContentPart::type() const
+QByteArray AlternativePart::type() const
 {
-    return "ContentPart";
+    return "AlternativePart";
 }
 
-ContentPart::Types ContentPart::availableContents() const
+QVector<QByteArray> AlternativePart::availableContents() const
 {
     return d->types();
+}
+
+QVector<Content::Ptr> AlternativePart::content() const
+{
+    return d->content(availableContents().first());
+}
+
+QVector<Content::Ptr> AlternativePart::content(const QByteArray& ct) const
+{
+    return d->content(ct);
+}
+
+class SinglePartPrivate
+{
+public:
+    void fillFrom(MimeTreeParser::TextMessagePart::Ptr part);
+    void fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part);
+    void fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part);
+    SinglePart *q;
+
+    QVector<Content::Ptr> mContent;
+    QByteArray mType;
+};
+
+void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
+{
+    mType = "plaintext";
+    mContent.clear();
+    foreach (const auto &mp, part->subParts()) {
+        mContent.append(std::make_shared<PlainTextContent>(mp->text().toLocal8Bit(), q));
+    }
+}
+
+void SinglePartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
+{
+    mType = "html";
+    mContent.clear();
+    mContent.append(std::make_shared<HtmlContent>(part->text().toLocal8Bit(), q));
+}
+
+void SinglePartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part)
+{
+
+}
+
+SinglePart::SinglePart()
+    : d(std::unique_ptr<SinglePartPrivate>(new SinglePartPrivate))
+{
+    d->q = this;
+}
+
+SinglePart::~SinglePart()
+{
+
+}
+
+QVector<QByteArray> SinglePart::availableContents() const
+{
+    return QVector<QByteArray>() << d->mType;
+}
+
+QVector< Content::Ptr > SinglePart::content() const
+{
+    return d->mContent;
+}
+
+QByteArray SinglePart::type() const
+{
+    return "SinglePart";
 }
 
 class MimePartPrivate
@@ -248,22 +302,6 @@ public:
 QByteArray MimePart::type() const
 {
     return "MimePart";
-}
-
-class AttachmentPartPrivate
-{
-public:
-    void fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part);
-};
-
-void AttachmentPartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part)
-{
-
-}
-
-QByteArray AttachmentPart::type() const
-{
-    return "AttachmentPart";
 }
 
 ParserPrivate::ParserPrivate(Parser* parser)
@@ -309,15 +347,15 @@ void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, co
             part->d->fillFrom(attachment);
             mTree->d->appendSubPart(part);
          } else if (text) {
-            auto part = std::make_shared<ContentPart>();
+            auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(text);
             mTree->d->appendSubPart(part);
         } else if (alternative) {
-            auto part = std::make_shared<ContentPart>();
+            auto part = std::make_shared<AlternativePart>();
             part->d->fillFrom(alternative);
             mTree->d->appendSubPart(part);
         } else if (html) {
-            auto part = std::make_shared<ContentPart>();
+            auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(html);
             mTree->d->appendSubPart(part);
         } else {
@@ -336,18 +374,9 @@ Parser::~Parser()
 {
 }
 
-ContentPart::Ptr Parser::collectContentPart(const Part::Ptr &start) const
+QVector<Part::Ptr> Parser::collectContentParts() const
 {
-    const auto ret = collect<ContentPart>(start, [](const Part::Ptr &p){return p->type() == "ContentPart";}, [](const ContentPart::Ptr &p){return true;});
-    if (ret.size() > 0) {
-        return ret[0];
-    };
-    return ContentPart::Ptr();
-}
-
-ContentPart::Ptr Parser::collectContentPart() const
-{
-    return collectContentPart(d->mTree);
+    return collect<Part>(d->mTree, [](const Part::Ptr &p){return p->availableContents().indexOf("html") > -1 || p->availableContents().indexOf("text") > -1;}, [](const Part::Ptr &p){return true;});
 }
 
 template <typename T>

@@ -29,11 +29,14 @@
 class Part;
 class PartPrivate;
 
-class MimePart;
-class MimePartPrivate;
+class MailMime;
+class MailMimePrivate;
 
-class ContentPart;
-class ContentPartPrivate;
+class AlternativePart;
+class AlternativePartPrivate;
+
+class SinglePart;
+class SinglePartPrivate;
 
 class EncryptionPart;
 class EncryptionPartPrivate;
@@ -44,11 +47,13 @@ class AttachmentPartPrivate;
 class EncapsulatedPart;
 class EncapsulatedPartPrivate;
 
-class CertPart;
-class CertPartPrivate;
-
 class Content;
 class ContentPrivate;
+
+class CertContent;
+class CertContentPrivate;
+
+class EncryptionError;
 
 class Key;
 class Signature;
@@ -57,55 +62,13 @@ class Encryption;
 class Parser;
 class ParserPrivate;
 
-class Part
-{
-public:
-    typedef std::shared_ptr<Part> Ptr;
-    Part();
-    virtual QByteArray type() const;
-
-    bool hasSubParts() const;
-    QVector<Part::Ptr> subParts() const;
-    Part *parent() const;
-
-    virtual QVector<Signature> signatures() const;
-    virtual QVector<Encryption> encryptions() const;
-private:
-    std::unique_ptr<PartPrivate> d;
-    friend class ParserPrivate;
-    friend class PartPrivate;
-};
-
-class Content
-{
-public:
-    typedef std::shared_ptr<Content> Ptr;
-    Content(const QByteArray &content, ContentPart *parent);
-    virtual ~Content();
-
-    QByteArray content() const;
-
-    QByteArray charset() const;
-
-    //Use default charset
-    QString encodedContent() const;
-
-    // overwrite default charset with given charset
-    QString encodedContent(QByteArray charset) const;
-
-    virtual QVector<Signature> signatures() const;
-    virtual QVector<Encryption> encryptions() const;
-private:
-    std::unique_ptr<ContentPrivate> d;
-};
-
 /* 
  * A MessagePart that is based on a KMime::Content
  */
-class MimePart : public Part
+class MailMime
 {
 public:
-    typedef std::shared_ptr<MimePart> Ptr;
+    typedef std::shared_ptr<MailMime> Ptr;
     /**
      *  Various possible values for the "Content-Disposition" header.
      */
@@ -122,13 +85,30 @@ public:
     QByteArray cid() const;
     QByteArray charset() const;
 
-    // we wanna overrwrite the charset of the content, because some clients set the charset wrong
-    void setCharset(QByteArray charset);
-
     // Unique identifier to ecactly this KMime::Content
     QByteArray link() const;
 
     QByteArray content() const;
+    //Use default charset
+    QString encodedContent() const;
+
+    // overwrite default charset with given charset
+    QString encodedContent(QByteArray charset) const;
+
+private:
+    std::unique_ptr<MailMimePrivate> d;
+};
+
+class Content
+{
+public:
+    typedef std::shared_ptr<Content> Ptr;
+    Content(const QByteArray &content, Part *parent);
+    virtual ~Content();
+
+    QByteArray content() const;
+
+    QByteArray charset() const;
 
     //Use default charset
     QString encodedContent() const;
@@ -136,101 +116,24 @@ public:
     // overwrite default charset with given charset
     QString encodedContent(QByteArray charset) const;
 
-    QByteArray type() const Q_DECL_OVERRIDE;
+    virtual QVector<Signature> signatures() const;
+    virtual QVector<Encryption> encryptions() const;
+    MailMime::Ptr mailMime() const;
+    virtual QByteArray type() const;
 private:
-    std::unique_ptr<MimePartPrivate> d;
+    std::unique_ptr<ContentPrivate> d;
 };
 
-/*
- * The main ContentPart
- * is MimePart a good parent class?
- * do we wanna need parts of the header of the connected KMime::Contents
- * usecases:
- *  - 
- * for htmlonly it is representating only one MimePart (ok)
- * for plaintext only also only one MimePart (ok)
- * for alternative, we are represating three messageparts
- *   - "headers" do we return?, we can use setType to make it possible to select and than return these headers
- */
-class ContentPart : public Part
+class PlainTextContent : public Content
 {
 public:
-    typedef std::shared_ptr<ContentPart> Ptr;
-    enum Type {
-        PlainText = 0x0001,
-        Html      = 0x0002
-    };
-    Q_DECLARE_FLAGS(Types, Type)
-
-    ContentPart();
-    virtual ~ContentPart();
-
-    QVector<Content::Ptr> content(Type ct) const;
-
-    Types availableContents() const;
-
     QByteArray type() const Q_DECL_OVERRIDE;
-
-private:
-    std::unique_ptr<ContentPartPrivate> d;
-
-    friend class ParserPrivate;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(ContentPart::Types);
-
-class AttachmentPart : public MimePart
+class HtmlContent : public Content
 {
 public:
-    typedef std::shared_ptr<AttachmentPart> Ptr;
     QByteArray type() const Q_DECL_OVERRIDE;
-
-private:
-    std::unique_ptr<AttachmentPartPrivate> d;
-
-    friend class ParserPrivate;
-};
-
-/*
- * Open Questions:
- * - How to make the string translateable for multiple clients, so that multiple clients can show same error messages,
- * that helps users to understand what is going on ?
- * - Does openpgp have translations already?
- */
-class EncryptionError
-{
-public:
-    int errorId() const;
-    QString errorString() const;
-};
-
-class EncryptionPart : public MimePart
-{
-public:
-    typedef std::shared_ptr<EncryptionPart> Ptr;
-    QByteArray type() const Q_DECL_OVERRIDE;
-
-    EncryptionError error() const;
-
-private:
-    std::unique_ptr<EncryptionPartPrivate> d;    
-};
-
-
-/*
- * we want to request complete headers like:
- * from/to...
- */
-
-class EncapsulatedPart : public AttachmentPart
-{
-public:
-    typedef std::shared_ptr<EncapsulatedPart> Ptr;
-    QByteArray type() const Q_DECL_OVERRIDE;
-
-    //template <class T> QByteArray header<T>();
-private:
-    std::unique_ptr<EncapsulatedPartPrivate> d;    
 };
 
 /*
@@ -238,12 +141,12 @@ private:
  * checking a cert (if it is a valid cert)
  */
 
-class CertPart : public AttachmentPart
+class CertContent : public Content
 {
 public:
-    typedef std::shared_ptr<CertPart> Ptr;
-    QByteArray type() const Q_DECL_OVERRIDE;
+    typedef std::shared_ptr<CertContent> Ptr;
 
+    QByteArray type() const Q_DECL_OVERRIDE;
     enum CertType {
         Pgp,
         SMime
@@ -259,7 +162,104 @@ public:
     int keyLength() const;
 
 private:
-    std::unique_ptr<CertPartPrivate> d;    
+    std::unique_ptr<CertContentPrivate> d;    
+};
+
+class Part
+{
+public:
+    typedef std::shared_ptr<Part> Ptr;
+    Part();
+    virtual QByteArray type() const;
+
+    virtual QVector<QByteArray> availableContents() const;
+    virtual QVector<Content::Ptr> content() const;
+
+    bool hasSubParts() const;
+    QVector<Part::Ptr> subParts() const;
+    Part *parent() const;
+
+    virtual QVector<Signature> signatures() const;
+    virtual QVector<Encryption> encryptions() const;
+    virtual MailMime::Ptr mailMime() const;
+private:
+    std::unique_ptr<PartPrivate> d;
+    friend class ParserPrivate;
+    friend class PartPrivate;
+};
+
+class AlternativePart : public Part
+{
+public:
+    typedef std::shared_ptr<AlternativePart> Ptr;
+
+    AlternativePart();
+    virtual ~AlternativePart();
+
+    QVector<Content::Ptr> content() const  Q_DECL_OVERRIDE;
+    QVector<QByteArray> availableContents() const Q_DECL_OVERRIDE;
+    QVector<Content::Ptr> content(const QByteArray& ct) const;
+
+    QByteArray type() const Q_DECL_OVERRIDE;
+
+private:
+    std::unique_ptr<AlternativePartPrivate> d;
+
+    friend class ParserPrivate;
+};
+
+class SinglePart : public Part
+{
+ public:
+    typedef std::shared_ptr<SinglePart> Ptr;
+
+    SinglePart();
+    virtual ~SinglePart();
+
+    QVector<Content::Ptr> content() const Q_DECL_OVERRIDE;
+    QVector<QByteArray> availableContents() const Q_DECL_OVERRIDE;
+
+    QByteArray type() const Q_DECL_OVERRIDE;
+private:
+    std::unique_ptr<SinglePartPrivate> d;
+
+    friend class ParserPrivate;   
+};
+
+
+class EncryptionPart : public Part
+{
+public:
+    typedef std::shared_ptr<EncryptionPart> Ptr;
+    QByteArray type() const Q_DECL_OVERRIDE;
+
+    EncryptionError error() const;
+private:
+    std::unique_ptr<EncryptionPartPrivate> d;    
+};
+
+
+/*
+ * we want to request complete headers like:
+ * from/to...
+ */
+
+class EncapsulatedPart : public SinglePart
+{
+public:
+    typedef std::shared_ptr<EncapsulatedPart> Ptr;
+    QByteArray type() const Q_DECL_OVERRIDE;
+
+    //template <class T> QByteArray header<T>();
+private:
+    std::unique_ptr<EncapsulatedPartPrivate> d;    
+};
+
+class EncryptionError
+{
+public:
+    int errorId() const;
+    QString errorString() const;
 };
 
 class Key
@@ -312,10 +312,8 @@ public:
     Part::Ptr getPart(QUrl url);
 
     template <typename T> QVector<typename T::Ptr> collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const typename T::Ptr &)> filter) const;
-    QVector<AttachmentPart::Ptr> collectAttachments(Part::Ptr start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const AttachmentPart::Ptr &)> filter) const;
-    ContentPart::Ptr collectContentPart(Part::Ptr start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const ContentPart::Ptr &)> filter) const;
-    ContentPart::Ptr collectContentPart(const Part::Ptr& start) const;
-    ContentPart::Ptr collectContentPart() const;
+    //QVector<AttachmentPart::Ptr> collectAttachments(Part::Ptr start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const AttachmentPart::Ptr &)> filter) const;
+    QVector<Part::Ptr> collectContentParts() const;
     //template <> QVector<ContentPart::Ptr> collect<ContentPart>() const;
 
     //template <> static StatusObject<SignatureVerificationResult> verifySignature(const Signature signature) const;
