@@ -141,7 +141,7 @@ Content::~Content()
 {
 }
 
-QVector< Encryption > Content::encryptions() const
+QVector<Encryption> Content::encryptions() const
 {
     if (d->mParent) {
         return d->mParent->encryptions();
@@ -149,7 +149,7 @@ QVector< Encryption > Content::encryptions() const
     return QVector<Encryption>();
 }
 
-QVector< Signature > Content::signatures() const
+QVector<Signature> Content::signatures() const
 {
     if (d->mParent) {
         return d->mParent->signatures();
@@ -166,6 +166,19 @@ QByteArray Content::charset() const
 {
     return d->mCodec;
 }
+
+HtmlContent::HtmlContent(const QByteArray& content, Part* parent)
+    : Content(content, parent)
+{
+
+}
+
+PlainTextContent::PlainTextContent(const QByteArray& content, Part* parent)
+    : Content(content, parent)
+{
+
+}
+
 
 class AlternativePartPrivate
 {
@@ -187,7 +200,7 @@ void AlternativePartPrivate::fillFrom(MimeTreeParser::AlternativeMessagePart::Pt
 {
     mTypes = QVector<QByteArray>() << "html" << "plaintext";
 
-    auto content = std::make_shared<HtmlContent>(part->htmlContent().toLocal8Bit(), q);
+    Content::Ptr content = std::make_shared<HtmlContent>(part->htmlContent().toLocal8Bit(), q);
     mContent["html"].append(content);
     content = std::make_shared<PlainTextContent>(part->plaintextContent().toLocal8Bit(), q);
     mContent["plaintext"].append(content);
@@ -222,11 +235,6 @@ QByteArray AlternativePart::type() const
 QVector<QByteArray> AlternativePart::availableContents() const
 {
     return d->types();
-}
-
-QVector<Content::Ptr> AlternativePart::content() const
-{
-    return d->content(availableContents().first());
 }
 
 QVector<Content::Ptr> AlternativePart::content(const QByteArray& ct) const
@@ -283,25 +291,17 @@ QVector<QByteArray> SinglePart::availableContents() const
     return QVector<QByteArray>() << d->mType;
 }
 
-QVector< Content::Ptr > SinglePart::content() const
+QVector< Content::Ptr > SinglePart::content(const QByteArray &ct) const
 {
-    return d->mContent;
+    if (ct == d->mType) {
+        return d->mContent;
+    }
+    return QVector<Content::Ptr>();
 }
 
 QByteArray SinglePart::type() const
 {
     return "SinglePart";
-}
-
-class MimePartPrivate
-{
-public:
-    void fillFrom(MimeTreeParser::MessagePart::Ptr part);
-};
-
-QByteArray MimePart::type() const
-{
-    return "MimePart";
 }
 
 ParserPrivate::ParserPrivate(Parser* parser)
@@ -343,7 +343,7 @@ void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, co
         const auto html = mp.dynamicCast<MimeTreeParser::HtmlMessagePart>();
         const auto attachment = mp.dynamicCast<MimeTreeParser::AttachmentMessagePart>();
          if (attachment) {
-            auto part = std::make_shared<AttachmentPart>();
+            auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(attachment);
             mTree->d->appendSubPart(part);
          } else if (text) {
@@ -376,20 +376,55 @@ Parser::~Parser()
 
 QVector<Part::Ptr> Parser::collectContentParts() const
 {
-    return collect<Part>(d->mTree, [](const Part::Ptr &p){return p->availableContents().indexOf("html") > -1 || p->availableContents().indexOf("text") > -1;}, [](const Part::Ptr &p){return true;});
+    return collect(d->mTree, [](const Part::Ptr &p){return p->type() != "EncapsulatedPart";},
+                             [](const Content::Ptr &content){
+                                    const auto mime = content->mailMime();
+
+                                    if (!mime) {
+                                        return true;
+                                    }
+
+                                    if (mime->isFirstTextPart()) {
+                                        return true;
+                                    }
+                                    const auto cd = mime->disposition();
+                                    if (cd && cd == MailMime::Inline) {
+                                        // explict "inline" disposition:
+                                        return true;
+                                    }
+                                    if (cd && cd == MailMime::Attachment) {
+                                        // explicit "attachment" disposition:
+                                        return false;
+                                    }
+
+                                    const auto ct = mime->mimetype();
+                                    if (ct.name().trimmed().toLower() == "text" && ct.name().trimmed().isEmpty() &&
+                                        (!mime || mime->filename().trimmed().isEmpty())) {
+                                        // text/* w/o filename parameter:
+                                        return true;
+                                    }
+                                    return false;
+                             });
 }
 
-template <typename T>
-QVector<typename T::Ptr> Parser::collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const typename T::Ptr &)> filter) const
+QVector<Part::Ptr> Parser::collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const Content::Ptr &)> filter) const
 {
-    QVector<typename T::Ptr> ret;
+    QVector<Part::Ptr> ret;
     foreach (const auto &part, start->subParts()) {
-        if (select(part)){
-            const auto p = std::dynamic_pointer_cast<T>(part);
-            if (p && filter(p)) {
-                ret.append(p);
+        QVector<QByteArray> contents;
+        foreach(const auto &ct, part->availableContents()) {
+            foreach(const auto &content, part->content(ct)) {
+                if (filter(content)) {
+                    contents.append(ct);
+                    break;
+                }
             }
-            ret += collect<T>(part, select, filter);
+        }
+        if (!contents.isEmpty()) {
+            ret.append(part);
+        }
+        if (select(part)){
+            ret += collect(part, select, filter);
         }
     }
     return ret;

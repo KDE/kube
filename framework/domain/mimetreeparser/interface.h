@@ -41,9 +41,6 @@ class SinglePartPrivate;
 class EncryptionPart;
 class EncryptionPartPrivate;
 
-class AttachmentPart;
-class AttachmentPartPrivate;
-
 class EncapsulatedPart;
 class EncapsulatedPartPrivate;
 
@@ -84,6 +81,7 @@ public:
     QUrl label() const;
     QByteArray cid() const;
     QByteArray charset() const;
+    QByteArray filename() const;
 
     // Unique identifier to ecactly this KMime::Content
     QByteArray link() const;
@@ -94,6 +92,8 @@ public:
 
     // overwrite default charset with given charset
     QString encodedContent(QByteArray charset) const;
+
+    bool isFirstTextPart() const;
 
 private:
     std::unique_ptr<MailMimePrivate> d;
@@ -127,12 +127,14 @@ private:
 class PlainTextContent : public Content
 {
 public:
+    PlainTextContent(const QByteArray &content, Part *parent);
     QByteArray type() const Q_DECL_OVERRIDE;
 };
 
 class HtmlContent : public Content
 {
 public:
+    HtmlContent(const QByteArray &content, Part *parent);
     QByteArray type() const Q_DECL_OVERRIDE;
 };
 
@@ -145,6 +147,7 @@ class CertContent : public Content
 {
 public:
     typedef std::shared_ptr<CertContent> Ptr;
+    CertContent(const QByteArray &content, Part *parent);
 
     QByteArray type() const Q_DECL_OVERRIDE;
     enum CertType {
@@ -173,7 +176,8 @@ public:
     virtual QByteArray type() const;
 
     virtual QVector<QByteArray> availableContents() const;
-    virtual QVector<Content::Ptr> content() const;
+    virtual QVector<Content::Ptr> content(const QByteArray& ct) const;
+    QVector<Content::Ptr> content() const;
 
     bool hasSubParts() const;
     QVector<Part::Ptr> subParts() const;
@@ -196,9 +200,8 @@ public:
     AlternativePart();
     virtual ~AlternativePart();
 
-    QVector<Content::Ptr> content() const  Q_DECL_OVERRIDE;
     QVector<QByteArray> availableContents() const Q_DECL_OVERRIDE;
-    QVector<Content::Ptr> content(const QByteArray& ct) const;
+    QVector<Content::Ptr> content(const QByteArray& ct) const Q_DECL_OVERRIDE;
 
     QByteArray type() const Q_DECL_OVERRIDE;
 
@@ -216,7 +219,7 @@ class SinglePart : public Part
     SinglePart();
     virtual ~SinglePart();
 
-    QVector<Content::Ptr> content() const Q_DECL_OVERRIDE;
+    QVector<Content::Ptr> content(const QByteArray& ct) const Q_DECL_OVERRIDE;
     QVector<QByteArray> availableContents() const Q_DECL_OVERRIDE;
 
     QByteArray type() const Q_DECL_OVERRIDE;
@@ -311,9 +314,9 @@ public:
 
     Part::Ptr getPart(QUrl url);
 
-    template <typename T> QVector<typename T::Ptr> collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const typename T::Ptr &)> filter) const;
-    //QVector<AttachmentPart::Ptr> collectAttachments(Part::Ptr start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const AttachmentPart::Ptr &)> filter) const;
+    QVector<Part::Ptr> collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const Content::Ptr &)> filter) const;
     QVector<Part::Ptr> collectContentParts() const;
+    QVector<Part::Ptr> collectAttachmentParts() const;
     //template <> QVector<ContentPart::Ptr> collect<ContentPart>() const;
 
     //template <> static StatusObject<SignatureVerificationResult> verifySignature(const Signature signature) const;
