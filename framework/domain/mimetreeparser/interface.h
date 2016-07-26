@@ -75,13 +75,15 @@ public:
         Attachment        ///< attachment
     };
 
+    MailMime();
+
     // interessting header parts of a KMime::Content
     QMimeType mimetype() const;
     Disposition disposition() const;
     QUrl label() const;
     QByteArray cid() const;
     QByteArray charset() const;
-    QByteArray filename() const;
+    QString filename() const;
 
     // Unique identifier to ecactly this KMime::Content
     QByteArray link() const;

@@ -28,7 +28,76 @@
 #include <MimeTreeParser/MessagePart>
 #include <MimeTreeParser/NodeHelper>
 
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QDebug>
+
+class MailMimePrivate
+{
+public:
+    KMime::Content *mNode;
+    MailMime *q;
+};
+
+MailMime::MailMime()
+    : d(std::unique_ptr<MailMimePrivate>(new MailMimePrivate()))
+{
+    d->q = this;
+}
+
+bool MailMime::isFirstTextPart() const
+{
+    if (!d->mNode) {
+        return false;
+    }
+    return (d->mNode->topLevel()->textContent() == d->mNode);
+}
+
+MailMime::Disposition MailMime::disposition() const
+{
+    if (!d->mNode) {
+        return Invalid;
+    }
+    const auto cd = d->mNode->contentDisposition(false);
+    if (!cd) {
+        return Invalid;
+    }
+    switch (cd->disposition()){
+        case KMime::Headers::CDinline:
+            return Inline;
+        case KMime::Headers::CDattachment:
+            return Attachment;
+        default:
+            return Invalid;
+    }
+}
+
+QString MailMime::filename() const
+{
+    if (!d->mNode) {
+        return QString();
+    }
+    const auto cd = d->mNode->contentDisposition(false);
+    if (!cd) {
+        return QString();
+    }
+    return cd->filename();
+}
+
+QMimeType MailMime::mimetype() const
+{
+    if (!d->mNode) {
+        return QMimeType();
+    }
+
+    const auto ct = d->mNode->contentType(false);
+    if (!ct) {
+        return QMimeType();
+    }
+
+    QMimeDatabase mimeDb;
+    return mimeDb.mimeTypeForName(ct->mimeType());
+}
 
 class PartPrivate
 {
@@ -39,10 +108,13 @@ public:
     QVector<Part::Ptr> subParts();
 
     Part *parent() const;
+
+    const MailMime::Ptr &mailMime() const;
 private:
     Part *q;
     Part *mParent;
     QVector<Part::Ptr> mSubParts;
+    MailMime::Ptr mMailMime;
 };
 
 PartPrivate::PartPrivate(Part* part)
@@ -66,6 +138,11 @@ Part *PartPrivate::parent() const
 QVector< Part::Ptr > PartPrivate::subParts()
 {
     return mSubParts;
+}
+
+const MailMime::Ptr& PartPrivate::mailMime() const
+{
+    return mMailMime;
 }
 
 Part::Part()
@@ -96,6 +173,11 @@ QVector<QByteArray> Part::availableContents() const
 
 QVector<Content::Ptr> Part::content() const
 {
+    return content(availableContents().first());
+}
+
+QVector<Content::Ptr> Part::content(const QByteArray& ct) const
+{
     return QVector<Content::Ptr>();
 }
 
@@ -119,6 +201,11 @@ QVector<Signature> Part::signatures() const
     }
 }
 
+MailMime::Ptr Part::mailMime() const
+{
+    return d->mailMime();
+}
+
 class ContentPrivate
 {
 public:
@@ -126,6 +213,7 @@ public:
     QByteArray mCodec;
     Part *mParent;
     Content *q;
+    MailMime::Ptr mMailMime;
 };
 
 Content::Content(const QByteArray& content, Part *parent)
@@ -167,10 +255,25 @@ QByteArray Content::charset() const
     return d->mCodec;
 }
 
+QByteArray Content::type() const
+{
+    return "Content";
+}
+
+MailMime::Ptr Content::mailMime() const
+{
+    return d->mMailMime;
+}
+
 HtmlContent::HtmlContent(const QByteArray& content, Part* parent)
     : Content(content, parent)
 {
 
+}
+
+QByteArray HtmlContent::type() const
+{
+    return "HtmlContent";
 }
 
 PlainTextContent::PlainTextContent(const QByteArray& content, Part* parent)
@@ -179,6 +282,10 @@ PlainTextContent::PlainTextContent(const QByteArray& content, Part* parent)
 
 }
 
+QByteArray PlainTextContent::type() const
+{
+    return "PlainTextContent";
+}
 
 class AlternativePartPrivate
 {

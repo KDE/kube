@@ -52,7 +52,7 @@ private slots:
         QCOMPARE(contentPartList.size(), 1);
         auto contentPart = contentPartList[0];
         QVERIFY((bool)contentPart);
-        QCOMPARE(contentPart->availableContents(), "plaintext");
+        QCOMPARE(contentPart->availableContents(), QVector<QByteArray>() << "plaintext");
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/").toLocal8Bit());
@@ -94,7 +94,7 @@ private slots:
         QCOMPARE(contentPartList.size(), 1);
         auto contentPart = contentPartList[0];
         QVERIFY((bool)contentPart);
-        QCOMPARE(contentPart->availableContents(), "html");
+        QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() << "html");
 
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 0);
@@ -115,7 +115,7 @@ private slots:
         QCOMPARE(contentPartList.size(), 1);
         auto contentPart = contentPartList[0];
         QVERIFY((bool)contentPart);
-        QCOMPARE(contentPart->availableContents(), "plaintext");
+        QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() << "plaintext");
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("The quick brown fox jumped over the lazy dog.").toLocal8Bit());
@@ -130,7 +130,7 @@ private slots:
         QCOMPARE(contentPartList.size(), 1);
         auto contentPart = contentPartList[0];
         QVERIFY((bool)contentPart);
-        QCOMPARE(contentPart->availableContents(), "plaintext");
+        QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() << "plaintext");
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("test text").toLocal8Bit());
@@ -145,7 +145,7 @@ private slots:
         QCOMPARE(contentPartList.size(), 1);
         auto contentPart = contentPartList[0];
         QVERIFY((bool)contentPart);
-        QCOMPARE(contentPart->availableContents(), "plaintext");
+        QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() << "plaintext");
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("asdasd asd asd asdf sadf sdaf sadf äöü").toLocal8Bit());
