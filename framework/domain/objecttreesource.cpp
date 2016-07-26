@@ -31,7 +31,7 @@ public:
         : mWriter(0)
         , mAllowDecryption(true)
         , mHtmlLoadExternal(true)
-        , mHtmlMail(true)
+        , mPreferredMode(MimeTreeParser::Util::Html)
     {
 
     }
@@ -39,7 +39,7 @@ public:
     MimeTreeParser::BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     bool mAllowDecryption;
     bool mHtmlLoadExternal;
-    bool mHtmlMail;
+    MimeTreeParser::Util::HtmlMode mPreferredMode;
 };
 
 ObjectTreeSource::ObjectTreeSource(MimeTreeParser::HtmlWriter *writer)
@@ -72,16 +72,6 @@ bool ObjectTreeSource::htmlLoadExternal() const
 void ObjectTreeSource::setHtmlLoadExternal(bool loadExternal)
 {
     d->mHtmlLoadExternal = loadExternal;
-}
-
-bool ObjectTreeSource::htmlMail() const
-{
-    return d->mHtmlMail;
-}
-
-void ObjectTreeSource::setHtmlMail(bool htmlMail)
-{
-    d->mHtmlMail = htmlMail;
 }
 
 bool ObjectTreeSource::decryptMessage() const
@@ -119,9 +109,15 @@ QObject *ObjectTreeSource::sourceObject()
     return Q_NULLPTR;
 }
 
-void ObjectTreeSource::setHtmlMode(MimeTreeParser::Util::HtmlMode mode)
+void ObjectTreeSource::setHtmlMode(MimeTreeParser::Util::HtmlMode mode, const QList<MimeTreeParser::Util::HtmlMode> &availableModes)
 {
       Q_UNUSED(mode);
+      Q_UNUSED(availableModes);
+}
+
+MimeTreeParser::Util::HtmlMode ObjectTreeSource::preferredMode() const
+{
+    return d->mPreferredMode;
 }
 
 bool ObjectTreeSource::autoImportKeys() const
