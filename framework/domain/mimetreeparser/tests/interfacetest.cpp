@@ -30,6 +30,19 @@ QByteArray readMailFromFile(const QString &mailFile)
     return file.readAll();
 }
 
+QByteArray join(QVector<QByteArray> vec, QByteArray sep)
+{
+    QByteArray ret;
+    bool bInit = true;
+    foreach(const auto &entry, vec) {
+        if (!bInit) {
+            ret += sep;
+        }
+        bInit = false;
+        ret += entry;
+    }
+    return ret;
+}
 
 class InterfaceTest : public QObject
 {
@@ -38,7 +51,10 @@ private:
     void printTree(const Part::Ptr &start, QString pre)
     {
         foreach (const auto &part, start->subParts()) {
-            qWarning() << QStringLiteral("%1* %2").arg(pre).arg(QString::fromLatin1(part->type()));
+            qWarning() << QStringLiteral("%1* %2(%3)")
+                            .arg(pre)
+                            .arg(QString::fromLatin1(part->type()))
+                            .arg(QString::fromLatin1(join(part->availableContents(),", ")));
             printTree(part,pre + QStringLiteral("  "));
         }
     }
@@ -48,6 +64,7 @@ private slots:
     void testTextMail()
     {
         Parser parser(readMailFromFile("plaintext.mbox"));
+        printTree(parser.d->mTree,QString());
         auto contentPartList = parser.collectContentParts();
         QCOMPARE(contentPartList.size(), 1);
         auto contentPart = contentPartList[0];
@@ -67,6 +84,7 @@ private slots:
     void testTextAlternative()
     {
         Parser parser(readMailFromFile("alternative.mbox"));
+        printTree(parser.d->mTree,QString());
         auto contentPartList = parser.collectContentParts();
         QCOMPARE(contentPartList.size(), 1);
         auto contentPart = contentPartList[0];
@@ -90,6 +108,7 @@ private slots:
      void testTextHtml()
     {
         Parser parser(readMailFromFile("html.mbox"));
+        printTree(parser.d->mTree,QString());
         auto contentPartList = parser.collectContentParts();
         QCOMPARE(contentPartList.size(), 1);
         auto contentPart = contentPartList[0];
