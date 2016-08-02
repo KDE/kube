@@ -47,10 +47,18 @@ MailMime::MailMime()
 
 bool MailMime::isFirstTextPart() const
 {
-    if (!d->mNode) {
+    if (!d->mNode || !d->mNode->topLevel()) {
         return false;
     }
     return (d->mNode->topLevel()->textContent() == d->mNode);
+}
+
+bool MailMime::isTopLevelPart() const
+{
+    if (!d->mNode) {
+        return false;
+    }
+    return (d->mNode->topLevel() == d->mNode);
 }
 
 MailMime::Disposition MailMime::disposition() const
@@ -110,6 +118,10 @@ public:
     Part *parent() const;
 
     const MailMime::Ptr &mailMime() const;
+    void createMailMime(const MimeTreeParser::MimeMessagePart::Ptr &part);
+    void createMailMime(const MimeTreeParser::TextMessagePart::Ptr &part);
+    void createMailMime(const MimeTreeParser::AlternativeMessagePart::Ptr &part);
+    void createMailMime(const MimeTreeParser::HtmlMessagePart::Ptr &part);
 private:
     Part *q;
     Part *mParent;
@@ -122,6 +134,30 @@ PartPrivate::PartPrivate(Part* part)
     , mParent(Q_NULLPTR)
 {
 
+}
+
+void PartPrivate::createMailMime(const MimeTreeParser::HtmlMessagePart::Ptr& part)
+{
+    mMailMime = MailMime::Ptr(new MailMime);
+    mMailMime->d->mNode = part->mNode;
+}
+
+void PartPrivate::createMailMime(const MimeTreeParser::AlternativeMessagePart::Ptr& part)
+{
+    mMailMime = MailMime::Ptr(new MailMime);
+    mMailMime->d->mNode = part->mNode;
+}
+
+void PartPrivate::createMailMime(const MimeTreeParser::TextMessagePart::Ptr& part)
+{
+    mMailMime = MailMime::Ptr(new MailMime);
+    mMailMime->d->mNode = part->mNode;
+}
+
+void PartPrivate::createMailMime(const MimeTreeParser::MimeMessagePart::Ptr& part)
+{
+    mMailMime = MailMime::Ptr(new MailMime);
+    mMailMime->d->mNode = part->mNode;
 }
 
 void PartPrivate::appendSubPart(Part::Ptr subpart)
@@ -262,7 +298,16 @@ QByteArray Content::type() const
 
 MailMime::Ptr Content::mailMime() const
 {
-    return d->mMailMime;
+    if (d->mMailMime) {
+        return d->mMailMime;
+    } else {
+        return d->mParent->mailMime();
+    }
+}
+
+Part *Content::parent() const
+{
+    return d->mParent;
 }
 
 HtmlContent::HtmlContent(const QByteArray& content, Part* parent)
@@ -311,6 +356,7 @@ void AlternativePartPrivate::fillFrom(MimeTreeParser::AlternativeMessagePart::Pt
     mContent["html"].append(content);
     content = std::make_shared<PlainTextContent>(part->plaintextContent().toLocal8Bit(), q);
     mContent["plaintext"].append(content);
+    q->reachParentD()->createMailMime(part);
 }
 
 QVector<QByteArray> AlternativePartPrivate::types() const
@@ -349,6 +395,11 @@ QVector<Content::Ptr> AlternativePart::content(const QByteArray& ct) const
     return d->content(ct);
 }
 
+PartPrivate* AlternativePart::reachParentD() const
+{
+    return Part::d.get();
+}
+
 class SinglePartPrivate
 {
 public:
@@ -367,6 +418,7 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
     mContent.clear();
     foreach (const auto &mp, part->subParts()) {
         mContent.append(std::make_shared<PlainTextContent>(mp->text().toLocal8Bit(), q));
+        q->reachParentD()->createMailMime(part);
     }
 }
 
@@ -375,11 +427,12 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
     mType = "html";
     mContent.clear();
     mContent.append(std::make_shared<HtmlContent>(part->text().toLocal8Bit(), q));
+    q->reachParentD()->createMailMime(part);
 }
 
 void SinglePartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part)
 {
-
+   q->reachParentD()->createMailMime(part.staticCast<MimeTreeParser::TextMessagePart>());
 }
 
 SinglePart::SinglePart()
@@ -411,6 +464,11 @@ QByteArray SinglePart::type() const
     return "SinglePart";
 }
 
+PartPrivate* SinglePart::reachParentD() const
+{
+    return Part::d.get();
+}
+
 ParserPrivate::ParserPrivate(Parser* parser)
     : q(parser)
     , mNodeHelper(std::make_shared<MimeTreeParser::NodeHelper>())
@@ -421,16 +479,16 @@ ParserPrivate::ParserPrivate(Parser* parser)
 void ParserPrivate::setMessage(const QByteArray& mimeMessage)
 {
     const auto mailData = KMime::CRLFtoLF(mimeMessage);
-    KMime::Message::Ptr msg(new KMime::Message);
-    msg->setContent(mailData);
-    msg->parse();
+    mMsg = KMime::Message::Ptr(new KMime::Message);
+    mMsg->setContent(mailData);
+    mMsg->parse();
 
     // render the mail
     StringHtmlWriter htmlWriter;
     ObjectTreeSource source(&htmlWriter);
     MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
-    otp.parseObjectTree(msg.data());
+    otp.parseObjectTree(mMsg.data());
     mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
 
     mEmbeddedPartMap = htmlWriter.embeddedParts();
@@ -494,6 +552,16 @@ QVector<Part::Ptr> Parser::collectContentParts() const
                                     if (mime->isFirstTextPart()) {
                                         return true;
                                     }
+
+                                    {
+                                        const auto parent = content->parent();
+                                        if (parent) {
+                                            const auto _mime = parent->mailMime();
+                                            if (_mime && (_mime->isTopLevelPart() || _mime->isFirstTextPart())) {
+                                                return true;
+                                            }
+                                        }
+                                    }
                                     const auto cd = mime->disposition();
                                     if (cd && cd == MailMime::Inline) {
                                         // explict "inline" disposition:
@@ -526,6 +594,7 @@ QVector<Part::Ptr> Parser::collect(const Part::Ptr &start, std::function<bool(co
                     break;
                 }
             }
+            qWarning() << ct << contents.size();
         }
         if (!contents.isEmpty()) {
             ret.append(part);

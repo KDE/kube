@@ -96,9 +96,12 @@ public:
     QString encodedContent(QByteArray charset) const;
 
     bool isFirstTextPart() const;
+    bool isTopLevelPart() const;
 
 private:
     std::unique_ptr<MailMimePrivate> d;
+
+    friend class PartPrivate;
 };
 
 class Content
@@ -122,6 +125,7 @@ public:
     virtual QVector<Encryption> encryptions() const;
     MailMime::Ptr mailMime() const;
     virtual QByteArray type() const;
+    Part* parent() const;
 private:
     std::unique_ptr<ContentPrivate> d;
 };
@@ -188,8 +192,9 @@ public:
     virtual QVector<Signature> signatures() const;
     virtual QVector<Encryption> encryptions() const;
     virtual MailMime::Ptr mailMime() const;
-private:
+protected:
     std::unique_ptr<PartPrivate> d;
+private:
     friend class ParserPrivate;
     friend class PartPrivate;
 };
@@ -208,9 +213,11 @@ public:
     QByteArray type() const Q_DECL_OVERRIDE;
 
 private:
+    PartPrivate *reachParentD() const;
     std::unique_ptr<AlternativePartPrivate> d;
 
     friend class ParserPrivate;
+    friend class AlternativePartPrivate;
 };
 
 class SinglePart : public Part
@@ -226,9 +233,11 @@ class SinglePart : public Part
 
     QByteArray type() const Q_DECL_OVERRIDE;
 private:
+    PartPrivate *reachParentD() const;
     std::unique_ptr<SinglePartPrivate> d;
 
-    friend class ParserPrivate;   
+    friend class ParserPrivate;
+    friend class SinglePartPrivate;
 };
 
 

@@ -24,6 +24,12 @@
 #include <QSharedPointer>
 #include <QMap>
 
+namespace KMime
+{
+    class Message;
+    typedef QSharedPointer<Message> MessagePtr;
+}
+
 namespace MimeTreeParser
 {
     class MessagePart;
@@ -44,6 +50,7 @@ private:
     Parser *q;
 
     MimeTreeParser::MessagePartPtr mPartTree;
+    KMime::MessagePtr mMsg;
     std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
     QString mHtml;
     QMap<QByteArray, QUrl> mEmbeddedPartMap;
