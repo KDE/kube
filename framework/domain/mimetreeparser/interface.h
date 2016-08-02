@@ -54,7 +54,12 @@ class EncryptionError;
 
 class Key;
 class Signature;
+class SignaturePrivate;
 class Encryption;
+class EncryptionPrivate;
+
+typedef std::shared_ptr<Signature> SignaturePtr;
+typedef std::shared_ptr<Encryption> EncryptionPtr;
 
 class Parser;
 class ParserPrivate;
@@ -109,6 +114,7 @@ class Content
 public:
     typedef std::shared_ptr<Content> Ptr;
     Content(const QByteArray &content, Part *parent);
+    Content(ContentPrivate *d_ptr);
     virtual ~Content();
 
     QByteArray content() const;
@@ -121,8 +127,8 @@ public:
     // overwrite default charset with given charset
     QString encodedContent(QByteArray charset) const;
 
-    virtual QVector<Signature> signatures() const;
-    virtual QVector<Encryption> encryptions() const;
+    QVector<SignaturePtr> signatures() const;
+    QVector<EncryptionPtr> encryptions() const;
     MailMime::Ptr mailMime() const;
     virtual QByteArray type() const;
     Part* parent() const;
@@ -134,6 +140,7 @@ class PlainTextContent : public Content
 {
 public:
     PlainTextContent(const QByteArray &content, Part *parent);
+    PlainTextContent(ContentPrivate *d_ptr);
     QByteArray type() const Q_DECL_OVERRIDE;
 };
 
@@ -141,6 +148,7 @@ class HtmlContent : public Content
 {
 public:
     HtmlContent(const QByteArray &content, Part *parent);
+    HtmlContent(ContentPrivate* d_ptr);
     QByteArray type() const Q_DECL_OVERRIDE;
 };
 
@@ -171,9 +179,8 @@ public:
     int keyLength() const;
 
 private:
-    std::unique_ptr<CertContentPrivate> d;    
+    std::unique_ptr<CertContentPrivate> d;
 };
-
 class Part
 {
 public:
@@ -189,8 +196,8 @@ public:
     QVector<Part::Ptr> subParts() const;
     Part *parent() const;
 
-    virtual QVector<Signature> signatures() const;
-    virtual QVector<Encryption> encryptions() const;
+    QVector<SignaturePtr> signatures() const;
+    QVector<EncryptionPtr> encryptions() const;
     virtual MailMime::Ptr mailMime() const;
 protected:
     std::unique_ptr<PartPrivate> d;
@@ -298,12 +305,20 @@ class Key
 
 class Signature
 {
+public:
+    typedef std::shared_ptr<Signature> Ptr;
+    Signature();
+    Signature(SignaturePrivate *);
+    ~Signature();
+
     Key key() const;
     QDateTime creationDateTime() const;
     QDateTime expirationTime() const;
     bool neverExpires() const;
 
     //template <> StatusObject<SignatureVerificationResult> verify() const;
+    private:
+        std::unique_ptr<SignaturePrivate> d;
 };
 
 /*
@@ -313,7 +328,14 @@ class Signature
  */
 class Encryption
 {
+public:
+    typedef std::shared_ptr<Encryption> Ptr;
+    Encryption();
+    Encryption(EncryptionPrivate *);
+    ~Encryption();
     std::vector<Key> recipients() const;
+private:
+    std::unique_ptr<EncryptionPrivate> d;
 };
 
 class Parser

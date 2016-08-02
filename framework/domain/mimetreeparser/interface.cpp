@@ -122,10 +122,21 @@ public:
     void createMailMime(const MimeTreeParser::TextMessagePart::Ptr &part);
     void createMailMime(const MimeTreeParser::AlternativeMessagePart::Ptr &part);
     void createMailMime(const MimeTreeParser::HtmlMessagePart::Ptr &part);
+
+    void appendEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr &part);
+    void appendSignature(const MimeTreeParser::SignedMessagePart::Ptr &part);
+
+    void setSignatures(const QVector<Signature::Ptr> &sigs);
+    void setEncryptions(const QVector<Encryption::Ptr> &encs);
+
+    const QVector<Encryption::Ptr> &encryptions() const;
+    const QVector<Signature::Ptr> &signatures() const;
 private:
     Part *q;
     Part *mParent;
     QVector<Part::Ptr> mSubParts;
+    QVector<Encryption::Ptr> mEncryptions;
+    QVector<Signature::Ptr> mSignatures;
     MailMime::Ptr mMailMime;
 };
 
@@ -166,6 +177,27 @@ void PartPrivate::appendSubPart(Part::Ptr subpart)
     mSubParts.append(subpart);
 }
 
+void PartPrivate::appendEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr& part)
+{
+    mEncryptions.append(Encryption::Ptr(new Encryption));
+}
+
+void PartPrivate::setEncryptions(const QVector< Encryption::Ptr >& encs)
+{
+    mEncryptions = encs;
+}
+
+void PartPrivate::appendSignature(const MimeTreeParser::SignedMessagePart::Ptr& part)
+{
+    mSignatures.append(Signature::Ptr(new Signature));
+}
+
+
+void PartPrivate::setSignatures(const QVector< Signature::Ptr >& sigs)
+{
+    mSignatures = sigs;
+}
+
 Part *PartPrivate::parent() const
 {
     return mParent;
@@ -179,6 +211,16 @@ QVector< Part::Ptr > PartPrivate::subParts()
 const MailMime::Ptr& PartPrivate::mailMime() const
 {
     return mMailMime;
+}
+
+const QVector< Encryption::Ptr >& PartPrivate::encryptions() const
+{
+    return mEncryptions;
+}
+
+const QVector< Signature::Ptr >& PartPrivate::signatures() const
+{
+    return mSignatures;
 }
 
 Part::Part()
@@ -217,24 +259,24 @@ QVector<Content::Ptr> Part::content(const QByteArray& ct) const
     return QVector<Content::Ptr>();
 }
 
-QVector<Encryption> Part::encryptions() const
+QVector<Encryption::Ptr> Part::encryptions() const
 {
+    auto ret = d->encryptions();
     auto parent = d->parent();
     if (parent) {
-        return parent->encryptions();
-    } else {
-        return QVector<Encryption>();
+        ret.append(parent->encryptions());
     }
+    return ret;
 }
 
-QVector<Signature> Part::signatures() const
+QVector<Signature::Ptr> Part::signatures() const
 {
+    auto ret = d->signatures();
     auto parent = d->parent();
     if (parent) {
-        return parent->signatures();
-    } else {
-        return QVector<Signature>();
+        ret.append(parent->signatures());
     }
+    return ret;
 }
 
 MailMime::Ptr Part::mailMime() const
@@ -250,7 +292,22 @@ public:
     Part *mParent;
     Content *q;
     MailMime::Ptr mMailMime;
+    QVector<Encryption::Ptr> mEncryptions;
+    QVector<Signature::Ptr> mSignatures;
+    void appendSignature(const MimeTreeParser::SignedMessagePart::Ptr &sig);
+    void appendEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr &enc);
 };
+
+void ContentPrivate::appendEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr& enc)
+{
+    mEncryptions.append(Encryption::Ptr(new Encryption));
+}
+
+void ContentPrivate::appendSignature(const MimeTreeParser::SignedMessagePart::Ptr& sig)
+{
+    mSignatures.append(Signature::Ptr(new Signature));
+}
+
 
 Content::Content(const QByteArray& content, Part *parent)
     : d(std::unique_ptr<ContentPrivate>(new ContentPrivate))
@@ -261,24 +318,32 @@ Content::Content(const QByteArray& content, Part *parent)
     d->mParent = parent;
 }
 
+Content::Content(ContentPrivate* d_ptr)
+    : d(std::unique_ptr<ContentPrivate>(d_ptr))
+{
+    d->q = this;
+}
+
 Content::~Content()
 {
 }
 
-QVector<Encryption> Content::encryptions() const
+QVector<Encryption::Ptr> Content::encryptions() const
 {
+    auto ret = d->mEncryptions;
     if (d->mParent) {
-        return d->mParent->encryptions();
+        ret.append(d->mParent->encryptions());
     }
-    return QVector<Encryption>();
+    return ret;
 }
 
-QVector<Signature> Content::signatures() const
+QVector<Signature::Ptr> Content::signatures() const
 {
+    auto ret = d->mSignatures;
     if (d->mParent) {
-        return d->mParent->signatures();
+        ret.append(d->mParent->signatures());
     }
-    return QVector<Signature>();
+    return ret;
 }
 
 QByteArray Content::content() const
@@ -326,6 +391,19 @@ PlainTextContent::PlainTextContent(const QByteArray& content, Part* parent)
 {
 
 }
+
+PlainTextContent::PlainTextContent(ContentPrivate* d_ptr)
+    : Content(d_ptr)
+{
+
+}
+
+HtmlContent::HtmlContent(ContentPrivate* d_ptr)
+    : Content(d_ptr)
+{
+
+}
+
 
 QByteArray PlainTextContent::type() const
 {
@@ -417,7 +495,23 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
     mType = "plaintext";
     mContent.clear();
     foreach (const auto &mp, part->subParts()) {
-        mContent.append(std::make_shared<PlainTextContent>(mp->text().toLocal8Bit(), q));
+        auto d_ptr = new ContentPrivate;
+        d_ptr->mContent = part->text().toLocal8Bit();
+        d_ptr->mParent = q;
+        d_ptr->mCodec = "utf-8";
+        const auto enc = mp.dynamicCast<MimeTreeParser::EncryptedMessagePart>();
+        auto sig = mp.dynamicCast<MimeTreeParser::SignedMessagePart>();
+        if (enc) {
+           d_ptr->appendEncryption(enc);
+           const auto s = enc->subParts();
+           if (s.size() == 1) {
+               sig = s[0].dynamicCast<MimeTreeParser::SignedMessagePart>();
+           }
+        }
+        if (sig) {
+           d_ptr->appendSignature(sig);
+        }
+        mContent.append(std::make_shared<PlainTextContent>(d_ptr));
         q->reachParentD()->createMailMime(part);
     }
 }
@@ -472,6 +566,54 @@ PartPrivate* SinglePart::reachParentD() const
     return Part::d.get();
 }
 
+class SignaturePrivate
+{
+public:
+    Signature *q;
+};
+
+Signature::Signature()
+    :d(std::unique_ptr<SignaturePrivate>(new SignaturePrivate))
+{
+    d->q = this;
+}
+
+
+Signature::Signature(SignaturePrivate *d_ptr)
+    :d(std::unique_ptr<SignaturePrivate>(d_ptr))
+{
+    d->q = this;
+}
+
+Signature::~Signature()
+{
+
+}
+
+
+class EncryptionPrivate
+{
+public:
+    Encryption *q;
+};
+
+Encryption::Encryption(EncryptionPrivate *d_ptr)
+    :d(std::unique_ptr<EncryptionPrivate>(d_ptr))
+{
+    d->q = this;
+}
+
+Encryption::Encryption()
+    :d(std::unique_ptr<EncryptionPrivate>(new EncryptionPrivate))
+{
+    d->q = this;
+}
+
+Encryption::~Encryption()
+{
+
+}
+
 ParserPrivate::ParserPrivate(Parser* parser)
     : q(parser)
     , mNodeHelper(std::make_shared<MimeTreeParser::NodeHelper>())
@@ -513,21 +655,43 @@ void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, co
          if (attachment) {
             auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(attachment);
-            mTree->d->appendSubPart(part);
+            tree->d->appendSubPart(part);
          } else if (text) {
             auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(text);
-            mTree->d->appendSubPart(part);
+            tree->d->appendSubPart(part);
         } else if (alternative) {
             auto part = std::make_shared<AlternativePart>();
             part->d->fillFrom(alternative);
-            mTree->d->appendSubPart(part);
+            tree->d->appendSubPart(part);
         } else if (html) {
             auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(html);
-            mTree->d->appendSubPart(part);
+            tree->d->appendSubPart(part);
         } else {
-            createTree(m, tree);
+            const auto enc = mp.dynamicCast<MimeTreeParser::EncryptedMessagePart>();
+            const auto sig = mp.dynamicCast<MimeTreeParser::SignedMessagePart>();
+            if (enc || sig) {
+                auto subTree =  std::make_shared<Part>();
+                if (enc) {
+                    subTree->d->appendEncryption(enc);
+                }
+                if (sig) {
+                    subTree->d->appendSignature(sig);
+                }
+                createTree(m, subTree);
+                foreach(const auto &p, subTree->subParts()) {
+                    tree->d->appendSubPart(p);
+                    if (enc) {
+                        p->d->setEncryptions(subTree->d->encryptions());
+                    }
+                    if (sig) {
+                        p->d->setSignatures(subTree->d->signatures());
+                    }
+                }
+            } else {
+                createTree(m, tree);
+            }
         }
     }
 }
