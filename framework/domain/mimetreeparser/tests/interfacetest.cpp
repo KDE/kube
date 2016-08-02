@@ -79,6 +79,8 @@ private slots:
 
         contentList = contentPart->content("html");
         QCOMPARE(contentList.size(), 0);
+        auto contentAttachmentList = parser.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
     }
 
     void testTextAlternative()
@@ -103,6 +105,8 @@ private slots:
         QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
         QCOMPARE(contentList[0]->encryptions().size(), 0);
         QCOMPARE(contentList[0]->signatures().size(), 0);
+        auto contentAttachmentList = parser.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
     }
 
      void testTextHtml()
@@ -124,6 +128,8 @@ private slots:
         QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
         QCOMPARE(contentList[0]->encryptions().size(), 0);
         QCOMPARE(contentList[0]->signatures().size(), 0);
+        auto contentAttachmentList = parser.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
     }
 
     void testSMimeEncrypted()
@@ -139,6 +145,8 @@ private slots:
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("The quick brown fox jumped over the lazy dog.").toLocal8Bit());
         QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        auto contentAttachmentList = parser.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
     }
 
     void testOpenPGPEncryptedAttachment()
@@ -154,6 +162,12 @@ private slots:
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("test text").toLocal8Bit());
         QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        auto contentAttachmentList = parser.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 2);
+        QCOMPARE(contentAttachmentList[0]->availableContents(), QVector<QByteArray>() << "text/plain");
+        QCOMPARE(contentAttachmentList[0]->content().size(), 1);
+        QCOMPARE(contentAttachmentList[1]->availableContents(), QVector<QByteArray>() << "image/png");
+        QCOMPARE(contentAttachmentList[1]->content().size(), 1);
     }
 
     void testOpenPPGInline()
@@ -169,6 +183,8 @@ private slots:
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("asdasd asd asd asdf sadf sdaf sadf äöü").toLocal8Bit());
         QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        auto contentAttachmentList = parser.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
     }
 };
 

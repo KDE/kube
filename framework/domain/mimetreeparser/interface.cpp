@@ -433,6 +433,9 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
 void SinglePartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part)
 {
    q->reachParentD()->createMailMime(part.staticCast<MimeTreeParser::TextMessagePart>());
+   mType = q->mailMime()->mimetype().name().toUtf8();
+   mContent.clear();
+   mContent.append(std::make_shared<Content>(part->text().toLocal8Bit(), q));
 }
 
 SinglePart::SinglePart()
@@ -582,6 +585,49 @@ QVector<Part::Ptr> Parser::collectContentParts() const
                              });
 }
 
+
+QVector<Part::Ptr> Parser::collectAttachmentParts() const
+{
+    return collect(d->mTree, [](const Part::Ptr &p){return p->type() != "EncapsulatedPart";},
+                             [](const Content::Ptr &content){
+                                    const auto mime = content->mailMime();
+
+                                    if (!mime) {
+                                        return false;
+                                    }
+
+                                    if (mime->isFirstTextPart()) {
+                                        return false;
+                                    }
+
+                                    {
+                                        const auto parent = content->parent();
+                                        if (parent) {
+                                            const auto _mime = parent->mailMime();
+                                            if (_mime && (_mime->isTopLevelPart() || _mime->isFirstTextPart())) {
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                    const auto cd = mime->disposition();
+                                    if (cd && cd == MailMime::Inline) {
+                                        // explict "inline" disposition:
+                                        return false;
+                                    }
+                                    if (cd && cd == MailMime::Attachment) {
+                                        // explicit "attachment" disposition:
+                                        return true;
+                                    }
+
+                                    const auto ct = mime->mimetype();
+                                    if (ct.name().trimmed().toLower() == "text" && ct.name().trimmed().isEmpty() &&
+                                        (!mime || mime->filename().trimmed().isEmpty())) {
+                                        // text/* w/o filename parameter:
+                                        return false;
+                                    }
+                                    return true;
+                             });
+}
 QVector<Part::Ptr> Parser::collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const Content::Ptr &)> filter) const
 {
     QVector<Part::Ptr> ret;
@@ -594,7 +640,6 @@ QVector<Part::Ptr> Parser::collect(const Part::Ptr &start, std::function<bool(co
                     break;
                 }
             }
-            qWarning() << ct << contents.size();
         }
         if (!contents.isEmpty()) {
             ret.append(part);
