@@ -29,10 +29,10 @@
 #include <memory>
 #include <MimeTreeParser/MessagePart>
 
-namespace MimeTreeParser {
-    class NodeHelper;
-};
 class QAbstractItemModel;
+
+class Parser;
+class MessagePartPrivate;
 
 class MessageParser : public QObject
 {
@@ -43,6 +43,7 @@ class MessageParser : public QObject
 
 public:
     explicit MessageParser(QObject *parent = Q_NULLPTR);
+    ~MessageParser();
 
     QString html() const;
 
@@ -54,16 +55,13 @@ signals:
     void htmlChanged();
 
 private:
-    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
-    QString mHtml;
-    QMap<QByteArray, QUrl> mEmbeddedPartMap;
-    std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
+    std::unique_ptr<MessagePartPrivate> d;
 };
 
 class PartModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, QMap<QByteArray, QUrl> embeddedPartMap);
+    PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, std::shared_ptr<Parser> parser);
 
 public:
     enum Roles {
@@ -86,5 +84,6 @@ public:
 private:
     QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
     QMap<QByteArray, QUrl> mEmbeddedPartMap;
+    std::shared_ptr<Parser> mParser;
 };
 

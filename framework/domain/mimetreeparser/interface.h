@@ -181,6 +181,7 @@ public:
 private:
     std::unique_ptr<CertContentPrivate> d;
 };
+
 class Part
 {
 public:
@@ -346,6 +347,7 @@ public:
     ~Parser();
 
     Part::Ptr getPart(QUrl url);
+    QUrl getPart(const QByteArray &cid);
 
     QVector<Part::Ptr> collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const Content::Ptr &)> filter) const;
     QVector<Part::Ptr> collectContentParts() const;

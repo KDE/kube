@@ -21,6 +21,10 @@
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
 
+#include "mimetreeparser/interface.h"
+
+#include <QRegExp>
+
 #include <QFile>
 #include <QImage>
 #include <QDebug>
@@ -29,7 +33,9 @@
 #include <MimeTreeParser/ObjectTreeParser>
 #include <MimeTreeParser/MessagePart>
 
-PartModel::PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, QMap<QByteArray, QUrl> embeddedPartMap) : mPartTree(partTree), mEmbeddedPartMap(embeddedPartMap)
+PartModel::PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, std::shared_ptr<Parser> parser)
+    : mPartTree(partTree)
+    , mParser(parser)
 {
 }
 
@@ -73,8 +79,14 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 // qDebug() << "Getting text: " << part->property("text").toString();
                 // FIXME: we should have a list per part, and not one for all parts.
                 auto text = part->property("htmlContent").toString();
-                for (const auto &cid : mEmbeddedPartMap.keys()) {
-                    text.replace(QString("src=\"cid:%1\"").arg(QString(cid)), QString("src=\"%1\"").arg(mEmbeddedPartMap.value(cid).toString()));
+                auto rx = QRegExp("src=(\"|')cid:([^\1]*)\1");
+                int pos  = 0;
+                while ((pos = rx.indexIn(text, pos)) != -1) {
+                    auto repl = mParser->getPart(rx.cap(2).toUtf8());
+                    if (repl.isValid()) {
+                        text.replace(rx.cap(0), QString("src=\"%1\"").arg(repl.toString()));
+                    }
+                    pos += rx.matchedLength();
                 }
                 return text;
             }
@@ -140,16 +152,31 @@ int PartModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
+class MessagePartPrivate
+{
+public:
+    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
+    QString mHtml;
+    QMap<QByteArray, QUrl> mEmbeddedPartMap;
+    std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
+    std::shared_ptr<Parser> mParser;
+};
 
 MessageParser::MessageParser(QObject *parent)
     : QObject(parent)
+    , d(std::unique_ptr<MessagePartPrivate>(new MessagePartPrivate))
+{
+
+}
+
+MessageParser::~MessageParser()
 {
 
 }
 
 QString MessageParser::html() const
 {
-    return mHtml;
+    return d->mHtml;
 }
 
 QVariant MessageParser::message() const
@@ -161,6 +188,8 @@ void MessageParser::setMessage(const QVariant &message)
 {
     QTime time;
     time.start();
+    d->mParser = std::shared_ptr<Parser>(new Parser(message.toByteArray()));
+
     const auto mailData = KMime::CRLFtoLF(message.toByteArray());
     KMime::Message::Ptr msg(new KMime::Message);
     msg->setContent(mailData);
@@ -170,20 +199,20 @@ void MessageParser::setMessage(const QVariant &message)
     // render the mail
     StringHtmlWriter htmlWriter;
     //temporary files only have the lifetime of the nodehelper, so we keep it around until the mail changes.
-    mNodeHelper = std::make_shared<MimeTreeParser::NodeHelper>();
+    d->mNodeHelper = std::make_shared<MimeTreeParser::NodeHelper>();
     ObjectTreeSource source(&htmlWriter);
-    MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
+    MimeTreeParser::ObjectTreeParser otp(&source, d->mNodeHelper.get());
 
     otp.parseObjectTree(msg.data());
-    mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
+    d->mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
 
-    mEmbeddedPartMap = htmlWriter.embeddedParts();
-    mHtml = htmlWriter.html();
+    d->mEmbeddedPartMap = htmlWriter.embeddedParts();
+    d->mHtml = htmlWriter.html();
     emit htmlChanged();
 }
 
 QAbstractItemModel *MessageParser::partTree() const
 {
-    return new PartModel(mPartTree, mEmbeddedPartMap);
+    return new PartModel(d->mPartTree, d->mParser);
 }
 

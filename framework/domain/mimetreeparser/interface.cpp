@@ -706,6 +706,11 @@ Parser::~Parser()
 {
 }
 
+QUrl Parser::getPart(const QByteArray &cid)
+{
+    return d->mEmbeddedPartMap.value(cid);
+}
+
 QVector<Part::Ptr> Parser::collectContentParts() const
 {
     return collect(d->mTree, [](const Part::Ptr &p){return p->type() != "EncapsulatedPart";},

@@ -46,7 +46,6 @@ public:
     void createTree(const MimeTreeParser::MessagePartPtr& start, const Part::Ptr& tree);
 
     Part::Ptr mTree;
-private:
     Parser *q;
 
     MimeTreeParser::MessagePartPtr mPartTree;
