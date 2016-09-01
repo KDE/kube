@@ -5,7 +5,6 @@ ListModel {
     ListElement {
         type: "encrypted"
         trusted: false
-        trustlevel: "trusted" // "trusted" = green, "unknown" = grey, "dangerous" = red, "wierd" = yellow
         content: [
         ListElement {
             type: "plaintext"
