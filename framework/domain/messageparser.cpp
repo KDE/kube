@@ -89,7 +89,8 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             case Type:
                 return part->metaObject()->className();
             case IsHidden:
-                return part->property("isHidden").toBool();
+                return false;
+                //return part->property("isHidden").toBool();
 
         }
     }
