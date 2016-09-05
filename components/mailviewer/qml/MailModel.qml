@@ -4,7 +4,7 @@ ListModel {
 
     ListElement {
         type: "encrypted"
-        trusted: false
+        trusted: true
         content: [
         ListElement {
             type: "plaintext"
