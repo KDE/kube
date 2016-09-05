@@ -38,13 +38,15 @@ ToolButton {
     Rectangle {
         id: dialog
 
+        property int modelCount: 5 //FIXME replace with actual model
+
         anchors {
             top: parent.bottom
             horizontalCenter: parent.horizontalCenter
         }
 
-        height: Kirigami.Units.gridUnit * 15
-        width: Kirigami.Units.gridUnit * 12
+       height: modelCount * Kirigami.Units.gridUnit * 3 + 10//scrollView.height  height: Kirigami.Units.gridUnit * 15
+       width: Kirigami.Units.gridUnit * 12
 
         color: Kirigami.Theme.backgroundColor
         border.width: 1
@@ -55,16 +57,22 @@ ToolButton {
 
         //BEGIN Dialog Content
         ScrollView {
+            id: scrollView
+
             anchors {
                 fill: parent
-                margins: 1
+                margins: 5
             }
+
             ListView {
                 id: listView
 
-                model: 3
+                model: 5
 
                 delegate: Kirigami.AbstractListItem {
+
+                    height: Kirigami.Units.gridUnit * 3
+
                     Kirigami.Label {
                         anchors.centerIn: parent
                         text: "Subjext subxetson"
