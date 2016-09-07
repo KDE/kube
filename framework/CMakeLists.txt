@@ -41,7 +41,5 @@ add_subdirectory(actions)
 add_subdirectory(settings)
 # Domain specific domain logic
 add_subdirectory(domain)
-# Theme specfic things like colors
-add_subdirectory(theme)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
