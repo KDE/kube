@@ -1,8 +1,5 @@
 set(settingsplugin_SRCS
     settingsplugin.cpp
-    # maildir_resource.cpp
-    # resourcelistmodel.cpp
-    # resourcescontroller.cpp
     settings.cpp
 )
 
