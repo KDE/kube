@@ -106,14 +106,12 @@ ActionResult ActionHandlerHelper::execute(Context *context)
         handlerFunction(context);
         result.setDone();
     } else {
-        jobHandlerFunction(context).then<void>([=]() {
+        jobHandlerFunction(context).syncThen<void>([=](const KAsync::Error &error) {
             auto modifyableResult = result;
-            modifyableResult.setDone();
-        },
-        [=](int errorCode, const QString &string) {
-            qWarning() << "Job failed: " << errorCode << string;
-            auto modifyableResult = result;
-            modifyableResult.setError(1);
+            if (error) {
+                qWarning() << "Job failed: " << error.errorCode << error.errorMessage;
+                modifyableResult.setError(1);
+            }
             modifyableResult.setDone();
         }).exec();
     }

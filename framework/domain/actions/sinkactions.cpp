@@ -106,7 +106,7 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
         query += Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport);
         query += Sink::Query::AccountFilter(accountId);
         Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(query)
-            .then<void, KAsync::Job<void>, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([=](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
+            .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([=](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
                 if (!resources.isEmpty()) {
                     auto resourceId = resources[0]->identifier();
                     SinkTrace() << "Sending message via resource: " << resourceId;
@@ -141,7 +141,7 @@ static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
             query += Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::drafts);
             query += Sink::Query::AccountFilter(accountId);
             return Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(query)
-                .then<void, KAsync::Job<void>, Sink::ApplicationDomain::SinkResource>([=](const Sink::ApplicationDomain::SinkResource &resource) -> KAsync::Job<void> {
+                .then<void, Sink::ApplicationDomain::SinkResource>([=](const Sink::ApplicationDomain::SinkResource &resource) -> KAsync::Job<void> {
                     Sink::ApplicationDomain::Mail mail(resource.identifier());
                     mail.setProperty("draft", true);
                     mail.setBlobProperty("mimeMessage", message->encodedContent());

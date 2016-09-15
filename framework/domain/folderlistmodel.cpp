@@ -74,7 +74,7 @@ void FolderListModel::setAccountId(const QVariant &accountId)
 {
     const auto account = accountId.toString().toUtf8();
     Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query::PropertyFilter("account", QVariant::fromValue(account)))
-        .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([this, account](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
+        .syncThen<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([this, account](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
             Sink::Query query;
             query.liveQuery = true;
             query.requestedProperties << "name" << "icon" << "parent";
