@@ -3,49 +3,23 @@ import QtQuick.Controls 1.5
 
 Item {
 
-    height: mailPart.height
-    width: mailPart.width
-
-   // Rectangle {
-     //   id: border
-
-       // border.width: 5
-      //  border.color: "lightgreen"
-    //}
+    height: mailPart.height + 20
+    width: mailPart.width + 20
 
         BorderImage {
 
         anchors.fill: parent
         border { left: 40; top: 40; right: 40; bottom: 40 }
-        horizontalTileMode: BorderImage.Repeat
-        verticalTileMode: BorderImage.Repeat
+        horizontalTileMode: BorderImage.Round
+        verticalTileMode: BorderImage.Round
 
-        source: model.trusted ?  "bordergreen.png" : "bordergrey.png"
+        source: "securityborders" + model.securityLevel + ".png"
     }
 
     MailPart {
         id: mailPart
 
-    }
+        anchors.centerIn: parent
 
-    Rectangle {
-
-        anchors {
-            top: parent.top
-            right: parent.right
-        }
-
-        height: 50
-        width: 50
-
-        radius: 100
-
-        color: model.trusted ? "lightgreen" : "lightgrey"
-
-        ToolButton {
-            anchors.fill: parent
-
-            iconName: "document-encrypt"
-        }
     }
 }
