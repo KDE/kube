@@ -78,6 +78,9 @@ Rectangle {
                             case "plaintext":
                                 loader.source = "TextPart.qml";
                                 break;
+                            case "html":
+                                loader.source = "HtmlPart.qml";
+                                break;
                         }
                     }
                 }
