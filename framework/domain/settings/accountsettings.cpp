@@ -155,7 +155,7 @@ void AccountSettings::loadAccount()
 
 void AccountSettings::loadImapResource()
 {
-    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(mAccountIdentifier) + Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::storage))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query().filter(Sink::ApplicationDomain::SinkAccount(mAccountIdentifier)).containsFilter<Sink::ApplicationDomain::SinkResource::Capabilities>(Sink::ApplicationDomain::ResourceCapabilities::Mail::storage))
         .syncThen<void, Sink::ApplicationDomain::SinkResource>([this](const Sink::ApplicationDomain::SinkResource &resource) {
             mImapIdentifier = resource.identifier();
             mImapServer = resource.getProperty("server").toString();
@@ -169,7 +169,7 @@ void AccountSettings::loadImapResource()
 
 void AccountSettings::loadMaildirResource()
 {
-    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(mAccountIdentifier) + Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::storage))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query().filter(Sink::ApplicationDomain::SinkAccount(mAccountIdentifier)).containsFilter<Sink::ApplicationDomain::SinkResource::Capabilities>(Sink::ApplicationDomain::ResourceCapabilities::Mail::storage))
         .syncThen<void, Sink::ApplicationDomain::SinkResource>([this](const Sink::ApplicationDomain::SinkResource &resource) {
             mMaildirIdentifier = resource.identifier();
             auto path = resource.getProperty("path").toString();
@@ -184,7 +184,7 @@ void AccountSettings::loadMaildirResource()
 
 void AccountSettings::loadMailtransportResource()
 {
-    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query::AccountFilter(mAccountIdentifier) + Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(Sink::Query().filter(Sink::ApplicationDomain::SinkAccount(mAccountIdentifier)).containsFilter<Sink::ApplicationDomain::SinkResource::Capabilities>(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport))
         .syncThen<void, Sink::ApplicationDomain::SinkResource>([this](const Sink::ApplicationDomain::SinkResource &resource) {
             mMailtransportIdentifier = resource.identifier();
             mSmtpServer = resource.getProperty("server").toString();
@@ -199,7 +199,7 @@ void AccountSettings::loadMailtransportResource()
 void AccountSettings::loadIdentity()
 {
     //FIXME this assumes that we only ever have one identity per account
-    Sink::Store::fetchOne<Sink::ApplicationDomain::Identity>(Sink::Query::AccountFilter(mAccountIdentifier))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::Identity>(Sink::Query().filter(Sink::ApplicationDomain::SinkAccount(mAccountIdentifier)))
         .syncThen<void, Sink::ApplicationDomain::Identity>([this](const Sink::ApplicationDomain::Identity &identity) {
             mIdentityIdentifier = identity.identifier();
             mUsername = identity.getProperty("username").toString();

@@ -28,6 +28,7 @@
 SINK_DEBUG_AREA("sinkactions")
 
 using namespace Kube;
+using namespace Sink;
 
 static ActionHandlerHelper markAsReadHandler("org.kde.kube.actions.mark-as-read",
     [](Context *context) -> bool {
@@ -102,11 +103,11 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
         auto message = context->property("message").value<KMime::Message::Ptr>();
         SinkLog() << "Sending a mail: ";
 
-        Sink::Query query;
-        query += Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport);
-        query += Sink::Query::AccountFilter(accountId);
-        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(query)
-            .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([=](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
+        Query query;
+        query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);
+        query.filter(ApplicationDomain::SinkAccount(accountId));
+        Store::fetchAll<ApplicationDomain::SinkResource>(query)
+            .then<void, QList<ApplicationDomain::SinkResource::Ptr>>([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
                 if (!resources.isEmpty()) {
                     auto resourceId = resources[0]->identifier();
                     SinkTrace() << "Sending message via resource: " << resourceId;
@@ -138,8 +139,8 @@ static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
 
         if (existingMail.identifier().isEmpty()) {
             Sink::Query query;
-            query += Sink::Query::CapabilityFilter(Sink::ApplicationDomain::ResourceCapabilities::Mail::drafts);
-            query += Sink::Query::AccountFilter(accountId);
+            query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::drafts);
+            query.filter(ApplicationDomain::SinkAccount(accountId));
             return Sink::Store::fetchOne<Sink::ApplicationDomain::SinkResource>(query)
                 .then<void, Sink::ApplicationDomain::SinkResource>([=](const Sink::ApplicationDomain::SinkResource &resource) -> KAsync::Job<void> {
                     Sink::ApplicationDomain::Mail mail(resource.identifier());
