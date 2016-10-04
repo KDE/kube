@@ -22,9 +22,12 @@
 #include <sink/store.h>
 #include <settings/settings.h>
 
+using namespace Sink;
+using namespace Sink::ApplicationDomain;
+
 FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
 {
-    Sink::Query query;
+    Query query;
     query.liveQuery = true;
     query.requestedProperties << "name" << "icon" << "parent";
     query.parentProperty = "parent";
@@ -57,26 +60,25 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
         case Icon:
             return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
         case Id:
-            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+            return srcIdx.data(Store::DomainObjectBaseRole).value<ApplicationDomainType::Ptr>()->identifier();
         case DomainObject:
-            return srcIdx.data(Sink::Store::DomainObjectRole);
+            return srcIdx.data(Store::DomainObjectRole);
     }
     return QIdentityProxyModel::data(idx, role);
 }
 
-void FolderListModel::runQuery(const Sink::Query &query)
+void FolderListModel::runQuery(const Query &query)
 {
-    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::Folder>(query);
+    mModel = Store::loadModel<Folder>(query);
     setSourceModel(mModel.data());
 }
 
 void FolderListModel::setAccountId(const QVariant &accountId)
 {
-    using namespace Sink::ApplicationDomain;
     const auto account = accountId.toString().toUtf8();
 
     //Get all folders of an account
-    auto query = Sink::Query();
+    auto query = Query();
     query.filter(SinkAccount(account));
     query.liveQuery = true;
     query.request<Folder::Name>()
