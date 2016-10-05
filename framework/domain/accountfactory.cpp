@@ -43,7 +43,7 @@ QString AccountFactory::name() const
 void AccountFactory::setAccountId(const QString &accountId)
 {
     mAccountId = accountId;
-    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkAccount>(Sink::Query::IdentityFilter(accountId.toUtf8()))
+    Sink::Store::fetchOne<Sink::ApplicationDomain::SinkAccount>(Sink::Query().filter(accountId.toUtf8()))
         .syncThen<void, Sink::ApplicationDomain::SinkAccount>([this](const Sink::ApplicationDomain::SinkAccount &account) {
             mAccountType = account.getProperty("type").toByteArray();
             loadPackage();

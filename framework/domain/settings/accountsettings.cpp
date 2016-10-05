@@ -134,9 +134,9 @@ void AccountSettings::saveAccount()
     qDebug() << "Saving account " << mAccountIdentifier << mMailtransportIdentifier;
     Q_ASSERT(!mAccountIdentifier.isEmpty());
     SinkAccount account(mAccountIdentifier);
-    account.setProperty("type", "imap");
-    account.setProperty("name", mName);
-    account.setProperty("icon", mIcon);
+    account.setAccountType("imap");
+    account.setName(mName);
+    account.setIcon(mIcon);
     Q_ASSERT(!account.identifier().isEmpty());
     Store::modify(account)
         .onError([](const KAsync::Error &error) {
@@ -148,17 +148,17 @@ void AccountSettings::saveAccount()
 void AccountSettings::loadAccount()
 {
     Q_ASSERT(!mAccountIdentifier.isEmpty());
-    Store::fetchOne<SinkAccount>(Query::IdentityFilter(mAccountIdentifier))
+    Store::fetchOne<SinkAccount>(Query().filter(mAccountIdentifier))
         .syncThen<void, SinkAccount>([this](const SinkAccount &account) {
-            mIcon = account.getProperty("icon").toString();
-            mName = account.getProperty("name").toString();
+            mIcon = account.getIcon();
+            mName = account.getName();
             emit changed();
         }).exec();
 }
 
 void AccountSettings::loadImapResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter(SinkAccount(mAccountIdentifier)).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
         .syncThen<void, SinkResource>([this](const SinkResource &resource) {
             mImapIdentifier = resource.identifier();
             mImapServer = resource.getProperty("server").toString();
@@ -172,7 +172,7 @@ void AccountSettings::loadImapResource()
 
 void AccountSettings::loadMaildirResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter(SinkAccount(mAccountIdentifier)).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
         .syncThen<void, SinkResource>([this](const SinkResource &resource) {
             mMaildirIdentifier = resource.identifier();
             auto path = resource.getProperty("path").toString();
@@ -187,7 +187,7 @@ void AccountSettings::loadMaildirResource()
 
 void AccountSettings::loadMailtransportResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter(SinkAccount(mAccountIdentifier)).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport))
         .syncThen<void, SinkResource>([this](const SinkResource &resource) {
             mMailtransportIdentifier = resource.identifier();
             mSmtpServer = resource.getProperty("server").toString();
@@ -202,7 +202,7 @@ void AccountSettings::loadMailtransportResource()
 void AccountSettings::loadIdentity()
 {
     //FIXME this assumes that we only ever have one identity per account
-    Store::fetchOne<Identity>(Query().filter(SinkAccount(mAccountIdentifier)))
+    Store::fetchOne<Identity>(Query().filter<Identity::Account>(mAccountIdentifier))
         .syncThen<void, Identity>([this](const Identity &identity) {
             mIdentityIdentifier = identity.identifier();
             mUsername = identity.getProperty("username").toString();
@@ -283,7 +283,7 @@ void AccountSettings::saveIdentity()
     } else {
         auto identity = ApplicationDomainType::createEntity<Identity>();
         mIdentityIdentifier = identity.identifier();
-        identity.setProperty("account", mAccountIdentifier);
+        identity.setAccount(mAccountIdentifier);
         identity.setProperty("username", mUsername);
         identity.setProperty("address", mEmailAddress);
         Store::create(identity)
@@ -299,7 +299,7 @@ void AccountSettings::removeResource(const QByteArray &identifier)
     if (identifier.isEmpty()) {
         qWarning() << "We're missing an identifier";
     } else {
-        SinkResource resource("", identifier, 0, QSharedPointer<MemoryBufferAdaptor>::create());
+        SinkResource resource(identifier);
         Store::remove(resource)
         .onError([](const KAsync::Error &error) {
             qWarning() << "Error while removing resource: " << error.errorMessage;
@@ -313,7 +313,7 @@ void AccountSettings::removeAccount()
     if (mAccountIdentifier.isEmpty()) {
         qWarning() << "We're missing an identifier";
     } else {
-        SinkAccount account("", mAccountIdentifier, 0, QSharedPointer<MemoryBufferAdaptor>::create());
+        SinkAccount account(mAccountIdentifier);
         Store::remove(account)
         .onError([](const KAsync::Error &error) {
             qWarning() << "Error while removing account: " << error.errorMessage;
@@ -327,7 +327,7 @@ void AccountSettings::removeIdentity()
     if (mIdentityIdentifier.isEmpty()) {
         qWarning() << "We're missing an identifier";
     } else {
-        Identity identity("", mIdentityIdentifier, 0, QSharedPointer<MemoryBufferAdaptor>::create());
+        Identity identity(mIdentityIdentifier);
         Store::remove(identity)
         .onError([](const KAsync::Error &error) {
             qWarning() << "Error while removing identity: " << error.errorMessage;

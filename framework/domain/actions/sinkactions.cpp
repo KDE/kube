@@ -85,7 +85,7 @@ static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize"
     [](Context *context) {
         if (auto folder = context->property("folder").value<Folder::Ptr>()) {
             SinkLog() << "Synchronizing resource " << folder->resourceInstanceIdentifier();
-            Store::synchronize(Query::ResourceFilter(folder->resourceInstanceIdentifier())).exec();
+            Store::synchronize(Query().resourceFilter(folder->resourceInstanceIdentifier())).exec();
         } else {
             SinkLog() << "Synchronizing all";
             Store::synchronize(Query()).exec();
@@ -106,7 +106,7 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
 
         Query query;
         query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);
-        query.filter(ApplicationDomain::SinkAccount(accountId));
+        query.filter<SinkResource::Account>(accountId);
         Store::fetchAll<ApplicationDomain::SinkResource>(query)
             .then<void, QList<ApplicationDomain::SinkResource::Ptr>>([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
                 if (!resources.isEmpty()) {
@@ -129,7 +129,7 @@ static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
         return !accountId.isEmpty() && message;
     },
     ActionHandlerHelper::JobHandler([](Context *context) -> KAsync::Job<void> {
-        SinkWarning() << "executing save as draft";
+        SinkLog() << "Executing the save-as-draft action";
         const auto accountId = context->property("accountId").value<QByteArray>();
         const auto message = context->property("message").value<KMime::Message::Ptr>();
         auto existingMail = context->property("existingMail").value<Mail>();
@@ -140,18 +140,18 @@ static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
 
         if (existingMail.identifier().isEmpty()) {
             Query query;
-            query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::drafts);
-            query.filter(ApplicationDomain::SinkAccount(accountId));
+            query.containsFilter<SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::drafts);
+            query.filter<SinkResource::Account>(accountId);
             return Store::fetchOne<SinkResource>(query)
                 .then<void, SinkResource>([=](const SinkResource &resource) -> KAsync::Job<void> {
                     Mail mail(resource.identifier());
-                    mail.setProperty("draft", true);
-                    mail.setBlobProperty("mimeMessage", message->encodedContent());
+                    mail.setDraft(true);
+                    mail.setMimeMessage(message->encodedContent());
                     return Store::create(mail);
                 });
         } else {
             SinkWarning() << "Modifying an existing mail" << existingMail.identifier();
-            existingMail.setBlobProperty("mimeMessage", message->encodedContent());
+            existingMail.setMimeMessage(message->encodedContent());
             return Store::modify(existingMail);
         }
     })

@@ -29,7 +29,7 @@ FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
 {
     Query query;
     query.liveQuery = true;
-    query.requestedProperties << "name" << "icon" << "parent";
+    query.request<Folder::Name>().request<Folder::Icon>().request<Folder::Parent>();
     query.parentProperty = "parent";
     runQuery(query);
 }
@@ -79,7 +79,7 @@ void FolderListModel::setAccountId(const QVariant &accountId)
 
     //Get all folders of an account
     auto query = Query();
-    query.filter(SinkAccount(account));
+    query.resourceFilter<SinkResource::Account>(account);
     query.liveQuery = true;
     query.request<Folder::Name>()
          .request<Folder::Icon>()
