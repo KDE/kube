@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
+  Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,23 +16,39 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include <QObject>
+import QtQuick 2.4
+
+Item {
+
+    height: mailPart.height
+    width: mailPart.width
 
 
-class Unit : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY (int size READ size NOTIFY unitChanged)
+    Rectangle {
+        id: border
+        color: "lightgrey"
+        height: mailPart.height
+        width: 5
+    }
 
+    Text {
+        id: sender
 
-public:
-    explicit Unit(QObject *parent = Q_NULLPTR);
+        anchors {
+            left: border.right
+            leftMargin: 15
+        }
 
-    int size() const;
+        text: "sent by " + model.sender + " on  " + model.date
+        color: "grey"
+    }
 
-signals:
-    void unitChanged();
+    MailPart {
+        id: mailPart
 
-private:
-    int m_size;
-};
+        anchors.top: sender.bottom
+
+    }
+
+}
+

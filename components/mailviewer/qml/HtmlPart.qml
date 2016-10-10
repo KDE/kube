@@ -17,49 +17,32 @@
 */
 
 import QtQuick 2.4
-import org.kube.framework.theme 1.0
+import QtQuick.Controls 1.3
+import QtWebKit 3.0
+// import QtWebEngine 1.3 //This would give use contentsSize
+import QtWebEngine 1.2
 
 Item {
-    id: delegateRoot
+    id: root
+    property string content: model.htmlContent
+    property int contentHeight: helperView.contentHeight;
+    //FIXME workaround until QtWebEngine 1.3 with contentsSize
 
-    readonly property bool isCurrentItem: ListView.isCurrentItem
+    height: contentHeight
+    width: delegateRoot.width
 
-    height: Unit.width * 25
-    width: parent.width
-
-    MouseArea {
-        id: mouseArea
-
-        anchors.fill: parent
+    WebView {
+        id: helperView
+        visible: false
+        Component.onCompleted: loadHtml(content, "file:///")
     }
-
-    Rectangle {
+    WebEngineView {
+        id: htmlView
         anchors.fill: parent
-
-        color: colorPalette.background
-
-        //clickColor
-        Rectangle {
-            id: clickColor
-
-            anchors.fill: parent
-
-            color: colorPalette.selected
-            opacity: 0.4
-
-            visible: mouseArea.pressed
-        }
-
-        //border
-        Rectangle {
-
-            anchors.bottom: parent.bottom
-
-            height: 1
-            width: parent.width
-
-            color: colorPalette.border
-            opacity: 0.2
-        }
+        Component.onCompleted: loadHtml(content, "file:///")
+    }
+    onContentChanged: {
+        htmlView.loadHtml(content, "file:///");
+        helperView.loadHtml(content, "file:///");
     }
 }

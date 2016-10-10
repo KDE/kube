@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
+  Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,16 +16,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#pragma once
+import QtQuick 2.4
 
-#include <QQmlEngine>
-#include <QQmlExtensionPlugin>
+ListModel {
 
-class ThemePlugin : public QQmlExtensionPlugin
-{
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+    ListElement {
+        type: "html"
+        htmlContent: "<!DOCTYPE html>  <html>  <body>  <h1>Some Heading</h1>  <p>My some paragraph.</p> </body>  </html>"
+    }
+}
 
-public:
-    virtual void registerTypes(const char *uri);
-};

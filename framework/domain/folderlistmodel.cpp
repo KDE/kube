@@ -22,11 +22,14 @@
 #include <sink/store.h>
 #include <settings/settings.h>
 
+using namespace Sink;
+using namespace Sink::ApplicationDomain;
+
 FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
 {
-    Sink::Query query;
+    Query query;
     query.liveQuery = true;
-    query.requestedProperties << "name" << "icon" << "parent";
+    query.request<Folder::Name>().request<Folder::Icon>().request<Folder::Parent>();
     query.parentProperty = "parent";
     runQuery(query);
 }
@@ -57,34 +60,32 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
         case Icon:
             return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
         case Id:
-            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+            return srcIdx.data(Store::DomainObjectBaseRole).value<ApplicationDomainType::Ptr>()->identifier();
         case DomainObject:
-            return srcIdx.data(Sink::Store::DomainObjectRole);
+            return srcIdx.data(Store::DomainObjectRole);
     }
     return QIdentityProxyModel::data(idx, role);
 }
 
-void FolderListModel::runQuery(const Sink::Query &query)
+void FolderListModel::runQuery(const Query &query)
 {
-    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::Folder>(query);
+    mModel = Store::loadModel<Folder>(query);
     setSourceModel(mModel.data());
 }
 
 void FolderListModel::setAccountId(const QVariant &accountId)
 {
     const auto account = accountId.toString().toUtf8();
-    Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query::PropertyFilter("account", QVariant::fromValue(account)))
-        .then<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([this, account](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
-            Sink::Query query;
-            query.liveQuery = true;
-            query.requestedProperties << "name" << "icon" << "parent";
-            query.parentProperty = "parent";
-            for (const auto &r : resources) {
-                qDebug() << "Found resources for account: " << r->identifier() << account;
-                query.resources << r->identifier();
-            }
-            runQuery(query);
-        }).exec();
+
+    //Get all folders of an account
+    auto query = Query();
+    query.resourceFilter<SinkResource::Account>(account);
+    query.liveQuery = true;
+    query.request<Folder::Name>()
+         .request<Folder::Icon>()
+         .request<Folder::Parent>();
+    query.parentProperty = Folder::Parent::name;
+    runQuery(query);
 }
 
 QVariant FolderListModel::accountId() const

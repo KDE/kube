@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
+  Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,14 +16,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "unit.h"
+import QtQuick 2.4
+import QtQuick.Controls 1.5
 
-Unit::Unit(QObject *parent) : QObject(parent), m_size(5)
-{
+Item {
 
-}
+    height: mailPart.height + 20
+    width: mailPart.width + 20
 
-int Unit::size() const
-{
-    return m_size;
+        BorderImage {
+
+        anchors.fill: parent
+        border { left: 40; top: 40; right: 40; bottom: 40 }
+        horizontalTileMode: BorderImage.Round
+        verticalTileMode: BorderImage.Round
+
+        source: "securityborders" + model.securityLevel + ".png"
+    }
+
+    MailPart {
+        id: mailPart
+
+        anchors.centerIn: parent
+
+    }
 }

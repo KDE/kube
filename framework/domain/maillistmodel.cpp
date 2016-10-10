@@ -107,7 +107,7 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     }
     Sink::Query query;
     query.liveQuery = true;
-    query.resources << folder->resourceInstanceIdentifier();
+    query.resourceFilter(folder->resourceInstanceIdentifier());
     query.sort<Mail::Date>();
     query.limit = 100;
     query.request<Mail::Subject>();

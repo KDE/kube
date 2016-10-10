@@ -34,9 +34,9 @@ void AccountsController::createAccount(const QString &accountType)
 {
     auto account = Sink::ApplicationDomain::ApplicationDomainType::createEntity<Sink::ApplicationDomain::SinkAccount>();
     account.setProperty("type", accountType);
-    Sink::Store::create(account).then<void>([]() {},
-    [](int errorCode, const QString &errorMessage) {
-        qWarning() << "Error while creating account: " << errorMessage;
-    })
-    .exec();
+    Sink::Store::create(account).syncThen<void>([](const KAsync::Error &error) {
+        if (error) {
+            qWarning() << "Error while creating account: " << error.errorMessage;
+        }
+    }).exec();
 }

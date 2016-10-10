@@ -17,49 +17,28 @@
 */
 
 import QtQuick 2.4
-import org.kube.framework.theme 1.0
+import QtQuick.Controls 1.5
 
 Item {
-    id: delegateRoot
 
-    readonly property bool isCurrentItem: ListView.isCurrentItem
+    height: mailPart.height + 20
+    width: mailPart.width + 20
 
-    height: Unit.width * 25
-    width: parent.width
-
-    MouseArea {
-        id: mouseArea
+        BorderImage {
 
         anchors.fill: parent
+        border { left: 40; top: 40; right: 40; bottom: 40 }
+        horizontalTileMode: BorderImage.Round
+        verticalTileMode: BorderImage.Round
+
+        source: "securityborders" + model.securityLevel + ".png"
     }
 
-    Rectangle {
-        anchors.fill: parent
+    MailPart {
+        id: mailPart
 
-        color: colorPalette.background
+        anchors.centerIn: parent
 
-        //clickColor
-        Rectangle {
-            id: clickColor
-
-            anchors.fill: parent
-
-            color: colorPalette.selected
-            opacity: 0.4
-
-            visible: mouseArea.pressed
-        }
-
-        //border
-        Rectangle {
-
-            anchors.bottom: parent.bottom
-
-            height: 1
-            width: parent.width
-
-            color: colorPalette.border
-            opacity: 0.2
-        }
     }
 }
+

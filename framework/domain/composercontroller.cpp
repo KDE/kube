@@ -133,7 +133,7 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
 {
     Sink::Query query(*message.value<Sink::ApplicationDomain::Mail::Ptr>());
     query.request<Sink::ApplicationDomain::Mail::MimeMessage>();
-    Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).then<void, Sink::ApplicationDomain::Mail>([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
+    Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).syncThen<void, Sink::ApplicationDomain::Mail>([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
         m_existingMail = mail;
         const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
         if (!mailData.isEmpty()) {
