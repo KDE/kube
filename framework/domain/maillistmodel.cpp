@@ -23,6 +23,7 @@
 #include <QFile>
 #include <QDateTime>
 
+#include <sink/standardqueries.h>
 
 MailListModel::MailListModel(QObject *parent)
     : QSortFilterProxyModel()
@@ -50,6 +51,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Id] = "id";
     roles[MimeMessage] = "mimeMessage";
     roles[DomainObject] = "domainObject";
+    roles[ThreadSize] = "threadSize";
 
     return roles;
 }
@@ -68,18 +70,19 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
         case Date:
             return mail->getDate();
         case Unread:
-            return mail->getUnread();
+            return mail->getProperty("unreadCollected").toList().contains(true);
         case Important:
-            return mail->getImportant();
+            return mail->getProperty("importantCollected").toList().contains(true);
         case Draft:
             return mail->getDraft();
         case Id:
             return mail->identifier();
         case DomainObject:
             return QVariant::fromValue(mail);
-        case MimeMessage: {
+        case MimeMessage:
             return mail->getMimeMessage();
-        }
+        case ThreadSize:
+            return mail->getProperty("count").toInt();
     }
     return QSortFilterProxyModel::data(idx, role);
 }
@@ -105,10 +108,8 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
         qWarning() << "No folder: " << parentFolder;
         return;
     }
-    Sink::Query query;
+    Sink::Query query = Sink::StandardQueries::threadLeaders(*folder);
     query.liveQuery = true;
-    query.resourceFilter(folder->resourceInstanceIdentifier());
-    query.sort<Mail::Date>();
     query.limit = 100;
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
@@ -118,7 +119,6 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.request<Mail::Important>();
     query.request<Mail::Draft>();
     query.request<Mail::Folder>();
-    query.filter<Mail::Folder>(*folder);
     qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
     runQuery(query);
 }
@@ -136,7 +136,7 @@ void MailListModel::setMail(const QVariant &variant)
         qWarning() << "No mail: " << mail;
         return;
     }
-    Sink::Query query(*mail);
+    Sink::Query query = Sink::StandardQueries::completeThread(*mail);
     query.liveQuery = false;
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();

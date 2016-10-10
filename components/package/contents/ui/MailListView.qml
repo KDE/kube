@@ -127,6 +127,13 @@ Controls.ScrollView {
                             color: Kirigami.Theme.textColor
                         }
                     }
+                    Text {
+                        text: model.threadSize
+
+                        renderType: Text.NativeRendering
+                        font.weight: Font.Light
+                        color:  Kirigami.Theme.textColor
+                    }
                 }
             }
         }

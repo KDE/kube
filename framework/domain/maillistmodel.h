@@ -50,10 +50,11 @@ public:
         Draft,
         Id,
         MimeMessage,
-        DomainObject
+        DomainObject,
+        ThreadSize
     };
 
-    QHash<int, QByteArray> roleNames() const;
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
     void runQuery(const Sink::Query &query);
 
