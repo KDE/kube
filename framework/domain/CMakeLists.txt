@@ -12,6 +12,7 @@ set(mailplugin_SRCS
     accountfactory.cpp
     accountscontroller.cpp
     accountsmodel.cpp
+    outboxmodel.cpp
     identitiesmodel.cpp
     settings/accountsettings.cpp
 )
