@@ -24,7 +24,6 @@ import QtQuick.Dialogs 1.0
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.settings 1.0 as KubeSettings
-import org.kube.framework.theme 1.0
 import org.kube.accounts.maildir 1.0 as MaildirAccount
 
 

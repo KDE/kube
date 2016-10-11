@@ -39,7 +39,7 @@ ToolButton {
     Rectangle {
         id: dialog
 
-        property int modelCount: 5 //FIXME replace with actual model
+        property int modelCount: listView.count
 
         anchors {
             top: parent.bottom
@@ -68,7 +68,8 @@ ToolButton {
             ListView {
                 id: listView
 
-                model: 5
+                model: KubeFramework.OutboxModel {
+                }
 
                 delegate: Kirigami.AbstractListItem {
 
@@ -76,7 +77,7 @@ ToolButton {
 
                     Kirigami.Label {
                         anchors.centerIn: parent
-                        text: "Subjext subxetson"
+                        text: model.subject
                     }
                 }
             }

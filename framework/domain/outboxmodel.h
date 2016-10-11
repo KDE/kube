@@ -26,15 +26,13 @@
 #include <QSharedPointer>
 #include <QStringList>
 
-class MailListModel : public QSortFilterProxyModel
+class OutboxModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
-    Q_PROPERTY (QVariant mail READ mail WRITE setMail)
 
 public:
-    MailListModel(QObject *parent = Q_NULLPTR);
-    ~MailListModel();
+    OutboxModel(QObject *parent = Q_NULLPTR);
+    ~OutboxModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
@@ -50,19 +48,13 @@ public:
         Draft,
         Id,
         MimeMessage,
-        DomainObject,
-        ThreadSize
+        DomainObject
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
     void runQuery(const Sink::Query &query);
 
-    void setParentFolder(const QVariant &parentFolder);
-    QVariant parentFolder() const;
-
-    void setMail(const QVariant &mail);
-    QVariant mail() const;
 private:
     QSharedPointer<QAbstractItemModel> m_model;
 };
