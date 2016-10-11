@@ -32,6 +32,10 @@
 class QAbstractItemModel;
 
 class Parser;
+class Part;
+typedef std::shared_ptr<Part> PartPtr;
+class Content;
+typedef std::shared_ptr<Content> ContentPtr;
 class MessagePartPrivate;
 
 class MessageParser : public QObject
@@ -40,6 +44,7 @@ class MessageParser : public QObject
     Q_PROPERTY (QVariant message READ message WRITE setMessage)
     Q_PROPERTY (QString html READ html NOTIFY htmlChanged)
     Q_PROPERTY (QAbstractItemModel* partTree READ partTree NOTIFY htmlChanged)
+    Q_PROPERTY (QAbstractItemModel* newTree READ newTree NOTIFY htmlChanged)
 
 public:
     explicit MessageParser(QObject *parent = Q_NULLPTR);
@@ -50,6 +55,7 @@ public:
     QVariant message() const;
     void setMessage(const QVariant &to);
     QAbstractItemModel *partTree() const;
+    QAbstractItemModel *newTree() const;
 
 signals:
     void htmlChanged();
@@ -85,5 +91,56 @@ private:
     QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
     QMap<QByteArray, QUrl> mEmbeddedPartMap;
     std::shared_ptr<Parser> mParser;
+};
+
+
+class NewContentModel : public QAbstractItemModel {
+    Q_OBJECT
+public:
+    NewContentModel (const PartPtr &part);
+
+public:
+    enum Roles {
+        TypeRole  = Qt::UserRole + 1,
+        ContentRole,
+        IsEmbededRole,
+        SecurityLevelRole
+    };
+
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+
+private:
+    const PartPtr &mPart;
+};
+
+class NewModel : public QAbstractItemModel {
+    Q_OBJECT
+public:
+    NewModel(std::shared_ptr<Parser> parser);
+
+public:
+    enum Roles {
+        TypeRole  = Qt::UserRole + 1,
+        ContentsRole,
+        IsEmbededRole,
+        SecurityLevelRole
+    };
+
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+
+private:
+    std::shared_ptr<Parser> mParser;
+    QVector<PartPtr> mParts;
+    QMap<Part *, std::shared_ptr<NewContentModel>> mContentMap;
 };
 

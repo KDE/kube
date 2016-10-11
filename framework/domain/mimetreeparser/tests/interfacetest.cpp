@@ -198,6 +198,31 @@ private slots:
         auto contentAttachmentList = parser.collectAttachmentParts();
         QCOMPARE(contentAttachmentList.size(), 0);
     }
+
+    void testOpenPPGInlineWithNonEncText()
+    {
+        Parser parser(readMailFromFile("openpgp-inline-encrypted+nonenc.mbox"));
+        printTree(parser.d->mTree,QString());
+        auto contentPartList = parser.collectContentParts();
+        QCOMPARE(contentPartList.size(), 1);
+        auto contentPart = contentPartList[0];
+        QVERIFY((bool)contentPart);
+        QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() << "plaintext");
+        QCOMPARE(contentPart->encryptions().size(), 0);
+        QCOMPARE(contentPart->signatures().size(), 0);
+        auto contentList = contentPart->content("plaintext");
+        QCOMPARE(contentList.size(), 2);
+        QCOMPARE(contentList[0]->content(), QStringLiteral("Not encrypted not signed :(\n\n").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->encryptions().size(), 0);
+        QCOMPARE(contentList[0]->signatures().size(), 0);
+        QCOMPARE(contentList[1]->content(), QStringLiteral("some random text").toLocal8Bit());
+        QCOMPARE(contentList[1]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[1]->encryptions().size(), 1);
+        QCOMPARE(contentList[1]->signatures().size(), 0);
+        auto contentAttachmentList = parser.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)

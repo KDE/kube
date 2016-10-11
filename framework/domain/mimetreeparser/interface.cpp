@@ -30,6 +30,7 @@
 
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QTextCodec>
 #include <QDebug>
 
 class MailMimePrivate
@@ -356,6 +357,17 @@ QByteArray Content::charset() const
     return d->mCodec;
 }
 
+QString Content::encodedContent() const
+{
+    return encodedContent(charset());
+}
+
+QString Content::encodedContent(const QByteArray &charset) const
+{
+    QTextCodec *codec = QTextCodec::codecForName(charset);
+    return codec->toUnicode(content());
+}
+
 QByteArray Content::type() const
 {
     return "Content";
@@ -496,7 +508,7 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
     mContent.clear();
     foreach (const auto &mp, part->subParts()) {
         auto d_ptr = new ContentPrivate;
-        d_ptr->mContent = part->text().toLocal8Bit();
+        d_ptr->mContent = mp->text().toLocal8Bit();
         d_ptr->mParent = q;
         d_ptr->mCodec = "utf-8";
         const auto enc = mp.dynamicCast<MimeTreeParser::EncryptedMessagePart>();

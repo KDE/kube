@@ -125,7 +125,7 @@ public:
     QString encodedContent() const;
 
     // overwrite default charset with given charset
-    QString encodedContent(QByteArray charset) const;
+    QString encodedContent(const QByteArray &charset) const;
 
     QVector<SignaturePtr> signatures() const;
     QVector<EncryptionPtr> encryptions() const;

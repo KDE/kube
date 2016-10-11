@@ -21,24 +21,22 @@ import QtQuick 2.4
 Item {
     id: root
 
-    height: partColumn.height + 40
+    height: partColumn.height + 20
     width: delegateRoot.width
 
     Column {
         id: partColumn
-
         anchors {
             top: parent.top
             left: parent.left
             right: parent.right
-            margins: 20
+            margins: 10
         }
 
-        spacing: 10
+        spacing: 5
 
         Repeater {
-            model: content
-
+            model: contents
             delegate: Column {
                 id: delegateRoot
 
@@ -49,23 +47,29 @@ Item {
                 }
 
                 Component.onCompleted: {
-
                     switch (model.type) {
+                        case "AlternativePart":
+                        case "SinglePart":
+                            loader.source = "MailPart.qml";
+                            break;
+
+                        case "PlainTextContent":
+                        case "Content":
+                            loader.source = "TextPart.qml";
+                            break;
+                        case "HtmlContent":
+                            loader.source = "HtmlPart.qml";
+                        break;
+
+                        case "alternativeframe":
+                            loader.source = "Frame.qml"
+                            break;
                         case "encrypted":
                             loader.source = "EncryptedPart.qml";
                             break;
                         case "embeded":
                             loader.source = "EmbededPart.qml";
                             break;
-                        case "frame":
-                            loader.source = "Frame.qml"
-                            break;
-                        case "plaintext":
-                            loader.source = "TextPart.qml";
-                            break;
-                        case "html":
-                            loader.source = "HtmlPart.qml";
-                        break;
                     }
                 }
             }

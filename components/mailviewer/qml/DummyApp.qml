@@ -18,11 +18,38 @@
 
 import QtQuick 2.4
 
-Text  {
-    width: delegateRoot.width
-
-    text: model.content
-    wrapMode: Text.WordWrap
-
-    color: model.securityLevel //embeded ? "grey" : "black"
+Item {
+Column {
+    anchors {
+        top: parent.top
+        left: parent.left
+        right: parent.right
+        margins: 20
+    }
+    
+    spacing: 10
+    width: parent.width
+    Repeater {
+        model: messageParser.newTree
+        
+        delegate: Column {
+            id: delegateRoot
+            
+            width: parent.width
+            
+            Loader {
+                id: loader
+            }
+            
+            Component.onCompleted: {
+                switch (model.type) {
+                    case "AlternativePart":
+                    case "SinglePart":
+                        loader.source = "MailPart.qml";
+                        break;
+                }
+            }
+        }
+    }
+}
 }

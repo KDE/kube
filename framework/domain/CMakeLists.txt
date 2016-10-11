@@ -7,6 +7,8 @@ set(mailplugin_SRCS
     stringhtmlwriter.cpp
     composercontroller.cpp
     messageparser.cpp
+    messageparser_new.cpp
+    messageparser_old.cpp
     mailtemplates.cpp
     retriever.cpp
     accountfactory.cpp

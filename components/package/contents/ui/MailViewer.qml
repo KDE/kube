@@ -27,8 +27,8 @@ Item {
     id: root
     property variant message;
     property string html;
-    property bool enablePartTreeView : false
-    property int desiredHeight: enablePartTreeView ? topPartLoader.height+450 : topPartLoader.height;
+    property bool enablePartTreeView : true;
+    property int desiredHeight: enablePartTreeView ? topPartLoader.height + dummyApp.height + mailStructure.height + 50 : topPartLoader.height + dummyApp.height + 50;
 
     Rectangle {
         id: rootRectangle
@@ -41,6 +41,19 @@ Item {
             verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             Column {
                 spacing:2
+                Text {
+                    text: "New Mailviewer:"
+                    color: "blue"
+                }
+                DummyApp {
+                    id: dummyApp
+                    height: 800
+                    width: rootRectangle.width
+                }
+                Text {
+                    text: "Old Mailviewer:"
+                    color: "blue"
+                }
                 MessagePartTree {
                     id: topPartLoader
                     // width: rootRectangle.width
@@ -48,6 +61,7 @@ Item {
                     width: topPartLoader.contentWidth >= rootRectangle.width ? topPartLoader.contentWidth : rootRectangle.width
                 }
                 TreeView {
+                    id: mailStructure
                     visible: enablePartTreeView
                     width: rootRectangle.width
                     height: 400
@@ -57,16 +71,17 @@ Item {
                         width: 300
                     }
                     TableViewColumn {
-                        role: "isHidden"
-                        title: "Hidden"
+                        role: "embeded"
+                        title: "Embeded"
                         width: 60
                     }
                     TableViewColumn {
-                        role: "text"
-                        title: "Text"
-                        width: 600
+                        role: "content"
+                        title: "Content"
+                        width: 200
                     }
-                    model: messageParser.partTree
+                    //model: messageParser.partTree
+                    model: messageParser.newTree
                 }
             }
        }

@@ -24,7 +24,7 @@ import QtWebEngine 1.2
 
 Item {
     id: root
-    property string content: model.htmlContent
+    property string content: model.content
     property int contentHeight: helperView.contentHeight;
     //FIXME workaround until QtWebEngine 1.3 with contentsSize
 
