@@ -17,7 +17,6 @@
 */
 
 import QtQuick 2.4
-import org.kube.framework.theme 1.0
 
 Item {
     id: delegateRoot

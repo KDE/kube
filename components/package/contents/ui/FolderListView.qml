@@ -24,7 +24,6 @@ import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.framework.theme 1.0
 
 Item {
     id: root
