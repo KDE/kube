@@ -22,13 +22,14 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.mailviewer 1.0 as MV
 
 Item {
     id: root
     property variant message;
     property string html;
     property bool enablePartTreeView : true;
-    property int desiredHeight: enablePartTreeView ? topPartLoader.height + dummyApp.height + mailStructure.height + 50 : topPartLoader.height + dummyApp.height + 50;
+    property int desiredHeight: enablePartTreeView ? topPartLoader.height + newMailViewer.height + mailStructure.height + 50 : topPartLoader.height + newMailViewer.height + 50;
 
     Rectangle {
         id: rootRectangle
@@ -40,14 +41,13 @@ Item {
             anchors.margins: 0
             verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             Column {
-                spacing:2
+                spacing: 2
                 Text {
                     text: "New Mailviewer:"
                     color: "blue"
                 }
-                DummyApp {
-                    id: dummyApp
-                    height: 800
+                MV.MailViewer {
+                    id: newMailViewer
                     width: rootRectangle.width
                 }
                 Text {
