@@ -47,7 +47,7 @@ ToolButton {
         }
 
        height: modelCount * Kirigami.Units.gridUnit * 3 + 10//scrollView.height  height: Kirigami.Units.gridUnit * 15
-       width: Kirigami.Units.gridUnit * 12
+       width: Kirigami.Units.gridUnit * 20
 
         color: Kirigami.Theme.backgroundColor
         border.width: 1
@@ -76,7 +76,9 @@ ToolButton {
                     height: Kirigami.Units.gridUnit * 3
 
                     Kirigami.Label {
-                        anchors.centerIn: parent
+
+                        anchors.verticalCenter: parent.verticalCenter
+
                         text: model.subject
                     }
                 }
