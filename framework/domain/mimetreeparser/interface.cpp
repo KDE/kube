@@ -36,14 +36,24 @@
 class MailMimePrivate
 {
 public:
-    KMime::Content *mNode;
+    MailMimePrivate(MailMime *p);
+
     MailMime *q;
+    KMime::Content *mNode;
+    std::shared_ptr<MailMime> parent;
 };
 
-MailMime::MailMime()
-    : d(std::unique_ptr<MailMimePrivate>(new MailMimePrivate()))
+MailMimePrivate::MailMimePrivate(MailMime* p)
+    : q(p)
+    , mNode(nullptr)
+    , parent(nullptr)
 {
-    d->q = this;
+}
+
+
+MailMime::MailMime()
+    : d(std::unique_ptr<MailMimePrivate>(new MailMimePrivate(this)))
+{
 }
 
 bool MailMime::isFirstTextPart() const
@@ -52,6 +62,14 @@ bool MailMime::isFirstTextPart() const
         return false;
     }
     return (d->mNode->topLevel()->textContent() == d->mNode);
+}
+
+bool MailMime::isFirstPart() const
+{
+   if (!d->mNode || !d->mNode->parent()) {
+       return false;
+   }
+   return (d->mNode->parent()->contents().first() == d->mNode);
 }
 
 bool MailMime::isTopLevelPart() const
@@ -106,6 +124,15 @@ QMimeType MailMime::mimetype() const
 
     QMimeDatabase mimeDb;
     return mimeDb.mimeTypeForName(ct->mimeType());
+}
+
+MailMime::Ptr MailMime::parent() const
+{
+    if (!d->parent) {
+        d->parent = std::shared_ptr<MailMime>(new MailMime());
+        d->parent->d->mNode = d->mNode->parent();
+    }
+    return d->parent;
 }
 
 class PartPrivate
@@ -283,6 +310,11 @@ QVector<Signature::Ptr> Part::signatures() const
 MailMime::Ptr Part::mailMime() const
 {
     return d->mailMime();
+}
+
+Part *Part::parent() const
+{
+    return d->parent();
 }
 
 class ContentPrivate
@@ -738,11 +770,15 @@ QVector<Part::Ptr> Parser::collectContentParts() const
                                     }
 
                                     {
-                                        const auto parent = content->parent();
-                                        if (parent) {
-                                            const auto _mime = parent->mailMime();
+                                        auto _mime = content->parent()->mailMime();
+                                        while (_mime) {
                                             if (_mime && (_mime->isTopLevelPart() || _mime->isFirstTextPart())) {
                                                 return true;
+                                            }
+                                            if (_mime->isFirstPart()) {
+                                                _mime = _mime->parent();
+                                            } else {
+                                                break;
                                             }
                                         }
                                     }

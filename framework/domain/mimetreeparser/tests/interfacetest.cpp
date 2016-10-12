@@ -223,6 +223,21 @@ private slots:
         auto contentAttachmentList = parser.collectAttachmentParts();
         QCOMPARE(contentAttachmentList.size(), 0);
     }
+
+    void testRelatedAlternative()
+    {
+        Parser parser(readMailFromFile("cid-links.mbox"));
+        printTree(parser.d->mTree,QString());
+        auto contentPartList = parser.collectContentParts();
+        QCOMPARE(contentPartList.size(), 1);
+        auto contentPart = contentPartList[0];
+        QVERIFY((bool)contentPart);
+        QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() <<  "html" << "plaintext");
+        QCOMPARE(contentPart->encryptions().size(), 0);
+        QCOMPARE(contentPart->signatures().size(), 0);
+        auto contentList = contentPart->content("plaintext");
+        QCOMPARE(contentList.size(), 1);
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)

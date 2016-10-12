@@ -101,7 +101,10 @@ public:
     QString encodedContent(QByteArray charset) const;
 
     bool isFirstTextPart() const;
+    bool isFirstPart() const;
     bool isTopLevelPart() const;
+
+    MailMime::Ptr parent() const;
 
 private:
     std::unique_ptr<MailMimePrivate> d;
