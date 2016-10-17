@@ -64,6 +64,17 @@ QByteArray MailMime::cid() const
     return d->mNode->contentID()->identifier();
 }
 
+QByteArray MailMime::charset() const
+{
+    if(!d->mNode || !d->mNode->contentType(false)) {
+        return QByteArray();
+    }
+    if (d->mNode->contentType(false)) {
+        return d->mNode->contentType(false)->charset();
+    }
+    return d->mNode->defaultCharset();
+}
+
 bool MailMime::isFirstTextPart() const
 {
     if (!d->mNode || !d->mNode->topLevel()) {
@@ -559,7 +570,6 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
         auto d_ptr = new ContentPrivate;
         d_ptr->mContent = mp->text().toLocal8Bit();
         d_ptr->mParent = q;
-        d_ptr->mCodec = "utf-8";
         const auto enc = mp.dynamicCast<MimeTreeParser::EncryptedMessagePart>();
         auto sig = mp.dynamicCast<MimeTreeParser::SignedMessagePart>();
         if (enc) {
@@ -574,6 +584,7 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
         }
         mContent.append(std::make_shared<PlainTextContent>(d_ptr));
         q->reachParentD()->createMailMime(part);
+        d_ptr->mCodec = q->mailMime()->charset();
     }
 }
 

@@ -144,7 +144,7 @@ private slots:
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("The quick brown fox jumped over the lazy dog.").toLocal8Bit());
-        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("us-ascii").toLocal8Bit());
         QCOMPARE(contentList[0]->encryptions().size(), 1);
         QCOMPARE(contentList[0]->signatures().size(), 0);
         auto contentAttachmentList = parser.collectAttachmentParts();
@@ -163,7 +163,7 @@ private slots:
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("test text").toLocal8Bit());
-        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("us-ascii").toLocal8Bit());
         QCOMPARE(contentList[0]->encryptions().size(), 1);
         QCOMPARE(contentList[0]->signatures().size(), 1);
         auto contentAttachmentList = parser.collectAttachmentParts();
@@ -178,7 +178,7 @@ private slots:
         QCOMPARE(contentAttachmentList[1]->signatures().size(), 0);
     }
 
-    void testOpenPPGInline()
+    void testOpenPGPInline()
     {
         Parser parser(readMailFromFile("openpgp-inline-charset-encrypted.mbox"));
         printTree(parser.d->mTree,QString());
@@ -192,7 +192,7 @@ private slots:
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 1);
         QCOMPARE(contentList[0]->content(), QStringLiteral("asdasd asd asd asdf sadf sdaf sadf äöü").toLocal8Bit());
-        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("ISO-8859-15").toLocal8Bit());
         QCOMPARE(contentList[0]->encryptions().size(), 1);
         QCOMPARE(contentList[0]->signatures().size(), 1);
         auto contentAttachmentList = parser.collectAttachmentParts();
@@ -213,11 +213,11 @@ private slots:
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 2);
         QCOMPARE(contentList[0]->content(), QStringLiteral("Not encrypted not signed :(\n\n").toLocal8Bit());
-        QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[0]->charset(), QStringLiteral("us-ascii").toLocal8Bit());
         QCOMPARE(contentList[0]->encryptions().size(), 0);
         QCOMPARE(contentList[0]->signatures().size(), 0);
         QCOMPARE(contentList[1]->content(), QStringLiteral("some random text").toLocal8Bit());
-        QCOMPARE(contentList[1]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(contentList[1]->charset(), QStringLiteral("us-ascii").toLocal8Bit());
         QCOMPARE(contentList[1]->encryptions().size(), 1);
         QCOMPARE(contentList[1]->signatures().size(), 0);
         auto contentAttachmentList = parser.collectAttachmentParts();
