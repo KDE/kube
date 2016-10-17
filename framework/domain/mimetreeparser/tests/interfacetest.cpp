@@ -241,6 +241,17 @@ private slots:
         QCOMPARE(contentAttachmentList.size(), 0);
     }
 
+    void testAttachmentPart()
+    {
+        Parser parser(readMailFromFile("cid-links.mbox"));
+        const auto relatedImage = parser.d->mTree->subParts().at(1);
+        QCOMPARE(relatedImage->availableContents(),  QVector<QByteArray>() <<  "image/jpeg");
+        auto contentList = relatedImage->content();
+        QCOMPARE(contentList.size(), 1);
+        contentList = relatedImage->content("image/jpeg");
+        QCOMPARE(contentList.size(), 1);
+    }
+
     void testCidLink()
     {
         Parser parser(readMailFromFile("cid-links.mbox"));
