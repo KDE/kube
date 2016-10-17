@@ -53,6 +53,7 @@ class CertContentPrivate;
 class EncryptionError;
 
 class Key;
+class KeyPrivate;
 class Signature;
 class SignaturePrivate;
 class Encryption;
@@ -262,9 +263,8 @@ public:
 
     EncryptionError error() const;
 private:
-    std::unique_ptr<EncryptionPartPrivate> d;    
+    std::unique_ptr<EncryptionPartPrivate> d;
 };
-
 
 /*
  * we want to request complete headers like:
@@ -279,7 +279,7 @@ public:
 
     //template <class T> QByteArray header<T>();
 private:
-    std::unique_ptr<EncapsulatedPartPrivate> d;    
+    std::unique_ptr<EncapsulatedPartPrivate> d;
 };
 
 class EncryptionError
@@ -291,6 +291,12 @@ public:
 
 class Key
 {
+public:
+    typedef std::shared_ptr<Key> Ptr;
+    Key();
+    Key(KeyPrivate *);
+    ~Key();
+
     QString keyid() const;
     QString name() const;
     QString email() const;
@@ -305,8 +311,10 @@ class Key
     bool isInvalid() const;
     bool isExpired() const;
 
-    std::vector<Key> subkeys();
+    std::vector<Key::Ptr> subkeys();
     Key parentkey() const;
+private:
+    std::unique_ptr<KeyPrivate> d;
 };
 
 class Signature
@@ -317,9 +325,9 @@ public:
     Signature(SignaturePrivate *);
     ~Signature();
 
-    Key key() const;
+    Key::Ptr key() const;
     QDateTime creationDateTime() const;
-    QDateTime expirationTime() const;
+    QDateTime expirationDateTime() const;
     bool neverExpires() const;
 
     //template <> StatusObject<SignatureVerificationResult> verify() const;
@@ -339,7 +347,7 @@ public:
     Encryption();
     Encryption(EncryptionPrivate *);
     ~Encryption();
-    std::vector<Key> recipients() const;
+    std::vector<Key::Ptr> recipients() const;
 private:
     std::unique_ptr<EncryptionPrivate> d;
 };

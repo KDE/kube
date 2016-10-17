@@ -23,6 +23,10 @@
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
 
+#include <Libkleo/KeyListJob>
+#include <gpgme++/key.h>
+#include <gpgme++/keylistresult.h>
+
 #include <KMime/Content>
 #include <MimeTreeParser/ObjectTreeParser>
 #include <MimeTreeParser/MessagePart>
@@ -162,6 +166,131 @@ QByteArray MailMime::decodedContent() const
     return d->mNode->decodedContent();
 }
 
+class KeyPrivate
+{
+public:
+    Key *q;
+    GpgME::Key mKey;
+};
+
+Key::Key()
+    :d(std::unique_ptr<KeyPrivate>(new KeyPrivate))
+{
+    d->q = this;
+}
+
+
+Key::Key(KeyPrivate *d_ptr)
+    :d(std::unique_ptr<KeyPrivate>(d_ptr))
+{
+    d->q = this;
+}
+
+Key::~Key()
+{
+
+}
+
+QString Key::keyid() const
+{
+    return d->mKey.keyID();
+}
+
+QString Key::name() const
+{
+    //FIXME: is this the correct way to get the primary UID?
+    return d->mKey.userID(0).name();
+}
+
+QString Key::email() const
+{
+    return d->mKey.userID(0).email();
+}
+
+QString Key::comment() const
+{
+    return d->mKey.userID(0).comment();
+}
+
+class SignaturePrivate
+{
+public:
+    Signature *q;
+    GpgME::Signature mSignature;
+    Key::Ptr mKey;
+};
+
+Signature::Signature()
+    :d(std::unique_ptr<SignaturePrivate>(new SignaturePrivate))
+{
+    d->q = this;
+}
+
+
+Signature::Signature(SignaturePrivate *d_ptr)
+    :d(std::unique_ptr<SignaturePrivate>(d_ptr))
+{
+    d->q = this;
+    
+}
+
+Signature::~Signature()
+{
+
+}
+
+QDateTime Signature::creationDateTime() const
+{
+    QDateTime dt;
+    dt.setTime_t(d->mSignature.creationTime());
+    return dt;
+}
+
+QDateTime Signature::expirationDateTime() const
+{
+    QDateTime dt;
+    dt.setTime_t(d->mSignature.expirationTime());
+    return dt;
+}
+
+bool Signature::neverExpires() const
+{
+    return d->mSignature.neverExpires();
+}
+
+Key::Ptr Signature::key() const
+{
+    return d->mKey;
+}
+
+class EncryptionPrivate
+{
+public:
+    Encryption *q;
+    std::vector<Key::Ptr> mRecipients;
+};
+
+Encryption::Encryption(EncryptionPrivate *d_ptr)
+    :d(std::unique_ptr<EncryptionPrivate>(d_ptr))
+{
+    d->q = this;
+}
+
+Encryption::Encryption()
+    :d(std::unique_ptr<EncryptionPrivate>(new EncryptionPrivate))
+{
+    d->q = this;
+}
+
+Encryption::~Encryption()
+{
+
+}
+
+std::vector<Key::Ptr> Encryption::recipients() const
+{
+    return d->mRecipients;
+}
 
 class PartPrivate
 {
@@ -179,7 +308,9 @@ public:
     void createMailMime(const MimeTreeParser::AlternativeMessagePart::Ptr &part);
     void createMailMime(const MimeTreeParser::HtmlMessagePart::Ptr &part);
 
+    static Encryption::Ptr createEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr& part);
     void appendEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr &part);
+    static QVector<Signature::Ptr> createSignature(const MimeTreeParser::SignedMessagePart::Ptr& part);
     void appendSignature(const MimeTreeParser::SignedMessagePart::Ptr &part);
 
     void setSignatures(const QVector<Signature::Ptr> &sigs);
@@ -233,9 +364,43 @@ void PartPrivate::appendSubPart(Part::Ptr subpart)
     mSubParts.append(subpart);
 }
 
+Encryption::Ptr PartPrivate::createEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr& part)
+{
+    Kleo::KeyListJob *job = part->mCryptoProto->keyListJob(false);    // local, no sigs
+    if (!job) {
+        qWarning() << "The Crypto backend does not support listing keys. ";
+        return Encryption::Ptr();
+    }
+
+    auto encpriv = new EncryptionPrivate();
+    foreach(const auto &recipient, part->mDecryptRecipients) {
+        std::vector<GpgME::Key> found_keys;
+        const auto &keyid = recipient.keyID();
+        GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(keyid)), false, found_keys);
+        if (res.error()) {
+            qWarning() << "Error while searching key for Fingerprint: " << keyid;
+            continue;
+        }
+        if (found_keys.size() > 1) {
+            // Should not Happen
+            qWarning() << "Oops: Found more then one Key for Fingerprint: " << keyid;
+        }
+        if (found_keys.size() != 1) {
+            // Should not Happen at this point
+            qWarning() << "Oops: Found no Key for Fingerprint: " << keyid;
+        } else {
+            auto key = found_keys[0];
+            auto keypriv = new KeyPrivate;
+            keypriv->mKey = key;
+            encpriv->mRecipients.push_back(Key::Ptr(new Key(keypriv)));
+        }
+    }
+    return Encryption::Ptr(new Encryption(encpriv));
+}
+
 void PartPrivate::appendEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr& part)
 {
-    mEncryptions.append(Encryption::Ptr(new Encryption));
+    mEncryptions.append(createEncryption(part));
 }
 
 void PartPrivate::setEncryptions(const QVector< Encryption::Ptr >& encs)
@@ -243,9 +408,50 @@ void PartPrivate::setEncryptions(const QVector< Encryption::Ptr >& encs)
     mEncryptions = encs;
 }
 
+QVector<Signature::Ptr> PartPrivate::createSignature(const MimeTreeParser::SignedMessagePart::Ptr& part)
+{
+    QVector<Signature::Ptr> sigs;
+    Kleo::KeyListJob *job = part->mCryptoProto->keyListJob(false);    // local, no sigs
+    if (!job) {
+        qWarning() << "The Crypto backend does not support listing keys. ";
+        return sigs;
+    }
+
+    foreach(const auto &sig, part->mSignatures) {
+        auto sigpriv = new SignaturePrivate();
+        sigpriv->mSignature = sig;
+        auto signature = std::make_shared<Signature>(sigpriv);
+        sigs.append(signature);
+
+        std::vector<GpgME::Key> found_keys;
+        const auto &keyid = sig.fingerprint();
+        GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(keyid)), false, found_keys);
+        if (res.error()) {
+            qWarning() << "Error while searching key for Fingerprint: " << keyid;
+            continue;
+        }
+        if (found_keys.size() > 1) {
+            // Should not Happen
+            qWarning() << "Oops: Found more then one Key for Fingerprint: " << keyid;
+            continue;
+        }
+        if (found_keys.size() != 1) {
+            // Should not Happen at this point
+            qWarning() << "Oops: Found no Key for Fingerprint: " << keyid;
+            continue;
+        } else {
+            auto key = found_keys[0];
+            auto keypriv = new KeyPrivate;
+            keypriv->mKey = key;
+            sigpriv->mKey = Key::Ptr(new Key(keypriv));
+        }
+    }
+    return sigs;
+}
+
 void PartPrivate::appendSignature(const MimeTreeParser::SignedMessagePart::Ptr& part)
 {
-    mSignatures.append(Signature::Ptr(new Signature));
+    mSignatures.append(createSignature(part));
 }
 
 
@@ -361,12 +567,12 @@ public:
 
 void ContentPrivate::appendEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr& enc)
 {
-    mEncryptions.append(Encryption::Ptr(new Encryption));
+    mEncryptions.append(PartPrivate::createEncryption(enc));
 }
 
 void ContentPrivate::appendSignature(const MimeTreeParser::SignedMessagePart::Ptr& sig)
 {
-    mSignatures.append(Signature::Ptr(new Signature));
+    mSignatures.append(PartPrivate::createSignature(sig));
 }
 
 
@@ -636,54 +842,6 @@ QByteArray SinglePart::type() const
 PartPrivate* SinglePart::reachParentD() const
 {
     return Part::d.get();
-}
-
-class SignaturePrivate
-{
-public:
-    Signature *q;
-};
-
-Signature::Signature()
-    :d(std::unique_ptr<SignaturePrivate>(new SignaturePrivate))
-{
-    d->q = this;
-}
-
-
-Signature::Signature(SignaturePrivate *d_ptr)
-    :d(std::unique_ptr<SignaturePrivate>(d_ptr))
-{
-    d->q = this;
-}
-
-Signature::~Signature()
-{
-
-}
-
-
-class EncryptionPrivate
-{
-public:
-    Encryption *q;
-};
-
-Encryption::Encryption(EncryptionPrivate *d_ptr)
-    :d(std::unique_ptr<EncryptionPrivate>(d_ptr))
-{
-    d->q = this;
-}
-
-Encryption::Encryption()
-    :d(std::unique_ptr<EncryptionPrivate>(new EncryptionPrivate))
-{
-    d->q = this;
-}
-
-Encryption::~Encryption()
-{
-
 }
 
 ParserPrivate::ParserPrivate(Parser* parser)

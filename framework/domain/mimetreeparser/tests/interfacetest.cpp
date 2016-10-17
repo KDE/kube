@@ -224,6 +224,50 @@ private slots:
         QCOMPARE(contentAttachmentList.size(), 0);
     }
 
+    void testEncryptionBlock()
+    {
+        Parser parser(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
+        auto contentPartList = parser.collectContentParts();
+        auto contentPart = contentPartList[0];
+        auto contentList = contentPart->content("plaintext");
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->encryptions().size(), 1);
+        auto enc = contentList[0]->encryptions()[0];
+        QCOMPARE((int) enc->recipients().size(), 2);
+
+        auto r = enc->recipients()[0];
+        QCOMPARE(r->keyid(),QStringLiteral("14B79E26050467AA"));
+        QCOMPARE(r->name(),QStringLiteral("kdetest"));
+        QCOMPARE(r->email(),QStringLiteral("you@you.com"));
+        QCOMPARE(r->comment(),QStringLiteral(""));
+
+        r = enc->recipients()[1];
+        QCOMPARE(r->keyid(),QStringLiteral("8D9860C58F246DE6"));
+        QCOMPARE(r->name(),QStringLiteral("unittest key"));
+        QCOMPARE(r->email(),QStringLiteral("test@kolab.org"));
+        QCOMPARE(r->comment(),QStringLiteral("no password"));
+    }
+
+    void testSignatureBlock()
+    {
+        Parser parser(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
+        auto contentPartList = parser.collectContentParts();
+        auto contentPart = contentPartList[0];
+        auto contentList = contentPart->content("plaintext");
+        QCOMPARE(contentList.size(), 1);
+        QCOMPARE(contentList[0]->signatures().size(), 1);
+        auto sig = contentList[0]->signatures()[0];
+        QCOMPARE(sig->creationDateTime(), QDateTime(QDate(2015,05,01),QTime(15,12,47)));
+        QCOMPARE(sig->expirationDateTime(), QDateTime());
+        QCOMPARE(sig->neverExpires(), true);
+
+        auto key = sig->key();
+        QCOMPARE(key->keyid(),QStringLiteral("8D9860C58F246DE6"));
+        QCOMPARE(key->name(),QStringLiteral("unittest key"));
+        QCOMPARE(key->email(),QStringLiteral("test@kolab.org"));
+        QCOMPARE(key->comment(),QStringLiteral("no password"));
+    }
+
     void testRelatedAlternative()
     {
         Parser parser(readMailFromFile("cid-links.mbox"));
