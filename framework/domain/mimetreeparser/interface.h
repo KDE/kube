@@ -349,10 +349,10 @@ public:
     Parser(const QByteArray &mimeMessage);
     ~Parser();
 
-    Part::Ptr getPart(QUrl url);
-    QUrl getPart(const QByteArray &cid);
+    Part::Ptr getPart(const QUrl &url);
 
     QVector<Part::Ptr> collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const Content::Ptr &)> filter) const;
+    Part::Ptr find(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select) const;
     QVector<Part::Ptr> collectContentParts() const;
     QVector<Part::Ptr> collectAttachmentParts() const;
     //template <> QVector<ContentPart::Ptr> collect<ContentPart>() const;

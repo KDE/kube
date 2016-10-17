@@ -56,6 +56,14 @@ MailMime::MailMime()
 {
 }
 
+QByteArray MailMime::cid() const
+{
+    if (!d->mNode || !d->mNode->contentID()) {
+        return QByteArray();
+    }
+    return d->mNode->contentID()->identifier();
+}
+
 bool MailMime::isFirstTextPart() const
 {
     if (!d->mNode || !d->mNode->topLevel()) {
@@ -750,9 +758,16 @@ Parser::~Parser()
 {
 }
 
-QUrl Parser::getPart(const QByteArray &cid)
+Part::Ptr Parser::getPart(const QUrl &url)
 {
-    return d->mEmbeddedPartMap.value(cid);
+    if (url.scheme() == QStringLiteral("cid") && !url.path().isEmpty()) {
+        const auto cid = url.path();
+        return find(d->mTree, [&cid](const Part::Ptr &p){
+             const auto mime = p->mailMime();
+             return mime->cid() == cid;
+        });
+    }
+    return Part::Ptr();
 }
 
 QVector<Part::Ptr> Parser::collectContentParts() const
@@ -857,6 +872,7 @@ QVector<Part::Ptr> Parser::collectAttachmentParts() const
                                     return true;
                              });
 }
+
 QVector<Part::Ptr> Parser::collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const Content::Ptr &)> filter) const
 {
     QVector<Part::Ptr> ret;
@@ -878,4 +894,18 @@ QVector<Part::Ptr> Parser::collect(const Part::Ptr &start, std::function<bool(co
         }
     }
     return ret;
+}
+
+Part::Ptr Parser::find(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select) const
+{
+    foreach (const auto &part, start->subParts()) {
+        if (select(part)) {
+            return part;
+        }
+        const auto ret = find(part, select);
+        if (ret) {
+            return ret;
+        }
+    }
+    return Part::Ptr();
 }

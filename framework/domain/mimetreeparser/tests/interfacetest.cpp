@@ -240,6 +240,15 @@ private slots:
         auto contentAttachmentList = parser.collectAttachmentParts();
         QCOMPARE(contentAttachmentList.size(), 0);
     }
+
+    void testCidLink()
+    {
+        Parser parser(readMailFromFile("cid-links.mbox"));
+        printTree(parser.d->mTree,QString());
+        QCOMPARE(parser.getPart(QUrl("cid:9359201d15e53f31a68c307b3369b6@info")), parser.d->mTree->subParts().at(1));
+        QVERIFY(!parser.getPart(QUrl("cid:")));
+        QVERIFY(!parser.getPart(QUrl("cid:unknown")));
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)
