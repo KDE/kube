@@ -97,7 +97,7 @@ private:
 class NewContentModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    NewContentModel (const PartPtr &part);
+    NewContentModel (const PartPtr &part, const std::shared_ptr<Parser> &parser);
 
 public:
     enum Roles {
@@ -116,6 +116,7 @@ public:
 
 private:
     const PartPtr &mPart;
+    const std::shared_ptr<Parser> &mParser;
 };
 
 class NewModel : public QAbstractItemModel {

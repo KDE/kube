@@ -64,14 +64,25 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 // qDebug() << "Getting text: " << part->property("text").toString();
                 // FIXME: we should have a list per part, and not one for all parts.
                 auto text = part->property("htmlContent").toString();
-                auto rx = QRegExp("src=(\"|')cid:([^\1]*)\1");
-                int pos  = 0;
+                const auto rx = QRegExp("(src)\\s*=\\s*(\"|')(cid:[^\"']+)\\2");
+                int pos = 0;
                 while ((pos = rx.indexIn(text, pos)) != -1) {
-                    auto repl = mParser->getPart(rx.cap(2).toUtf8());
-                    if (repl.isValid()) {
-                        text.replace(rx.cap(0), QString("src=\"%1\"").arg(repl.toString()));
-                    }
+                    const auto link = QUrl(rx.cap(3).toUtf8());
                     pos += rx.matchedLength();
+                    const auto repl = mParser->getPart(link);
+                    if (!repl) {
+                        continue;
+                    }
+                    const auto content = repl->content();
+                    if(content.size() < 1) {
+                        continue;
+                    }
+                    const auto mailMime = content.first()->mailMime();
+                    const auto mimetype = mailMime->mimetype().name();
+                    if (mimetype.startsWith("image/")) {
+                        const auto data = content.first()->content();
+                        text.replace(rx.cap(0), QString("src=\"data:%1;base64,%2\"").arg(mimetype, QString::fromLatin1(data.toBase64())));
+                    }
                 }
                 return text;
             }

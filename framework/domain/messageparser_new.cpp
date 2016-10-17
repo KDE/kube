@@ -26,7 +26,7 @@ NewModel::NewModel(std::shared_ptr<Parser> parser)
 {
    mParts = mParser->collectContentParts();
    foreach(const auto &part, mParts) {
-       mContentMap.insert(part.get(), std::shared_ptr<NewContentModel>(new NewContentModel(part)));
+       mContentMap.insert(part.get(), std::shared_ptr<NewContentModel>(new NewContentModel(part, mParser)));
    }
 }
 
@@ -87,8 +87,9 @@ int NewModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
-NewContentModel::NewContentModel(const Part::Ptr &part)
+NewContentModel::NewContentModel(const Part::Ptr &part, const std::shared_ptr<Parser> &parser)
     : mPart(part)
+    , mParser(parser)
 {
 }
 
@@ -121,8 +122,32 @@ QVariant NewContentModel::data(const QModelIndex &index, int role) const
             return QString::fromLatin1(content->type());
         case IsEmbededRole:
             return false;
-        case ContentRole:
-            return content->encodedContent();
+        case ContentRole: {
+            auto text = content->encodedContent();
+            if (data(index, TypeRole).toString() == "HtmlContent") {
+                const auto rx = QRegExp("(src)\\s*=\\s*(\"|')(cid:[^\"']+)\\2");
+                int pos = 0;
+                while ((pos = rx.indexIn(text, pos)) != -1) {
+                    const auto link = QUrl(rx.cap(3).toUtf8());
+                    pos += rx.matchedLength();
+                    const auto repl = mParser->getPart(link);
+                    if (!repl) {
+                        continue;
+                    }
+                    const auto content = repl->content();
+                    if(content.size() < 1) {
+                        continue;
+                    }
+                    const auto mailMime = content.first()->mailMime();
+                    const auto mimetype = mailMime->mimetype().name();
+                    if (mimetype.startsWith("image/")) {
+                        const auto data = content.first()->content();
+                        text.replace(rx.cap(0), QString("src=\"data:%1;base64,%2\"").arg(mimetype, QString::fromLatin1(data.toBase64())));
+                    }
+                }
+            }
+            return text;
+        }
         case SecurityLevelRole:
             return content->encryptions().size() > mPart->encryptions().size() ? "red": "black"; //test for gpg inline
     }

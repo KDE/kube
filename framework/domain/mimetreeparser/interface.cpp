@@ -143,6 +143,15 @@ MailMime::Ptr MailMime::parent() const
     return d->parent;
 }
 
+QByteArray MailMime::decodedContent() const
+{
+    if (!d->mNode) {
+        return QByteArray();
+    }
+    return d->mNode->decodedContent();
+}
+
+
 class PartPrivate
 {
 public:
@@ -581,7 +590,7 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part
    q->reachParentD()->createMailMime(part.staticCast<MimeTreeParser::TextMessagePart>());
    mType = q->mailMime()->mimetype().name().toUtf8();
    mContent.clear();
-   mContent.append(std::make_shared<Content>(part->text().toLocal8Bit(), q));
+   mContent.append(std::make_shared<Content>(q->mailMime()->decodedContent(), q));
 }
 
 SinglePart::SinglePart()

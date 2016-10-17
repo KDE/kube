@@ -100,6 +100,8 @@ public:
     // overwrite default charset with given charset
     QString encodedContent(QByteArray charset) const;
 
+    QByteArray decodedContent() const;
+
     bool isFirstTextPart() const;
     bool isFirstPart() const;
     bool isTopLevelPart() const;
