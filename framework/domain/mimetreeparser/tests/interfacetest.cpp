@@ -237,6 +237,8 @@ private slots:
         QCOMPARE(contentPart->signatures().size(), 0);
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList.size(), 1);
+        auto contentAttachmentList = parser.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
     }
 };
 

@@ -818,11 +818,23 @@ QVector<Part::Ptr> Parser::collectAttachmentParts() const
                                     }
 
                                     {
-                                        const auto parent = content->parent();
+                                        QMimeDatabase mimeDb;
+                                        auto _mime = content->parent()->mailMime();
+                                        const auto parent = _mime->parent();
                                         if (parent) {
-                                            const auto _mime = parent->mailMime();
+                                            const auto mimetype = parent->mimetype();
+                                            if (mimetype == mimeDb.mimeTypeForName("multipart/related")) {
+                                                return false;
+                                            }
+                                        }
+                                        while (_mime) {
                                             if (_mime && (_mime->isTopLevelPart() || _mime->isFirstTextPart())) {
                                                 return false;
+                                            }
+                                            if (_mime->isFirstPart()) {
+                                                _mime = _mime->parent();
+                                            } else {
+                                                break;
                                             }
                                         }
                                     }
