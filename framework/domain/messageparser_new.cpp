@@ -298,6 +298,7 @@ QHash<int, QByteArray> NewModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[TypeRole] = "type";
     roles[ContentsRole] = "contents";
+    roles[ContentRole] = "content";
     roles[IsEmbededRole] = "embeded";
     roles[SecurityLevelRole] = "securityLevel";
     return roles;
@@ -330,26 +331,27 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
     }
     if (index.internalPointer()) {
         const auto entry = static_cast<Entry *>(index.internalPointer());
-        const auto data = entry->mData;
-        if (data->userType() ==  qMetaTypeId<Signature *>()) {
-            const auto signature = data->value<Signature *>();
+        const auto _data = entry->mData;
+        if (_data->userType() ==  qMetaTypeId<Signature *>()) {
+            const auto signature = _data->value<Signature *>();
             int i = d->getPos(signature);
             switch(role) {
             case Qt::DisplayRole:
-                case TypeRole:
                 return QStringLiteral("Signature%1").arg(i);
+            case TypeRole:
+                return QStringLiteral("Signature");
             }
-        } else if (data->userType() ==  qMetaTypeId<Encryption *>()) {
-            const auto first = d->mParts.first();
-            const auto encryption = data->value<Encryption *>();
+        } else if (_data->userType() ==  qMetaTypeId<Encryption *>()) {
+            const auto encryption = _data->value<Encryption *>();
             int i = d->getPos(encryption);
             switch(role) {
             case Qt::DisplayRole:
-                case TypeRole:
                 return QStringLiteral("Encryption%1").arg(i);
+            case TypeRole:
+                return QStringLiteral("Encryption");
             }
-        } else if (data->userType() ==  qMetaTypeId<Part *>()) {
-            const auto part = data->value<Part *>();
+        } else if (_data->userType() ==  qMetaTypeId<Part *>()) {
+            const auto part = _data->value<Part *>();
             switch (role) {
                 case Qt::DisplayRole:
                 case TypeRole:
@@ -361,13 +363,42 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 case ContentsRole:
                     return  QVariant::fromValue<QAbstractItemModel *>(d->mContentMap.value(part).get());
             }
-        } else if (data->userType() ==  qMetaTypeId<Content *>()) {
-            const auto content = data->value<Content *>();
+        } else if (_data->userType() ==  qMetaTypeId<Content *>()) {
+            const auto content = _data->value<Content *>();
             int i = d->getPos(content);
             switch(role) {
             case Qt::DisplayRole:
-                case TypeRole:
                 return QStringLiteral("Content%1").arg(i);
+            case TypeRole:
+                return QString::fromLatin1(content->type());
+            case IsEmbededRole:
+                return false;
+            case ContentRole: {
+                auto text = content->encodedContent();
+                if (data(index, TypeRole).toString() == "HtmlContent") {
+                    const auto rx = QRegExp("(src)\\s*=\\s*(\"|')(cid:[^\"']+)\\2");
+                    int pos = 0;
+                    while ((pos = rx.indexIn(text, pos)) != -1) {
+                        const auto link = QUrl(rx.cap(3).toUtf8());
+                        pos += rx.matchedLength();
+                        const auto repl = d->mParser->getPart(link);
+                        if (!repl) {
+                            continue;
+                        }
+                        const auto content = repl->content();
+                        if(content.size() < 1) {
+                            continue;
+                        }
+                        const auto mailMime = content.first()->mailMime();
+                        const auto mimetype = mailMime->mimetype().name();
+                        if (mimetype.startsWith("image/")) {
+                            const auto data = content.first()->content();
+                            text.replace(rx.cap(0), QString("src=\"data:%1;base64,%2\"").arg(mimetype, QString::fromLatin1(data.toBase64())));
+                        }
+                    }
+                }
+                return text;
+            }
             }
         }
     }
