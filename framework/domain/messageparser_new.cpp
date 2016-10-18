@@ -21,13 +21,121 @@
 
 #include <QDebug>
 
-NewModel::NewModel(std::shared_ptr<Parser> parser)
-    : mParser(parser)
+Q_DECLARE_METATYPE(Part *)
+Q_DECLARE_METATYPE(Content *)
+Q_DECLARE_METATYPE(Signature *)
+Q_DECLARE_METATYPE(Encryption *)
+
+class NewModelPrivate
+{
+public:
+    NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> &parser);
+    
+    QSharedPointer<QVariant> getVar(const std::shared_ptr<Signature> &sig);
+    QSharedPointer<QVariant> getVar(const std::shared_ptr<Encryption> &enc);
+    QSharedPointer<QVariant> getVar(const std::shared_ptr<Part> &part);
+
+    int getPos(Signature *sig);
+    int getPos(Encryption *enc);
+    int getPos(Part *part);
+
+    NewModel *q;
+    QVector<Part::Ptr> mParts;
+
+    std::shared_ptr<Parser> mParser;
+    QMap<Part *, std::shared_ptr<NewContentModel>> mContentMap;
+private:
+    QMap<std::shared_ptr<Signature>, QSharedPointer<QVariant>> mSignatureMap;
+    QMap<std::shared_ptr<Encryption>, QSharedPointer<QVariant>> mEncryptionMap;
+    QMap<std::shared_ptr<Part>, QSharedPointer<QVariant>> mPartMap;
+};
+
+NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> &parser)
+    : q(q_ptr)
+    , mParser(parser)
 {
    mParts = mParser->collectContentParts();
    foreach(const auto &part, mParts) {
        mContentMap.insert(part.get(), std::shared_ptr<NewContentModel>(new NewContentModel(part, mParser)));
    }
+}
+
+QSharedPointer<QVariant> NewModelPrivate::getVar(const std::shared_ptr<Signature> &sig)
+{
+    if (!mSignatureMap.contains(sig)) {
+        auto var = new QVariant();
+        var->setValue(sig.get());
+        mSignatureMap.insert(sig, QSharedPointer<QVariant>(var));
+    }
+    return mSignatureMap.value(sig);
+}
+
+QSharedPointer<QVariant> NewModelPrivate::getVar(const std::shared_ptr<Encryption> &enc)
+{
+    if (!mEncryptionMap.contains(enc)) {
+        auto var = new QVariant();
+        var->setValue(enc.get());
+        mEncryptionMap.insert(enc, QSharedPointer<QVariant>(var));
+    }
+    return mEncryptionMap.value(enc);
+}
+
+QSharedPointer<QVariant> NewModelPrivate::getVar(const std::shared_ptr<Part> &part)
+{
+    if (!mPartMap.contains(part)) {
+        auto var = new QVariant();
+        var->setValue(part.get());
+        mPartMap.insert(part, QSharedPointer<QVariant>(var));
+    }
+    return mPartMap.value(part);
+}
+
+int NewModelPrivate::getPos(Signature *signature)
+{
+    const auto first = mParts.first();
+    int i = 0;
+    foreach(const auto &sig, first->signatures()) {
+        if (sig.get() == signature) {
+            break;
+        }
+        i++;
+    }
+    return i;
+}
+
+int NewModelPrivate::getPos(Encryption *encryption)
+{
+    const auto first = mParts.first();
+    int i = 0;
+    foreach(const auto &enc, first->encryptions()) {
+        if (enc.get() == encryption) {
+            break;
+        }
+        i++;
+    }
+    return i;
+}
+
+
+int NewModelPrivate::getPos(Part *part)
+{
+    int i = 0;
+    foreach(const auto &p, mParts) {
+        if (p.get() == part) {
+            break;
+        }
+        i++;
+    }
+    return i;
+}
+
+NewModel::NewModel(std::shared_ptr<Parser> parser)
+    : d(std::unique_ptr<NewModelPrivate>(new NewModelPrivate(this, parser)))
+{
+}
+
+NewModel::~NewModel()
+{
 }
 
 QHash<int, QByteArray> NewModel::roleNames() const
@@ -40,12 +148,71 @@ QHash<int, QByteArray> NewModel::roleNames() const
     return roles;
 }
 
+
 QModelIndex NewModel::index(int row, int column, const QModelIndex &parent) const
 {
+    if (row < 0 || column != 0) {
+        return QModelIndex();
+    }
     if (!parent.isValid()) {
-        if (row < mParts.size()) {
-            auto part = mParts.at(row);
-            return createIndex(row, column, part.get());
+        const auto first = d->mParts.first();
+        if (first->signatures().size() > 0) {
+            if (row == 0) {
+                const auto sig = first->signatures().at(row);
+                return createIndex(row, column, d->getVar(sig).data());
+            }
+        } else if (first->encryptions().size() > 0) {
+            if (row == 0) {
+                const auto enc = first->encryptions().at(row);
+                return createIndex(row, column, d->getVar(enc).data());
+            }
+        } else {
+            if (row < d->mParts.size()) {
+                auto part = d->mParts.at(row);
+                return createIndex(row, column, d->getVar(part).data());
+            }
+        }
+    } else {
+        if (!parent.internalPointer()) {
+            return QModelIndex();
+        }
+        const auto data = static_cast<QVariant *>(parent.internalPointer());
+        const auto first = d->mParts.first();
+        int encpos = -1;
+        int partpos = -1;
+        if (data->userType() == qMetaTypeId<Signature *>()) {
+            const auto signature = data->value<Signature *>();
+            int i = d->getPos(signature);
+
+            if (i+1 < first->signatures().size()) {
+                if (row != 0) {
+                    return QModelIndex();
+                }
+                const auto sig = first->signatures().at(i+1);
+                return createIndex(0,0, d->getVar(sig).data());
+            }
+
+            if (first->encryptions().size() > 0) {
+                encpos = 0;
+            }
+        } else if (data->userType() == qMetaTypeId<Encryption *>()) {
+            const auto encryption = data->value<Encryption *>();
+            encpos = d->getPos(encryption) + 1;
+        }
+
+        if (encpos > -1 && encpos < first->encryptions().size()) {
+            if (row != 0) {
+                return QModelIndex();
+            }
+            const auto enc = first->encryptions().at(encpos);
+            return createIndex(0,0, d->getVar(enc).data());
+        }
+
+        if (row < d->mParts.size()) {
+            auto part = d->mParts.at(row);
+            auto var = new QVariant();
+            var->setValue(part.get());
+            return createIndex(row, column, d->getVar(part).data());
         }
     }
     return QModelIndex();
@@ -53,17 +220,44 @@ QModelIndex NewModel::index(int row, int column, const QModelIndex &parent) cons
 
 QVariant NewModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.parent().isValid()) {
-        auto part = static_cast<Part *>(index.internalPointer());
-        switch (role) {
-            case TypeRole:
-                return QString::fromLatin1(part->type());
-            case IsEmbededRole:
-                return index.parent().isValid();
-            case SecurityLevelRole:
-                return QStringLiteral("GRAY");
-            case ContentsRole:
-                return  QVariant::fromValue<QAbstractItemModel *>(mContentMap.value(part).get());
+    if (!index.isValid()) {
+        if (role == Qt::DisplayRole) {
+            return QString("root");
+        }
+        return QVariant();
+    }
+    if (index.internalPointer()) {
+        const auto data = static_cast<QVariant *>(index.internalPointer());
+        if (data->userType() ==  qMetaTypeId<Signature *>()) {
+            const auto signature = data->value<Signature *>();
+            int i = d->getPos(signature);
+            switch(role) {
+            case Qt::DisplayRole:
+                case TypeRole:
+                return QStringLiteral("Signature%1").arg(i);
+            }
+        } else if (data->userType() ==  qMetaTypeId<Encryption *>()) {
+            const auto first = d->mParts.first();
+            const auto encryption = data->value<Encryption *>();
+            int i = d->getPos(encryption);
+            switch(role) {
+            case Qt::DisplayRole:
+                case TypeRole:
+                return QStringLiteral("Encryption%1").arg(i);
+            }
+        } else if (data->userType() ==  qMetaTypeId<Part *>()) {
+            const auto part = data->value<Part *>();
+            switch (role) {
+                case Qt::DisplayRole:
+                case TypeRole:
+                    return QString::fromLatin1(part->type());
+                case IsEmbededRole:
+                    return index.parent().isValid();
+                case SecurityLevelRole:
+                    return QStringLiteral("GRAY");
+                case ContentsRole:
+                    return  QVariant::fromValue<QAbstractItemModel *>(d->mContentMap.value(part).get());
+            }
         }
     }
     return QVariant();
@@ -71,13 +265,98 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
 
 QModelIndex NewModel::parent(const QModelIndex &index) const
 {
+    if (!index.internalPointer()) {
+        return QModelIndex();
+    }
+    const auto data = static_cast<QVariant *>(index.internalPointer());
+    if (data->userType() == qMetaTypeId<Signature *>()) {
+        const auto signature = data->value<Signature *>();
+        const auto first = d->mParts.first();
+        int i = d->getPos(signature);
+
+        if (i > 1) {
+            const auto sig = first->signatures().at(i-1);
+            return createIndex(0, 0, d->getVar(sig).data());
+        }
+
+        return QModelIndex();
+    } else if (data->userType() == qMetaTypeId<Encryption *>()) {
+        const auto encryption = data->value<Encryption *>();
+        const auto first = d->mParts.first();
+        int i = d->getPos(encryption);
+
+        if (i > 1) {
+            const auto enc = first->encryptions().at(i-1);
+            return createIndex(0, 0, d->getVar(enc).data());
+        }
+
+        if (first->signatures().size() > 0) {
+            const int row = first->signatures().size() - 1;
+            const auto sig = first->signatures().at(row);
+            return createIndex(0, 0, d->getVar(sig).data());
+        } else {
+            return QModelIndex();
+        }
+    } else if (data->userType() == qMetaTypeId<Part *>()) {
+        const auto first = d->mParts.first();
+        if (first->encryptions().size() > 0) {
+            const int row = first->encryptions().size() - 1;
+            const auto enc = first->encryptions().at(row);
+            auto var = new QVariant();
+            var->setValue(enc.get());
+            return createIndex(0, 0, d->getVar(enc).data());
+        }
+        if (first->signatures().size() > 0) {
+            const int row = first->signatures().size() - 1;
+            const auto sig = first->signatures().at(row);
+            return createIndex(0, 0, d->getVar(sig).data());
+        }
+        return QModelIndex();
+    }
     return QModelIndex();
 }
 
 int NewModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
-        return mParts.size();
+        const auto first = d->mParts.first();
+        if (first->signatures().size() > 0) {
+            return 1;
+        } else if (first->encryptions().size() > 0) {
+            return 1;
+        } else {
+            return d->mParts.size();
+        }
+    } else {
+        if (!parent.internalPointer()) {
+            return 0;
+        }
+        const auto data = static_cast<QVariant *>(parent.internalPointer());
+        if (data->userType() == qMetaTypeId<Signature *>()) {
+            const auto signature = data->value<Signature *>();
+            const auto first = d->mParts.first();
+            int i = d->getPos(signature);
+
+            if (i+1 < first->signatures().size()) {
+                return 1;
+            }
+
+            if (first->encryptions().size() > 0) {
+                return 1;
+            }
+
+            return d->mParts.size();
+        } else if (data->userType() == qMetaTypeId<Encryption *>()) {
+            const auto encryption = data->value<Encryption *>();
+            const auto first = d->mParts.first();
+            int i = d->getPos(encryption);
+
+            if (i+1 < first->encryptions().size()) {
+                return 1;
+            }
+
+            return d->mParts.size();
+        }
     }
     return 0;
 }

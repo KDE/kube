@@ -33,10 +33,14 @@ class QAbstractItemModel;
 
 class Parser;
 class Part;
+class Encryption;
+class Signature;
 typedef std::shared_ptr<Part> PartPtr;
 class Content;
 typedef std::shared_ptr<Content> ContentPtr;
 class MessagePartPrivate;
+
+class NewModelPrivate;
 
 class MessageParser : public QObject
 {
@@ -123,6 +127,7 @@ class NewModel : public QAbstractItemModel {
     Q_OBJECT
 public:
     NewModel(std::shared_ptr<Parser> parser);
+    ~NewModel();
 
 public:
     enum Roles {
@@ -140,8 +145,6 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
 private:
-    std::shared_ptr<Parser> mParser;
-    QVector<PartPtr> mParts;
-    QMap<Part *, std::shared_ptr<NewContentModel>> mContentMap;
+    std::unique_ptr<NewModelPrivate> d;
 };
 
