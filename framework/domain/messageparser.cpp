@@ -18,6 +18,7 @@
 */
 #include "messageparser.h"
 
+#include "modeltest.h"
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
 
@@ -100,5 +101,7 @@ QAbstractItemModel *MessageParser::partTree() const
 
 QAbstractItemModel *MessageParser::newTree() const
 {
-    return new NewModel(d->mParser);
+    const auto model = new NewModel(d->mParser);
+    new ModelTest(model, model);
+    return model;
 }
