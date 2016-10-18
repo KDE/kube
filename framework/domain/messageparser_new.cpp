@@ -26,11 +26,54 @@ Q_DECLARE_METATYPE(Content *)
 Q_DECLARE_METATYPE(Signature *)
 Q_DECLARE_METATYPE(Encryption *)
 
+class Entry
+{
+public:
+    ~Entry()
+    {
+        foreach(auto child, mChildren) {
+            delete child;
+        }
+        mChildren.clear();
+    }
+    
+    void addChild(Entry *entry)
+    {
+        mChildren.append(entry);
+        entry->mParent = this;
+    }
+
+    int pos()
+    {
+        if(!mParent) {
+            return -1;
+        }
+        int i=0;
+        foreach(const auto &child, mParent->mChildren) {
+            if (child == this) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    QSharedPointer<QVariant> mData;
+
+    Entry *mParent;
+    QVector<Entry *> mChildren;
+};
+
 class NewModelPrivate
 {
 public:
     NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> &parser);
-    
+
+    void createTree();
+    Entry *addSignatures(Entry *parent, QVector<Signature::Ptr> signatures);
+    Entry *addEncryptions(Entry *parent, QVector<Encryption::Ptr> encryptions);
+    Entry *addPart(Entry *parent, Part *part);
+
     QSharedPointer<QVariant> getVar(const std::shared_ptr<Signature> &sig);
     QSharedPointer<QVariant> getVar(const std::shared_ptr<Encryption> &enc);
     QSharedPointer<QVariant> getVar(const std::shared_ptr<Part> &part);
@@ -45,6 +88,7 @@ public:
 
     NewModel *q;
     QVector<Part::Ptr> mParts;
+    Entry *mRoot;
 
     std::shared_ptr<Parser> mParser;
     QMap<Part *, std::shared_ptr<NewContentModel>> mContentMap;
@@ -63,6 +107,79 @@ NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> 
    foreach(const auto &part, mParts) {
        mContentMap.insert(part.get(), std::shared_ptr<NewContentModel>(new NewContentModel(part, mParser)));
    }
+   createTree();
+}
+
+Entry * NewModelPrivate::addSignatures(Entry *parent, QVector<Signature::Ptr> signatures)
+{
+    auto ret = parent;
+    foreach(const auto &sig, signatures) {
+        auto entry = new Entry();
+        entry->mData = getVar(sig);
+        ret = entry;
+        parent->addChild(entry);
+    }
+    return ret;
+}
+
+Entry * NewModelPrivate::addEncryptions(Entry *parent, QVector<Encryption::Ptr> encryptions)
+{
+    auto ret = parent;
+    foreach(const auto &enc, encryptions) {
+        auto entry = new Entry();
+        entry->mData = getVar(enc);
+        parent->addChild(entry);
+        ret = entry;
+    }
+    return ret;
+}
+
+Entry * NewModelPrivate::addPart(Entry *parent, Part *part)
+{
+    auto entry = new Entry();
+    entry->mData = getVar(part);
+    parent->addChild(entry);
+
+    foreach(const auto &content, part->content()) {
+        auto _entry = entry;
+        _entry = addSignatures(_entry, content->signatures().mid(part->signatures().size()));
+        _entry = addEncryptions(_entry, content->encryptions().mid(part->encryptions().size()));
+        auto c = new Entry();
+        c->mData = getVar(content);
+        _entry->addChild(c);
+    }
+
+    foreach(const auto &sp, part->subParts()) {
+        auto _entry = entry;
+        _entry = addSignatures(_entry, sp->signatures().mid(part->signatures().size()));
+        _entry = addEncryptions(_entry, sp->encryptions().mid(part->encryptions().size()));
+        addPart(_entry, sp.get());
+    }
+    return entry;
+}
+
+void NewModelPrivate::createTree()
+{
+    mRoot = new Entry();
+    auto parent = mRoot;
+    Part *pPart = nullptr;
+    QVector<Signature::Ptr> signatures;
+    QVector<Encryption::Ptr> encryptions;
+    foreach(const auto part, mParts) {
+        auto _parent = parent;
+        if (pPart != part->parent()) {
+            auto _parent = mRoot;
+            _parent = addSignatures(_parent, part->parent()->signatures());
+            _parent = addEncryptions(_parent, part->parent()->encryptions());
+            signatures = part->parent()->signatures();
+            encryptions = part->parent()->encryptions();
+            parent = _parent;
+            pPart = part->parent();
+        }
+        _parent = addSignatures(_parent, part->signatures().mid(signatures.size()));
+        _parent = addEncryptions(_parent, part->encryptions().mid(encryptions.size()));
+        addPart(_parent, part.get());
+    }
 }
 
 QSharedPointer<QVariant> NewModelPrivate::getVar(const std::shared_ptr<Signature> &sig)
@@ -192,73 +309,13 @@ QModelIndex NewModel::index(int row, int column, const QModelIndex &parent) cons
     if (row < 0 || column != 0) {
         return QModelIndex();
     }
-    if (!parent.isValid()) {
-        const auto first = d->mParts.first();
-        if (first->signatures().size() > 0) {
-            if (row == 0) {
-                const auto sig = first->signatures().at(row);
-                return createIndex(row, column, d->getVar(sig).data());
-            }
-        } else if (first->encryptions().size() > 0) {
-            if (row == 0) {
-                const auto enc = first->encryptions().at(row);
-                return createIndex(row, column, d->getVar(enc).data());
-            }
-        } else {
-            if (row < d->mParts.size()) {
-                auto part = d->mParts.at(row);
-                return createIndex(row, column, d->getVar(part).data());
-            }
-        }
-    } else {
-        if (!parent.internalPointer()) {
-            return QModelIndex();
-        }
-        const auto data = static_cast<QVariant *>(parent.internalPointer());
-        const auto first = d->mParts.first();
-        int encpos = -1;
-        int partpos = -1;
-        if (data->userType() == qMetaTypeId<Signature *>()) {
-            const auto signature = data->value<Signature *>();
-            int i = d->getPos(signature);
+    Entry *entry = d->mRoot;
+    if (parent.isValid()) {
+        entry = static_cast<Entry *>(parent.internalPointer());
+    }
 
-            if (i+1 < first->signatures().size()) {
-                if (row != 0) {
-                    return QModelIndex();
-                }
-                const auto sig = first->signatures().at(i+1);
-                return createIndex(0,0, d->getVar(sig).data());
-            }
-
-            if (first->encryptions().size() > 0) {
-                encpos = 0;
-            }
-        } else if (data->userType() == qMetaTypeId<Encryption *>()) {
-            const auto encryption = data->value<Encryption *>();
-            encpos = d->getPos(encryption) + 1;
-        } else if (data->userType() == qMetaTypeId<Part *>()) {
-            const auto part = data->value<Part *>();
-            if (row < part->content().size()) {
-                auto c = part->content().at(row);
-                return createIndex(row, column, d->getVar(c).data());
-            }
-            return QModelIndex();
-        }
-
-        if (encpos > -1 && encpos < first->encryptions().size()) {
-            if (row != 0) {
-                return QModelIndex();
-            }
-            const auto enc = first->encryptions().at(encpos);
-            return createIndex(0,0, d->getVar(enc).data());
-        }
-
-        if (row < d->mParts.size()) {
-            auto part = d->mParts.at(row);
-            auto var = new QVariant();
-            var->setValue(part.get());
-            return createIndex(row, column, d->getVar(part).data());
-        }
+    if (row < entry->mChildren.size()) {
+        return createIndex(row, column, entry->mChildren.at(row));
     }
     return QModelIndex();
 }
@@ -272,7 +329,8 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     if (index.internalPointer()) {
-        const auto data = static_cast<QVariant *>(index.internalPointer());
+        const auto entry = static_cast<Entry *>(index.internalPointer());
+        const auto data = entry->mData;
         if (data->userType() ==  qMetaTypeId<Signature *>()) {
             const auto signature = data->value<Signature *>();
             int i = d->getPos(signature);
@@ -321,61 +379,9 @@ QModelIndex NewModel::parent(const QModelIndex &index) const
     if (!index.internalPointer()) {
         return QModelIndex();
     }
-    const auto data = static_cast<QVariant *>(index.internalPointer());
-    if (data->userType() == qMetaTypeId<Signature *>()) {
-        const auto signature = data->value<Signature *>();
-        const auto first = d->mParts.first();
-        int i = d->getPos(signature);
-
-        if (i > 1) {
-            const auto sig = first->signatures().at(i-1);
-            return createIndex(0, 0, d->getVar(sig).data());
-        }
-
-        return QModelIndex();
-    } else if (data->userType() == qMetaTypeId<Encryption *>()) {
-        const auto encryption = data->value<Encryption *>();
-        const auto first = d->mParts.first();
-        int i = d->getPos(encryption);
-
-        if (i > 1) {
-            const auto enc = first->encryptions().at(i-1);
-            return createIndex(0, 0, d->getVar(enc).data());
-        }
-
-        if (first->signatures().size() > 0) {
-            const int row = first->signatures().size() - 1;
-            const auto sig = first->signatures().at(row);
-            return createIndex(0, 0, d->getVar(sig).data());
-        } else {
-            return QModelIndex();
-        }
-    } else if (data->userType() == qMetaTypeId<Part *>()) {
-        const auto first = d->mParts.first();
-        if (first->encryptions().size() > 0) {
-            const int row = first->encryptions().size() - 1;
-            const auto enc = first->encryptions().at(row);
-            auto var = new QVariant();
-            var->setValue(enc.get());
-            return createIndex(0, 0, d->getVar(enc).data());
-        }
-        if (first->signatures().size() > 0) {
-            const int row = first->signatures().size() - 1;
-            const auto sig = first->signatures().at(row);
-            return createIndex(0, 0, d->getVar(sig).data());
-        }
-        return QModelIndex();
-    } else if (data->userType() == qMetaTypeId<Content *>()) {
-        const auto content = data->value<Content *>();
-        const auto parent = content->parent();
-        if (!parent) {
-            return QModelIndex();
-        }
-        int pos = d->getPos(parent);
-        if (pos < 0 || pos >= d->mParts.size()) {
-            return QModelIndex();
-        }
-        return createIndex(pos, 0, d->getVar(parent).data());
+    const auto entry = static_cast<Entry *>(index.internalPointer());
+    if (entry->mParent) {
+        return createIndex(entry->pos(), 0, entry->mParent);
     }
     return QModelIndex();
 }
@@ -383,47 +389,13 @@ QModelIndex NewModel::parent(const QModelIndex &index) const
 int NewModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
-        const auto first = d->mParts.first();
-        if (first->signatures().size() > 0) {
-            return 1;
-        } else if (first->encryptions().size() > 0) {
-            return 1;
-        } else {
-            return d->mParts.size();
-        }
+        return d->mRoot->mChildren.size();
     } else {
         if (!parent.internalPointer()) {
             return 0;
         }
-        const auto data = static_cast<QVariant *>(parent.internalPointer());
-        if (data->userType() == qMetaTypeId<Signature *>()) {
-            const auto signature = data->value<Signature *>();
-            const auto first = d->mParts.first();
-            int i = d->getPos(signature);
-
-            if (i+1 < first->signatures().size()) {
-                return 1;
-            }
-
-            if (first->encryptions().size() > 0) {
-                return 1;
-            }
-
-            return d->mParts.size();
-        } else if (data->userType() == qMetaTypeId<Encryption *>()) {
-            const auto encryption = data->value<Encryption *>();
-            const auto first = d->mParts.first();
-            int i = d->getPos(encryption);
-
-            if (i+1 < first->encryptions().size()) {
-                return 1;
-            }
-
-            return d->mParts.size();
-        } else if (data->userType() == qMetaTypeId<Part *>()) {
-            const auto part = data->value<Part *>();
-            return part->content().size();
-        }
+        const auto entry = static_cast<Entry *>(parent.internalPointer());
+        return entry->mChildren.size();
     }
     return 0;
 }
