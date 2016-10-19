@@ -26,48 +26,7 @@ Q_DECLARE_METATYPE(Content *)
 Q_DECLARE_METATYPE(Signature *)
 Q_DECLARE_METATYPE(Encryption *)
 
-class Entry
-{
-public:
-    Entry()
-        : mParent(nullptr)
-    {
-    }
-
-    ~Entry()
-    {
-        foreach(auto child, mChildren) {
-            delete child;
-        }
-        mChildren.clear();
-    }
-
-    void addChild(Entry *entry)
-    {
-        mChildren.append(entry);
-        entry->mParent = this;
-    }
-
-    int pos()
-    {
-        if(!mParent) {
-            return -1;
-        }
-        int i=0;
-        foreach(const auto &child, mParent->mChildren) {
-            if (child == this) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
-    }
-
-    QSharedPointer<QVariant> mData;
-
-    Entry *mParent;
-    QVector<Entry *> mChildren;
-};
+class Entry;
 
 class NewModelPrivate
 {
@@ -76,9 +35,6 @@ public:
     ~NewModelPrivate();
 
     void createTree();
-    Entry *addSignatures(Entry *parent, QVector<Signature::Ptr> signatures);
-    Entry *addEncryptions(Entry *parent, QVector<Encryption::Ptr> encryptions);
-    Entry *addPart(Entry *parent, Part *part);
 
     QSharedPointer<QVariant> getVar(const std::shared_ptr<Signature> &sig);
     QSharedPointer<QVariant> getVar(const std::shared_ptr<Encryption> &enc);
@@ -104,9 +60,101 @@ private:
     QMap<Content *, QSharedPointer<QVariant>> mCMap;
 };
 
+class Entry
+{
+public:
+    Entry(NewModelPrivate *model)
+        : mParent(nullptr)
+        , mNewModelPrivate(model)
+    {
+    }
+
+    ~Entry()
+    {
+        foreach(auto child, mChildren) {
+            delete child;
+        }
+        mChildren.clear();
+    }
+
+    void addChild(Entry *entry)
+    {
+        mChildren.append(entry);
+        entry->mParent = this;
+    }
+
+    Entry *addSignatures(QVector<Signature::Ptr> signatures)
+    {
+        auto ret = this;
+        foreach(const auto &sig, signatures) {
+            auto entry = new Entry(mNewModelPrivate);
+            entry->mData = mNewModelPrivate->getVar(sig);
+            ret->addChild(entry);
+            ret = entry;
+        }
+        return ret;
+    }
+
+    Entry *addEncryptions(QVector<Encryption::Ptr> encryptions)
+    {
+        auto ret = this;
+        foreach(const auto &enc, encryptions) {
+            auto entry = new Entry(mNewModelPrivate);
+            entry->mData = mNewModelPrivate->getVar(enc);
+            ret->addChild(entry);
+            ret = entry;
+        }
+        return ret;
+    }
+
+     Entry *addPart(Part *part)
+    {
+        auto entry = new Entry(mNewModelPrivate);
+        entry->mData = mNewModelPrivate->getVar(part);
+        addChild(entry);
+        foreach(const auto &content, part->content()) {
+            auto _entry = entry;
+            _entry = _entry->addEncryptions(content->encryptions().mid(part->encryptions().size()));
+            _entry = _entry->addSignatures(content->signatures().mid(part->signatures().size()));
+            auto c = new Entry(mNewModelPrivate);
+            c->mData = mNewModelPrivate->getVar(content);
+            _entry->addChild(c);
+        }
+        foreach(const auto &sp, part->subParts()) {
+            auto _entry = entry;
+            _entry = _entry->addEncryptions(sp->encryptions().mid(part->encryptions().size()));
+            _entry = _entry->addSignatures(sp->signatures().mid(part->signatures().size()));
+            _entry->addPart(sp.get());
+        }
+        return entry;
+    }
+
+    int pos()
+    {
+        if(!mParent) {
+            return -1;
+        }
+        int i=0;
+        foreach(const auto &child, mParent->mChildren) {
+            if (child == this) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    QSharedPointer<QVariant> mData;
+
+    Entry *mParent;
+    QVector<Entry *> mChildren;
+    NewModelPrivate *mNewModelPrivate;
+};
+
+
 NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> &parser)
     : q(q_ptr)
-    , mRoot(std::unique_ptr<Entry>(new Entry))
+    , mRoot(std::unique_ptr<Entry>(new Entry(this)))
     , mParser(parser)
 {
    mParts = mParser->collectContentParts();
@@ -115,54 +163,6 @@ NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> 
 
 NewModelPrivate::~NewModelPrivate()
 {
-}
-
-Entry *NewModelPrivate::addSignatures(Entry *parent, QVector<Signature::Ptr> signatures)
-{
-    auto ret = parent;
-    foreach(const auto &sig, signatures) {
-        auto entry = new Entry();
-        entry->mData = getVar(sig);
-        ret = entry;
-        parent->addChild(entry);
-    }
-    return ret;
-}
-
-Entry * NewModelPrivate::addEncryptions(Entry *parent, QVector<Encryption::Ptr> encryptions)
-{
-    auto ret = parent;
-    foreach(const auto &enc, encryptions) {
-        auto entry = new Entry();
-        entry->mData = getVar(enc);
-        parent->addChild(entry);
-        ret = entry;
-    }
-    return ret;
-}
-
-Entry * NewModelPrivate::addPart(Entry *parent, Part *part)
-{
-    auto entry = new Entry();
-    entry->mData = getVar(part);
-    parent->addChild(entry);
-
-    foreach(const auto &content, part->content()) {
-        auto _entry = entry;
-        _entry = addEncryptions(_entry, content->encryptions().mid(part->encryptions().size()));
-        _entry = addSignatures(_entry, content->signatures().mid(part->signatures().size()));
-        auto c = new Entry();
-        c->mData = getVar(content);
-        _entry->addChild(c);
-    }
-
-    foreach(const auto &sp, part->subParts()) {
-        auto _entry = entry;
-        _entry = addEncryptions(_entry, sp->encryptions().mid(part->encryptions().size()));
-        _entry = addSignatures(_entry, sp->signatures().mid(part->signatures().size()));
-        addPart(_entry, sp.get());
-    }
-    return entry;
 }
 
 void NewModelPrivate::createTree()
@@ -176,16 +176,16 @@ void NewModelPrivate::createTree()
         auto _parent = parent;
         if (pPart != part->parent()) {
             auto _parent = root;
-            _parent = addEncryptions(_parent, part->parent()->encryptions());
-            _parent = addSignatures(_parent, part->parent()->signatures());
+            _parent = _parent->addEncryptions(part->parent()->encryptions());
+            _parent = _parent->addSignatures(part->parent()->signatures());
             signatures = part->parent()->signatures();
             encryptions = part->parent()->encryptions();
             parent = _parent;
             pPart = part->parent();
         }
-        _parent = addEncryptions(_parent, part->encryptions().mid(encryptions.size()));
-        _parent = addSignatures(_parent, part->signatures().mid(signatures.size()));
-        addPart(_parent, part.get());
+        _parent = _parent->addEncryptions(part->encryptions().mid(encryptions.size()));
+        _parent = _parent->addSignatures(part->signatures().mid(signatures.size()));
+        _parent->addPart(part.get());
     }
 }
 
