@@ -142,8 +142,8 @@ Entry * NewModelPrivate::addPart(Entry *parent, Part *part)
 
     foreach(const auto &content, part->content()) {
         auto _entry = entry;
-        _entry = addSignatures(_entry, content->signatures().mid(part->signatures().size()));
         _entry = addEncryptions(_entry, content->encryptions().mid(part->encryptions().size()));
+        _entry = addSignatures(_entry, content->signatures().mid(part->signatures().size()));
         auto c = new Entry();
         c->mData = getVar(content);
         _entry->addChild(c);
@@ -151,8 +151,8 @@ Entry * NewModelPrivate::addPart(Entry *parent, Part *part)
 
     foreach(const auto &sp, part->subParts()) {
         auto _entry = entry;
-        _entry = addSignatures(_entry, sp->signatures().mid(part->signatures().size()));
         _entry = addEncryptions(_entry, sp->encryptions().mid(part->encryptions().size()));
+        _entry = addSignatures(_entry, sp->signatures().mid(part->signatures().size()));
         addPart(_entry, sp.get());
     }
     return entry;
@@ -169,15 +169,15 @@ void NewModelPrivate::createTree()
         auto _parent = parent;
         if (pPart != part->parent()) {
             auto _parent = mRoot;
-            _parent = addSignatures(_parent, part->parent()->signatures());
             _parent = addEncryptions(_parent, part->parent()->encryptions());
+            _parent = addSignatures(_parent, part->parent()->signatures());
             signatures = part->parent()->signatures();
             encryptions = part->parent()->encryptions();
             parent = _parent;
             pPart = part->parent();
         }
-        _parent = addSignatures(_parent, part->signatures().mid(signatures.size()));
         _parent = addEncryptions(_parent, part->encryptions().mid(encryptions.size()));
+        _parent = addSignatures(_parent, part->signatures().mid(signatures.size()));
         addPart(_parent, part.get());
     }
 }
@@ -340,6 +340,8 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return QStringLiteral("Signature%1").arg(i);
             case TypeRole:
                 return QStringLiteral("Signature");
+            case SecurityLevelRole:
+                return QStringLiteral("RED");
             }
         } else if (_data->userType() ==  qMetaTypeId<Encryption *>()) {
             const auto encryption = _data->value<Encryption *>();
@@ -349,6 +351,8 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return QStringLiteral("Encryption%1").arg(i);
             case TypeRole:
                 return QStringLiteral("Encryption");
+            case SecurityLevelRole:
+                return QStringLiteral("GREEN");
             }
         } else if (_data->userType() ==  qMetaTypeId<Part *>()) {
             const auto part = _data->value<Part *>();
@@ -358,8 +362,6 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                     return QString::fromLatin1(part->type());
                 case IsEmbededRole:
                     return index.parent().isValid();
-                case SecurityLevelRole:
-                    return QStringLiteral("GRAY");
                 case ContentsRole:
                     return  QVariant::fromValue<QAbstractItemModel *>(d->mContentMap.value(part).get());
             }
