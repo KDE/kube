@@ -29,6 +29,11 @@ Q_DECLARE_METATYPE(Encryption *)
 class Entry
 {
 public:
+    Entry()
+        : mParent(nullptr)
+    {
+    }
+
     ~Entry()
     {
         foreach(auto child, mChildren) {
@@ -36,7 +41,7 @@ public:
         }
         mChildren.clear();
     }
-    
+
     void addChild(Entry *entry)
     {
         mChildren.append(entry);
@@ -68,6 +73,7 @@ class NewModelPrivate
 {
 public:
     NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> &parser);
+    ~NewModelPrivate();
 
     void createTree();
     Entry *addSignatures(Entry *parent, QVector<Signature::Ptr> signatures);
@@ -88,10 +94,9 @@ public:
 
     NewModel *q;
     QVector<Part::Ptr> mParts;
-    Entry *mRoot;
+    std::unique_ptr<Entry> mRoot;
 
     std::shared_ptr<Parser> mParser;
-    QMap<Part *, std::shared_ptr<NewContentModel>> mContentMap;
 private:
     QMap<std::shared_ptr<Signature>, QSharedPointer<QVariant>> mSignatureMap;
     QMap<std::shared_ptr<Encryption>, QSharedPointer<QVariant>> mEncryptionMap;
@@ -101,16 +106,18 @@ private:
 
 NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> &parser)
     : q(q_ptr)
+    , mRoot(std::unique_ptr<Entry>(new Entry))
     , mParser(parser)
 {
    mParts = mParser->collectContentParts();
-   foreach(const auto &part, mParts) {
-       mContentMap.insert(part.get(), std::shared_ptr<NewContentModel>(new NewContentModel(part, mParser)));
-   }
    createTree();
 }
 
-Entry * NewModelPrivate::addSignatures(Entry *parent, QVector<Signature::Ptr> signatures)
+NewModelPrivate::~NewModelPrivate()
+{
+}
+
+Entry *NewModelPrivate::addSignatures(Entry *parent, QVector<Signature::Ptr> signatures)
 {
     auto ret = parent;
     foreach(const auto &sig, signatures) {
@@ -160,15 +167,15 @@ Entry * NewModelPrivate::addPart(Entry *parent, Part *part)
 
 void NewModelPrivate::createTree()
 {
-    mRoot = new Entry();
-    auto parent = mRoot;
+    auto root = mRoot.get();
+    auto parent = root;
     Part *pPart = nullptr;
     QVector<Signature::Ptr> signatures;
     QVector<Encryption::Ptr> encryptions;
     foreach(const auto part, mParts) {
         auto _parent = parent;
         if (pPart != part->parent()) {
-            auto _parent = mRoot;
+            auto _parent = root;
             _parent = addEncryptions(_parent, part->parent()->encryptions());
             _parent = addSignatures(_parent, part->parent()->signatures());
             signatures = part->parent()->signatures();
@@ -201,7 +208,6 @@ QSharedPointer<QVariant> NewModelPrivate::getVar(const std::shared_ptr<Encryptio
     }
     return mEncryptionMap.value(enc);
 }
-
 
 QSharedPointer<QVariant> NewModelPrivate::getVar(const std::shared_ptr<Part> &part)
 {
@@ -259,7 +265,6 @@ int NewModelPrivate::getPos(Encryption *encryption)
     return i;
 }
 
-
 int NewModelPrivate::getPos(Part *part)
 {
     int i = 0;
@@ -297,20 +302,18 @@ QHash<int, QByteArray> NewModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[TypeRole] = "type";
-    roles[ContentsRole] = "contents";
     roles[ContentRole] = "content";
     roles[IsEmbededRole] = "embeded";
     roles[SecurityLevelRole] = "securityLevel";
     return roles;
 }
 
-
 QModelIndex NewModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (row < 0 || column != 0) {
         return QModelIndex();
     }
-    Entry *entry = d->mRoot;
+    Entry *entry = d->mRoot.get();
     if (parent.isValid()) {
         entry = static_cast<Entry *>(parent.internalPointer());
     }
@@ -324,14 +327,27 @@ QModelIndex NewModel::index(int row, int column, const QModelIndex &parent) cons
 QVariant NewModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
-        if (role == Qt::DisplayRole) {
+        switch (role) {
+        case Qt::DisplayRole:
             return QString("root");
+        case IsEmbededRole:
+            return false;
         }
         return QVariant();
     }
+
     if (index.internalPointer()) {
         const auto entry = static_cast<Entry *>(index.internalPointer());
         const auto _data = entry->mData;
+        if (entry == d->mRoot.get()|| !_data) {
+            switch (role) {
+            case Qt::DisplayRole:
+                return QString("root");
+            case IsEmbededRole:
+                return false;
+            }
+            return QVariant();
+        }
         if (_data->userType() ==  qMetaTypeId<Signature *>()) {
             const auto signature = _data->value<Signature *>();
             int i = d->getPos(signature);
@@ -342,6 +358,8 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return QStringLiteral("Signature");
             case SecurityLevelRole:
                 return QStringLiteral("RED");
+            case IsEmbededRole:
+                return data(index.parent(), IsEmbededRole);
             }
         } else if (_data->userType() ==  qMetaTypeId<Encryption *>()) {
             const auto encryption = _data->value<Encryption *>();
@@ -353,17 +371,17 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return QStringLiteral("Encryption");
             case SecurityLevelRole:
                 return QStringLiteral("GREEN");
+            case IsEmbededRole:
+                return data(index.parent(), IsEmbededRole);
             }
         } else if (_data->userType() ==  qMetaTypeId<Part *>()) {
             const auto part = _data->value<Part *>();
             switch (role) {
-                case Qt::DisplayRole:
-                case TypeRole:
-                    return QString::fromLatin1(part->type());
-                case IsEmbededRole:
-                    return index.parent().isValid();
-                case ContentsRole:
-                    return  QVariant::fromValue<QAbstractItemModel *>(d->mContentMap.value(part).get());
+            case Qt::DisplayRole:
+            case TypeRole:
+                return QString::fromLatin1(part->type());
+            case IsEmbededRole:
+                return data(index.parent(), IsEmbededRole);
             }
         } else if (_data->userType() ==  qMetaTypeId<Content *>()) {
             const auto content = _data->value<Content *>();
@@ -374,7 +392,7 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
             case TypeRole:
                 return QString::fromLatin1(content->type());
             case IsEmbededRole:
-                return false;
+                return data(index.parent(), IsEmbededRole);
             case ContentRole: {
                 auto text = content->encodedContent();
                 if (data(index, TypeRole).toString() == "HtmlContent") {
@@ -413,7 +431,7 @@ QModelIndex NewModel::parent(const QModelIndex &index) const
         return QModelIndex();
     }
     const auto entry = static_cast<Entry *>(index.internalPointer());
-    if (entry->mParent) {
+    if (entry->mParent && entry->mParent != d->mRoot.get()) {
         return createIndex(entry->pos(), 0, entry->mParent);
     }
     return QModelIndex();
@@ -434,91 +452,6 @@ int NewModel::rowCount(const QModelIndex &parent) const
 }
 
 int NewModel::columnCount(const QModelIndex &parent) const
-{
-    return 1;
-}
-
-NewContentModel::NewContentModel(const Part::Ptr &part, const std::shared_ptr<Parser> &parser)
-    : mPart(part)
-    , mParser(parser)
-{
-}
-
-QHash<int, QByteArray> NewContentModel::roleNames() const
-{
-    QHash<int, QByteArray> roles;
-    roles[TypeRole] = "type";
-    roles[ContentRole] = "content";
-    roles[IsEmbededRole] = "embeded";
-    roles[SecurityLevelRole] = "securityLevel";
-    return roles;
-}
-
-QModelIndex NewContentModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (!parent.isValid()) {
-        if (row < mPart->content().size()) {
-            auto part = mPart->content().at(row);
-            return createIndex(row, column, part.get());
-        }
-    }
-    return QModelIndex();
-}
-
-QVariant NewContentModel::data(const QModelIndex &index, int role) const
-{
-    auto content = static_cast<Content *>(index.internalPointer());
-    switch (role) {
-        case TypeRole:
-            return QString::fromLatin1(content->type());
-        case IsEmbededRole:
-            return false;
-        case ContentRole: {
-            auto text = content->encodedContent();
-            if (data(index, TypeRole).toString() == "HtmlContent") {
-                const auto rx = QRegExp("(src)\\s*=\\s*(\"|')(cid:[^\"']+)\\2");
-                int pos = 0;
-                while ((pos = rx.indexIn(text, pos)) != -1) {
-                    const auto link = QUrl(rx.cap(3).toUtf8());
-                    pos += rx.matchedLength();
-                    const auto repl = mParser->getPart(link);
-                    if (!repl) {
-                        continue;
-                    }
-                    const auto content = repl->content();
-                    if(content.size() < 1) {
-                        continue;
-                    }
-                    const auto mailMime = content.first()->mailMime();
-                    const auto mimetype = mailMime->mimetype().name();
-                    if (mimetype.startsWith("image/")) {
-                        const auto data = content.first()->content();
-                        text.replace(rx.cap(0), QString("src=\"data:%1;base64,%2\"").arg(mimetype, QString::fromLatin1(data.toBase64())));
-                    }
-                }
-            }
-            return text;
-        }
-        case SecurityLevelRole:
-            return content->encryptions().size() > mPart->encryptions().size() ? "red": "black"; //test for gpg inline
-    }
-    return QVariant();
-}
-
-QModelIndex NewContentModel::parent(const QModelIndex &index) const
-{
-    return QModelIndex();
-}
-
-int NewContentModel::rowCount(const QModelIndex &parent) const
-{
-    if (!parent.isValid()) {
-        return mPart->content().size();
-    }
-    return 0;
-}
-
-int NewContentModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }

@@ -339,7 +339,7 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
             // rowCount() and columnCount() said that it existed...
             QVERIFY( index.isValid() );
 
-            qWarning() << "\tchild("<< r <<", " << c << ", " << index.column() << "):" << model->data(index).toString(); 
+            qWarning() << "\tchild("<< r <<", " << c << ", " << index.column() << "):" << model->data(index).toString() << index.internalPointer();
 
             // index() should always return the same index when called twice in a row
             QModelIndex modifiedIndex = model->index ( r, c, parent );
