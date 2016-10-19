@@ -17,27 +17,31 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.5
-
 Item {
+    id: textItem
+    property bool debug: true
+    width: partColumn.width
+    height: textColumn.height
+    Column {
+        id: textColumn
+        anchors {
+            top: parent.top
+            left: parent.left
+        }
+        width: parent.width
+        spacing: 5
+        Text {
+            width: parent.width
+            visible: textItem.debug
+            text: model.type
+        }
+        Text  {
+            width: parent.width
 
-    height: mailPart.height + 20
-    width: mailPart.width + 20
+            text: model.content
+            wrapMode: Text.WordWrap
 
-        BorderImage {
-
-        anchors.fill: parent
-        border { left: 40; top: 40; right: 40; bottom: 40 }
-        horizontalTileMode: BorderImage.Round
-        verticalTileMode: BorderImage.Round
-
-        source: "securityborders" + model.securityLevel + ".png"
-    }
-
-    MailPart {
-        id: mailPart
-
-        anchors.centerIn: parent
-
+            color: model.embeded ? "grey" : "black"
+        }
     }
 }

@@ -20,67 +20,27 @@ import QtQuick 2.4
 
 Item {
     id: root
+    property alias rootIndex: visualModel.rootIndex
+    property bool debug: true
+    height: partListView.height + 10
+    width: parent.width
 
-    height: partColumn.height + 20
-    width: delegateRoot.width
+    MailDataModel {
+        id: visualModel
+        debug: root.debug
+        model: messageParser.newTree
+    }
 
-    Column {
-        id: partColumn
+    ListView {
+        id: partListView
+        model: visualModel
         anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            margins: 10
+                top: parent.top
+                left: parent.left
+                margins: 5
         }
-
         spacing: 5
-
-        Repeater {
-            model: contents
-            delegate: Column {
-                id: delegateRoot
-
-                width: partColumn.width
-
-                Loader {
-                    id: loader
-                }
-
-                Component.onCompleted: {
-                    switch (model.type) {
-                        case "AlternativePart":
-                        case "SinglePart":
-                            loader.source = "MailPart.qml";
-                            break;
-
-                        case "PlainTextContent":
-                        case "Content":
-                            loader.source = "TextPart.qml";
-                            break;
-                        case "HtmlContent":
-                            loader.source = "HtmlPart.qml";
-                        break;
-
-                        case "alternativeframe":
-                            loader.source = "Frame.qml"
-                            break;
-                        case "encrypted":
-                            loader.source = "EncryptedPart.qml";
-                            break;
-                        case "embeded":
-                            loader.source = "EmbededPart.qml";
-                            break;
-                    }
-                }
-            }
-        }
-
-
-        Item {
-            id: footer
-
-            height: 5
-            width: 10
-        }
+        height: contentHeight
+        width: parent.width - 10
     }
 }

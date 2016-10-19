@@ -19,28 +19,48 @@
 import QtQuick 2.4
 
 Item {
-    id: root
+    id: signature
     property alias rootIndex: visualModel.rootIndex
     property bool debug: true
-    height: partListView.height + 50
-    width: parent.width * 0.9
+    height: partListView.height
+    width: parent.width
 
     MailDataModel {
         id: visualModel
-        debug: root.debug
+        debug: signature.debug
         model: messageParser.newTree
     }
-
-    ListView {
+    Column {
         id: partListView
-        model: visualModel
         anchors {
-                top: parent.top
-                left: parent.left
-                margins: 5
+            top: parent.top
+            left: parent.left
         }
+        width: parent.width
         spacing: 5
-        height: contentHeight
-        width: parent.width - 10
+        Text {
+            width: parent.width
+            visible: signature.debug
+            text: model.type
+        }
+        BorderImage {
+            width: parent.width
+            height: childrenRect.height + 40
+            border { left: 10; top: 10; right: 10; bottom: 10 }
+            horizontalTileMode: BorderImage.Round
+            verticalTileMode: BorderImage.Round
+            source: "securityborders"+ model.securityLevel +".png"
+            ListView {
+                model: visualModel
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    margins: 20
+                }
+                spacing: 20
+                height: contentHeight
+                width: parent.width - 40
+            }
+        }
     }
 }

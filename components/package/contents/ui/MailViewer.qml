@@ -48,6 +48,7 @@ Item {
                 }
                 MV.MailViewer {
                     id: newMailViewer
+                    debug: false
                     width: rootRectangle.width
                 }
                 Text {
@@ -73,6 +74,11 @@ Item {
                     TableViewColumn {
                         role: "embeded"
                         title: "Embeded"
+                        width: 60
+                    }
+                    TableViewColumn {
+                        role: "securityLevel"
+                        title: "SecurityLevel"
                         width: 60
                     }
                     TableViewColumn {
