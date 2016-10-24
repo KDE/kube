@@ -18,11 +18,29 @@
 
 import QtQuick 2.4
 
-ListModel {
+Item {
+    id: root
+    property alias rootIndex: visualModel.rootIndex
+    property bool debug: true
+    height: partListView.height + 50
+    width: parent.width * 0.9
 
-    ListElement {
-        type: "html"
-        htmlContent: "<!DOCTYPE html>  <html>  <body>  <h1>Some Heading</h1>  <p>My some paragraph.</p> </body>  </html>"
+    MailDataModel {
+        id: visualModel
+        debug: root.debug
+        model: messageParser.newTree
+    }
+
+    ListView {
+        id: partListView
+        model: visualModel
+        anchors {
+                top: parent.top
+                left: parent.left
+                margins: 5
+        }
+        spacing: 5
+        height: contentHeight
+        width: parent.width - 10
     }
 }
-

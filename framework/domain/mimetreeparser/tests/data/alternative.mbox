@@ -1,0 +1,28 @@
+Return-Path: <konqi@example.org>
+Date: Wed, 8 Jun 2016 20:34:44 -0700
+From: Konqi <konqi@example.org>
+To: konqi@kde.org
+Subject: A random subject with alternative contenttype
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+ boundary="----=_Part_12345678_12345678"
+
+
+------=_Part_12345678_12345678
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+If you can see this text it means that your email client couldn't display o=
+ur newsletter properly.
+Please visit this link to view the newsletter on our website: http://www.go=
+g.com/newsletter/
+
+
+------=_Part_12345678_12345678
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/html; charset="windows-1252"
+
+<html><body><p><span>HTML</span> text</p></body></html>
+
+
+------=_Part_12345678_12345678--

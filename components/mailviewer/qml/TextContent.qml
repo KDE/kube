@@ -17,12 +17,31 @@
 */
 
 import QtQuick 2.4
+Item {
+    id: textItem
+    property bool debug: true
+    width: partColumn.width
+    height: textColumn.height
+    Column {
+        id: textColumn
+        anchors {
+            top: parent.top
+            left: parent.left
+        }
+        width: parent.width
+        spacing: 5
+        Text {
+            width: parent.width
+            visible: textItem.debug
+            text: model.type
+        }
+        Text  {
+            width: parent.width
 
-Text  {
-    width: delegateRoot.width
+            text: model.content
+            wrapMode: Text.WordWrap
 
-    text: model.textContent
-    wrapMode: Text.WordWrap
-
-    color: embeded ? "grey" : "black"
+            color: model.embeded ? "grey" : "black"
+        }
+    }
 }

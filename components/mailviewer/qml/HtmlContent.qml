@@ -17,27 +17,32 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.5
+import QtQuick.Controls 1.3
+import QtWebKit 3.0
+// import QtWebEngine 1.3 //This would give use contentsSize
+import QtWebEngine 1.2
 
 Item {
+    id: root
+    property string content: model.content
+    property int contentHeight: helperView.contentHeight;
+    //FIXME workaround until QtWebEngine 1.3 with contentsSize
 
-    height: mailPart.height + 20
-    width: mailPart.width + 20
+    height: contentHeight
+    width: partColumn.width
 
-        BorderImage {
-
-        anchors.fill: parent
-        border { left: 40; top: 40; right: 40; bottom: 40 }
-        horizontalTileMode: BorderImage.Round
-        verticalTileMode: BorderImage.Round
-
-        source: "securityborders" + model.securityLevel + ".png"
+    WebView {
+        id: helperView
+        visible: false
+        Component.onCompleted: loadHtml(content, "file:///")
     }
-
-    MailPart {
-        id: mailPart
-
-        anchors.centerIn: parent
-
+    WebEngineView {
+        id: htmlView
+        anchors.fill: parent
+        Component.onCompleted: loadHtml(content, "file:///")
+    }
+    onContentChanged: {
+        htmlView.loadHtml(content, "file:///");
+        helperView.loadHtml(content, "file:///");
     }
 }

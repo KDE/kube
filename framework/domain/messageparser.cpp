@@ -18,8 +18,13 @@
 */
 #include "messageparser.h"
 
+#include "modeltest.h"
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
+
+#include "mimetreeparser/interface.h"
+
+#include <QRegExp>
 
 #include <QFile>
 #include <QImage>
@@ -29,128 +34,32 @@
 #include <MimeTreeParser/ObjectTreeParser>
 #include <MimeTreeParser/MessagePart>
 
-PartModel::PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, QMap<QByteArray, QUrl> embeddedPartMap) : mPartTree(partTree), mEmbeddedPartMap(embeddedPartMap)
+
+class MessagePartPrivate
 {
-}
-
-QHash<int, QByteArray> PartModel::roleNames() const
-{
-    QHash<int, QByteArray> roles;
-    roles[Text] = "text";
-    roles[IsHtml] = "isHtml";
-    roles[IsHidden] = "isHidden";
-    roles[IsEncrypted] = "isEncrypted";
-    roles[IsAttachment] = "isAttachment";
-    roles[HasContent] = "hasContent";
-    roles[Type] = "type";
-    roles[IsHidden] = "isHidden";
-    return roles;
-}
-
-QModelIndex PartModel::index(int row, int column, const QModelIndex &parent) const
-{
-    // qDebug() << "index " << parent << row << column << mPartTree->subParts().size();
-    if (!parent.isValid()) {
-        if (row < mPartTree->subParts().size()) {
-            auto part = mPartTree->subParts().at(row);
-            return createIndex(row, column, part.data());
-        }
-    } else {
-        auto part = static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer());
-        auto subPart = part->subParts().at(row);
-        return createIndex(row, column, subPart.data());
-    }
-    return QModelIndex();
-}
-
-QVariant PartModel::data(const QModelIndex &index, int role) const
-{
-    // qDebug() << "Getting data for index";
-    if (index.isValid()) {
-        auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
-        switch (role) {
-            case Text: {
-                // qDebug() << "Getting text: " << part->property("text").toString();
-                // FIXME: we should have a list per part, and not one for all parts.
-                auto text = part->property("htmlContent").toString();
-                for (const auto &cid : mEmbeddedPartMap.keys()) {
-                    text.replace(QString("src=\"cid:%1\"").arg(QString(cid)), QString("src=\"%1\"").arg(mEmbeddedPartMap.value(cid).toString()));
-                }
-                return text;
-            }
-            case IsAttachment:
-                return part->property("attachment").toBool();
-            case IsEncrypted:
-                return part->property("isEncrypted").toBool();
-            case IsHtml:
-                return part->property("isHtml").toBool();
-            case HasContent:
-                return !part->property("htmlContent").toString().isEmpty();
-            case Type:
-                return part->metaObject()->className();
-            case IsHidden:
-                return false;
-                //return part->property("isHidden").toBool();
-
-        }
-    }
-    return QVariant();
-}
-
-QModelIndex PartModel::parent(const QModelIndex &index) const
-{
-    // qDebug() << "parent " << index;
-    if (index.isValid()) {
-        auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
-        auto parentPart = static_cast<MimeTreeParser::MessagePart*>(part->parentPart());
-        auto row = 0;//get the parents parent to find the index
-        if (!parentPart) {
-            parentPart = mPartTree.data();
-        }
-        int i = 0;
-        for (const auto &p : parentPart->subParts()) {
-            if (p.data() == part) {
-                row = i;
-                break;
-            }
-            i++;
-        }
-        return createIndex(row, index.column(), parentPart);
-    }
-    return QModelIndex();
-}
-
-int PartModel::rowCount(const QModelIndex &parent) const
-{
-    // qDebug() << "Row count " << parent;
-    if (!parent.isValid()) {
-        // qDebug() << "Row count " << mPartTree->subParts().size();
-        return mPartTree->subParts().size();
-    } else {
-        auto part = static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer());
-        if (part) {
-            return part->subParts().size();
-        }
-    }
-    return 0;
-}
-
-int PartModel::columnCount(const QModelIndex &parent) const
-{
-    // qDebug() << "Column count " << parent;
-    return 1;
-}
-
+public:
+    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
+    QString mHtml;
+    QMap<QByteArray, QUrl> mEmbeddedPartMap;
+    std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
+    std::shared_ptr<Parser> mParser;
+};
 
 MessageParser::MessageParser(QObject *parent)
     : QObject(parent)
+    , d(std::unique_ptr<MessagePartPrivate>(new MessagePartPrivate))
+{
+
+}
+
+MessageParser::~MessageParser()
 {
 
 }
 
 QString MessageParser::html() const
 {
-    return mHtml;
+    return d->mHtml;
 }
 
 QVariant MessageParser::message() const
@@ -162,6 +71,8 @@ void MessageParser::setMessage(const QVariant &message)
 {
     QTime time;
     time.start();
+    d->mParser = std::shared_ptr<Parser>(new Parser(message.toByteArray()));
+
     const auto mailData = KMime::CRLFtoLF(message.toByteArray());
     KMime::Message::Ptr msg(new KMime::Message);
     msg->setContent(mailData);
@@ -171,20 +82,26 @@ void MessageParser::setMessage(const QVariant &message)
     // render the mail
     StringHtmlWriter htmlWriter;
     //temporary files only have the lifetime of the nodehelper, so we keep it around until the mail changes.
-    mNodeHelper = std::make_shared<MimeTreeParser::NodeHelper>();
+    d->mNodeHelper = std::make_shared<MimeTreeParser::NodeHelper>();
     ObjectTreeSource source(&htmlWriter);
-    MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
+    MimeTreeParser::ObjectTreeParser otp(&source, d->mNodeHelper.get());
 
     otp.parseObjectTree(msg.data());
-    mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
+    d->mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
 
-    mEmbeddedPartMap = htmlWriter.embeddedParts();
-    mHtml = htmlWriter.html();
+    d->mEmbeddedPartMap = htmlWriter.embeddedParts();
+    d->mHtml = htmlWriter.html();
     emit htmlChanged();
 }
 
 QAbstractItemModel *MessageParser::partTree() const
 {
-    return new PartModel(mPartTree, mEmbeddedPartMap);
+    return new PartModel(d->mPartTree, d->mParser);
 }
 
+QAbstractItemModel *MessageParser::newTree() const
+{
+    const auto model = new NewModel(d->mParser);
+    new ModelTest(model, model);
+    return model;
+}

@@ -22,13 +22,14 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.mailviewer 1.0 as MV
 
 Item {
     id: root
     property variant message;
     property string html;
-    property bool enablePartTreeView : false
-    property int desiredHeight: enablePartTreeView ? topPartLoader.height+450 : topPartLoader.height;
+    property bool enablePartTreeView : true;
+    property int desiredHeight: enablePartTreeView ? topPartLoader.height + newMailViewer.height + mailStructure.height + 50 : topPartLoader.height + newMailViewer.height + 50;
 
     Rectangle {
         id: rootRectangle
@@ -40,7 +41,20 @@ Item {
             anchors.margins: 0
             verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             Column {
-                spacing:2
+                spacing: 2
+                Text {
+                    text: "New Mailviewer:"
+                    color: "blue"
+                }
+                MV.MailViewer {
+                    id: newMailViewer
+                    debug: false
+                    width: rootRectangle.width
+                }
+                Text {
+                    text: "Old Mailviewer:"
+                    color: "blue"
+                }
                 MessagePartTree {
                     id: topPartLoader
                     // width: rootRectangle.width
@@ -48,6 +62,7 @@ Item {
                     width: topPartLoader.contentWidth >= rootRectangle.width ? topPartLoader.contentWidth : rootRectangle.width
                 }
                 TreeView {
+                    id: mailStructure
                     visible: enablePartTreeView
                     width: rootRectangle.width
                     height: 400
@@ -57,16 +72,22 @@ Item {
                         width: 300
                     }
                     TableViewColumn {
-                        role: "isHidden"
-                        title: "Hidden"
+                        role: "embeded"
+                        title: "Embeded"
                         width: 60
                     }
                     TableViewColumn {
-                        role: "text"
-                        title: "Text"
-                        width: 600
+                        role: "securityLevel"
+                        title: "SecurityLevel"
+                        width: 60
                     }
-                    model: messageParser.partTree
+                    TableViewColumn {
+                        role: "content"
+                        title: "Content"
+                        width: 200
+                    }
+                    //model: messageParser.partTree
+                    model: messageParser.newTree
                 }
             }
        }
