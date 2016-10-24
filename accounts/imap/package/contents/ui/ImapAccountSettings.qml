@@ -61,8 +61,9 @@ Item {
             width: parent.width
 
             text: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP server, which authentification and port to be used, please contact your email provider"
-            //TODO wait for kirgami theme disabled text color
-            opacity: 0.5
+
+            color: Kirigami.Theme.disabledTextColor
+
             wrapMode: Text.Wrap
         }
 
