@@ -25,8 +25,11 @@
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
 
-FolderListModel::FolderListModel(QObject *parent) : QIdentityProxyModel()
+FolderListModel::FolderListModel(QObject *parent) : QSortFilterProxyModel()
 {
+    setDynamicSortFilter(true);
+    sort(0, Qt::AscendingOrder);
+
     Query query;
     query.liveQuery = true;
     query.request<Folder::Name>().request<Folder::Icon>().request<Folder::Parent>();
@@ -64,7 +67,7 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
         case DomainObject:
             return srcIdx.data(Store::DomainObjectRole);
     }
-    return QIdentityProxyModel::data(idx, role);
+    return QSortFilterProxyModel::data(idx, role);
 }
 
 void FolderListModel::runQuery(const Query &query)
@@ -86,6 +89,28 @@ void FolderListModel::setAccountId(const QVariant &accountId)
          .request<Folder::Parent>();
     query.parentProperty = Folder::Parent::name;
     runQuery(query);
+}
+
+static int getPriority(const Sink::ApplicationDomain::Folder &folder)
+{
+    auto specialPurpose = folder.getSpecialPurpose();
+    if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::inbox)) {
+        return 10;
+    }
+    if (!specialPurpose.isEmpty()) {
+        return 9;
+    }
+    return 0;
+}
+
+bool FolderListModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+    const auto leftFolder = left.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
+    const auto rightFolder = right.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
+    if (getPriority(*leftFolder) < getPriority(*rightFolder)) {
+        return true;
+    }
+    return leftFolder->getName() < rightFolder->getName();
 }
 
 QVariant FolderListModel::accountId() const

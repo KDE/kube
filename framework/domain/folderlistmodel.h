@@ -21,7 +21,7 @@
 #pragma once
 
 #include <QObject>
-#include <QIdentityProxyModel>
+#include <QSortFilterProxyModel>
 #include <QSharedPointer>
 #include <QStringList>
 
@@ -29,7 +29,7 @@ namespace Sink {
     class Query;
 }
 
-class FolderListModel : public QIdentityProxyModel
+class FolderListModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
@@ -39,7 +39,7 @@ public:
     FolderListModel(QObject *parent = Q_NULLPTR);
     ~FolderListModel();
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     enum Roles {
         Name  = Qt::UserRole + 1,
@@ -49,10 +49,12 @@ public:
     };
     Q_ENUMS(Roles)
 
-    QHash<int, QByteArray> roleNames() const;
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
     void setAccountId(const QVariant &accountId);
     QVariant accountId() const;
+protected:
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 
 private:
     void runQuery(const Sink::Query &query);
