@@ -59,9 +59,12 @@ Item {
                     left: parent.left
                     margins: 20
                 }
-                spacing: 20
                 height: contentHeight
                 width: parent.width - 40
+
+                spacing: 20
+
+                interactive: false
             }
         }
     }

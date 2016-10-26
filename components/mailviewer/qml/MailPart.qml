@@ -42,5 +42,6 @@ Item {
         spacing: 5
         height: contentHeight
         width: parent.width - 10
+        interactive: false
     }
 }
