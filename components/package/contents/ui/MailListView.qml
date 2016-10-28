@@ -105,7 +105,6 @@ Controls.ScrollView {
                         Text{
                             text: model.subject
 
-                            renderType: Text.NativeRendering
                             color: mailListDelegate.checked ? Kirigami.Theme.textColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
                             font.weight: model.unread || model.important ? Font.DemiBold : Font.Normal
                         }
@@ -113,14 +112,12 @@ Controls.ScrollView {
                         Text {
                             text: model.senderName
 
-                            renderType: Text.NativeRendering
                             color:  Kirigami.Theme.textColor
                         }
 
                         Text {
                             text: Qt.formatDateTime(model.date)
 
-                            renderType: Text.NativeRendering
                             font.weight: Font.Light
                             opacity: 0.5
                             color: Kirigami.Theme.textColor
@@ -129,7 +126,6 @@ Controls.ScrollView {
                     Text {
                         text: model.threadSize
 
-                        renderType: Text.NativeRendering
                         font.weight: Font.Light
                         color:  Kirigami.Theme.textColor
                     }
