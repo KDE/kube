@@ -28,7 +28,7 @@ Item {
     id: root
     property variant message;
     property string html;
-    property int desiredHeight: topPartLoader.height + newMailViewer.height + 50;
+    property int desiredHeight: topPartLoader.height + newMailViewer.height
 
     clip: true
 
@@ -39,6 +39,7 @@ Item {
     }
 
     //BEGIN old mail viewer
+
     MessagePartTree {
         id: topPartLoader
         anchors.top: newMailViewer.bottom
@@ -89,4 +90,5 @@ Item {
         message: root.message
     }
     html: messageParser.html
+
 }

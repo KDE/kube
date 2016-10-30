@@ -21,9 +21,8 @@ import QtQuick 2.4
 Item {
     id: root
     property alias rootIndex: visualModel.rootIndex
-    property bool debug: true
-    height: partListView.height + 50
-    width: parent.width * 0.9
+    property bool debug: false
+    height: partListView.height
 
     MailDataModel {
         id: visualModel

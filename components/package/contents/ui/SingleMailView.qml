@@ -198,7 +198,7 @@ Item {
 
                         anchors.bottom: parent.bottom
 
-                        height: Kirigami.Units.gridUnit * 3
+                        height: Kirigami.Units.gridUnit * 2
                         width: parent.width
 
                         Text {
