@@ -139,7 +139,7 @@ Item {
                                 bottom: headerContent.top
                             }
 
-                            text: Qt.formatDateTime(model.date)
+                            text: Qt.formatDateTime(model.date, "dd MMM yyyy hh:mm")
 
                             font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
                             color: Kirigami.Theme.textColor
