@@ -51,7 +51,7 @@ Item {
             horizontalTileMode: BorderImage.Round
             verticalTileMode: BorderImage.Round
 
-            source: "securityborders"+ model.securityLevel +".png"
+            source: /* "securityborders"+ */ model.securityLevel +".png"
             ListView {
                 model: visualModel
                 anchors {

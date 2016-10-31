@@ -28,7 +28,7 @@ Item {
     id: root
     property variant message;
     property string html;
-    property int desiredHeight: topPartLoader.height + newMailViewer.height
+    property int desiredHeight: topPartLoader.height + newMailViewer.height + 5
 
     clip: true
 

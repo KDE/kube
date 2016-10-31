@@ -49,7 +49,7 @@ Item {
             border { left: 10; top: 10; right: 10; bottom: 10 }
             horizontalTileMode: BorderImage.Round
             verticalTileMode: BorderImage.Round
-            source: "securityborders"+ model.securityLevel +".png"
+            source: /* "securityborders"+ */ model.securityLevel +".png"
             ListView {
                 model: visualModel
                 anchors {
