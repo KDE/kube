@@ -31,8 +31,8 @@ Item {
     property string accountId
 
     ImapAccount.ImapSettings {
-             id: imapSettings
-             accountIdentifier: accountId
+        id: imapSettings
+        accountIdentifier: accountId
     }
 
     anchors.fill: parent
@@ -101,6 +101,7 @@ Item {
                 text: "Email address"
                 Layout.alignment: Qt.AlignRight
             }
+
             TextField {
                 Layout.fillWidth: true
 
@@ -132,16 +133,34 @@ Item {
                 text: "Password"
                 Layout.alignment: Qt.AlignRight
             }
-            TextField {
+
+            RowLayout {
                 Layout.fillWidth: true
 
-               text: imapSettings.imapPassword
-               placeholderText: "Password of your email account"
-               echoMode: TextInput.Password
-               onTextChanged: {
-                   imapSettings.imapPassword = text
-                   imapSettings.smtpPassword = text
+                TextField {
+                    id: pwField
+                    Layout.fillWidth: true
+
+                    text: imapSettings.imapPassword
+                    placeholderText: "Password of your email account"
+                    echoMode: TextInput.Password
+                    onTextChanged: {
+                        imapSettings.imapPassword = text
+                        imapSettings.smtpPassword = text
+                    }
                 }
+
+                CheckBox {
+                    text: "Show Password"
+                    onClicked: {
+                        if(pwField.echoMode == TextInput.Password) {
+                            pwField.echoMode = TextInput.Normal;
+                        } else {
+                            pwField.echoMode = TextInput.Password;
+                        }
+                    }
+                }
+
             }
 
             Kirigami.Label {
