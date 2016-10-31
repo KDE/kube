@@ -60,7 +60,7 @@ Item {
 
             width: parent.width
 
-            text: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP server, which authentification and port to be used, please contact your email provider"
+            text: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP address, which authentification and port to be used, please contact your email provider"
 
             color: Kirigami.Theme.disabledTextColor
 
@@ -89,6 +89,8 @@ Item {
             TextField {
                 Layout.fillWidth: true
 
+                placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+
                 text: imapSettings.accountName
                 onTextChanged: {
                     imapSettings.accountName = text
@@ -102,6 +104,8 @@ Item {
             TextField {
                 Layout.fillWidth: true
 
+                placeholderText: "Your email address"
+
                 text: imapSettings.emailAddress
                 onTextChanged: {
                     imapSettings.emailAddress = text
@@ -114,6 +118,8 @@ Item {
             }
             TextField {
                 Layout.fillWidth: true
+
+                placeholderText: "The name used to log into your email account"
 
                 text: imapSettings.imapUsername
                 onTextChanged: {
@@ -130,6 +136,8 @@ Item {
                 Layout.fillWidth: true
 
                text: imapSettings.imapPassword
+               placeholderText: "Password of your email account"
+               echoMode: TextInput.Password
                onTextChanged: {
                    imapSettings.imapPassword = text
                    imapSettings.smtpPassword = text
