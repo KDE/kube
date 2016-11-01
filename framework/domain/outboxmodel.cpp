@@ -37,7 +37,6 @@ OutboxModel::OutboxModel(QObject *parent)
     query.liveQuery = true;
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
-    query.request<Mail::SenderName>();
     query.request<Mail::Date>();
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
@@ -77,9 +76,9 @@ QVariant OutboxModel::data(const QModelIndex &idx, int role) const
         case Subject:
             return mail->getSubject();
         case Sender:
-            return mail->getSender();
+            return mail->getSender().emailAddress;
         case SenderName:
-            return mail->getSenderName();
+            return mail->getSender().name;
         case Date:
             return mail->getDate();
         case Unread:

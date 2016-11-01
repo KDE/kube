@@ -107,15 +107,12 @@ Item {
                                         opacity: 0.75
                                     }
 
-                                    //TODO not yet in model
-                                    /*
                                     Text {
-                                        text: model.senderAd
+                                        text: model.senderAddress
 
                                         color: Kirigami.Theme.textColor
                                         opacity: 0.75
                                     }
-                                    */
                                 }
 
                                 RowLayout {
@@ -123,7 +120,19 @@ Item {
                                         text: "To:"
                                     }
                                     Text {
-                                        text: "TODO TODO TODO"//model.receivers TODO not yet in model
+                                        text: model.to
+
+                                        color: Kirigami.Theme.textColor
+                                        opacity: 0.75
+                                    }
+                                    Text {
+                                        text: model.cc
+
+                                        color: Kirigami.Theme.textColor
+                                        opacity: 0.75
+                                    }
+                                    Text {
+                                        text: model.bcc
 
                                         color: Kirigami.Theme.textColor
                                         opacity: 0.75

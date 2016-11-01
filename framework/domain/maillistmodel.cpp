@@ -44,6 +44,9 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Subject] = "subject";
     roles[Sender] = "sender";
     roles[SenderName] = "senderName";
+    roles[To] = "to";
+    roles[Cc] = "cc";
+    roles[Bcc] = "bcc";
     roles[Date] = "date";
     roles[Unread] = "unread";
     roles[Important] = "important";
@@ -56,6 +59,19 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     return roles;
 }
 
+static QString join(const QList<Sink::ApplicationDomain::Mail::Contact> &contacts)
+{
+    QStringList list;
+    for (const auto &contact : contacts) {
+        if (!contact.name.isEmpty()) {
+            list << QString("%1 <%2>").arg(contact.name).arg(contact.emailAddress);
+        } else {
+            list << contact.emailAddress;
+        }
+    }
+    return list.join(", ");
+}
+
 QVariant MailListModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
@@ -64,9 +80,15 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
         case Subject:
             return mail->getSubject();
         case Sender:
-            return mail->getSender();
+            return mail->getSender().emailAddress;
         case SenderName:
-            return mail->getSenderName();
+            return mail->getSender().name;
+        case To:
+            return join(mail->getTo());
+        case Cc:
+            return join(mail->getCc());
+        case Bcc:
+            return join(mail->getBcc());
         case Date:
             return mail->getDate();
         case Unread:
@@ -113,7 +135,9 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.limit = 100;
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
-    query.request<Mail::SenderName>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
     query.request<Mail::Date>();
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
@@ -140,7 +164,9 @@ void MailListModel::setMail(const QVariant &variant)
     query.liveQuery = false;
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
-    query.request<Mail::SenderName>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
     query.request<Mail::Date>();
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
