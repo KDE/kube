@@ -54,6 +54,7 @@ Controls.ScrollView {
             id: mailListDelegate
 
             width: listView.width
+            height: Kirigami.Units.gridUnit * 4
 
             enabled: true
             supportsMouseEvents: true
@@ -66,7 +67,7 @@ Controls.ScrollView {
             //Content
             Item {
                 width: parent.width
-                height: Kirigami.Units.gridUnit * 4
+                height: parent.height
 
                 QtQml.Binding {
                     target: root
@@ -81,56 +82,96 @@ Controls.ScrollView {
                     value: model.draft
                 }
 
-                RowLayout {
+                //TODO implement bulk action
+                //    Controls.CheckBox {
+                //        visible: mailListDelegate.containsMouse == true
+                //    }
 
+                Column {
                     anchors {
-                        top: parent.top
-                        bottom: parent.bottom
+                        verticalCenter: parent.verticalCenter
                         left: parent.left
+                        leftMargin: Kirigami.Units.largeSpacing
                     }
 
-                    Avatar {
-                        id: avatar
-
-                        height: textItem.height
-                        width: height
-
-                        name: model.senderName
+                    Text{
+                        text: model.subject
+                        color: mailListDelegate.checked ? Kirigami.Theme.textColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
                     }
 
-                    ColumnLayout {
-                        id: textItem
-                        height: Kirigami.Units.gridUnit * 3
-
-                        Text{
-                            text: model.subject
-
-                            color: mailListDelegate.checked ? Kirigami.Theme.textColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
-                            font.weight: model.unread || model.important ? Font.DemiBold : Font.Normal
-                        }
-
-                        Text {
-                            text: model.senderName
-
-                            color:  Kirigami.Theme.textColor
-                        }
-
-                        Text {
-                            text: Qt.formatDateTime(model.date)
-
-                            font.weight: Font.Light
-                            opacity: 0.5
-                            color: Kirigami.Theme.textColor
-                        }
-                    }
                     Text {
-                        text: model.threadSize
-
-                        font.weight: Font.Light
+                        text: model.senderName
+                        font.italic: true
                         color:  Kirigami.Theme.textColor
                     }
                 }
+
+                Text {
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+                    text: Qt.formatDateTime(model.date)
+                    font.italic: true
+                    color:  Kirigami.Theme.textColor
+                    opacity: 0.5
+                    font.pointSize: 9
+                }
+
+                Rectangle {
+
+                    anchors {
+                        right: parent.right
+                    }
+
+                    height: Kirigami.Units.gridUnit * 1.2
+                    width: height
+
+                    visible: !mailListDelegate.checked
+
+                    radius: 80
+                    color: model.unread ? "#1d99f3" : "lightgrey"
+
+                    Text {
+                        anchors.centerIn: parent
+
+                        text: model.threadSize
+                        color: "white"
+                    }
+
+                }
             }
+            /*
+             *                        Text{
+             *                            text: model.subject
+             *
+             *                            color: mailListDelegate.checked ? Kirigami.Theme.textColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
+             *                            font.weight: model.unread || model.important ? Font.DemiBold : Font.Normal
+        }
+
+        Text {
+        text: model.senderName
+
+        color:  Kirigami.Theme.textColor
+        }
+
+        Text {
+        text: Qt.formatDateTime(model.date)
+
+        font.weight: Font.Light
+        opacity: 0.5
+        color: Kirigami.Theme.textColor
+        }
+        }
+        Text {
+        text: model.threadSize
+
+        font.weight: Font.Light
+        color:  Kirigami.Theme.textColor
+        }
+
+        }
+        */
         }
     }
 }
