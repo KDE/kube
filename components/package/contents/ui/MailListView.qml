@@ -97,6 +97,10 @@ Controls.ScrollView {
                     Text{
                         text: model.subject
                         color: mailListDelegate.checked ? Kirigami.Theme.textColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
+
+                        maximumLineCount: 2
+                        width: mailListDelegate.width - Kirigami.Units.gridUnit * 3
+                        wrapMode: Text.WrapAnywhere
                     }
 
                     Text {
@@ -111,7 +115,7 @@ Controls.ScrollView {
                         right: parent.right
                         bottom: parent.bottom
                     }
-                    text: Qt.formatDateTime(model.date)
+                    text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                     font.italic: true
                     color:  Kirigami.Theme.textColor
                     opacity: 0.5
@@ -119,7 +123,6 @@ Controls.ScrollView {
                 }
 
                 Rectangle {
-
                     anchors {
                         right: parent.right
                     }
