@@ -47,7 +47,7 @@ Item {
         BorderImage {
             width: parent.width
             height: childrenRect.height + 40
-            border { left: 10; top: 10; right: 10; bottom: 10 }
+            border { left: 5; top: 5; right: 6; bottom: 6 }
             horizontalTileMode: BorderImage.Round
             verticalTileMode: BorderImage.Round
 
