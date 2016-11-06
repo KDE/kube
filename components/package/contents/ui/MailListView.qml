@@ -149,37 +149,6 @@ Controls.ScrollView {
 
                 }
             }
-            /*
-             *                        Text{
-             *                            text: model.subject
-             *
-             *                            color: mailListDelegate.checked ? Kirigami.Theme.textColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
-             *                            font.weight: model.unread || model.important ? Font.DemiBold : Font.Normal
-        }
-
-        Text {
-        text: model.senderName
-
-        color:  Kirigami.Theme.textColor
-        }
-
-        Text {
-        text: Qt.formatDateTime(model.date)
-
-        font.weight: Font.Light
-        opacity: 0.5
-        color: Kirigami.Theme.textColor
-        }
-        }
-        Text {
-        text: model.threadSize
-
-        font.weight: Font.Light
-        color:  Kirigami.Theme.textColor
-        }
-
-        }
-        */
         }
     }
 }
