@@ -96,7 +96,7 @@ Controls.ScrollView {
 
                     Text{
                         text: model.subject
-                        color: mailListDelegate.checked ? Kirigami.Theme.textColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
+                        color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
 
                         maximumLineCount: 2
                         width: mailListDelegate.width - Kirigami.Units.gridUnit * 3
@@ -106,7 +106,7 @@ Controls.ScrollView {
                     Text {
                         text: model.senderName
                         font.italic: true
-                        color:  Kirigami.Theme.textColor
+                        color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
                     }
                 }
 
@@ -117,12 +117,12 @@ Controls.ScrollView {
                     }
                     text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                     font.italic: true
-                    color:  Kirigami.Theme.textColor
-                    opacity: 0.5
+                    color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.disabledTextColor
                     font.pointSize: 9
                 }
 
-                Rectangle {
+
+                Item {
                     anchors {
                         right: parent.right
                     }
@@ -132,14 +132,19 @@ Controls.ScrollView {
 
                     visible: !mailListDelegate.checked
 
-                    radius: 80
-                    color: model.unread ? "#1d99f3" : "lightgrey"
+                    Rectangle {
+                        anchors.fill: parent
+
+                        opacity: model.unread ? 1 :  0.5
+                        radius: 80
+                        color: model.unread ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
+                    }
 
                     Text {
                         anchors.centerIn: parent
 
                         text: model.threadSize
-                        color: "white"
+                        color: Kirigami.Theme.highlightedTextColor
                     }
 
                 }
