@@ -23,7 +23,8 @@
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
 
-#include <Libkleo/KeyListJob>
+#include <QGpgME/KeyListJob>
+#include <QGpgME/Protocol>
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
@@ -366,7 +367,7 @@ void PartPrivate::appendSubPart(Part::Ptr subpart)
 
 Encryption::Ptr PartPrivate::createEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr& part)
 {
-    Kleo::KeyListJob *job = part->mCryptoProto->keyListJob(false);    // local, no sigs
+    QGpgME::KeyListJob *job = part->mCryptoProto->keyListJob(false);    // local, no sigs
     if (!job) {
         qWarning() << "The Crypto backend does not support listing keys. ";
         return Encryption::Ptr();
@@ -411,7 +412,7 @@ void PartPrivate::setEncryptions(const QVector< Encryption::Ptr >& encs)
 QVector<Signature::Ptr> PartPrivate::createSignature(const MimeTreeParser::SignedMessagePart::Ptr& part)
 {
     QVector<Signature::Ptr> sigs;
-    Kleo::KeyListJob *job = part->mCryptoProto->keyListJob(false);    // local, no sigs
+    QGpgME::KeyListJob *job = part->mCryptoProto->keyListJob(false);    // local, no sigs
     if (!job) {
         qWarning() << "The Crypto backend does not support listing keys. ";
         return sigs;
