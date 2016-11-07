@@ -135,6 +135,11 @@ bool ObjectTreeSource::showExpandQuotesMark() const
     return false;
 }
 
+bool ObjectTreeSource::isPrinting() const
+{
+    return false;
+}
+
 const MimeTreeParser::BodyPartFormatterBaseFactory *ObjectTreeSource::bodyPartFormatterFactory()
 {
     return &(d->mBodyPartFormatterBaseFactory);
