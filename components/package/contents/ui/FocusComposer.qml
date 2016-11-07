@@ -52,7 +52,30 @@ KubeComponents.OverlayDialog {
             }
 
             RowLayout {
-                Layout.alignment: Qt.AlignRight
+
+                Button {
+
+                    text: "Discard"
+
+                    onClicked: {
+                        root.destroy()
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+
+                Button {
+
+                    text: "Save as Draft"
+
+                    onClicked: {
+                        composer.saveAsDraft()
+                        root.destroy()
+                    }
+                }
 
                 Button {
                     text: "Send"

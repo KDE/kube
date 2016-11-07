@@ -53,25 +53,23 @@ Item {
 
         anchors.fill: parent
 
+        TextField {
+            id: subject
+
+            Layout.fillWidth: true
+
+            placeholderText: "Enter Subject"
+
+            text: composer.subject
+
+            onTextChanged: {
+                composer.subject = text;
+            }
+        }
+
         GridLayout {
 
             columns: 2
-
-            Kirigami.Label {
-                text: "From"
-            }
-
-            ComboBox {
-                id: identityCombo
-                model: composer.identityModel
-                textRole: "displayName"
-
-                Layout.fillWidth: true
-
-                onCurrentIndexChanged: {
-                    composer.currentIdentityIndex = currentIndex
-                }
-            }
 
             Kirigami.Label {
                 text: "To"
@@ -89,28 +87,6 @@ Item {
 
                     onTextChanged: {
                         composer.to = text;
-                    }
-                }
-
-                Button {
-                    id: ccButton
-
-                    text: "Cc"
-
-                    onClicked: {
-                        cc.visible = true
-                        ccButton.visible = false
-                    }
-                }
-
-                Button {
-                    id: bccButton
-
-                    text: "Bcc"
-
-                    onClicked: {
-                        bcc.visible = true
-                        bccButton.visible = false
                     }
                 }
             }
@@ -131,7 +107,7 @@ Item {
                 text: composer.cc
 
                 onTextChanged: {
-                        composer.cc = text;
+                    composer.cc = text;
                 }
             }
 
@@ -151,22 +127,48 @@ Item {
                 text: composer.bcc
 
                 onTextChanged: {
-                        composer.bcc = text;
+                    composer.bcc = text;
                 }
             }
         }
 
-        TextField {
-            id: subject
+        RowLayout {
+            Kirigami.Label {
+                text: "Sending as"
+            }
 
-            Layout.fillWidth: true
+            ComboBox {
+                id: identityCombo
+                model: composer.identityModel
+                textRole: "displayName"
 
-            placeholderText: "Enter Subject"
+                Layout.fillWidth: true
 
-            text: composer.subject
+                onCurrentIndexChanged: {
+                    composer.currentIdentityIndex = currentIndex
+                }
+            }
 
-            onTextChanged: {
-                composer.subject = text;
+            Button {
+                id: ccButton
+
+                text: "Cc"
+
+                onClicked: {
+                    cc.visible = true
+                    ccButton.visible = false
+                }
+            }
+
+            Button {
+                id: bccButton
+
+                text: "Bcc"
+
+                onClicked: {
+                    bcc.visible = true
+                    bccButton.visible = false
+                }
             }
         }
 
@@ -175,19 +177,6 @@ Item {
             Layout.fillWidth: true
 
             height: subject.height * 1.5
-
-            Button {
-
-                anchors {
-                    bottom: parent.bottom
-                }
-
-                text: "Save as Draft"
-
-                onClicked: {
-                    composer.saveAsDraft()
-                }
-            }
 
             Button {
 
