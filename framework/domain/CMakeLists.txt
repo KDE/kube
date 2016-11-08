@@ -1,4 +1,5 @@
 set(mailplugin_SRCS
+    attachmentmodel.cpp
     mailplugin.cpp
     maillistmodel.cpp
     folderlistmodel.cpp

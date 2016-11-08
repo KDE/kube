@@ -28,7 +28,7 @@ Item {
     id: root
     property variant message;
     property string html;
-    property int desiredHeight: topPartLoader.height + newMailViewer.height + 5
+    property int desiredHeight: topPartLoader.height + newMailViewer.height + attachments.height + mailStructure.height + 5
 
     clip: true
 
@@ -55,9 +55,46 @@ Item {
         width: topPartLoader.contentWidth >= parent.width ? topPartLoader.contentWidth : parent.width
     }
 
+    //END old mail viewer
+
+    TreeView {
+        id: attachments
+        anchors.top: newMailViewer.bottom
+        visible: messageParser.attachments.rowCount() > 0
+        width: parent.width
+        height: 200
+        TableViewColumn {
+            role: "name"
+            title: "Filename"
+            width: 300
+        }
+        TableViewColumn {
+            role: "type"
+            title: "Type"
+            width: 60
+        }
+        TableViewColumn {
+            role: "size"
+            title: "Size"
+            width: 60
+        }
+        TableViewColumn {
+            role: "encrypted"
+            title: "Encrypted"
+            width: 60
+        }
+        TableViewColumn {
+            role: "signed"
+            title: "Signed"
+            width: 60
+        }
+        model: messageParser.attachments
+    }
+
     TreeView {
         id: mailStructure
         visible: false
+        anchors.top: messageParser.attachments.rowCount() > 0 ? attachments.bottom : newMailViewer.bottom
         width: parent.width
         height: 400
         TableViewColumn {
@@ -80,10 +117,8 @@ Item {
             title: "Content"
             width: 200
         }
-        //model: messageParser.partTree
         model: messageParser.newTree
     }
-    //END old mail viewer
 
     KubeFramework.MessageParser {
         id: messageParser
