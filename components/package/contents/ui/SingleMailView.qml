@@ -181,6 +181,14 @@ Item {
 
                             color: Kirigami.Theme.textColor
                             opacity: 0.5
+
+                            ToolButton {
+                                anchors.fill: parent
+
+                                onClicked: {
+                                    console.error(model.mimeMessage)
+                                }
+                            }
                         }
                     }
 
