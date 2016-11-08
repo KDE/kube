@@ -976,18 +976,23 @@ QVector<Part::Ptr> Parser::collectContentParts() const
                                             }
                                         }
                                     }
+
+                                    const auto ctname = mime->mimetype().name().trimmed().toLower();
+                                    bool mightContent = false;
+
+                                    if (ctname.startsWith("text/") || ctname.startsWith("image/") || ctname.isEmpty()) {
+                                        mightContent = true;
+                                    }
+
                                     const auto cd = mime->disposition();
                                     if (cd && cd == MailMime::Inline) {
-                                        // explict "inline" disposition:
-                                        return true;
+                                        return mightContent;
                                     }
                                     if (cd && cd == MailMime::Attachment) {
-                                        // explicit "attachment" disposition:
                                         return false;
                                     }
 
-                                    const auto ct = mime->mimetype();
-                                    if (ct.name().trimmed().toLower() == "text" && ct.name().trimmed().isEmpty() &&
+                                    if ((ctname.startsWith("text/") || ctname.isEmpty()) &&
                                         (!mime || mime->filename().trimmed().isEmpty())) {
                                         // text/* w/o filename parameter:
                                         return true;
@@ -1032,10 +1037,18 @@ QVector<Part::Ptr> Parser::collectAttachmentParts() const
                                             }
                                         }
                                     }
+
+                                    const auto ctname = mime->mimetype().name().trimmed().toLower();
+                                    bool mightContent = false;
+
+                                    if (ctname.startsWith("text/") || ctname.startsWith("image/") || ctname.isEmpty()) {
+                                        mightContent = true;
+                                    }
+
                                     const auto cd = mime->disposition();
                                     if (cd && cd == MailMime::Inline) {
                                         // explict "inline" disposition:
-                                        return false;
+                                        return !mightContent;
                                     }
                                     if (cd && cd == MailMime::Attachment) {
                                         // explicit "attachment" disposition:
@@ -1043,7 +1056,7 @@ QVector<Part::Ptr> Parser::collectAttachmentParts() const
                                     }
 
                                     const auto ct = mime->mimetype();
-                                    if (ct.name().trimmed().toLower() == "text" && ct.name().trimmed().isEmpty() &&
+                                    if ((ctname.startsWith("text/") || ctname.isEmpty()) &&
                                         (!mime || mime->filename().trimmed().isEmpty())) {
                                         // text/* w/o filename parameter:
                                         return false;
