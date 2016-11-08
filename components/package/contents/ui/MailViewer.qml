@@ -28,7 +28,7 @@ Item {
     id: root
     property variant message;
     property string html;
-    property int desiredHeight: topPartLoader.height + newMailViewer.height + attachments.height + mailStructure.height + 5
+    property int desiredHeight: topPartLoader.height + newMailViewer.height + attachments.height + 20
 
     clip: true
 
@@ -59,8 +59,11 @@ Item {
 
     TreeView {
         id: attachments
-        anchors.top: newMailViewer.bottom
-        visible: messageParser.attachments.rowCount() > 0
+        anchors {
+            top: newMailViewer.bottom
+            topMargin: 20
+        }
+        //visible: messageParser.attachments.rowCount() > 0
         width: parent.width
         height: 200
         TableViewColumn {
