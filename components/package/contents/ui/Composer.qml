@@ -58,7 +58,7 @@ Item {
 
             Layout.fillWidth: true
 
-            placeholderText: "Enter Subject"
+            placeholderText: "Enter Subject..."
 
             text: composer.subject
 
