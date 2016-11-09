@@ -77,6 +77,11 @@ Item {
             width: 60
         }
         TableViewColumn {
+            role: "icon"
+            title: "Icon"
+            width: 60
+        }
+        TableViewColumn {
             role: "size"
             title: "Size"
             width: 60

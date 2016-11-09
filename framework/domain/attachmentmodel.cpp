@@ -20,6 +20,7 @@
 #include "messageparser.h"
 #include "mimetreeparser/interface.h"
 
+#include <QIcon>
 #include <QDebug>
 
 QString sizeHuman(const Content::Ptr &content)
@@ -36,7 +37,7 @@ QString sizeHuman(const Content::Ptr &content)
         unit = i.next();
         num /= 1024.0;
     }
-    
+
     if (unit == "Bytes") {
         return QString().setNum(num) + " " + unit;
     } else {
@@ -76,6 +77,7 @@ QHash<int, QByteArray> AttachmentModel::roleNames() const
     roles[TypeRole] = "type";
     roles[NameRole] = "name";
     roles[SizeRole] = "size";
+    roles[IconRole] = "icon";
     roles[IsEncryptedRole] = "encrypted";
     roles[IsSignedRole] = "signed";
     return roles;
@@ -111,6 +113,8 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
             return content->mailMime()->mimetype().name();
         case NameRole:
             return entry->mailMime()->filename();
+        case IconRole:
+            return QIcon::fromTheme(content->mailMime()->mimetype().iconName());
         case SizeRole:
             return sizeHuman(content);
         case IsEncryptedRole:
