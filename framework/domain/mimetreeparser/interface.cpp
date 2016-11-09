@@ -626,7 +626,7 @@ QByteArray Content::charset() const
 
 QString Content::encodedContent() const
 {
-    return encodedContent(charset());
+    return QString::fromUtf8(content());
 }
 
 QString Content::encodedContent(const QByteArray &charset) const
@@ -775,7 +775,7 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
     mContent.clear();
     foreach (const auto &mp, part->subParts()) {
         auto d_ptr = new ContentPrivate;
-        d_ptr->mContent = mp->text().toLocal8Bit();
+        d_ptr->mContent = mp->text().toUtf8();
         d_ptr->mParent = q;
         const auto enc = mp.dynamicCast<MimeTreeParser::EncryptedMessagePart>();
         auto sig = mp.dynamicCast<MimeTreeParser::SignedMessagePart>();
@@ -799,7 +799,7 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
 {
     mType = "html";
     mContent.clear();
-    mContent.append(std::make_shared<HtmlContent>(part->text().toLocal8Bit(), q));
+    mContent.append(std::make_shared<HtmlContent>(part->text().toUtf8(), q));
     q->reachParentD()->createMailMime(part);
 }
 
@@ -809,13 +809,15 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part
     q->reachParentD()->createMailMime(part.staticCast<MimeTreeParser::TextMessagePart>());
     const auto mimetype = q->mailMime()->mimetype();
     const auto content = q->mailMime()->decodedContent();
-    mType = mimetype.name().toUtf8();
     mContent.clear();
     if (mimetype == mimeDb.mimeTypeForName("text/plain")) {
+        mType = "plaintext";
         mContent.append(std::make_shared<PlainTextContent>(content, q));
     } else if (mimetype == mimeDb.mimeTypeForName("text/html")) {
+        mType = "html";
         mContent.append(std::make_shared<HtmlContent>(content, q));
     } else {
+        mType = mimetype.name().toUtf8();
         mContent.append(std::make_shared<Content>(content, q));
     }
 }
