@@ -35,8 +35,11 @@ Item {
             visible: textItem.debug
             text: model.type
         }
-        Text  {
+        TextEdit  {
             width: parent.width
+
+            readOnly: true
+            selectByMouse: true
 
             text: model.content
             wrapMode: Text.WordWrap
