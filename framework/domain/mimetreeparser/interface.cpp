@@ -805,10 +805,19 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
 
 void SinglePartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part)
 {
-   q->reachParentD()->createMailMime(part.staticCast<MimeTreeParser::TextMessagePart>());
-   mType = q->mailMime()->mimetype().name().toUtf8();
-   mContent.clear();
-   mContent.append(std::make_shared<Content>(q->mailMime()->decodedContent(), q));
+    QMimeDatabase mimeDb;
+    q->reachParentD()->createMailMime(part.staticCast<MimeTreeParser::TextMessagePart>());
+    const auto mimetype = q->mailMime()->mimetype();
+    const auto content = q->mailMime()->decodedContent();
+    mType = mimetype.name().toUtf8();
+    mContent.clear();
+    if (mimetype == mimeDb.mimeTypeForName("text/plain")) {
+        mContent.append(std::make_shared<PlainTextContent>(content, q));
+    } else if (mimetype == mimeDb.mimeTypeForName("text/html")) {
+        mContent.append(std::make_shared<HtmlContent>(content, q));
+    } else {
+        mContent.append(std::make_shared<Content>(content, q));
+    }
 }
 
 SinglePart::SinglePart()
@@ -978,16 +987,13 @@ QVector<Part::Ptr> Parser::collectContentParts() const
                                     }
 
                                     const auto ctname = mime->mimetype().name().trimmed().toLower();
-                                    bool mightContent = false;
-
-                                    if (ctname.startsWith("text/") || ctname.startsWith("image/") || ctname.isEmpty()) {
-                                        mightContent = true;
-                                    }
+                                    bool mightContent = (content->type() != "Content");     //Content we understand
 
                                     const auto cd = mime->disposition();
                                     if (cd && cd == MailMime::Inline) {
                                         return mightContent;
                                     }
+
                                     if (cd && cd == MailMime::Attachment) {
                                         return false;
                                     }
@@ -1039,11 +1045,7 @@ QVector<Part::Ptr> Parser::collectAttachmentParts() const
                                     }
 
                                     const auto ctname = mime->mimetype().name().trimmed().toLower();
-                                    bool mightContent = false;
-
-                                    if (ctname.startsWith("text/") || ctname.startsWith("image/") || ctname.isEmpty()) {
-                                        mightContent = true;
-                                    }
+                                    bool mightContent = (content->type() != "Content");         //Content we understand
 
                                     const auto cd = mime->disposition();
                                     if (cd && cd == MailMime::Inline) {
