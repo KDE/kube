@@ -34,7 +34,7 @@ OutboxModel::OutboxModel(QObject *parent)
 
     using namespace Sink::ApplicationDomain;
     auto query = Sink::StandardQueries::outboxMails();
-    query.liveQuery = true;
+    query.setFlags(Sink::Query::LiveQuery);
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
     query.request<Mail::Date>();

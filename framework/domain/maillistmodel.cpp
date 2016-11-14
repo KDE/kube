@@ -131,8 +131,8 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
         return;
     }
     Sink::Query query = Sink::StandardQueries::threadLeaders(*folder);
-    query.liveQuery = true;
-    query.limit = 100;
+    query.setFlags(Sink::Query::LiveQuery);
+    query.limit(100);
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
     query.request<Mail::To>();
@@ -161,7 +161,6 @@ void MailListModel::setMail(const QVariant &variant)
         return;
     }
     Sink::Query query = Sink::StandardQueries::completeThread(*mail);
-    query.liveQuery = false;
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
     query.request<Mail::To>();

@@ -22,7 +22,7 @@
 IdentitiesModel::IdentitiesModel(QObject *parent) : QIdentityProxyModel()
 {
     Sink::Query query;
-    query.liveQuery = true;
+    query.setFlags(Sink::Query::LiveQuery);
     query.requestedProperties << "name" << "username" << "address" << "account";
     runQuery(query);
 }

@@ -31,9 +31,9 @@ FolderListModel::FolderListModel(QObject *parent) : QSortFilterProxyModel()
     sort(0, Qt::AscendingOrder);
 
     Query query;
-    query.liveQuery = true;
+    query.setFlags(Sink::Query::LiveQuery);
     query.request<Folder::Name>().request<Folder::Icon>().request<Folder::Parent>();
-    query.parentProperty = "parent";
+    query.requestTree<Folder::Parent>();
     runQuery(query);
 }
 
@@ -83,11 +83,12 @@ void FolderListModel::setAccountId(const QVariant &accountId)
     //Get all folders of an account
     auto query = Query();
     query.resourceFilter<SinkResource::Account>(account);
-    query.liveQuery = true;
+    query.setFlags(Sink::Query::LiveQuery);
+    query.requestTree<Folder::Parent>();
     query.request<Folder::Name>()
          .request<Folder::Icon>()
          .request<Folder::Parent>();
-    query.parentProperty = Folder::Parent::name;
+    query.requestTree<Folder::Parent>();
     runQuery(query);
 }
 

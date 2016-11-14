@@ -22,7 +22,7 @@
 AccountsModel::AccountsModel(QObject *parent) : QIdentityProxyModel()
 {
     Sink::Query query;
-    query.liveQuery = true;
+    query.setFlags(Sink::Query::LiveQuery);
     query.request<Sink::ApplicationDomain::SinkAccount::Name>();
     query.request<Sink::ApplicationDomain::SinkAccount::Icon>();
     query.request<Sink::ApplicationDomain::SinkAccount::Status>();
