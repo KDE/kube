@@ -84,11 +84,13 @@ static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize"
     },
     [](Context *context) {
         if (auto folder = context->property("folder").value<Folder::Ptr>()) {
-            SinkLog() << "Synchronizing resource " << folder->resourceInstanceIdentifier();
-            Store::synchronize(Query().resourceFilter(folder->resourceInstanceIdentifier())).exec();
+            SinkLog() << "Synchronizing folder " << folder->resourceInstanceIdentifier() << folder->identifier();
+            auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(folder->identifier()));
+            scope.setType<ApplicationDomain::Mail>();
+            Store::synchronize(scope).exec();
         } else {
             SinkLog() << "Synchronizing all";
-            Store::synchronize(Query()).exec();
+            Store::synchronize(SyncScope()).exec();
         }
     }
 );
