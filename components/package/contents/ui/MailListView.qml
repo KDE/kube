@@ -30,6 +30,7 @@ Controls.ScrollView {
     property variant parentFolder
     property variant currentMail
     property bool isDraft : false
+    property int currentIndex
 
     onParentFolderChanged: {
         currentMail = null
@@ -37,6 +38,7 @@ Controls.ScrollView {
 
     ListView {
         id: listView
+        currentIndex: root.currentIndex
 
         model: KubeFramework.MailListModel {
             parentFolder: root.parentFolder

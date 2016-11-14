@@ -17,7 +17,7 @@
 */
 
 
-import QtQuick 2.4
+import QtQuick 2.7
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
@@ -82,6 +82,27 @@ ApplicationWindow {
         context: folderListContext
     }
     //END Actions
+
+    //BEGIN Shortcuts
+    Shortcut {
+        sequence: StandardKey.Refresh
+        onActivated: syncAction.execute()
+        enabled: syncAction.ready
+    }
+    Shortcut {
+        sequence: StandardKey.Delete
+        onActivated: deleteAction.execute()
+        enabled: deleteAction.ready
+    }
+    Shortcut {
+        sequence: StandardKey.MoveToNextLine
+        onActivated: mailListView.currentIndex++
+    }
+    Shortcut {
+        sequence: StandardKey.MoveToPreviousLine
+        onActivated: mailListView.currentIndex--
+    }
+    //END Shortcuts
 
     //BEGIN Main content
     SplitView {
