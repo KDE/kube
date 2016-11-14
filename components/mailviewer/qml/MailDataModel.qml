@@ -17,8 +17,9 @@
 */
 
 import QtQuick 2.4
+import QtQml.Models 2.2
 
-VisualDataModel {
+DelegateModel {
     id: mailDataModel
     property bool debug: true
     delegate: Rectangle {
