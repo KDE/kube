@@ -108,7 +108,7 @@ Item {
                                     }
 
                                     Text {
-                                        text: model.senderAddress
+                                        text: model.sender
 
                                         color: Kirigami.Theme.textColor
                                         opacity: 0.75
