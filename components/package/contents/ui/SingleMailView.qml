@@ -30,9 +30,49 @@ Item {
 
     property variant mail;
 
-    ScrollView {
+    Rectangle {
+        id: subjectBar
 
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+
+        height: Kirigami.Units.gridUnit * 2
+
+        color: Kirigami.Theme.backgroundColor
+
+        Text {
+            anchors.centerIn: parent
+
+            text: "Some subject"
+            color: Kirigami.Theme.textColor
+        }
+
+        Rectangle {
+
+            anchors.bottom: parent.bottom
+
+            height: 1
+            width: parent.width
+
+            color: Kirigami.Theme.highlightColor
+        }
+    }
+
+
+    Flickable {
+        id: flickable
+
+        anchors {
+            top: subjectBar.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+
+        clip: true
 
         ListView {
             anchors.fill: parent
