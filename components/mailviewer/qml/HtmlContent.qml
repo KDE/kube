@@ -43,9 +43,25 @@ Item {
             }
         }
         settings {
-            autoLoadImages: true;
-            javascriptEnabled: false;
-            localStorageEnabled: false;
+            webGLEnabled: false
+            touchIconsEnabled: false
+            spatialNavigationEnabled: false
+            screenCaptureEnabled: false
+            pluginsEnabled: false
+            localStorageEnabled: false
+            localContentCanAccessRemoteUrls: false
+            localContentCanAccessFileUrls: false
+            linksIncludedInFocusChain: false
+            javascriptEnabled: false
+            javascriptCanOpenWindows: false
+            javascriptCanAccessClipboard: false
+            hyperlinkAuditingEnabled: false
+            fullScreenSupportEnabled: false
+            errorPageEnabled: false
+            //defaultTextEncoding: ???
+            autoLoadImages: false
+            autoLoadIconsForPage: false
+            accelerated2dCanvasEnabled: false
         }
     }
     onContentChanged: {
