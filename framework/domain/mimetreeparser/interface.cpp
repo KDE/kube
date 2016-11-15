@@ -767,9 +767,9 @@ PartPrivate* AlternativePart::reachParentD() const
 class SinglePartPrivate
 {
 public:
-    void fillFrom(MimeTreeParser::TextMessagePart::Ptr part);
-    void fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part);
-    void fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part);
+    void fillFrom(const MimeTreeParser::TextMessagePart::Ptr &part);
+    void fillFrom(const MimeTreeParser::HtmlMessagePart::Ptr &part);
+    void fillFrom(const MimeTreeParser::AttachmentMessagePart::Ptr &part);
     void createEncryptionFailBlock(const MimeTreeParser::EncryptedMessagePart::Ptr &part);
     SinglePart *q;
 
@@ -777,7 +777,7 @@ public:
     QByteArray mType;
 };
 
-void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
+void SinglePartPrivate::fillFrom(const MimeTreeParser::TextMessagePart::Ptr &part)
 {
     mType = "plaintext";
     mContent.clear();
@@ -806,7 +806,7 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
     }
 }
 
-void SinglePartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
+void SinglePartPrivate::fillFrom(const MimeTreeParser::HtmlMessagePart::Ptr &part)
 {
     mType = "html";
     mContent.clear();
@@ -814,7 +814,7 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part)
     q->reachParentD()->createMailMime(part);
 }
 
-void SinglePartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part)
+void SinglePartPrivate::fillFrom(const MimeTreeParser::AttachmentMessagePart::Ptr &part)
 {
     QMimeDatabase mimeDb;
     q->reachParentD()->createMailMime(part.staticCast<MimeTreeParser::TextMessagePart>());
