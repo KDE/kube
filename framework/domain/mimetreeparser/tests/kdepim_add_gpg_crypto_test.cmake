@@ -4,7 +4,7 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 set( GNUPGHOME ${CMAKE_BINARY_DIR}/framework/domain/mimetreeparser/tests/gnupg_home )
-add_definitions( -DGNUPGHOME="\\"${GNUPGHOME}\\"" )
+add_definitions( -DGNUPGHOME="${GNUPGHOME}" )
 
 macro (ADD_GPG_CRYPTO_TEST _target _testname)
    if (UNIX)

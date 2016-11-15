@@ -308,6 +308,7 @@ public:
     void createMailMime(const MimeTreeParser::TextMessagePart::Ptr &part);
     void createMailMime(const MimeTreeParser::AlternativeMessagePart::Ptr &part);
     void createMailMime(const MimeTreeParser::HtmlMessagePart::Ptr &part);
+    void createMailMime(const MimeTreeParser::EncryptedMessagePart::Ptr &part);
 
     static Encryption::Ptr createEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr& part);
     void appendEncryption(const MimeTreeParser::EncryptedMessagePart::Ptr &part);
@@ -354,6 +355,12 @@ void PartPrivate::createMailMime(const MimeTreeParser::TextMessagePart::Ptr& par
 }
 
 void PartPrivate::createMailMime(const MimeTreeParser::MimeMessagePart::Ptr& part)
+{
+    mMailMime = MailMime::Ptr(new MailMime);
+    mMailMime->d->mNode = part->mNode;
+}
+
+void PartPrivate::createMailMime(const MimeTreeParser::EncryptedMessagePart::Ptr& part)
 {
     mMailMime = MailMime::Ptr(new MailMime);
     mMailMime->d->mNode = part->mNode;
@@ -763,6 +770,7 @@ public:
     void fillFrom(MimeTreeParser::TextMessagePart::Ptr part);
     void fillFrom(MimeTreeParser::HtmlMessagePart::Ptr part);
     void fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part);
+    void createEncryptionFailBlock(const MimeTreeParser::EncryptedMessagePart::Ptr &part);
     SinglePart *q;
 
     QVector<Content::Ptr> mContent;
@@ -781,6 +789,9 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::TextMessagePart::Ptr part)
         auto sig = mp.dynamicCast<MimeTreeParser::SignedMessagePart>();
         if (enc) {
            d_ptr->appendEncryption(enc);
+           if (!enc->isDecryptable()) {
+               d_ptr->mContent = QByteArray();
+           }
            const auto s = enc->subParts();
            if (s.size() == 1) {
                sig = s[0].dynamicCast<MimeTreeParser::SignedMessagePart>();
@@ -820,6 +831,14 @@ void SinglePartPrivate::fillFrom(MimeTreeParser::AttachmentMessagePart::Ptr part
         mType = mimetype.name().toUtf8();
         mContent.append(std::make_shared<Content>(content, q));
     }
+}
+
+void SinglePartPrivate::createEncryptionFailBlock(const MimeTreeParser::EncryptedMessagePart::Ptr &part)
+{
+    mType = "plaintext";
+    mContent.clear();
+    mContent.append(std::make_shared<PlainTextContent>(QByteArray(), q));
+    q->reachParentD()->createMailMime(part);
 }
 
 SinglePart::SinglePart()
@@ -917,6 +936,13 @@ void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, co
                 auto subTree =  std::make_shared<Part>();
                 if (enc) {
                     subTree->d->appendEncryption(enc);
+                    if (!enc->isDecryptable()) {
+                        auto part = std::make_shared<SinglePart>();
+                        part->d->createEncryptionFailBlock(enc);
+                        part->reachParentD()->setEncryptions(subTree->d->encryptions());
+                        tree->d->appendSubPart(part);
+                        return;
+                    }
                 }
                 if (sig) {
                     subTree->d->appendSignature(sig);
