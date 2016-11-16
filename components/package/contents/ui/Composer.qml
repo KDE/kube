@@ -17,7 +17,7 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0
 
@@ -53,7 +53,7 @@ Item {
 
         anchors.fill: parent
 
-        TextField {
+        Controls2.TextField {
             id: subject
 
             Layout.fillWidth: true
@@ -71,14 +71,14 @@ Item {
 
             columns: 2
 
-            Kirigami.Label {
+            Controls2.Label {
                 text: "To"
             }
 
             RowLayout {
                 Layout.fillWidth: true
 
-                TextField {
+                Controls2.TextField {
                     id: to
 
                     Layout.fillWidth: true
@@ -91,13 +91,13 @@ Item {
                 }
             }
 
-            Kirigami.Label {
+            Controls2.Label {
                 text: "Cc"
 
                 visible: cc.visible
             }
 
-            TextField {
+            Controls2.TextField {
                 id: cc
 
                 Layout.fillWidth: true
@@ -111,13 +111,13 @@ Item {
                 }
             }
 
-            Kirigami.Label {
+            Controls2.Label {
                 text: "Bcc"
 
                 visible: bcc.visible
             }
 
-            TextField {
+            Controls2.TextField {
                 id: bcc
 
                 Layout.fillWidth: true
@@ -133,11 +133,11 @@ Item {
         }
 
         RowLayout {
-            Kirigami.Label {
+            Controls2.Label {
                 text: "Sending as"
             }
 
-            ComboBox {
+            Controls2.ComboBox {
                 id: identityCombo
                 model: composer.identityModel
                 textRole: "displayName"
@@ -149,7 +149,7 @@ Item {
                 }
             }
 
-            Button {
+            Controls2.Button {
                 id: ccButton
 
                 text: "Cc"
@@ -160,7 +160,7 @@ Item {
                 }
             }
 
-            Button {
+            Controls2.Button {
                 id: bccButton
 
                 text: "Bcc"
@@ -178,7 +178,7 @@ Item {
 
             height: subject.height * 1.5
 
-            Button {
+            Controls2.Button {
 
                 anchors {
                     bottom: parent.bottom
@@ -216,7 +216,7 @@ Item {
             }
         }
 
-        TextArea {
+        Controls2.TextArea {
             id: content
 
             text: composer.body
