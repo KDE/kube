@@ -17,8 +17,9 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
+
+import QtQuick.Controls 2.0 as Controls2
 
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -47,14 +48,14 @@ Item {
         }
     }
 
-    Rectangle {
+    Controls2.Pane {
         id: dialog
         anchors.centerIn: parent
 
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: Kirigami.Theme.backgroundColor
+        //color: Kirigami.Theme.backgroundColor
 
         MouseArea {
             anchors.fill: parent
