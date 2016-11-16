@@ -86,6 +86,35 @@ Controls2.ApplicationWindow {
     }
     //END Actions
 
+    //BEGIN ActionHandler
+
+    //TODO
+    /*
+    KubeAction.ActionHandler {
+        actionId: "org.kde.kube.actions.reply"
+        function isReady(context) {
+            return context.mail ? true : false;
+        }
+
+        function handler(context) {
+            var component = composerComponent.createObject(app)
+            component.loadMessage(context.mail, false)
+        }
+    }
+
+    KubeAction.ActionHandler {
+        actionId: "org.kde.kube.actions.edit"
+        function isReady(context) {
+            return context.mail && context.isDraft;
+        }
+        function handler(context) {
+            var component= composerComponent.createObject(app, {"draftMessage": context.mail})
+            component.loadMessage(context.mail, true)
+        }
+    }
+    */
+    //END ActionHandler
+
     //BEGIN Shortcuts
     Shortcut {
         sequence: StandardKey.Refresh
@@ -218,38 +247,6 @@ Controls2.ApplicationWindow {
                 height: parent.height
                 width: mailView.width
 
-                Component {
-                    id: composerComponent
-
-                    KubeComponents.FocusComposer {
-                        id: composer
-                        anchors.fill: parent
-                    }
-                }
-
-                KubeAction.ActionHandler {
-                    actionId: "org.kde.kube.actions.reply"
-                    function isReady(context) {
-                        return context.mail ? true : false;
-                    }
-
-                    function handler(context) {
-                        var component = composerComponent.createObject(app)
-                        component.loadMessage(context.mail, false)
-                    }
-                }
-
-                KubeAction.ActionHandler {
-                    actionId: "org.kde.kube.actions.edit"
-                    function isReady(context) {
-                        return context.mail && context.isDraft;
-                    }
-                    function handler(context) {
-                        var component= composerComponent.createObject(app, {"draftMessage": context.mail})
-                        component.loadMessage(context.mail, true)
-                    }
-                }
-
                 Button {
                     id: newMailButton
 
@@ -257,7 +254,7 @@ Controls2.ApplicationWindow {
                     text: "New Email"
                     tooltip: "compose new email"
                     onClicked: {
-                        composerComponent.createObject(app)
+                        composer.open()
                     }
                 }
 
@@ -305,4 +302,17 @@ Controls2.ApplicationWindow {
         }
     }
     //END ToolBar
+
+    //BEGIN Composer
+    KubeComponents.FocusComposer {
+        id: composer
+
+        height: app.height * 0.85
+        width: app.width * 0.85
+
+        x: app.width * 0.075
+        y: toolbar.y + toolbar.height
+    }
+    //END Composer
+
 }
