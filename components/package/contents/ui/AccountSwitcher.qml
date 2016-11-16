@@ -20,6 +20,8 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
+import QtQuick.Controls 2.0 as Controls2
+
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
@@ -35,26 +37,21 @@ Button {
     tooltip: "switch accounts, edit them and add new ones"
 
     onClicked: {
-        dialog.visible = dialog.visible ? false : true
+        popup.open()
     }
 
-    Rectangle {
-        id: dialog
-
-        anchors {
-            top: parent.bottom
-            left: parent.left
-        }
+    Controls2.Popup {
+        id: popup
 
         height: 300
         width: 600
 
-        color: Kirigami.Theme.backgroundColor
-        border.width: 1
-        border.color: Kirigami.Theme.highlightColor //TODO change to Kirigami inactive text color once it is available
-        radius: 3
-        clip: true
-        visible: false
+        x: parent.x
+        y: parent.y + parent.height
+
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
         Item {
             id: footer
@@ -80,7 +77,6 @@ Button {
 
                 onClicked: {
                     newAccountComponent.createObject(app)
-                    dialog.visible = false
                 }
 
                 Component {
@@ -105,7 +101,6 @@ Button {
 
                 onClicked: {
                     syncAction.execute()
-                    dialog.visible = false
                 }
             }
         }

@@ -20,6 +20,9 @@
 import QtQuick 2.7
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+
+import QtQuick.Controls 2.0 as Controls2
+
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.actions 1.0 as KubeAction
@@ -27,7 +30,7 @@ import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
 
-ApplicationWindow {
+Controls2.ApplicationWindow {
     id: app
 
     //FIXME remove fixed pixel hight
