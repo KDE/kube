@@ -190,6 +190,7 @@ Controls2.Popup {
                     }
                 }
 
+                /*
                 Item {
 
                     Layout.fillWidth: true
@@ -233,6 +234,7 @@ Controls2.Popup {
                         }
                     }
                 }
+                */
 
                 Controls.TextArea {
                     id: content
