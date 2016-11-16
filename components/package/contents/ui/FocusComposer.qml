@@ -17,7 +17,7 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2 as Controls2
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
@@ -53,7 +53,7 @@ KubeComponents.OverlayDialog {
 
             RowLayout {
 
-                Button {
+                Controls2.Button {
 
                     text: "Discard"
 
@@ -67,7 +67,7 @@ KubeComponents.OverlayDialog {
                 }
 
 
-                Button {
+                Controls2.Button {
 
                     text: "Save as Draft"
 
@@ -77,7 +77,7 @@ KubeComponents.OverlayDialog {
                     }
                 }
 
-                Button {
+                Controls2.Button {
                     text: "Send"
 
                     onClicked: {
