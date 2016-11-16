@@ -22,12 +22,14 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
+import QtQuick.Controls 2.0 as Controls2
+
 import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
 
-ApplicationWindow {
+Controls2.ApplicationWindow {
     id: app
 
     //FIXME remove fixed pixel hight
@@ -140,7 +142,7 @@ ApplicationWindow {
     //END Main content
 
     //BEGIN Toolbar
-    ToolBar {
+    Controls2.ToolBar {
         id: toolbar
 
         anchors {
@@ -162,6 +164,12 @@ ApplicationWindow {
                 width: folderListView.width - 5 //to adjust for the toolbar spacing
 
                 KubeComponents.AccountSwitcher {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: parent.left
+                        right: parent.right
+                        margins: Kirigami.Units.smallMargin
+                    }
                 }
             }
             //END Folderlist section
@@ -247,12 +255,17 @@ ApplicationWindow {
                     }
                 }
 
-                Button {
+                Item {
+                    height: 1
+                    width: Kirigami.Units.smallSpacing
+                }
+
+                Controls2.Button {
                     id: newMailButton
 
                     //iconName: "mail-message-new"
                     text: "New Email"
-                    tooltip: "compose new email"
+                    //tooltip: "compose new email"
                     onClicked: {
                         composerComponent.createObject(app)
                     }
@@ -285,7 +298,7 @@ ApplicationWindow {
                     Layout.fillWidth: true
                 }
 
-                TextField {
+                Controls2.TextField {
                     id: searchBar
 
                     Layout.minimumWidth: Kirigami.Units.gridUnit * 15
