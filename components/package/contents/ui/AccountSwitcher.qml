@@ -17,100 +17,37 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+
+import QtQuick.Controls 1.4 as Controls1
+import QtQuick.Controls 2.0 as Controls2
 
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
 
-Button {
+Controls2.Button {
     id: accountSwitcher
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-
     text: "Account Switcher"
-    tooltip: "switch accounts, edit them and add new ones"
+    //ToolTip.text: "switch accounts, edit them and add new ones"
 
     onClicked: {
-        dialog.visible = dialog.visible ? false : true
+        //dialog.visible = dialog.visible ? false : true
+        onClicked: popup.open()
     }
 
-    Rectangle {
-        id: dialog
+    Controls2.Popup {
+        id: popup
 
-        anchors {
-            top: parent.bottom
-            left: parent.left
-        }
-
-        height: 300
         width: 600
+        height: 300
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
-        color: Kirigami.Theme.backgroundColor
-        border.width: 1
-        border.color: Kirigami.Theme.highlightColor //TODO change to Kirigami inactive text color once it is available
-        radius: 3
-        clip: true
-        visible: false
-
-        Item {
-            id: footer
-
-            anchors {
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-                margins: Kirigami.Units.largeSpacing
-            }
-
-            height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
-            width: listView.width
-
-            Button {
-
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    right: parent.right
-                }
-
-                text: "Create new Account"
-
-                onClicked: {
-                    newAccountComponent.createObject(app)
-                    dialog.visible = false
-                }
-
-                Component {
-                    id: newAccountComponent
-                    KubeComponents.NewAccountDialog {
-                        id: settings
-                        anchors.fill: parent
-                    }
-                }
-            }
-
-            Button {
-
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                }
-
-                iconName: "view-refresh"
-                text: "Sync"
-                enabled: syncAction.ready
-
-                onClicked: {
-                    syncAction.execute()
-                    dialog.visible = false
-                }
-            }
-        }
-
-        ListView {
+                ListView {
             id: listView
 
             anchors {
@@ -131,36 +68,38 @@ Button {
                 enabled: true
                 supportsMouseEvents: true
 
-                contentItem: Item {
-                    height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
-                    width: listView.width
-
-                    RowLayout {
+                 RowLayout {
                         anchors {
+                            verticalCenter: parent.verticalCenter
                             left: parent.left
                             margins: Kirigami.Units.smallSpacing
                         }
 
-                        Layout.fillHeight: true
+                        width: listView.width
+                        height: Kirigami.Units.gridUnit * 1.5
 
                         KubeFramework.AccountFactory {
                             id: accountFactory
                             accountId: model.accountId
                         }
 
+                        RowLayout {
+
                         Kirigami.Icon {
                             source: accountFactory.icon
                         }
 
-                        Label {
+                        Controls2.Label {
                             text: model.name === "" ? accountFactory.name : model.name
                         }
-                        Button {
+                        Controls1.ToolButton {
                             visible: model.showStatus
                             iconName: model.statusIcon
                         }
-                    }
-                    Button {
+
+                        }
+
+                    Controls2.Button {
 
                         anchors {
                             right: parent.right
@@ -173,7 +112,6 @@ Button {
 
                         onClicked: {
                             editAccountComponent.createObject(app)
-                            dialog.visible = false
                         }
 
                         Component {
@@ -192,5 +130,59 @@ Button {
                 }
             }
         }
+
+         Item {
+            id: footer
+
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+                margins: Kirigami.Units.largeSpacing
+            }
+
+            height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
+            width: listView.width
+
+            Controls2.Button {
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    right: parent.right
+                }
+
+                text: "Create new Account"
+
+                onClicked: {
+                    newAccountComponent.createObject(app)
+                }
+
+                Component {
+                    id: newAccountComponent
+                    KubeComponents.NewAccountDialog {
+                        id: settings
+                        anchors.fill: parent
+                    }
+                }
+            }
+
+            Controls2.Button {
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                }
+
+                //iconName: "view-refresh"
+                text: "Sync"
+                enabled: syncAction.ready
+
+                onClicked: {
+                    syncAction.execute()
+                }
+            }
+         }
     }
 }
+
+
