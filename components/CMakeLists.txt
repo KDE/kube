@@ -26,6 +26,8 @@ install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
 install(DIRECTORY package/contents/ui/ DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
 install(DIRECTORY mailviewer/qml/ DESTINATION ${QML_INSTALL_DIR}/org/kube/mailviewer)
 
+install(DIRECTORY accounts/ DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts)
+
 include(${CMAKE_SOURCE_DIR}/KF5KirigamiMacros.cmake)
 kirigami_package_breeze_icons(ICONS applications-graphics view-list-icons folder-sync view-list-details configure document-edit dialog-cancel document-decrypt mail-reply-sender bookmarks folder)
 

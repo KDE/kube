@@ -29,6 +29,7 @@ import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
+import org.kube.accounts 1.0 as KubeAccounts
 
 Controls2.ApplicationWindow {
     id: app
@@ -315,4 +316,15 @@ Controls2.ApplicationWindow {
     }
     //END Composer
 
+    //BEGIN AccountWizard
+    KubeAccounts.AccountWizard {
+        id: accountWizard
+
+        height: app.height * 0.85
+        width: app.width * 0.85
+
+        x: app.width * 0.075
+        y: 50
+    }
+    //END AccountWizard
 }

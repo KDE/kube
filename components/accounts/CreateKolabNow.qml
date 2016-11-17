@@ -157,6 +157,7 @@ Item {
                     text: "Save"
 
                     onClicked: {
+                        popup.close()
                     }
                 }
             }

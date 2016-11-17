@@ -21,10 +21,19 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
-import QtQuick.Dialogs 1.0
+import QtQuick.Dialogs 1.0 as Dialogs
+
+import org.kube.framework.domain 1.0 as KubeFramework
 
 Item {
+    id: root
 
+    //Controller
+    KubeFramework.AccountsController {
+        id: accountsController
+    }
+
+    //Navigation
     Controls.ToolButton {
         iconName: "go-previous"
 
@@ -44,6 +53,7 @@ Item {
         }
 
 
+        //BEGIN heading
         Kirigami.Heading {
             id: heading
             text: "Add your Maildir archive"
@@ -66,7 +76,7 @@ Item {
             color: Kirigami.Theme.disabledTextColor
             wrapMode: Text.Wrap
         }
-
+        //END heading
 
         GridLayout {
             anchors {
@@ -86,6 +96,7 @@ Item {
                 Layout.alignment: Qt.AlignRight
             }
             Controls.TextField {
+                id: title
                 Layout.fillWidth: true
             }
 
@@ -112,7 +123,7 @@ Item {
 
                     Component {
                         id: fileDialogComponent
-                        FileDialog {
+                        Dialogs.FileDialog {
                             id: fileDialog
 
                             visible: true
@@ -121,7 +132,7 @@ Item {
                             selectFolder: true
 
                             onAccepted: {
-                                path.text = fileDialog.fileUrl
+                                //root.path = fileDialog.fileUrl
                             }
                         }
                     }
@@ -132,6 +143,7 @@ Item {
                 text: ""
             }
             Controls.CheckBox {
+                id: readOnly
                 text: "Read only"
             }
 
@@ -165,6 +177,8 @@ Item {
                     text: "Save"
 
                     onClicked: {
+                        //accountsController.createMaildirAccount(root.name, root.path, root.readOnly)
+                        popup.close()
                     }
                 }
             }

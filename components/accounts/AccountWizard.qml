@@ -25,18 +25,11 @@ import org.kde.kirigami 1.0 as Kirigami
 Controls2.Popup {
     id: popup
 
-    height: app.height * 0.85
-    width: app.width * 0.85
-
-    x: app.width * 0.075
-    y: 50
-
-    visible: true
-
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
+    clip: true
 
     Controls2.StackView {
         id: stack

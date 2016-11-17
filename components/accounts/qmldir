@@ -1,0 +1,4 @@
+module org.kube.accounts
+
+AccountWizard 1.0 AccountWizard.qml
+

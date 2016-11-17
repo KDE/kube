@@ -25,5 +25,6 @@ Controls2.ApplicationWindow {
     width: 1500
 
     AccountWizard {
+        visible: true
     }
 }
