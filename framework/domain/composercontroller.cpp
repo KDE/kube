@@ -25,13 +25,19 @@
 #include <KMime/Message>
 #include <KCodecs/KEmailAddress>
 #include <QVariant>
+#include <QSortFilterProxyModel>
+#include <QList>
 #include <QDebug>
 #include <QQmlEngine>
 #include <sink/store.h>
+#include <sink/log.h>
 
 #include "accountsmodel.h"
 #include "identitiesmodel.h"
+#include "recepientautocompletionmodel.h"
 #include "mailtemplates.h"
+
+SINK_DEBUG_AREA("composercontroller");
 
 ComposerController::ComposerController(QObject *parent) : QObject(parent)
 {
@@ -102,9 +108,28 @@ void ComposerController::setBody(const QString &body)
     }
 }
 
+QString ComposerController::recepientSearchString() const
+{
+    return QString();
+}
+
+void ComposerController::setRecepientSearchString(const QString &s)
+{
+    if (auto model = static_cast<RecipientAutocompletionModel*>(recepientAutocompletionModel())) {
+        model->setFilter(s);
+    }
+}
+
 QAbstractItemModel *ComposerController::identityModel() const
 {
     static auto model = new IdentitiesModel();
+    QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+    return model;
+}
+
+QAbstractItemModel *ComposerController::recepientAutocompletionModel() const
+{
+    static auto model = new RecipientAutocompletionModel();
     QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
     return model;
 }
@@ -153,43 +178,82 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
     }).exec();
 }
 
+void ComposerController::recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName)
+{
+    if (auto model = static_cast<RecipientAutocompletionModel*>(recepientAutocompletionModel())) {
+        model->addEntry(addrSpec, displayName);
+    }
+}
+
+void applyAddresses(const QString &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
+{
+    for (const auto &to : KEmailAddress::splitAddressList(list)) {
+        QByteArray displayName;
+        QByteArray addrSpec;
+        QByteArray comment;
+        KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
+        callback(addrSpec, displayName);
+    }
+}
+
+bool ComposerController::identityIsSet() const
+{
+    return (identityModel()->rowCount() > 0) && (m_currentAccountIndex >= 0);
+}
+
 KMime::Message::Ptr ComposerController::assembleMessage()
 {
     auto mail = m_msg.value<KMime::Message::Ptr>();
     if (!mail) {
         mail = KMime::Message::Ptr::create();
     }
-    for (const auto &to : KEmailAddress::splitAddressList(m_to)) {
-        QByteArray displayName;
-        QByteArray addrSpec;
-        QByteArray comment;
-        KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
+    applyAddresses(m_to, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->to(true)->addAddress(addrSpec, displayName);
+        recordForAutocompletion(addrSpec, displayName);
+    });
+    applyAddresses(m_cc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        mail->cc(true)->addAddress(addrSpec, displayName);
+        recordForAutocompletion(addrSpec, displayName);
+    });
+    applyAddresses(m_bcc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        mail->bcc(true)->addAddress(addrSpec, displayName);
+        recordForAutocompletion(addrSpec, displayName);
+    });
+    if (!identityIsSet()) {
+        SinkWarning() << "We don't have an identity to send the mail with.";
+    } else {
+        auto currentIndex = identityModel()->index(m_currentAccountIndex, 0);
+        KMime::Types::Mailbox mb;
+        mb.setName(currentIndex.data(IdentitiesModel::Username).toString());
+        mb.setAddress(currentIndex.data(IdentitiesModel::Address).toString().toUtf8());
+        mail->from(true)->addAddress(mb);
+        mail->subject(true)->fromUnicodeString(m_subject, "utf-8");
+        mail->setBody(m_body.toUtf8());
+        mail->assemble();
+        return mail;
     }
-    auto currentIndex = identityModel()->index(m_currentAccountIndex, 0);
-    KMime::Types::Mailbox mb;
-    mb.setName(currentIndex.data(IdentitiesModel::Username).toString());
-    mb.setAddress(currentIndex.data(IdentitiesModel::Address).toString().toUtf8());
-    mail->from(true)->addAddress(mb);
-    mail->subject(true)->fromUnicodeString(m_subject, "utf-8");
-    mail->setBody(m_body.toUtf8());
-    mail->assemble();
-    return mail;
+    return KMime::Message::Ptr();
 }
 
 void ComposerController::send()
 {
     auto mail = assembleMessage();
-    auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(IdentitiesModel::AccountId).toByteArray();
 
-    Kube::Context context;
-    context.setProperty("message", QVariant::fromValue(mail));
-    context.setProperty("accountId", QVariant::fromValue(currentAccountId));
+    //TODO deactivate action if we don't have the identiy set
+    if (!identityIsSet()) {
+        SinkWarning() << "We don't have an identity to send the mail with.";
+    } else {
+        auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(IdentitiesModel::AccountId).toByteArray();
 
-    qDebug() << "Current account " << currentAccountId;
+        Kube::Context context;
+        context.setProperty("message", QVariant::fromValue(mail));
+        context.setProperty("accountId", QVariant::fromValue(currentAccountId));
 
-    Kube::Action("org.kde.kube.actions.sendmail", context).execute();
-    clear();
+        qDebug() << "Current account " << currentAccountId;
+
+        Kube::Action("org.kde.kube.actions.sendmail", context).execute();
+        clear();
+    }
 }
 
 void ComposerController::saveAsDraft()

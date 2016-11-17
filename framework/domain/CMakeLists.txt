@@ -18,6 +18,7 @@ set(mailplugin_SRCS
     accountsmodel.cpp
     outboxmodel.cpp
     identitiesmodel.cpp
+    recepientautocompletionmodel.cpp
     settings/accountsettings.cpp
 )
 find_package(KF5 REQUIRED COMPONENTS Package)

@@ -93,21 +93,22 @@ Controls2.Popup {
                         text: "To"
                     }
 
-                    RowLayout {
+                    AutocompleteLineEdit {
+                        id: to
+
                         Layout.fillWidth: true
 
-                        Controls.TextField {
-                            id: to
+                        text: composer.to
+                        onTextChanged: {
+                            composer.to = text;
+                        }
 
-                            Layout.fillWidth: true
-
-                            text: composer.to
-
-                            onTextChanged: {
-                                composer.to = text;
-                            }
+                        model: composer.recepientAutocompletionModel
+                        onSearchTermChanged: {
+                            composer.recepientSearchString = searchTerm
                         }
                     }
+
 
                     Kirigami.Label {
                         text: "Cc"
@@ -115,7 +116,7 @@ Controls2.Popup {
                         visible: cc.visible
                     }
 
-                    Controls.TextField {
+                    AutocompleteLineEdit {
                         id: cc
 
                         Layout.fillWidth: true
@@ -127,6 +128,11 @@ Controls2.Popup {
                         onTextChanged: {
                             composer.cc = text;
                         }
+
+                        model: composer.recepientAutocompletionModel
+                        onSearchTermChanged: {
+                            composer.recepientSearchString = searchTerm
+                        }
                     }
 
                     Kirigami.Label {
@@ -135,7 +141,7 @@ Controls2.Popup {
                         visible: bcc.visible
                     }
 
-                    Controls.TextField {
+                    AutocompleteLineEdit {
                         id: bcc
 
                         Layout.fillWidth: true
@@ -146,6 +152,11 @@ Controls2.Popup {
 
                         onTextChanged: {
                             composer.bcc = text;
+                        }
+
+                        model: composer.recepientAutocompletionModel
+                        onSearchTermChanged: {
+                            composer.recepientSearchString = searchTerm
                         }
                     }
                 }

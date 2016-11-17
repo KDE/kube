@@ -38,6 +38,8 @@ class ComposerController : public QObject
     Q_PROPERTY (QString bcc READ bcc WRITE setBcc NOTIFY bccChanged)
     Q_PROPERTY (QString subject READ subject WRITE setSubject NOTIFY subjectChanged)
     Q_PROPERTY (QString body READ body WRITE setBody NOTIFY bodyChanged)
+    Q_PROPERTY (QString recepientSearchString READ recepientSearchString WRITE setRecepientSearchString)
+    Q_PROPERTY (QAbstractItemModel* recepientAutocompletionModel READ recepientAutocompletionModel CONSTANT)
     Q_PROPERTY (QAbstractItemModel* identityModel READ identityModel CONSTANT)
     Q_PROPERTY (int currentIdentityIndex MEMBER m_currentAccountIndex)
     Q_PROPERTY (QStringList attachments READ attachemts NOTIFY attachmentsChanged)
@@ -60,7 +62,11 @@ public:
     QString body() const;
     void setBody(const QString &body);
 
+    QString recepientSearchString() const;
+    void setRecepientSearchString(const QString &body);
+
     QAbstractItemModel *identityModel() const;
+    QAbstractItemModel *recepientAutocompletionModel() const;
 
     QStringList attachemts() const;
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
@@ -81,6 +87,8 @@ public slots:
     void addAttachment(const QUrl &fileUrl);
 
 private:
+    bool identityIsSet() const;
+    void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
     QSharedPointer<KMime::Message> assembleMessage();
     QString m_to;
