@@ -172,6 +172,7 @@ class KeyPrivate
 public:
     Key *q;
     GpgME::Key mKey;
+    QByteArray mKeyID;
 };
 
 Key::Key()
@@ -194,23 +195,37 @@ Key::~Key()
 
 QString Key::keyid() const
 {
-    return d->mKey.keyID();
+    if (!d->mKey.isNull()) {
+        return d->mKey.keyID();
+    }
+
+    return d->mKeyID;
 }
 
 QString Key::name() const
 {
     //FIXME: is this the correct way to get the primary UID?
-    return d->mKey.userID(0).name();
+    if (!d->mKey.isNull()) {
+        return d->mKey.userID(0).name();
+    }
+
+    return QString();
 }
 
 QString Key::email() const
 {
-    return d->mKey.userID(0).email();
+    if (!d->mKey.isNull()) {
+        return d->mKey.userID(0).email();
+    }
+    return QString();
 }
 
 QString Key::comment() const
 {
-    return d->mKey.userID(0).comment();
+    if (!d->mKey.isNull()) {
+        return d->mKey.userID(0).comment();
+    }
+    return QString();
 }
 
 class SignaturePrivate
@@ -269,6 +284,8 @@ class EncryptionPrivate
 public:
     Encryption *q;
     std::vector<Key::Ptr> mRecipients;
+    Encryption::ErrorType mErrorType;
+    QString mErrorString;
 };
 
 Encryption::Encryption(EncryptionPrivate *d_ptr)
@@ -281,6 +298,7 @@ Encryption::Encryption()
     :d(std::unique_ptr<EncryptionPrivate>(new EncryptionPrivate))
 {
     d->q = this;
+    d->mErrorType = Encryption::NoError;
 }
 
 Encryption::~Encryption()
@@ -292,6 +310,17 @@ std::vector<Key::Ptr> Encryption::recipients() const
 {
     return d->mRecipients;
 }
+
+QString Encryption::errorString()
+{
+    return d->mErrorString;
+}
+
+Encryption::ErrorType Encryption::errorType()
+{
+    return d->mErrorType;
+}
+
 
 class PartPrivate
 {
@@ -381,6 +410,19 @@ Encryption::Ptr PartPrivate::createEncryption(const MimeTreeParser::EncryptedMes
     }
 
     auto encpriv = new EncryptionPrivate();
+    if (part->passphraseError()) {
+        encpriv->mErrorType = Encryption::PassphraseError;
+        encpriv->mErrorString = part->mMetaData.errorText;
+    } else if (part->isEncrypted() && !part->isDecryptable()) {
+        encpriv->mErrorType = Encryption::KeyMissing;
+        encpriv->mErrorString = part->mMetaData.errorText;
+    } else if (!part->isEncrypted() && !part->isDecryptable()) {
+        encpriv->mErrorType = Encryption::UnknownError;
+        encpriv->mErrorString = part->mMetaData.errorText;
+    } else {
+        encpriv->mErrorType = Encryption::NoError;
+    }
+
     foreach(const auto &recipient, part->mDecryptRecipients) {
         std::vector<GpgME::Key> found_keys;
         const auto &keyid = recipient.keyID();
@@ -396,6 +438,9 @@ Encryption::Ptr PartPrivate::createEncryption(const MimeTreeParser::EncryptedMes
         if (found_keys.size() != 1) {
             // Should not Happen at this point
             qWarning() << "Oops: Found no Key for Fingerprint: " << keyid;
+            auto keypriv = new KeyPrivate;
+            keypriv->mKeyID = keyid;
+            encpriv->mRecipients.push_back(Key::Ptr(new Key(keypriv)));
         } else {
             auto key = found_keys[0];
             auto keypriv = new KeyPrivate;

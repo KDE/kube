@@ -255,18 +255,6 @@ private:
     friend class SinglePartPrivate;
 };
 
-
-class EncryptionPart : public Part
-{
-public:
-    typedef std::shared_ptr<EncryptionPart> Ptr;
-    QByteArray type() const Q_DECL_OVERRIDE;
-
-    EncryptionError error() const;
-private:
-    std::unique_ptr<EncryptionPartPrivate> d;
-};
-
 /*
  * we want to request complete headers like:
  * from/to...
@@ -344,11 +332,19 @@ public:
 class Encryption
 {
 public:
+    enum ErrorType {
+        NoError,
+        PassphraseError,
+        KeyMissing,
+        UnknownError
+    };
     typedef std::shared_ptr<Encryption> Ptr;
     Encryption();
     Encryption(EncryptionPrivate *);
     ~Encryption();
     std::vector<Key::Ptr> recipients() const;
+    QString errorString();
+    ErrorType errorType();
 private:
     std::unique_ptr<EncryptionPrivate> d;
 };

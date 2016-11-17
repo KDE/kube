@@ -71,7 +71,10 @@ private slots:
         auto contentList = contentPart->content("plaintext");
         QVERIFY(contentList[0]->content().startsWith("asdasd"));
         QCOMPARE(contentList[0]->encryptions().size(), 1);
-        QCOMPARE(contentList[0]->signatures().size(), 1);
+        auto enc = contentList[0]->encryptions()[0];
+        QCOMPARE(enc->errorType(), Encryption::NoError);
+        QCOMPARE(enc->errorString(), QString());
+        QCOMPARE((int) enc->recipients().size(), 2);
     }
 
     void testNoGPGInstalled_data()
@@ -98,8 +101,12 @@ private slots:
         QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() << "plaintext");
         auto contentList = contentPart->content("plaintext");
         QCOMPARE(contentList[0]->encryptions().size(), 1);
-        QCOMPARE(contentList[0]->signatures().size(), 0);
         QVERIFY(contentList[0]->content().isEmpty());
+        auto enc = contentList[0]->encryptions()[0];
+        qDebug() << "HUHU"<< enc->errorType();
+        QCOMPARE(enc->errorType(), Encryption::UnknownError);
+        QCOMPARE(enc->errorString(), QString("Crypto plug-in \"OpenPGP\" could not decrypt the data.<br />Error: No data"));
+        QCOMPARE((int) enc->recipients().size(), 0);
     }
 
     void testGpgIncorrectGPGHOME_data()
@@ -126,6 +133,11 @@ private slots:
         QCOMPARE(contentList[0]->encryptions().size(), 1);
         QCOMPARE(contentList[0]->signatures().size(), 0);
         QVERIFY(contentList[0]->content().isEmpty());
+        auto enc = contentList[0]->encryptions()[0];
+        qDebug() << enc->errorType();
+        QCOMPARE(enc->errorType(), Encryption::KeyMissing);
+        QCOMPARE(enc->errorString(), QString("Crypto plug-in \"OpenPGP\" could not decrypt the data.<br />Error: Decryption failed"));
+        QCOMPARE((int) enc->recipients().size(), 2);
     }
 
 public Q_SLOTS:
