@@ -205,8 +205,8 @@ void AccountSettings::loadIdentity()
     Store::fetchOne<Identity>(Query().filter<Identity::Account>(mAccountIdentifier))
         .syncThen<void, Identity>([this](const Identity &identity) {
             mIdentityIdentifier = identity.identifier();
-            mUsername = identity.getProperty("username").toString();
-            mEmailAddress = identity.getProperty("address").toString();
+            mUsername = identity.getName();
+            mEmailAddress = identity.getAddress();
             emit identityChanged();
         }).onError([](const KAsync::Error &error) {
             qWarning() << "Failed to find the identity resource: " << error.errorMessage;
@@ -273,8 +273,8 @@ void AccountSettings::saveIdentity()
 {
     if (!mIdentityIdentifier.isEmpty()) {
         Identity identity(mMailtransportIdentifier);
-        identity.setProperty("username", mUsername);
-        identity.setProperty("address", mEmailAddress);
+        identity.setName(mUsername);
+        identity.setAddress(mEmailAddress);
         Store::modify(identity)
         .onError([](const KAsync::Error &error) {
             qWarning() << "Error while modifying identity: " << error.errorMessage;
@@ -284,8 +284,8 @@ void AccountSettings::saveIdentity()
         auto identity = ApplicationDomainType::createEntity<Identity>();
         mIdentityIdentifier = identity.identifier();
         identity.setAccount(mAccountIdentifier);
-        identity.setProperty("username", mUsername);
-        identity.setProperty("address", mEmailAddress);
+        identity.setName(mUsername);
+        identity.setAddress(mEmailAddress);
         Store::create(identity)
         .onError([](const KAsync::Error &error) {
             qWarning() << "Error while creating identity: " << error.errorMessage;
