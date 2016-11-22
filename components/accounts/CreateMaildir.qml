@@ -23,13 +23,13 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 import QtQuick.Dialogs 1.0 as Dialogs
 
-import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.accounts.maildir 1.0 as MaildirAccount
 
 Item {
     id: root
 
     //Controller
-    KubeFramework.AccountsController {
+    MaildirAccount.MaildirController {
         id: accountsController
     }
 
@@ -98,6 +98,12 @@ Item {
             Controls.TextField {
                 id: title
                 Layout.fillWidth: true
+
+                text: accountsController.name
+
+                onTextChanged: {
+                    accountsController.name = text
+                }
             }
 
             Kirigami.Label {
@@ -112,6 +118,8 @@ Item {
                     Layout.fillWidth: true
 
                     enabled: false
+
+                    text: accountsController.path
                 }
 
                 Controls.Button {
@@ -132,13 +140,14 @@ Item {
                             selectFolder: true
 
                             onAccepted: {
-                                //root.path = fileDialog.fileUrl
+                                accountsController.path = fileDialog.fileUrl
                             }
                         }
                     }
                 }
             }
 
+            /*
             Kirigami.Label {
                 text: ""
             }
@@ -146,6 +155,7 @@ Item {
                 id: readOnly
                 text: "Read only"
             }
+            */
 
             Kirigami.Label {
                 text:  ""
@@ -177,7 +187,7 @@ Item {
                     text: "Save"
 
                     onClicked: {
-                        //accountsController.createMaildirAccount(root.name, root.path, root.readOnly)
+                        accountsController.createAccount()
                         popup.close()
                     }
                 }

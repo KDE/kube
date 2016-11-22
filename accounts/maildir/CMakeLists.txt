@@ -31,6 +31,7 @@ include_directories(../../framework/)
 set(SRCS
     maildirsettings.cpp
     maildiraccountplugin.cpp
+    maildircontroller.cpp
 )
 
 add_library(maildiraccountplugin SHARED ${SRCS})
