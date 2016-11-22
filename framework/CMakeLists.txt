@@ -21,7 +21,6 @@ find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
 find_package(Sink CONFIG REQUIRED)
 find_package(KF5Async CONFIG REQUIRED)
 find_package(QGpgme CONFIG REQUIRED)
-find_package(KF5IconThemes CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
@@ -29,7 +28,6 @@ add_definitions("-Wall -std=c++0x -g")
 include_directories(.)
 include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/)
 include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/KMime)
-include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/KIconThemes)
 
 enable_testing()
 
