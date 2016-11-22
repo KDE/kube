@@ -101,8 +101,8 @@ Item {
 
     TreeView {
         id: mailStructure
-        visible: false
         anchors.top: messageParser.attachments.rowCount() > 0 ? attachments.bottom : newMailViewer.bottom
+        visible: newMailViewer.debug
         width: parent.width
         height: 400
         TableViewColumn {
