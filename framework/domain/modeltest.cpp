@@ -320,7 +320,7 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
     if ( rows > 0 )
         QVERIFY( model->hasChildren ( parent ) );
 
-    qWarning() << "parent:" << model->data(parent).toString() << "rows:" << rows
+    qDebug() << "parent:" << model->data(parent).toString() << "rows:" << rows
              << "columns:" << columns << "parent column:" << parent.column();
 
     const QModelIndex topLeftChild = model->index( 0, 0, parent );
@@ -339,7 +339,7 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
             // rowCount() and columnCount() said that it existed...
             QVERIFY( index.isValid() );
 
-            qWarning() << "\tchild("<< r <<", " << c << ", " << index.column() << "):" << model->data(index).toString() << index.internalPointer();
+            qDebug() << "\tchild("<< r <<", " << c << ", " << index.column() << "):" << model->data(index).toString() << index.internalPointer();
 
             // index() should always return the same index when called twice in a row
             QModelIndex modifiedIndex = model->index ( r, c, parent );
@@ -370,9 +370,9 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
             // If the next test fails here is some somewhat useful debug you play with.
 
             if (model->parent(index) != parent) {
-                qWarning() << r << c << currentDepth << model->data(index).toString()
+                qDebug() << r << c << currentDepth << model->data(index).toString()
                          << model->data(parent).toString();
-                qWarning() << index << parent << model->parent(index);
+                qDebug() << index << parent << model->parent(index);
 //                 And a view that you can even use to show the model.
 //                 QTreeView view;
 //                 view.setModel(model);
@@ -384,7 +384,7 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
 
             // recursively go down the children
             if ( model->hasChildren ( index ) && currentDepth < 10 ) {
-                qWarning() << r << c << "has children" << model->rowCount(index);
+                qDebug() << r << c << "has children" << model->rowCount(index);
                 checkChildren ( index, ++currentDepth );
             }/* else { if (currentDepth >= 10) qDebug() << "checked 10 deep"; };*/
 
