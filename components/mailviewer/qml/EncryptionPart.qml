@@ -44,6 +44,10 @@ Item {
             visible: encryption.debug
             text: model.type
         }
+        Text {
+            visible: model.errorType || encryption.debug
+            text: model.errorType + ": " + model.errorString
+        }
         BorderImage {
             width: parent.width
             height: childrenRect.height + 40

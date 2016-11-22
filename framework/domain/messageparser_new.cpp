@@ -306,6 +306,8 @@ QHash<int, QByteArray> NewModel::roleNames() const
     roles[ContentRole] = "content";
     roles[IsEmbededRole] = "embeded";
     roles[SecurityLevelRole] = "securityLevel";
+    roles[EncryptionErrorType] = "errorType";
+    roles[EncryptionErrorString] = "errorString";
     return roles;
 }
 
@@ -374,6 +376,21 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return QStringLiteral("GREEN");
             case IsEmbededRole:
                 return data(index.parent(), IsEmbededRole);
+            case EncryptionErrorType:
+                {
+                    switch(encryption->errorType()) {
+                    case Encryption::NoError:
+                        return QString();
+                    case Encryption::PassphraseError:
+                        return QStringLiteral("PassphraseError");
+                    case Encryption::KeyMissing:
+                        return QStringLiteral("KeyMissing");
+                    default:
+                        return QStringLiteral("UnknownError");
+                    }
+                }
+            case EncryptionErrorString:
+                return encryption->errorString();
             }
         } else if (_data->userType() ==  qMetaTypeId<Part *>()) {
             const auto part = _data->value<Part *>();

@@ -113,7 +113,9 @@ public:
         ContentsRole,
         ContentRole,
         IsEmbededRole,
-        SecurityLevelRole
+        SecurityLevelRole,
+        EncryptionErrorType,
+        EncryptionErrorString
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
