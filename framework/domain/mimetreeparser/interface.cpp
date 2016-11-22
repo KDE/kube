@@ -247,7 +247,6 @@ Signature::Signature(SignaturePrivate *d_ptr)
     :d(std::unique_ptr<SignaturePrivate>(d_ptr))
 {
     d->q = this;
-    
 }
 
 Signature::~Signature()
@@ -679,6 +678,8 @@ QByteArray Content::charset() const
 QString Content::encodedContent() const
 {
     return QString::fromUtf8(content());
+    // TODO: should set "raw" content not the already utf8 encoded content
+    // return encodedContent(charset());
 }
 
 QString Content::encodedContent(const QByteArray &charset) const
@@ -828,7 +829,7 @@ void SinglePartPrivate::fillFrom(const MimeTreeParser::TextMessagePart::Ptr &par
     mContent.clear();
     foreach (const auto &mp, part->subParts()) {
         auto d_ptr = new ContentPrivate;
-        d_ptr->mContent = mp->text().toUtf8();
+        d_ptr->mContent = mp->text().toUtf8();  // TODO: should set "raw" content not the already utf8 encoded content
         d_ptr->mParent = q;
         const auto enc = mp.dynamicCast<MimeTreeParser::EncryptedMessagePart>();
         auto sig = mp.dynamicCast<MimeTreeParser::SignedMessagePart>();
