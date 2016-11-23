@@ -175,6 +175,8 @@ Same as files? Import/Export calendar data
 Keyselection, encryption, decryption, signing
 Probably requires access to identities in some way.
 
+see also [Cryptography](cryptography).
+
 ### MIME-Message parsing
 * ObjectTreeParser
 * KMime

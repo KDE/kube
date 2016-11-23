@@ -4,4 +4,5 @@ pages:
 - Project: project.md
 - Design: design.md
 - Requirements: requirements.md
+- Cryptography: cryptography.md
 theme: readthedocs
