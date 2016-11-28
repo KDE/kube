@@ -113,13 +113,15 @@ public:
         auto entry = new Entry(mNewModelPrivate);
         entry->mData = mNewModelPrivate->getVar(part);
         addChild(entry);
-        foreach(const auto &content, part->content()) {
-            auto _entry = entry;
-            _entry = _entry->addEncryptions(content->encryptions().mid(part->encryptions().size()));
-            _entry = _entry->addSignatures(content->signatures().mid(part->signatures().size()));
-            auto c = new Entry(mNewModelPrivate);
-            c->mData = mNewModelPrivate->getVar(content);
-            _entry->addChild(c);
+        foreach(const auto &content, part->availableContents()) {
+            foreach(const auto &contentPart, part->content(content)) {
+                auto _entry = entry;
+                _entry = _entry->addEncryptions(contentPart->encryptions().mid(part->encryptions().size()));
+                _entry = _entry->addSignatures(contentPart->signatures().mid(part->signatures().size()));
+                auto c = new Entry(mNewModelPrivate);
+                c->mData = mNewModelPrivate->getVar(contentPart);
+                _entry->addChild(c);
+            }
         }
         foreach(const auto &sp, part->subParts()) {
             auto _entry = entry;
