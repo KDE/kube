@@ -17,9 +17,7 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
-
 import QtQuick.Controls 2.0 as Controls2
 
 import org.kde.kirigami 1.0 as Kirigami
@@ -27,14 +25,13 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
 
-Button {
+Controls2.Button {
     id: accountSwitcher
 
     Layout.fillWidth: true
     Layout.fillHeight: true
 
     text: "Account Switcher"
-    tooltip: "switch accounts, edit them and add new ones"
 
     onClicked: {
         popup.open()
@@ -66,7 +63,7 @@ Button {
             height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
             width: listView.width
 
-            Button {
+            Controls2.Button {
 
                 anchors {
                     verticalCenter: parent.verticalCenter
@@ -88,14 +85,14 @@ Button {
                 }
             }
 
-            Button {
+            Controls2.Button {
 
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
                 }
 
-                iconName: "view-refresh"
+                //iconName: "view-refresh"
                 text: "Sync"
                 enabled: syncAction.ready
 
@@ -147,15 +144,16 @@ Button {
                             source: accountFactory.icon
                         }
 
-                        Label {
+                        Controls2.Label {
                             text: model.name === "" ? accountFactory.name : model.name
                         }
-                        Button {
-                            visible: model.showStatus
-                            iconName: model.statusIcon
-                        }
+                        //FIXME port to qqc2
+//                         Button {
+//                             visible: model.showStatus
+//                             source: model.statusIcon
+//                         }
                     }
-                    Button {
+                    Controls2.Button {
 
                         anchors {
                             right: parent.right
