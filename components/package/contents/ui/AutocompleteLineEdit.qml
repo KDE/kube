@@ -17,14 +17,14 @@
 */
 
 import QtQuick 2.7
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0
 
 import org.kde.kirigami 1.0 as Kirigami
 
-TextField {
+Controls2.TextField {
     id: textField
 
     property string searchTerm
@@ -94,7 +94,7 @@ TextField {
             width: textField.width
             border.color: "Black"
             radius: 5
-            ScrollView {
+            Controls1.ScrollView {
                 id: scrollView
                 anchors.fill: parent
                 ListView {

@@ -18,7 +18,6 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.0 as Controls2
 
 import org.kde.kirigami 1.0 as Kirigami
@@ -71,7 +70,7 @@ Controls2.Popup {
 
                 anchors.fill: parent
 
-                Controls.TextField {
+                Controls2.TextField {
                     id: subject
 
                     Layout.fillWidth: true
@@ -89,7 +88,7 @@ Controls2.Popup {
 
                     columns: 2
 
-                    Kirigami.Label {
+                    Controls2.Label {
                         text: "To"
                     }
 
@@ -110,7 +109,7 @@ Controls2.Popup {
                     }
 
 
-                    Kirigami.Label {
+                    Controls2.Label {
                         text: "Cc"
 
                         visible: cc.visible
@@ -135,7 +134,7 @@ Controls2.Popup {
                         }
                     }
 
-                    Kirigami.Label {
+                    Controls2.Label {
                         text: "Bcc"
 
                         visible: bcc.visible
@@ -162,11 +161,11 @@ Controls2.Popup {
                 }
 
                 RowLayout {
-                    Kirigami.Label {
+                    Controls2.Label {
                         text: "Sending as"
                     }
 
-                    Controls.ComboBox {
+                    Controls2.ComboBox {
                         id: identityCombo
                         model: composer.identityModel
                         textRole: "displayName"
@@ -178,7 +177,7 @@ Controls2.Popup {
                         }
                     }
 
-                    Controls.Button {
+                    Controls2.Button {
                         id: ccButton
 
                         text: "Cc"
@@ -189,7 +188,7 @@ Controls2.Popup {
                         }
                     }
 
-                    Controls.Button {
+                    Controls2.Button {
                         id: bccButton
 
                         text: "Bcc"
@@ -208,7 +207,7 @@ Controls2.Popup {
 
                     height: subject.height * 1.5
 
-                    Controls.Button {
+                    Controls2.Button {
 
                         anchors {
                             bottom: parent.bottom
@@ -231,7 +230,7 @@ Controls2.Popup {
 
                         model: composer.attachments
 
-                        delegate: Kirigami.Label {
+                        delegate: Controls2.Label {
                             id: name
 
                             text: modelData
@@ -247,7 +246,7 @@ Controls2.Popup {
                 }
                 */
 
-                Controls.TextArea {
+                Controls2.TextArea {
                     id: content
 
                     text: composer.body
@@ -265,7 +264,7 @@ Controls2.Popup {
 
                     width: parent.width
 
-                    Controls.Button {
+                    Controls2.Button {
 
                         text: "Discard"
 
@@ -279,7 +278,7 @@ Controls2.Popup {
                     }
 
 
-                    Controls.Button {
+                    Controls2.Button {
 
                         text: "Save as Draft"
 
@@ -289,7 +288,7 @@ Controls2.Popup {
                         }
                     }
 
-                    Controls.Button {
+                    Controls2.Button {
                         text: "Send"
 
                         onClicked: {
