@@ -248,12 +248,14 @@ Controls2.ApplicationWindow {
                 height: parent.height
                 width: mailView.width
 
-                Button {
+                Controls2.Button {
                     id: newMailButton
 
+                    Layout.fillHeight: true
+
                     //iconName: "mail-message-new"
-                    text: "New Email"
-                    tooltip: "compose new email"
+                    text: "  New Email  "
+                    //Controls2.Tooltip.text: "compose new email"
                     onClicked: {
                         composer.open()
                     }
@@ -286,10 +288,10 @@ Controls2.ApplicationWindow {
                     Layout.fillWidth: true
                 }
 
-                TextField {
+                Controls2.TextField {
                     id: searchBar
 
-                    Layout.minimumWidth: Kirigami.Units.gridUnit * 15
+                    Layout.minimumWidth: Kirigami.Units.gridUnit * 19
                     height: toolbar.height
 
                     placeholderText: "Search..."
