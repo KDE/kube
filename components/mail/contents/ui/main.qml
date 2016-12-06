@@ -159,6 +159,7 @@ Controls2.ApplicationWindow {
             id: mailListView
             parentFolder: folderListView.currentFolder
             width: Kirigami.Units.gridUnit * 20
+            height: parent.height
             Layout.maximumWidth: app.width * 0.4
             Layout.minimumWidth: Kirigami.Units.gridUnit * 10
             focus: true

@@ -16,8 +16,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-import QtQuick 2.4
-import QtQuick.Controls 1.4 as Controls
+import QtQuick 2.7
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import QtQml 2.2 as QtQml
 
@@ -25,7 +25,7 @@ import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
 
-Controls.ScrollView {
+Item {
     id: root
     property variant parentFolder
     property variant currentMail
@@ -38,24 +38,34 @@ Controls.ScrollView {
 
     ListView {
         id: listView
-        currentIndex: root.currentIndex
 
-        model: KubeFramework.MailListModel {
-            parentFolder: root.parentFolder
+        anchors.fill: parent
+
+        focus: true
+
+        ScrollBar.vertical: ScrollBar{
+            id: scrollbar
         }
 
+        //BEGIN keyboard nav
         Keys.onDownPressed: {
             incrementCurrentIndex()
         }
         Keys.onUpPressed: {
             decrementCurrentIndex()
         }
-        focus: true
+        //END keyboard nav
+
+        currentIndex: root.currentIndex
+
+        model: KubeFramework.MailListModel {
+            parentFolder: root.parentFolder
+        }
 
         delegate: Kirigami.AbstractListItem {
             id: mailListDelegate
 
-            width: listView.width
+            width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
             height: Kirigami.Units.gridUnit * 4
 
             enabled: true
