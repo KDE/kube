@@ -17,8 +17,7 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Layouts 1.1
 
 import org.kube.framework.domain 1.0 as KubeFramework
@@ -57,7 +56,7 @@ Item {
 
     //END old mail viewer
 
-    TreeView {
+    Controls1.TreeView {
         id: attachments
         anchors {
             top: newMailViewer.bottom
@@ -66,32 +65,32 @@ Item {
         //visible: messageParser.attachments.rowCount() > 0
         width: parent.width
         height: 200
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "name"
             title: "Filename"
             width: 300
         }
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "type"
             title: "Type"
             width: 60
         }
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "icon"
             title: "Icon"
             width: 60
         }
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "size"
             title: "Size"
             width: 60
         }
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "encrypted"
             title: "Encrypted"
             width: 60
         }
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "signed"
             title: "Signed"
             width: 60
@@ -99,28 +98,28 @@ Item {
         model: messageParser.attachments
     }
 
-    TreeView {
+    Controls1.TreeView {
         id: mailStructure
         anchors.top: messageParser.attachments.rowCount() > 0 ? attachments.bottom : newMailViewer.bottom
         visible: newMailViewer.debug
         width: parent.width
         height: 400
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "type"
             title: "Type"
             width: 300
         }
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "embeded"
             title: "Embeded"
             width: 60
         }
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "securityLevel"
             title: "SecurityLevel"
             width: 60
         }
-        TableViewColumn {
+        Controls1.TableViewColumn {
             role: "content"
             title: "Content"
             width: 200
