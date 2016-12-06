@@ -16,8 +16,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick 2.7
 
 Item {
     id: root
