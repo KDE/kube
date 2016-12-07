@@ -20,24 +20,27 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
-Rectangle {
+Item {
 
     property string name
     property string icon
 
-    anchors.centerIn: parent
+    width: content.width + Kirigami.Units.gridUnit / 2
+    height: content.height + Kirigami.Units.gridUnit / 2
 
-    width: content.width + Kirigami.Units.largeSpacing
-    height: content.height + Kirigami.Units.largeSpacing
+    Rectangle {
+        anchors.fill: parent
 
-    color: Kirigami.Theme.textColor
+        id: background
+        color: Kirigami.Theme.disabledTextColor
+    }
 
     RowLayout {
         id: content
 
         anchors.centerIn: parent
 
-        spacing: Kirigami.Units.largeSpacing / 2
+        spacing: Kirigami.Units.smallSpacing
 
         Rectangle {
             id: mimetype
@@ -57,7 +60,7 @@ Rectangle {
 
         Text {
             text: "some attachment.csv"
-            color: Kirigami.Theme.backgroundColor
+            color: Kirigami.Theme.textColor
         }
     }
 }
