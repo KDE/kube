@@ -72,7 +72,6 @@ Rectangle {
         }
 
         Rectangle {
-
             anchors.bottom: parent.bottom
 
             height: 1
@@ -123,6 +122,8 @@ Rectangle {
                     anchors.centerIn: parent
                     implicitHeight: header.height + body.height + (Kirigami.Units.gridUnit * 2.5) * 2 + footer.height
                     width: parent.width - Kirigami.Units.gridUnit * 4
+
+                    color: Kirigami.Theme.viewBackgroundColor
 
                     //TODO bookmark
                     /*
@@ -254,6 +255,33 @@ Rectangle {
                         }
                     }
                     //END header
+
+                    Flow {
+                        id: attachments
+
+                        anchors {
+                            top: header.bottom
+                            topMargin: Kirigami.Units.smallSpacing
+                            horizontalCenter: parent.horizontalCenter
+                        }
+
+                        width: parent.width - Kirigami.Units.gridUnit * 2
+                        height: Kirigami.Units.gridUnit * 2
+
+                        layoutDirection: Qt.RightToLeft
+                        spacing: Kirigami.Units.smallSpacing
+
+                        Repeater {
+                            model: body.attachments
+
+                            delegate: AttachmentDelegate {
+                                name: model.name
+                                icon: "mail-attachment"
+
+                                //TODO size encrypted signed type
+                            }
+                        }
+                    }
 
                     MailViewer {
                         id: body

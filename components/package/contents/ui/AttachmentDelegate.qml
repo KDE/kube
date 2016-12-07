@@ -21,6 +21,7 @@ import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
 Item {
+    id: root
 
     property string name
     property string icon
@@ -54,12 +55,12 @@ Item {
                 height: parent.height
                 width: height
 
-                source: "text-csv"
+                source: root.icon
             }
         }
 
         Text {
-            text: "some attachment.csv"
+            text: root.name
             color: Kirigami.Theme.textColor
         }
     }

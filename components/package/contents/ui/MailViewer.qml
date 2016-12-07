@@ -27,7 +27,8 @@ Item {
     id: root
     property variant message;
     property string html;
-    property int desiredHeight: topPartLoader.height + newMailViewer.height + attachments.height + 20
+    property int desiredHeight: topPartLoader.height + newMailViewer.height + 20
+    property variant attachments
 
     clip: true
 
@@ -55,48 +56,6 @@ Item {
     }
 
     //END old mail viewer
-
-    Controls1.TreeView {
-        id: attachments
-        anchors {
-            top: newMailViewer.bottom
-            topMargin: 20
-        }
-        //visible: messageParser.attachments.rowCount() > 0
-        width: parent.width
-        height: 200
-        Controls1.TableViewColumn {
-            role: "name"
-            title: "Filename"
-            width: 300
-        }
-        Controls1.TableViewColumn {
-            role: "type"
-            title: "Type"
-            width: 60
-        }
-        Controls1.TableViewColumn {
-            role: "icon"
-            title: "Icon"
-            width: 60
-        }
-        Controls1.TableViewColumn {
-            role: "size"
-            title: "Size"
-            width: 60
-        }
-        Controls1.TableViewColumn {
-            role: "encrypted"
-            title: "Encrypted"
-            width: 60
-        }
-        Controls1.TableViewColumn {
-            role: "signed"
-            title: "Signed"
-            width: 60
-        }
-        model: messageParser.attachments
-    }
 
     Controls1.TreeView {
         id: mailStructure
@@ -131,6 +90,6 @@ Item {
         id: messageParser
         message: root.message
     }
+    attachments: messageParser.attachments
     html: messageParser.html
-
 }
