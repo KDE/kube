@@ -18,6 +18,7 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.3
+import QtQuick.Controls 2 as Controls2
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -45,11 +46,29 @@ Rectangle {
 
         color: Kirigami.Theme.backgroundColor
 
-        Text {
+        Kirigami.Heading {
             anchors.centerIn: parent
+
+            width: parent.width - Kirigami.Units.gridUnit * 4.2
 
             text: "Some subject"
             color: Kirigami.Theme.textColor
+            level: 4
+            font.italic: true
+
+        }
+
+        Controls2.Button {
+            anchors {
+                right: parent.right
+                rightMargin: Kirigami.Units.gridUnit * 0.2
+                verticalCenter: parent.verticalCenter
+            }
+            text: "show plaintext"
+
+            onClicked: {
+                text = text == "show plaintext" ? "show html" : "show plaintext"
+            }
         }
 
         Rectangle {
