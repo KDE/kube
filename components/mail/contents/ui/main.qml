@@ -255,7 +255,7 @@ Controls2.ApplicationWindow {
                     Layout.fillHeight: true
 
                     //iconName: "mail-message-new"
-                    text: "  New Email  "
+                    text: "      " + "New Email" + "      "
                     //Controls2.Tooltip.text: "compose new email"
                     onClicked: {
                         composer.open()
