@@ -131,6 +131,7 @@ Rectangle {
 
                     }
                     */
+                    //BEGIN header
                     Item {
                         id: header
 
@@ -252,6 +253,7 @@ Rectangle {
                             }
                         }
                     }
+                    //END header
 
                     MailViewer {
                         id: body
