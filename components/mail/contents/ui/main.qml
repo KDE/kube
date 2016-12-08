@@ -174,7 +174,7 @@ Controls2.ApplicationWindow {
     //END Main content
 
     //BEGIN Toolbar
-    ToolBar {
+    Controls2.ToolBar {
         id: toolbar
 
         anchors {
@@ -249,10 +249,16 @@ Controls2.ApplicationWindow {
                 height: parent.height
                 width: mailView.width
 
+                Item {
+                    width: Kirigami.Units.smallSpacing
+                    height: width
+                }
+
                 Controls2.Button {
                     id: newMailButton
 
-                    Layout.fillHeight: true
+
+                    height: toolbar.height
 
                     //iconName: "mail-message-new"
                     text: "      " + "New Email" + "      "
