@@ -16,8 +16,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick 2.7
+import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2 as Controls2
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
@@ -122,7 +122,7 @@ Rectangle {
 
                 //TODO bookmark
                 /*
-                 *                    ToolButton {
+                 *                    Contorls1.ToolButton {
                  *                        iconName: "bookmark-new"
                  *
             }
@@ -240,7 +240,7 @@ Rectangle {
                         color: Kirigami.Theme.textColor
                         opacity: 0.5
 
-                        ToolButton {
+                        Controls1.ToolButton {
                             anchors.fill: parent
 
                             onClicked: {
@@ -317,7 +317,7 @@ Rectangle {
                         opacity: 0.5
                     }
 
-                    ToolButton {
+                    Controls1.ToolButton {
                         anchors{
                             verticalCenter: parent.verticalCenter
                             right: parent.right
