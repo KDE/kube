@@ -18,7 +18,6 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -52,7 +51,7 @@ Controls2.Popup {
 
                 spacing: Kirigami.Units.largeSpacing
 
-                Controls.Button {
+                Controls2.Button {
 
                     Layout.fillWidth: true
 
@@ -63,7 +62,7 @@ Controls2.Popup {
                     }
                 }
 
-                Controls.Button {
+                Controls2.Button {
 
                     Layout.fillWidth: true
 
@@ -74,7 +73,7 @@ Controls2.Popup {
                     }
                 }
 
-                Controls.Button {
+                Controls2.Button {
 
                     Layout.fillWidth: true
 

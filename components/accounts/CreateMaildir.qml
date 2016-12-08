@@ -61,7 +61,7 @@ Item {
             color: Kirigami.Theme.highlightColor
         }
 
-        Kirigami.Label {
+        Controls2.Label {
             id: subHeadline
 
             anchors {
@@ -91,7 +91,7 @@ Item {
             columnSpacing: Kirigami.Units.largeSpacing
             rowSpacing: Kirigami.Units.largeSpacing
 
-            Kirigami.Label {
+            Controls2.Label {
                 text: "Title of account"
                 Layout.alignment: Qt.AlignRight
             }
@@ -106,7 +106,7 @@ Item {
                 }
             }
 
-            Kirigami.Label {
+            Controls2.Label {
                 text: "Path"
                 Layout.alignment: Qt.AlignRight
             }
@@ -148,7 +148,7 @@ Item {
             }
 
             /*
-            Kirigami.Label {
+            Controls2.Label {
                 text: ""
             }
             Controls.CheckBox {
@@ -157,21 +157,21 @@ Item {
             }
             */
 
-            Kirigami.Label {
+            Controls2.Label {
                 text:  ""
                 Layout.fillHeight: true
             }
-            Kirigami.Label {
+            Controls2.Label {
                 text: ""
             }
 
-            Kirigami.Label {
+            Controls2.Label {
                 text: ""
             }
             Item {
                 Layout.fillWidth: true
 
-                Controls.Button {
+                Controls2.Button {
                     text: "Discard"
 
                     onClicked: {
@@ -179,7 +179,7 @@ Item {
                     }
                 }
 
-                Controls.Button {
+                Controls2.Button {
                     id: saveButton
 
                     anchors.right: parent.right
