@@ -22,7 +22,7 @@ import QtQml.Models 2.2
 DelegateModel {
     id: mailDataModel
     property bool debug: true
-    delegate: Rectangle {
+    delegate: Item {
         id: partColumn
         width: parent.width
         height: childrenRect.height
