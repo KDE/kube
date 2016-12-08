@@ -61,7 +61,7 @@ Item {
 
         Text {
             text: root.name
-            color: Kirigami.Theme.textColor
+            color: Kirigami.Theme.backgroundColor
         }
     }
 }
