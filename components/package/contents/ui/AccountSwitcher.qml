@@ -35,6 +35,7 @@ Controls2.Button {
 
     onClicked: {
         popup.open()
+        focus = false
     }
 
     Controls2.Popup {
