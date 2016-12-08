@@ -29,7 +29,7 @@ Controls2.Button {
     id: accountSwitcher
 
     Layout.fillWidth: true
-    Layout.fillHeight: true
+    height: parent.height
 
     text: "Account Switcher"
 
