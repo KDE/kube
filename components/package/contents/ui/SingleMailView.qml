@@ -18,7 +18,7 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 1.3 as Controls1
-import QtQuick.Controls 2 as Controls2
+import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -58,7 +58,7 @@ Rectangle {
 
         }
 
-        Controls2.Button {
+        Button {
             anchors {
                 right: parent.right
                 rightMargin: Kirigami.Units.gridUnit * 0.2
