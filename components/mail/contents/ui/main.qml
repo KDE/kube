@@ -22,7 +22,6 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
 import QtQuick.Controls 2.0 as Controls2
-
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.actions 1.0 as KubeAction
@@ -136,6 +135,14 @@ Controls2.ApplicationWindow {
         onActivated: mailListView.currentIndex--
     }
     //END Shortcuts
+
+    //BEGIN background
+    Rectangle {
+        anchors.fill: parent
+
+        color: Kirigami.Theme.backgroundColor
+    }
+    //END background
 
     //BEGIN Main content
     SplitView {
@@ -328,6 +335,8 @@ Controls2.ApplicationWindow {
     //BEGIN AccountWizard
     KubeAccounts.AccountWizard {
         id: accountWizard
+
+        // visible: true
 
         height: app.height * 0.85
         width: app.width * 0.85
