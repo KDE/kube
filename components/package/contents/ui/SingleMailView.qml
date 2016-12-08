@@ -68,6 +68,7 @@ Rectangle {
 
             onClicked: {
                 text = text == "show plaintext" ? "show html" : "show plaintext"
+                focus = false
             }
         }
 
