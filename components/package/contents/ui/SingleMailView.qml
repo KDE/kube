@@ -155,7 +155,7 @@ Rectangle {
                                 height: Kirigami.Units.gridUnit * 2.5
                                 width: height
 
-                                name: model.sender
+                                name: model.senderName
                             }
 
                             ColumnLayout {
