@@ -1,20 +1,20 @@
 /*
-  Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License along
-  with this program; if not, write to the Free Software Foundation, Inc.,
-  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-*/
+ *  Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ */
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
@@ -70,25 +70,12 @@ Controls2.Popup {
 
                 anchors.fill: parent
 
-                Controls2.TextField {
-                    id: subject
-
-                    Layout.fillWidth: true
-
-                    placeholderText: "Enter Subject..."
-
-                    text: composer.subject
-
-                    onTextChanged: {
-                        composer.subject = text;
-                    }
-                }
-
                 GridLayout {
 
                     columns: 2
 
                     Controls2.Label {
+                        Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         text: "To"
                     }
 
@@ -110,8 +97,8 @@ Controls2.Popup {
 
 
                     Controls2.Label {
+                        Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         text: "Cc"
-
                         visible: cc.visible
                     }
 
@@ -135,8 +122,8 @@ Controls2.Popup {
                     }
 
                     Controls2.Label {
+                        Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         text: "Bcc"
-
                         visible: bcc.visible
                     }
 
@@ -158,93 +145,61 @@ Controls2.Popup {
                             composer.recepientSearchString = searchTerm
                         }
                     }
-                }
 
-                RowLayout {
                     Controls2.Label {
-                        text: "Sending as"
+                        text: "From"
                     }
 
-                    Controls2.ComboBox {
-                        id: identityCombo
-                        model: composer.identityModel
-                        textRole: "displayName"
+                    RowLayout {
 
-                        Layout.fillWidth: true
+                        Controls2.ComboBox {
+                            id: identityCombo
+                            model: composer.identityModel
+                            textRole: "displayName"
 
-                        onCurrentIndexChanged: {
-                            composer.currentIdentityIndex = currentIndex
-                        }
-                    }
+                            Layout.fillWidth: true
 
-                    Controls2.Button {
-                        id: ccButton
-
-                        text: "Cc"
-
-                        onClicked: {
-                            cc.visible = true
-                            ccButton.visible = false
-                        }
-                    }
-
-                    Controls2.Button {
-                        id: bccButton
-
-                        text: "Bcc"
-
-                        onClicked: {
-                            bcc.visible = true
-                            bccButton.visible = false
-                        }
-                    }
-                }
-
-                /*
-                Item {
-
-                    Layout.fillWidth: true
-
-                    height: subject.height * 1.5
-
-                    Controls2.Button {
-
-                        anchors {
-                            bottom: parent.bottom
-                            right: parent.right
+                            onCurrentIndexChanged: {
+                                composer.currentIdentityIndex = currentIndex
+                            }
                         }
 
-                        text: "Attach"
+                        Controls2.Button {
+                            id: ccButton
 
-                        onClicked: {
-                            fileDialog.open();
+                            text: "Cc"
+                            onClicked: {
+                                cc.visible = true
+                                ccButton.visible = false
+                            }
                         }
-                    }
-                }
 
-                RowLayout {
+                        Controls2.Button {
+                            id: bccButton
 
-                    Layout.fillWidth: true
+                            text: "Bcc"
 
-                    Repeater {
-
-                        model: composer.attachments
-
-                        delegate: Controls2.Label {
-                            id: name
-
-                            text: modelData
-
-                            Rectangle {
-
-                                anchors.fill: parent
-
-                                color: "lightsteelblue"
+                            onClicked: {
+                                bcc.visible = true
+                                bccButton.visible = false
                             }
                         }
                     }
                 }
-                */
+
+                Controls2.TextField {
+                    id: subject
+
+                    Layout.fillWidth: true
+
+                    placeholderText: "Enter Subject..."
+
+                    text: composer.subject
+
+                    onTextChanged: {
+                        composer.subject = text;
+                    }
+                }
 
                 Controls2.TextArea {
                     id: content
