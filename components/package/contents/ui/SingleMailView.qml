@@ -156,7 +156,7 @@ Item {
                             topMargin: Kirigami.Units.smallSpacing
                         }
 
-                        width: parent.width - avatar.width - Kirigami.Units.largeSpacing * 3
+                        width: parent.width - avatar.width - Kirigami.Units.largeSpacing * 2
 
                         spacing: Kirigami.Units.smallSpacing
                         clip: true
