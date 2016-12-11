@@ -26,12 +26,10 @@ import QtQml 2.2 as QtQml
 
 import org.kube.framework.domain 1.0 as KubeFramework
 
-Rectangle {
+Item {
     id: root
 
     property variant mail;
-
-    color: Kirigami.Theme.backgroundColor
 
     Rectangle {
         id: subjectBar
