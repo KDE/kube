@@ -66,7 +66,7 @@ Item {
             id: mailListDelegate
 
             width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
-            height: Kirigami.Units.gridUnit * 4
+            height: Kirigami.Units.gridUnit * 4.5
 
             enabled: true
             supportsMouseEvents: true
@@ -113,12 +113,15 @@ Item {
                         maximumLineCount: 2
                         width: mailListDelegate.width - Kirigami.Units.gridUnit * 3
                         wrapMode: Text.WrapAnywhere
+                        elide: Text.ElideRight
                     }
 
                     Text {
                         text: model.senderName
                         font.italic: true
                         color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
+                        width: mailListDelegate.width - Kirigami.Units.gridUnit * 3
+                        elide: Text.ElideRight
                     }
                 }
 
