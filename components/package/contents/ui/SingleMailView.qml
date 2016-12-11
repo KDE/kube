@@ -119,83 +119,107 @@ Item {
 
                 color: Kirigami.Theme.viewBackgroundColor
 
-                //TODO bookmark
-                /*
-                 *                    Contorls1.ToolButton {
-                 *                        iconName: "bookmark-new"
-                 *
-            }
-            */
                 //BEGIN header
                 Item {
                     id: header
 
-                    height: Kirigami.Units.gridUnit * 5
-                    width: parent.width
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        right: parent.right
+                        margins: Kirigami.Units.largeSpacing
+                    }
 
-                    Row {
-                        id: headerContent
+                    height: from.height + to.height + Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing
+
+                    Avatar {
+                        id: avatar
+
                         anchors {
-                            left: seperator.left
-                            bottom: seperator.top
-                            bottomMargin: height * 0.25
+                            top: parent.top
+                            topMargin: Kirigami.Units.smallSpacing
                         }
 
-                        spacing: Kirigami.Units.largeSpacing / 2
+                        height: Kirigami.Units.gridUnit * 2.5
+                        width: height
 
-                        Avatar {
-                            id: avatar
+                        name: model.senderName
+                    }
 
-                            height: Kirigami.Units.gridUnit * 2.5
-                            width: height
+                    Row{
+                        id: from
 
-                            name: model.senderName
+                        anchors {
+                            top: avatar.top
+                            left: avatar.right
+                            leftMargin: Kirigami.Units.smallSpacing * 2
+                            topMargin: Kirigami.Units.smallSpacing
                         }
 
-                        ColumnLayout {
+                        width: parent.width - avatar.width - Kirigami.Units.largeSpacing * 3
 
-                            RowLayout {
+                        spacing: Kirigami.Units.smallSpacing
+                        clip: true
 
-                                Text {
-                                    text: model.senderName
+                        Text {
+                            id: senderName
 
-                                    font.weight: Font.DemiBold
-                                    color: Kirigami.Theme.textColor
-                                    opacity: 0.75
-                                }
+                            text: model.senderName
 
-                                Text {
-                                    text: model.sender
-
-                                    color: Kirigami.Theme.textColor
-                                    opacity: 0.75
-                                }
-                            }
-
-                            RowLayout {
-                                Kirigami.Label {
-                                    text: "To:"
-                                }
-                                Text {
-                                    text: model.to
-
-                                    color: Kirigami.Theme.textColor
-                                    opacity: 0.75
-                                }
-                                Text {
-                                    text: model.cc
-
-                                    color: Kirigami.Theme.textColor
-                                    opacity: 0.75
-                                }
-                                Text {
-                                    text: model.bcc
-
-                                    color: Kirigami.Theme.textColor
-                                    opacity: 0.75
-                                }
-                            }
+                            font.weight: Font.DemiBold
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.75
                         }
+
+                        Text {
+
+                            width: parent.width - senderName.width - Kirigami.Units.smallSpacing
+
+                            text: model.sender
+
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.75
+
+                            elide: Text.ElideRight
+                        }
+                    }
+
+                    Text {
+                        id: to_label
+
+                        anchors {
+                            top: from.bottom
+                            left: avatar.right
+                            leftMargin: Kirigami.Units.smallSpacing * 2
+                            topMargin: Kirigami.Units.smallSpacing * 0.5
+                        }
+
+                        text: "to:"
+
+                        color: Kirigami.Theme.textColor
+                        opacity: 0.75
+                    }
+
+                    Text {
+                        id: to
+
+                        anchors {
+                            top: to_label.top
+                            left: to_label.right
+                            leftMargin: Kirigami.Units.smallSpacing
+                        }
+
+                        width: parent.width - avatar.width  - to_label.width - Kirigami.Units.largeSpacing * 2
+
+                        text: model.to + " "  + model.cc + " " +  model.bcc
+
+                        maximumLineCount: 3
+                        wrapMode: Text.WrapAnywhere
+                        elide: Text.ElideRight
+
+                        color: Kirigami.Theme.textColor
+                        opacity: 0.75
+                        clip: true
                     }
 
                     Text {
@@ -213,21 +237,6 @@ Item {
                     }
 
                     Rectangle {
-                        id: seperator
-
-                        anchors {
-                            bottom: parent.bottom
-                            horizontalCenter: parent.horizontalCenter
-                        }
-
-                        width: parent.width - Kirigami.Units.gridUnit * 2
-                        height: 1
-
-                        color: Kirigami.Theme.textColor
-                        opacity: 0.5
-                    }
-
-                    Rectangle {
                         anchors {
                             bottom: seperator.top
                             right: seperator.right
@@ -236,16 +245,28 @@ Item {
                         height: Kirigami.Units.gridUnit
                         width: height
 
-                        color: Kirigami.Theme.textColor
-                        opacity: 0.5
+                        color: Kirigami.Theme.backgroundColor
 
                         Controls1.ToolButton {
                             anchors.fill: parent
 
-                            onClicked: {
-                                console.error(model.mimeMessage)
-                            }
+                            iconName: "go-down"
                         }
+                    }
+
+                    Rectangle {
+                        id: seperator
+
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
+
+                        height: 1
+
+                        color: Kirigami.Theme.textColor
+                        opacity: 0.5
                     }
                 }
                 //END header
