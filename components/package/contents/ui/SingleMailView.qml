@@ -96,26 +96,26 @@ Item {
         }
 
         header: Item {
-            height: Kirigami.Units.gridUnit
+            height: Kirigami.Units.gridUnit * 0.5
             width: parent.width
 
         }
 
         footer: Item {
-            height: Kirigami.Units.gridUnit * 2
+            height: Kirigami.Units.gridUnit
             width: parent.width
         }
 
         delegate: Item {
 
-            height: sheet.height + Kirigami.Units.gridUnit * 2
+            height: sheet.height + Kirigami.Units.gridUnit
             width: parent.width
 
             Rectangle {
                 id: sheet
                 anchors.centerIn: parent
                 implicitHeight: header.height + body.height + (Kirigami.Units.gridUnit * 2.5) * 2 + footer.height
-                width: parent.width - Kirigami.Units.gridUnit * 4
+                width: parent.width - Kirigami.Units.gridUnit * 2
 
                 color: Kirigami.Theme.viewBackgroundColor
 
