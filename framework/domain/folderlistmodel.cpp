@@ -32,7 +32,7 @@ FolderListModel::FolderListModel(QObject *parent) : QSortFilterProxyModel()
 
     Query query;
     query.setFlags(Sink::Query::LiveQuery);
-    query.request<Folder::Name>().request<Folder::Icon>().request<Folder::Parent>();
+    query.request<Folder::Name>().request<Folder::Icon>().request<Folder::Parent>().request<Folder::SpecialPurpose>();
     query.requestTree<Folder::Parent>();
     runQuery(query);
 }
@@ -87,7 +87,8 @@ void FolderListModel::setAccountId(const QVariant &accountId)
     query.requestTree<Folder::Parent>();
     query.request<Folder::Name>()
          .request<Folder::Icon>()
-         .request<Folder::Parent>();
+         .request<Folder::Parent>()
+         .request<Folder::SpecialPurpose>();
     query.requestTree<Folder::Parent>();
     runQuery(query);
 }
