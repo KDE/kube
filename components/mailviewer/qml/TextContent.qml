@@ -16,25 +16,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-import QtQuick 2.4
+import QtQuick 2.7
+import org.kde.kirigami 1.0 as Kirigami
+
 Item {
     id: textItem
+
     property bool debug: true
+
     width: partColumn.width
     height: textColumn.height
+
     Column {
         id: textColumn
+
         anchors {
             top: parent.top
             left: parent.left
         }
+
         width: parent.width
         spacing: 5
-        Text {
-            width: parent.width
-            visible: textItem.debug
-            text: model.type
-        }
+
         TextEdit  {
             width: parent.width
 
@@ -44,7 +47,15 @@ Item {
             text: model.content
             wrapMode: Text.WordWrap
 
-            color: model.embeded ? "grey" : "black"
+            color: model.embeded ? Kirigami.Theme.diabledTextColor : Kirigami.Theme.textColor
         }
+
+        //BEGIN debug
+        Text {
+            width: parent.width
+            visible: textItem.debug
+            text: model.type
+        }
+        //END debug
     }
 }
