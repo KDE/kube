@@ -226,7 +226,7 @@ Item {
 
                         anchors {
                             right: seperator.right
-                            bottom: headerContent.top
+                            top: parent.top
                         }
 
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy hh:mm")
