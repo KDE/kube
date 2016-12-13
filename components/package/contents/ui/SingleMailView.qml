@@ -81,7 +81,8 @@ Item {
     }
 
 
-    ListView {
+    Flickable {
+        id: flickroot
         anchors {
             top: subjectBar.bottom
             left: parent.left
@@ -91,25 +92,45 @@ Item {
 
         clip: true
 
-        model: KubeFramework.MailListModel {
-            mail: root.mail
-        }
+        contentHeight: content_column.height
+        contentWidth: parent.width
 
-        header: Item {
-            height: Kirigami.Units.gridUnit * 0.5
+        Column {
+            id: content_column
+
             width: parent.width
 
-        }
+            Item {
+                id: header
+                height: Kirigami.Units.gridUnit * 0.5
+                width: parent.width
 
-        footer: Item {
-            height: Kirigami.Units.gridUnit
-            width: parent.width
-        }
+            }
 
-        delegate: Item {
+            Repeater {
+                model: KubeFramework.MailListModel {
+                    mail: root.mail
+                }
+
+                delegate: mailDelegate
+            }
+
+            Item {
+                id: footer
+                height: Kirigami.Units.gridUnit * 0.5
+                width: parent.width
+
+            }
+        }
+    }
+
+    Component {
+        id: mailDelegate
+
+        Item {
 
             height: sheet.height + Kirigami.Units.gridUnit
-            width: parent.width
+            width: flickroot.width
 
             Rectangle {
                 id: sheet
