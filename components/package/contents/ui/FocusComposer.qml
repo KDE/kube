@@ -23,22 +23,37 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework.actions 1.0 as KubeAction
 
 Controls2.Popup {
     id: root
 
-    //Controler
+    //Controller
     KubeFramework.ComposerController {
         id: composer
+
+        mailContext: KubeAction.Context {
+            id: mailcontext
+            property variant to
+            property variant cc
+            property variant bcc
+            property variant from
+            property variant subject
+            property variant body
+        }
+
+        /* onDone: { */
+        /*     root.close() */
+        /* } */
     }
+
+    //actions
+    property variant sendAction: composer.sendAction
+    property variant saveAsDraftAction: composer.saveAsDraftAction
 
     //BEGIN functions
     function loadMessage(message, loadAsDraft) {
         composer.loadMessage(message, loadAsDraft)
-    }
-
-    function send() {
-        composer.send()
     }
 
     function saveAsDraft() {
@@ -84,9 +99,9 @@ Controls2.Popup {
 
                         Layout.fillWidth: true
 
-                        text: composer.to
+                        text: mailcontext.to
                         onTextChanged: {
-                            composer.to = text;
+                            mailcontext.to = text;
                         }
 
                         model: composer.recepientAutocompletionModel
@@ -109,10 +124,10 @@ Controls2.Popup {
 
                         visible: false
 
-                        text: composer.cc
+                        text: mailcontext.cc
 
                         onTextChanged: {
-                            composer.cc = text;
+                            mailcontext.cc = text;
                         }
 
                         model: composer.recepientAutocompletionModel
@@ -134,10 +149,10 @@ Controls2.Popup {
 
                         visible : false
 
-                        text: composer.bcc
+                        text: mailcontext.bcc
 
                         onTextChanged: {
-                            composer.bcc = text;
+                            mailcontext.bcc = text;
                         }
 
                         model: composer.recepientAutocompletionModel
@@ -194,20 +209,20 @@ Controls2.Popup {
 
                     placeholderText: "Enter Subject..."
 
-                    text: composer.subject
+                    text: mailcontext.subject
 
                     onTextChanged: {
-                        composer.subject = text;
+                        mailcontext.subject = text;
                     }
                 }
 
                 Controls2.TextArea {
                     id: content
 
-                    text: composer.body
+                    text: mailcontext.body
 
                     onTextChanged: {
-                        composer.body = text;
+                        mailcontext.body = text;
                     }
 
                     Layout.fillWidth: true
@@ -220,7 +235,6 @@ Controls2.Popup {
                     width: parent.width
 
                     Controls2.Button {
-
                         text: "Discard"
 
                         onClicked: {
@@ -234,21 +248,20 @@ Controls2.Popup {
 
 
                     Controls2.Button {
-
                         text: "Save as Draft"
 
+                        enabled: saveAsDraftAction.ready
                         onClicked: {
-                            saveAsDraft()
-                            root.close()
+                            saveAsDraftAction.execute()
                         }
                     }
 
                     Controls2.Button {
                         text: "Send"
 
+                        enabled: sendAction.ready
                         onClicked: {
-                            send()
-                            root.close()
+                            sendAction.execute()
                         }
                     }
                 }

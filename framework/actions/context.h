@@ -31,5 +31,7 @@ public:
 
 }
 
+QDebug operator<<(QDebug dbg, const Kube::Context &);
+
 Q_DECLARE_METATYPE(Kube::Context*);
 

@@ -55,6 +55,8 @@ public:
     typedef std::function<void(Context*)> Handler;
     typedef std::function<KAsync::Job<void>(Context*)> JobHandler;
 
+    ActionHandlerHelper(const Handler &);
+    ActionHandlerHelper(const IsReadyFunction &, const Handler &);
     ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &, const Handler &);
     ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &, const JobHandler &);
 

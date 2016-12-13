@@ -37,6 +37,7 @@ class Action : public QObject
 public:
     Action(QObject *parent = 0);
     Action(const QByteArray &actionId, Context &context, QObject *parent = 0);
+    ~Action();
 
     void setContext(Context *);
     Context *context() const;
@@ -51,6 +52,8 @@ public:
 
     void addPreHandler(ActionHandler *handler);
     void addPostHandler(ActionHandler *handler);
+
+    bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void readyChanged();

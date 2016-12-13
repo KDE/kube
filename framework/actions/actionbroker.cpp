@@ -21,10 +21,13 @@
 
 #include "context.h"
 #include "actionhandler.h"
+#include <sink/log.h>
 
 #include <QDebug>
 
 using namespace Kube;
+
+SINK_DEBUG_AREA("actionbroker")
 
 ActionBroker::ActionBroker(QObject *parent)
     : QObject(parent)
@@ -38,15 +41,20 @@ ActionBroker &ActionBroker::instance()
     return instance;
 }
 
-bool ActionBroker::isActionReady(const QByteArray &actionId, Context *context)
+bool ActionBroker::isActionReady(const QByteArray &actionId, Context *context, const QList<QPointer<ActionHandler>> &preHandler)
 {
     if (!context) {
         return false;
     }
+    for (const auto handler : preHandler) {
+        if (!handler->isActionReady(context)) {
+            return false;
+        }
+    }
 
     for (const auto handler : mHandler.values(actionId)) {
         if (handler) {
-            if (handler-> isActionReady(context)) {
+            if (handler->isActionReady(context)) {
                 return true;
             }
         }
@@ -59,6 +67,8 @@ ActionResult ActionBroker::executeAction(const QByteArray &actionId, Context *co
 {
     ActionResult result;
     if (context) {
+        SinkLog() << "Executing action " << actionId;
+        SinkLog() << *context;
         for (const auto handler : preHandler) {
             handler->execute(context);
         }
@@ -73,7 +83,7 @@ ActionResult ActionBroker::executeAction(const QByteArray &actionId, Context *co
             handler->execute(context);
         }
     } else {
-        qWarning() << "Can't execute without context";
+        SinkWarning() << "Can't execute without context";
         result.setDone();
         result.setError(1);
     }

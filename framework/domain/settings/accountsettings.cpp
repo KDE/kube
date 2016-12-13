@@ -19,12 +19,15 @@
 #include "accountsettings.h"
 
 #include <sink/store.h>
+#include <sink/log.h>
 #include <QDebug>
 #include <QDir>
 #include <QUrl>
 
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
+
+SINK_DEBUG_AREA("accountsettings")
 
 AccountSettings::AccountSettings(QObject *parent)
     : QObject(parent)
@@ -181,7 +184,7 @@ void AccountSettings::loadMaildirResource()
                 emit pathChanged();
             }
         }).onError([](const KAsync::Error &error) {
-            qWarning() << "Failed to find the maildir resource: " << error.errorMessage;
+            SinkWarning() << "Failed to find the maildir resource: " << error.errorMessage;
         }).exec();
 }
 
@@ -195,7 +198,7 @@ void AccountSettings::loadMailtransportResource()
             mSmtpPassword = resource.getProperty("password").toString();
             emit smtpResourceChanged();
         }).onError([](const KAsync::Error &error) {
-            qWarning() << "Failed to find the smtp resource: " << error.errorMessage;
+            SinkWarning() << "Failed to find the smtp resource: " << error.errorMessage;
         }).exec();
 }
 
@@ -209,7 +212,7 @@ void AccountSettings::loadIdentity()
             mEmailAddress = identity.getAddress();
             emit identityChanged();
         }).onError([](const KAsync::Error &error) {
-            qWarning() << "Failed to find the identity resource: " << error.errorMessage;
+            SinkWarning() << "Failed to find the identity resource: " << error.errorMessage;
         }).exec();
 }
 
@@ -225,7 +228,7 @@ static QByteArray saveResource(const QByteArray &accountIdentifier, const QByteA
         }
         Store::modify(resource)
             .onError([](const KAsync::Error &error) {
-                qWarning() << "Error while modifying resource: " << error.errorMessage;
+                SinkWarning() << "Error while modifying resource: " << error.errorMessage;
             })
             .exec();
     } else {
@@ -236,7 +239,7 @@ static QByteArray saveResource(const QByteArray &accountIdentifier, const QByteA
         }
         Store::create(resource)
             .onError([](const KAsync::Error &error) {
-                qWarning() << "Error while creating resource: " << error.errorMessage;
+                SinkWarning() << "Error while creating resource: " << error.errorMessage;
             })
             .exec();
         return newIdentifier;
@@ -277,7 +280,7 @@ void AccountSettings::saveIdentity()
         identity.setAddress(mEmailAddress);
         Store::modify(identity)
         .onError([](const KAsync::Error &error) {
-            qWarning() << "Error while modifying identity: " << error.errorMessage;
+            SinkWarning() << "Error while modifying identity: " << error.errorMessage;
         })
         .exec();
     } else {
@@ -288,7 +291,7 @@ void AccountSettings::saveIdentity()
         identity.setAddress(mEmailAddress);
         Store::create(identity)
         .onError([](const KAsync::Error &error) {
-            qWarning() << "Error while creating identity: " << error.errorMessage;
+            SinkWarning() << "Error while creating identity: " << error.errorMessage;
         })
         .exec();
     }
@@ -297,12 +300,12 @@ void AccountSettings::saveIdentity()
 void AccountSettings::removeResource(const QByteArray &identifier)
 {
     if (identifier.isEmpty()) {
-        qWarning() << "We're missing an identifier";
+        SinkWarning() << "We're missing an identifier";
     } else {
         SinkResource resource(identifier);
         Store::remove(resource)
         .onError([](const KAsync::Error &error) {
-            qWarning() << "Error while removing resource: " << error.errorMessage;
+            SinkWarning() << "Error while removing resource: " << error.errorMessage;
         })
         .exec();
     }
@@ -311,12 +314,12 @@ void AccountSettings::removeResource(const QByteArray &identifier)
 void AccountSettings::removeAccount()
 {
     if (mAccountIdentifier.isEmpty()) {
-        qWarning() << "We're missing an identifier";
+        SinkWarning() << "We're missing an identifier";
     } else {
         SinkAccount account(mAccountIdentifier);
         Store::remove(account)
         .onError([](const KAsync::Error &error) {
-            qWarning() << "Error while removing account: " << error.errorMessage;
+            SinkWarning() << "Error while removing account: " << error.errorMessage;
         })
         .exec();
     }
@@ -325,12 +328,12 @@ void AccountSettings::removeAccount()
 void AccountSettings::removeIdentity()
 {
     if (mIdentityIdentifier.isEmpty()) {
-        qWarning() << "We're missing an identifier";
+        SinkWarning() << "We're missing an identifier";
     } else {
         Identity identity(mIdentityIdentifier);
         Store::remove(identity)
         .onError([](const KAsync::Error &error) {
-            qWarning() << "Error while removing identity: " << error.errorMessage;
+            SinkWarning() << "Error while removing identity: " << error.errorMessage;
         })
         .exec();
     }

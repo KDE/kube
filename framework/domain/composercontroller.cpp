@@ -21,6 +21,7 @@
 #include "composercontroller.h"
 #include <actions/context.h>
 #include <actions/action.h>
+#include <actions/actionhandler.h>
 #include <settings/settings.h>
 #include <KMime/Message>
 #include <KCodecs/KEmailAddress>
@@ -39,78 +40,25 @@
 
 SINK_DEBUG_AREA("composercontroller");
 
+Q_DECLARE_METATYPE(KMime::Types::Mailbox)
+
 ComposerController::ComposerController(QObject *parent) : QObject(parent)
 {
-}
-
-QString ComposerController::to() const
-{
-    return m_to;
-}
-
-void ComposerController::setTo(const QString &to)
-{
-    if(m_to != to) {
-        m_to = to;
-        emit toChanged();
-    }
-}
-
-QString ComposerController::cc() const
-{
-    return m_cc;
-}
-
-void ComposerController::setCc(const QString &cc)
-{
-    if(m_cc != cc) {
-        m_cc = cc;
-        emit ccChanged();
-    }
-}
-
-QString ComposerController::bcc() const
-{
-    return m_bcc;
-}
-
-void ComposerController::setBcc(const QString &bcc)
-{
-    if(m_bcc != bcc) {
-        m_bcc = bcc;
-        emit bccChanged();
-    }
-}
-
-QString ComposerController::subject() const
-{
-    return m_subject;
-}
-
-void ComposerController::setSubject(const QString &subject)
-{
-    if(m_subject != subject) {
-        m_subject = subject;
-        emit subjectChanged();
-    }
-}
-
-QString ComposerController::body() const
-{
-    return m_body;
-}
-
-void ComposerController::setBody(const QString &body)
-{
-    if(m_body != body) {
-        m_body = body;
-        emit bodyChanged();
-    }
 }
 
 QString ComposerController::recepientSearchString() const
 {
     return QString();
+}
+
+Kube::Context* ComposerController::mailContext() const
+{
+    return mContext;
+}
+
+void ComposerController::setMailContext(Kube::Context *context)
+{
+    mContext = context;
 }
 
 void ComposerController::setRecepientSearchString(const QString &s)
@@ -134,24 +82,13 @@ QAbstractItemModel *ComposerController::recepientAutocompletionModel() const
     return model;
 }
 
-QStringList ComposerController::attachemts() const
-{
-    return m_attachments;
-}
-
-void ComposerController::addAttachment(const QUrl &fileUrl)
-{
-    m_attachments.append(fileUrl.toString());
-    emit attachmentsChanged();
-}
-
 void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 {
-    setTo(msg->to(true)->asUnicodeString());
-    setCc(msg->cc(true)->asUnicodeString());
-    setSubject(msg->subject(true)->asUnicodeString());
-    setBody(msg->body());
-    m_msg = QVariant::fromValue(msg);
+    mContext->setProperty("to", msg->to(true)->asUnicodeString());
+    mContext->setProperty("cc", msg->cc(true)->asUnicodeString());
+    mContext->setProperty("subject", msg->subject(true)->asUnicodeString());
+    mContext->setProperty("body", msg->body());
+    mContext->setProperty("existingMessage", QVariant::fromValue(msg));
 }
 
 void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
@@ -159,7 +96,7 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
     Sink::Query query(*message.value<Sink::ApplicationDomain::Mail::Ptr>());
     query.request<Sink::ApplicationDomain::Mail::MimeMessage>();
     Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).syncThen<void, Sink::ApplicationDomain::Mail>([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
-        m_existingMail = mail;
+        mContext->setProperty("existingMail", QVariant::fromValue(mail));
         const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
         if (!mailData.isEmpty()) {
             KMime::Message::Ptr mail(new KMime::Message);
@@ -196,84 +133,88 @@ void applyAddresses(const QString &list, std::function<void(const QByteArray &, 
     }
 }
 
-bool ComposerController::identityIsSet() const
+void ComposerController::clear()
 {
-    return (identityModel()->rowCount() > 0) && (m_currentAccountIndex >= 0);
+    mContext->setProperty("subject", QVariant());
+    mContext->setProperty("body", QVariant());
+    mContext->setProperty("to", QVariant());
+    mContext->setProperty("cc", QVariant());
+    mContext->setProperty("bcc", QVariant());
 }
 
-KMime::Message::Ptr ComposerController::assembleMessage()
+
+Kube::ActionHandler *ComposerController::messageHandler()
 {
-    auto mail = m_msg.value<KMime::Message::Ptr>();
-    if (!mail) {
-        mail = KMime::Message::Ptr::create();
-    }
-    applyAddresses(m_to, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        mail->to(true)->addAddress(addrSpec, displayName);
-        recordForAutocompletion(addrSpec, displayName);
-    });
-    applyAddresses(m_cc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        mail->cc(true)->addAddress(addrSpec, displayName);
-        recordForAutocompletion(addrSpec, displayName);
-    });
-    applyAddresses(m_bcc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        mail->bcc(true)->addAddress(addrSpec, displayName);
-        recordForAutocompletion(addrSpec, displayName);
-    });
-    if (!identityIsSet()) {
-        SinkWarning() << "We don't have an identity to send the mail with.";
-    } else {
-        auto currentIndex = identityModel()->index(m_currentAccountIndex, 0);
+    return new Kube::ActionHandlerHelper(
+        [](Kube::Context *context) {
+            auto identity = context->property("identity");
+            return identity.isValid();
+        },
+        [this](Kube::Context *context) {
+            auto mail = context->property("existingMessage").value<KMime::Message::Ptr>();
+            if (!mail) {
+                mail = KMime::Message::Ptr::create();
+            }
+            applyAddresses(context->property("to").toString(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+                mail->to(true)->addAddress(addrSpec, displayName);
+                recordForAutocompletion(addrSpec, displayName);
+            });
+            applyAddresses(context->property("cc").toString(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+                mail->cc(true)->addAddress(addrSpec, displayName);
+                recordForAutocompletion(addrSpec, displayName);
+            });
+            applyAddresses(context->property("bcc").toString(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+                mail->bcc(true)->addAddress(addrSpec, displayName);
+                recordForAutocompletion(addrSpec, displayName);
+            });
+
+            mail->from(true)->addAddress(context->property("identity").value<KMime::Types::Mailbox>());
+
+            mail->subject(true)->fromUnicodeString(context->property("subject").toString(), "utf-8");
+            mail->setBody(context->property("body").toString().toUtf8());
+            mail->assemble();
+
+            context->setProperty("message", QVariant::fromValue(mail));
+        }
+    );
+}
+
+Kube::Action* ComposerController::saveAsDraftAction()
+{
+    auto action = new Kube::Action("org.kde.kube.actions.save-as-draft", *mContext);
+    action->addPreHandler(messageHandler());
+    return action;
+}
+
+Kube::Action* ComposerController::sendAction()
+{
+    qWarning() << "send action";
+    auto action = new Kube::Action("org.kde.kube.actions.sendmail", *mContext);
+    // action->addPreHandler(identityHandler());
+    action->addPreHandler(messageHandler());
+    // action->addPreHandler(encryptionHandler());
+    return action;
+}
+
+void ComposerController::setCurrentIdentityIndex(int index)
+{
+    m_currentAccountIndex = index;
+    auto currentIndex = identityModel()->index(m_currentAccountIndex, 0);
+    if (currentIndex.isValid()) {
+        auto currentAccountId = currentIndex.data(IdentitiesModel::AccountId).toByteArray();
+        SinkWarning() << "valid identity for index: " << index << " out of available in model: " << identityModel()->rowCount();
         KMime::Types::Mailbox mb;
         mb.setName(currentIndex.data(IdentitiesModel::Username).toString());
         mb.setAddress(currentIndex.data(IdentitiesModel::Address).toString().toUtf8());
-        mail->from(true)->addAddress(mb);
-        mail->subject(true)->fromUnicodeString(m_subject, "utf-8");
-        mail->setBody(m_body.toUtf8());
-        mail->assemble();
-        return mail;
-    }
-    return KMime::Message::Ptr();
-}
-
-void ComposerController::send()
-{
-    auto mail = assembleMessage();
-
-    //TODO deactivate action if we don't have the identiy set
-    if (!identityIsSet()) {
-        SinkWarning() << "We don't have an identity to send the mail with.";
+        SinkLog() << "Setting current identity: " << mb.prettyAddress() << "Account: " << currentAccountId;
+        mContext->setProperty("identity", QVariant::fromValue(mb));
+        mContext->setProperty("accountId", QVariant::fromValue(currentAccountId));
     } else {
-        auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(IdentitiesModel::AccountId).toByteArray();
-
-        Kube::Context context;
-        context.setProperty("message", QVariant::fromValue(mail));
-        context.setProperty("accountId", QVariant::fromValue(currentAccountId));
-
-        qDebug() << "Current account " << currentAccountId;
-
-        Kube::Action("org.kde.kube.actions.sendmail", context).execute();
-        clear();
+        SinkWarning() << "No valid identity for index: " << index << " out of available in model: " << identityModel()->rowCount();
     }
 }
 
-void ComposerController::saveAsDraft()
+int ComposerController::currentIdentityIndex() const
 {
-    auto mail = assembleMessage();
-    auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(IdentitiesModel::AccountId).toByteArray();
-
-    Kube::Context context;
-    context.setProperty("message", QVariant::fromValue(mail));
-    context.setProperty("accountId", QVariant::fromValue(currentAccountId));
-    context.setProperty("existingMail", QVariant::fromValue(m_existingMail));
-    Kube::Action("org.kde.kube.actions.save-as-draft", context).execute();
-    clear();
-}
-
-void ComposerController::clear()
-{
-    setSubject("");
-    setBody("");
-    setTo("");
-    setCc("");
-    setBcc("");
+    return m_currentAccountIndex;
 }

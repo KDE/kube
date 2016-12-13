@@ -77,6 +77,18 @@ QByteArray ActionHandler::actionId() const
 }
 
 
+ActionHandlerHelper::ActionHandlerHelper(const Handler &handler)
+    : ActionHandler(nullptr),
+    handlerFunction(handler)
+{
+}
+
+ActionHandlerHelper::ActionHandlerHelper(const IsReadyFunction &isReady, const Handler &handler)
+    : ActionHandler(nullptr),
+    isReadyFunction(isReady),
+    handlerFunction(handler)
+{
+}
 
 ActionHandlerHelper::ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &isReady, const Handler &handler)
     : ActionHandler(nullptr),
@@ -96,7 +108,10 @@ ActionHandlerHelper::ActionHandlerHelper(const QByteArray &actionId, const IsRea
 
 bool ActionHandlerHelper::isActionReady(Context *context)
 {
-    return isReadyFunction(context);
+    if (isReadyFunction) {
+        return isReadyFunction(context);
+    }
+    return true;
 }
 
 ActionResult ActionHandlerHelper::execute(Context *context)

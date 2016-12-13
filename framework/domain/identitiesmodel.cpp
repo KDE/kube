@@ -18,12 +18,17 @@
 */
 #include "identitiesmodel.h"
 #include <sink/store.h>
+#include <sink/log.h>
+
+using namespace Sink;
 
 IdentitiesModel::IdentitiesModel(QObject *parent) : QIdentityProxyModel()
 {
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
-    query.requestedProperties << "name" << "username" << "address" << "account";
+    query.request<Sink::ApplicationDomain::Identity::Name>()
+        .request<Sink::ApplicationDomain::Identity::Address>()
+        .request<Sink::ApplicationDomain::Identity::Account>();
     runQuery(query);
 }
 
@@ -53,21 +58,21 @@ QVariant IdentitiesModel::data(const QModelIndex &idx, int role) const
     auto srcIdx = mapToSource(idx);
     switch (role) {
         case Name:
-            return srcIdx.sibling(srcIdx.row(), 0).data(Qt::DisplayRole).toString();
+            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getName();
         case Username:
-            return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
+            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getName();
         case Address:
-            return srcIdx.sibling(srcIdx.row(), 2).data(Qt::DisplayRole).toString();
+            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getAddress();
         case IdentityId:
-            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->identifier();
+            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->identifier();
         case AccountId:
-            return srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()->getProperty("account").toByteArray();
+            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getAccount();
         case AccountName: {
-            const auto accountId = srcIdx.sibling(srcIdx.row(), 3).data(Qt::DisplayRole).toByteArray();
+            const auto accountId = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getAccount();
             return mAccountNames.value(accountId);
         }
         case AccountIcon: {
-            const auto accountId = srcIdx.sibling(srcIdx.row(), 3).data(Qt::DisplayRole).toByteArray();
+            const auto accountId = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getAccount();
             return mAccountIcons.value(accountId);
         }
         case DisplayName: {
@@ -85,8 +90,8 @@ void IdentitiesModel::runQuery(const Sink::Query &query)
     Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>(Sink::Query())
         .syncThen<void, QList<Sink::ApplicationDomain::SinkAccount::Ptr> >([this](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
             for (const auto &account : accounts) {
-                mAccountNames.insert(account->identifier(), account->getProperty("name").toString());
-                mAccountIcons.insert(account->identifier(), account->getProperty("icon").toString());
+                mAccountNames.insert(account->identifier(), account->getName());
+                mAccountIcons.insert(account->identifier(), account->getIcon());
             }
             emit layoutChanged();
         }).exec();

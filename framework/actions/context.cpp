@@ -19,6 +19,7 @@
 #include "context.h"
 
 #include <QDebug>
+#include <QMetaProperty>
 
 using namespace Kube;
 
@@ -26,4 +27,19 @@ Context::Context(QObject *parent)
     : QObject(parent)
 {
 
+}
+
+QDebug operator<<(QDebug dbg, const Kube::Context &context)
+{
+    dbg << "Kube::Context {\n";
+    auto metaObject = context.QObject::metaObject();
+    for (auto i = metaObject->propertyOffset(); i < metaObject->propertyCount(); i++) {
+        auto property = metaObject->property(i);
+        dbg << property.name() << context.property(property.name()) << "\n";
+    }
+    for (const auto &p : context.dynamicPropertyNames()) {
+        dbg << p << context.property(p) << "\n";
+    }
+    dbg << "\n}";
+    return dbg;
 }

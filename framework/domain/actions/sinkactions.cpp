@@ -98,10 +98,9 @@ static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize"
 static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
     [](Context *context) -> bool {
         auto accountId = context->property("accountId").value<QByteArray>();
-        auto message = context->property("message").value<KMime::Message::Ptr>();
-        return !accountId.isEmpty() && message;
+        return !accountId.isEmpty();
     },
-    [](Context *context) {
+    ActionHandlerHelper::JobHandler{[](Context *context) -> KAsync::Job<void> {
         auto accountId = context->property("accountId").value<QByteArray>();
         auto message = context->property("message").value<KMime::Message::Ptr>();
         SinkLog() << "Sending a mail: ";
@@ -109,7 +108,7 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
         Query query;
         query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);
         query.filter<SinkResource::Account>(accountId);
-        Store::fetchAll<ApplicationDomain::SinkResource>(query)
+        return Store::fetchAll<ApplicationDomain::SinkResource>(query)
             .then<void, QList<ApplicationDomain::SinkResource::Ptr>>([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
                 if (!resources.isEmpty()) {
                     auto resourceId = resources[0]->identifier();
@@ -120,18 +119,18 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
                 }
                 SinkWarning() << "Failed to find a mailtransport resource";
                 return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
-            }).exec();
-    }
+            });
+    }}
 );
 
 static ActionHandlerHelper saveAsDraft("org.kde.kube.actions.save-as-draft",
     [](Context *context) -> bool {
         auto accountId = context->property("accountId").value<QByteArray>();
-        auto message = context->property("message").value<KMime::Message::Ptr>();
-        return !accountId.isEmpty() && message;
+        return !accountId.isEmpty();
     },
     ActionHandlerHelper::JobHandler([](Context *context) -> KAsync::Job<void> {
         SinkLog() << "Executing the save-as-draft action";
+        SinkLog() << *context;
         const auto accountId = context->property("accountId").value<QByteArray>();
         const auto message = context->property("message").value<KMime::Message::Ptr>();
         auto existingMail = context->property("existingMail").value<Mail>();

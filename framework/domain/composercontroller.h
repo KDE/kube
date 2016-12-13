@@ -26,6 +26,9 @@
 #include <QAbstractItemModel>
 #include <sink/applicationdomaintype.h>
 
+#include <actions/context.h>
+#include <actions/action.h>
+
 namespace KMime {
 class Message;
 }
@@ -33,34 +36,21 @@ class Message;
 class ComposerController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (QString to READ to WRITE setTo NOTIFY toChanged)
-    Q_PROPERTY (QString cc READ cc WRITE setCc NOTIFY ccChanged)
-    Q_PROPERTY (QString bcc READ bcc WRITE setBcc NOTIFY bccChanged)
-    Q_PROPERTY (QString subject READ subject WRITE setSubject NOTIFY subjectChanged)
-    Q_PROPERTY (QString body READ body WRITE setBody NOTIFY bodyChanged)
+    Q_PROPERTY (Kube::Context* mailContext READ mailContext WRITE setMailContext)
+    Q_PROPERTY (int currentIdentityIndex READ currentIdentityIndex WRITE setCurrentIdentityIndex)
+
     Q_PROPERTY (QString recepientSearchString READ recepientSearchString WRITE setRecepientSearchString)
     Q_PROPERTY (QAbstractItemModel* recepientAutocompletionModel READ recepientAutocompletionModel CONSTANT)
     Q_PROPERTY (QAbstractItemModel* identityModel READ identityModel CONSTANT)
-    Q_PROPERTY (int currentIdentityIndex MEMBER m_currentAccountIndex)
-    Q_PROPERTY (QStringList attachments READ attachemts NOTIFY attachmentsChanged)
+
+    Q_PROPERTY (Kube::Action* sendAction READ sendAction)
+    Q_PROPERTY (Kube::Action* saveAsDraftAction READ saveAsDraftAction)
 
 public:
     explicit ComposerController(QObject *parent = Q_NULLPTR);
 
-    QString to() const;
-    void setTo(const QString &to);
-
-    QString cc() const;
-    void setCc(const QString &cc);
-
-    QString bcc() const;
-    void setBcc(const QString &bcc);
-
-    QString subject() const;
-    void setSubject(const QString &subject);
-
-    QString body() const;
-    void setBody(const QString &body);
+    Kube::Context* mailContext() const;
+    void setMailContext(Kube::Context *context);
 
     QString recepientSearchString() const;
     void setRecepientSearchString(const QString &body);
@@ -68,36 +58,22 @@ public:
     QAbstractItemModel *identityModel() const;
     QAbstractItemModel *recepientAutocompletionModel() const;
 
-    QStringList attachemts() const;
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
 
-signals:
-    void subjectChanged();
-    void bodyChanged();
-    void toChanged();
-    void ccChanged();
-    void bccChanged();
-    void fromIndexChanged();
-    void attachmentsChanged();
+    Kube::Action* sendAction();
+    Kube::Action* saveAsDraftAction();
+
+    void setCurrentIdentityIndex(int index);
+    int currentIdentityIndex() const;
 
 public slots:
-    void send();
-    void saveAsDraft();
     void clear();
-    void addAttachment(const QUrl &fileUrl);
 
 private:
-    bool identityIsSet() const;
+    Kube::ActionHandler *messageHandler();
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
-    QSharedPointer<KMime::Message> assembleMessage();
-    QString m_to;
-    QString m_cc;
-    QString m_bcc;
-    QString m_subject;
-    QString m_body;
-    QStringList m_attachments;
-    Sink::ApplicationDomain::Mail m_existingMail;
-    QVariant m_msg;
-    int m_currentAccountIndex;
+
+    int m_currentAccountIndex = -1;
+    Kube::Context *mContext;
 };

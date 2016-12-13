@@ -42,7 +42,11 @@ Action::Action(const QByteArray &actionId, Context &context, QObject *parent)
     mContext(&context),
     mActionId(actionId)
 {
+    setContext(&context);
+}
 
+Action::~Action()
+{
 }
 
 void Action::setContext(Context *context)
@@ -59,6 +63,16 @@ void Action::setContext(Context *context)
     mContext = context;
     mContext->installEventFilter(this);
     emit readyChanged();
+}
+
+bool Action::eventFilter(QObject *obj, QEvent *e)
+{
+    if (obj == mContext) {
+        if (e->type() == QEvent::DynamicPropertyChange) {
+            contextChanged();
+        }
+    }
+    return QObject::eventFilter(obj, e);
 }
 
 void Action::contextChanged()
@@ -84,7 +98,7 @@ QByteArray Action::actionId() const
 
 bool Action::ready() const
 {
-    return ActionBroker::instance().isActionReady(mActionId, mContext);
+    return ActionBroker::instance().isActionReady(mActionId, mContext, mPreHandler);
 }
 
 void Action::execute()
@@ -99,11 +113,15 @@ ActionResult Action::executeWithResult()
 
 void Action::addPreHandler(ActionHandler *handler)
 {
+    //For cleanup
+    handler->setParent(this);
     mPreHandler << handler;
 }
 
 void Action::addPostHandler(ActionHandler *handler)
 {
+    //For cleanup
+    handler->setParent(this);
     mPostHandler << handler;
 }
 
