@@ -121,6 +121,8 @@ Controls2.Button {
             delegate: Kirigami.AbstractListItem {
                 id: accountDelegate
 
+                height: Kirigami.Units.gridUnit * 2
+
                 enabled: true
                 supportsMouseEvents: true
 
@@ -130,6 +132,7 @@ Controls2.Button {
 
                     RowLayout {
                         anchors {
+                            verticalCenter: parent.verticalCenter
                             left: parent.left
                             margins: Kirigami.Units.smallSpacing
                         }
@@ -158,7 +161,8 @@ Controls2.Button {
 
                         anchors {
                             right: parent.right
-                            margins: Kirigami.Units.largeSpacing
+                            rightMargin: Kirigami.Units.largeSpacing
+                            verticalCenter: parent.verticalCenter
                         }
 
                         opacity: hovered ? 1 : 0.7
