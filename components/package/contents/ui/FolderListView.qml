@@ -25,25 +25,84 @@ import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
 
-Item {
+Rectangle {
     id: root
 
     property variant currentFolder
     property variant accountId
 
+    color: Kirigami.Theme.textColor
+
     TreeView {
-        anchors.fill: parent
         id: treeView
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+
+        height: parent.height
+
         TableViewColumn {
             title: "Name"
             role: "name"
         }
+
         model: KubeFramework.FolderListModel { id: folderListModel} //; accountId: wrapper.accountId }
+
         onCurrentIndexChanged: {
             model.fetchMore(currentIndex)
             root.currentFolder = model.data(currentIndex, KubeFramework.FolderListModel.DomainObject)
         }
+
         alternatingRowColors: false
         headerVisible: false
+
+        style: TreeViewStyle {
+
+            rowDelegate: Rectangle {
+                color: styleData.selected ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+
+                height: Kirigami.Units.gridUnit * 2
+                width: 20
+
+            }
+
+            branchDelegate: Item {
+
+                width: 16; height: 16
+
+                Text  {
+
+                    anchors.centerIn: parent
+
+                    color: Kirigami.Theme.viewBackgroundColor
+                    text: styleData.isExpanded ? "-" : "+"
+                }
+
+                //radius: styleData.isExpanded ? 0 : 100
+            }
+
+            itemDelegate: Rectangle {
+
+                color: styleData.selected ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+
+               Text {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: parent.left
+                        leftMargin: Kirigami.Units.smallSpacing
+                    }
+
+                    text: "#" + styleData.value
+
+                    color: Kirigami.Theme.viewBackgroundColor
+                }
+            }
+
+            backgroundColor: Kirigami.Theme.textColor
+            highlightedTextColor: Kirigami.Theme.highlightedTextColor
+        }
     }
 }
