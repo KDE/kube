@@ -45,9 +45,14 @@ Item {
         color: Kirigami.Theme.backgroundColor
 
         Kirigami.Heading {
-            anchors.centerIn: parent
 
-            width: parent.width - Kirigami.Units.gridUnit * 4.2
+            anchors {
+                left: parent.left
+                leftMargin: Kirigami.Units.largeSpacing
+                verticalCenter: parent.verticalCenter
+            }
+
+            width: parent.width - Kirigami.Units.gridUnit * 5
 
             text: "Some subject"
             color: Kirigami.Theme.textColor
@@ -56,21 +61,23 @@ Item {
 
         }
 
-        Button {
+        //TODO Make it clickable
+        Text {
             anchors {
                 right: parent.right
                 rightMargin: Kirigami.Units.gridUnit * 0.2
-                verticalCenter: parent.verticalCenter
+                bottom: parent.bottom
+                bottomMargin: Kirigami.Units.gridUnit * 0.2  + 1
             }
-            text: "show plaintext"
 
-            onClicked: {
-                text = text == "show plaintext" ? "show html" : "show plaintext"
-                focus = false
-            }
+            //make it blue and lightgrey
+            text: "<b>Plaintext</b> / <i>HTML</i>"
+            color: Kirigami.Theme.textColor
+            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
         }
 
         Rectangle {
+
             anchors.bottom: parent.bottom
 
             height: 1
@@ -350,6 +357,7 @@ Item {
                         }
 
                         iconName: "mail-reply-sender"
+                        //TODO add text
                     }
                 }
             }
