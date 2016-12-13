@@ -20,11 +20,13 @@
 
 #include <QDebug>
 #include <QEvent>
+#include <QPointer>
 #include <QDynamicPropertyChangeEvent>
 #include <QMetaObject>
 #include <QMetaProperty>
 
 #include "actionbroker.h"
+#include "actionhandler.h"
 #include "context.h"
 
 using namespace Kube;
@@ -87,11 +89,21 @@ bool Action::ready() const
 
 void Action::execute()
 {
-    ActionBroker::instance().executeAction(mActionId, mContext);
+    ActionBroker::instance().executeAction(mActionId, mContext, mPreHandler, mPostHandler);
 }
 
 ActionResult Action::executeWithResult()
 {
-    return ActionBroker::instance().executeAction(mActionId, mContext);
+    return ActionBroker::instance().executeAction(mActionId, mContext, mPreHandler, mPostHandler);
+}
+
+void Action::addPreHandler(ActionHandler *handler)
+{
+    mPreHandler << handler;
+}
+
+void Action::addPostHandler(ActionHandler *handler)
+{
+    mPostHandler << handler;
 }
 

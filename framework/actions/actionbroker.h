@@ -33,7 +33,7 @@ public:
     static ActionBroker &instance();
 
     bool isActionReady(const QByteArray &actionId, Context *context);
-    ActionResult executeAction(const QByteArray &actionId, Context *context);
+    ActionResult executeAction(const QByteArray &actionId, Context *context, const QList<QPointer<ActionHandler>> &preHandler, const QList<QPointer<ActionHandler>> &postHandler);
 
     void registerHandler(const QByteArray &actionId, ActionHandler *handler);
 
@@ -42,7 +42,7 @@ Q_SIGNALS:
 
 private:
     ActionBroker(QObject *parent = 0);
-    QMultiMap<QByteArray, ActionHandler*> mHandler;
+    QMultiMap<QByteArray, QPointer<ActionHandler>> mHandler;
 };
 
 }
