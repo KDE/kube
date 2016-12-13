@@ -43,6 +43,18 @@ public:
     }
     virtual ~ActionResult() {}
 
+    ActionResult &operator+=(const ActionResult &rhs)
+    {
+        if (!error() && rhs.error()) {
+            setError(rhs.error());
+        }
+        if (isDone() && rhs.isDone()) {
+            mData->mDone = false;
+        }
+        mData = rhs.mData;
+        return *this;
+    }
+
     void setDone() {
         mData->mDone = true;
     }

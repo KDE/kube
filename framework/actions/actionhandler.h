@@ -38,9 +38,7 @@ public:
 
     virtual bool isActionReady(Context *context);
 
-    // void pre(Context *context);
     virtual ActionResult execute(Context *context);
-    // void post(Context *context);
  
     void setActionId(const QByteArray &);
     QByteArray actionId() const;

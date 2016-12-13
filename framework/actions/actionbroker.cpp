@@ -44,36 +44,43 @@ bool ActionBroker::isActionReady(const QByteArray &actionId, Context *context)
         return false;
     }
 
-    //TODO This should return true if all handlers together promise to gather all necessary data, but not otherwise
     for (const auto handler : mHandler.values(actionId)) {
-        if (handler && handler->isActionReady(context)) {
-            return true;
+        if (handler) {
+            if (handler-> isActionReady(context)) {
+                return true;
+            }
         }
     }
 
     return false;
 }
 
-ActionResult ActionBroker::executeAction(const QByteArray &actionId, Context *context)
+ActionResult ActionBroker::executeAction(const QByteArray &actionId, Context *context, const QList<QPointer<ActionHandler>> &preHandler, const QList<QPointer<ActionHandler>> &postHandler)
 {
+    ActionResult result;
     if (context) {
+        for (const auto handler : preHandler) {
+            handler->execute(context);
+        }
+        //TODO the main handler should only execute once the pre handler is done
         for (const auto handler : mHandler.values(actionId)) {
             if (handler) {
-                //FIXME All handler together return one result
-                return handler->execute(context);
+                result += handler->execute(context);
             }
+        }
+        //TODO the post handler should only execute once the main handler is done
+        for (const auto handler : postHandler) {
+            handler->execute(context);
         }
     } else {
         qWarning() << "Can't execute without context";
+        result.setDone();
+        result.setError(1);
     }
-    ActionResult result;
-    result.setDone();
-    result.setError(1);
     return result;
 }
 
 void ActionBroker::registerHandler(const QByteArray &actionId, ActionHandler *handler)
 {
-    //TODO get notified on destruction via QPointer
     mHandler.insert(actionId, handler);
 }

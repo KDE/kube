@@ -24,6 +24,8 @@
 
 namespace Kube {
 
+class ActionHandler;
+
 class Action : public QObject
 {
     Q_OBJECT
@@ -47,6 +49,9 @@ public:
     Q_INVOKABLE void execute();
     ActionResult executeWithResult();
 
+    void addPreHandler(ActionHandler *handler);
+    void addPostHandler(ActionHandler *handler);
+
 Q_SIGNALS:
     void readyChanged();
 
@@ -56,6 +61,8 @@ private Q_SLOTS:
 private:
     Context *mContext;
     QByteArray mActionId;
+    QList<QPointer<ActionHandler>> mPreHandler;
+    QList<QPointer<ActionHandler>> mPostHandler;
 };
 
 }
