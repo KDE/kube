@@ -23,6 +23,7 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework.actions 1.0 as KubeAction
 
 Controls2.Popup {
     id: root
@@ -30,6 +31,9 @@ Controls2.Popup {
     //Controler
     KubeFramework.ComposerController {
         id: composer
+        /* onDone: { */
+        /*     root.close() */
+        /* } */
     }
 
     //BEGIN functions
@@ -37,9 +41,6 @@ Controls2.Popup {
         composer.loadMessage(message, loadAsDraft)
     }
 
-    function send() {
-        composer.send()
-    }
 
     function saveAsDraft() {
         composer.saveAsDraft()
@@ -50,6 +51,7 @@ Controls2.Popup {
     }
     //END functions
 
+    property variant sendAction: composer.sendAction
     modal: true
     focus: true
     closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
@@ -246,9 +248,9 @@ Controls2.Popup {
                     Controls2.Button {
                         text: "Send"
 
+                        enabled: sendAction.ready
                         onClicked: {
-                            send()
-                            root.close()
+                            sendAction.execute()
                         }
                     }
                 }

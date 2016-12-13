@@ -26,6 +26,9 @@
 #include <QAbstractItemModel>
 #include <sink/applicationdomaintype.h>
 
+#include <actions/context.h>
+#include <actions/action.h>
+
 namespace KMime {
 class Message;
 }
@@ -41,8 +44,9 @@ class ComposerController : public QObject
     Q_PROPERTY (QString recepientSearchString READ recepientSearchString WRITE setRecepientSearchString)
     Q_PROPERTY (QAbstractItemModel* recepientAutocompletionModel READ recepientAutocompletionModel CONSTANT)
     Q_PROPERTY (QAbstractItemModel* identityModel READ identityModel CONSTANT)
-    Q_PROPERTY (int currentIdentityIndex MEMBER m_currentAccountIndex)
+    Q_PROPERTY (int currentIdentityIndex READ currentIdentityIndex WRITE setCurrentIdentityIndex)
     Q_PROPERTY (QStringList attachments READ attachemts NOTIFY attachmentsChanged)
+    Q_PROPERTY (Kube::Action* sendAction READ sendAction)
 
 public:
     explicit ComposerController(QObject *parent = Q_NULLPTR);
@@ -70,6 +74,11 @@ public:
 
     QStringList attachemts() const;
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
+
+    Kube::Action* sendAction();
+
+    void setCurrentIdentityIndex(int index);
+    int currentIdentityIndex() const;
 
 signals:
     void subjectChanged();
@@ -99,5 +108,6 @@ private:
     QStringList m_attachments;
     Sink::ApplicationDomain::Mail m_existingMail;
     QVariant m_msg;
-    int m_currentAccountIndex;
+    int m_currentAccountIndex = -1;
+    Kube::Context mContext;
 };

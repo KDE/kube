@@ -21,6 +21,7 @@
 #include "composercontroller.h"
 #include <actions/context.h>
 #include <actions/action.h>
+#include <actions/actionhandler.h>
 #include <settings/settings.h>
 #include <KMime/Message>
 #include <KCodecs/KEmailAddress>
@@ -276,4 +277,39 @@ void ComposerController::clear()
     setTo("");
     setCc("");
     setBcc("");
+}
+
+
+Kube::Action* ComposerController::sendAction()
+{
+    qWarning() << "send action";
+    /* qDebug() << "Current account " << currentAccountId; */
+    auto action = new Kube::Action("org.kde.kube.actions.sendmail", mContext);
+    auto preHandler = new Kube::ActionHandlerHelper(
+        [this](Kube::Context *context) {
+            auto mail = assembleMessage();
+            if (mail) {
+                context->setProperty("message", QVariant::fromValue(mail));
+            }
+        }
+    );
+    //For cleanup
+    preHandler->setParent(action);
+    action->addPreHandler(preHandler);
+
+    // QQmlEngine::setObjectOwnership(action, QQmlEngine::CppOwnership);
+    return action;
+}
+
+void ComposerController::setCurrentIdentityIndex(int index)
+{
+    qWarning() << "Setting current identity";
+    m_currentAccountIndex = index;
+    auto currentAccountId = identityModel()->index(m_currentAccountIndex, 0).data(IdentitiesModel::AccountId).toByteArray();
+    mContext.setProperty("accountId", QVariant::fromValue(currentAccountId));
+}
+
+int ComposerController::currentIdentityIndex() const
+{
+    return m_currentAccountIndex;
 }
