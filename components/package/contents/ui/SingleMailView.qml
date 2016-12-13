@@ -106,7 +106,12 @@ Item {
             width: parent.width
         }
 
-        delegate: Item {
+        delegate: mailDelegate
+    }
+    Component {
+        id: mailDelegate
+
+        Item {
 
             height: sheet.height + Kirigami.Units.gridUnit
             width: parent.width
