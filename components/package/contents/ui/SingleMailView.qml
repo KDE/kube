@@ -63,6 +63,7 @@ Item {
 
         //TODO Make it clickable
         Text {
+
             anchors {
                 right: parent.right
                 rightMargin: Kirigami.Units.gridUnit * 0.2
@@ -74,6 +75,14 @@ Item {
             text: "<b>Plaintext</b> / <i>HTML</i>"
             color: Kirigami.Theme.textColor
             font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    parent.text == "<b>Plaintext</b> / <i>HTML</i>" ? parent.text = "<i>Plaintext</i> / <b>HTML</b>" : parent.text = "<b>Plaintext</b> / <i>HTML</i>"
+                }
+            }
         }
 
         Rectangle {
