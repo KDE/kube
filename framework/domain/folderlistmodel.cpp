@@ -20,10 +20,13 @@
 
 #include "folderlistmodel.h"
 #include <sink/store.h>
+#include <sink/log.h>
 #include <settings/settings.h>
 
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
+
+SINK_DEBUG_AREA("folderlistmodel")
 
 FolderListModel::FolderListModel(QObject *parent) : QSortFilterProxyModel()
 {
@@ -97,22 +100,29 @@ static int getPriority(const Sink::ApplicationDomain::Folder &folder)
 {
     auto specialPurpose = folder.getSpecialPurpose();
     if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::inbox)) {
-        return 10;
-    }
-    if (!specialPurpose.isEmpty()) {
+        return 5;
+    } else if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::drafts)) {
+        return 6;
+    } else if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::sent)) {
+        return 7;
+    } else if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash)) {
+        return 8;
+    } else if (!specialPurpose.isEmpty()) {
         return 9;
     }
-    return 0;
+    return 10;
 }
 
 bool FolderListModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     const auto leftFolder = left.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
     const auto rightFolder = right.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
-    if (getPriority(*leftFolder) < getPriority(*rightFolder)) {
-        return true;
+    const auto leftPriority = getPriority(*leftFolder);
+    const auto rightPriority = getPriority(*rightFolder);
+    if (leftPriority == rightPriority) {
+        return leftFolder->getName() < rightFolder->getName();
     }
-    return leftFolder->getName() < rightFolder->getName();
+    return leftPriority < rightPriority;
 }
 
 QVariant FolderListModel::accountId() const
