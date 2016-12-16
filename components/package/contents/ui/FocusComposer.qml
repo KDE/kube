@@ -42,9 +42,9 @@ Controls2.Popup {
             property variant body
         }
 
-        /* onDone: { */
-        /*     root.close() */
-        /* } */
+        onDone: {
+            root.close()
+        }
     }
 
     //actions

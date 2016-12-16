@@ -183,6 +183,10 @@ Kube::Action* ComposerController::saveAsDraftAction()
 {
     auto action = new Kube::Action("org.kde.kube.actions.save-as-draft", *mContext);
     action->addPreHandler(messageHandler());
+    action->addPostHandler(new Kube::ActionHandlerHelper(
+        [this](Kube::Context *context) {
+            emit done();
+        }));
     return action;
 }
 
@@ -193,6 +197,10 @@ Kube::Action* ComposerController::sendAction()
     // action->addPreHandler(identityHandler());
     action->addPreHandler(messageHandler());
     // action->addPreHandler(encryptionHandler());
+    action->addPostHandler(new Kube::ActionHandlerHelper(
+        [this](Kube::Context *context) {
+            emit done();
+        }));
     return action;
 }
 

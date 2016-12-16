@@ -69,6 +69,9 @@ public:
 public slots:
     void clear();
 
+signals:
+    void done();
+
 private:
     Kube::ActionHandler *messageHandler();
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
