@@ -95,7 +95,7 @@ Rectangle {
                         leftMargin: Kirigami.Units.smallSpacing
                     }
 
-                    text: "#" + styleData.value
+                    text: styleData.value
 
                     color: Kirigami.Theme.viewBackgroundColor
                 }
