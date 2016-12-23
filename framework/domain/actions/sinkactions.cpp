@@ -95,6 +95,21 @@ static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize"
     }
 );
 
+static ActionHandlerHelper sendOutboxHandler("org.kde.kube.actions.sendOutbox",
+    [](Context *context) -> bool {
+        return true;
+    },
+    ActionHandlerHelper::JobHandler{[](Context *context) -> KAsync::Job<void> {
+        using namespace Sink::ApplicationDomain;
+        Query query;
+        query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
+        return Store::fetchAll<SinkResource>(query)
+            .each([=](const SinkResource::Ptr &resource) -> KAsync::Job<void> {
+                return Store::synchronize(SyncScope{}.resourceFilter(resource->identifier()));
+            });
+    }}
+);
+
 static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
     [](Context *context) -> bool {
         auto accountId = context->property("accountId").value<QByteArray>();

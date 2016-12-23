@@ -19,9 +19,11 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import QtQuick.Controls 2.0 as Controls2
 
 import org.kde.kirigami 1.0 as Kirigami
 
+import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
 
@@ -35,6 +37,13 @@ ToolButton {
         dialog.visible = dialog.visible ? false : true
     }
 
+    KubeAction.Action {
+        id: sendNowAction
+        actionId: "org.kde.kube.actions.sendOutbox"
+        context: KubeAction.Context {
+        }
+    }
+
     //BEGIN Dialog
     Rectangle {
         id: dialog
@@ -46,8 +55,16 @@ ToolButton {
             horizontalCenter: parent.horizontalCenter
         }
 
-       height: modelCount * Kirigami.Units.gridUnit * 3 + 10//scrollView.height  height: Kirigami.Units.gridUnit * 15
-       width: Kirigami.Units.gridUnit * 20
+        function calculateHeight() {
+            if (modelCount == 0) {
+                return Kirigami.Units.gridUnit * 3 + 10
+            } else {
+                return modelCount * Kirigami.Units.gridUnit * 3 + 10 + sendNowButton.height
+            }
+        }
+
+        height: calculateHeight()
+        width: Kirigami.Units.gridUnit * 20
 
         color: Kirigami.Theme.backgroundColor
         border.width: 1
@@ -57,32 +74,58 @@ ToolButton {
         visible: false
 
         //BEGIN Dialog Content
-        ScrollView {
-            id: scrollView
-
+        Column {
             anchors {
                 fill: parent
                 margins: 5
             }
 
-            ListView {
-                id: listView
+            visible: dialog.modelCount != 0
 
-                model: KubeFramework.OutboxModel {
+            Controls2.Button {
+                id: sendNowButton
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: Kirigami.Units.gridUnit * 2
+                text: qsTr("Send now.")
+                onClicked: {
+                    sendNowAction.execute()
+                }
+            }
+
+            ScrollView {
+                id: scrollView
+
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 5
                 }
 
-                delegate: Kirigami.AbstractListItem {
+                ListView {
+                    id: listView
 
-                    height: Kirigami.Units.gridUnit * 3
+                    model: KubeFramework.OutboxModel {
+                    }
 
-                    Kirigami.Label {
+                    delegate: Kirigami.AbstractListItem {
+                        height: Kirigami.Units.gridUnit * 3
 
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: model.subject
+                        Kirigami.Label {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: model.subject
+                        }
                     }
                 }
             }
+        }
+        Kirigami.Label {
+            anchors {
+                fill: parent
+                margins: 5
+                verticalCenter: parent.verticalCenter
+            }
+            visible: dialog.modelCount == 0
+            text: qsTr("No pending messages.")
         }
         //END Dialog Content
     }
