@@ -210,7 +210,6 @@ void ComposerController::setCurrentIdentityIndex(int index)
     auto currentIndex = identityModel()->index(m_currentAccountIndex, 0);
     if (currentIndex.isValid()) {
         auto currentAccountId = currentIndex.data(IdentitiesModel::AccountId).toByteArray();
-        SinkWarning() << "valid identity for index: " << index << " out of available in model: " << identityModel()->rowCount();
         KMime::Types::Mailbox mb;
         mb.setName(currentIndex.data(IdentitiesModel::Username).toString());
         mb.setAddress(currentIndex.data(IdentitiesModel::Address).toString().toUtf8());
