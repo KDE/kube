@@ -31,21 +31,13 @@ Controls2.Popup {
     //Controller
     KubeFramework.ComposerController {
         id: composer
-
-        mailContext: KubeAction.Context {
-            id: mailcontext
-            property variant to
-            property variant cc
-            property variant bcc
-            property variant from
-            property variant subject
-            property variant body
-        }
-
         onDone: {
             root.close()
         }
     }
+
+    //context
+    property variant mailcontext: composer.mailContext
 
     //actions
     property variant sendAction: composer.sendAction

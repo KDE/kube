@@ -29,10 +29,22 @@ Context::Context(QObject *parent)
 
 }
 
+void Context::clear()
+{
+    auto meta = metaObject();
+    for (auto i = meta->propertyOffset(); i < meta->propertyCount(); i++) {
+        auto property = meta->property(i);
+        setProperty(property.name(), QVariant());
+    }
+    for (const auto &p : dynamicPropertyNames()) {
+        setProperty(p, QVariant());
+    }
+}
+
 QDebug operator<<(QDebug dbg, const Kube::Context &context)
 {
     dbg << "Kube::Context {\n";
-    auto metaObject = context.QObject::metaObject();
+    auto metaObject = context.metaObject();
     for (auto i = metaObject->propertyOffset(); i < metaObject->propertyCount(); i++) {
         auto property = metaObject->property(i);
         dbg << property.name() << context.property(property.name()) << "\n";

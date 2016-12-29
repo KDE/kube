@@ -118,7 +118,7 @@ static ActionHandlerHelper sendMailHandler("org.kde.kube.actions.sendmail",
     ActionHandlerHelper::JobHandler{[](Context *context) -> KAsync::Job<void> {
         auto accountId = context->property("accountId").value<QByteArray>();
         auto message = context->property("message").value<KMime::Message::Ptr>();
-        SinkLog() << "Sending a mail: ";
+        SinkLog() << "Sending a mail: " << *context;
 
         Query query;
         query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);

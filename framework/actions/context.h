@@ -20,6 +20,18 @@
 
 #include <QObject>
 
+#define KUBE_CONTEXT_PROPERTY(TYPE, NAME, LOWERCASENAME) \
+    public: Q_PROPERTY(TYPE LOWERCASENAME MEMBER m##NAME NOTIFY LOWERCASENAME##Changed) \
+    struct NAME { \
+        static constexpr const char *name = #LOWERCASENAME; \
+        typedef TYPE Type; \
+    }; \
+    void set##NAME(const TYPE &value) { setProperty(NAME::name, QVariant::fromValue(value)); } \
+    TYPE get##NAME() const { return m##NAME; } \
+    Q_SIGNALS: void LOWERCASENAME##Changed(); \
+    private: TYPE m##NAME;
+
+
 namespace Kube {
 
 class Context : public QObject {
@@ -27,6 +39,7 @@ class Context : public QObject {
 public:
     Context(QObject *parent = 0);
     virtual ~Context(){};
+    virtual void clear();
 };
 
 }

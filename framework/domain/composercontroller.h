@@ -33,10 +33,20 @@ namespace KMime {
 class Message;
 }
 
+class ComposerContext : public Kube::Context {
+    Q_OBJECT
+    KUBE_CONTEXT_PROPERTY(QString, To, to)
+    KUBE_CONTEXT_PROPERTY(QString, Cc, cc)
+    KUBE_CONTEXT_PROPERTY(QString, Bcc, bcc)
+    KUBE_CONTEXT_PROPERTY(QString, From, from)
+    KUBE_CONTEXT_PROPERTY(QString, Subject, subject)
+    KUBE_CONTEXT_PROPERTY(QString, Body, body)
+};
+
 class ComposerController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (Kube::Context* mailContext READ mailContext WRITE setMailContext)
+    Q_PROPERTY (Kube::Context* mailContext READ mailContext CONSTANT)
     Q_PROPERTY (int currentIdentityIndex READ currentIdentityIndex WRITE setCurrentIdentityIndex)
 
     Q_PROPERTY (QString recepientSearchString READ recepientSearchString WRITE setRecepientSearchString)
@@ -49,8 +59,7 @@ class ComposerController : public QObject
 public:
     explicit ComposerController(QObject *parent = Q_NULLPTR);
 
-    Kube::Context* mailContext() const;
-    void setMailContext(Kube::Context *context);
+    Kube::Context* mailContext();
 
     QString recepientSearchString() const;
     void setRecepientSearchString(const QString &body);
@@ -78,5 +87,5 @@ private:
     void setMessage(const QSharedPointer<KMime::Message> &msg);
 
     int m_currentAccountIndex = -1;
-    Kube::Context *mContext;
+    ComposerContext mContext;
 };
