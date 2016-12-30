@@ -47,35 +47,65 @@ ComposerController::ComposerController(QObject *parent) : QObject(parent)
     QQmlEngine::setObjectOwnership(&mContext, QQmlEngine::CppOwnership);
 }
 
-QString ComposerController::recepientSearchString() const
-{
-    return QString();
-}
 
 Kube::Context* ComposerController::mailContext()
 {
     return &mContext;
 }
 
-void ComposerController::setRecepientSearchString(const QString &s)
-{
-    if (auto model = static_cast<RecipientAutocompletionModel*>(recepientAutocompletionModel())) {
-        model->setFilter(s);
+class RecipientCompleter : public Completer {
+public:
+    RecipientCompleter() : Completer(new RecipientAutocompletionModel)
+    {
     }
+
+    void setSearchString(const QString &s) {
+        static_cast<RecipientAutocompletionModel*>(model())->setFilter(s);
+        Completer::setSearchString(s);
+    }
+};
+
+Completer *ComposerController::recipientCompleter() const
+{
+    static auto selector = new RecipientCompleter();
+    QQmlEngine::setObjectOwnership(selector, QQmlEngine::CppOwnership);
+    return selector;
 }
 
-QAbstractItemModel *ComposerController::identityModel() const
-{
-    static auto model = new IdentitiesModel();
-    QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
-    return model;
-}
+class IdentitySelector : public Selector {
+public:
+    IdentitySelector(ComposerContext &context) : Selector(new IdentitiesModel), mContext(context)
+    {
+    }
 
-QAbstractItemModel *ComposerController::recepientAutocompletionModel() const
+    void setCurrent(const QModelIndex &index) Q_DECL_OVERRIDE
+    {
+        if (index.isValid()) {
+            auto currentAccountId = index.data(IdentitiesModel::AccountId).toByteArray();
+
+            KMime::Types::Mailbox mb;
+            mb.setName(index.data(IdentitiesModel::Username).toString());
+            mb.setAddress(index.data(IdentitiesModel::Address).toString().toUtf8());
+            SinkLog() << "Setting current identity: " << mb.prettyAddress() << "Account: " << currentAccountId;
+
+            mContext.setProperty("identity", QVariant::fromValue(mb));
+            mContext.setProperty("accountId", QVariant::fromValue(currentAccountId));
+        } else {
+            SinkWarning() << "No valid identity for index: " << index;
+            mContext.setProperty("identity", QVariant{});
+            mContext.setProperty("accountId", QVariant{});
+        }
+
+    }
+private:
+    ComposerContext &mContext;
+};
+
+Selector *ComposerController::identitySelector() const
 {
-    static auto model = new RecipientAutocompletionModel();
-    QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
-    return model;
+    static auto selector = new IdentitySelector(*const_cast<ComposerContext*>(&mContext));
+    QQmlEngine::setObjectOwnership(selector, QQmlEngine::CppOwnership);
+    return selector;
 }
 
 void ComposerController::setMessage(const KMime::Message::Ptr &msg)
@@ -113,7 +143,7 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
 
 void ComposerController::recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName)
 {
-    if (auto model = static_cast<RecipientAutocompletionModel*>(recepientAutocompletionModel())) {
+    if (auto model = static_cast<RecipientAutocompletionModel*>(recipientCompleter()->model())) {
         model->addEntry(addrSpec, displayName);
     }
 }
@@ -193,26 +223,4 @@ Kube::Action* ComposerController::sendAction()
             emit done();
         }));
     return action;
-}
-
-void ComposerController::setCurrentIdentityIndex(int index)
-{
-    m_currentAccountIndex = index;
-    auto currentIndex = identityModel()->index(m_currentAccountIndex, 0);
-    if (currentIndex.isValid()) {
-        auto currentAccountId = currentIndex.data(IdentitiesModel::AccountId).toByteArray();
-        KMime::Types::Mailbox mb;
-        mb.setName(currentIndex.data(IdentitiesModel::Username).toString());
-        mb.setAddress(currentIndex.data(IdentitiesModel::Address).toString().toUtf8());
-        SinkLog() << "Setting current identity: " << mb.prettyAddress() << "Account: " << currentAccountId;
-        mContext.setProperty("identity", QVariant::fromValue(mb));
-        mContext.setProperty("accountId", QVariant::fromValue(currentAccountId));
-    } else {
-        SinkWarning() << "No valid identity for index: " << index << " out of available in model: " << identityModel()->rowCount();
-    }
-}
-
-int ComposerController::currentIdentityIndex() const
-{
-    return m_currentAccountIndex;
 }

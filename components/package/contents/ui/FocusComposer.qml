@@ -96,9 +96,9 @@ Controls2.Popup {
                             mailcontext.to = text;
                         }
 
-                        model: composer.recepientAutocompletionModel
+                        model: composer.recipientCompleter.model
                         onSearchTermChanged: {
-                            composer.recepientSearchString = searchTerm
+                            composer.recipientCompleter.searchString = searchTerm
                         }
                     }
 
@@ -122,9 +122,9 @@ Controls2.Popup {
                             mailcontext.cc = text;
                         }
 
-                        model: composer.recepientAutocompletionModel
+                        model: composer.recipientCompleter.model
                         onSearchTermChanged: {
-                            composer.recepientSearchString = searchTerm
+                            composer.recipientCompleter.searchString = searchTerm
                         }
                     }
 
@@ -147,9 +147,9 @@ Controls2.Popup {
                             mailcontext.bcc = text;
                         }
 
-                        model: composer.recepientAutocompletionModel
+                        model: composer.recipientCompleter.model
                         onSearchTermChanged: {
-                            composer.recepientSearchString = searchTerm
+                            composer.recipientCompleter.searchString = searchTerm
                         }
                     }
 
@@ -161,13 +161,13 @@ Controls2.Popup {
 
                         Controls2.ComboBox {
                             id: identityCombo
-                            model: composer.identityModel
+                            model: composer.identitySelector.model
                             textRole: "displayName"
 
                             Layout.fillWidth: true
 
                             onCurrentIndexChanged: {
-                                composer.currentIdentityIndex = currentIndex
+                                composer.identitySelector.currentIndex = currentIndex
                             }
                         }
 

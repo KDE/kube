@@ -23,6 +23,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVariant>
+#include <QQmlEngine>
 #include <QAbstractItemModel>
 #include <sink/applicationdomaintype.h>
 
@@ -43,15 +44,62 @@ class ComposerContext : public Kube::Context {
     KUBE_CONTEXT_PROPERTY(QString, Body, body)
 };
 
+class Completer : public QObject {
+    Q_OBJECT
+    Q_PROPERTY (QAbstractItemModel* model READ model CONSTANT)
+    Q_PROPERTY (QString searchString WRITE setSearchString READ searchString)
+
+public:
+    Completer(QAbstractItemModel *model) : mModel{model}
+    {
+        QQmlEngine::setObjectOwnership(mModel, QQmlEngine::CppOwnership);
+    }
+    QAbstractItemModel *model() { return mModel; }
+    virtual void setSearchString(const QString &s) { mSearchString = s; }
+    QString searchString() const { return mSearchString; }
+
+private:
+    QAbstractItemModel *mModel = nullptr;
+    QString mSearchString;
+};
+
+/**
+ * Exposes a model and maintains a current index selection.
+ */
+class Selector : public QObject {
+    Q_OBJECT
+    Q_PROPERTY (int currentIndex READ currentIndex WRITE setCurrentIndex)
+    Q_PROPERTY (QAbstractItemModel* model READ model CONSTANT)
+
+public:
+    Selector(QAbstractItemModel *model) : mModel{model}
+    {
+        QQmlEngine::setObjectOwnership(mModel, QQmlEngine::CppOwnership);
+    }
+
+    virtual QAbstractItemModel *model() { return mModel; }
+
+    void setCurrentIndex(int i) {
+        mCurrentIndex = i;
+        Q_ASSERT(mModel);
+        setCurrent(mModel->index(mCurrentIndex, 0));
+    }
+
+    int currentIndex() { return mCurrentIndex; }
+
+    virtual void setCurrent(const QModelIndex &) = 0;
+private:
+    QAbstractItemModel *mModel = nullptr;
+    int mCurrentIndex = 0;
+};
+
 class ComposerController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (Kube::Context* mailContext READ mailContext CONSTANT)
-    Q_PROPERTY (int currentIdentityIndex READ currentIdentityIndex WRITE setCurrentIdentityIndex)
 
-    Q_PROPERTY (QString recepientSearchString READ recepientSearchString WRITE setRecepientSearchString)
-    Q_PROPERTY (QAbstractItemModel* recepientAutocompletionModel READ recepientAutocompletionModel CONSTANT)
-    Q_PROPERTY (QAbstractItemModel* identityModel READ identityModel CONSTANT)
+    Q_PROPERTY (Completer* recipientCompleter READ recipientCompleter CONSTANT)
+    Q_PROPERTY (Selector* identitySelector READ identitySelector CONSTANT)
 
     Q_PROPERTY (Kube::Action* sendAction READ sendAction)
     Q_PROPERTY (Kube::Action* saveAsDraftAction READ saveAsDraftAction)
@@ -61,19 +109,13 @@ public:
 
     Kube::Context* mailContext();
 
-    QString recepientSearchString() const;
-    void setRecepientSearchString(const QString &body);
-
-    QAbstractItemModel *identityModel() const;
-    QAbstractItemModel *recepientAutocompletionModel() const;
+    Completer *recipientCompleter() const;
+    Selector *identitySelector() const;
 
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
 
     Kube::Action* sendAction();
     Kube::Action* saveAsDraftAction();
-
-    void setCurrentIdentityIndex(int index);
-    int currentIdentityIndex() const;
 
 public slots:
     void clear();
@@ -86,6 +128,5 @@ private:
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
 
-    int m_currentAccountIndex = -1;
     ComposerContext mContext;
 };
