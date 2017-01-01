@@ -37,11 +37,8 @@ ToolButton {
         dialog.visible = dialog.visible ? false : true
     }
 
-    KubeAction.Action {
-        id: sendNowAction
-        actionId: "org.kde.kube.actions.sendOutbox"
-        context: KubeAction.Context {
-        }
+    KubeFramework.OutboxController {
+        id: outboxController
     }
 
     //BEGIN Dialog
@@ -88,7 +85,7 @@ ToolButton {
                 height: Kirigami.Units.gridUnit * 2
                 text: qsTr("Send now.")
                 onClicked: {
-                    sendNowAction.execute()
+                    outboxController.sendOutboxAction.execute()
                 }
             }
 

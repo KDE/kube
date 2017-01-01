@@ -29,6 +29,8 @@
 #include "accountscontroller.h"
 #include "accountsmodel.h"
 #include "outboxmodel.h"
+#include "outboxcontroller.h"
+#include "mailcontroller.h"
 
 #include <QtQml>
 
@@ -44,5 +46,7 @@ void MailPlugin::registerTypes (const char *uri)
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsController>(uri, 1, 0, "AccountsController");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
+    qmlRegisterType<OutboxController>(uri, 1, 0, "OutboxController");
     qmlRegisterType<OutboxModel>(uri, 1, 0, "OutboxModel");
+    qmlRegisterType<MailController>(uri, 1, 0, "MailController");
 }

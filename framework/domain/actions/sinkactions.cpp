@@ -31,53 +31,6 @@ using namespace Kube;
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
 
-static ActionHandlerHelper markAsReadHandler("org.kde.kube.actions.mark-as-read",
-    [](Context *context) -> bool {
-        return context->property("mail").isValid();
-    },
-    [](Context *context) {
-        auto mail = context->property("mail").value<Mail::Ptr>();
-        if (!mail) {
-            SinkWarning() << "Failed to get the mail mail: " << context->property("mail");
-            return;
-        }
-        mail->setProperty("unread", false);
-        SinkLog() << "Mark as read " << mail->identifier();
-        Store::modify(*mail).exec();
-    }
-);
-
-static ActionHandlerHelper moveToTrashHandler("org.kde.kube.actions.move-to-trash",
-    [](Context *context) -> bool {
-        return context->property("mail").isValid();
-    },
-    [](Context *context) {
-        auto mail = context->property("mail").value<Mail::Ptr>();
-        if (!mail) {
-            SinkWarning() << "Failed to get the mail mail: " << context->property("mail");
-            return;
-        }
-        mail->setTrash(true);
-        SinkLog() << "Move to trash " << mail->identifier();
-        Store::modify(*mail).exec();
-    }
-);
-
-static ActionHandlerHelper deleteHandler("org.kde.kube.actions.delete",
-    [](Context *context) -> bool {
-        return context->property("mail").isValid();
-    },
-    [](Context *context) {
-        auto mail = context->property("mail").value<Mail::Ptr>();
-        if (!mail) {
-            SinkWarning() << "Failed to get the mail mail: " << context->property("mail");
-            return;
-        }
-        SinkLog() << "Remove " << mail->identifier();
-        Store::remove(*mail).exec();
-    }
-);
-
 class FolderContext : public Kube::ContextWrapper {
     using Kube::ContextWrapper::ContextWrapper;
     KUBE_CONTEXTWRAPPER_PROPERTY(Sink::ApplicationDomain::Folder::Ptr, Folder, folder)
@@ -99,20 +52,5 @@ static ActionHandlerHelper synchronizeHandler("org.kde.kube.actions.synchronize"
             Store::synchronize(SyncScope()).exec();
         }
     }
-);
-
-static ActionHandlerHelper sendOutboxHandler("org.kde.kube.actions.sendOutbox",
-    [](Context *context) -> bool {
-        return true;
-    },
-    ActionHandlerHelper::JobHandler{[](Context *context) -> KAsync::Job<void> {
-        using namespace Sink::ApplicationDomain;
-        Query query;
-        query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
-        return Store::fetchAll<SinkResource>(query)
-            .each([=](const SinkResource::Ptr &resource) -> KAsync::Job<void> {
-                return Store::synchronize(SyncScope{}.resourceFilter(resource->identifier()));
-            });
-    }}
 );
 

@@ -62,24 +62,6 @@ Controls2.ApplicationWindow {
     }
 
     KubeAction.Action {
-        id: editAction
-        actionId: "org.kde.kube.actions.edit"
-        context: maillistcontext
-    }
-
-    KubeAction.Action {
-        id: markAsReadAction
-        actionId: "org.kde.kube.actions.mark-as-read"
-        context: maillistcontext
-    }
-
-    KubeAction.Action {
-        id: deleteAction
-        actionId: "org.kde.kube.actions.move-to-trash"
-        context: maillistcontext
-    }
-
-    KubeAction.Action {
         id: syncAction
         actionId: "org.kde.kube.actions.synchronize"
         context: folderListContext
@@ -115,6 +97,13 @@ Controls2.ApplicationWindow {
     */
     //END ActionHandler
 
+    //Controller
+    KubeFramework.MailController {
+        id: mailController
+        mail: mailListView.currentMail
+    }
+
+
     //BEGIN Shortcuts
     Shortcut {
         sequence: StandardKey.Refresh
@@ -123,8 +112,8 @@ Controls2.ApplicationWindow {
     }
     Shortcut {
         sequence: StandardKey.Delete
-        onActivated: deleteAction.execute()
-        enabled: deleteAction.ready
+        onActivated: mailController.moveToTrashAction.execute()
+        enabled: mailController.moveToTrashAction.enabled
     }
     Shortcut {
         sequence: StandardKey.MoveToNextLine
@@ -221,10 +210,10 @@ Controls2.ApplicationWindow {
                     ToolButton {
                         iconName: "mail-mark-unread"
                         text: "Mark As Read"
-                        enabled: markAsReadAction.ready
+                        enabled: mailController.markAsRead.enabled
                         tooltip: "mark mail as read"
                         onClicked: {
-                            markAsReadAction.execute()
+                            mailController.markAsRead.execute()
                         }
                     }
 
@@ -240,10 +229,10 @@ Controls2.ApplicationWindow {
                     ToolButton {
                         iconName: "edit-delete"
                         text: "Delete Mail"
-                        enabled: deleteAction.ready
+                        enabled: mailController.moveToTrashAction.enabled
                         tooltip: "delete email"
                         onClicked: {
-                            deleteAction.execute()
+                            mailController.moveToTrashAction.execute()
                         }
                     }
                 }
