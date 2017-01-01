@@ -49,22 +49,10 @@ Controls2.ApplicationWindow {
         isDraft: mailListView.isDraft
     }
 
-    KubeAction.Context {
-        id: folderListContext
-        property variant folder
-        folder: folderListView.currentFolder
-    }
-
     KubeAction.Action {
         id: replyAction
         actionId: "org.kde.kube.actions.reply"
         context: maillistcontext
-    }
-
-    KubeAction.Action {
-        id: syncAction
-        actionId: "org.kde.kube.actions.synchronize"
-        context: folderListContext
     }
     //END Actions
 
@@ -103,12 +91,17 @@ Controls2.ApplicationWindow {
         mail: mailListView.currentMail
     }
 
+    KubeFramework.FolderController {
+        id: folderController
+        folder: folderListView.currentFolder
+    }
+
 
     //BEGIN Shortcuts
     Shortcut {
         sequence: StandardKey.Refresh
-        onActivated: syncAction.execute()
-        enabled: syncAction.ready
+        onActivated: folderController.synchronizeAction.execute()
+        enabled: folderController.synchronizeAction.enabled
     }
     Shortcut {
         sequence: StandardKey.Delete

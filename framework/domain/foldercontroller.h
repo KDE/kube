@@ -22,14 +22,12 @@
 #include "controller.h"
 #include "sink/applicationdomaintype.h"
 
-class MailController : public Kube::Controller
+class FolderController : public Kube::Controller
 {
     Q_OBJECT
-    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail::Ptr, Mail, mail)
-    KUBE_CONTROLLER_ACTION(markAsRead)
-    KUBE_CONTROLLER_ACTION(moveToTrash)
-    KUBE_CONTROLLER_ACTION(remove)
+    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Folder::Ptr, Folder, folder)
+    KUBE_CONTROLLER_ACTION(synchronize)
 
 public:
-    explicit MailController();
+    explicit FolderController();
 };

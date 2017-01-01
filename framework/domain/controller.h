@@ -35,6 +35,14 @@
     void clear##NAME() { setProperty(NAME::name, QVariant{}); } \
     TYPE get##NAME() const { return m##NAME; } \
 
+
+#define KUBE_CONTROLLER_ACTION(NAME) \
+    Q_PROPERTY (Kube::ControllerAction* NAME##Action READ NAME##Action CONSTANT) \
+    private: QScopedPointer<Kube::ControllerAction> action_##NAME; \
+    public: Kube::ControllerAction* NAME##Action() const { Q_ASSERT(action_##NAME); return action_##NAME.data(); } \
+    private slots: void NAME(); \
+
+
 namespace Kube {
 
 class ControllerAction : public QObject {

@@ -25,6 +25,7 @@ set(mailplugin_SRCS
     controller.cpp
     outboxcontroller.cpp
     mailcontroller.cpp
+    foldercontroller.cpp
 )
 find_package(KF5 REQUIRED COMPONENTS Package)
 

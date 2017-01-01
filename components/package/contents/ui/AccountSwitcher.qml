@@ -28,6 +28,10 @@ import org.kube.components 1.0 as KubeComponents
 Controls2.Button {
     id: accountSwitcher
 
+    KubeFramework.FolderController {
+        id: folderController
+    }
+
     Layout.fillWidth: true
     height: parent.height
 
@@ -87,7 +91,6 @@ Controls2.Button {
             }
 
             Controls2.Button {
-
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
@@ -95,10 +98,10 @@ Controls2.Button {
 
                 //iconName: "view-refresh"
                 text: "Sync"
-                enabled: syncAction.ready
-
+                enabled: folderController.synchronizeAction.enabled
                 onClicked: {
-                    syncAction.execute()
+                    folderController.synchronizeAction.execute()
+                    popup.close()
                 }
             }
         }
