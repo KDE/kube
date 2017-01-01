@@ -23,110 +23,74 @@
 #include <QString>
 #include <QStringList>
 #include <QVariant>
-#include <QQmlEngine>
-#include <QAbstractItemModel>
 #include <sink/applicationdomaintype.h>
+#include <KMime/Message>
 
-#include <actions/context.h>
-#include <actions/action.h>
+#include "completer.h"
+#include "selector.h"
+#include "controller.h"
+
+inline bool operator !=(const KMime::Types::Mailbox &l, const KMime::Types::Mailbox &r)
+{
+    return !(l.prettyAddress() == r.prettyAddress());
+}
+
+Q_DECLARE_METATYPE(KMime::Types::Mailbox);
 
 namespace KMime {
 class Message;
 }
 
-class ComposerContext : public Kube::Context {
-    Q_OBJECT
-    KUBE_CONTEXT_PROPERTY(QString, To, to)
-    KUBE_CONTEXT_PROPERTY(QString, Cc, cc)
-    KUBE_CONTEXT_PROPERTY(QString, Bcc, bcc)
-    KUBE_CONTEXT_PROPERTY(QString, From, from)
-    KUBE_CONTEXT_PROPERTY(QString, Subject, subject)
-    KUBE_CONTEXT_PROPERTY(QString, Body, body)
-};
-
-class Completer : public QObject {
-    Q_OBJECT
-    Q_PROPERTY (QAbstractItemModel* model READ model CONSTANT)
-    Q_PROPERTY (QString searchString WRITE setSearchString READ searchString)
-
-public:
-    Completer(QAbstractItemModel *model) : mModel{model}
-    {
-        QQmlEngine::setObjectOwnership(mModel, QQmlEngine::CppOwnership);
-    }
-    QAbstractItemModel *model() { return mModel; }
-    virtual void setSearchString(const QString &s) { mSearchString = s; }
-    QString searchString() const { return mSearchString; }
-
-private:
-    QAbstractItemModel *mModel = nullptr;
-    QString mSearchString;
-};
-
-/**
- * Exposes a model and maintains a current index selection.
- */
-class Selector : public QObject {
-    Q_OBJECT
-    Q_PROPERTY (int currentIndex READ currentIndex WRITE setCurrentIndex)
-    Q_PROPERTY (QAbstractItemModel* model READ model CONSTANT)
-
-public:
-    Selector(QAbstractItemModel *model) : mModel{model}
-    {
-        QQmlEngine::setObjectOwnership(mModel, QQmlEngine::CppOwnership);
-    }
-
-    virtual QAbstractItemModel *model() { return mModel; }
-
-    void setCurrentIndex(int i) {
-        mCurrentIndex = i;
-        Q_ASSERT(mModel);
-        setCurrent(mModel->index(mCurrentIndex, 0));
-    }
-
-    int currentIndex() { return mCurrentIndex; }
-
-    virtual void setCurrent(const QModelIndex &) = 0;
-private:
-    QAbstractItemModel *mModel = nullptr;
-    int mCurrentIndex = 0;
-};
-
-class ComposerController : public QObject
+class ComposerController : public Kube::Controller
 {
     Q_OBJECT
-    Q_PROPERTY (Kube::Context* mailContext READ mailContext CONSTANT)
+
+    //Interface properties
+    KUBE_CONTROLLER_PROPERTY(QString, To, to)
+    KUBE_CONTROLLER_PROPERTY(QString, Cc, cc)
+    KUBE_CONTROLLER_PROPERTY(QString, Bcc, bcc)
+    KUBE_CONTROLLER_PROPERTY(QString, Subject, subject)
+    KUBE_CONTROLLER_PROPERTY(QString, Body, body)
+
+    //Set by identitySelector
+    KUBE_CONTROLLER_PROPERTY(KMime::Types::Mailbox, Identity, identity)
+    KUBE_CONTROLLER_PROPERTY(QByteArray, AccountId, accountId)
+
+    //Set by loadMessage
+    KUBE_CONTROLLER_PROPERTY(KMime::Message::Ptr, ExistingMessage, existingMessage)
+    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail, ExistingMail, existingMail)
 
     Q_PROPERTY (Completer* recipientCompleter READ recipientCompleter CONSTANT)
     Q_PROPERTY (Selector* identitySelector READ identitySelector CONSTANT)
+    //Q_PROPERTY (QValidator* subjectValidator READ subjectValidator CONSTANT)
 
-    Q_PROPERTY (Kube::Action* sendAction READ sendAction)
-    Q_PROPERTY (Kube::Action* saveAsDraftAction READ saveAsDraftAction)
+    Q_PROPERTY (Kube::ControllerAction* sendAction READ sendAction CONSTANT)
+    Q_PROPERTY (Kube::ControllerAction* saveAsDraftAction READ saveAsDraftAction CONSTANT)
 
 public:
-    explicit ComposerController(QObject *parent = Q_NULLPTR);
-
-    Kube::Context* mailContext();
+    explicit ComposerController();
 
     Completer *recipientCompleter() const;
     Selector *identitySelector() const;
 
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
 
-    Kube::Action* sendAction();
-    Kube::Action* saveAsDraftAction();
+    Kube::ControllerAction* sendAction();
+    Kube::ControllerAction* saveAsDraftAction();
 
-public slots:
-    void clear();
-
-signals:
-    void done();
+private slots:
+    void updateSendAction();
+    void send();
+    void updateSaveAsDraftAction();
+    void saveAsDraft();
 
 private:
-    Kube::ActionHandler *messageHandler();
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
+    KMime::Message::Ptr assembleMessage();
 
-    ComposerContext mContext;
+    QScopedPointer<Kube::ControllerAction> mSendAction;
+    QScopedPointer<Kube::ControllerAction> mSaveAsDraftAction;
+    QScopedPointer<Completer> mRecipientCompleter;
+    QScopedPointer<Selector> mIdentitySelector;
 };

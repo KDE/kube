@@ -94,7 +94,7 @@ The action can, through property-binding, reevaluate its ready state based on th
 #### Pre-action handler
 A pre-action handler can be used to supply additional context information for the action to execute. This can be used to i.e. retrieve configuration information or resolve a user uid over ldap.
 
-An action can be executed if a set of available pre-action handlers plus the initially supplied informatin can complete the context so the target action-handler can be executed.
+An action can be executed if a set of available pre-action handlers plus the initially supplied information can complete the context so the target action-handler can be executed.
 
 #### Selecting action handlers out of candidates.
 It is possible that multiple action handlers are avialable for the same action, i.e. because different accounts supplied an action handler for the same action. In such a case it is necessary to select the right action handler based on the context.
@@ -102,7 +102,7 @@ It is possible that multiple action handlers are avialable for the same action, 
 A simple criteria could be the currently selected account.
 
 #### Automatic action discovery
-While in many places explicit instantiation of actions is desirable, sometimes we may want to offer all available actions for a certain type. For this it should be possible to i.e. query for all actions that apply to a mail. That way it is possible to centrally add a new action that automatically becomes available everywhere. Note that this only works for actions that don't require an additional UI, since the components would have to embedd that somewhere.
+While in many places explicit instantiation of actions is desirable, sometimes we may want to offer all available actions for a certain type. For this it should be possible to i.e. query for all actions that apply to a mail. That way it is possible to centrally add a new action that automatically become available everywhere. Note that this only works for actions that don't require an additional UI, since the components would have to embed that somewhere.
 
 #### Implementation
 Actions are objects that provide the API, and that QML can instantiate directly with it's id. The C++ implementation looks up the action handler via a broker.

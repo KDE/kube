@@ -29,6 +29,20 @@ Context::Context(QObject *parent)
 
 }
 
+Context::Context(const Context &other)
+    : QObject()
+{
+    *this = other;
+}
+
+Context &Context::operator=(const Context &other)
+{
+    for (const auto &p : other.availableProperties()) {
+        setProperty(p, other.property(p));
+    }
+    return *this;
+}
+
 void Context::clear()
 {
     auto meta = metaObject();
@@ -39,6 +53,20 @@ void Context::clear()
     for (const auto &p : dynamicPropertyNames()) {
         setProperty(p, QVariant());
     }
+}
+
+QSet<QByteArray> Context::availableProperties() const
+{
+    QSet<QByteArray> names;
+    auto meta = metaObject();
+    for (auto i = meta->propertyOffset(); i < meta->propertyCount(); i++) {
+        auto property = meta->property(i);
+        names << property.name();
+    }
+    for (const auto &p : dynamicPropertyNames()) {
+        names << p;
+    }
+    return names;
 }
 
 QDebug operator<<(QDebug dbg, const Kube::Context &context)
@@ -53,5 +81,11 @@ QDebug operator<<(QDebug dbg, const Kube::Context &context)
         dbg << p << context.property(p) << "\n";
     }
     dbg << "\n}";
+    return dbg;
+}
+
+QDebug operator<<(QDebug dbg, const Kube::ContextWrapper &context)
+{
+    dbg << context.context;
     return dbg;
 }

@@ -94,3 +94,8 @@ void ActionBroker::registerHandler(const QByteArray &actionId, ActionHandler *ha
 {
     mHandler.insert(actionId, handler);
 }
+
+void ActionBroker::unregisterHandler(const QByteArray &actionId, ActionHandler *handler)
+{
+    mHandler.remove(actionId, handler);
+}

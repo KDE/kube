@@ -19,49 +19,57 @@
 #pragma once
 
 #include <QObject>
-#define KUBE_CONTEXT_PROPERTY(TYPE, NAME, LOWERCASENAME) \
+#include <QVariant>
+#include <Async/Async>
+
+#define KUBE_CONTROLLER_PROPERTY(TYPE, NAME, LOWERCASENAME) \
     public: Q_PROPERTY(TYPE LOWERCASENAME MEMBER m##NAME NOTIFY LOWERCASENAME##Changed) \
     Q_SIGNALS: void LOWERCASENAME##Changed(); \
-    private: TYPE m##NAME;
-
-#define KUBE_CONTEXTWRAPPER_PROPERTY(TYPE, NAME, LOWERCASENAME) \
+    private: TYPE m##NAME; \
     public: \
     struct NAME { \
         static constexpr const char *name = #LOWERCASENAME; \
         typedef TYPE Type; \
     }; \
-    void set##NAME(const TYPE &value) { context.setProperty(NAME::name, QVariant::fromValue(value)); } \
-    void clear##NAME() { context.setProperty(NAME::name, QVariant{}); } \
-    TYPE get##NAME() const { return context.property(NAME::name).value<TYPE>(); } \
-
+    void set##NAME(const TYPE &value) { setProperty(NAME::name, QVariant::fromValue(value)); } \
+    void clear##NAME() { setProperty(NAME::name, QVariant{}); } \
+    TYPE get##NAME() const { return m##NAME; } \
 
 namespace Kube {
 
-class Context : public QObject {
+class ControllerAction : public QObject {
     Q_OBJECT
+    Q_PROPERTY(bool enabled MEMBER mEnabled NOTIFY enabledChanged)
 public:
-    Context(QObject *parent = 0);
-    Context(const Context &);
+    ControllerAction();
+    ~ControllerAction() = default;
 
-    virtual ~Context(){};
+    Q_INVOKABLE void execute();
+    void setEnabled(bool enabled) { setProperty("enabled", enabled); }
 
-    Context &operator=(const Context &);
+signals:
+    void enabledChanged();
+    void triggered();
 
-    virtual void clear();
-
-    QSet<QByteArray> availableProperties() const;
+private:
+    bool mEnabled = true;
 };
 
-class ContextWrapper {
+class Controller : public QObject {
+    Q_OBJECT
 public:
-    ContextWrapper(Context &c) : context{c} {}
-    Context &context;
+    Controller() = default;
+    virtual ~Controller() = default;
+
+public slots:
+    void clear();
+
+signals:
+    void done();
+    void error();
+
+protected:
+    void run(const KAsync::Job<void> &job);
 };
 
 }
-
-QDebug operator<<(QDebug dbg, const Kube::Context &);
-QDebug operator<<(QDebug dbg, const Kube::ContextWrapper &);
-
-Q_DECLARE_METATYPE(Kube::Context*);
-

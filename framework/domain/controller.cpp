@@ -16,34 +16,40 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#pragma once
+#include "controller.h"
 
-#include <QObject>
-#include <QMultiMap>
+#include <QQmlEngine>
+#include <QMetaProperty>
 
-namespace Kube {
-class Context;
-class ActionHandler;
-class ActionResult;
+using namespace Kube;
 
-class ActionBroker : public QObject
+ControllerAction::ControllerAction()
+    : QObject()
 {
-    Q_OBJECT
-public:
-    static ActionBroker &instance();
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
 
-    bool isActionReady(const QByteArray &actionId, Context *context, const QList<QPointer<ActionHandler>> &preHandler);
-    ActionResult executeAction(const QByteArray &actionId, Context *context, const QList<QPointer<ActionHandler>> &preHandler, const QList<QPointer<ActionHandler>> &postHandler);
+void ControllerAction::execute()
+{
+    emit triggered();
+}
 
-    void registerHandler(const QByteArray &actionId, ActionHandler *handler);
-    void unregisterHandler(const QByteArray &actionId, ActionHandler *handler);
+void Controller::clear()
+{
+    auto meta = metaObject();
+    for (auto i = meta->propertyOffset(); i < meta->propertyCount(); i++) {
+        auto property = meta->property(i);
+        setProperty(property.name(), QVariant());
+    }
+    for (const auto &p : dynamicPropertyNames()) {
+        setProperty(p, QVariant());
+    }
+}
 
-Q_SIGNALS:
-    void readyChanged();
-
-private:
-    ActionBroker(QObject *parent = 0);
-    QMultiMap<QByteArray, QPointer<ActionHandler>> mHandler;
-};
-
+void Controller::run(const KAsync::Job<void> &job)
+{
+    auto jobToExec = job;
+    //TODO handle error
+    //TODO attach a log context to the execution that we can gather from the job?
+    jobToExec.exec();
 }

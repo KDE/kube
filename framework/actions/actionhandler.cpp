@@ -31,6 +31,11 @@ ActionHandler::ActionHandler(QObject *parent)
 
 }
 
+ActionHandler::~ActionHandler()
+{
+    ActionBroker::instance().unregisterHandler(mActionId, this);
+}
+
 bool ActionHandler::isActionReady(Context *context)
 {
     if (context) {
@@ -67,6 +72,8 @@ ActionResult ActionHandler::execute(Context *context)
 
 void ActionHandler::setActionId(const QByteArray &actionId)
 {
+    //Reassigning the id is not supported
+    Q_ASSERT(mActionId.isEmpty());
     mActionId = actionId;
     ActionBroker::instance().registerHandler(actionId, this);
 }
@@ -74,6 +81,16 @@ void ActionHandler::setActionId(const QByteArray &actionId)
 QByteArray ActionHandler::actionId() const
 {
     return mActionId;
+}
+
+void ActionHandler::setRequiredProperties(const QSet<QByteArray> &requiredProperties)
+{
+    mRequiredProperties = requiredProperties;
+}
+
+QSet<QByteArray> ActionHandler::requiredProperties() const
+{
+    return mRequiredProperties;
 }
 
 

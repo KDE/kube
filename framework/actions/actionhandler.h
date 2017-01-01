@@ -24,9 +24,9 @@
 #include <Async/Async>
 
 #include "actionresult.h"
+#include "context.h"
 
 namespace Kube {
-class Context;
 
 class ActionHandler : public QObject
 {
@@ -35,6 +35,7 @@ class ActionHandler : public QObject
 
 public:
     ActionHandler(QObject *parent = 0);
+    virtual ~ActionHandler();
 
     virtual bool isActionReady(Context *context);
 
@@ -43,25 +44,65 @@ public:
     void setActionId(const QByteArray &);
     QByteArray actionId() const;
 
+    void setRequiredProperties(const QSet<QByteArray> &requiredProperties);
+    QSet<QByteArray> requiredProperties() const;
+
 private:
     QByteArray mActionId;
+    QSet<QByteArray> mRequiredProperties;
+};
+
+template <typename ContextType>
+class ActionHandlerBase : public ActionHandler
+{
+public:
+    ActionHandlerBase(const QByteArray &actionId)
+        : ActionHandler{}
+    {
+        setActionId(actionId);
+    }
+
+    bool isActionReady(Context *c) Q_DECL_OVERRIDE
+    {
+        auto wrapper = ContextType{*c};
+        return isActionReady(wrapper);
+    }
+
+    ActionResult execute(Context *c) Q_DECL_OVERRIDE
+    {
+        ActionResult result;
+        auto wrapper = ContextType{*c};
+        execute(wrapper)
+        .template syncThen<void>([=](const KAsync::Error &error) {
+            auto modifyableResult = result;
+            if (error) {
+                qWarning() << "Job failed: " << error.errorCode << error.errorMessage;
+                modifyableResult.setError(1);
+            }
+            modifyableResult.setDone();
+        }).exec();
+        return result;
+    }
+protected:
+
+    virtual bool isActionReady(ContextType &) { return true; }
+    virtual KAsync::Job<void> execute(ContextType &) = 0;
 };
 
 class ActionHandlerHelper : public ActionHandler
 {
-    Q_OBJECT
 public:
-    typedef std::function<bool(Context*)> IsReadyFunction;
-    typedef std::function<void(Context*)> Handler;
-    typedef std::function<KAsync::Job<void>(Context*)> JobHandler;
+    typedef std::function<bool(Context *)> IsReadyFunction;
+    typedef std::function<void(Context *)> Handler;
+    typedef std::function<KAsync::Job<void>(Context *)> JobHandler;
 
     ActionHandlerHelper(const Handler &);
     ActionHandlerHelper(const IsReadyFunction &, const Handler &);
     ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &, const Handler &);
     ActionHandlerHelper(const QByteArray &actionId, const IsReadyFunction &, const JobHandler &);
 
-    bool isActionReady(Context *context) Q_DECL_OVERRIDE;
-    ActionResult execute(Context *context) Q_DECL_OVERRIDE;
+    bool isActionReady(Context *) Q_DECL_OVERRIDE;
+    ActionResult execute(Context *) Q_DECL_OVERRIDE;
 private:
     const IsReadyFunction isReadyFunction;
     const Handler handlerFunction;

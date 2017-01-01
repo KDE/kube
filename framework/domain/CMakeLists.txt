@@ -20,6 +20,9 @@ set(mailplugin_SRCS
     identitiesmodel.cpp
     recepientautocompletionmodel.cpp
     settings/accountsettings.cpp
+    selector.cpp
+    completer.cpp
+    controller.cpp
 )
 find_package(KF5 REQUIRED COMPONENTS Package)
 

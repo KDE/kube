@@ -23,37 +23,26 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.framework.actions 1.0 as KubeAction
 
 Controls2.Popup {
     id: root
 
     //Controller
     KubeFramework.ComposerController {
-        id: composer
+        id: composerController
         onDone: {
+            clear();
             root.close()
         }
     }
 
-    //context
-    property variant mailcontext: composer.mailContext
-
     //actions
-    property variant sendAction: composer.sendAction
-    property variant saveAsDraftAction: composer.saveAsDraftAction
+    property variant sendAction: composerController.sendAction
+    property variant saveAsDraftAction: composerController.saveAsDraftAction
 
     //BEGIN functions
     function loadMessage(message, loadAsDraft) {
-        composer.loadMessage(message, loadAsDraft)
-    }
-
-    function saveAsDraft() {
-        composer.saveAsDraft()
-    }
-
-    function clear() {
-        composer.clear();
+        composerController.loadMessage(message, loadAsDraft)
     }
     //END functions
 
@@ -91,14 +80,14 @@ Controls2.Popup {
 
                         Layout.fillWidth: true
 
-                        text: mailcontext.to
+                        text: composerController.to
                         onTextChanged: {
-                            mailcontext.to = text;
+                            composerController.to = text;
                         }
 
-                        model: composer.recipientCompleter.model
+                        model: composerController.recipientCompleter.model
                         onSearchTermChanged: {
-                            composer.recipientCompleter.searchString = searchTerm
+                            composerController.recipientCompleter.searchString = searchTerm
                         }
                     }
 
@@ -116,15 +105,15 @@ Controls2.Popup {
 
                         visible: false
 
-                        text: mailcontext.cc
+                        text: composerController.cc
 
                         onTextChanged: {
-                            mailcontext.cc = text;
+                            composerController.cc = text;
                         }
 
-                        model: composer.recipientCompleter.model
+                        model: composerController.recipientCompleter.model
                         onSearchTermChanged: {
-                            composer.recipientCompleter.searchString = searchTerm
+                            composerController.recipientCompleter.searchString = searchTerm
                         }
                     }
 
@@ -141,15 +130,15 @@ Controls2.Popup {
 
                         visible : false
 
-                        text: mailcontext.bcc
+                        text: composerController.bcc
 
                         onTextChanged: {
-                            mailcontext.bcc = text;
+                            composerController.bcc = text;
                         }
 
-                        model: composer.recipientCompleter.model
+                        model: composerController.recipientCompleter.model
                         onSearchTermChanged: {
-                            composer.recipientCompleter.searchString = searchTerm
+                            composerController.recipientCompleter.searchString = searchTerm
                         }
                     }
 
@@ -161,13 +150,13 @@ Controls2.Popup {
 
                         Controls2.ComboBox {
                             id: identityCombo
-                            model: composer.identitySelector.model
+                            model: composerController.identitySelector.model
                             textRole: "displayName"
 
                             Layout.fillWidth: true
 
                             onCurrentIndexChanged: {
-                                composer.identitySelector.currentIndex = currentIndex
+                                composerController.identitySelector.currentIndex = currentIndex
                             }
                         }
 
@@ -201,20 +190,20 @@ Controls2.Popup {
 
                     placeholderText: "Enter Subject..."
 
-                    text: mailcontext.subject
+                    text: composerController.subject
 
                     onTextChanged: {
-                        mailcontext.subject = text;
+                        composerController.subject = text;
                     }
                 }
 
                 Controls2.TextArea {
                     id: content
 
-                    text: mailcontext.body
+                    text: composerController.body
 
                     onTextChanged: {
-                        mailcontext.body = text;
+                        composerController.body = text;
                     }
 
                     Layout.fillWidth: true
@@ -242,7 +231,7 @@ Controls2.Popup {
                     Controls2.Button {
                         text: "Save as Draft"
 
-                        enabled: saveAsDraftAction.ready
+                        enabled: saveAsDraftAction.enabled
                         onClicked: {
                             saveAsDraftAction.execute()
                         }
@@ -251,7 +240,7 @@ Controls2.Popup {
                     Controls2.Button {
                         text: "Send"
 
-                        enabled: sendAction.ready
+                        enabled: sendAction.enabled
                         onClicked: {
                             sendAction.execute()
                         }

@@ -19,9 +19,6 @@
 
 
 #include "composercontroller.h"
-#include <actions/context.h>
-#include <actions/action.h>
-#include <actions/actionhandler.h>
 #include <settings/settings.h>
 #include <KMime/Message>
 #include <KCodecs/KEmailAddress>
@@ -40,41 +37,9 @@
 
 SINK_DEBUG_AREA("composercontroller");
 
-Q_DECLARE_METATYPE(KMime::Types::Mailbox)
-
-ComposerController::ComposerController(QObject *parent) : QObject(parent)
-{
-    QQmlEngine::setObjectOwnership(&mContext, QQmlEngine::CppOwnership);
-}
-
-
-Kube::Context* ComposerController::mailContext()
-{
-    return &mContext;
-}
-
-class RecipientCompleter : public Completer {
-public:
-    RecipientCompleter() : Completer(new RecipientAutocompletionModel)
-    {
-    }
-
-    void setSearchString(const QString &s) {
-        static_cast<RecipientAutocompletionModel*>(model())->setFilter(s);
-        Completer::setSearchString(s);
-    }
-};
-
-Completer *ComposerController::recipientCompleter() const
-{
-    static auto selector = new RecipientCompleter();
-    QQmlEngine::setObjectOwnership(selector, QQmlEngine::CppOwnership);
-    return selector;
-}
-
 class IdentitySelector : public Selector {
 public:
-    IdentitySelector(ComposerContext &context) : Selector(new IdentitiesModel), mContext(context)
+    IdentitySelector(ComposerController &controller) : Selector(new IdentitiesModel), mController(controller)
     {
     }
 
@@ -88,33 +53,72 @@ public:
             mb.setAddress(index.data(IdentitiesModel::Address).toString().toUtf8());
             SinkLog() << "Setting current identity: " << mb.prettyAddress() << "Account: " << currentAccountId;
 
-            mContext.setProperty("identity", QVariant::fromValue(mb));
-            mContext.setProperty("accountId", QVariant::fromValue(currentAccountId));
+            mController.setIdentity(mb);
+            mController.setAccountId(currentAccountId);
         } else {
             SinkWarning() << "No valid identity for index: " << index;
-            mContext.setProperty("identity", QVariant{});
-            mContext.setProperty("accountId", QVariant{});
+            mController.clearIdentity();
+            mController.clearAccountId();
         }
 
     }
 private:
-    ComposerContext &mContext;
+    ComposerController &mController;
 };
+
+class RecipientCompleter : public Completer {
+public:
+    RecipientCompleter() : Completer(new RecipientAutocompletionModel)
+    {
+    }
+
+    void setSearchString(const QString &s) {
+        static_cast<RecipientAutocompletionModel*>(model())->setFilter(s);
+        Completer::setSearchString(s);
+    }
+};
+
+
+ComposerController::ComposerController()
+    : Kube::Controller(),
+    mSendAction{new Kube::ControllerAction},
+    mSaveAsDraftAction{new Kube::ControllerAction},
+    mRecipientCompleter{new RecipientCompleter},
+    mIdentitySelector{new IdentitySelector{*this}}
+{
+    QObject::connect(mSaveAsDraftAction.data(), &Kube::ControllerAction::triggered, this, &ComposerController::saveAsDraft);
+    updateSaveAsDraftAction();
+    // mSendAction->monitorProperty<To>();
+    // mSendAction->monitorProperty<Send>([] (const QString &) -> bool{
+    //     //validate
+    // });
+    // registerAction<ControllerAction>(&ComposerController::send);
+    // actionDepends<ControllerAction, To, Subject>();
+    // TODO do in constructor
+    QObject::connect(mSendAction.data(), &Kube::ControllerAction::triggered, this, &ComposerController::send);
+
+    QObject::connect(this, &ComposerController::toChanged, &ComposerController::updateSendAction);
+    QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSendAction);
+    updateSendAction();
+}
+
+Completer *ComposerController::recipientCompleter() const
+{
+    return mRecipientCompleter.data();
+}
 
 Selector *ComposerController::identitySelector() const
 {
-    static auto selector = new IdentitySelector(*const_cast<ComposerContext*>(&mContext));
-    QQmlEngine::setObjectOwnership(selector, QQmlEngine::CppOwnership);
-    return selector;
+    return mIdentitySelector.data();
 }
 
 void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 {
-    mContext.setTo(msg->to(true)->asUnicodeString());
-    mContext.setCc(msg->cc(true)->asUnicodeString());
-    mContext.setSubject(msg->subject(true)->asUnicodeString());
-    mContext.setBody(msg->body());
-    mContext.setProperty("existingMessage", QVariant::fromValue(msg));
+    setTo(msg->to(true)->asUnicodeString());
+    setCc(msg->cc(true)->asUnicodeString());
+    setSubject(msg->subject(true)->asUnicodeString());
+    setBody(msg->body());
+    setExistingMessage(msg);
 }
 
 void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
@@ -122,18 +126,20 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
     Sink::Query query(*message.value<Sink::ApplicationDomain::Mail::Ptr>());
     query.request<Sink::ApplicationDomain::Mail::MimeMessage>();
     Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).syncThen<void, Sink::ApplicationDomain::Mail>([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
-        mContext.setProperty("existingMail", QVariant::fromValue(mail));
+        setExistingMail(mail);
+
+        //TODO this should probably happen as reaction to the property being set.
         const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
         if (!mailData.isEmpty()) {
             KMime::Message::Ptr mail(new KMime::Message);
             mail->setContent(mailData);
             mail->parse();
             if (loadAsDraft) {
+                setMessage(mail);
+            } else {
                 auto reply = MailTemplates::reply(mail);
                 //We assume reply
                 setMessage(reply);
-            } else {
-                setMessage(mail);
             }
         } else {
             qWarning() << "Retrieved empty message";
@@ -159,68 +165,122 @@ void applyAddresses(const QString &list, std::function<void(const QByteArray &, 
     }
 }
 
-void ComposerController::clear()
+Kube::ControllerAction* ComposerController::saveAsDraftAction()
 {
-    mContext.clear();
+    return mSaveAsDraftAction.data();
 }
 
-
-Kube::ActionHandler *ComposerController::messageHandler()
+Kube::ControllerAction* ComposerController::sendAction()
 {
-    return new Kube::ActionHandlerHelper(
-        [](Kube::Context *context) {
-            auto identity = context->property("identity");
-            return identity.isValid();
-        },
-        [this](Kube::Context *context) {
-            auto mail = context->property("existingMessage").value<KMime::Message::Ptr>();
-            if (!mail) {
-                mail = KMime::Message::Ptr::create();
+    return mSendAction.data();
+}
+
+KMime::Message::Ptr ComposerController::assembleMessage()
+{
+    auto mail = mExistingMessage;
+    if (!mail) {
+        mail = KMime::Message::Ptr::create();
+    }
+    applyAddresses(getTo(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        mail->to(true)->addAddress(addrSpec, displayName);
+        recordForAutocompletion(addrSpec, displayName);
+    });
+    applyAddresses(getCc(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        mail->cc(true)->addAddress(addrSpec, displayName);
+        recordForAutocompletion(addrSpec, displayName);
+    });
+    applyAddresses(getBcc(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        mail->bcc(true)->addAddress(addrSpec, displayName);
+        recordForAutocompletion(addrSpec, displayName);
+    });
+
+    mail->from(true)->addAddress(getIdentity());
+
+    mail->subject(true)->fromUnicodeString(getSubject(), "utf-8");
+    mail->setBody(getBody().toUtf8());
+    mail->assemble();
+    return mail;
+}
+
+void ComposerController::updateSendAction()
+{
+    auto enabled = !getTo().isEmpty() && !getSubject().isEmpty();
+    mSendAction->setEnabled(enabled);
+}
+
+void ComposerController::send()
+{
+    // verify<To, Subject>()
+    // && verify<Subject>();
+    auto message = assembleMessage();
+
+    auto accountId = getAccountId();
+    //SinkLog() << "Sending a mail: " << *this;
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    Query query;
+    query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);
+    query.filter<SinkResource::Account>(accountId);
+    auto job = Store::fetchAll<ApplicationDomain::SinkResource>(query)
+        .then<void, QList<ApplicationDomain::SinkResource::Ptr>>([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
+            if (!resources.isEmpty()) {
+                auto resourceId = resources[0]->identifier();
+                SinkTrace() << "Sending message via resource: " << resourceId;
+                Mail mail(resourceId);
+                mail.setBlobProperty("mimeMessage", message->encodedContent());
+                return Store::create(mail);
             }
-            applyAddresses(context->property(ComposerContext::To::name).toString(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-                mail->to(true)->addAddress(addrSpec, displayName);
-                recordForAutocompletion(addrSpec, displayName);
-            });
-            applyAddresses(context->property(ComposerContext::Cc::name).toString(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-                mail->cc(true)->addAddress(addrSpec, displayName);
-                recordForAutocompletion(addrSpec, displayName);
-            });
-            applyAddresses(context->property(ComposerContext::Bcc::name).toString(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-                mail->bcc(true)->addAddress(addrSpec, displayName);
-                recordForAutocompletion(addrSpec, displayName);
-            });
+            return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
+        });
+    run(job);
+    job = job.syncThen<void>([&] {
+        emit done();
+    });
+}
 
-            mail->from(true)->addAddress(context->property("identity").value<KMime::Types::Mailbox>());
+void ComposerController::updateSaveAsDraftAction()
+{
+    mSendAction->setEnabled(true);
+}
 
-            mail->subject(true)->fromUnicodeString(context->property(ComposerContext::Subject::name).toString(), "utf-8");
-            mail->setBody(context->property(ComposerContext::Body::name).toString().toUtf8());
-            mail->assemble();
+void ComposerController::saveAsDraft()
+{
+    const auto accountId = getAccountId();
+    auto existingMail = getExistingMail();
 
-            context->setProperty("message", QVariant::fromValue(mail));
+    auto message = assembleMessage();
+    //FIXME this is something for the validation
+    if (!message) {
+        SinkWarning() << "Failed to get the mail: ";
+        return;
+        // return KAsync::error<void>(1, "Failed to get the mail.");
+    }
+
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    auto job = [&] {
+        if (existingMail.identifier().isEmpty()) {
+            Query query;
+            query.containsFilter<SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::drafts);
+            query.filter<SinkResource::Account>(accountId);
+            return Store::fetchOne<SinkResource>(query)
+                .then<void, SinkResource>([=](const SinkResource &resource) -> KAsync::Job<void> {
+                    Mail mail(resource.identifier());
+                    mail.setDraft(true);
+                    mail.setMimeMessage(message->encodedContent());
+                    return Store::create(mail);
+                });
+        } else {
+            SinkWarning() << "Modifying an existing mail" << existingMail.identifier();
+            existingMail.setDraft(true);
+            existingMail.setMimeMessage(message->encodedContent());
+            return Store::modify(existingMail);
         }
-    );
-}
-
-Kube::Action* ComposerController::saveAsDraftAction()
-{
-    auto action = new Kube::Action("org.kde.kube.actions.save-as-draft", mContext);
-    action->addPreHandler(messageHandler());
-    action->addPostHandler(new Kube::ActionHandlerHelper(
-        [this](Kube::Context *context) {
-            emit done();
-        }));
-    return action;
-}
-
-Kube::Action* ComposerController::sendAction()
-{
-    auto action = new Kube::Action("org.kde.kube.actions.sendmail", mContext);
-    // action->addPreHandler(identityHandler());
-    action->addPreHandler(messageHandler());
-    // action->addPreHandler(encryptionHandler());
-    action->addPostHandler(new Kube::ActionHandlerHelper(
-        [this](Kube::Context *context) {
-            emit done();
-        }));
-    return action;
+    }();
+    job = job.syncThen<void>([&] {
+        emit done();
+    });
+    run(job);
 }
