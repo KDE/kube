@@ -57,9 +57,6 @@ Controls2.ApplicationWindow {
     //END Actions
 
     //BEGIN ActionHandler
-
-    //TODO
-    /*
     KubeAction.ActionHandler {
         actionId: "org.kde.kube.actions.reply"
         function isReady(context) {
@@ -67,8 +64,8 @@ Controls2.ApplicationWindow {
         }
 
         function handler(context) {
-            var component = composerComponent.createObject(app)
-            component.loadMessage(context.mail, false)
+            composer.loadMessage(context.mail, false)
+            composer.open()
         }
     }
 
@@ -78,11 +75,10 @@ Controls2.ApplicationWindow {
             return context.mail && context.isDraft;
         }
         function handler(context) {
-            var component= composerComponent.createObject(app, {"draftMessage": context.mail})
-            component.loadMessage(context.mail, true)
+            composer.loadMessage(context.mail, true)
+            composer.open()
         }
     }
-    */
     //END ActionHandler
 
     //Controller

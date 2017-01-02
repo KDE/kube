@@ -25,6 +25,7 @@ import org.kde.kirigami 1.0 as Kirigami
 import QtQml 2.2 as QtQml
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework.actions 1.0 as KubeAction
 
 Item {
     id: root
@@ -346,7 +347,6 @@ Item {
                     width: parent.width
 
                     Text {
-
                         anchors{
                             verticalCenter: parent.verticalCenter
                             left: parent.left
@@ -380,8 +380,34 @@ Item {
                             rightMargin: Kirigami.Units.gridUnit
                         }
 
-                        iconName: "mail-reply-sender"
-                        //TODO add text
+                        KubeAction.Context {
+                            id: mailcontext
+                            property variant mail
+                            property bool isDraft
+                            mail: model.mail
+                            isDraft: model.draft
+                        }
+
+                        KubeAction.Action {
+                            id: replyAction
+                            actionId: "org.kde.kube.actions.reply"
+                            context: maillistcontext
+                        }
+
+                        KubeAction.Action {
+                            id: editAction
+                            actionId: "org.kde.kube.actions.edit"
+                            context: maillistcontext
+                        }
+
+                        iconName: model.draft ? "document-edit" : "mail-reply-sender"
+                        onClicked: {
+                            if (model.draft) {
+                                editAction.execute()
+                            } else {
+                                replyAction.execute()
+                            }
+                        }
                     }
                 }
             }
