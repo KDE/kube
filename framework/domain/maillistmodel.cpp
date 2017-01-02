@@ -51,6 +51,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Unread] = "unread";
     roles[Important] = "important";
     roles[Draft] = "draft";
+    roles[Trash] = "trash";
     roles[Id] = "id";
     roles[MimeMessage] = "mimeMessage";
     roles[DomainObject] = "domainObject";

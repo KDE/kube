@@ -358,15 +358,17 @@ Item {
                             mail: model.mail
                         }
 
-                        text: "Delete Mail"
+                        text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
                         color: Kirigami.Theme.textColor
                         opacity: 0.5
-                        enabled: mailController.moveToTrashAction.enabled
+                        enabled: model.trash ? mailController.removeAction.enabled : mailController.moveToTrashAction.enabled
                         MouseArea {
                             anchors.fill: parent
-                            enabled: mailController.moveToTrashAction.enabled
+                            enabled: parent.enabled
                             onClicked: {
-                                if (mailController.moveToTrashAction.enabled) {
+                                if (model.trash) {
+                                    mailController.removeAction.execute();
+                                } else {
                                     mailController.moveToTrashAction.execute();
                                 }
                             }
@@ -374,6 +376,7 @@ Item {
                     }
 
                     Controls1.ToolButton {
+                        visible: !model.trash
                         anchors{
                             verticalCenter: parent.verticalCenter
                             right: parent.right
