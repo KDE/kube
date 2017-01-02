@@ -353,9 +353,24 @@ Item {
                             leftMargin: Kirigami.Units.gridUnit
                         }
 
+                        KubeFramework.MailController {
+                            id: mailController
+                            mail: model.mail
+                        }
+
                         text: "Delete Mail"
                         color: Kirigami.Theme.textColor
                         opacity: 0.5
+                        enabled: mailController.moveToTrashAction.enabled
+                        MouseArea {
+                            anchors.fill: parent
+                            enabled: mailController.moveToTrashAction.enabled
+                            onClicked: {
+                                if (mailController.moveToTrashAction.enabled) {
+                                    mailController.moveToTrashAction.execute();
+                                }
+                            }
+                        }
                     }
 
                     Controls1.ToolButton {

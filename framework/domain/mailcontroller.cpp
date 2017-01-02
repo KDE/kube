@@ -32,6 +32,16 @@ MailController::MailController()
     QObject::connect(markAsReadAction(), &Kube::ControllerAction::triggered, this, &MailController::markAsRead);
     QObject::connect(moveToTrashAction(), &Kube::ControllerAction::triggered, this, &MailController::moveToTrash);
     QObject::connect(removeAction(), &Kube::ControllerAction::triggered, this, &MailController::remove);
+
+    QObject::connect(this, &MailController::mailChanged, &MailController::updateActions);
+    updateActions();
+}
+
+void MailController::updateActions()
+{
+    if (auto mail = getMail()) {
+        action_moveToTrash->setEnabled(!mail->getTrash());
+    }
 }
 
 void MailController::markAsRead()

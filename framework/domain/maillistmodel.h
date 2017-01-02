@@ -51,10 +51,12 @@ public:
         Unread,
         Important,
         Draft,
+        Trash,
         Id,
         MimeMessage,
         DomainObject,
-        ThreadSize
+        ThreadSize,
+        Mail
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;

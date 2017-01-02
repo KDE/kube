@@ -32,4 +32,6 @@ class MailController : public Kube::Controller
 
 public:
     explicit MailController();
+private slots:
+    void updateActions();
 };

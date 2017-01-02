@@ -55,6 +55,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[MimeMessage] = "mimeMessage";
     roles[DomainObject] = "domainObject";
     roles[ThreadSize] = "threadSize";
+    roles[Mail] = "mail";
 
     return roles;
 }
@@ -97,6 +98,8 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return mail->getProperty("importantCollected").toList().contains(true);
         case Draft:
             return mail->getDraft();
+        case Trash:
+            return mail->getTrash();
         case Id:
             return mail->identifier();
         case DomainObject:
@@ -105,6 +108,8 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return mail->getMimeMessage();
         case ThreadSize:
             return mail->getProperty("count").toInt();
+        case Mail:
+            return QVariant::fromValue(mail);
     }
     return QSortFilterProxyModel::data(idx, role);
 }
@@ -142,6 +147,7 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
     query.request<Mail::Draft>();
+    query.request<Mail::Trash>();
     query.request<Mail::Folder>();
     qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
     runQuery(query);
@@ -170,6 +176,7 @@ void MailListModel::setMail(const QVariant &variant)
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
     query.request<Mail::Draft>();
+    query.request<Mail::Trash>();
     query.request<Mail::MimeMessage>();
     qWarning() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
     runQuery(query);
