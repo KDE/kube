@@ -65,8 +65,8 @@ class ComposerController : public Kube::Controller
     Q_PROPERTY (Selector* identitySelector READ identitySelector CONSTANT)
     //Q_PROPERTY (QValidator* subjectValidator READ subjectValidator CONSTANT)
 
-    Q_PROPERTY (Kube::ControllerAction* sendAction READ sendAction CONSTANT)
-    Q_PROPERTY (Kube::ControllerAction* saveAsDraftAction READ saveAsDraftAction CONSTANT)
+    KUBE_CONTROLLER_ACTION(send)
+    KUBE_CONTROLLER_ACTION(saveAsDraft)
 
 public:
     explicit ComposerController();
@@ -76,22 +76,15 @@ public:
 
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
 
-    Kube::ControllerAction* sendAction();
-    Kube::ControllerAction* saveAsDraftAction();
-
 private slots:
     void updateSendAction();
-    void send();
     void updateSaveAsDraftAction();
-    void saveAsDraft();
 
 private:
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
     KMime::Message::Ptr assembleMessage();
 
-    QScopedPointer<Kube::ControllerAction> mSendAction;
-    QScopedPointer<Kube::ControllerAction> mSaveAsDraftAction;
     QScopedPointer<Completer> mRecipientCompleter;
     QScopedPointer<Selector> mIdentitySelector;
 };

@@ -28,18 +28,12 @@ using namespace Sink::ApplicationDomain;
 
 MailController::MailController()
     : Kube::Controller(),
-    action_markAsRead{new Kube::ControllerAction},
-    action_markAsImportant{new Kube::ControllerAction},
-    action_moveToTrash{new Kube::ControllerAction},
-    action_restoreFromTrash{new Kube::ControllerAction},
-    action_remove{new Kube::ControllerAction}
+    action_markAsRead{new Kube::ControllerAction{this, &MailController::markAsRead}},
+    action_markAsImportant{new Kube::ControllerAction{this, &MailController::markAsImportant}},
+    action_moveToTrash{new Kube::ControllerAction{this, &MailController::moveToTrash}},
+    action_restoreFromTrash{new Kube::ControllerAction{this, &MailController::restoreFromTrash}},
+    action_remove{new Kube::ControllerAction{this, &MailController::remove}}
 {
-    QObject::connect(markAsReadAction(), &Kube::ControllerAction::triggered, this, &MailController::markAsRead);
-    QObject::connect(markAsImportantAction(), &Kube::ControllerAction::triggered, this, &MailController::markAsImportant);
-    QObject::connect(moveToTrashAction(), &Kube::ControllerAction::triggered, this, &MailController::moveToTrash);
-    QObject::connect(restoreFromTrashAction(), &Kube::ControllerAction::triggered, this, &MailController::restoreFromTrash);
-    QObject::connect(removeAction(), &Kube::ControllerAction::triggered, this, &MailController::remove);
-
     QObject::connect(this, &MailController::mailChanged, &MailController::updateActions);
     updateActions();
 }

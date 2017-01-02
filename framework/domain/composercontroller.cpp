@@ -82,12 +82,11 @@ public:
 
 ComposerController::ComposerController()
     : Kube::Controller(),
-    mSendAction{new Kube::ControllerAction},
-    mSaveAsDraftAction{new Kube::ControllerAction},
+    action_send{new Kube::ControllerAction{this, &ComposerController::send}},
+    action_saveAsDraft{new Kube::ControllerAction{this, &ComposerController::saveAsDraft}},
     mRecipientCompleter{new RecipientCompleter},
     mIdentitySelector{new IdentitySelector{*this}}
 {
-    QObject::connect(mSaveAsDraftAction.data(), &Kube::ControllerAction::triggered, this, &ComposerController::saveAsDraft);
     updateSaveAsDraftAction();
     // mSendAction->monitorProperty<To>();
     // mSendAction->monitorProperty<Send>([] (const QString &) -> bool{
@@ -96,7 +95,6 @@ ComposerController::ComposerController()
     // registerAction<ControllerAction>(&ComposerController::send);
     // actionDepends<ControllerAction, To, Subject>();
     // TODO do in constructor
-    QObject::connect(mSendAction.data(), &Kube::ControllerAction::triggered, this, &ComposerController::send);
 
     QObject::connect(this, &ComposerController::toChanged, &ComposerController::updateSendAction);
     QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSendAction);
@@ -166,16 +164,6 @@ void applyAddresses(const QString &list, std::function<void(const QByteArray &, 
     }
 }
 
-Kube::ControllerAction* ComposerController::saveAsDraftAction()
-{
-    return mSaveAsDraftAction.data();
-}
-
-Kube::ControllerAction* ComposerController::sendAction()
-{
-    return mSendAction.data();
-}
-
 KMime::Message::Ptr ComposerController::assembleMessage()
 {
     auto mail = mExistingMessage;
@@ -206,7 +194,7 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 void ComposerController::updateSendAction()
 {
     auto enabled = !getTo().isEmpty() && !getSubject().isEmpty();
-    mSendAction->setEnabled(enabled);
+    sendAction()->setEnabled(enabled);
 }
 
 void ComposerController::send()
@@ -242,7 +230,7 @@ void ComposerController::send()
 
 void ComposerController::updateSaveAsDraftAction()
 {
-    mSendAction->setEnabled(true);
+    sendAction()->setEnabled(true);
 }
 
 void ComposerController::saveAsDraft()

@@ -50,6 +50,13 @@ class ControllerAction : public QObject {
     Q_PROPERTY(bool enabled MEMBER mEnabled NOTIFY enabledChanged)
 public:
     ControllerAction();
+    template <typename Func>
+    ControllerAction(const typename QtPrivate::FunctionPointer<Func>::Object *obj, Func slot)
+    : ControllerAction()
+    {
+        QObject::connect(this, &ControllerAction::triggered, obj, slot);
+    }
+
     ~ControllerAction() = default;
 
     Q_INVOKABLE void execute();

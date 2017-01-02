@@ -25,9 +25,8 @@ SINK_DEBUG_AREA("outboxcontroller");
 
 OutboxController::OutboxController()
     : Kube::Controller(),
-    mSynchronizeOutboxAction{new Kube::ControllerAction}
+    mSynchronizeOutboxAction{new Kube::ControllerAction{this, &OutboxController::sendOutbox}}
 {
-    QObject::connect(mSynchronizeOutboxAction.data(), &Kube::ControllerAction::triggered, this, &OutboxController::sendOutbox);
 }
 
 Kube::ControllerAction* OutboxController::sendOutboxAction() const

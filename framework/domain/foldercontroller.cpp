@@ -25,9 +25,8 @@ SINK_DEBUG_AREA("foldercontroller");
 
 FolderController::FolderController()
     : Kube::Controller(),
-    action_synchronize{new Kube::ControllerAction}
+    action_synchronize{new Kube::ControllerAction{this, &FolderController::synchronize}}
 {
-    QObject::connect(synchronizeAction(), &Kube::ControllerAction::triggered, this, &FolderController::synchronize);
 }
 
 void FolderController::synchronize()
