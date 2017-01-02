@@ -198,9 +198,9 @@ Controls2.ApplicationWindow {
 
                     ToolButton {
                         iconName: "mail-mark-unread"
-                        text: tr("Mark As Read")
+                        text: qsTr("Mark As Read")
                         enabled: mailController.markAsRead.enabled
-                        tooltip: tr("mark mail as read")
+                        tooltip: qsTr("mark mail as read")
                         onClicked: {
                             mailController.markAsRead.execute()
                         }
@@ -208,9 +208,9 @@ Controls2.ApplicationWindow {
 
                     ToolButton {
                         iconName: "mail-mark-important"
-                        text: tr("Mark Important")
+                        text: qsTr("Mark Important")
                         enabled: mailController.markAsImportant.enabled
-                        tooltip: tr("mark mail as important")
+                        tooltip: qsTr("mark mail as important")
                         onClicked: {
                             mailController.markAsImportant.execute()
                         }
@@ -218,19 +218,19 @@ Controls2.ApplicationWindow {
 
                     ToolButton {
                         iconName: "edit-delete"
-                        text: tr("Delete Mail")
+                        text: qsTr("Delete Mail")
                         enabled: mailController.moveToTrashAction.enabled
-                        tooltip: tr("delete email")
+                        tooltip: qsTr("delete email")
                         onClicked: {
                             mailController.moveToTrashAction.execute()
                         }
                     }
 
                     ToolButton {
-                        iconName: "edit-delete"
-                        text: tr("Restore Mail")
+                        iconName: "edit-undo"
+                        text: qsTr("Restore Mail")
                         enabled: mailController.restoreFromTrashAction.enabled
-                        tooltip: tr("restore email")
+                        tooltip: qsTr("restore email")
                         onClicked: {
                             mailController.restoreFromTrashAction.execute()
                         }
@@ -257,7 +257,7 @@ Controls2.ApplicationWindow {
                     height: toolbar.height
 
                     //iconName: "mail-message-new"
-                    text: "      " + "New Email" + "      "
+                    text: "      " + qsTr("New Email") + "      "
                     //Controls2.Tooltip.text: "compose new email"
                     onClicked: {
                         composer.open()
