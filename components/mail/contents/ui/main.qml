@@ -202,9 +202,9 @@ Controls2.ApplicationWindow {
 
                     ToolButton {
                         iconName: "mail-mark-unread"
-                        text: "Mark As Read"
+                        text: tr("Mark As Read")
                         enabled: mailController.markAsRead.enabled
-                        tooltip: "mark mail as read"
+                        tooltip: tr("mark mail as read")
                         onClicked: {
                             mailController.markAsRead.execute()
                         }
@@ -212,20 +212,31 @@ Controls2.ApplicationWindow {
 
                     ToolButton {
                         iconName: "mail-mark-important"
-                        text: "Mark Important"
-                        enabled: false
-                        tooltip: "mark mail as important"
+                        text: tr("Mark Important")
+                        enabled: mailController.markAsImportant.enabled
+                        tooltip: tr("mark mail as important")
                         onClicked: {
+                            mailController.markAsImportant.execute()
                         }
                     }
 
                     ToolButton {
                         iconName: "edit-delete"
-                        text: "Delete Mail"
+                        text: tr("Delete Mail")
                         enabled: mailController.moveToTrashAction.enabled
-                        tooltip: "delete email"
+                        tooltip: tr("delete email")
                         onClicked: {
                             mailController.moveToTrashAction.execute()
+                        }
+                    }
+
+                    ToolButton {
+                        iconName: "edit-delete"
+                        text: tr("Restore Mail")
+                        enabled: mailController.restoreFromTrashAction.enabled
+                        tooltip: tr("restore email")
+                        onClicked: {
+                            mailController.restoreFromTrashAction.execute()
                         }
                     }
                 }

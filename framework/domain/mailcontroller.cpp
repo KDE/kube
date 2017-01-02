@@ -23,14 +23,21 @@
 
 SINK_DEBUG_AREA("mailcontroller");
 
+using namespace Sink;
+using namespace Sink::ApplicationDomain;
+
 MailController::MailController()
     : Kube::Controller(),
     action_markAsRead{new Kube::ControllerAction},
+    action_markAsImportant{new Kube::ControllerAction},
     action_moveToTrash{new Kube::ControllerAction},
+    action_restoreFromTrash{new Kube::ControllerAction},
     action_remove{new Kube::ControllerAction}
 {
     QObject::connect(markAsReadAction(), &Kube::ControllerAction::triggered, this, &MailController::markAsRead);
+    QObject::connect(markAsImportantAction(), &Kube::ControllerAction::triggered, this, &MailController::markAsImportant);
     QObject::connect(moveToTrashAction(), &Kube::ControllerAction::triggered, this, &MailController::moveToTrash);
+    QObject::connect(restoreFromTrashAction(), &Kube::ControllerAction::triggered, this, &MailController::restoreFromTrash);
     QObject::connect(removeAction(), &Kube::ControllerAction::triggered, this, &MailController::remove);
 
     QObject::connect(this, &MailController::mailChanged, &MailController::updateActions);
@@ -41,33 +48,44 @@ void MailController::updateActions()
 {
     if (auto mail = getMail()) {
         action_moveToTrash->setEnabled(!mail->getTrash());
+        action_restoreFromTrash->setEnabled(mail->getTrash());
     }
 }
 
 void MailController::markAsRead()
 {
-    using namespace Sink;
-    using namespace Sink::ApplicationDomain;
     auto mail = getMail();
     mail->setUnread(false);
     SinkLog() << "Mark as read " << mail->identifier();
     run(Store::modify(*mail));
 }
 
+void MailController::markAsImportant()
+{
+    auto mail = getMail();
+    mail->setImportant(true);
+    SinkLog() << "Mark as important " << mail->identifier();
+    run(Store::modify(*mail));
+}
+
 void MailController::moveToTrash()
 {
-    using namespace Sink;
-    using namespace Sink::ApplicationDomain;
     auto mail = getMail();
     mail->setTrash(true);
     SinkLog() << "Move to trash " << mail->identifier();
     run(Store::modify(*mail));
 }
 
+void MailController::restoreFromTrash()
+{
+    auto mail = getMail();
+    mail->setTrash(false);
+    SinkLog() << "Move to trash " << mail->identifier();
+    run(Store::modify(*mail));
+}
+
 void MailController::remove()
 {
-    using namespace Sink;
-    using namespace Sink::ApplicationDomain;
     auto mail = getMail();
     mail->setTrash(true);
     SinkLog() << "Remove " << mail->identifier();
