@@ -32,6 +32,7 @@
 #include "outboxcontroller.h"
 #include "mailcontroller.h"
 #include "foldercontroller.h"
+#include "mouseproxy.h"
 
 #include <QtQml>
 
@@ -51,4 +52,5 @@ void MailPlugin::registerTypes (const char *uri)
     qmlRegisterType<OutboxModel>(uri, 1, 0, "OutboxModel");
     qmlRegisterType<MailController>(uri, 1, 0, "MailController");
     qmlRegisterType<FolderController>(uri, 1, 0, "FolderController");
+    qmlRegisterType<MouseProxy>(uri, 1, 0, "MouseProxy");
 }

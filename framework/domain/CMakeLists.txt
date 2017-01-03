@@ -26,6 +26,7 @@ set(mailplugin_SRCS
     outboxcontroller.cpp
     mailcontroller.cpp
     foldercontroller.cpp
+    mouseproxy.cpp
 )
 find_package(KF5 REQUIRED COMPONENTS Package)
 

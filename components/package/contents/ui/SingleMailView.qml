@@ -99,6 +99,7 @@ Item {
 
 
     ListView {
+        id: listView
         anchors {
             top: subjectBar.bottom
             left: parent.left
@@ -124,6 +125,14 @@ Item {
         }
 
         delegate: mailDelegate
+
+        //Intercept all scroll events,
+        //necessary due to the webengineview
+        KubeFramework.MouseProxy {
+            anchors.fill: parent
+            target: listView
+            forwardWheelEvents: true
+        }
     }
     Component {
         id: mailDelegate
