@@ -6,6 +6,7 @@
 #include <QQuickImageProvider>
 #include <QIcon>
 #include <QtWebEngine>
+#include <QDesktopServices>
 
 #include <QDebug>
 
@@ -32,10 +33,30 @@ public:
     }
 };
 
+class WebUrlRequestInterceptor : public QWebEngineUrlRequestInterceptor
+{
+    Q_OBJECT
+public:
+    WebUrlRequestInterceptor(QObject *p = Q_NULLPTR) : QWebEngineUrlRequestInterceptor{}
+    {}
+
+    void interceptRequest(QWebEngineUrlRequestInfo &info)
+    {
+        qWarning() << info.requestMethod() << info.requestUrl();
+        QDesktopServices::openUrl(info.requestUrl());
+        info.block(true);
+        //TODO handle mailto to open a composer
+    }
+};
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
     QtWebEngine::initialize();
+    WebUrlRequestInterceptor *wuri = new WebUrlRequestInterceptor();
+    QQuickWebEngineProfile::defaultProfile()->setRequestInterceptor(wuri);
+
     auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.mail");
     Q_ASSERT(package.isValid());
     QQmlApplicationEngine engine;
@@ -43,3 +64,5 @@ int main(int argc, char *argv[])
     engine.load(QUrl::fromLocalFile(package.filePath("mainscript")));
     return app.exec();
 }
+
+#include "main.moc"

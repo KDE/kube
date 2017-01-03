@@ -31,10 +31,19 @@ Item {
             console.warn("Error is ", loadRequest.errorString);
             console.warn("Status is ", loadRequest.status);
         }
-        Component.onCompleted: loadHtml(content, "file:///")
+        Component.onCompleted: {
+            loadHtml(content, "file:///")
+        }
         onContentsSizeChanged: {
             root.contentWidth = contentsSize.width
             root.contentHeight = contentsSize.height
+        }
+        activeFocusOnPress: false
+        settings {
+            autoLoadImages: true
+            javascriptCanOpenWindows: false
+            javascriptEnabled: true
+            localStorageEnabled: false
         }
     }
     onContentChanged: {
