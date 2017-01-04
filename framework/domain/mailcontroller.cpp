@@ -29,6 +29,7 @@ using namespace Sink::ApplicationDomain;
 MailController::MailController()
     : Kube::Controller(),
     action_markAsRead{new Kube::ControllerAction{this, &MailController::markAsRead}},
+    action_markAsUnread{new Kube::ControllerAction{this, &MailController::markAsUnread}},
     action_markAsImportant{new Kube::ControllerAction{this, &MailController::markAsImportant}},
     action_moveToTrash{new Kube::ControllerAction{this, &MailController::moveToTrash}},
     action_restoreFromTrash{new Kube::ControllerAction{this, &MailController::restoreFromTrash}},
@@ -54,6 +55,14 @@ void MailController::markAsRead()
     run(Store::modify(*mail));
 }
 
+void MailController::markAsUnread()
+{
+    auto mail = getMail();
+    mail->setUnread(true);
+    SinkLog() << "Mark as unread " << mail->identifier();
+    run(Store::modify(*mail));
+}
+
 void MailController::markAsImportant()
 {
     auto mail = getMail();
@@ -74,7 +83,7 @@ void MailController::restoreFromTrash()
 {
     auto mail = getMail();
     mail->setTrash(false);
-    SinkLog() << "Move to trash " << mail->identifier();
+    SinkLog() << "Restore from trash " << mail->identifier();
     run(Store::modify(*mail));
 }
 

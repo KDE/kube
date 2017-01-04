@@ -199,20 +199,20 @@ Controls2.ApplicationWindow {
                     ToolButton {
                         iconName: "mail-mark-unread"
                         text: qsTr("Mark As Read")
-                        enabled: mailController.markAsRead.enabled
+                        enabled: mailController.markAsReadAction.enabled
                         tooltip: qsTr("mark mail as read")
                         onClicked: {
-                            mailController.markAsRead.execute()
+                            mailController.markAsReadAction.execute()
                         }
                     }
 
                     ToolButton {
                         iconName: "mail-mark-important"
                         text: qsTr("Mark Important")
-                        enabled: mailController.markAsImportant.enabled
+                        enabled: mailController.markAsImportantAction.enabled
                         tooltip: qsTr("mark mail as important")
                         onClicked: {
-                            mailController.markAsImportant.execute()
+                            mailController.markAsImportantAction.execute()
                         }
                     }
 
