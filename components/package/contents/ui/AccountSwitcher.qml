@@ -79,6 +79,7 @@ Controls2.Button {
 
                 onClicked: {
                     newAccountComponent.createObject(app)
+                    popup.close()
                 }
 
                 Component {
@@ -174,7 +175,7 @@ Controls2.Button {
 
                         onClicked: {
                             editAccountComponent.createObject(app)
-                            dialog.visible = false
+                            popup.close()
                         }
 
                         Component {

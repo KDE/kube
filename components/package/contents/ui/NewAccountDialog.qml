@@ -97,13 +97,15 @@ KubeComponents.OverlayDialog {
                             text: "kolabnow"
 
                             onClicked: {
-                                stack.push(kolabnow)
+                                accountsController.createAccount("kolabnow");
+                                root.closeDialog()
+                                //stack.push(imap)
                             }
                         }
 
                         Button {
                             anchors.horizontalCenter: parent.horizontalCenter
-                             width: pageRoot.width * 0.4
+                            width: pageRoot.width * 0.4
 
                             text: "imap"
 
