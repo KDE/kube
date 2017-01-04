@@ -187,6 +187,13 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 
     mail->subject(true)->fromUnicodeString(getSubject(), "utf-8");
     mail->setBody(getBody().toUtf8());
+    if (!mail->messageID()) {
+        mail->messageID(true)->generate("org.kde.kube");
+    }
+    if (!mail->date(true)->dateTime().isValid()) {
+        mail->date(true)->setDateTime(QDateTime::currentDateTimeUtc());
+    }
+
     mail->assemble();
     return mail;
 }
