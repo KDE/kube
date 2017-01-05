@@ -22,7 +22,13 @@ import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 
+import org.kube.framework.accounts 1.0 as KubeAccounts
+
 Item {
+
+    KubeAccounts.KolabNowController {
+        id: account
+    }
 
     Controls.ToolButton {
         iconName: "go-previous"
@@ -97,6 +103,12 @@ Item {
             Controls.TextField {
                 Layout.fillWidth: true
 
+                text: account.emailAddress
+
+                onTextChanged: {
+                    account.emailAddress = text
+                }
+
                 placeholderText: "Your email address"
             }
 
@@ -113,6 +125,13 @@ Item {
                     Layout.fillWidth: true
 
                     placeholderText: "Password of your email account"
+
+                    text: account.password
+
+                    onTextChanged: {
+                        account.password = text
+                    }
+
                     echoMode: TextInput.Password
                 }
 
@@ -157,6 +176,7 @@ Item {
                     text: "Save"
 
                     onClicked: {
+                        account.createAction.execute()
                         popup.close()
                     }
                 }

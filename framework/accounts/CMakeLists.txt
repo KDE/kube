@@ -3,6 +3,7 @@ set(accountsplugin_SRCS
     accountfactory.cpp
     accountsmodel.cpp
     maildircontroller.cpp
+    kolabnowcontroller.cpp
 )
 
 add_library(accountsplugin SHARED ${accountsplugin_SRCS})
