@@ -26,7 +26,7 @@ Controls2.Popup {
 
     modal: true
     focus: true
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+    closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
 
     clip: true
 
