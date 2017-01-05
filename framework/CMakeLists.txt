@@ -39,5 +39,7 @@ add_subdirectory(actions)
 add_subdirectory(settings)
 # Domain specific domain logic
 add_subdirectory(domain)
+# The accounts framework
+add_subdirectory(accounts)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
