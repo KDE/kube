@@ -19,6 +19,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0 as Controls2
+import QtQml 2.2 as QtQml
 
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -27,6 +28,8 @@ import org.kube.components 1.0 as KubeComponents
 
 Controls2.Button {
     id: accountSwitcher
+
+    property variant accountId
 
     KubeFramework.FolderController {
         id: folderController
@@ -130,9 +133,21 @@ Controls2.Button {
                 enabled: true
                 supportsMouseEvents: true
 
-                contentItem: Item {
+                checked: listView.currentIndex == index
+                onClicked:  {
+                    listView.currentIndex = model.index
+                    popup.close()
+                }
+                Item {
                     height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
                     width: listView.width
+
+                    QtQml.Binding {
+                        target: accountSwitcher
+                        property: "accountId"
+                        when: listView.currentIndex == index
+                        value: model.accountId
+                    }
 
                     RowLayout {
                         anchors {

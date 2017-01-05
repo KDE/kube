@@ -138,6 +138,7 @@ Controls2.ApplicationWindow {
             Layout.maximumWidth: app.width * 0.25
             Layout.minimumWidth: Kirigami.Units.gridUnit * 5
             focus: true
+            accountId: accountSwitcher.accountId
         }
 
         KubeComponents.MailListView  {
@@ -181,6 +182,7 @@ Controls2.ApplicationWindow {
                 width: folderListView.width - 5 //to adjust for the toolbar spacing
 
                 KubeComponents.AccountSwitcher {
+                    id: accountSwitcher
                 }
             }
             //END Folderlist section

@@ -49,7 +49,10 @@ Rectangle {
             role: "name"
         }
 
-        model: KubeFramework.FolderListModel { id: folderListModel} //; accountId: wrapper.accountId }
+        model: KubeFramework.FolderListModel {
+            id: folderListModel
+            accountId: root.accountId
+        }
 
         onCurrentIndexChanged: {
             model.fetchMore(currentIndex)
