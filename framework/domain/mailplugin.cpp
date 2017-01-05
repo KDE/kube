@@ -25,9 +25,6 @@
 #include "composercontroller.h"
 #include "messageparser.h"
 #include "retriever.h"
-#include "accountfactory.h"
-#include "accountscontroller.h"
-#include "accountsmodel.h"
 #include "outboxmodel.h"
 #include "outboxcontroller.h"
 #include "mailcontroller.h"
@@ -45,9 +42,6 @@ void MailPlugin::registerTypes (const char *uri)
     qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");
     qmlRegisterType<Retriever>(uri, 1, 0, "Retriever");
-    qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
-    qmlRegisterType<AccountsController>(uri, 1, 0, "AccountsController");
-    qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
     qmlRegisterType<OutboxController>(uri, 1, 0, "OutboxController");
     qmlRegisterType<OutboxModel>(uri, 1, 0, "OutboxModel");
     qmlRegisterType<MailController>(uri, 1, 0, "MailController");

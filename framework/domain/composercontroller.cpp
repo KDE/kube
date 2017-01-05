@@ -31,7 +31,6 @@
 #include <sink/store.h>
 #include <sink/log.h>
 
-#include "accountsmodel.h"
 #include "identitiesmodel.h"
 #include "recepientautocompletionmodel.h"
 #include "mailtemplates.h"

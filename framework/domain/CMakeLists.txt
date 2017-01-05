@@ -13,9 +13,6 @@ set(mailplugin_SRCS
     mailtemplates.cpp
     modeltest.cpp
     retriever.cpp
-    accountfactory.cpp
-    accountscontroller.cpp
-    accountsmodel.cpp
     outboxmodel.cpp
     identitiesmodel.cpp
     recepientautocompletionmodel.cpp
