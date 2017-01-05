@@ -93,6 +93,12 @@ Item {
                 Layout.fillWidth: true
 
                 placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+
+                text: account.name
+
+                onTextChanged: {
+                    account.name = text
+                }
             }
 
             Controls.Label {

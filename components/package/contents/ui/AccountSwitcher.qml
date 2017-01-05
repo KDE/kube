@@ -19,6 +19,8 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 1.4 as Controls
+
 import QtQml 2.2 as QtQml
 
 import org.kde.kirigami 1.0 as Kirigami
@@ -156,18 +158,18 @@ Controls2.Button {
                             accountId: model.accountId
                         }
 
-                        Kirigami.Icon {
-                            source: accountFactory.icon
-                        }
+//                         Kirigami.Icon {
+//                             source: model.icon
+//                         }
 
                         Controls2.Label {
-                            text: model.name === "" ? accountFactory.name : model.name
+                            text: model.name
                         }
-                        //FIXME port to qqc2
-//                         Button {
-//                             visible: model.showStatus
-//                             source: model.statusIcon
-//                         }
+
+                        Controls.ToolButton {
+                            visible: model.showStatus
+                            source: model.statusIcon
+                        }
                     }
                     Controls2.Button {
 
