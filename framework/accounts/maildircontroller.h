@@ -41,4 +41,11 @@ class MaildirController : public Kube::Controller
 
 public:
     explicit MaildirController();
+
+public slots:
+    void load(const QByteArray &id);
+
+private:
+    QByteArray m_accountId;
+    QByteArray m_resourceId;
 };
