@@ -24,6 +24,7 @@ import QtQml 2.2 as QtQml
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework.accounts 1.0 as KubeAccounts
 import org.kube.components 1.0 as KubeComponents
 
 Controls2.Button {
@@ -81,16 +82,8 @@ Controls2.Button {
                 text: "Create new Account"
 
                 onClicked: {
-                    newAccountComponent.createObject(app)
+                    accountWizard.open()
                     popup.close()
-                }
-
-                Component {
-                    id: newAccountComponent
-                    KubeComponents.NewAccountDialog {
-                        id: settings
-                        anchors.fill: parent
-                    }
                 }
             }
 
@@ -123,7 +116,7 @@ Controls2.Button {
 
             clip: true
 
-            model: KubeFramework.AccountsModel {  }
+            model: KubeAccounts.AccountsModel {  }
 
             delegate: Kirigami.AbstractListItem {
                 id: accountDelegate
@@ -158,7 +151,7 @@ Controls2.Button {
 
                         Layout.fillHeight: true
 
-                        KubeFramework.AccountFactory {
+                        KubeAccounts.AccountFactory {
                             id: accountFactory
                             accountId: model.accountId
                         }
