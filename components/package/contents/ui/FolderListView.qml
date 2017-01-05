@@ -33,6 +33,23 @@ Rectangle {
 
     color: Kirigami.Theme.textColor
 
+    KubeFramework.FolderController {
+        id: folderController
+        folder: root.currentFolder
+    }
+
+    Menu {
+        id: contextMenu
+        title: "Edit"
+
+        MenuItem {
+            text: "Synchronize"
+            onTriggered: {
+                folderController.synchronizeAction.execute()
+            }
+        }
+    }
+
     TreeView {
         id: treeView
 
@@ -61,6 +78,18 @@ Rectangle {
 
         alternatingRowColors: false
         headerVisible: false
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: {
+                var index = parent.indexAt(mouse.x, mouse.y)
+                if (index.valid) {
+                    folderController.folder = treeView.model.data(index, KubeFramework.FolderListModel.DomainObject)
+                    contextMenu.popup()
+                }
+            }
+        }
 
         style: TreeViewStyle {
 
