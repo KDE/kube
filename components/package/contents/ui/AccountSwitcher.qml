@@ -168,7 +168,7 @@ Controls2.Button {
 
                         Controls.ToolButton {
                             visible: model.showStatus
-                            source: model.statusIcon
+                            iconName: model.statusIcon
                         }
                     }
                     Controls2.Button {
