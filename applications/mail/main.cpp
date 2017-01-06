@@ -37,14 +37,17 @@ class WebUrlRequestInterceptor : public QWebEngineUrlRequestInterceptor
 {
     Q_OBJECT
 public:
-    WebUrlRequestInterceptor(QObject *p = Q_NULLPTR) : QWebEngineUrlRequestInterceptor{}
+    WebUrlRequestInterceptor(QObject *p = Q_NULLPTR) : QWebEngineUrlRequestInterceptor{p}
     {}
 
     void interceptRequest(QWebEngineUrlRequestInfo &info)
     {
-        qWarning() << info.requestMethod() << info.requestUrl();
-        QDesktopServices::openUrl(info.requestUrl());
-        info.block(true);
+        qDebug() << info.requestMethod() << info.requestUrl() << info.resourceType() << info.navigationType();
+        const bool isNavigationRequest = info.resourceType() == QWebEngineUrlRequestInfo::ResourceTypeMainFrame;
+        if (isNavigationRequest) {
+            QDesktopServices::openUrl(info.requestUrl());
+            info.block(true);
+        }
         //TODO handle mailto to open a composer
     }
 };
