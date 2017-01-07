@@ -32,76 +32,10 @@ Item {
 
     property variant mail;
 
-    Rectangle {
-        id: subjectBar
-
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
-
-        height: Kirigami.Units.gridUnit * 2
-
-        color: Kirigami.Theme.backgroundColor
-
-        Kirigami.Heading {
-
-            anchors {
-                left: parent.left
-                leftMargin: Kirigami.Units.largeSpacing
-                verticalCenter: parent.verticalCenter
-            }
-
-            width: parent.width - Kirigami.Units.gridUnit * 5
-
-            text: "Some subject"
-            color: Kirigami.Theme.textColor
-            level: 4
-            font.italic: true
-
-        }
-
-        //TODO Make it clickable
-        Text {
-
-            anchors {
-                right: parent.right
-                rightMargin: Kirigami.Units.gridUnit * 0.2
-                bottom: parent.bottom
-                bottomMargin: Kirigami.Units.gridUnit * 0.2  + 1
-            }
-
-            //make it blue and lightgrey
-            text: "<b>Plaintext</b> / <i>HTML</i>"
-            color: Kirigami.Theme.textColor
-            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
-
-            MouseArea {
-                anchors.fill: parent
-
-                onClicked: {
-                    parent.text == "<b>Plaintext</b> / <i>HTML</i>" ? parent.text = "<i>Plaintext</i> / <b>HTML</b>" : parent.text = "<b>Plaintext</b> / <i>HTML</i>"
-                }
-            }
-        }
-
-        Rectangle {
-
-            anchors.bottom: parent.bottom
-
-            height: 1
-            width: parent.width
-
-            color: Kirigami.Theme.highlightColor
-        }
-    }
-
-
     ListView {
         id: listView
         anchors {
-            top: subjectBar.bottom
+            top: parent.top
             left: parent.left
             right: parent.right
             bottom: parent.bottom
@@ -161,99 +95,10 @@ Item {
                         margins: Kirigami.Units.largeSpacing
                     }
 
-                    height: from.height + to.height + Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing
-
-                    Avatar {
-                        id: avatar
-
-                        anchors {
-                            top: parent.top
-                            topMargin: Kirigami.Units.smallSpacing
-                        }
-
-                        height: Kirigami.Units.gridUnit * 2.5
-                        width: height
-
-                        name: model.senderName
-                    }
-
-                    Row{
-                        id: from
-
-                        anchors {
-                            top: avatar.top
-                            left: avatar.right
-                            leftMargin: Kirigami.Units.smallSpacing * 2
-                            topMargin: Kirigami.Units.smallSpacing
-                        }
-
-                        width: parent.width - avatar.width - Kirigami.Units.largeSpacing * 2
-
-                        spacing: Kirigami.Units.smallSpacing
-                        clip: true
-
-                        Text {
-                            id: senderName
-
-                            text: model.senderName
-
-                            font.weight: Font.DemiBold
-                            color: Kirigami.Theme.textColor
-                            opacity: 0.75
-                        }
-
-                        Text {
-
-                            width: parent.width - senderName.width - Kirigami.Units.smallSpacing
-
-                            text: model.sender
-
-                            color: Kirigami.Theme.textColor
-                            opacity: 0.75
-
-                            elide: Text.ElideRight
-                        }
-                    }
+                    height: headerContent.height + Kirigami.Units.smallSpacing
 
                     Text {
-                        id: to_label
-
-                        anchors {
-                            top: from.bottom
-                            left: avatar.right
-                            leftMargin: Kirigami.Units.smallSpacing * 2
-                            topMargin: Kirigami.Units.smallSpacing * 0.5
-                        }
-
-                        text: "to:"
-
-                        color: Kirigami.Theme.textColor
-                        opacity: 0.75
-                    }
-
-                    Text {
-                        id: to
-
-                        anchors {
-                            top: to_label.top
-                            left: to_label.right
-                            leftMargin: Kirigami.Units.smallSpacing
-                        }
-
-                        width: parent.width - avatar.width  - to_label.width - Kirigami.Units.largeSpacing * 2
-
-                        text: model.to + " "  + model.cc + " " +  model.bcc
-
-                        maximumLineCount: 3
-                        wrapMode: Text.WrapAnywhere
-                        elide: Text.ElideRight
-
-                        color: Kirigami.Theme.textColor
-                        opacity: 0.75
-                        clip: true
-                    }
-
-                    Text {
+                        id: date_label
 
                         anchors {
                             right: seperator.right
@@ -265,6 +110,92 @@ Item {
                         font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
                         color: Kirigami.Theme.textColor
                         opacity: 0.75
+                    }
+
+                    Column {
+                        id: headerContent
+
+                        anchors {
+                            //left: to_l.right
+                            horizontalCenter: parent.horizontalCenter
+                        }
+
+                        //spacing: Kirigami.Units.smallSpacing
+
+                        width: parent.width
+
+                        Row{
+                            id: from
+
+                            width: parent.width
+
+                            spacing: Kirigami.Units.smallSpacing
+                            clip: true
+
+                            Text {
+                                id: senderName
+
+                                text: model.senderName
+
+                                font.weight: Font.DemiBold
+                                color: Kirigami.Theme.textColor
+                                opacity: 0.75
+                            }
+
+                            Text {
+
+                                text: model.sender
+
+                                width: parent.width - senderName.width - date_label.width - Kirigami.Units.largeSpacing
+
+                                color: Kirigami.Theme.textColor
+                                opacity: 0.75
+
+                                clip: true
+                            }
+                        }
+
+                        Text {
+                            text: model.subject
+
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.75
+
+                            font.italic: true
+                        }
+
+                        Text {
+                            id: to
+
+                            anchors {
+                                top: to_label.top
+                                left: to_label.right
+                                leftMargin: Kirigami.Units.smallSpacing
+                            }
+
+                            text:"to: "+ model.to + " "  + model.cc + " " +  model.bcc
+
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.75
+                        }
+
+                    }
+                    Rectangle {
+                        anchors {
+                            bottom: seperator.top
+                            right: seperator.right
+                        }
+
+                        height: Kirigami.Units.gridUnit
+                        width: height
+
+                        color: Kirigami.Theme.backgroundColor
+
+                        Controls1.ToolButton {
+                            anchors.fill: parent
+
+                            iconName: "go-down"
+                        }
                     }
 
                     Rectangle {
@@ -308,14 +239,14 @@ Item {
                     anchors {
                         top: header.bottom
                         topMargin: Kirigami.Units.smallSpacing
-                        horizontalCenter: parent.horizontalCenter
+                        right: header.right
                     }
 
-                    width: parent.width - Kirigami.Units.gridUnit * 2
-                    height: Kirigami.Units.gridUnit * 2
+                    width: header.width - Kirigami.Units.largeSpacing
 
                     layoutDirection: Qt.RightToLeft
                     spacing: Kirigami.Units.smallSpacing
+                    clip: true
 
                     Repeater {
                         model: body.attachments
@@ -323,6 +254,8 @@ Item {
                         delegate: AttachmentDelegate {
                             name: model.name
                             icon: "mail-attachment"
+
+                            clip: true
 
                             //TODO size encrypted signed type
                         }
@@ -334,11 +267,11 @@ Item {
 
                     anchors {
                         top: header.bottom
-                        left: parent.left
-                        right: parent.right
-                        leftMargin: avatar.height + Kirigami.Units.gridUnit
-                        rightMargin: avatar.height + Kirigami.Units.gridUnit
-                        topMargin: avatar.height
+                        left: header.left
+                        right: header.right
+                        leftMargin: Kirigami.Units.largeSpacing
+                        rightMargin: Kirigami.Units.largeSpacing
+                        topMargin: Math.max(attachments.height, Kirigami.Units.largeSpacing)
                     }
 
                     width: header.width - Kirigami.Units.largeSpacing * 2
