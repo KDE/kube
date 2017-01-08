@@ -79,7 +79,7 @@ Item {
             Rectangle {
                 id: sheet
                 anchors.centerIn: parent
-                implicitHeight: header.height + body.height + (Kirigami.Units.gridUnit * 2.5) * 2 + footer.height
+                implicitHeight: header.height + attachments.height + body.height + footer.height + Kirigami.Units.largeSpacing
                 width: parent.width - Kirigami.Units.gridUnit * 2
 
                 color: Kirigami.Theme.viewBackgroundColor
@@ -292,7 +292,7 @@ Item {
                         anchors{
                             verticalCenter: parent.verticalCenter
                             left: parent.left
-                            leftMargin: Kirigami.Units.gridUnit
+                            leftMargin: Kirigami.Units.largeSpacing
                         }
 
                         KubeFramework.MailController {
@@ -322,7 +322,7 @@ Item {
                         anchors{
                             verticalCenter: parent.verticalCenter
                             right: parent.right
-                            rightMargin: Kirigami.Units.gridUnit
+                            rightMargin: Kirigami.Units.largeSpacing
                         }
 
                         KubeAction.Context {
