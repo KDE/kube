@@ -97,6 +97,27 @@ Item {
 
                     height: headerContent.height + Kirigami.Units.smallSpacing
 
+                    states: [
+                        State {
+                            name: "small"
+                            PropertyChanges { target: subject; wrapMode: Text.NoWrap}
+                            PropertyChanges { target: recipients; visible: true}
+                            PropertyChanges { target: to; visible: false}
+                            PropertyChanges { target: cc; visible: false}
+                            PropertyChanges { target: bcc; visible: false}
+                        },
+                        State {
+                            name: "details"
+                            PropertyChanges { target: subject; wrapMode: Text.WrapAnywhere}
+                            PropertyChanges { target: recipients; visible: false}
+                            PropertyChanges { target: to; visible: true}
+                            PropertyChanges { target: cc; visible: true}
+                            PropertyChanges { target: bcc; visible: true}
+                        }
+                    ]
+
+                    state: "small"
+
                     Text {
                         id: date_label
 
@@ -157,6 +178,7 @@ Item {
                         }
 
                         Text {
+                            id: subject
 
                             width: to.width
 
@@ -170,7 +192,7 @@ Item {
                         }
 
                         Text {
-                            id: to
+                            id: recipients
 
                             width: parent.width - goDown.width - Kirigami.Units.smallSpacing
 
@@ -178,6 +200,42 @@ Item {
 
                             elide: Text.ElideRight
 
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.75
+                        }
+
+                        Text {
+                            id: to
+
+                            width: parent.width - goDown.width - Kirigami.Units.smallSpacing
+
+                            text:"to: " + model.to
+
+                            wrapMode: Text.WordWrap
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.75
+                        }
+
+                        Text {
+                            id: cc
+
+                            width: parent.width - goDown.width - Kirigami.Units.smallSpacing
+
+                            text:"cc: " + model.cc
+
+                            wrapMode: Text.WordWrap
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.75
+                        }
+
+                        Text {
+                            id: bcc
+
+                            width: parent.width - goDown.width - Kirigami.Units.smallSpacing
+
+                            text:"bcc: " + model.bcc
+
+                            wrapMode: Text.WordWrap
                             color: Kirigami.Theme.textColor
                             opacity: 0.75
                         }
@@ -216,7 +274,11 @@ Item {
                         Controls1.ToolButton {
                             anchors.fill: parent
 
-                            iconName: "go-down"
+                            iconName: header.state === "details" ? "go-up" : "go-down"
+
+                            onClicked: {
+                                header.state === "details" ? header.state = "small" : header.state = "details"
+                            }
                         }
                     }
 
