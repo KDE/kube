@@ -147,6 +147,7 @@ Item {
                                 text: model.sender
 
                                 width: parent.width - senderName.width - date_label.width - Kirigami.Units.largeSpacing
+                                elide: Text.ElideRight
 
                                 color: Kirigami.Theme.textColor
                                 opacity: 0.75
@@ -156,18 +157,26 @@ Item {
                         }
 
                         Text {
+
+                            width: to.width
+
                             text: model.subject
+
+                            elide: Text.ElideRight
 
                             color: Kirigami.Theme.textColor
                             opacity: 0.75
-
                             font.italic: true
                         }
 
                         Text {
                             id: to
 
+                            width: parent.width - goDown.width - Kirigami.Units.smallSpacing
+
                             text:"to: "+ model.to + " "  + model.cc + " " +  model.bcc
+
+                            elide: Text.ElideRight
 
                             color: Kirigami.Theme.textColor
                             opacity: 0.75
@@ -175,6 +184,7 @@ Item {
 
                     }
                     Rectangle {
+                        id: goDown
                         anchors {
                             bottom: seperator.top
                             right: seperator.right
