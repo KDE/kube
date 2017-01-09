@@ -18,6 +18,7 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 import QtQml 2.2 as QtQml
 
@@ -36,12 +37,68 @@ Item {
         currentMail = null
     }
 
-    ListView {
+    ToolBar {
+        id: toolbar
+
+        width: parent.width
+
+        Row {
+            anchors.centerIn: parent
+
+            spacing: Kirigami.Units.smallSpacing
+
+            Controls.ToolButton {
+                iconName: "mail-mark-unread"
+                text: qsTr("Mark As Read")
+                enabled: mailController.markAsReadAction.enabled
+                tooltip: qsTr("mark mail as read")
+                onClicked: {
+                    mailController.markAsReadAction.execute()
+                }
+            }
+
+            Controls.ToolButton {
+                iconName: "mail-mark-important"
+                text: qsTr("Mark Important")
+                enabled: mailController.markAsImportantAction.enabled
+                tooltip: qsTr("mark mail as important")
+                onClicked: {
+                    mailController.markAsImportantAction.execute()
+                }
+            }
+
+            Controls.ToolButton {
+                iconName: "edit-delete"
+                text: qsTr("Delete Mail")
+                enabled: mailController.moveToTrashAction.enabled
+                tooltip: qsTr("delete email")
+                onClicked: {
+                    mailController.moveToTrashAction.execute()
+                }
+            }
+
+            Controls.ToolButton {
+                iconName: "edit-undo"
+                text: qsTr("Restore Mail")
+                enabled: mailController.restoreFromTrashAction.enabled
+                tooltip: qsTr("restore email")
+                onClicked: {
+                    mailController.restoreFromTrashAction.execute()
+                }
+            }
+        }
+    }
+
+        ListView {
         id: listView
 
-        anchors.fill: parent
+        anchors.top: toolbar.bottom
+
+        width: parent.width
+        height: parent.height - toolbar.height
 
         focus: true
+        clip: true
 
         ScrollBar.vertical: ScrollBar{
             id: scrollbar

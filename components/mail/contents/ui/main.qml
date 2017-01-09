@@ -125,20 +125,63 @@ Controls2.ApplicationWindow {
     //BEGIN Main content
     SplitView {
         anchors {
-            top: toolbar.bottom
+            top: app.top
             left: app.left
         }
 
-        height: app.height - toolbar.height
+        height: app.height
         width: app.width
 
-        KubeComponents.FolderListView {
-            id: folderListView
+        Rectangle {
             width: Kirigami.Units.gridUnit * 10
             Layout.maximumWidth: app.width * 0.25
             Layout.minimumWidth: Kirigami.Units.gridUnit * 5
-            focus: true
-            accountId: accountSwitcher.accountId
+
+            color: Kirigami.Theme.textColor
+
+            Controls2.Button {
+                id: newMailButton
+
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                    margins: Kirigami.Units.smallSpacing
+                }
+
+                height: Kirigami.Units.gridUnit * 1.5
+
+                text: "      " + qsTr("New Email") + "      "
+                //iconName: "mail-message-new"
+                //Controls2.Tooltip.text: "compose new email"
+
+                onClicked: {
+                    composer.open()
+                }
+            }
+
+            KubeComponents.FolderListView {
+                id: folderListView
+
+                anchors {
+                    top: newMailButton.bottom
+                    bottom: accountSwitcher.top
+                    left: parent.left
+                    right: parent.right
+                    topMargin: Kirigami.Units.smallSpacing
+                }
+
+                focus: true
+                accountId: accountSwitcher.accountId
+            }
+            KubeComponents.AccountSwitcher {
+                id: accountSwitcher
+
+                anchors.bottom: parent.bottom
+
+                width: parent.width
+                height: Kirigami.Units.gridUnit * 2
+            }
         }
 
         KubeComponents.MailListView  {
@@ -159,158 +202,6 @@ Controls2.ApplicationWindow {
     }
     //END Main content
 
-    //BEGIN Toolbar
-    Controls2.ToolBar {
-        id: toolbar
-
-        anchors {
-            top: app.top
-        }
-
-        width: app.width
-        height: Kirigami.Units.iconSizes.medium + Kirigami.Units.smallSpacing * 2
-
-        Row {
-            width: parent.width
-            height: parent.height
-
-            spacing: 1 //to account for the SplitView borders
-
-            //BEGIN Folderlist section
-            RowLayout {
-                height: parent.height
-                width: folderListView.width - 5 //to adjust for the toolbar spacing
-
-                KubeComponents.AccountSwitcher {
-                    id: accountSwitcher
-                }
-            }
-            //END Folderlist section
-
-            //BEGIN MailList section
-            Item {
-
-                height: parent.height
-                width: mailListView.width
-
-                Row {
-                    anchors.centerIn: parent
-
-                    spacing: Kirigami.Units.smallSpacing
-
-                    ToolButton {
-                        iconName: "mail-mark-unread"
-                        text: qsTr("Mark As Read")
-                        enabled: mailController.markAsReadAction.enabled
-                        tooltip: qsTr("mark mail as read")
-                        onClicked: {
-                            mailController.markAsReadAction.execute()
-                        }
-                    }
-
-                    ToolButton {
-                        iconName: "mail-mark-important"
-                        text: qsTr("Mark Important")
-                        enabled: mailController.markAsImportantAction.enabled
-                        tooltip: qsTr("mark mail as important")
-                        onClicked: {
-                            mailController.markAsImportantAction.execute()
-                        }
-                    }
-
-                    ToolButton {
-                        iconName: "edit-delete"
-                        text: qsTr("Delete Mail")
-                        enabled: mailController.moveToTrashAction.enabled
-                        tooltip: qsTr("delete email")
-                        onClicked: {
-                            mailController.moveToTrashAction.execute()
-                        }
-                    }
-
-                    ToolButton {
-                        iconName: "edit-undo"
-                        text: qsTr("Restore Mail")
-                        enabled: mailController.restoreFromTrashAction.enabled
-                        tooltip: qsTr("restore email")
-                        onClicked: {
-                            mailController.restoreFromTrashAction.execute()
-                        }
-                    }
-                }
-            }
-            //END MailList section
-
-            //BEGIN MailView sections
-            RowLayout{
-
-                height: parent.height
-                width: mailView.width
-
-                Item {
-                    width: Kirigami.Units.smallSpacing
-                    height: width
-                }
-
-                Controls2.Button {
-                    id: newMailButton
-
-
-                    height: toolbar.height
-
-                    //iconName: "mail-message-new"
-                    text: "      " + qsTr("New Email") + "      "
-                    //Controls2.Tooltip.text: "compose new email"
-                    onClicked: {
-                        composer.open()
-                    }
-                }
-
-                KubeComponents.Outbox {
-                }
-/*
-                ToolButton {
-                    iconName: "mail-message-reply"
-                    text: "Reply"
-                    enabled: replyAction.ready
-                    onClicked: {
-                        replyAction.execute()
-                    }
-                }
-
-
-                 *               ToolButton {
-                 *                   iconName: "mail-message-edit"
-                 *                   text: "Edit"
-                 *                   enabled: editAction.ready
-                 *                   onClicked: {
-                 *                       editAction.execute()
-            }
-            }
-            */
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                Controls2.TextField {
-                    id: searchBar
-
-                    Layout.minimumWidth: Kirigami.Units.gridUnit * 19
-                    height: toolbar.height
-
-                    placeholderText: "Search..."
-                }
-
-                Item  {
-                    width: Kirigami.Units.smallSpacing
-                }
-            }
-            //END MailView section
-        }
-    }
-    //END ToolBar
-
     //BEGIN Composer
     KubeComponents.FocusComposer {
         id: composer
@@ -319,7 +210,7 @@ Controls2.ApplicationWindow {
         width: app.width * 0.85
 
         x: app.width * 0.075
-        y: toolbar.y + toolbar.height
+        y: app.height * 0.075
     }
     //END Composer
 
@@ -327,13 +218,11 @@ Controls2.ApplicationWindow {
     KubeAccounts.AccountWizard {
         id: accountWizard
 
-        // visible: true
-
         height: app.height * 0.85
         width: app.width * 0.85
 
         x: app.width * 0.075
-        y: 50
+        y: app.height * 0.075
     }
     //END AccountWizard
 }

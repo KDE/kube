@@ -38,9 +38,6 @@ Controls2.Button {
         id: folderController
     }
 
-    Layout.fillWidth: true
-    height: parent.height
-
     text: "Accounts"
 
     onClicked: {
@@ -54,8 +51,8 @@ Controls2.Button {
         height: 300
         width: 600
 
-        x: parent.x
-        y: parent.y + parent.height
+        x: 0
+        y: - popup.height
 
         modal: true
         focus: true
