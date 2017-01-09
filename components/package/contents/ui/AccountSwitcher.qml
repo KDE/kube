@@ -41,7 +41,7 @@ Controls2.Button {
     Layout.fillWidth: true
     height: parent.height
 
-    text: "Account Switcher"
+    text: "Accounts"
 
     onClicked: {
         popup.open()
