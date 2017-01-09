@@ -167,12 +167,6 @@ Item {
                         Text {
                             id: to
 
-                            anchors {
-                                top: to_label.top
-                                left: to_label.right
-                                leftMargin: Kirigami.Units.smallSpacing
-                            }
-
                             text:"to: "+ model.to + " "  + model.cc + " " +  model.bcc
 
                             color: Kirigami.Theme.textColor
