@@ -66,6 +66,17 @@ Controls2.Popup {
 
                     Layout.fillWidth: true
 
+                    text: "gmail account"
+
+                    onClicked: {
+                        stack.push(gmail)
+                    }
+                }
+
+                Controls2.Button {
+
+                    Layout.fillWidth: true
+
                     text: "imap account"
 
                     onClicked: {
@@ -91,6 +102,13 @@ Controls2.Popup {
         id: kolabnow
 
         CreateKolabNow {
+        }
+    }
+
+    Component {
+        id: gmail
+
+        CreateGmail {
         }
     }
 

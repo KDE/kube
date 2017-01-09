@@ -16,22 +16,40 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "accountsplugin.h"
+#pragma once
 
-#include "accountsmodel.h"
-#include "accountfactory.h"
-#include "maildircontroller.h"
-#include "kolabnowcontroller.h"
-#include "gmailcontroller.h"
+#include <QObject>
+#include <QString>
+#include <QByteArray>
 
-#include <QtQml>
+#include <domain/controller.h>
 
-void AccountsPlugin::registerTypes (const char *uri)
+class GmailController : public Kube::Controller
 {
-    Q_ASSERT(uri == QLatin1String("org.kube.framework.accounts"));
-    qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
-    qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
-    qmlRegisterType<MaildirController>(uri, 1, 0, "MaildirController");
-    qmlRegisterType<KolabNowController>(uri, 1, 0, "KolabNowController");
-    qmlRegisterType<GmailController>(uri, 1, 0, "GmailController");
-}
+    Q_OBJECT
+
+    //Interface properties
+    KUBE_CONTROLLER_PROPERTY(QString, Name, name)
+
+    KUBE_CONTROLLER_PROPERTY(QString, EmailAddress, emailAddress)
+    KUBE_CONTROLLER_PROPERTY(QString, Password, password)
+    KUBE_CONTROLLER_PROPERTY(QString, IdentityName, identityName)
+
+    //Actions
+    KUBE_CONTROLLER_ACTION(create)
+    KUBE_CONTROLLER_ACTION(modify)
+    KUBE_CONTROLLER_ACTION(remove)
+
+public:
+    explicit GmailController();
+
+public slots:
+    void load(const QByteArray &id);
+
+private:
+    QByteArray m_accountId;
+    QByteArray m_smtpId;
+    QByteArray m_imapId;
+    QByteArray m_identityId;
+};
+
