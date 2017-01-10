@@ -89,7 +89,7 @@ Item {
         }
     }
 
-        ListView {
+    ListView {
         id: listView
 
         anchors.top: toolbar.bottom
@@ -152,32 +152,38 @@ Item {
                 }
 
                 //TODO implement bulk action
-                //    Controls.CheckBox {
-                //        visible: mailListDelegate.containsMouse == true
-                //    }
+//                 CheckBox {
+//                     id: checkBox
+//
+//                     anchors.verticalCenter: parent.verticalCenter
+//
+//                     visible: mailListDelegate.containsMouse == true || checked
+//                 }
 
                 Column {
+                    id: mainContent
+
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
                         leftMargin: Kirigami.Units.largeSpacing
                     }
 
-                    Text{
-                        text: model.subject
-                        color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
+                        Text{
+                            text: model.subject
+                            color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
 
-                        maximumLineCount: 2
-                        width: mailListDelegate.width - Kirigami.Units.gridUnit * 3
-                        wrapMode: Text.WrapAnywhere
-                        elide: Text.ElideRight
-                    }
+                            maximumLineCount: 2
+                            width: mailListDelegate.width - Kirigami.Units.largeSpacing * 2 - unreadCounter.width
+                            wrapMode: Text.Wrap
+                            elide: Text.ElideRight
+                        }
 
                     Text {
                         text: model.senderName
                         font.italic: true
                         color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
-                        width: mailListDelegate.width - Kirigami.Units.gridUnit * 3
+                        width: mailListDelegate.width - Kirigami.Units.large
                         elide: Text.ElideRight
                     }
                 }
@@ -193,32 +199,16 @@ Item {
                     font.pointSize: 9
                 }
 
+                Text {
+                    id: unreadCounter
 
-                Item {
                     anchors {
                         right: parent.right
                     }
+                    font.italic: true
 
-                    height: Kirigami.Units.gridUnit * 1.2
-                    width: height
-
-                    visible: !mailListDelegate.checked
-
-                    Rectangle {
-                        anchors.fill: parent
-
-                        opacity: model.unread ? 1 :  0.5
-                        radius: 80
-                        color: model.unread ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
-                    }
-
-                    Text {
-                        anchors.centerIn: parent
-
-                        text: model.threadSize
-                        color: Kirigami.Theme.highlightedTextColor
-                    }
-
+                    text: model.threadSize
+                    color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.disabledTextColor
                 }
             }
         }
