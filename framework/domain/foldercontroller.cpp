@@ -23,20 +23,22 @@
 
 SINK_DEBUG_AREA("foldercontroller");
 
+using namespace Sink;
+using namespace Sink::ApplicationDomain;
+
 FolderController::FolderController()
     : Kube::Controller(),
-    action_synchronize{new Kube::ControllerAction{this, &FolderController::synchronize}}
+    action_synchronize{new Kube::ControllerAction{this, &FolderController::synchronize}},
+    action_moveToFolder{new Kube::ControllerAction{this, &FolderController::moveToFolder}}
 {
 }
 
 void FolderController::synchronize()
 {
-    using namespace Sink;
-    using namespace Sink::ApplicationDomain;
     auto job = [&] {
         if (auto folder = getFolder()) {
             SinkLog() << "Synchronizing folder " << folder->resourceInstanceIdentifier() << folder->identifier();
-            auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(folder->identifier()));
+            auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<ApplicationDomain::Mail::Folder>(QVariant::fromValue(folder->identifier()));
             scope.setType<ApplicationDomain::Mail>();
             return Store::synchronize(scope);
         } else {
@@ -47,3 +49,11 @@ void FolderController::synchronize()
     run(job);
 }
 
+void FolderController::moveToFolder()
+{
+    auto mail = getMail();
+    auto targetFolder = getFolder();
+    mail->setFolder(*targetFolder);
+    SinkLog() << "Moving to folder " << mail->identifier() << targetFolder->identifier();
+    run(Store::modify(*mail));
+}

@@ -26,12 +26,14 @@ class MailController : public Kube::Controller
 {
     Q_OBJECT
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail::Ptr, Mail, mail)
+    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Folder::Ptr, TargetFolder, targetFolder)
     KUBE_CONTROLLER_ACTION(markAsRead)
     KUBE_CONTROLLER_ACTION(markAsUnread)
     KUBE_CONTROLLER_ACTION(markAsImportant)
     KUBE_CONTROLLER_ACTION(moveToTrash)
     KUBE_CONTROLLER_ACTION(restoreFromTrash)
     KUBE_CONTROLLER_ACTION(remove)
+    KUBE_CONTROLLER_ACTION(moveToFolder)
 
 public:
     explicit MailController();

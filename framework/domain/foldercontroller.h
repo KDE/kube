@@ -26,7 +26,9 @@ class FolderController : public Kube::Controller
 {
     Q_OBJECT
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Folder::Ptr, Folder, folder)
+    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail::Ptr, Mail, mail)
     KUBE_CONTROLLER_ACTION(synchronize)
+    KUBE_CONTROLLER_ACTION(moveToFolder)
 
 public:
     explicit FolderController();

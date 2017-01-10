@@ -33,7 +33,8 @@ MailController::MailController()
     action_markAsImportant{new Kube::ControllerAction{this, &MailController::markAsImportant}},
     action_moveToTrash{new Kube::ControllerAction{this, &MailController::moveToTrash}},
     action_restoreFromTrash{new Kube::ControllerAction{this, &MailController::restoreFromTrash}},
-    action_remove{new Kube::ControllerAction{this, &MailController::remove}}
+    action_remove{new Kube::ControllerAction{this, &MailController::remove}},
+    action_moveToFolder{new Kube::ControllerAction{this, &MailController::moveToFolder}}
 {
     QObject::connect(this, &MailController::mailChanged, &MailController::updateActions);
     updateActions();
@@ -93,5 +94,14 @@ void MailController::remove()
     mail->setTrash(true);
     SinkLog() << "Remove " << mail->identifier();
     run(Store::remove(*mail));
+}
+
+void MailController::moveToFolder()
+{
+    auto mail = getMail();
+    auto targetFolder = getTargetFolder();
+    mail->setFolder(*targetFolder);
+    SinkLog() << "Moving to folder " << mail->identifier() << targetFolder->identifier();
+    run(Store::modify(*mail));
 }
 
