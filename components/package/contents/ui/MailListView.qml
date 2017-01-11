@@ -169,15 +169,15 @@ Item {
                         leftMargin: Kirigami.Units.largeSpacing
                     }
 
-                        Text{
-                            text: model.subject
-                            color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.textColor
+                    Text{
+                        text: model.subject
+                        color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
 
-                            maximumLineCount: 2
-                            width: mailListDelegate.width - Kirigami.Units.largeSpacing * 2 - unreadCounter.width
-                            wrapMode: Text.Wrap
-                            elide: Text.ElideRight
-                        }
+                        maximumLineCount: 2
+                        width: mailListDelegate.width - Kirigami.Units.largeSpacing * 2 - unreadCounter.width
+                        wrapMode: Text.Wrap
+                        elide: Text.ElideRight
+                    }
 
                     Text {
                         text: model.senderName
@@ -197,6 +197,9 @@ Item {
                     font.italic: true
                     color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.disabledTextColor
                     font.pointSize: 9
+
+                    visible: mailListDelegate.containsMouse == false
+
                 }
 
                 Text {
@@ -209,6 +212,42 @@ Item {
 
                     text: model.threadSize
                     color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.disabledTextColor
+                }
+
+                Row {
+                    id: actionButtons
+
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+
+                    visible: mailListDelegate.containsMouse == true
+                    spacing: Kirigami.Units.smallSpacing
+
+                    Controls.ToolButton {
+                        iconName: "mail-mark-unread"
+                        enabled: mailController.markAsReadAction.enabled
+                        onClicked: {
+                            //mailController.markAsReadAction.execute()
+                        }
+                    }
+
+                    Controls.ToolButton {
+                        iconName: "mail-mark-important"
+                        enabled: mailController.markAsImportantAction.enabled
+                        onClicked: {
+                            //mailController.markAsImportantAction.execute()
+                        }
+                    }
+
+                    Controls.ToolButton {
+                        iconName: "edit-delete"
+                        enabled: mailController.moveToTrashAction.enabled
+                        onClicked: {
+                            //mailController.moveToTrashAction.execute()
+                        }
+                    }
                 }
             }
         }
