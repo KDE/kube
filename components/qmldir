@@ -1,5 +1,6 @@
 module org.kube.components
 
+Avatar 1.0 Avatar.qml
 FocusComposer 1.0 FocusComposer.qml
 SingleMailView 1.0 SingleMailView.qml
 FolderListView 1.0 FolderListView.qml
