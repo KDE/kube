@@ -125,7 +125,21 @@ bool MailListModel::lessThan(const QModelIndex &left, const QModelIndex &right) 
 void MailListModel::runQuery(const Sink::Query &query)
 {
     m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+    QObject::connect(m_model.data(), &QAbstractItemModel::rowsInserted, this, &MailListModel::onRowsInserted);
     setSourceModel(m_model.data());
+}
+
+void MailListModel::onRowsInserted(const QModelIndex &parent, int begin, int end)
+{
+    if (mFetchMails) {
+        for (int row = begin; row <= end; row++) {
+            auto mail = sourceModel()->index(row, 0, parent).data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
+            if (mail && !mail->getFullPayloadAvailable()) {
+                qWarning() << "Fetching mail: " << mail->identifier();
+                Sink::Store::synchronize(Sink::SyncScope{*mail}).exec();
+            }
+        }
+    }
 }
 
 void MailListModel::setParentFolder(const QVariant &parentFolder)
@@ -150,6 +164,7 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.request<Mail::Draft>();
     query.request<Mail::Trash>();
     query.request<Mail::Folder>();
+    mFetchMails = false;
     qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
     runQuery(query);
 }
@@ -179,6 +194,8 @@ void MailListModel::setMail(const QVariant &variant)
     query.request<Mail::Draft>();
     query.request<Mail::Trash>();
     query.request<Mail::MimeMessage>();
+    query.request<Mail::FullPayloadAvailable>();
+    mFetchMails = true;
     qWarning() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
     runQuery(query);
 }
