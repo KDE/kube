@@ -96,7 +96,7 @@ Rectangle {
             rowDelegate: Rectangle {
                 color: styleData.selected ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
 
-                height: Kirigami.Units.gridUnit * 2
+                height: Kirigami.Units.gridUnit * 1.5
                 width: 20
 
             }
