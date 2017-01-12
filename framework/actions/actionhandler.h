@@ -73,7 +73,7 @@ public:
         ActionResult result;
         auto wrapper = ContextType{*c};
         execute(wrapper)
-        .template syncThen<void>([=](const KAsync::Error &error) {
+        .template then([=](const KAsync::Error &error) {
             auto modifyableResult = result;
             if (error) {
                 qWarning() << "Job failed: " << error.errorCode << error.errorMessage;

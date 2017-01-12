@@ -123,7 +123,7 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
 {
     Sink::Query query(*message.value<Sink::ApplicationDomain::Mail::Ptr>());
     query.request<Sink::ApplicationDomain::Mail::MimeMessage>();
-    Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).syncThen<void, Sink::ApplicationDomain::Mail>([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
+    Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).then([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
         setExistingMail(mail);
 
         //TODO this should probably happen as reaction to the property being set.
@@ -233,7 +233,7 @@ void ComposerController::send()
             }
             return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
         })
-        .syncThen<void>([&] (const KAsync::Error &error) {
+        .then([&] (const KAsync::Error &error) {
             emit done();
         });
     run(job);
@@ -279,7 +279,7 @@ void ComposerController::saveAsDraft()
             return Store::modify(existingMail);
         }
     }();
-    job = job.syncThen<void>([&] {
+    job = job.then([&] {
         emit done();
     });
     run(job);

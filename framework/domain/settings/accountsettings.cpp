@@ -152,7 +152,7 @@ void AccountSettings::loadAccount()
 {
     Q_ASSERT(!mAccountIdentifier.isEmpty());
     Store::fetchOne<SinkAccount>(Query().filter(mAccountIdentifier))
-        .syncThen<void, SinkAccount>([this](const SinkAccount &account) {
+        .then([this](const SinkAccount &account) {
             mIcon = account.getIcon();
             mName = account.getName();
             emit changed();
@@ -162,7 +162,7 @@ void AccountSettings::loadAccount()
 void AccountSettings::loadImapResource()
 {
     Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
-        .syncThen<void, SinkResource>([this](const SinkResource &resource) {
+        .then([this](const SinkResource &resource) {
             mImapIdentifier = resource.identifier();
             mImapServer = resource.getProperty("server").toString();
             mImapUsername = resource.getProperty("username").toString();
@@ -176,7 +176,7 @@ void AccountSettings::loadImapResource()
 void AccountSettings::loadMaildirResource()
 {
     Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
-        .syncThen<void, SinkResource>([this](const SinkResource &resource) {
+        .then([this](const SinkResource &resource) {
             mMaildirIdentifier = resource.identifier();
             auto path = resource.getProperty("path").toString();
             if (mPath != path) {
@@ -191,7 +191,7 @@ void AccountSettings::loadMaildirResource()
 void AccountSettings::loadMailtransportResource()
 {
     Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport))
-        .syncThen<void, SinkResource>([this](const SinkResource &resource) {
+        .then([this](const SinkResource &resource) {
             mMailtransportIdentifier = resource.identifier();
             mSmtpServer = resource.getProperty("server").toString();
             mSmtpUsername = resource.getProperty("username").toString();
@@ -206,7 +206,7 @@ void AccountSettings::loadIdentity()
 {
     //FIXME this assumes that we only ever have one identity per account
     Store::fetchOne<Identity>(Query().filter<Identity::Account>(mAccountIdentifier))
-        .syncThen<void, Identity>([this](const Identity &identity) {
+        .then([this](const Identity &identity) {
             mIdentityIdentifier = identity.identifier();
             mUsername = identity.getName();
             mEmailAddress = identity.getAddress();
