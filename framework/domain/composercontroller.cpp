@@ -221,17 +221,22 @@ void ComposerController::send()
         .then<void, QList<ApplicationDomain::SinkResource::Ptr>>([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
             if (!resources.isEmpty()) {
                 auto resourceId = resources[0]->identifier();
-                SinkTrace() << "Sending message via resource: " << resourceId;
+                SinkLog() << "Sending message via resource: " << resourceId;
                 Mail mail(resourceId);
-                mail.setBlobProperty("mimeMessage", message->encodedContent());
-                return Store::create(mail);
+                mail.setMimeMessage(message->encodedContent());
+                return Store::create(mail)
+                    .then<void>([=] {
+                        //Trigger a sync, but don't wait for it.
+                        Store::synchronize(Sink::SyncScope{}.resourceFilter(resourceId)).exec();
+                        return KAsync::null<void>();
+                    });
             }
             return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
+        })
+        .syncThen<void>([&] (const KAsync::Error &error) {
+            emit done();
         });
     run(job);
-    job = job.syncThen<void>([&] {
-        emit done();
-    });
 }
 
 void ComposerController::updateSaveAsDraftAction()
@@ -268,7 +273,7 @@ void ComposerController::saveAsDraft()
                     return Store::create(mail);
                 });
         } else {
-            SinkWarning() << "Modifying an existing mail" << existingMail.identifier();
+            SinkLog() << "Modifying an existing mail" << existingMail.identifier();
             existingMail.setDraft(true);
             existingMail.setMimeMessage(message->encodedContent());
             return Store::modify(existingMail);
