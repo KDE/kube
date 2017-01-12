@@ -26,6 +26,7 @@ class MailController : public Kube::Controller
 {
     Q_OBJECT
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail::Ptr, Mail, mail)
+    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail::Ptr, ThreadLeader, threadLeader)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Folder::Ptr, TargetFolder, targetFolder)
     KUBE_CONTROLLER_ACTION(markAsRead)
     KUBE_CONTROLLER_ACTION(markAsUnread)
@@ -39,4 +40,5 @@ public:
     explicit MailController();
 private slots:
     void updateActions();
+    void runModification(const std::function<void(Sink::ApplicationDomain::Mail &)> &f);
 };
