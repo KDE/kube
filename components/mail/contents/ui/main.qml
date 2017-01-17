@@ -177,10 +177,45 @@ Controls2.ApplicationWindow {
             KubeComponents.AccountSwitcher {
                 id: accountSwitcher
 
-                anchors.bottom: parent.bottom
+                anchors.bottom: appSwitcher.top
 
                 width: parent.width
                 height: Kirigami.Units.gridUnit * 2
+            }
+
+            Item {
+                id: appSwitcher
+
+                anchors {
+                    bottom: parent.bottom
+                }
+
+                width: parent.width
+                height: Kirigami.Units.gridUnit * 2
+
+                RowLayout {
+                    anchors.centerIn: parent
+
+                    spacing: Kirigami.Units.largeSpacing
+
+                     ToolButton {
+                        iconName: "mail-message"
+                        height: Kirigami.Units.gridUnit * 1.5
+                        width: height
+                    }
+
+                    ToolButton {
+                        iconName: "user"
+                        height: Kirigami.Units.gridUnit * 1.5
+                        width: height
+                    }
+
+                    ToolButton {
+                        iconName: "configure"
+                        height: Kirigami.Units.gridUnit * 1.5
+                        width: height
+                    }
+                }
             }
         }
 
