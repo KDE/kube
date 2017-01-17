@@ -208,8 +208,10 @@ Item {
                     anchors {
                         right: parent.right
                     }
-                    font.italic: true
 
+                    visible: model.threadSize > 1
+
+                    font.italic: true
                     text: model.threadSize
                     color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.disabledTextColor
                 }
