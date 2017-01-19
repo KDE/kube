@@ -139,17 +139,42 @@ Controls2.ApplicationWindow {
 
             color: Kirigami.Theme.textColor
 
-            Controls2.Button {
-                id: newMailButton
+            Controls2.ToolBar {
+                id: toolBar
 
                 anchors {
                     top: parent.top
                     left: parent.left
                     right: parent.right
-                    margins: Kirigami.Units.smallSpacing
                 }
 
-                height: Kirigami.Units.gridUnit * 1.5
+                RowLayout {
+                    anchors.centerIn: parent
+
+                    spacing: Kirigami.Units.largeSpacing
+
+                    ToolButton {
+                        iconName: "mail-message"
+                        height: Kirigami.Units.gridUnit * 1.5
+                        width: height
+                    }
+
+                    ToolButton {
+                        iconName: "user"
+                        height: Kirigami.Units.gridUnit * 1.5
+                        width: height
+                    }
+                }
+            }
+
+            Controls2.Button {
+                id: newMailButton
+
+                anchors {
+                    top: toolBar.bottom
+                    topMargin: Kirigami.Units.smallSpacing
+                    horizontalCenter: parent.horizontalCenter
+                }
 
                 text: "      " + qsTr("New Email") + "      "
                 //iconName: "mail-message-new"
@@ -165,57 +190,23 @@ Controls2.ApplicationWindow {
 
                 anchors {
                     top: newMailButton.bottom
+                    topMargin: Kirigami.Units.smallSpacing
                     bottom: accountSwitcher.top
                     left: parent.left
                     right: parent.right
-                    topMargin: Kirigami.Units.smallSpacing
                 }
 
                 focus: true
                 accountId: accountSwitcher.accountId
             }
+
             KubeComponents.AccountSwitcher {
                 id: accountSwitcher
 
-                anchors.bottom: appSwitcher.top
+                anchors.bottom: parent.bottom
 
                 width: parent.width
                 height: Kirigami.Units.gridUnit * 2
-            }
-
-            Item {
-                id: appSwitcher
-
-                anchors {
-                    bottom: parent.bottom
-                }
-
-                width: parent.width
-                height: Kirigami.Units.gridUnit * 2
-
-                RowLayout {
-                    anchors.centerIn: parent
-
-                    spacing: Kirigami.Units.largeSpacing
-
-                     ToolButton {
-                        iconName: "mail-message"
-                        height: Kirigami.Units.gridUnit * 1.5
-                        width: height
-                    }
-
-                    ToolButton {
-                        iconName: "user"
-                        height: Kirigami.Units.gridUnit * 1.5
-                        width: height
-                    }
-
-                    ToolButton {
-                        iconName: "configure"
-                        height: Kirigami.Units.gridUnit * 1.5
-                        width: height
-                    }
-                }
             }
         }
 
