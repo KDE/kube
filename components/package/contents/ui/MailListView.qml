@@ -198,7 +198,7 @@ Item {
                     color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.disabledTextColor
                     font.pointSize: 9
 
-                    visible: mailListDelegate.containsMouse == false
+                    //visible: mailListDelegate.containsMouse == false
 
                 }
 
@@ -216,41 +216,41 @@ Item {
                     color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.disabledTextColor
                 }
 
-                Row {
-                    id: actionButtons
-
-                    anchors {
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
-
-                    visible: mailListDelegate.containsMouse == true
-                    spacing: Kirigami.Units.smallSpacing
-
-                    Controls.ToolButton {
-                        iconName: "mail-mark-unread"
-                        enabled: mailController.markAsReadAction.enabled
-                        onClicked: {
-                            //mailController.markAsReadAction.execute()
-                        }
-                    }
-
-                    Controls.ToolButton {
-                        iconName: "mail-mark-important"
-                        enabled: mailController.markAsImportantAction.enabled
-                        onClicked: {
-                            //mailController.markAsImportantAction.execute()
-                        }
-                    }
-
-                    Controls.ToolButton {
-                        iconName: "edit-delete"
-                        enabled: mailController.moveToTrashAction.enabled
-                        onClicked: {
-                            //mailController.moveToTrashAction.execute()
-                        }
-                    }
-                }
+//                 Row {
+//                     id: actionButtons
+//
+//                     anchors {
+//                         right: parent.right
+//                         bottom: parent.bottom
+//                     }
+//
+//                     visible: mailListDelegate.containsMouse == true
+//                     spacing: Kirigami.Units.smallSpacing
+//
+//                     Controls.ToolButton {
+//                         iconName: "mail-mark-unread"
+//                         enabled: mailController.markAsReadAction.enabled
+//                         onClicked: {
+//                             //mailController.markAsReadAction.execute()
+//                         }
+//                     }
+//
+//                     Controls.ToolButton {
+//                         iconName: "mail-mark-important"
+//                         enabled: mailController.markAsImportantAction.enabled
+//                         onClicked: {
+//                             //mailController.markAsImportantAction.execute()
+//                         }
+//                     }
+//
+//                     Controls.ToolButton {
+//                         iconName: "edit-delete"
+//                         enabled: mailController.moveToTrashAction.enabled
+//                         onClicked: {
+//                             //mailController.moveToTrashAction.execute()
+//                         }
+//                     }
+//                 }
             }
         }
     }
