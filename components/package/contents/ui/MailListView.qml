@@ -180,10 +180,10 @@ Item {
                     }
 
                     Text {
+                        width: mailListDelegate.width - Kirigami.Units.largeSpacing * 2 - unreadCounter.width
                         text: model.senderName
                         font.italic: true
                         color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
-                        width: mailListDelegate.width - Kirigami.Units.large
                         elide: Text.ElideRight
                     }
                 }
