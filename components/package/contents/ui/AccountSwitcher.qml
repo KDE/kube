@@ -29,53 +29,95 @@ import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.accounts 1.0 as KubeAccounts
 import org.kube.components 1.0 as KubeComponents
 
-Controls2.Button {
+Item {
     id: accountSwitcher
 
     property variant accountId
+    property variant accountName
+
+    width: parent.width
+
+    clip: true
 
     KubeFramework.FolderController {
         id: folderController
     }
 
-    text: "Accounts"
+    KubeAccounts.AccountsModel {
+        id: accountsModel
+    }
 
-    onClicked: {
-        popup.open()
-        focus = false
+    Text {
+        anchors {
+            left: parent.left
+            leftMargin: Kirigami.Units.smallSpacing
+            bottom: parent.bottom
+        }
+
+        text: accountName
+        color: Kirigami.Theme.backgroundColor
+        font.weight: Font.DemiBold
+    }
+
+    MouseArea {
+        anchors.fill: parent
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        onClicked: {
+            if (mouse.button == Qt.RightButton) {
+                contextMenu.popup()
+            } else {
+                popup.open()
+                focus = false
+            }
+        }
+    }
+
+    Controls.Menu {
+        id: contextMenu
+        title: "Edit"
+
+        Controls.MenuItem {
+            text: "Synchronize"
+            onTriggered: {
+                folderController.synchronizeAction.execute()
+            }
+        }
     }
 
     Controls2.Popup {
         id: popup
 
-        height: 300
-        width: 600
-
-        x: 0
-        y: - popup.height
+        height: listView.count == 0 ? Kirigami.Units.gridUnit * 2  : Kirigami.Units.gridUnit * 2 + listView.count * Kirigami.Units.gridUnit * 3
+        width: parent.width
 
         modal: true
         focus: true
         closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
 
-        Item {
-            id: footer
 
-            anchors {
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-                margins: Kirigami.Units.largeSpacing
-            }
-
-            height: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 1
-            width: listView.width
+//             Controls2.Button {
+//                 anchors {
+//                     verticalCenter: parent.verticalCenter
+//                     left: parent.left
+//                 }
+//
+//                 //iconName: "view-refresh"
+//                 text: "Sync"
+//                 enabled: folderController.synchronizeAction.enabled
+//                 onClicked: {
+//                     folderController.synchronizeAction.execute()
+//                     popup.close()
+//                 }
+//             }
 
             Controls2.Button {
+                id: newAccountButton
 
                 anchors {
-                    verticalCenter: parent.verticalCenter
-                    right: parent.right
+                    horizontalCenter: parent.horizontalCenter
+                    bottom: parent.bottom
                 }
 
                 text: "Create new Account"
@@ -86,36 +128,19 @@ Controls2.Button {
                 }
             }
 
-            Controls2.Button {
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                }
-
-                //iconName: "view-refresh"
-                text: "Sync"
-                enabled: folderController.synchronizeAction.enabled
-                onClicked: {
-                    folderController.synchronizeAction.execute()
-                    popup.close()
-                }
-            }
-        }
-
         ListView {
             id: listView
 
             anchors {
                 top: parent.top
-                bottom: footer.top
+                bottom: newAccountButton.top
                 left: parent.left
                 right: parent.right
-                margins: Kirigami.Units.smallSpacing
             }
 
             clip: true
 
-            model: KubeAccounts.AccountsModel {  }
+            model: accountsModel
 
             delegate: Kirigami.AbstractListItem {
                 id: accountDelegate
@@ -139,6 +164,13 @@ Controls2.Button {
                         property: "accountId"
                         when: listView.currentIndex == index
                         value: model.accountId
+                    }
+
+                    QtQml.Binding {
+                        target: accountSwitcher
+                        property: "accountName"
+                        when: listView.currentIndex == index
+                        value: model.name
                     }
 
                     RowLayout {

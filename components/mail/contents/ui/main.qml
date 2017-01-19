@@ -185,28 +185,31 @@ Controls2.ApplicationWindow {
                 }
             }
 
-            KubeComponents.FolderListView {
-                id: folderListView
+            KubeComponents.AccountSwitcher {
+                id: accountSwitcher
 
                 anchors {
                     top: newMailButton.bottom
                     topMargin: Kirigami.Units.smallSpacing
-                    bottom: accountSwitcher.top
+                }
+
+                width: parent.width
+                height: Kirigami.Units.gridUnit * 2
+            }
+
+            KubeComponents.FolderListView {
+                id: folderListView
+
+                anchors {
+                    top: accountSwitcher.bottom
+                    topMargin: Kirigami.Units.smallSpacing
+                    bottom: parent.bottom
                     left: parent.left
                     right: parent.right
                 }
 
                 focus: true
                 accountId: accountSwitcher.accountId
-            }
-
-            KubeComponents.AccountSwitcher {
-                id: accountSwitcher
-
-                anchors.bottom: parent.bottom
-
-                width: parent.width
-                height: Kirigami.Units.gridUnit * 2
             }
         }
 
