@@ -92,7 +92,6 @@ Controls2.ApplicationWindow {
         folder: folderListView.currentFolder
     }
 
-
     //BEGIN Shortcuts
     Shortcut {
         sequence: StandardKey.Refresh
@@ -169,6 +168,10 @@ Controls2.ApplicationWindow {
                         iconName: "search"
                         height: Kirigami.Units.gridUnit * 1.5
                         width: height
+
+                        onClicked: {
+                            search.open()
+                        }
                     }
                 }
             }
@@ -274,4 +277,32 @@ Controls2.ApplicationWindow {
         y: app.height * 0.075
     }
     //END AccountWizard
+
+    //BEGIN Search
+    Controls2.Popup {
+        id: search
+
+        width: app.width * 0.6
+        height: Kirigami.Units.gridUnit * 3
+
+        x: app.width * 0.2
+        y: app.height * 0.2
+
+        RowLayout {
+            anchors.fill: parent
+            Controls2.TextField {
+                Layout.fillWidth: true
+                placeholderText: "Search...   is not available in this beta"
+            }
+
+            Controls2.Button {
+                text: "Go"
+
+                onClicked: {
+                    search.close()
+                }
+            }
+        }
+    }
+    //END Search
 }
