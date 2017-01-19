@@ -101,6 +101,10 @@ Rectangle {
 
             }
 
+            frame: Rectangle {
+                color: Kirigami.Theme.textColor
+            }
+
             branchDelegate: Item {
 
                 width: 16; height: 16
