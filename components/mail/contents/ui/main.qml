@@ -154,13 +154,19 @@ Controls2.ApplicationWindow {
                     spacing: Kirigami.Units.largeSpacing
 
                     ToolButton {
-                        iconName: "mail-message"
+                        iconName: "kdenlive-menu"
                         height: Kirigami.Units.gridUnit * 1.5
                         width: height
                     }
 
                     ToolButton {
                         iconName: "user"
+                        height: Kirigami.Units.gridUnit * 1.5
+                        width: height
+                    }
+
+                    ToolButton {
+                        iconName: "search"
                         height: Kirigami.Units.gridUnit * 1.5
                         width: height
                     }
