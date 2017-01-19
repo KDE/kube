@@ -35,8 +35,8 @@ Controls2.ApplicationWindow {
 
     //FIXME remove fixed pixel hight
     //for now just convinience during testing
-    height: 1080 * 0.7
-    width: 1920  * 0.7
+    height: 1080 * 0.8
+    width: 1920  * 0.8
 
     visible: true
 
@@ -167,21 +167,35 @@ Controls2.ApplicationWindow {
                 }
             }
 
-            Controls2.Button {
+            Rectangle {
                 id: newMailButton
 
                 anchors {
                     top: toolBar.bottom
-                    topMargin: Kirigami.Units.smallSpacing
-                    horizontalCenter: parent.horizontalCenter
+                    left: parent.left
+                    right: parent.right
+                    margins: Kirigami.Units.largeSpacing
                 }
 
-                text: "      " + qsTr("New Email") + "      "
+                color: "#27ae60"
+                clip: true
+
+                height: Kirigami.Units.gridUnit * 1.5
+
+                Text {
+                    anchors.centerIn: parent
+
+                    text: qsTr("New Email")
+                    color: "white"
+                }
                 //iconName: "mail-message-new"
                 //Controls2.Tooltip.text: "compose new email"
 
-                onClicked: {
-                    composer.open()
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        composer.open()
+                    }
                 }
             }
 
