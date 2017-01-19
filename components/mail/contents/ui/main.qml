@@ -288,8 +288,12 @@ Controls2.ApplicationWindow {
         x: app.width * 0.2
         y: app.height * 0.2
 
+        modal: true
+        focus: true
+
         RowLayout {
             anchors.fill: parent
+
             Controls2.TextField {
                 Layout.fillWidth: true
                 placeholderText: "Search...   is not available in this beta"
