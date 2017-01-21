@@ -10,3 +10,4 @@ NewAccountDialog 1.0 NewAccountDialog.qml
 EditAccountDialog 1.0 EditAccountDialog.qml
 OverlayDialog 1.0 OverlayDialog.qml
 Outbox 1.0 Outbox.qml
+People 1.0 People.qml

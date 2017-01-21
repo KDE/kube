@@ -162,6 +162,10 @@ Controls2.ApplicationWindow {
                         iconName: "user"
                         height: Kirigami.Units.gridUnit * 1.5
                         width: height
+
+                        onClicked: {
+                            people.open()
+                        }
                     }
 
                     ToolButton {
@@ -309,4 +313,17 @@ Controls2.ApplicationWindow {
         }
     }
     //END Search
+
+    //BEGIN People
+    KubeComponents.People {
+        id: people
+
+        height: app.height * 0.85
+        width: app.width * 0.85
+
+        x: app.width * 0.075
+        y: app.height * 0.075
+
+    }
+    //END People
 }
