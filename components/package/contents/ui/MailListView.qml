@@ -119,138 +119,162 @@ Item {
             parentFolder: root.parentFolder
         }
 
-        delegate: Kirigami.AbstractListItem {
-            id: mailListDelegate
+        delegate: Item {
+            id: origin
 
-            width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
-            height: Kirigami.Units.gridUnit * 4.5
+            width: delegateRoot.width
+            height: delegateRoot.height
 
-            enabled: true
-            supportsMouseEvents: true
-
-            checked: listView.currentIndex == index
-            onClicked:  {
-                listView.currentIndex = model.index
+            QtQml.Binding {
+                target: root
+                property: "currentMail"
+                when: listView.currentIndex == index
+                value: model.domainObject
+            }
+            QtQml.Binding {
+                target: root
+                property: "isDraft"
+                when: listView.currentIndex == index
+                value: model.draft
             }
 
-            //Content
             Item {
-                width: parent.width
-                height: parent.height
+                id: delegateRoot
 
-                QtQml.Binding {
-                    target: root
-                    property: "currentMail"
-                    when: listView.currentIndex == index
-                    value: model.domainObject
+                width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
+                height: Kirigami.Units.gridUnit * 5
+
+                states: [
+                State {
+                    name: "dnd"
+                    when: mouseArea.drag.active
+
+                    PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
+                    PropertyChanges {target: delegateRoot; x: x; y:y}
+                    PropertyChanges {target: delegateRoot; parent: root}
+
+                    PropertyChanges {target: delegateRoot; opacity: 0.7}
+                    PropertyChanges {target: background; color: Kirigami.Theme.highlightColor}
+                    PropertyChanges {target: subject; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: sender; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: date; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: Kirigami.Theme.highlightedTextColor}
+                },
+                State {
+                    name: "selected"
+                    when: listView.currentIndex == index && !mouseArea.drag.active
+
+                    PropertyChanges {target: background; color: Kirigami.Theme.highlightColor}
+                    PropertyChanges {target: subject; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: sender; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: date; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: Kirigami.Theme.highlightedTextColor}
+                },
+                State {
+                    name: "hovered"
+                    when: mouseArea.containsMouse && !mouseArea.drag.active
+
+                    PropertyChanges {target: background; color: Kirigami.Theme.buttonHoverColor; opacity: 0.7}
+                    PropertyChanges {target: subject; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: sender; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: date; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: Kirigami.Theme.highlightedTextColor}
                 }
-                QtQml.Binding {
-                    target: root
-                    property: "isDraft"
-                    when: listView.currentIndex == index
-                    value: model.draft
+                ]
+
+                Drag.active: mouseArea.drag.active
+                Drag.hotSpot.x: Kirigami.Units.gridUnit * 2
+                Drag.hotSpot.y: height / 2
+
+                MouseArea {
+                    id: mouseArea
+
+                    anchors.fill: parent
+
+                    hoverEnabled: true
+                    drag.target: parent
+
+                    onClicked: {
+                        listView.currentIndex = index
+                    }
                 }
 
-                //TODO implement bulk action
-//                 CheckBox {
-//                     id: checkBox
-//
-//                     anchors.verticalCenter: parent.verticalCenter
-//
-//                     visible: mailListDelegate.containsMouse == true || checked
-//                 }
+                Rectangle {
+                    id: background
 
-                Column {
-                    id: mainContent
+                    anchors.fill: parent
+
+                    color: Kirigami.Theme.viewBackgroundColor
+
+                    border.color: Kirigami.Theme.backgroundColor
+                    border.width: 1
+                }
+
+                Item {
+                    id: content
 
                     anchors {
-                        verticalCenter: parent.verticalCenter
+                        top: parent.top
+                        bottom: parent.bottom
                         left: parent.left
-                        leftMargin: Kirigami.Units.largeSpacing
+                        right: parent.right
+                        margins: Kirigami.Units.smallSpacing
                     }
 
-                    Text{
-                        text: model.subject
-                        color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                    Column {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: Kirigami.Units.largeSpacing
+                        }
 
-                        maximumLineCount: 2
-                        width: mailListDelegate.width - Kirigami.Units.largeSpacing * 2 - unreadCounter.width
-                        wrapMode: Text.Wrap
-                        elide: Text.ElideRight
+                        Text{
+                            id: subject
+
+                            text: model.subject
+                            color: model.unread ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+
+                            maximumLineCount: 2
+                            width: content.width - Kirigami.Units.gridUnit * 3
+                            wrapMode: Text.WrapAnywhere
+                            elide: Text.ElideRight
+                        }
+
+                        Text {
+                            id: sender
+
+                            text: model.senderName
+                            font.italic: true
+                            color: Kirigami.Theme.textColor
+                            width: delegateRoot.width - Kirigami.Units.gridUnit * 3
+                            elide: Text.ElideRight
+                        }
                     }
 
                     Text {
-                        width: mailListDelegate.width - Kirigami.Units.largeSpacing * 2 - unreadCounter.width
-                        text: model.senderName
+                        id: date
+
+                        anchors {
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
+                        text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                         font.italic: true
-                        color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
-                        elide: Text.ElideRight
-                    }
-                }
-
-                Text {
-                    anchors {
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
-                    text: Qt.formatDateTime(model.date, "dd MMM yyyy")
-                    font.italic: true
-                    color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.disabledTextColor
-                    font.pointSize: 9
-
-                    //visible: mailListDelegate.containsMouse == false
-
-                }
-
-                Text {
-                    id: unreadCounter
-
-                    anchors {
-                        right: parent.right
+                        color: Kirigami.Theme.disabledTextColor
+                        font.pointSize: 9
                     }
 
-                    visible: model.threadSize > 1
+                    Text {
+                        id: threadCounter
 
-                    font.italic: true
-                    text: model.threadSize
-                    color: mailListDelegate.checked ? Kirigami.Theme.highlightedTextColor : model.unread ? "#1d99f3" : Kirigami.Theme.disabledTextColor
+                        anchors {
+                            right: parent.right
+                        }
+                        text: model.threadSize
+                        color: model.unread ?  Kirigami.Theme.highlightColor  : Kirigami.Theme.disabledTextColor
+                        visible: model.threadSize > 1
+                    }
                 }
-
-//                 Row {
-//                     id: actionButtons
-//
-//                     anchors {
-//                         right: parent.right
-//                         bottom: parent.bottom
-//                     }
-//
-//                     visible: mailListDelegate.containsMouse == true
-//                     spacing: Kirigami.Units.smallSpacing
-//
-//                     Controls.ToolButton {
-//                         iconName: "mail-mark-unread"
-//                         enabled: mailController.markAsReadAction.enabled
-//                         onClicked: {
-//                             //mailController.markAsReadAction.execute()
-//                         }
-//                     }
-//
-//                     Controls.ToolButton {
-//                         iconName: "mail-mark-important"
-//                         enabled: mailController.markAsImportantAction.enabled
-//                         onClicked: {
-//                             //mailController.markAsImportantAction.execute()
-//                         }
-//                     }
-//
-//                     Controls.ToolButton {
-//                         iconName: "edit-delete"
-//                         enabled: mailController.moveToTrashAction.enabled
-//                         onClicked: {
-//                             //mailController.moveToTrashAction.execute()
-//                         }
-//                     }
-//                 }
             }
         }
     }
