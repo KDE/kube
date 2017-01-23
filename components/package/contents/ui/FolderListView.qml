@@ -124,6 +124,19 @@ Rectangle {
 
                 color: styleData.selected ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
 
+                DropArea {
+                    anchors.fill: parent
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Kirigami.Theme.viewBackgroundColor
+
+                        opacity: 0.3
+
+                        visible: parent.containsDrag
+                    }
+                }
+
                Text {
                     anchors {
                         verticalCenter: parent.verticalCenter
