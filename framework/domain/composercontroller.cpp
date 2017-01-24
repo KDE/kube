@@ -97,7 +97,18 @@ ComposerController::ComposerController()
 
     QObject::connect(this, &ComposerController::toChanged, &ComposerController::updateSendAction);
     QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSendAction);
+    QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSendAction);
+    QObject::connect(this, &ComposerController::toChanged, &ComposerController::updateSaveAsDraftAction);
+    QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSaveAsDraftAction);
+    QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSaveAsDraftAction);
     updateSendAction();
+}
+
+void ComposerController::clear()
+{
+    Controller::clear();
+    //Reapply account and identity from selection
+    mIdentitySelector->reapplyCurrentIndex();
 }
 
 Completer *ComposerController::recipientCompleter() const
@@ -199,7 +210,7 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 
 void ComposerController::updateSendAction()
 {
-    auto enabled = !getTo().isEmpty() && !getSubject().isEmpty();
+    auto enabled = !getTo().isEmpty() && !getSubject().isEmpty() && !getAccountId().isEmpty();
     sendAction()->setEnabled(enabled);
 }
 
@@ -214,6 +225,7 @@ void ComposerController::send()
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
 
+    Q_ASSERT(!accountId.isEmpty());
     Query query;
     query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);
     query.filter<SinkResource::Account>(accountId);
@@ -241,7 +253,8 @@ void ComposerController::send()
 
 void ComposerController::updateSaveAsDraftAction()
 {
-    sendAction()->setEnabled(true);
+    bool enabled = !getAccountId().isEmpty();
+    sendAction()->setEnabled(enabled);
 }
 
 void ComposerController::saveAsDraft()
@@ -254,7 +267,6 @@ void ComposerController::saveAsDraft()
     if (!message) {
         SinkWarning() << "Failed to get the mail: ";
         return;
-        // return KAsync::error<void>(1, "Failed to get the mail.");
     }
 
     using namespace Sink;

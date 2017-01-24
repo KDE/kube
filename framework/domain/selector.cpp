@@ -24,3 +24,8 @@ Selector::Selector(QAbstractItemModel *model) : mModel{model}
 {
     QQmlEngine::setObjectOwnership(mModel, QQmlEngine::CppOwnership);
 }
+
+void Selector::reapplyCurrentIndex()
+{
+    setCurrentIndex(currentIndex());
+}

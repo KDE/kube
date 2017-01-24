@@ -40,6 +40,8 @@ public:
         setCurrent(mModel->index(mCurrentIndex, 0));
     }
 
+    void reapplyCurrentIndex();
+
     int currentIndex() { return mCurrentIndex; }
 
     virtual void setCurrent(const QModelIndex &) = 0;
