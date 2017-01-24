@@ -88,7 +88,7 @@ void IdentitiesModel::runQuery(const Sink::Query &query)
     setSourceModel(mModel.data());
 
     Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>(Sink::Query())
-        .syncThen<void, QList<Sink::ApplicationDomain::SinkAccount::Ptr> >([this](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
+        .then([this](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
             for (const auto &account : accounts) {
                 mAccountNames.insert(account->identifier(), account->getName());
                 mAccountIcons.insert(account->identifier(), account->getIcon());

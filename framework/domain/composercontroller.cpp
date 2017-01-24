@@ -97,7 +97,18 @@ ComposerController::ComposerController()
 
     QObject::connect(this, &ComposerController::toChanged, &ComposerController::updateSendAction);
     QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSendAction);
+    QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSendAction);
+    QObject::connect(this, &ComposerController::toChanged, &ComposerController::updateSaveAsDraftAction);
+    QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSaveAsDraftAction);
+    QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSaveAsDraftAction);
     updateSendAction();
+}
+
+void ComposerController::clear()
+{
+    Controller::clear();
+    //Reapply account and identity from selection
+    mIdentitySelector->reapplyCurrentIndex();
 }
 
 Completer *ComposerController::recipientCompleter() const
@@ -123,7 +134,7 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
 {
     Sink::Query query(*message.value<Sink::ApplicationDomain::Mail::Ptr>());
     query.request<Sink::ApplicationDomain::Mail::MimeMessage>();
-    Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).syncThen<void, Sink::ApplicationDomain::Mail>([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
+    Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).then([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
         setExistingMail(mail);
 
         //TODO this should probably happen as reaction to the property being set.
@@ -199,7 +210,7 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 
 void ComposerController::updateSendAction()
 {
-    auto enabled = !getTo().isEmpty() && !getSubject().isEmpty();
+    auto enabled = !getTo().isEmpty() && !getSubject().isEmpty() && !getAccountId().isEmpty();
     sendAction()->setEnabled(enabled);
 }
 
@@ -214,33 +225,42 @@ void ComposerController::send()
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
 
+    Q_ASSERT(!accountId.isEmpty());
     Query query;
     query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);
     query.filter<SinkResource::Account>(accountId);
     auto job = Store::fetchAll<ApplicationDomain::SinkResource>(query)
-        .then<void, QList<ApplicationDomain::SinkResource::Ptr>>([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
+        .then([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) {
             if (!resources.isEmpty()) {
                 auto resourceId = resources[0]->identifier();
-                SinkTrace() << "Sending message via resource: " << resourceId;
+                SinkLog() << "Sending message via resource: " << resourceId;
                 Mail mail(resourceId);
-                mail.setBlobProperty("mimeMessage", message->encodedContent());
-                return Store::create(mail);
+                mail.setMimeMessage(message->encodedContent());
+                return Store::create(mail)
+                    .then<void>([=] {
+                        //Trigger a sync, but don't wait for it.
+                        Store::synchronize(Sink::SyncScope{}.resourceFilter(resourceId)).exec();
+                    });
             }
+            SinkWarning() << "Failed to find a mailtransport resource";
             return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
+        })
+        .then([&] (const KAsync::Error &error) {
+            SinkLog() << "Message was sent: ";
+            emit done();
         });
     run(job);
-    job = job.syncThen<void>([&] {
-        emit done();
-    });
 }
 
 void ComposerController::updateSaveAsDraftAction()
 {
-    sendAction()->setEnabled(true);
+    bool enabled = !getAccountId().isEmpty();
+    sendAction()->setEnabled(enabled);
 }
 
 void ComposerController::saveAsDraft()
 {
+    SinkLog() << "Save as draft";
     const auto accountId = getAccountId();
     auto existingMail = getExistingMail();
 
@@ -249,7 +269,6 @@ void ComposerController::saveAsDraft()
     if (!message) {
         SinkWarning() << "Failed to get the mail: ";
         return;
-        // return KAsync::error<void>(1, "Failed to get the mail.");
     }
 
     using namespace Sink;
@@ -257,24 +276,28 @@ void ComposerController::saveAsDraft()
 
     auto job = [&] {
         if (existingMail.identifier().isEmpty()) {
+            SinkLog() << "Creating a new draft" << existingMail.identifier();
             Query query;
             query.containsFilter<SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::drafts);
             query.filter<SinkResource::Account>(accountId);
             return Store::fetchOne<SinkResource>(query)
-                .then<void, SinkResource>([=](const SinkResource &resource) -> KAsync::Job<void> {
+                .then([=](const SinkResource &resource) {
                     Mail mail(resource.identifier());
                     mail.setDraft(true);
                     mail.setMimeMessage(message->encodedContent());
                     return Store::create(mail);
+                })
+                .onError([] (const KAsync::Error &error) {
+                    SinkWarning() << "Error while creating draft: " << error.errorMessage;
                 });
         } else {
-            SinkWarning() << "Modifying an existing mail" << existingMail.identifier();
+            SinkLog() << "Modifying an existing mail" << existingMail.identifier();
             existingMail.setDraft(true);
             existingMail.setMimeMessage(message->encodedContent());
             return Store::modify(existingMail);
         }
     }();
-    job = job.syncThen<void>([&] {
+    job = job.then([&] (const KAsync::Error &) {
         emit done();
     });
     run(job);

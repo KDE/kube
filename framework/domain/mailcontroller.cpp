@@ -20,6 +20,7 @@
 
 #include <sink/store.h>
 #include <sink/log.h>
+#include <sink/standardqueries.h>
 
 SINK_DEBUG_AREA("mailcontroller");
 
@@ -33,15 +34,31 @@ MailController::MailController()
     action_markAsImportant{new Kube::ControllerAction{this, &MailController::markAsImportant}},
     action_moveToTrash{new Kube::ControllerAction{this, &MailController::moveToTrash}},
     action_restoreFromTrash{new Kube::ControllerAction{this, &MailController::restoreFromTrash}},
-    action_remove{new Kube::ControllerAction{this, &MailController::remove}}
+    action_remove{new Kube::ControllerAction{this, &MailController::remove}},
+    action_moveToFolder{new Kube::ControllerAction{this, &MailController::moveToFolder}}
 {
     QObject::connect(this, &MailController::mailChanged, &MailController::updateActions);
     updateActions();
 }
 
-void MailController::updateActions()
+void MailController::runModification(const std::function<void(ApplicationDomain::Mail &)> &f)
 {
     if (auto mail = getMail()) {
+        f(*mail);
+        run(Store::modify(*mail));
+    } else if (auto mail = getThreadLeader()) {
+        f(*mail);
+        run(Store::modify(Sink::StandardQueries::completeThread(*mail), *mail));
+    }
+}
+
+void MailController::updateActions()
+{
+    auto mail = getMail();
+    if (!mail) {
+        mail= getThreadLeader();
+    }
+    if (mail) {
         action_moveToTrash->setEnabled(!mail->getTrash());
         action_restoreFromTrash->setEnabled(mail->getTrash());
     }
@@ -49,49 +66,58 @@ void MailController::updateActions()
 
 void MailController::markAsRead()
 {
-    auto mail = getMail();
-    mail->setUnread(false);
-    SinkLog() << "Mark as read " << mail->identifier();
-    run(Store::modify(*mail));
+    runModification([] (ApplicationDomain::Mail &mail) {
+        mail.setUnread(false);
+        SinkLog() << "Mark as read " << mail.identifier();
+    });
 }
 
 void MailController::markAsUnread()
 {
-    auto mail = getMail();
-    mail->setUnread(true);
-    SinkLog() << "Mark as unread " << mail->identifier();
-    run(Store::modify(*mail));
+    runModification([] (ApplicationDomain::Mail &mail) {
+        mail.setUnread(true);
+        SinkLog() << "Mark as unread " << mail.identifier();
+    });
 }
 
 void MailController::markAsImportant()
 {
-    auto mail = getMail();
-    mail->setImportant(true);
-    SinkLog() << "Mark as important " << mail->identifier();
-    run(Store::modify(*mail));
+    runModification([] (ApplicationDomain::Mail &mail) {
+        mail.setImportant(true);
+        SinkLog() << "Mark as important " << mail.identifier();
+    });
 }
 
 void MailController::moveToTrash()
 {
-    auto mail = getMail();
-    mail->setTrash(true);
-    SinkLog() << "Move to trash " << mail->identifier();
-    run(Store::modify(*mail));
+    runModification([] (ApplicationDomain::Mail &mail) {
+        mail.setTrash(true);
+        SinkLog() << "Move to trash " << mail.identifier();
+    });
 }
 
 void MailController::restoreFromTrash()
 {
-    auto mail = getMail();
-    mail->setTrash(false);
-    SinkLog() << "Restore from trash " << mail->identifier();
-    run(Store::modify(*mail));
+    runModification([] (ApplicationDomain::Mail &mail) {
+        mail.setTrash(false);
+        SinkLog() << "Restore from trash " << mail.identifier();
+    });
 }
 
 void MailController::remove()
 {
-    auto mail = getMail();
-    mail->setTrash(true);
-    SinkLog() << "Remove " << mail->identifier();
-    run(Store::remove(*mail));
+    runModification([] (ApplicationDomain::Mail &mail) {
+        mail.setTrash(true);
+        SinkLog() << "Remove " << mail.identifier();
+    });
+}
+
+void MailController::moveToFolder()
+{
+    runModification([&] (ApplicationDomain::Mail &mail) {
+        auto targetFolder = getTargetFolder();
+        mail.setFolder(*targetFolder);
+        SinkLog() << "Moving to folder " << mail.identifier() << targetFolder->identifier();
+    });
 }
 

@@ -65,13 +65,13 @@ void MaildirController::load(const QByteArray &id) {
     clear();
 
     Store::fetchOne<SinkAccount>(Query().filter(m_accountId))
-    .syncThen<void, SinkAccount>([this](const SinkAccount &account) {
+    .then([this](const SinkAccount &account) {
         setIcon(account.getIcon());
         setName(account.getName());
     }).exec();
 
     Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(m_accountId).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
-    .syncThen<void, SinkResource>([this](const SinkResource &resource) {
+    .then([this](const SinkResource &resource) {
         m_resourceId = resource.identifier();
         setPath(resource.getProperty("path").toString());
     }).exec();

@@ -39,7 +39,7 @@ private slots:
         settings.setProperty("emailAddress", emailAddress);
         settings.save();
 
-        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).syncThen<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
+        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).then([](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
             QCOMPARE(resources.size(), 2);
         })
         .exec().waitForFinished();
@@ -70,7 +70,7 @@ private slots:
             settings.remove();
         }
 
-        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).syncThen<void, QList<Sink::ApplicationDomain::SinkResource::Ptr>>([](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
+        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).then([](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
             QCOMPARE(resources.size(), 0);
         })
         .exec().waitForFinished();

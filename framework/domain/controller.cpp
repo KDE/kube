@@ -20,6 +20,7 @@
 
 #include <QQmlEngine>
 #include <QMetaProperty>
+#include <sink/log.h>
 
 using namespace Kube;
 
@@ -49,6 +50,9 @@ void Controller::clear()
 void Controller::run(const KAsync::Job<void> &job)
 {
     auto jobToExec = job;
+    jobToExec.onError([] (const KAsync::Error &error) {
+        SinkWarningCtx(Sink::Log::Context{"controller"}) << "Error while executing job: " << error.errorMessage;
+    });
     //TODO handle error
     //TODO attach a log context to the execution that we can gather from the job?
     jobToExec.exec();

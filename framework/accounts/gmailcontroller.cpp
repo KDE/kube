@@ -80,7 +80,7 @@ void GmailController::load(const QByteArray &id) {
     m_accountId = id;
 
     Store::fetchOne<SinkAccount>(Query().filter(m_accountId))
-    .syncThen<void, SinkAccount>([this](const SinkAccount &account) {
+    .then([this](const SinkAccount &account) {
         setName(account.getName());
     }).exec();
 

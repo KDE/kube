@@ -365,7 +365,7 @@ Rectangle {
 
                         KubeFramework.MailController {
                             id: mailController
-                            mail: model.mail
+                            threadLeader: model.mail
                         }
 
                         text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")

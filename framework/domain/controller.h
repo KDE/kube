@@ -77,7 +77,7 @@ public:
     virtual ~Controller() = default;
 
 public slots:
-    void clear();
+    virtual void clear();
 
 signals:
     void done();

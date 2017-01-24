@@ -76,6 +76,9 @@ public:
 
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
 
+public slots:
+    virtual void clear() Q_DECL_OVERRIDE;
+
 private slots:
     void updateSendAction();
     void updateSaveAsDraftAction();

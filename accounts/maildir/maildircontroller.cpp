@@ -85,7 +85,7 @@ void MaildirController::loadAccount(const QByteArray &id)
 {
     Q_ASSERT(!mAccountIdentifier.isEmpty());
     Store::fetchOne<SinkAccount>(Query().filter(mAccountIdentifier))
-    .syncThen<void, SinkAccount>([this](const SinkAccount &account) {
+    .then([this](const SinkAccount &account) {
         mIcon = account.getIcon();
         mName = account.getName();
         emit nameChanged();
