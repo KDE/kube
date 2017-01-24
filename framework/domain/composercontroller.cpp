@@ -230,7 +230,7 @@ void ComposerController::send()
     query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);
     query.filter<SinkResource::Account>(accountId);
     auto job = Store::fetchAll<ApplicationDomain::SinkResource>(query)
-        .then<void, QList<ApplicationDomain::SinkResource::Ptr>>([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) -> KAsync::Job<void> {
+        .then([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) {
             if (!resources.isEmpty()) {
                 auto resourceId = resources[0]->identifier();
                 SinkLog() << "Sending message via resource: " << resourceId;
@@ -240,12 +240,13 @@ void ComposerController::send()
                     .then<void>([=] {
                         //Trigger a sync, but don't wait for it.
                         Store::synchronize(Sink::SyncScope{}.resourceFilter(resourceId)).exec();
-                        return KAsync::null<void>();
                     });
             }
+            SinkWarning() << "Failed to find a mailtransport resource";
             return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
         })
         .then([&] (const KAsync::Error &error) {
+            SinkLog() << "Message was sent: ";
             emit done();
         });
     run(job);
@@ -259,6 +260,7 @@ void ComposerController::updateSaveAsDraftAction()
 
 void ComposerController::saveAsDraft()
 {
+    SinkLog() << "Save as draft";
     const auto accountId = getAccountId();
     auto existingMail = getExistingMail();
 
@@ -274,15 +276,19 @@ void ComposerController::saveAsDraft()
 
     auto job = [&] {
         if (existingMail.identifier().isEmpty()) {
+            SinkLog() << "Creating a new draft" << existingMail.identifier();
             Query query;
             query.containsFilter<SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::drafts);
             query.filter<SinkResource::Account>(accountId);
             return Store::fetchOne<SinkResource>(query)
-                .then<void, SinkResource>([=](const SinkResource &resource) -> KAsync::Job<void> {
+                .then([=](const SinkResource &resource) {
                     Mail mail(resource.identifier());
                     mail.setDraft(true);
                     mail.setMimeMessage(message->encodedContent());
                     return Store::create(mail);
+                })
+                .onError([] (const KAsync::Error &error) {
+                    SinkWarning() << "Error while creating draft: " << error.errorMessage;
                 });
         } else {
             SinkLog() << "Modifying an existing mail" << existingMail.identifier();
@@ -291,7 +297,7 @@ void ComposerController::saveAsDraft()
             return Store::modify(existingMail);
         }
     }();
-    job = job.then([&] {
+    job = job.then([&] (const KAsync::Error &) {
         emit done();
     });
     run(job);
