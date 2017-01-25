@@ -148,6 +148,7 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     auto folder = parentFolder.value<Folder::Ptr>();
     if (!folder) {
         qWarning() << "No folder: " << parentFolder;
+        setSourceModel(nullptr);
         return;
     }
     Sink::Query query = Sink::StandardQueries::threadLeaders(*folder);
@@ -180,6 +181,7 @@ void MailListModel::setMail(const QVariant &variant)
     auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>();
     if (!mail) {
         qWarning() << "No mail: " << mail;
+        setSourceModel(nullptr);
         return;
     }
     Sink::Query query = Sink::StandardQueries::completeThread(*mail);
