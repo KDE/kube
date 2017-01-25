@@ -183,8 +183,8 @@ Item {
                 ]
 
                 Drag.active: mouseArea.drag.active
-                Drag.hotSpot.x: Kirigami.Units.gridUnit * 2
-                Drag.hotSpot.y: height / 2
+                Drag.hotSpot.x: mouseArea.mouseX
+                Drag.hotSpot.y: mouseArea.mouseY
 
                 MouseArea {
                     id: mouseArea
