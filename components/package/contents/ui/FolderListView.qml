@@ -135,6 +135,12 @@ Rectangle {
 
                         visible: parent.containsDrag
                     }
+                    onDropped: {
+                        folderController.folder = model.domainObject
+                        folderController.mail = drop.source.mail
+                        folderController.moveToFolderAction.execute()
+                        drop.accept(Qt.MoveAction)
+                    }
                 }
 
                Text {

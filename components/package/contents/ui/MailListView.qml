@@ -141,6 +141,8 @@ Item {
             Item {
                 id: delegateRoot
 
+                property variant mail : model.domainObject
+
                 width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
                 height: Kirigami.Units.gridUnit * 5
 
@@ -185,6 +187,7 @@ Item {
                 Drag.active: mouseArea.drag.active
                 Drag.hotSpot.x: mouseArea.mouseX
                 Drag.hotSpot.y: mouseArea.mouseY
+                Drag.source: delegateRoot
 
                 MouseArea {
                     id: mouseArea
@@ -197,6 +200,7 @@ Item {
                     onClicked: {
                         listView.currentIndex = index
                     }
+                    onReleased: parent.Drag.drop()
                 }
 
                 Rectangle {
