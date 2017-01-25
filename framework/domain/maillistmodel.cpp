@@ -131,7 +131,7 @@ void MailListModel::runQuery(const Sink::Query &query)
 
 void MailListModel::onRowsInserted(const QModelIndex &parent, int begin, int end)
 {
-    if (mFetchMails) {
+    if (mFetchMails && sourceModel()) {
         for (int row = begin; row <= end; row++) {
             auto mail = sourceModel()->index(row, 0, parent).data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
             if (mail && !mail->getFullPayloadAvailable()) {
