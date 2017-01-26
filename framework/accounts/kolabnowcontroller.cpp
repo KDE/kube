@@ -43,7 +43,7 @@ void KolabNowController::create() {
     auto resource =  ApplicationDomainType::createEntity<SinkResource>();
     resource.setResourceType("sink.imap");
     resource.setAccount(account);
-    resource.setProperty("server","imaps://beta.kolabnow.com:993");
+    resource.setProperty("server","imaps://beta.kolabnow.com:143");
     resource.setProperty("username", getEmailAddress());
     resource.setProperty("password", getPassword());
     Store::create(resource).exec().waitForFinished();
