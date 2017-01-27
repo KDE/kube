@@ -64,6 +64,7 @@ popd
 %dir %{_libdir}/qt5/qml/
 %dir %{_libdir}/qt5/qml/org/
 %{_libdir}/qt5/qml/org/kube/
+%{_libdir}/libmimetreeparser.so
 %{_datadir}/appdata/org.kde.kube.appdata.xml
 %{_datadir}/applications/org.kde.kube.desktop
 %{_datadir}/icons/hicolor/256x256/apps/kube_icon.png
@@ -72,6 +73,8 @@ popd
 %{_datadir}/icons/hicolor/scalable/apps/kube_symbol.svg
 %{_datadir}/kpackage/genericqml/org.kube.accounts.imap/
 %{_datadir}/kpackage/genericqml/org.kube.accounts.maildir/
+%{_datadir}/kpackage/genericqml/org.kube.accounts.kolabnow/
 %{_datadir}/kpackage/genericqml/org.kube.components.mail/
+%{_datadir}/metainfo/org.kube.*
 
 %changelog
