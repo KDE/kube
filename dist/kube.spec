@@ -25,7 +25,8 @@ BuildRequires:  qt5-qtwebengine-devel
 BuildRequires:  sink-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  qt5-qtquickcontrols2-devel
-BuildRequires:  libqgpgme-devel
+BuildRequires:  qgpgme-devel
+BuildRequires:  gpgme >= 1.8.0
 
 Requires:       qt5-qtquick1
 Requires:       qt5-qtquickcontrols
