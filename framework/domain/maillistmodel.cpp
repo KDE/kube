@@ -167,6 +167,8 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.request<Mail::Folder>();
     mFetchMails = false;
     qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
+    //Latest mail on top
+    sort(0, Qt::DescendingOrder);
     runQuery(query);
 }
 
@@ -199,6 +201,8 @@ void MailListModel::setMail(const QVariant &variant)
     query.request<Mail::FullPayloadAvailable>();
     mFetchMails = true;
     qWarning() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
+    //Latest mail at the bottom
+    sort(0, Qt::AscendingOrder);
     runQuery(query);
 }
 
