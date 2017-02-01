@@ -33,6 +33,7 @@ Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2-devel
 Requires:       sink
 Requires:       kirigami
+Requires:       libotp
 
 %description
 kube
