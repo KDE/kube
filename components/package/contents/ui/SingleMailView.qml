@@ -62,6 +62,8 @@ Rectangle {
 
         delegate: mailDelegate
 
+        boundsBehavior: Flickable.StopAtBounds
+
         //Intercept all scroll events,
         //necessary due to the webengineview
         KubeFramework.MouseProxy {
