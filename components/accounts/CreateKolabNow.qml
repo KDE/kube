@@ -102,6 +102,22 @@ Item {
             }
 
             Controls.Label {
+                text: "Name"
+                Layout.alignment: Qt.AlignRight
+            }
+            Controls.TextField {
+                Layout.fillWidth: true
+
+                placeholderText: "Your name"
+
+                text: account.identityName
+
+                onTextChanged: {
+                    account.identityName = text
+                }
+            }
+
+            Controls.Label {
                 text: "Email address"
                 Layout.alignment: Qt.AlignRight
             }

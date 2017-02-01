@@ -118,6 +118,22 @@ Item {
                 placeholderText: "Your email address"
             }
 
+            Controls.Label {
+                text: "Name"
+                Layout.alignment: Qt.AlignRight
+            }
+            Controls.TextField {
+                Layout.fillWidth: true
+
+                placeholderText: "Your name"
+
+                text: account.identityName
+
+                onTextChanged: {
+                    account.identityName = text
+                }
+            }
+
             Kirigami.Label {
                 text: "Password"
                 Layout.alignment: Qt.AlignRight
