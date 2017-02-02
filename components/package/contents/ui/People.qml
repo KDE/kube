@@ -22,6 +22,8 @@ import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.framework.domain 1.0 as KubeFramework
+
 
 Popup {
 
@@ -120,13 +122,101 @@ Popup {
         }
 
         Item {
+
+            KubeFramework.ContactController {
+                id: contactController
+            }
+
             height: parent.height
             Layout.fillWidth: true
 
             ToolBar {
+                id: detailToolBar
 
                 width: parent.width
                 height: Kirigami.Units.gridUnit * 2
+            }
+
+            Rectangle {
+
+                anchors {
+                    top: detailToolBar.bottom
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                    //margins: Kirigami.Units.largeSpacing
+                }
+
+                color: Krigami.Theme.viewBackgroundColor
+
+                ColumnLayout {
+
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        margins: Kirigami.Units.smallSpacing
+                    }
+
+                    width: parent.width
+
+                    Avatar {
+                        id: avatar
+
+
+                        height: Kirigami.Units.gridUnit * 2.5
+                        width: height
+
+                        name: contactController.name
+                    }
+
+                    Text {
+                        color: Kirigami.Theme.textColor
+                        opacity: 0.8
+
+                        text: contactController.name
+
+                        font.weight: Font.DemiBold
+                    }
+
+                    Text {
+                        color: Kirigami.Theme.textColor
+                        text: "Email"
+                        font.weight: Font.DemiBold
+                        opacity: 0.8
+                    }
+
+                    ColumnLayout {
+                        Repeater {
+                            model: contactController.emails
+
+                            RowLayout {
+                                Text { text: modelData }
+                                Controls.ToolButton {
+                                    iconName: "edit-delete"
+
+                                    onClicked: {
+                                        contactController.removeEmail(modelData)
+                                    }
+                                }
+                            }
+                        }
+
+                        RowLayout {
+                            TextField {
+                                id: newEmail
+                            }
+
+                            Button {
+                                text: "Add email"
+
+                                onClicked: {
+                                    contactController.addEmail(newEmail.text)
+                                    newEmail.text = "";
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
