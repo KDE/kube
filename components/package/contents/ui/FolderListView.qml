@@ -140,6 +140,7 @@ Rectangle {
                         folderController.mail = drop.source.mail
                         folderController.moveToFolderAction.execute()
                         drop.accept(Qt.MoveAction)
+                        drop.source.visible = false
                     }
                 }
 
