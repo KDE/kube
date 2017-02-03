@@ -142,22 +142,22 @@ Popup {
                     left: parent.left
                     right: parent.right
                     bottom: parent.bottom
-                    //margins: Kirigami.Units.largeSpacing
                 }
 
                 color: Krigami.Theme.viewBackgroundColor
 
-                ColumnLayout {
+                    Row{
+                        id: avatar_row
 
-                    anchors {
-                        top: parent.top
-                        left: parent.left
-                        margins: Kirigami.Units.smallSpacing
-                    }
+                        height: avatar.height
 
-                    width: parent.width
+                        anchors {
+                            top: parent.top
+                            left: parent.left
+                            margins: Kirigami.Units.largeSpacing
+                        }
 
-                    RowLayout {
+                        spacing: Kirigami.Units.smallSpacing
 
                         Avatar {
                             id: avatar
@@ -169,6 +169,9 @@ Popup {
                         }
 
                         Text {
+
+                            anchors.verticalCenter: parent.verticalCenter
+
                             color: Kirigami.Theme.textColor
                             opacity: 0.8
 
@@ -178,41 +181,55 @@ Popup {
                         }
                     }
 
-                    Text {
+                Text {
+                    id: email_label
+
+                        anchors {
+                            top: avatar_row.bottom
+                            left: avatar_row.left
+                            leftMargin:  Kirigami.Units.gridUnit * 2.5
+                            topMargin: Kirigami.Units.largeSpacing
+                        }
+
                         color: Kirigami.Theme.textColor
                         text: "Email"
                         font.weight: Font.DemiBold
                         opacity: 0.8
+                }
+
+                ColumnLayout {
+
+                    anchors {
+                        top: email_label.bottom
+                        left: email_label.left
                     }
 
-                    ColumnLayout {
-                        Repeater {
-                            model: contactController.emails
+                    Repeater {
+                        model: contactController.emails
 
-                            RowLayout {
-                                Text { text: modelData }
-                                Controls.ToolButton {
-                                    iconName: "edit-delete"
+                        RowLayout {
+                            Text { text: modelData }
+                            Controls.ToolButton {
+                                iconName: "edit-delete"
 
-                                    onClicked: {
-                                        contactController.removeEmail(modelData)
-                                    }
+                                onClicked: {
+                                    contactController.removeEmail(modelData)
                                 }
                             }
                         }
+                    }
 
-                        RowLayout {
-                            TextField {
-                                id: newEmail
-                            }
+                    RowLayout {
+                        TextField {
+                            id: newEmail
+                        }
 
-                            Button {
-                                text: "Add email"
+                        Button {
+                            text: "Add email"
 
-                                onClicked: {
-                                    contactController.addEmail(newEmail.text)
-                                    newEmail.text = "";
-                                }
+                            onClicked: {
+                                contactController.addEmail(newEmail.text)
+                                newEmail.text = "";
                             }
                         }
                     }
