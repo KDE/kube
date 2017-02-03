@@ -50,11 +50,9 @@ Popup {
                     width: parent.width* 0.8
 
                     color: "#27ae60"
-
                     clip: true
 
                     Text {
-
                         anchors.centerIn: parent
 
                         clip: true
@@ -159,23 +157,25 @@ Popup {
 
                     width: parent.width
 
-                    Avatar {
-                        id: avatar
+                    RowLayout {
 
+                        Avatar {
+                            id: avatar
 
-                        height: Kirigami.Units.gridUnit * 2.5
-                        width: height
+                            height: Kirigami.Units.gridUnit * 2.5
+                            width: height
 
-                        name: contactController.name
-                    }
+                            name: contactController.name
+                        }
 
-                    Text {
-                        color: Kirigami.Theme.textColor
-                        opacity: 0.8
+                        Text {
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.8
 
-                        text: contactController.name
+                            text: contactController.name
 
-                        font.weight: Font.DemiBold
+                            font.weight: Font.DemiBold
+                        }
                     }
 
                     Text {
