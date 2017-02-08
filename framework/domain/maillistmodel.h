@@ -68,8 +68,6 @@ public:
 
     void setMail(const QVariant &mail);
     QVariant mail() const;
-private slots:
-    void onRowsInserted(const QModelIndex &idx, int, int);
 
 private:
     QSharedPointer<QAbstractItemModel> m_model;

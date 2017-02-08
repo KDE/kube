@@ -74,6 +74,14 @@ static QString join(const QList<Sink::ApplicationDomain::Mail::Contact> &contact
     return list.join(", ");
 }
 
+void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail)
+{
+    if (mail && !mail->getFullPayloadAvailable()) {
+        qWarning() << "Fetching mail: " << mail->identifier() << mail->getSubject();
+        Sink::Store::synchronize(Sink::SyncScope{*mail}).exec();
+    }
+}
+
 QVariant MailListModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
@@ -106,6 +114,9 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
         case DomainObject:
             return QVariant::fromValue(mail);
         case MimeMessage:
+            if (mFetchMails) {
+                fetchMail(mail);
+            }
             return mail->getMimeMessage();
         case ThreadSize:
             return mail->getProperty("count").toInt();
@@ -125,21 +136,7 @@ bool MailListModel::lessThan(const QModelIndex &left, const QModelIndex &right) 
 void MailListModel::runQuery(const Sink::Query &query)
 {
     m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
-    QObject::connect(m_model.data(), &QAbstractItemModel::rowsInserted, this, &MailListModel::onRowsInserted);
     setSourceModel(m_model.data());
-}
-
-void MailListModel::onRowsInserted(const QModelIndex &parent, int begin, int end)
-{
-    if (mFetchMails && sourceModel()) {
-        for (int row = begin; row <= end; row++) {
-            auto mail = sourceModel()->index(row, 0, parent).data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
-            if (mail && !mail->getFullPayloadAvailable()) {
-                qWarning() << "Fetching mail: " << mail->identifier();
-                Sink::Store::synchronize(Sink::SyncScope{*mail}).exec();
-            }
-        }
-    }
 }
 
 void MailListModel::setParentFolder(const QVariant &parentFolder)
