@@ -77,7 +77,7 @@ static QString join(const QList<Sink::ApplicationDomain::Mail::Contact> &contact
 void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail)
 {
     if (mail && !mail->getFullPayloadAvailable()) {
-        qWarning() << "Fetching mail: " << mail->identifier() << mail->getSubject();
+        qDebug() << "Fetching mail: " << mail->identifier() << mail->getSubject();
         Sink::Store::synchronize(Sink::SyncScope{*mail}).exec();
     }
 }
@@ -145,9 +145,14 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     auto folder = parentFolder.value<Folder::Ptr>();
     if (!folder) {
         qWarning() << "No folder: " << parentFolder;
+        mCurrentQueryItem.clear();
         setSourceModel(nullptr);
         return;
     }
+    if (mCurrentQueryItem == folder->identifier()) {
+        return;
+    }
+    mCurrentQueryItem = folder->identifier();
     Sink::Query query = Sink::StandardQueries::threadLeaders(*folder);
     query.setFlags(Sink::Query::LiveQuery);
     query.limit(100);
@@ -163,7 +168,7 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.request<Mail::Trash>();
     query.request<Mail::Folder>();
     mFetchMails = false;
-    qWarning() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
+    qDebug() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
     //Latest mail on top
     sort(0, Qt::DescendingOrder);
     runQuery(query);
@@ -180,10 +185,16 @@ void MailListModel::setMail(const QVariant &variant)
     auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>();
     if (!mail) {
         qWarning() << "No mail: " << mail;
+        mCurrentQueryItem.clear();
         setSourceModel(nullptr);
         return;
     }
+    if (mCurrentQueryItem == mail->identifier()) {
+        return;
+    }
+    mCurrentQueryItem = mail->identifier();
     Sink::Query query = Sink::StandardQueries::completeThread(*mail);
+    query.setFlags(Sink::Query::LiveQuery);
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
     query.request<Mail::To>();
@@ -197,7 +208,7 @@ void MailListModel::setMail(const QVariant &variant)
     query.request<Mail::MimeMessage>();
     query.request<Mail::FullPayloadAvailable>();
     mFetchMails = true;
-    qWarning() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
+    qDebug() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
     //Latest mail at the bottom
     sort(0, Qt::AscendingOrder);
     runQuery(query);

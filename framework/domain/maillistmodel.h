@@ -72,4 +72,5 @@ public:
 private:
     QSharedPointer<QAbstractItemModel> m_model;
     bool mFetchMails = false;
+    QByteArray mCurrentQueryItem;
 };
