@@ -102,13 +102,13 @@ QAbstractItemModel *MessageParser::partTree() const
 QAbstractItemModel *MessageParser::newTree() const
 {
     const auto model = new NewModel(d->mParser);
-    new ModelTest(model, model);
+    // new ModelTest(model, model);
     return model;
 }
 
 QAbstractItemModel *MessageParser::attachments() const
 {
     const auto model = new AttachmentModel(d->mParser);
-    new ModelTest(model, model);
+    // new ModelTest(model, model);
     return model;
 }
