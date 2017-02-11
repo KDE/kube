@@ -50,7 +50,7 @@ void KolabNowController::create() {
 
     //smtp
     resource = ApplicationDomainType::createEntity<SinkResource>();
-    resource.setResourceType("sink.smtp");
+    resource.setResourceType("sink.mailtransport");
     resource.setAccount(account);
     resource.setProperty("server", "smtps://smtp.kolabnow.com:465");
     resource.setProperty("username", getEmailAddress());
