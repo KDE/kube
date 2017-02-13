@@ -1,0 +1,5 @@
+{
+  "phabricator.uri" : "https://phabricator.kde.org/",
+  "arc.land.onto.default" : "develop",
+  "immutable_history" : true
+}
