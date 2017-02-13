@@ -144,7 +144,7 @@ Popup {
                     bottom: parent.bottom
                 }
 
-                color: Krigami.Theme.viewBackgroundColor
+                color: Kirigami.Theme.viewBackgroundColor
 
                     Row{
                         id: avatar_row
