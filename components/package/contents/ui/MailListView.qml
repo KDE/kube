@@ -20,7 +20,6 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
-import QtQml 2.2 as QtQml
 
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -114,6 +113,10 @@ Item {
         //END keyboard nav
 
         currentIndex: root.currentIndex
+        onCurrentItemChanged: {
+            root.currentMail = currentItem.currentData.domainObject;
+            root.isDraft = currentItem.currentData.draft;
+        }
 
         model: KubeFramework.MailListModel {
             parentFolder: root.parentFolder
@@ -122,21 +125,10 @@ Item {
         delegate: Item {
             id: origin
 
+            property variant currentData: model
+
             width: delegateRoot.width
             height: delegateRoot.height
-
-            QtQml.Binding {
-                target: root
-                property: "currentMail"
-                when: listView.currentIndex == index
-                value: model.domainObject
-            }
-            QtQml.Binding {
-                target: root
-                property: "isDraft"
-                when: listView.currentIndex == index
-                value: model.draft
-            }
 
             Item {
                 id: delegateRoot
