@@ -84,7 +84,7 @@ Controls2.ApplicationWindow {
     //Controller
     KubeFramework.MailController {
         id: mailController
-        mail: mailListView.currentMail
+        threadLeader: mailListView.currentMail
     }
 
     KubeFramework.FolderController {
