@@ -26,8 +26,6 @@
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
 
-SINK_DEBUG_AREA("folderlistmodel")
-
 FolderListModel::FolderListModel(QObject *parent) : QSortFilterProxyModel()
 {
     setDynamicSortFilter(true);
