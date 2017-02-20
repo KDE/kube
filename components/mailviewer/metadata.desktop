@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Kube Mailviewer
+X-KDE-PluginInfo-Name=org.kube.components.mailviewer
+Exec=kpackagelauncherqml -a org.kube.components.mailviewer
+X-Plasma-MainScript=ui/main.qml
+X-KDE-ServiceTypes=KPackage/GenericQML
+Icon=kmail2
+Type=Service
