@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.7
-import org.kube.components.Mail 1.0 as MailComponent
+import org.kube.components.mail 1.0 as MailComponent
 
 MailComponent.Mail {
 
