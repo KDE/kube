@@ -22,14 +22,20 @@ find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets)
 set (QT_MIN_VERSION "5.4.0")
 find_package(KF5 REQUIRED COMPONENTS Package)
 
+
+macro(install_component name)
+    install(DIRECTORY ${name}/contents/ui/ DESTINATION ${QML_INSTALL_DIR}/org/kube/components/${name})
+    install(FILES ${name}/qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/components/${name})
+    kpackage_install_package(${name} org.kube.components.${name} "genericqml")
+endmacro(auto_tests)
+
 install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
 install(DIRECTORY package/contents/ui/ DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
+
 install(DIRECTORY mailviewer/qml/ DESTINATION ${QML_INSTALL_DIR}/org/kube/mailviewer)
 
-install(DIRECTORY accounts/ DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts)
+install_component(mail)
+install_component(accounts)
 
 include(${CMAKE_SOURCE_DIR}/KF5KirigamiMacros.cmake)
 kirigami_package_breeze_icons(ICONS applications-graphics view-list-icons folder-sync view-list-details configure document-edit dialog-cancel document-decrypt mail-reply-sender bookmarks folder)
-
-# install UI package
-kpackage_install_package(mail org.kube.components.mail "genericqml")

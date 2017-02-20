@@ -8,3 +8,5 @@ add_subdirectory(components)
 add_subdirectory(accounts)
 add_subdirectory(icons)
 add_subdirectory(applications)
+
+add_subdirectory(tests)
