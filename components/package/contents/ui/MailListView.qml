@@ -47,7 +47,7 @@ Item {
             spacing: Kirigami.Units.smallSpacing
 
             Controls.ToolButton {
-                iconName: "mail-mark-unread"
+                iconName: "mail-mark-unread-new"
                 text: qsTr("Mark As Read")
                 enabled: mailController.markAsReadAction.enabled
                 tooltip: qsTr("mark mail as read")
