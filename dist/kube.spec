@@ -72,11 +72,7 @@ popd
 %{_datadir}/icons/hicolor/scalable/apps/kube_icon.svg
 %{_datadir}/icons/hicolor/scalable/apps/kube_logo.svg
 %{_datadir}/icons/hicolor/scalable/apps/kube_symbol.svg
-%{_datadir}/kpackage/genericqml/org.kube.accounts.imap/
-%{_datadir}/kpackage/genericqml/org.kube.accounts.maildir/
-%{_datadir}/kpackage/genericqml/org.kube.accounts.kolabnow/
-%{_datadir}/kpackage/genericqml/org.kube.accounts.gmail/
-%{_datadir}/kpackage/genericqml/org.kube.components.mail/
+%{_datadir}/kpackage/genericqml/org.kube.*/
 %{_datadir}/metainfo/org.kube.*
 
 %changelog
