@@ -33,10 +33,8 @@ void KolabnowSettings::load()
 
 void KolabnowSettings::save()
 {
-    mUsername = mEmailAddress;
     mImapServer = "imaps://beta.kolabnow.com:143";
     mImapUsername = mEmailAddress;
-    // mImapPassword = mPassword;
 
     mSmtpServer = "smtps://smtp.kolabnow.com:587";
     mSmtpUsername = mEmailAddress;

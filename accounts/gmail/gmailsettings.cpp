@@ -33,10 +33,8 @@ void GmailSettings::load()
 
 void GmailSettings::save()
 {
-    mUsername = mEmailAddress;
     mImapServer = "imaps://imap.gmail.com:993";
     mImapUsername = mEmailAddress;
-    // mImapPassword = mPassword;
 
     mSmtpServer = "smtps://smtp.gmail.com:465";
     mSmtpUsername = mEmailAddress;
