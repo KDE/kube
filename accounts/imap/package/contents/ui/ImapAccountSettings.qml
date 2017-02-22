@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
+  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,7 +18,7 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
@@ -25,132 +26,101 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.accounts.imap 1.0 as ImapAccount
 
-
 Item {
 
     property string accountId
+    property string heading: "Connect your IMAP account"
+    property string subheadline: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP address, which authentification and port to be used, please contact your email provider."
 
     ImapAccount.ImapSettings {
         id: imapSettings
         accountIdentifier: accountId
+        accountType: "imap"
     }
 
-    anchors.fill: parent
+    function save(){
+        imapSettings.save()
+    }
+
+    function remove(){
+        imapSettings.remove()
+    }
 
     Item {
         anchors {
             fill: parent
-            margins: Kirigami.Units.largeSpacing * 2
         }
-
-        Kirigami.Heading {
-            id: heading
-            text: "Connect your IMAP account"
-
-            color: Kirigami.Theme.highlightColor
-        }
-
-        Label {
-            id: subHeadline
-
-            anchors {
-                left: heading.left
-                top: heading.bottom
-            }
-
-            width: parent.width
-
-            text: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP address, which authentification and port to be used, please contact your email provider"
-
-            color: Kirigami.Theme.disabledTextColor
-
-            wrapMode: Text.Wrap
-        }
-
 
         GridLayout {
             anchors {
-                top:subHeadline.bottom
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-                topMargin: Kirigami.Units.largeSpacing
-                bottomMargin: Kirigami.Units.largeSpacing * 2
+                fill: parent
             }
-
             columns: 2
             columnSpacing: Kirigami.Units.largeSpacing
             rowSpacing: Kirigami.Units.largeSpacing
 
-            Kirigami.Label {
-                text: "Title of Acocunt"
+            Controls.Label {
+                text: "Title of Account"
                 Layout.alignment: Qt.AlignRight
             }
-            TextField {
+            Controls.TextField {
                 Layout.fillWidth: true
-
                 placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
-
                 text: imapSettings.accountName
                 onTextChanged: {
                     imapSettings.accountName = text
                 }
             }
 
-            Kirigami.Label {
+            Controls.Label {
+                text: "Name"
+                Layout.alignment: Qt.AlignRight
+            }
+            Controls.TextField {
+                Layout.fillWidth: true
+                placeholderText: "Your name"
+                text: imapSettings.userName
+                onTextChanged: {
+                    imapSettings.userName = text
+                }
+            }
+
+            Controls.Label {
                 text: "Email address"
                 Layout.alignment: Qt.AlignRight
             }
-
-            TextField {
+            Controls.TextField {
                 Layout.fillWidth: true
-
-                placeholderText: "Your email address"
 
                 text: imapSettings.emailAddress
                 onTextChanged: {
                     imapSettings.emailAddress = text
                 }
+                placeholderText: "Your email address"
             }
 
-            Kirigami.Label {
-                text: "Username"
-                Layout.alignment: Qt.AlignRight
-            }
-            TextField {
-                Layout.fillWidth: true
-
-                placeholderText: "The name used to log into your email account"
-
-                text: imapSettings.imapUsername
-                onTextChanged: {
-                    imapSettings.imapUsername = text
-                    imapSettings.smtpUsername = text
-                }
-            }
-
-            Kirigami.Label {
+            Controls.Label {
                 text: "Password"
                 Layout.alignment: Qt.AlignRight
             }
-
             RowLayout {
                 Layout.fillWidth: true
 
-                TextField {
+                Controls.TextField {
                     id: pwField
                     Layout.fillWidth: true
 
-                    text: imapSettings.imapPassword
                     placeholderText: "Password of your email account"
-                    echoMode: TextInput.Password
+                    text: imapSettings.imapPassword
                     onTextChanged: {
                         imapSettings.imapPassword = text
                         imapSettings.smtpPassword = text
                     }
+
+                    echoMode: TextInput.Password
                 }
 
-                CheckBox {
+                Controls.CheckBox {
                     text: "Show Password"
                     onClicked: {
                         if(pwField.echoMode == TextInput.Password) {
@@ -160,14 +130,13 @@ Item {
                         }
                     }
                 }
-
             }
 
-            Kirigami.Label {
-                text: "IMAP address"
+            Controls.Label {
+                text: "IMAP server address"
                 Layout.alignment: Qt.AlignRight
             }
-            TextField {
+            Controls.TextField {
                 id: imapServer
 
                 Layout.fillWidth: true
@@ -187,11 +156,11 @@ Item {
                 }
             }
 
-            Kirigami.Label {
+            Controls.Label {
                 text: "Smtp address"
                 Layout.alignment: Qt.AlignRight
             }
-            TextField {
+            Controls.TextField {
                 id: smtpServer
                 Layout.fillWidth: true
 
@@ -207,34 +176,6 @@ Item {
                     opacity: 0.2
                     color: "yellow"
                     visible: smtpServer.acceptableInput
-                }
-            }
-
-            Label {
-                text: ""
-            }
-            Item {
-                Layout.fillWidth: true
-
-                Button {
-                    text: "Delete"
-
-                    onClicked: {
-                        imapSettings.remove()
-                        root.closeDialog()
-                    }
-                }
-
-                Button {
-                    anchors.right: parent.right
-
-                    text: "Save"
-
-                    onClicked: {
-                        focus: true
-                        imapSettings.save()
-                        root.closeDialog()
-                    }
                 }
             }
         }

@@ -20,9 +20,6 @@
 
 #include "accountsmodel.h"
 #include "accountfactory.h"
-#include "maildircontroller.h"
-#include "kolabnowcontroller.h"
-#include "gmailcontroller.h"
 
 #include <QtQml>
 
@@ -31,7 +28,4 @@ void AccountsPlugin::registerTypes (const char *uri)
     Q_ASSERT(uri == QLatin1String("org.kube.framework.accounts"));
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
-    qmlRegisterType<MaildirController>(uri, 1, 0, "MaildirController");
-    qmlRegisterType<KolabNowController>(uri, 1, 0, "KolabNowController");
-    qmlRegisterType<GmailController>(uri, 1, 0, "GmailController");
 }

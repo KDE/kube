@@ -19,32 +19,31 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.4 as Controls
-import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
-import QtQuick.Dialogs 1.0 as Dialogs
 
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.settings 1.0 as KubeSettings
-import org.kube.accounts.maildir 1.0 as MaildirAccount
+import org.kube.accounts.gmail 1.0 as GmailAccount
 
 Item {
-    property string accountId
-    property string heading: "Add your Maildir archive"
-    property string subheadline: "To let Kube access your maildir archive, add the path to your archive and give the account a title that will be displayed inside Kube."
 
-    MaildirAccount.MaildirSettings {
-        id: maildirSettings
+    property string accountId
+    property string heading: "Connect your GMail account"
+    property string subheadline: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube."
+
+    GmailAccount.GmailSettings {
+        id: gmailSettings
         accountIdentifier: accountId
-        accountType: "maildir"
+        accountType: "gmail"
     }
 
     function save(){
-        maildirSettings.save()
+        gmailSettings.save()
     }
 
     function remove(){
-        maildirSettings.remove()
+        gmailSettings.remove()
     }
 
     Item {
@@ -67,46 +66,67 @@ Item {
             Controls.TextField {
                 Layout.fillWidth: true
                 placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
-                text: maildirSettings.accountName
+                text: gmailSettings.accountName
                 onTextChanged: {
-                    maildirSettings.accountName = text
+                    gmailSettings.accountName = text
                 }
             }
 
-            Controls2.Label {
-                text: "Path"
+            Controls.Label {
+                text: "Name"
+                Layout.alignment: Qt.AlignRight
+            }
+            Controls.TextField {
+                Layout.fillWidth: true
+                placeholderText: "Your name"
+                text: gmailSettings.userName
+                onTextChanged: {
+                    gmailSettings.userName = text
+                }
+            }
+
+            Controls.Label {
+                text: "Email address"
+                Layout.alignment: Qt.AlignRight
+            }
+            Controls.TextField {
+                Layout.fillWidth: true
+
+                text: gmailSettings.emailAddress
+                onTextChanged: {
+                    gmailSettings.emailAddress = text
+                }
+                placeholderText: "Your email address"
+            }
+
+            Controls.Label {
+                text: "Password"
                 Layout.alignment: Qt.AlignRight
             }
             RowLayout {
                 Layout.fillWidth: true
 
                 Controls.TextField {
-                    id: path
+                    id: pwField
                     Layout.fillWidth: true
-                    enabled: false
-                    text: maildirSettings.path
-                }
 
-                Controls.Button {
-                    iconName: "folder"
-
-                    onClicked: {
-                        fileDialogComponent.createObject(parent)
+                    placeholderText: "Password of your email account"
+                    text: gmailSettings.imapPassword
+                    onTextChanged: {
+                        gmailSettings.imapPassword = text
+                        gmailSettings.smtpPassword = text
                     }
 
-                    Component {
-                        id: fileDialogComponent
-                        Dialogs.FileDialog {
-                            id: fileDialog
+                    echoMode: TextInput.Password
+                }
 
-                            visible: true
-                            title: "Choose the maildir folder"
-
-                            selectFolder: true
-
-                            onAccepted: {
-                                maildirSettings.path = fileDialog.fileUrl
-                            }
+                Controls.CheckBox {
+                    text: "Show Password"
+                    onClicked: {
+                        if(pwField.echoMode == TextInput.Password) {
+                            pwField.echoMode = TextInput.Normal;
+                        } else {
+                            pwField.echoMode = TextInput.Password;
                         }
                     }
                 }

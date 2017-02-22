@@ -1,0 +1,3 @@
+module org.kube.accounts.gmail
+
+plugin gmailaccountplugin

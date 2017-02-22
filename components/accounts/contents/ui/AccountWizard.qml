@@ -53,7 +53,7 @@ Controls2.Popup {
 
                 Repeater {
                     //TODO replace by model of available accounts
-                    model: ["kolabnow", "imap", "maildir"]
+                    model: ["kolabnow", "imap", "maildir", "gmail"]
                     delegate: Controls2.Button {
                         Layout.fillWidth: true
                         text: modelData +" account"
