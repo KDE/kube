@@ -50,6 +50,12 @@ void AccountFactory::setAccountId(const QString &accountId)
         }).exec();
 }
 
+void AccountFactory::setAccountType(const QString &type)
+{
+    mAccountType = type.toLatin1();
+    loadPackage();
+}
+
 void AccountFactory::loadPackage()
 {
     auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.accounts." + mAccountType);

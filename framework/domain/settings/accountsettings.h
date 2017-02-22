@@ -25,6 +25,7 @@ class AccountSettings : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
+    Q_PROPERTY(QByteArray accountType READ accountType WRITE setAccountType)
     Q_PROPERTY(QString icon MEMBER mIcon NOTIFY changed)
     Q_PROPERTY(QString accountName MEMBER mName NOTIFY changed)
 
@@ -49,6 +50,9 @@ public:
 
     void setAccountIdentifier(const QByteArray &);
     QByteArray accountIdentifier() const;
+
+    void setAccountType(const QByteArray &);
+    QByteArray accountType() const;
 
     void setPath(const QUrl &);
     QUrl path() const;
@@ -87,6 +91,7 @@ protected:
     void removeIdentity();
 
     QByteArray mAccountIdentifier;
+    QByteArray mAccountType;
     QString mIcon;
     QString mName;
 

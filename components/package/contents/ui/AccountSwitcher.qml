@@ -72,13 +72,10 @@ Controls.ToolButton {
             width: parent.width
 
             Controls2.Button {
-
-
                 anchors {
                     left: parent.left
                     bottom: parent.bottom
                 }
-
 
                 //iconName: "view-refresh"
                 text: "Sync"
@@ -160,15 +157,6 @@ Controls.ToolButton {
 
                         Layout.fillHeight: true
 
-                        KubeAccounts.AccountFactory {
-                            id: accountFactory
-                            accountId: model.accountId
-                        }
-
-                        //                         Kirigami.Icon {
-                        //                             source: model.icon
-                        //                         }
-
                         Controls2.Label {
                             text: model.name
                         }
@@ -191,20 +179,14 @@ Controls.ToolButton {
                         text: "edit"
 
                         onClicked: {
-                            editAccountComponent.createObject(app)
+                            editAccountComponent.createObject(app, {accountId:model.accountId})
                             popup.close()
                         }
 
                         Component {
                             id: editAccountComponent
-
                             KubeComponents.EditAccountDialog {
-                                id: editAccount
-
                                 anchors.fill: parent
-
-                                accountId: accountFactory.accountId
-                                uiSource: accountFactory.uiPath
                             }
                         }
                     }

@@ -51,47 +51,15 @@ Controls2.Popup {
 
                 spacing: Kirigami.Units.largeSpacing
 
-                Controls2.Button {
-
-                    Layout.fillWidth: true
-
-                    text: "kolabnow account"
-
-                    onClicked: {
-                        stack.push(kolabnow)
-                    }
-                }
-
-                Controls2.Button {
-
-                    Layout.fillWidth: true
-
-                    text: "gmail account"
-
-                    onClicked: {
-                        stack.push(gmail)
-                    }
-                }
-
-                Controls2.Button {
-
-                    Layout.fillWidth: true
-
-                    text: "imap account"
-
-                    onClicked: {
-                        stack.push(imap)
-                    }
-                }
-
-                Controls2.Button {
-
-                    Layout.fillWidth: true
-
-                    text: "maildir archive"
-
-                    onClicked: {
-                        stack.push(maildir)
+                Repeater {
+                    //TODO replace by model of available accounts
+                    model: ["kolabnow", "imap", "maildir"]
+                    delegate: Controls2.Button {
+                        Layout.fillWidth: true
+                        text: modelData +" account"
+                        onClicked: {
+                            stack.push(wizardPage.createObject(app, {accountType:modelData}))
+                        }
                     }
                 }
             }
@@ -99,30 +67,8 @@ Controls2.Popup {
     }
 
     Component {
-        id: kolabnow
-
-        CreateKolabNow {
-        }
-    }
-
-    Component {
-        id: gmail
-
-        CreateGmail {
-        }
-    }
-
-    Component {
-        id: imap
-
-        CreateImap {
-        }
-    }
-
-    Component {
-        id: maildir
-
-        CreateMaildir {
+        id: wizardPage
+        AccountWizardPage {
         }
     }
 }

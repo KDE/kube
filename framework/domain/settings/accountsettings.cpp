@@ -34,6 +34,15 @@ AccountSettings::AccountSettings(QObject *parent)
 {
 }
 
+void AccountSettings::setAccountType(const QByteArray &type)
+{
+    mAccountType = type;
+}
+
+QByteArray AccountSettings::accountType() const
+{
+    return mAccountType;
+}
 
 void AccountSettings::setAccountIdentifier(const QByteArray &id)
 {
@@ -134,18 +143,32 @@ QValidator *AccountSettings::smtpServerValidator() const
 
 void AccountSettings::saveAccount()
 {
-    qDebug() << "Saving account " << mAccountIdentifier << mMailtransportIdentifier;
-    Q_ASSERT(!mAccountIdentifier.isEmpty());
-    SinkAccount account(mAccountIdentifier);
-    account.setAccountType("imap");
-    account.setName(mName);
-    account.setIcon(mIcon);
-    Q_ASSERT(!account.identifier().isEmpty());
-    Store::modify(account)
-        .onError([](const KAsync::Error &error) {
-            qWarning() << "Error while creating account: " << error.errorMessage;;
-        })
-        .exec();
+    if (mAccountIdentifier.isEmpty()) {
+        auto account = ApplicationDomainType::createEntity<SinkAccount>();
+        mAccountIdentifier = account.identifier();
+        Q_ASSERT(!mAccountType.isEmpty());
+        account.setAccountType(mAccountType);
+        account.setName(mName);
+        account.setIcon(mIcon);
+        Store::create(account)
+            .onError([](const KAsync::Error &error) {
+                qWarning() << "Error while creating account: " << error.errorMessage;;
+            })
+            .exec();
+    } else {
+        qDebug() << "Saving account " << mAccountIdentifier << mMailtransportIdentifier;
+        Q_ASSERT(!mAccountIdentifier.isEmpty());
+        SinkAccount account(mAccountIdentifier);
+        account.setAccountType(mAccountType);
+        account.setName(mName);
+        account.setIcon(mIcon);
+        Q_ASSERT(!account.identifier().isEmpty());
+        Store::modify(account)
+            .onError([](const KAsync::Error &error) {
+                qWarning() << "Error while creating account: " << error.errorMessage;;
+            })
+            .exec();
+    }
 }
 
 void AccountSettings::loadAccount()
@@ -153,6 +176,7 @@ void AccountSettings::loadAccount()
     Q_ASSERT(!mAccountIdentifier.isEmpty());
     Store::fetchOne<SinkAccount>(Query().filter(mAccountIdentifier))
         .then([this](const SinkAccount &account) {
+            mAccountType = account.getAccountType().toLatin1();
             mIcon = account.getIcon();
             mName = account.getName();
             emit changed();

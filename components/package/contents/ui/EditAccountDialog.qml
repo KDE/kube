@@ -21,28 +21,18 @@ import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
 
-import org.kube.framework.settings 1.0 as KubeSettings
-import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
 
 KubeComponents.OverlayDialog {
-    id: root
+    id: dialog
 
-    property variant uiSource
     property variant accountId
+    EditAccount {
+        accountId: dialog.accountId
 
-    Item {
-        id: dialog
         anchors.centerIn: parent
 
-        height: root.height * 0.8
-        width: root.width * 0.8
-
-        Loader {
-            anchors.fill: parent
-
-            source: root.uiSource
-            onLoaded: item.accountId = root.accountId
-        }
+        height: dialog.height * 0.8
+        width: dialog.width * 0.8
     }
 }
