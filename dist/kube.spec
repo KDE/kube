@@ -75,6 +75,7 @@ popd
 %{_datadir}/kpackage/genericqml/org.kube.accounts.imap/
 %{_datadir}/kpackage/genericqml/org.kube.accounts.maildir/
 %{_datadir}/kpackage/genericqml/org.kube.accounts.kolabnow/
+%{_datadir}/kpackage/genericqml/org.kube.accounts.gmail/
 %{_datadir}/kpackage/genericqml/org.kube.components.mail/
 %{_datadir}/metainfo/org.kube.*
 
