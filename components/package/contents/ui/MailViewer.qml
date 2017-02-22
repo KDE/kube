@@ -21,7 +21,7 @@ import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Layouts 1.1
 
 import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.mailviewer 1.0 as MV
+import org.kube.components.mailviewer 1.0 as MV
 
 Item {
     id: root
