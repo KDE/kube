@@ -28,8 +28,8 @@ Item {
         id: htmlView
         anchors.fill: parent
         onLoadingChanged: {
-            console.warn("Error is ", loadRequest.errorString);
-            console.warn("Status is ", loadRequest.status);
+            console.debug("Error is ", loadRequest.errorString);
+            console.debug("Status is ", loadRequest.status);
         }
         Component.onCompleted: {
             loadHtml(content, "file:///")

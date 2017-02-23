@@ -69,15 +69,15 @@ QVariant MessageParser::message() const
 
 void MessageParser::setMessage(const QVariant &message)
 {
-    QTime time;
-    time.start();
+    // QTime time;
+    // time.start();
     d->mParser = std::shared_ptr<Parser>(new Parser(message.toByteArray()));
 
     const auto mailData = KMime::CRLFtoLF(message.toByteArray());
     KMime::Message::Ptr msg(new KMime::Message);
     msg->setContent(mailData);
     msg->parse();
-    qWarning() << "parsed: " << time.elapsed();
+    // qWarning() << "parsed: " << time.elapsed();
 
     // render the mail
     StringHtmlWriter htmlWriter;
