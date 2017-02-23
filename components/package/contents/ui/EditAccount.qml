@@ -65,7 +65,6 @@ Item {
             id: accountEdit
             anchors {
                 top:subHeadline.bottom
-                bottom: spacer.top
                 left: parent.left
                 right: parent.right
                 topMargin: Kirigami.Units.largeSpacing * 2
@@ -84,7 +83,6 @@ Item {
             Layout.fillHeight: true
             anchors {
                 top:accountEdit.bottom
-                bottom: footer.top
                 left: parent.left
                 right: parent.right
             }
