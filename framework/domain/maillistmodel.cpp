@@ -20,9 +20,6 @@
 
 #include "maillistmodel.h"
 
-#include <QFile>
-#include <QDateTime>
-
 #include <sink/standardqueries.h>
 
 MailListModel::MailListModel(QObject *parent)
@@ -74,10 +71,11 @@ static QString join(const QList<Sink::ApplicationDomain::Mail::Contact> &contact
     return list.join(", ");
 }
 
-void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail)
+void MailListModel::fetchMail(Sink::ApplicationDomain::Mail::Ptr mail) const
 {
-    if (mail && !mail->getFullPayloadAvailable()) {
+    if (mail && !mail->getFullPayloadAvailable() && !mFetchedMails.contains(mail->identifier())) {
         qDebug() << "Fetching mail: " << mail->identifier() << mail->getSubject();
+        mFetchedMails.insert(mail->identifier());
         Sink::Store::synchronize(Sink::SyncScope{*mail}).exec();
     }
 }
@@ -208,6 +206,7 @@ void MailListModel::setMail(const QVariant &variant)
     query.request<Mail::MimeMessage>();
     query.request<Mail::FullPayloadAvailable>();
     mFetchMails = true;
+    mFetchedMails.clear();
     qDebug() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
     //Latest mail at the bottom
     sort(0, Qt::AscendingOrder);

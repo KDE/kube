@@ -70,7 +70,10 @@ public:
     QVariant mail() const;
 
 private:
+    void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail) const;
+
     QSharedPointer<QAbstractItemModel> m_model;
     bool mFetchMails = false;
+    mutable QSet<QByteArray> mFetchedMails;
     QByteArray mCurrentQueryItem;
 };
