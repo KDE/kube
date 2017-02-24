@@ -64,6 +64,15 @@ Rectangle {
 
         boundsBehavior: Flickable.StopAtBounds
 
+        //Always scroll to the end of the conversation
+        highlightFollowsCurrentItem: true
+        //Scroll quickly
+        highlightMoveDuration: 1
+        onCountChanged: {
+            //TODO: ideally we should only do this initially, not when new messages enter while you're reading.
+            currentIndex = count - 1;
+        }
+
         //Intercept all scroll events,
         //necessary due to the webengineview
         KubeFramework.MouseProxy {
