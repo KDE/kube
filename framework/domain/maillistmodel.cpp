@@ -27,6 +27,8 @@ MailListModel::MailListModel(QObject *parent)
 {
     setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
+    connect(&mFetchTimer, &QTimer::timeout, this, &MailListModel::fetch);
+    mFetchTimer.setSingleShot(true);
 }
 
 MailListModel::~MailListModel()
@@ -71,12 +73,29 @@ static QString join(const QList<Sink::ApplicationDomain::Mail::Contact> &contact
     return list.join(", ");
 }
 
-void MailListModel::fetchMail(Sink::ApplicationDomain::Mail::Ptr mail) const
+void MailListModel::fetchMail(Sink::ApplicationDomain::Mail::Ptr mail)
 {
     if (mail && !mail->getFullPayloadAvailable() && !mFetchedMails.contains(mail->identifier())) {
         qDebug() << "Fetching mail: " << mail->identifier() << mail->getSubject();
         mFetchedMails.insert(mail->identifier());
-        Sink::Store::synchronize(Sink::SyncScope{*mail}).exec();
+        mMailsToFetch << *mail;
+        //TODO it would be nicer if Sink could just transparently merge synchronization requeusts.
+        if (!mFetchTimer.isActive()) {
+            mFetchTimer.start(50);
+        }
+    }
+}
+
+void MailListModel::fetch()
+{
+    if (!mMailsToFetch.isEmpty()) {
+        auto first = mMailsToFetch.first();
+        auto scope = Sink::SyncScope{first};
+        for (const auto &m : mMailsToFetch) {
+            scope.filter(m.identifier());
+        }
+        Sink::Store::synchronize(scope).exec();
+        mMailsToFetch.clear();
     }
 }
 
@@ -113,7 +132,7 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return QVariant::fromValue(mail);
         case MimeMessage:
             if (mFetchMails) {
-                fetchMail(mail);
+                const_cast<MailListModel*>(this)->fetchMail(mail);
             }
             return mail->getMimeMessage();
         case ThreadSize:
