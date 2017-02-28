@@ -54,7 +54,7 @@ public:
 
 class ContextWrapper {
 public:
-    ContextWrapper(Context &c) : context{c} {}
+    ContextWrapper(Context &c) : context(c) {}
     Context &context;
 };
 
