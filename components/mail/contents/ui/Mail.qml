@@ -264,7 +264,7 @@ Controls2.ApplicationWindow {
             focus: true
         }
 
-        KubeComponents.SingleMailView {
+        KubeComponents.ConversationView {
             id: mailView
             mail: mailListView.currentMail
             Layout.fillWidth: true
