@@ -59,7 +59,7 @@ Item {
             fullScreenSupportEnabled: false
             errorPageEnabled: false
             //defaultTextEncoding: ???
-            autoLoadImages: false
+            autoLoadImages: true
             autoLoadIconsForPage: false
             accelerated2dCanvasEnabled: false
         }
