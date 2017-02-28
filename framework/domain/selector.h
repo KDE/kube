@@ -37,7 +37,11 @@ public:
     void setCurrentIndex(int i) {
         mCurrentIndex = i;
         Q_ASSERT(mModel);
-        setCurrent(mModel->index(mCurrentIndex, 0));
+        if (i >= 0) {
+            setCurrent(mModel->index(mCurrentIndex, 0));
+        } else {
+            setCurrent(QModelIndex());
+        }
     }
 
     void reapplyCurrentIndex();
