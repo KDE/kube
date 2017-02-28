@@ -161,7 +161,6 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     using namespace Sink::ApplicationDomain;
     auto folder = parentFolder.value<Folder::Ptr>();
     if (!folder) {
-        qWarning() << "No folder: " << parentFolder;
         mCurrentQueryItem.clear();
         setSourceModel(nullptr);
         return;
@@ -201,7 +200,6 @@ void MailListModel::setMail(const QVariant &variant)
     using namespace Sink::ApplicationDomain;
     auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>();
     if (!mail) {
-        qWarning() << "No mail: " << mail;
         mCurrentQueryItem.clear();
         setSourceModel(nullptr);
         return;
