@@ -27,40 +27,21 @@ Item {
     id: root
     property variant message;
     property string html;
-    property int desiredHeight: topPartLoader.height + newMailViewer.height + 20
+    property int desiredHeight: mailViewer.height + 20
     property variant attachments
 
     clip: true
 
     MV.MailViewer {
-        id: newMailViewer
+        id: mailViewer
         debug: false
         width: parent.width
     }
 
-    //BEGIN old mail viewer
-
-    MessagePartTree {
-        id: topPartLoader
-        anchors.top: newMailViewer.bottom
-
-        Text {
-            text: "old mailviewer"
-            color: "blue"
-        }
-
-        visible: false
-        // width: parent.width
-        height: topPartLoader.contentHeight
-        width: topPartLoader.contentWidth >= parent.width ? topPartLoader.contentWidth : parent.width
-    }
-
-    //END old mail viewer
-
     Controls1.TreeView {
         id: mailStructure
-        anchors.top: messageParser.attachments.rowCount() > 0 ? attachments.bottom : newMailViewer.bottom
-        visible: newMailViewer.debug
+        anchors.top: messageParser.attachments.rowCount() > 0 ? attachments.bottom : mailViewer.bottom
+        visible: mailViewer.debug
         width: parent.width
         height: 400
         Controls1.TableViewColumn {
