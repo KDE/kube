@@ -28,14 +28,18 @@ import org.kube.framework.domain 1.0 as KubeFramework
 Rectangle {
     id: root
 
-    property variant currentFolder
+    property variant currentFolder: null
     property variant accountId
 
     color: Kirigami.Theme.textColor
 
     KubeFramework.FolderController {
         id: folderController
-        folder: root.currentFolder
+        Binding on folder {
+            //!! checks for the availability of the type
+            when: !!root.currentFolder
+            value: root.currentFolder
+        }
     }
 
     Menu {

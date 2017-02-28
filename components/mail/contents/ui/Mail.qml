@@ -84,12 +84,20 @@ Controls2.ApplicationWindow {
     //Controller
     KubeFramework.MailController {
         id: mailController
-        threadLeader: mailListView.currentMail
+        Binding on threadLeader {
+            //!! checks for the availability of the type
+            when: !!mailListView.currentMail
+            value: mailListView.currentMail
+        }
     }
 
     KubeFramework.FolderController {
         id: folderController
-        folder: folderListView.currentFolder
+        Binding on folder {
+            //!! checks for the availability of the type
+            when: !!folderListView.currentFolder
+            value: folderListView.currentFolder
+        }
     }
 
     //BEGIN Shortcuts

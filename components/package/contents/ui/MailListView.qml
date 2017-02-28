@@ -28,7 +28,7 @@ import org.kube.framework.domain 1.0 as KubeFramework
 Item {
     id: root
     property variant parentFolder
-    property variant currentMail
+    property variant currentMail: null
     property bool isDraft : false
     property int currentIndex
 
