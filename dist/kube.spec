@@ -1,5 +1,5 @@
 Name:           kube
-Version:        0.1
+Version:        0.1.0
 Release:	    4%{?dist}
 Summary:        kube
 
