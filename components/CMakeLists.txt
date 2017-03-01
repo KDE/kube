@@ -27,7 +27,7 @@ macro(install_component name)
     install(DIRECTORY ${name}/contents/ui/ DESTINATION ${QML_INSTALL_DIR}/org/kube/components/${name})
     install(FILES ${name}/qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/components/${name})
     kpackage_install_package(${name} org.kube.components.${name} "genericqml")
-endmacro(auto_tests)
+endmacro(install_component)
 
 install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
 install(DIRECTORY package/contents/ui/ DESTINATION ${QML_INSTALL_DIR}/org/kube/components)

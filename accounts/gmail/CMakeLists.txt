@@ -2,6 +2,8 @@ project(kube-accounts-gmail)
 
 cmake_minimum_required(VERSION 2.8.12)
 
+cmake_policy(SET CMP0063 NEW)
+
 include(CPack)
 include(FeatureSummary)
 find_package(PkgConfig)

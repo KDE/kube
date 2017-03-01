@@ -14,7 +14,7 @@ qt5_use_modules(mimetreeparsertest Core Test)
 target_link_libraries(mimetreeparsertest mimetreeparser)
 
 find_package(Gpgmepp 1.7.1 CONFIG)
-find_package(QGpgME 1.7.1 CONFIG)
+find_package(QGpgme 1.7.1 CONFIG)
 
 ecm_add_test(gpgerrortest.cpp
     TEST_NAME "gpgerrortest"

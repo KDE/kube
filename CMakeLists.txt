@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0028 NEW)
+cmake_policy(SET CMP0063 NEW)
 
 project(kube VERSION 0.1.0)
 
