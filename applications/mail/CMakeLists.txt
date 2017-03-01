@@ -27,7 +27,6 @@ find_package(KF5 REQUIRED COMPONENTS Package)
 add_executable(${PROJECT_NAME} main.cpp)
 qt5_use_modules(${PROJECT_NAME} Gui Quick Widgets WebEngine)
 target_link_libraries(${PROJECT_NAME} KF5::Package)
-set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${kube_VERSION})
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
