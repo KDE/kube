@@ -31,7 +31,7 @@ find_package(KF5 REQUIRED COMPONENTS Package)
 add_library(mailplugin SHARED ${mailplugin_SRCS})
 
 qt5_use_modules(mailplugin Core Quick Qml WebKitWidgets Test)
-target_link_libraries(mailplugin actionplugin settingsplugin sink mimetreeparser KF5::MimeTreeParser KF5::Codecs KF5::Package KF5::Async)
+target_link_libraries(mailplugin actionplugin settingsplugin sink mimetreeparser KF5::MimeTreeParser KF5::Codecs KF5::Package KAsync)
 
 add_subdirectory(actions/tests)
 

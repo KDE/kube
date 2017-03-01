@@ -9,7 +9,7 @@ set(SRCS
 
 add_library(actionplugin SHARED ${SRCS})
 
-target_link_libraries(actionplugin KF5::Async sink)
+target_link_libraries(actionplugin KAsync sink)
 qt5_use_modules(actionplugin Core Quick Qml)
 
 install(TARGETS actionplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/actions)

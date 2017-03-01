@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include <QVariant>
-#include <Async/Async>
+#include <KAsync/Async>
 
 #define KUBE_CONTROLLER_PROPERTY(TYPE, NAME, LOWERCASENAME) \
     public: Q_PROPERTY(TYPE LOWERCASENAME MEMBER m##NAME NOTIFY LOWERCASENAME##Changed) \

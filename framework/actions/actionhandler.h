@@ -21,7 +21,7 @@
 #include <QObject>
 #include <QMultiMap>
 #include <functional>
-#include <Async/Async>
+#include <KAsync/Async>
 
 #include "actionresult.h"
 #include "context.h"
