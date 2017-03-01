@@ -21,8 +21,6 @@
 #include <sink/store.h>
 #include <sink/log.h>
 
-SINK_DEBUG_AREA("outboxcontroller");
-
 OutboxController::OutboxController()
     : Kube::Controller(),
     mSynchronizeOutboxAction{new Kube::ControllerAction{this, &OutboxController::sendOutbox}}
