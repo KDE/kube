@@ -4,4 +4,5 @@
 *.diff
 *.patch
 *.swp
+build/
 site
