@@ -6,7 +6,7 @@ Summary:        kube
 Group:          Applications/Desktop
 License:        GPL
 URL:            https://docs.kolab.org/about/kube
-Source0:        kube-%{version}.tar.gz
+Source0:        kube-%{version}.tar.xz
 
 BuildRequires:  boost-devel
 BuildRequires:  cmake >= 2.8.12
@@ -15,7 +15,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  kasync-devel
 BuildRequires:  kf5-kpackage-devel
 BuildRequires:  kf5-kcodecs-devel
-BuildRequires:  kmime-devel
+BuildRequires:  kf5-kmime-devel
 BuildRequires:  libotp-devel
 BuildRequires:  lmdb-devel
 BuildRequires:  qt5-qtbase-devel
