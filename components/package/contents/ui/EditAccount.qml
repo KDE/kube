@@ -118,6 +118,7 @@ Item {
                     text: "Discard"
 
                     onClicked: {
+                        loader.item.remove()
                         dialog.closeDialog()
                     }
                 }
