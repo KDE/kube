@@ -1,5 +1,5 @@
 Name:           kube
-Version:        0.1.0
+Version:        0.2
 Release:	    0%{?dist}
 Summary:        kube
 
@@ -31,9 +31,9 @@ BuildRequires:  gpgme >= 1.8.0
 Requires:       qt5-qtquick1
 Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2-devel
-Requires:       sink
+Requires:       sink >= 0.2
 Requires:       kirigami
-Requires:       libotp
+Requires:       kf5-messagelib
 
 %description
 kube

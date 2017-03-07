@@ -4,7 +4,7 @@ cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0028 NEW)
 cmake_policy(SET CMP0063 NEW)
 
-project(kube VERSION 0.1.0)
+project(kube VERSION 0.2)
 
 enable_testing()
 
