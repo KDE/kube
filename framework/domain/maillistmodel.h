@@ -25,7 +25,6 @@
 #include <QSortFilterProxyModel>
 #include <QSharedPointer>
 #include <QStringList>
-#include <QTimer>
 
 class MailListModel : public QSortFilterProxyModel
 {
@@ -70,16 +69,11 @@ public:
     void setMail(const QVariant &mail);
     QVariant mail() const;
 
-private slots:
-    void fetch();
-
 private:
     void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail);
 
     QSharedPointer<QAbstractItemModel> m_model;
     bool mFetchMails = false;
     QSet<QByteArray> mFetchedMails;
-    QList<Sink::ApplicationDomain::Mail> mMailsToFetch;
     QByteArray mCurrentQueryItem;
-    QTimer mFetchTimer;
 };
