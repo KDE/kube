@@ -252,13 +252,23 @@ Controls2.ApplicationWindow {
                 anchors {
                     top: accountName.bottom
                     topMargin: Kirigami.Units.smallSpacing
-                    bottom: parent.bottom
+                    bottom: outbox.top
                     left: parent.left
                     right: parent.right
                 }
 
                 focus: true
                 accountId: accountSwitcher.accountId
+            }
+
+            KubeComponents.Outbox {
+                id: outbox
+
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                }
             }
         }
 

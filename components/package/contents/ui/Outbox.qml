@@ -17,9 +17,8 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2.0
 
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -27,11 +26,10 @@ import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
 
-ToolButton {
+Button {
     id: root
 
-    iconName: "mail-folder-outbox"
-    tooltip: "outbox"
+    text: "outbox"
 
     onClicked: {
         dialog.visible = dialog.visible ? false : true
@@ -41,90 +39,79 @@ ToolButton {
         id: outboxController
     }
 
-    //BEGIN Dialog
-    Rectangle {
+    Popup {
         id: dialog
 
-        property int modelCount: listView.count
+        height: content.height + Kirigami.Units.smallSpacing * 2
+        width: content.width + Kirigami.Units.smallSpacing * 2
 
-        anchors {
-            top: parent.bottom
-            horizontalCenter: parent.horizontalCenter
-        }
+        y: - dialog.height + root.height
+        x: root.width
 
-        function calculateHeight() {
-            if (modelCount == 0) {
-                return Kirigami.Units.gridUnit * 3 + 10
-            } else {
-                return modelCount * Kirigami.Units.gridUnit * 3 + 10 + sendNowButton.height
+        modal: true
+
+        Item  {
+            id: content
+
+            anchors.centerIn: parent
+
+            width: Kirigami.Units.gridUnit * 17
+            height: listView.count * Kirigami.Units.gridUnit * 3 + sendNowButton.height + Kirigami.Units.smallSpacing
+
+            ListView {
+                id: listView
+
+                width: parent.width
+                height: count * Kirigami.Units.gridUnit * 3
+
+                model: KubeFramework.OutboxModel {}
+
+                delegate: Rectangle {
+
+                    height: Kirigami.Units.gridUnit * 3
+                    width: listView.width
+
+                    color: Kirigami.Theme.viewBackgroundColor
+                    border.color: Kirigami.Theme.backgroundColor
+                    border.width: 1
+
+                    Label {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: Kirigami.Units.largeSpacing
+                        }
+                        text: model.subject
+                    }
+                }
+
+                clip: true
             }
-        }
 
-        height: calculateHeight()
-        width: Kirigami.Units.gridUnit * 20
-
-        color: Kirigami.Theme.backgroundColor
-        border.width: 1
-        border.color: Kirigami.Theme.highlightColor //TODO change to Kirigami inactive text color once it is available
-        radius: 3
-        clip: true
-        visible: false
-
-        //BEGIN Dialog Content
-        Column {
-            anchors {
-                fill: parent
-                margins: 5
-            }
-
-            visible: dialog.modelCount != 0
-
-            Controls2.Button {
+            Button {
                 id: sendNowButton
-                anchors.horizontalCenter: parent.horizontalCenter
-                height: Kirigami.Units.gridUnit * 2
-                text: qsTr("Send now.")
+
+                anchors {
+                    top: listView.bottom
+                    topMargin: Kirigami.Units.smallSpacing
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+                visible: listView.count != 0
+
+                text: qsTr("Send now")
                 onClicked: {
                     outboxController.sendOutboxAction.execute()
                 }
             }
 
-            ScrollView {
-                id: scrollView
+            Label {
+                anchors.centerIn: parent
 
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: 5
-                }
+                visible: listView.count == 0
 
-                ListView {
-                    id: listView
-
-                    model: KubeFramework.OutboxModel {
-                    }
-
-                    delegate: Kirigami.AbstractListItem {
-                        height: Kirigami.Units.gridUnit * 3
-
-                        Kirigami.Label {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: model.subject
-                        }
-                    }
-                }
+                text: qsTr("No pending messages")
             }
         }
-        Kirigami.Label {
-            anchors {
-                fill: parent
-                margins: 5
-                verticalCenter: parent.verticalCenter
-            }
-            visible: dialog.modelCount == 0
-            text: qsTr("No pending messages.")
-        }
-        //END Dialog Content
     }
-    //END Dialog
 }
