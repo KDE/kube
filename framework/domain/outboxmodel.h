@@ -40,12 +40,8 @@ public:
 
     enum Roles {
         Subject  = Qt::UserRole + 1,
-        Sender,
-        SenderName,
         Date,
-        Unread,
-        Important,
-        Draft,
+        Status,
         Id,
         MimeMessage,
         DomainObject

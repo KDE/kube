@@ -67,6 +67,7 @@ Button {
                 model: KubeFramework.OutboxModel {}
 
                 delegate: Rectangle {
+                    id: delegateRoot
 
                     height: Kirigami.Units.gridUnit * 3
                     width: listView.width
@@ -76,12 +77,17 @@ Button {
                     border.width: 1
 
                     Label {
+                        id: subjectLabel
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: parent.left
                             leftMargin: Kirigami.Units.largeSpacing
                         }
                         text: model.subject
+
+                        //FIXME use theme color
+                        color: model.status == "error" ? "red" : Kirigami.Theme.textColor
+                        opacity: model.status == "sent" ? 0.5 : 1
                     }
                 }
 

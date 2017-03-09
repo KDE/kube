@@ -22,6 +22,7 @@
 
 #include <QFile>
 #include <QDateTime>
+#include <QString>
 
 #include <sink/standardqueries.h>
 
@@ -36,11 +37,7 @@ OutboxModel::OutboxModel(QObject *parent)
     auto query = Sink::StandardQueries::outboxMails();
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Mail::Subject>();
-    query.request<Mail::Sender>();
     query.request<Mail::Date>();
-    query.request<Mail::Unread>();
-    query.request<Mail::Important>();
-    query.request<Mail::Draft>();
     query.request<Mail::Folder>();
     runQuery(query);
 }
@@ -55,12 +52,8 @@ QHash< int, QByteArray > OutboxModel::roleNames() const
     QHash<int, QByteArray> roles;
 
     roles[Subject] = "subject";
-    roles[Sender] = "sender";
-    roles[SenderName] = "senderName";
     roles[Date] = "date";
-    roles[Unread] = "unread";
-    roles[Important] = "important";
-    roles[Draft] = "draft";
+    roles[Status] = "status";
     roles[Id] = "id";
     roles[MimeMessage] = "mimeMessage";
     roles[DomainObject] = "domainObject";
@@ -75,18 +68,10 @@ QVariant OutboxModel::data(const QModelIndex &idx, int role) const
     switch (role) {
         case Subject:
             return mail->getSubject();
-        case Sender:
-            return mail->getSender().emailAddress;
-        case SenderName:
-            return mail->getSender().name;
         case Date:
             return mail->getDate();
-        case Unread:
-            return mail->getUnread();
-        case Important:
-            return mail->getImportant();
-        case Draft:
-            return mail->getDraft();
+        case Status:
+            return QString("pending"); //TODO
         case Id:
             return mail->identifier();
         case DomainObject:
