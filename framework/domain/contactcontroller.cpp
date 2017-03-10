@@ -18,16 +18,17 @@
 
 #include "contactcontroller.h"
 
+#include <sink/applicationdomaintype.h>
+
 ContactController::ContactController()
     : Kube::Controller(),
     action_save{new Kube::ControllerAction{this, &ContactController::save}}
 {
-    loadContact("test");
     updateSaveAction();
 }
 
 void ContactController::save() {
-    //TODO
+    qWarning() << "Saving is not implemented";
 }
 
 void ContactController::updateSaveAction()
@@ -37,23 +38,31 @@ void ContactController::updateSaveAction()
 
 void ContactController::loadContact(const QVariant &contact)
 {
-    setName("Anita Rosenzweig");
-    m_emails << "rosenzweig@kolabnow.com" << "wolfi@kolabnow.com";
+    if (auto c = contact.value<Sink::ApplicationDomain::Contact::Ptr>()) {
+        setName(c->getFn());
+        QStringList emails;
+        for (const auto &e : c->getEmails()) {
+            emails << e;
+        }
+        setEmails(emails);
+    }
+}
+
+QVariant ContactController::contact() const
+{
+    return QVariant{};
 }
 
 void ContactController::removeEmail(const QString &email)
 {
-    m_emails.removeOne(email);
-    emit emailsChanged();
+    auto emails = getEmails();
+    emails.removeAll(email);
+    setEmails(emails);
 }
 
 void ContactController::addEmail(const QString &email)
 {
-    m_emails << email;
-    emit emailsChanged();
-}
-
-QStringList ContactController::emails() const
-{
-    return m_emails;
+    auto emails = getEmails();
+    emails.append(email);
+    setEmails(emails);
 }

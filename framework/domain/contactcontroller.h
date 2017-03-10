@@ -29,28 +29,24 @@ class ContactController : public Kube::Controller
 {
     Q_OBJECT
 
-    Q_PROPERTY(QStringList emails READ emails NOTIFY emailsChanged)
+    // Input properties
+    Q_PROPERTY(QVariant contact READ contact WRITE loadContact)
 
     //Interface properties
     KUBE_CONTROLLER_PROPERTY(QString, Name, name)
+    KUBE_CONTROLLER_PROPERTY(QStringList, Emails, emails)
 
     KUBE_CONTROLLER_ACTION(save)
 
 public:
     explicit ContactController();
 
-    QStringList emails() const;
-
     Q_INVOKABLE void loadContact(const QVariant &contact);
     Q_INVOKABLE void removeEmail(const QString &email);
     Q_INVOKABLE void addEmail(const QString &email);
 
-signals:
-    void emailsChanged();
+    QVariant contact() const;
 
 private slots:
     void updateSaveAction();
-
-private:
-    QStringList m_emails;
 };

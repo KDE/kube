@@ -1,5 +1,6 @@
  /*
   Copyright (C) 2017 Michael Bohlender, <michael.bohlender@kdemail.net>
+  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,12 +28,17 @@ import org.kube.framework.domain 1.0 as KubeFramework
 
 Popup {
 
+    id: popup
     modal: true
+
+    property variant currentContact: null
 
     Controls.SplitView {
         anchors.fill: parent
 
         Item {
+            id: contactList
+
             height: parent.height
             width: Kirigami.Units.gridUnit * 14
 
@@ -75,18 +81,39 @@ Popup {
                     topMargin: Kirigami.Units.smallSpacing
                 }
 
-                model: 15
+                model: KubeFramework.PeopleModel{}
                 clip: true
 
                 ScrollBar.vertical: ScrollBar {
                     id: scroll
                 }
 
+                onCurrentItemChanged: {
+                    popup.currentContact = currentItem.currentData.domainObject;
+                }
+
                 delegate: Kirigami.AbstractListItem {
                     height: Kirigami.Units.gridUnit * 2.5
                     width: listView.width - scroll.width
 
+                    property variant currentData: model
+
                     clip: true
+
+                    states: [
+                        State {
+                            name: "selected"
+                            when: ListView.isCurrentItem
+                            PropertyChanges {target: background; color: Kirigami.Theme.highlightColor}
+                            PropertyChanges {target: name; color: Kirigami.Theme.highlightedTextColor}
+                        },
+                        State {
+                            name: "hovered"
+                            when: mouseArea.containsMouse
+                            PropertyChanges {target: background; color: Kirigami.Theme.buttonHoverColor; opacity: 0.7}
+                            PropertyChanges {target: name; color: Kirigami.Theme.highlightedTextColor}
+                        }
+                    ]
 
                     Avatar {
                         id: avatar
@@ -100,7 +127,7 @@ Popup {
                         height: parent.height * 0.9
                         width: height
 
-                        name: "Wolfgang Rosenzweig"
+                        name: model.name
                     }
 
                     Text {
@@ -112,7 +139,7 @@ Popup {
                             verticalCenter: avatar.verticalCenter
                         }
 
-                        text: "Wolfgang Rosenzweig"
+                        text: model.name
                         color: Kirigami.Theme.textColor
                     }
                 }
@@ -120,9 +147,9 @@ Popup {
         }
 
         Item {
-
             KubeFramework.ContactController {
                 id: contactController
+                contact: popup.currentContact
             }
 
             height: parent.height

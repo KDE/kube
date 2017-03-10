@@ -25,6 +25,7 @@ set(mailplugin_SRCS
     foldercontroller.cpp
     mouseproxy.cpp
     contactcontroller.cpp
+    peoplemodel.cpp
 )
 find_package(KF5 REQUIRED COMPONENTS Package)
 
