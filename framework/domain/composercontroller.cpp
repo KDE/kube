@@ -132,9 +132,12 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 
 void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
 {
-    Sink::Query query(*message.value<Sink::ApplicationDomain::Mail::Ptr>());
-    query.request<Sink::ApplicationDomain::Mail::MimeMessage>();
-    Sink::Store::fetchOne<Sink::ApplicationDomain::Mail>(query).then([this, loadAsDraft](const Sink::ApplicationDomain::Mail &mail) {
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    Query query(*message.value<Mail::Ptr>());
+    query.request<Mail::MimeMessage>();
+    Store::fetchOne<Mail>(query).then([this, loadAsDraft](const Mail &mail) {
         setExistingMail(mail);
 
         //TODO this should probably happen as reaction to the property being set.
@@ -227,10 +230,10 @@ void ComposerController::send()
 
     Q_ASSERT(!accountId.isEmpty());
     Query query;
-    query.containsFilter<ApplicationDomain::SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::transport);
+    query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
     query.filter<SinkResource::Account>(accountId);
-    auto job = Store::fetchAll<ApplicationDomain::SinkResource>(query)
-        .then([=](const QList<ApplicationDomain::SinkResource::Ptr> &resources) {
+    auto job = Store::fetchAll<SinkResource>(query)
+        .then([=](const QList<SinkResource::Ptr> &resources) {
             if (!resources.isEmpty()) {
                 auto resourceId = resources[0]->identifier();
                 SinkLog() << "Sending message via resource: " << resourceId;
@@ -278,7 +281,7 @@ void ComposerController::saveAsDraft()
         if (existingMail.identifier().isEmpty()) {
             SinkLog() << "Creating a new draft" << existingMail.identifier();
             Query query;
-            query.containsFilter<SinkResource::Capabilities>(ApplicationDomain::ResourceCapabilities::Mail::drafts);
+            query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::drafts);
             query.filter<SinkResource::Account>(accountId);
             return Store::fetchOne<SinkResource>(query)
                 .then([=](const SinkResource &resource) {
