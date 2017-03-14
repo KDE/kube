@@ -84,11 +84,12 @@ QVariant IdentitiesModel::data(const QModelIndex &idx, int role) const
 
 void IdentitiesModel::runQuery(const Sink::Query &query)
 {
-    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::Identity>(query);
+    using namespace Sink::ApplicationDomain;
+    mModel = Sink::Store::loadModel<Identity>(query);
     setSourceModel(mModel.data());
 
-    Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>(Sink::Query())
-        .then([this](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
+    Sink::Store::fetchAll<SinkAccount>(Sink::Query{}.request<SinkAccount::Icon>().request<SinkAccount::Name>())
+        .then([this](const QList<SinkAccount::Ptr> &accounts) {
             for (const auto &account : accounts) {
                 mAccountNames.insert(account->identifier(), account->getName());
                 mAccountIcons.insert(account->identifier(), account->getIcon());
