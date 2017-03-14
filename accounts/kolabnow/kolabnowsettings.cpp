@@ -28,6 +28,7 @@ void KolabnowSettings::load()
     loadAccount();
     loadImapResource();
     loadMailtransportResource();
+    loadCardDavResource();
     loadIdentity();
 }
 
@@ -40,9 +41,14 @@ void KolabnowSettings::save()
     mSmtpUsername = mEmailAddress;
     mSmtpPassword = mImapPassword;
 
+    mCardDavServer = "https://apps.kolabnow.com/addressbooks/" + mEmailAddress;
+    mCardDavUsername = mEmailAddress;
+    mCardDavPassword = mImapPassword;
+
     saveAccount();
     saveImapResource();
     saveMailtransportResource();
+    saveCardDavResource();
     saveIdentity();
 }
 
@@ -50,6 +56,7 @@ void KolabnowSettings::remove()
 {
     removeResource(mMailtransportIdentifier);
     removeResource(mImapIdentifier);
+    removeResource(mCardDavIdentifier);
     removeIdentity();
     removeAccount();
 }

@@ -60,9 +60,13 @@ void AccountSettings::setAccountIdentifier(const QByteArray &id)
     mSmtpServer = QString();
     mSmtpUsername = QString();
     mSmtpPassword = QString();
+    mCardDavServer = QString();
+    mCardDavUsername = QString();
+    mCardDavPassword = QString();
     emit changed();
     emit imapResourceChanged();
     emit smtpResourceChanged();
+    emit cardDavResourceChanged();
 
     load();
 
@@ -240,6 +244,19 @@ void AccountSettings::loadIdentity()
         }).exec();
 }
 
+void AccountSettings::loadCardDavResource()
+{
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
+        .then([this](const SinkResource &resource) {
+            mCardDavIdentifier = resource.identifier();
+            mCardDavServer = resource.getProperty("server").toString();
+            mCardDavUsername = resource.getProperty("username").toString();
+            mCardDavPassword = resource.getProperty("password").toString();
+            emit cardDavResourceChanged();
+        }).onError([](const KAsync::Error &error) {
+            qWarning() << "Failed to find the CardDAV resource: " << error.errorMessage;
+        }).exec();
+}
 
 
 template<typename ResourceType>
@@ -277,6 +294,15 @@ void AccountSettings::saveImapResource()
             {"server", mImapServer},
             {"username", mImapUsername},
             {"password", mImapPassword},
+        });
+}
+
+void AccountSettings::saveCardDavResource()
+{
+    mCardDavIdentifier = saveResource<CardDavResource>(mAccountIdentifier, mCardDavIdentifier, {
+            {"server", mCardDavServer},
+            {"username", mCardDavUsername},
+            {"password", mCardDavPassword},
         });
 }
 

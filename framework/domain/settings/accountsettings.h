@@ -71,6 +71,7 @@ signals:
     void identityChanged();
     void pathChanged();
     void changed();
+    void cardDavResourceChanged();
 
 protected:
     void saveAccount();
@@ -78,12 +79,14 @@ protected:
     void saveMaildirResource();
     void saveMailtransportResource();
     void saveIdentity();
+    void saveCardDavResource();
 
     void loadAccount();
     void loadImapResource();
     void loadMaildirResource();
     void loadMailtransportResource();
     void loadIdentity();
+    void loadCardDavResource();
 
     void removeAccount();
     void removeResource(const QByteArray &identifier);
@@ -111,5 +114,10 @@ protected:
     QByteArray mIdentityIdentifier;
     QString mUsername;
     QString mEmailAddress;
+
+    QByteArray mCardDavIdentifier;
+    QString mCardDavServer;
+    QString mCardDavUsername;
+    QString mCardDavPassword;
 };
 
