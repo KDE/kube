@@ -41,5 +41,7 @@ add_subdirectory(settings)
 add_subdirectory(domain)
 # The accounts framework
 add_subdirectory(accounts)
+# The notifications framework
+add_subdirectory(notifications)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
