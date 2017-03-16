@@ -48,6 +48,7 @@ Controls2.ApplicationWindow {
             if (n.type == KubeNotifications.Notification.Warning) {
                 console.warn("And it's a warning!", n.type)
             }
+            notificationPopup.notify(n.message);
         }
     }
 
@@ -324,6 +325,10 @@ Controls2.ApplicationWindow {
         y: app.height * 0.075
     }
     //END AccountWizard
+
+    KubeComponents.Notification {
+        id: notificationPopup
+    }
 
     //BEGIN Search
     Controls2.Popup {
