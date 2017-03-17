@@ -48,6 +48,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[Unread] = "unread";
     roles[Important] = "important";
     roles[Draft] = "draft";
+    roles[Sent] = "sent";
     roles[Trash] = "trash";
     roles[Id] = "id";
     roles[MimeMessage] = "mimeMessage";
@@ -105,6 +106,8 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return mail->getProperty("importantCollected").toList().contains(true);
         case Draft:
             return mail->getDraft();
+        case Sent:
+            return mail->getSent();
         case Trash:
             return mail->getTrash();
         case Id:
@@ -162,6 +165,7 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
     query.request<Mail::Draft>();
+    query.request<Mail::Sent>();
     query.request<Mail::Trash>();
     query.request<Mail::Folder>();
     mFetchMails = false;
@@ -200,6 +204,8 @@ void MailListModel::setMail(const QVariant &variant)
     query.request<Mail::Unread>();
     query.request<Mail::Important>();
     query.request<Mail::Draft>();
+    query.request<Mail::Folder>();
+    query.request<Mail::Sent>();
     query.request<Mail::Trash>();
     query.request<Mail::MimeMessage>();
     query.request<Mail::FullPayloadAvailable>();

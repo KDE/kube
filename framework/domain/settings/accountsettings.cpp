@@ -178,7 +178,7 @@ void AccountSettings::saveAccount()
 void AccountSettings::loadAccount()
 {
     Q_ASSERT(!mAccountIdentifier.isEmpty());
-    Store::fetchOne<SinkAccount>(Query().filter(mAccountIdentifier))
+    Store::fetchOne<SinkAccount>(Query().filter(mAccountIdentifier).request<SinkAccount::Icon>().request<SinkAccount::Name>().request<SinkAccount::AccountType>())
         .then([this](const SinkAccount &account) {
             mAccountType = account.getAccountType().toLatin1();
             mIcon = account.getIcon();

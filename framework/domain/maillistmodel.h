@@ -51,6 +51,7 @@ public:
         Unread,
         Important,
         Draft,
+        Sent,
         Trash,
         Id,
         MimeMessage,
