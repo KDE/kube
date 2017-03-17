@@ -44,16 +44,26 @@ void NotificationHandler::notify(const Sink::Notification &notification)
     qWarning() << "Received notification: " << notification;
     if (notification.type == Sink::Notification::Warning) {
         n.mType = Notification::Warning;
-        n.mMessage = notification.message;
+        if (notification.code == Sink::Notification::TransmissionFailed) {
+            n.mMessage = "Failed to send message.";
+        } else {
+            return;
+        }
     } else if (notification.type == Sink::Notification::Status) {
         if (notification.code == Sink::ApplicationDomain::ErrorStatus) {
             //A resource entered error status
             n.mType = Notification::Warning;
-            n.mMessage = notification.message;
+            n.mMessage = "A resource experienced an error.";
+        } else {
+            return;
         }
     } else if (notification.type == Sink::Notification::Info) {
         n.mType = Notification::Info;
-        n.mMessage = notification.message;
+        if (notification.code == Sink::Notification::TransmissionSucceeded) {
+            n.mMessage = "A message has been sent.";
+        } else {
+            return;
+        }
     } else {
         return;
     }
