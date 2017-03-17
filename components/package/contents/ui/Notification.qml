@@ -6,8 +6,8 @@ MouseArea {
     id: popup
     anchors.top: parent.top
     anchors.horizontalCenter: parent.horizontalCenter
-    width: Math.max(300, message.contentWidth + (Kirigami.Units.gridUnit * 2))
-    height: message.contentHeight + (Kirigami.Units.gridUnit * 2)
+    width: Math.max(300, message.contentWidth + (Kirigami.Units.largeSpacing * 2))
+    height: Math.max(50, message.contentHeight + (Kirigami.Units.largeSpacing * 2))
     property alias title: message.text
     property alias timeout: hideTimer.interval
     property alias background: bg.color
@@ -59,9 +59,9 @@ MouseArea {
         font.pixelSize: 16
         color: Kirigami.Theme.highlightedTextColor
         anchors.left: parent.left
-        anchors.leftMargin: Kirigami.Units.gridUnit
+        anchors.leftMargin: Kirigami.Units.largeSpacing
         anchors.right: parent.right
-        anchors.rightMargin: Kirigami.Units.gridUnit
+        anchors.rightMargin: Kirigami.Units.largeSpacing
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
         wrapMode: Text.Wrap
