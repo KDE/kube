@@ -295,11 +295,16 @@ Popup {
 
                         width: personPageRoot.width - Kirigami.Units.largeSpacing
 
-                        Row {
-                            spacing: Kirigami.Units.smallSpacing
-                            Text { text: "(main)"}
-                            Text { text: "testerson@kolabnow.com"; color: Kirigami.Theme.highlightColor }
-                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                        Repeater {
+
+                            model: contactController.emails
+
+                            Row {
+                                spacing: Kirigami.Units.smallSpacing
+                                Text { text: "(main)" }
+                                Text { text: modelData ; color: Kirigami.Theme.highlightColor }
+                                Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                            }
                         }
 
                         Row {
