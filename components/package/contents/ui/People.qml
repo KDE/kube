@@ -125,6 +125,7 @@ Popup {
                             model: KubeFramework.PeopleModel{}
 
                             delegate: Rectangle {
+                                id: delegateRoot
 
                                 height: Kirigami.Units.gridUnit * 3
                                 width: Kirigami.Units.gridUnit * 10
@@ -150,16 +151,33 @@ Popup {
                                     color: "lightgrey"
                                 }
 
-                                Text {
+                                Column {
+
+                                    width: parent.width
+
                                     anchors {
                                         left: avatarPlaceholder.right
-                                        leftMargin: Kirigami.Units.smallSpacing
+                                        margins: Kirigami.Units.smallSpacing
                                         verticalCenter: parent.verticalCenter
                                     }
 
-                                    color: Kirigami.Theme.textColor
-                                    text: model.name
+                                    Text {
+                                        width: delegateRoot.width - avatarPlaceholder.width - Kirigami.Units.smallSpacing * 2
+
+                                        text: model.firstName
+                                        elide: Text.ElideRight
+                                        color: Kirigami.Theme.textColor
+                                    }
+
+                                    Text {
+                                        width: delegateRoot.width - avatarPlaceholder.width - Kirigami.Units.smallSpacing * 2
+
+                                        text: model.lastName
+                                        elide: Text.ElideRight
+                                        color: Kirigami.Theme.textColor
+                                    }
                                 }
+                              }
                             }
                         }
                     }

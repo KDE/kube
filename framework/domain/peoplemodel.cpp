@@ -50,7 +50,9 @@ QHash< int, QByteArray > PeopleModel::roleNames() const
         {Emails, "emails"},
         {Addressbook, "addressbook"},
         {Type, "type"},
-        {DomainObject, "domainObject"}
+        {DomainObject, "domainObject"},
+        {FirstName, "firstName"},
+        {LastName, "lastName"}
         };
     return roles;
 }
@@ -70,6 +72,10 @@ QVariant PeopleModel::data(const QModelIndex &idx, int role) const
             return "contact";
         case DomainObject:
             return QVariant::fromValue(contact);
+        case FirstName:
+            return "FIRSTNAME";
+        case LastName:
+            return contact->getFn();
     }
     return QSortFilterProxyModel::data(idx, role);
 }
