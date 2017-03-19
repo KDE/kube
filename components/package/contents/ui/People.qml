@@ -1,5 +1,5 @@
  /*
-  Copyright (C) 2017 Michael Bohlender, <michael.bohlender@kdemail.net>
+  Copyright (C) 2017 Michael Bohlender, <bohlender@kolabsys.com>
   Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -27,237 +27,376 @@ import org.kube.framework.domain 1.0 as KubeFramework
 
 
 Popup {
-
     id: popup
+
+    property var currentContact
+
     modal: true
 
-    property variant currentContact: null
+    Item {
+        id: peopleRoot
 
-    Controls.SplitView {
         anchors.fill: parent
 
-        Item {
-            id: contactList
+        ToolBar {
+            id: toolbar
 
-            height: parent.height
-            width: Kirigami.Units.gridUnit * 14
+            width: parent.width
 
-            Item {
-                id: toolBar
+            Controls.ToolButton {
 
-                width: parent.width - scroll.width
-                height: Kirigami.Units.gridUnit * 2
+                anchors.verticalCenter: parent.verticalCenter
 
-                Rectangle {
+                iconName: "go-previous"
 
-                    anchors.centerIn: parent
+                onClicked: stack.pop()
 
-                    height: Kirigami.Units.gridUnit * 1.5
-                    width: parent.width* 0.8
-
-                    color: "#27ae60"
-                    clip: true
-
-                    Text {
-                        anchors.centerIn: parent
-
-                        clip: true
-
-                        text: "New Contact"
-
-                        color: "white"
-                    }
-                }
+                visible: stack. depth > 1
             }
 
-            ListView {
-                id: listView
+            TextField {
+                anchors.centerIn: parent
+
+                placeholderText: "Search..."
+
+                width: parent.width * 0.5
+            }
+
+            Controls.ToolButton {
 
                 anchors {
-                    top: toolBar.bottom
-                    left: parent.left
                     right: parent.right
-                    bottom: parent.bottom
-                    topMargin: Kirigami.Units.smallSpacing
+                    rightMargin: Kirigami.Units.smallSpacing
+                    verticalCenter: parent.verticalCenter
                 }
 
-                model: KubeFramework.PeopleModel{}
+                iconName: "list-add-new"
+            }
+        }
+
+        StackView {
+            id: stack
+
+            anchors {
+                top: toolbar.bottom
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+            }
+
+            initialItem: peoplePage
+
+            clip: true
+        }
+    }
+
+    Component {
+        id: peoplePage
+
+        Rectangle {
+            id: peoplePageRoot
+            color: Kirigami.Theme.viewBackgroundColor
+
+            Flickable {
+
+                anchors.fill: parent
+
+                ScrollBar.vertical: ScrollBar { }
+                contentHeight: content.height
                 clip: true
 
-                ScrollBar.vertical: ScrollBar {
-                    id: scroll
-                }
+                Item {
+                    id: content
 
-                onCurrentItemChanged: {
-                    popup.currentContact = currentItem.currentData.domainObject;
-                }
-
-                delegate: Kirigami.AbstractListItem {
-                    height: Kirigami.Units.gridUnit * 2.5
-                    width: listView.width - scroll.width
-
-                    property variant currentData: model
-
-                    clip: true
-
-                    states: [
-                        State {
-                            name: "selected"
-                            when: ListView.isCurrentItem
-                            PropertyChanges {target: background; color: Kirigami.Theme.highlightColor}
-                            PropertyChanges {target: name; color: Kirigami.Theme.highlightedTextColor}
-                        },
-                        State {
-                            name: "hovered"
-                            when: mouseArea.containsMouse
-                            PropertyChanges {target: background; color: Kirigami.Theme.buttonHoverColor; opacity: 0.7}
-                            PropertyChanges {target: name; color: Kirigami.Theme.highlightedTextColor}
-                        }
-                    ]
-
-                    Avatar {
-                        id: avatar
+                    Flow {
 
                         anchors {
-                            verticalCenter: parent.verticalCenter
+                            top: parent.top
+                            topMargin: Kirigami.Units.largeSpacing
                             left: parent.left
-                            leftMargin: Kirigami.Units.smallSpacing
+                            leftMargin: Kirigami.Units.largeSpacing
                         }
 
-                        height: parent.height * 0.9
-                        width: height
+                        spacing: Kirigami.Units.largeSpacing
+                        width: peoplePageRoot.width - Kirigami.Units.largeSpacing * 2
 
-                        name: model.name
-                    }
+                        Repeater {
 
-                    Text {
-                        id: name
+                            model: KubeFramework.PeopleModel{}
 
-                        anchors {
-                            left: avatar.right
-                            leftMargin: Kirigami.Units.smallSpacing
-                            verticalCenter: avatar.verticalCenter
+                            delegate: Rectangle {
+
+                                height: Kirigami.Units.gridUnit * 3
+                                width: Kirigami.Units.gridUnit * 10
+
+                                border.width: 1
+                                border.color: "lightgrey"
+
+                                MouseArea {
+                                    anchors.fill: parent
+
+                                    onClicked: {
+                                        popup.currentContact = model.domainObject
+                                        stack.push(personPage)
+                                    }
+                                }
+
+                                Rectangle {
+                                    id: avatarPlaceholder
+
+                                    height: parent.height
+                                    width: height
+
+                                    color: "lightgrey"
+                                }
+
+                                Text {
+                                    anchors {
+                                        left: avatarPlaceholder.right
+                                        leftMargin: Kirigami.Units.smallSpacing
+                                        verticalCenter: parent.verticalCenter
+                                    }
+
+                                    color: Kirigami.Theme.textColor
+                                    text: model.name
+                                }
+                            }
                         }
-
-                        text: model.name
-                        color: Kirigami.Theme.textColor
                     }
                 }
             }
         }
+    }
 
-        Item {
+    Component {
+        id: personPage
+
+        Rectangle {
+            id: personPageRoot
+
             KubeFramework.ContactController {
                 id: contactController
                 contact: popup.currentContact
             }
 
-            height: parent.height
-            Layout.fillWidth: true
+            color: Kirigami.Theme.viewBackgroundColor
 
-            ToolBar {
-                id: detailToolBar
-
-                width: parent.width
-                height: Kirigami.Units.gridUnit * 2
-            }
-
-            Rectangle {
+            Item {
 
                 anchors {
-                    top: detailToolBar.bottom
+                    top: parent.top
                     left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
+                    leftMargin: Kirigami.Units.largeSpacing
                 }
 
-                color: Kirigami.Theme.viewBackgroundColor
+                width: parent.width
+                height: parent.height
 
-                    Row{
-                        id: avatar_row
 
-                        height: avatar.height
+            Flickable {
 
-                        anchors {
-                            top: parent.top
-                            left: parent.left
-                            margins: Kirigami.Units.largeSpacing
-                        }
+                anchors.fill: parent
 
-                        spacing: Kirigami.Units.smallSpacing
+                ScrollBar.vertical: ScrollBar { }
+                contentHeight: contentColumn.height
 
-                        Avatar {
+                clip: true
+
+                ColumnLayout {
+                    id: contentColumn
+
+                    width: personPageRoot.width
+
+                    spacing: Kirigami.Units.largeSpacing
+
+                    Item {
+                        width: parent.width
+                        height: Kirigami.Units.smallSpacing
+                    }
+
+                    Item {
+
+                        height: Kirigami.Units.gridUnit * 8
+                        width: personPageRoot.width - Kirigami.Units.largeSpacing
+
+                        Rectangle {
                             id: avatar
 
-                            height: Kirigami.Units.gridUnit * 2.5
+                            height: parent.height
                             width: height
 
-                            name: contactController.name
+                            color: "lightgrey"
+                        }
+
+                        Kirigami.Heading {
+                            id: nameLabel
+
+                            anchors {
+                                top: avatar.top
+                                left: avatar.right
+                                leftMargin: Kirigami.Units.largeSpacing
+                            }
+
+                            text: contactController.name //"Michael Tester"
                         }
 
                         Text {
+                            id: jobTitle
 
-                            anchors.verticalCenter: parent.verticalCenter
+                            anchors {
+                                top: nameLabel.bottom
+                                left: avatar.right
+                                leftMargin: Kirigami.Units.largeSpacing
+                            }
 
-                            color: Kirigami.Theme.textColor
-                            opacity: 0.8
-
-                            text: contactController.name
-
-                            font.weight: Font.DemiBold
-                        }
-                    }
-
-                Text {
-                    id: email_label
-
-                        anchors {
-                            top: avatar_row.bottom
-                            left: avatar_row.left
-                            leftMargin:  Kirigami.Units.gridUnit * 2.5
-                            topMargin: Kirigami.Units.largeSpacing
+                            text: "CIO"
                         }
 
-                        color: Kirigami.Theme.textColor
-                        text: "Email"
-                        font.weight: Font.DemiBold
-                        opacity: 0.8
-                }
+                        Rectangle {
+                            id: company
 
-                ColumnLayout {
+                            anchors {
+                                bottom: avatar.bottom
+                                left: avatar.right
+                                leftMargin: Kirigami.Units.largeSpacing
+                            }
 
-                    anchors {
-                        top: email_label.bottom
-                        left: email_label.left
-                    }
+                            height: Kirigami.Units.gridUnit * 3
+                            width: Kirigami.Units.gridUnit * 10
 
-                    Repeater {
-                        model: contactController.emails
+                            border.width: 1
+                            border.color: "lightgrey"
 
-                        RowLayout {
-                            Text { text: modelData }
-                            Controls.ToolButton {
-                                iconName: "edit-delete"
+                            Rectangle {
+                                id: av
 
-                                onClicked: {
-                                    contactController.removeEmail(modelData)
+                                height: parent.height
+                                width: height
+
+                                color: "lightgrey"
+                            }
+
+                            Text {
+                                anchors {
+                                    verticalCenter: av.verticalCenter
+                                    left: av.right
+                                    leftMargin: Kirigami.Units.smallSpacing
                                 }
+
+                                text: "Sauerkraut AG"
+
+                                color: Kirigami.Theme.textColor
                             }
                         }
                     }
 
-                    RowLayout {
-                        TextField {
-                            id: newEmail
+                    Flow {
+                        id: emails
+
+                        width: personPageRoot.width - Kirigami.Units.largeSpacing
+
+                        Row {
+                            spacing: Kirigami.Units.smallSpacing
+                            Text { text: "(main)"}
+                            Text { text: "testerson@kolabnow.com"; color: Kirigami.Theme.highlightColor }
+                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
                         }
 
-                        Button {
-                            text: "Add email"
+                        Row {
+                            spacing: Kirigami.Units.smallSpacing
+                            Text { text: "(alias)"}
+                            Text { text: "test.testerson@gmail.com"; color: Kirigami.Theme.highlightColor }
+                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                        }
 
-                            onClicked: {
-                                contactController.addEmail(newEmail.text)
-                                newEmail.text = "";
-                            }
+                        Row {
+                            spacing: Kirigami.Units.smallSpacing
+                            Text { text: "(private)"}
+                            Text { text: "test@gmail.com"; color: Kirigami.Theme.highlightColor }
+                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                        }
+                    }
+
+                    Flow {
+                        id: phone
+
+                        width: personPageRoot.width - Kirigami.Units.largeSpacing
+                        spacing: Kirigami.Units.smallSpacing
+
+                        Row {
+                            spacing: Kirigami.Units.smallSpacing
+                            Text { text: "(inhouse)"}
+                            Text { text: "+49812324932"; opacity: 0.6 }
+                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                        }
+                        Row {
+                            spacing: Kirigami.Units.smallSpacing
+                            Text { text: "(mobile)"}
+                            Text { text: "+49812324932"; opacity: 0.6 }
+                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                        }
+                        Row {
+                            spacing: Kirigami.Units.smallSpacing
+                            Text { text: "(private)"}
+                            Text { text: "+49812324932"; opacity: 0.6 }
+                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                        }
+                    }
+
+                    Column {
+                        id: address
+
+                        width: personPageRoot.width - Kirigami.Units.largeSpacing
+
+                        Text { text: "Albertstrasse 35a"}
+                        Text { text: "81767 Teststadt"}
+                        Text { text: "GERMANY" }
+                    }
+
+//                     Column {
+//
+//                         width: parent.width
+//
+//                         spacing: Kirigami.Units.smallSpacing
+//
+//                         Text {
+//
+//                             text: root.firstname +  " is part of these groups:"
+//                         }
+//
+//                         GroupGrid {
+//                             id: groups
+//
+//                             width: root.width - Kirigami.Units.largeSpacing
+//
+//                             model: GroupModel1 {}
+//                         }
+//                     }
+
+//                     Column {
+//
+//                         width: parent.width
+//
+//                         spacing: Kirigami.Units.smallSpacing
+//
+//                         Text {
+//                             id: commonPeopleLabel
+//
+//                             text: root.firstname +  " is associated with:"
+//                         }
+//
+//                         PeopleGrid {
+//                             id: commonPeople
+//
+//                             width: root.width - Kirigami.Units.largeSpacing
+//
+//                             model: PeopleModel2 {}
+//                         }
+//                     }
+
+                        Item {
+                            width: parent.width
+                            height: Kirigami.Units.largeSpacing
                         }
                     }
                 }
