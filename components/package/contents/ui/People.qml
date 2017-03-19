@@ -177,7 +177,6 @@ Popup {
                                         color: Kirigami.Theme.textColor
                                     }
                                 }
-                              }
                             }
                         }
                     }
