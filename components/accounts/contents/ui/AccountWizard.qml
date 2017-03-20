@@ -42,6 +42,15 @@ Controls2.Popup {
         id: mainView
 
         Item {
+            anchors {
+                fill: parent
+                margins: Kirigami.Units.largeSpacing * 2
+            }
+            Kirigami.Heading {
+                id: heading
+                text: "Select your new account type"
+                color: Kirigami.Theme.highlightColor
+            }
 
             ColumnLayout {
 
@@ -56,7 +65,7 @@ Controls2.Popup {
                     model: ["kolabnow", "imap", "maildir", "gmail"]
                     delegate: Controls2.Button {
                         Layout.fillWidth: true
-                        text: modelData +" account"
+                        text: modelData
                         onClicked: {
                             stack.push(wizardPage.createObject(app, {accountType:modelData}))
                         }
