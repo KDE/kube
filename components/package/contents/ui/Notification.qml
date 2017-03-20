@@ -23,7 +23,7 @@ MouseArea {
 
     function notify(text) {
         popup.title = text
-        bg.color = Kirigami.Theme.highlightColor
+        bg.color = Kirigami.Theme.textColor
         show()
     }
 
@@ -56,7 +56,10 @@ MouseArea {
 
     Rectangle {
         id: bg
+
         anchors.fill: parent
+
+        opacity: 0.6
     }
 
     Label {
