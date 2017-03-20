@@ -237,6 +237,23 @@ Controls2.ApplicationWindow {
             Item {
                 id: accountName
 
+                KubeFramework.FolderController {
+                    id: accountNameFolderController
+                    accountId: accountSwitcher.accountId
+                }
+
+                Menu {
+                    id: contextMenu
+                    title: "Edit"
+
+                    MenuItem {
+                        text: "Synchronize"
+                        onTriggered: {
+                            accountNameFolderController.synchronizeAction.execute()
+                        }
+                    }
+                }
+
                 anchors {
                     top: newMailButton.bottom
                     topMargin: Kirigami.Units.smallSpacing
@@ -244,6 +261,14 @@ Controls2.ApplicationWindow {
 
                 width: parent.width
                 height: Kirigami.Units.gridUnit * 2
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: {
+                        contextMenu.popup()
+                    }
+                }
 
                 Text {
                     anchors {

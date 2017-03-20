@@ -36,11 +36,14 @@ FolderController::FolderController()
 void FolderController::synchronize()
 {
     auto job = [&] {
+        auto accountId = getAccountId();
         if (auto folder = getFolder()) {
             SinkLog() << "Synchronizing folder " << folder->resourceInstanceIdentifier() << folder->identifier();
             auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<ApplicationDomain::Mail::Folder>(QVariant::fromValue(folder->identifier()));
             scope.setType<ApplicationDomain::Mail>();
             return Store::synchronize(scope);
+        } else if (!accountId.isEmpty()) {
+            return Store::synchronize(SyncScope{}.resourceFilter<ApplicationDomain::SinkResource::Account>(accountId));
         } else {
             SinkLog() << "Synchronizing all";
             return Store::synchronize(SyncScope());

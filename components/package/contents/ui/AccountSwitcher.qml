@@ -39,6 +39,7 @@ Controls.ToolButton {
 
     KubeFramework.FolderController {
         id: folderController
+        accountId: accountId
     }
 
     KubeAccounts.AccountsModel {
