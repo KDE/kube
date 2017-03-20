@@ -27,6 +27,14 @@ MouseArea {
         show()
     }
 
+    Timer {
+        id: hideTimer
+        triggeredOnStart: false
+        repeat: false
+        interval: 5000
+        onTriggered: popup.hide()
+    }
+
     anchors {
         top: parent.top
         horizontalCenter: parent.horizontalCenter
@@ -49,14 +57,6 @@ MouseArea {
     Rectangle {
         id: bg
         anchors.fill: parent
-    }
-
-    Timer {
-        id: hideTimer
-        triggeredOnStart: false
-        repeat: false
-        interval: 5000
-        onTriggered: popup.hide()
     }
 
     Label {
