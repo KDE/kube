@@ -28,6 +28,7 @@ import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.notifications 1.0 as KubeNotifications
+import org.kube.framework.accounts 1.0 as KubeAccountsFramework
 import org.kube.components 1.0 as KubeComponents
 import org.kube.components.accounts 1.0 as KubeAccounts
 
@@ -270,16 +271,31 @@ Controls2.ApplicationWindow {
                     }
                 }
 
-                Text {
-                    anchors {
-                        bottom: parent.bottom
-                        left: parent.left
-                        leftMargin: Kirigami.Units.smallSpacing
+                Repeater {
+                    model: KubeAccountsFramework.AccountsModel {
+                        accountId: accountSwitcher.accountId
                     }
 
-                    text: accountSwitcher.accountName
-                    font.weight: Font.DemiBold
-                    color: "white"
+                    RowLayout {
+                        anchors {
+                            bottom: parent.bottom
+                            left: parent.left
+                            leftMargin: Kirigami.Units.smallSpacing
+                        }
+                        Layout.fillHeight: true
+
+                        Text {
+                            text: model.name
+                            font.weight: Font.DemiBold
+                            color: "white"
+                        }
+
+                        ToolButton {
+                            visible: model.showStatus
+                            iconName: model.statusIcon
+                            enabled: false
+                        }
+                    }
                 }
             }
 

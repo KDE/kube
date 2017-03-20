@@ -32,6 +32,7 @@ class AccountsModel : public QIdentityProxyModel
 {
     Q_OBJECT
 
+    Q_PROPERTY (QByteArray accountId READ accountId WRITE setAccountId)
 public:
     AccountsModel(QObject *parent = Q_NULLPTR);
     ~AccountsModel();
@@ -49,6 +50,9 @@ public:
     Q_ENUMS(Roles)
 
     QHash<int, QByteArray> roleNames() const;
+
+    void setAccountId(const QByteArray &id);
+    QByteArray accountId() const;
 
 private:
     void runQuery(const Sink::Query &query);

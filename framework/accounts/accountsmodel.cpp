@@ -19,13 +19,16 @@
 #include "accountsmodel.h"
 #include <sink/store.h>
 
+using namespace Sink;
+using namespace Sink::ApplicationDomain;
+
 AccountsModel::AccountsModel(QObject *parent) : QIdentityProxyModel()
 {
     Sink::Query query;
-    query.setFlags(Sink::Query::LiveQuery);
-    query.request<Sink::ApplicationDomain::SinkAccount::Name>();
-    query.request<Sink::ApplicationDomain::SinkAccount::Icon>();
-    query.request<Sink::ApplicationDomain::SinkAccount::Status>();
+    query.setFlags(Query::LiveQuery);
+    query.request<SinkAccount::Name>();
+    query.request<SinkAccount::Icon>();
+    query.request<SinkAccount::Status>();
     runQuery(query);
 }
 
@@ -51,7 +54,7 @@ QHash< int, QByteArray > AccountsModel::roleNames() const
 QVariant AccountsModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
-    auto account = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::SinkAccount::Ptr>();
+    auto account = srcIdx.data(Sink::Store::DomainObjectRole).value<SinkAccount::Ptr>();
     switch (role) {
         case Name:
             return account->getName();
@@ -77,6 +80,24 @@ QVariant AccountsModel::data(const QModelIndex &idx, int role) const
 
 void AccountsModel::runQuery(const Sink::Query &query)
 {
-    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::SinkAccount>(query);
+    mModel = Sink::Store::loadModel<SinkAccount>(query);
     setSourceModel(mModel.data());
+}
+
+void AccountsModel::setAccountId(const QByteArray &accountId)
+{
+    qWarning() << "Setting account id" << accountId;
+    //Get all folders of an account
+    Sink::Query query;
+    query.filter(accountId);
+    query.setFlags(Query::LiveQuery);
+    query.request<SinkAccount::Name>();
+    query.request<SinkAccount::Icon>();
+    query.request<SinkAccount::Status>();
+    runQuery(query);
+}
+
+QByteArray AccountsModel::accountId() const
+{
+    return {};
 }
