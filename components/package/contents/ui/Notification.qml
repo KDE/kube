@@ -35,11 +35,6 @@ MouseArea {
         onTriggered: popup.hide()
     }
 
-    anchors {
-        top: parent.top
-        horizontalCenter: parent.horizontalCenter
-    }
-
     width: Math.max(300, message.contentWidth + (Kirigami.Units.largeSpacing * 2))
     height: Math.max(50, message.contentHeight + (Kirigami.Units.largeSpacing * 2))
 

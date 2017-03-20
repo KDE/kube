@@ -351,9 +351,16 @@ Controls2.ApplicationWindow {
     }
     //END AccountWizard
 
+    //BEGIN Notification
     KubeComponents.Notification {
         id: notificationPopup
+
+        anchors {
+            top: parent.top
+            horizontalCenter: parent.horizontalCenter
+        }
     }
+    //END Notification
 
     //BEGIN Search
     Controls2.Popup {
