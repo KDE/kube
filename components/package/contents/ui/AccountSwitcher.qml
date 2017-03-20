@@ -163,6 +163,7 @@ Controls.ToolButton {
                         }
 
                         Controls.ToolButton {
+                            enabled: false
                             visible: model.showStatus
                             iconName: model.statusIcon
                         }
