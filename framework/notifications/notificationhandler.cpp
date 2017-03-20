@@ -44,7 +44,7 @@ void NotificationHandler::notify(const Sink::Notification &notification)
     qWarning() << "Received notification: " << notification;
     if (notification.type == Sink::Notification::Warning) {
         n.mType = Notification::Warning;
-        if (notification.code == Sink::Notification::TransmissionFailed) {
+        if (notification.code == Sink::ApplicationDomain::TransmissionError) {
             n.mMessage = "Failed to send message.";
         } else {
             return;
@@ -59,7 +59,7 @@ void NotificationHandler::notify(const Sink::Notification &notification)
         }
     } else if (notification.type == Sink::Notification::Info) {
         n.mType = Notification::Info;
-        if (notification.code == Sink::Notification::TransmissionSucceeded) {
+        if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {
             n.mMessage = "A message has been sent.";
         } else {
             return;
