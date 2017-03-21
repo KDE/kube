@@ -31,6 +31,7 @@ Item {
     property variant currentMail: null
     property bool isDraft : false
     property int currentIndex
+    property string filterString: searchBar.text;
 
     onParentFolderChanged: {
         currentMail = null
@@ -88,10 +89,17 @@ Item {
         }
     }
 
+    TextField {
+        id: searchBar
+        anchors.top: toolbar.bottom
+        width: parent.width
+        placeholderText: qsTr("Filter...")
+    }
+
     ListView {
         id: listView
 
-        anchors.top: toolbar.bottom
+        anchors.top: searchBar.bottom
 
         width: parent.width
         height: parent.height - toolbar.height
@@ -120,6 +128,7 @@ Item {
 
         model: KubeFramework.MailListModel {
             parentFolder: root.parentFolder
+            filter: root.filterString
         }
 
         delegate: Item {

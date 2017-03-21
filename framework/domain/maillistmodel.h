@@ -31,6 +31,7 @@ class MailListModel : public QSortFilterProxyModel
     Q_OBJECT
     Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
     Q_PROPERTY (QVariant mail READ mail WRITE setMail)
+    Q_PROPERTY (QString filter READ filter WRITE setFilter)
 
 public:
     MailListModel(QObject *parent = Q_NULLPTR);
@@ -69,6 +70,9 @@ public:
 
     void setMail(const QVariant &mail);
     QVariant mail() const;
+
+    void setFilter(const QString &mail);
+    QString filter() const;
 
 private:
     void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail);

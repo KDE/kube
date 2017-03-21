@@ -34,6 +34,7 @@ class PeopleModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY (QVariant addressbook READ addressbook WRITE setAddressbook)
+    Q_PROPERTY (QString filter READ filter WRITE setFilter)
 
 public:
     PeopleModel(QObject *parent = Q_NULLPTR);
@@ -59,6 +60,9 @@ public:
 
     void setAddressbook(const QVariant &parentFolder);
     QVariant addressbook() const;
+
+    void setFilter(const QString &mail);
+    QString filter() const;
 
 private:
     QSharedPointer<QAbstractItemModel> mModel;

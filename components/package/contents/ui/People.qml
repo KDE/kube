@@ -55,6 +55,7 @@ Popup {
             }
 
             TextField {
+                id: searchBar
                 anchors.centerIn: parent
 
                 placeholderText: "Search..."
@@ -122,7 +123,9 @@ Popup {
 
                         Repeater {
 
-                            model: KubeFramework.PeopleModel{}
+                            model: KubeFramework.PeopleModel {
+                                filter: searchBar.text
+                            }
 
                             delegate: Rectangle {
                                 id: delegateRoot

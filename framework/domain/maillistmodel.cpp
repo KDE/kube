@@ -27,11 +27,22 @@ MailListModel::MailListModel(QObject *parent)
 {
     setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
+    setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
 MailListModel::~MailListModel()
 {
 
+}
+
+void MailListModel::setFilter(const QString &filter)
+{
+    setFilterWildcard(filter);
+}
+
+QString MailListModel::filter() const
+{
+     return {};
 }
 
 QHash< int, QByteArray > MailListModel::roleNames() const

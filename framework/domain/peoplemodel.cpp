@@ -29,6 +29,7 @@ PeopleModel::PeopleModel(QObject *parent)
 
     setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
+    setFilterCaseSensitivity(Qt::CaseInsensitive);
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Contact::Fn>();
@@ -41,6 +42,16 @@ PeopleModel::PeopleModel(QObject *parent)
 PeopleModel::~PeopleModel()
 {
 
+}
+
+void PeopleModel::setFilter(const QString &filter)
+{
+    setFilterWildcard(filter);
+}
+
+QString PeopleModel::filter() const
+{
+     return {};
 }
 
 QHash< int, QByteArray > PeopleModel::roleNames() const

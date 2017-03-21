@@ -395,6 +395,7 @@ Controls2.ApplicationWindow {
             anchors.fill: parent
 
             Controls2.TextField {
+                id: searchField
                 Layout.fillWidth: true
                 placeholderText: "Search...   is not available in this beta"
             }
