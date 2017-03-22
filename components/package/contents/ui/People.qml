@@ -109,6 +109,8 @@ Popup {
                 Item {
                     id: content
 
+                    height: childrenRect.height
+
                     Flow {
 
                         anchors {
