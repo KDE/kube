@@ -61,6 +61,8 @@ void MailController::updateActions()
     if (mail) {
         action_moveToTrash->setEnabled(!mail->getTrash());
         action_restoreFromTrash->setEnabled(mail->getTrash());
+        action_markAsRead->setEnabled(mail->getUnread());
+        action_markAsUnread->setEnabled(!mail->getUnread());
     }
 }
 

@@ -31,11 +31,43 @@ Rectangle {
     id: root
 
     property variant mail;
+    property int currentIndex: 0;
+    property bool scrollToEnd: true;
+    property variant currentMail: null;
+    onCurrentIndexChanged: {
+        markAsReadTimer.restart();
+    }
+    onMailChanged: {
+        scrollToEnd = true;
+        currentMail = null;
+    }
 
     color: Kirigami.Theme.backgroundColor
 
     ListView {
         id: listView
+        function setCurrentIndex()
+        {
+            /**
+             * This will detect the index at the "scrollbar-position" (visibleArea.yPosition).
+             * This ensures that the first and last entry can become the currentIndex,
+             * but in the middle of the list the item in the middle is set as the current item.
+             */
+            var yPos = 0.5;
+            if (listView.visibleArea.yPosition < 0.4) {
+                yPos = 0.2 + (0.2 * listView.visibleArea.yPosition);
+            }
+            if (listView.visibleArea.yPosition > 0.6) {
+                yPos = 0.6 + (0.2 * listView.visibleArea.yPosition)
+            }
+            var indexAtCenter = listView.indexAt(root.width / 2, contentY + root.height * yPos);
+            if (indexAtCenter >= 0) {
+                root.currentIndex = indexAtCenter;
+            } else {
+                root.currentIndex = count - 1;
+            }
+        }
+
         anchors {
             top: parent.top
             left: parent.left
@@ -64,13 +96,68 @@ Rectangle {
 
         boundsBehavior: Flickable.StopAtBounds
 
-        //Always scroll to the end of the conversation
-        highlightFollowsCurrentItem: true
-        //Scroll quickly
-        highlightMoveDuration: 1
+        //default is 1500, which is not usable with a mouse
+        flickDeceleration: 10000
+
+        //Optimize for view quality
+        pixelAligned: true
+
+        Timer {
+            id: scrollToEndTimer
+            interval: 10
+            running: false
+            repeat: false
+            onTriggered: {
+                //Only do this once per conversation
+                root.scrollToEnd = false;
+                root.currentIndex = listView.count - 1
+                //positionViewAtEnd/Index don't work
+                listView.contentY = listView.contentHeight - listView.height
+            }
+        }
+
         onCountChanged: {
-            //TODO: ideally we should only do this initially, not when new messages enter while you're reading.
-            currentIndex = count - 1;
+            if (root.scrollToEnd) {
+                scrollToEndTimer.restart()
+            }
+        }
+
+        onContentHeightChanged: {
+            //Initially it will resize a lot, so we keep waiting
+            if (root.scrollToEnd) {
+                scrollToEndTimer.restart()
+            }
+        }
+
+        onContentYChanged: {
+            //We have to track our current mail manually
+            setCurrentIndex();
+        }
+
+        //The cacheBuffer needs to be large enough to fit the whole thread.
+        //Otherwise the contentHeight will constantly increase and decrease,
+        //which will break lot's of things.
+        cacheBuffer: 100000
+
+        KubeFramework.MailController {
+            id: mailController
+            Binding on mail {
+                //!! checks for the availability of the type
+                when: !!root.currentMail
+                value: root.currentMail
+            }
+        }
+
+        Timer {
+            id: markAsReadTimer
+            interval: 2000
+            running: false
+            repeat: false
+            onTriggered: {
+                if (mailController.markAsReadAction.enabled) {
+                    mailController.markAsReadAction.execute();
+                }
+            }
         }
 
         //Intercept all scroll events,
@@ -85,6 +172,13 @@ Rectangle {
         id: mailDelegate
 
         Item {
+            id: wrapper
+            property bool isCurrent: root.currentIndex === index;
+            onIsCurrentChanged: {
+                if (isCurrent) {
+                    root.currentMail = model.mail
+                }
+            }
 
             height: sheet.height + Kirigami.Units.gridUnit
             width: parent.width
@@ -94,6 +188,15 @@ Rectangle {
                 anchors.centerIn: parent
                 implicitHeight: header.height + attachments.height + body.height + footer.height + Kirigami.Units.largeSpacing
                 width: parent.width - Kirigami.Units.gridUnit * 2
+
+                //Overlay for non-active mails
+                Rectangle {
+                    anchors.fill: parent
+                    visible: !wrapper.isCurrent
+                    color: "lightGrey"
+                    z: 1
+                    opacity: 0.2
+                }
 
                 color: Kirigami.Theme.viewBackgroundColor
 
