@@ -94,6 +94,9 @@ Rectangle {
 
         delegate: mailDelegate
 
+        //Setting the currentIndex results in further lags. So we don't do that either.
+        // currentIndex: root.currentIndex
+
         boundsBehavior: Flickable.StopAtBounds
 
         //default is 1500, which is not usable with a mouse
