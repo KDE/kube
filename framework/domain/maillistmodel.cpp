@@ -66,6 +66,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[DomainObject] = "domainObject";
     roles[ThreadSize] = "threadSize";
     roles[Mail] = "mail";
+    roles[Incomplete] = "incomplete";
 
     return roles;
 }
@@ -134,6 +135,8 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return mail->getProperty("count").toInt();
         case Mail:
             return QVariant::fromValue(mail);
+        case Incomplete:
+            return !mail->getFullPayloadAvailable();
     }
     return QSortFilterProxyModel::data(idx, role);
 }

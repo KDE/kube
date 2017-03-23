@@ -58,7 +58,8 @@ public:
         MimeMessage,
         DomainObject,
         ThreadSize,
-        Mail
+        Mail,
+        Incomplete
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;

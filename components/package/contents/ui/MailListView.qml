@@ -96,6 +96,13 @@ Item {
         placeholderText: qsTr("Filter...")
     }
 
+    Label {
+        anchors.top: searchBar.bottom
+        visible: listView.count === 0
+        //TODO depending on whether we synchronized already or not the label should change.
+        text: "Nothing here..."
+    }
+
     ListView {
         id: listView
 

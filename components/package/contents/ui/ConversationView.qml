@@ -189,7 +189,7 @@ Rectangle {
             Rectangle {
                 id: sheet
                 anchors.centerIn: parent
-                implicitHeight: header.height + attachments.height + body.height + footer.height + Kirigami.Units.largeSpacing
+                implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + Kirigami.Units.largeSpacing
                 width: parent.width - Kirigami.Units.gridUnit * 2
 
                 //Overlay for non-active mails
@@ -463,8 +463,23 @@ Rectangle {
                     height: desiredHeight
 
                     message: model.mimeMessage
+                    visible: !model.incomplete
                 }
 
+                Label {
+                    id: incompleteBody
+                    anchors {
+                        top: header.bottom
+                        left: header.left
+                        right: header.right
+                        leftMargin: Kirigami.Units.largeSpacing
+                        rightMargin: Kirigami.Units.largeSpacing
+                        topMargin: Math.max(attachments.height, Kirigami.Units.largeSpacing)
+                    }
+                    //TODO Change text if we're fetching the body
+                    text: "Incomplete body..."
+                    visible: model.incomplete
+                }
                 Item {
                     id: footer
 
