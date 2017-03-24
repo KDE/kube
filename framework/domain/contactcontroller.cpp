@@ -42,7 +42,7 @@ void ContactController::loadContact(const QVariant &contact)
         setName(c->getFn());
         QStringList emails;
         for (const auto &e : c->getEmails()) {
-            emails << e;
+            emails << e.email;
         }
         setEmails(emails);
     }
