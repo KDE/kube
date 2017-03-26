@@ -476,9 +476,20 @@ Rectangle {
                         rightMargin: Kirigami.Units.largeSpacing
                         topMargin: Math.max(attachments.height, Kirigami.Units.largeSpacing)
                     }
-                    //TODO Change text if we're fetching the body
-                    text: "Incomplete body..."
                     visible: model.incomplete
+                    text: "Incomplete body..."
+                    color: Kirigami.Theme.textColor
+                    enabled: false
+                    states: [
+                        State {
+                            name: "inprogress"; when: model.status == KubeFramework.MailListModel.InProgressStatus
+                            PropertyChanges { target: incompleteBody; text: "Downloading message..." }
+                        },
+                        State {
+                            name: "error"; when: model.status == KubeFramework.MailListModel.ErrorStatus
+                            PropertyChanges { target: incompleteBody; text: "Failed to download message..." }
+                        }
+                    ]
                 }
                 Item {
                     id: footer

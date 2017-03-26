@@ -67,6 +67,7 @@ QHash< int, QByteArray > MailListModel::roleNames() const
     roles[ThreadSize] = "threadSize";
     roles[Mail] = "mail";
     roles[Incomplete] = "incomplete";
+    roles[Status] = "status";
 
     return roles;
 }
@@ -137,6 +138,15 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             return QVariant::fromValue(mail);
         case Incomplete:
             return !mail->getFullPayloadAvailable();
+        case Status:
+            const auto status = srcIdx.data(Sink::Store::StatusRole).toInt();
+            if (status == Sink::ApplicationDomain::SyncStatus::SyncInProgress) {
+                return InProgressStatus;
+            }
+            if (status == Sink::ApplicationDomain::SyncStatus::SyncError) {
+                return ErrorStatus;
+            }
+            return NoStatus;
     }
     return QSortFilterProxyModel::data(idx, role);
 }
@@ -208,7 +218,7 @@ void MailListModel::setMail(const QVariant &variant)
     }
     mCurrentQueryItem = mail->identifier();
     Sink::Query query = Sink::StandardQueries::completeThread(*mail);
-    query.setFlags(Sink::Query::LiveQuery);
+    query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
     query.request<Mail::To>();

@@ -34,6 +34,13 @@ class MailListModel : public QSortFilterProxyModel
     Q_PROPERTY (QString filter READ filter WRITE setFilter)
 
 public:
+    enum Status {
+        NoStatus,
+        InProgressStatus,
+        ErrorStatus
+    };
+    Q_ENUMS(Status)
+
     MailListModel(QObject *parent = Q_NULLPTR);
     ~MailListModel();
 
@@ -59,7 +66,8 @@ public:
         DomainObject,
         ThreadSize,
         Mail,
-        Incomplete
+        Incomplete,
+        Status
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
