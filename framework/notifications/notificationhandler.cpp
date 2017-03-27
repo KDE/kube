@@ -57,6 +57,13 @@ void NotificationHandler::notify(const Sink::Notification &notification)
         } else {
             return;
         }
+    } else if (notification.type == Sink::Notification::Error) {
+        if (notification.code == Sink::ApplicationDomain::ConnectionError) {
+            n.mType = Notification::Warning;
+            n.mMessage = "Failed to connect to server.";
+        } else {
+            return;
+        }
     } else if (notification.type == Sink::Notification::Info) {
         n.mType = Notification::Info;
         if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {
