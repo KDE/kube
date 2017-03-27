@@ -32,7 +32,7 @@ FolderListModel::FolderListModel(QObject *parent) : QSortFilterProxyModel()
     sort(0, Qt::AscendingOrder);
 
     Query query;
-    query.setFlags(Sink::Query::LiveQuery);
+    query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
     query.request<Folder::Name>().request<Folder::Icon>().request<Folder::Parent>().request<Folder::SpecialPurpose>();
     query.requestTree<Folder::Parent>();
     query.setId("foldertree");
@@ -52,6 +52,7 @@ QHash< int, QByteArray > FolderListModel::roleNames() const
     roles[Icon] = "icon";
     roles[Id] = "id";
     roles[DomainObject] = "domainObject";
+    roles[Status] = "status";
 
     return roles;
 }
@@ -59,15 +60,27 @@ QHash< int, QByteArray > FolderListModel::roleNames() const
 QVariant FolderListModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
+    auto folder = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
     switch (role) {
         case Name:
-            return srcIdx.sibling(srcIdx.row(), 0).data(Qt::DisplayRole).toString();
+            return folder->getName();
         case Icon:
-            return srcIdx.sibling(srcIdx.row(), 1).data(Qt::DisplayRole).toString();
+            return folder->getIcon();
         case Id:
-            return srcIdx.data(Store::DomainObjectBaseRole).value<ApplicationDomainType::Ptr>()->identifier();
+            return folder->identifier();
         case DomainObject:
-            return srcIdx.data(Store::DomainObjectRole);
+            return QVariant::fromValue(folder);
+        case Status: {
+            switch (srcIdx.data(Sink::Store::StatusRole).toInt()) {
+                case Sink::ApplicationDomain::SyncStatus::SyncInProgress:
+                    return InProgressStatus;
+                case Sink::ApplicationDomain::SyncStatus::SyncError:
+                    return ErrorStatus;
+                case Sink::ApplicationDomain::SyncStatus::SyncSuccess:
+                    return SuccessStatus;
+            }
+            return NoStatus;
+        }
     }
     return QSortFilterProxyModel::data(idx, role);
 }
@@ -85,7 +98,7 @@ void FolderListModel::setAccountId(const QVariant &accountId)
     //Get all folders of an account
     auto query = Query();
     query.resourceFilter<SinkResource::Account>(account);
-    query.setFlags(Sink::Query::LiveQuery);
+    query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
     query.requestTree<Folder::Parent>();
     query.request<Folder::Name>()
          .request<Folder::Icon>()

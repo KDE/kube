@@ -36,6 +36,14 @@ class FolderListModel : public QSortFilterProxyModel
     Q_PROPERTY (QVariant accountId READ accountId WRITE setAccountId)
 
 public:
+    enum Status {
+        NoStatus,
+        InProgressStatus,
+        ErrorStatus,
+        SuccessStatus,
+    };
+    Q_ENUMS(Status)
+
     FolderListModel(QObject *parent = Q_NULLPTR);
     ~FolderListModel();
 
@@ -45,7 +53,8 @@ public:
         Name  = Qt::UserRole + 1,
         Icon,
         Id,
-        DomainObject
+        DomainObject,
+        Status
     };
     Q_ENUMS(Roles)
 

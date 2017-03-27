@@ -148,16 +148,43 @@ Rectangle {
                     }
                 }
 
-               Text {
+                Row {
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
-                        leftMargin: Kirigami.Units.smallSpacing
                     }
+                    Text {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            leftMargin: Kirigami.Units.smallSpacing
+                        }
 
-                    text: styleData.value
+                        text: styleData.value
 
-                    color: Kirigami.Theme.viewBackgroundColor
+                        color: Kirigami.Theme.viewBackgroundColor
+                    }
+                    ToolButton {
+                        id: statusIcon
+                        visible: false
+                        iconName: ""
+                        enabled: false
+                        states: [
+                            State {
+                                name: "busy"; when: model.status == KubeFramework.FolderListModel.InProgressStatus
+                                PropertyChanges { target: statusIcon; iconName: "view-refresh"; visible: styleData.selected }
+                            },
+                            State {
+                                name: "error"; when: model.status == KubeFramework.FolderListModel.ErrorStatus
+                                //The error status should only be visible for a moment, otherwise we'll eventually always show errors everywhere.
+                                PropertyChanges { target: statusIcon; iconName: "emblem-error"; visible: styleData.selected }
+                            },
+                            State {
+                                name: "checkmark"; when: model.status == KubeFramework.FolderListModel.SuccessStatus
+                                //The success status should only be visible for a moment, otherwise we'll eventually always show checkmarks everywhere.
+                                PropertyChanges { target: statusIcon; iconName: "checkmark"; visible: styleData.selected }
+                            }
+                        ]
+                    }
                 }
             }
 
