@@ -115,7 +115,7 @@ Rectangle {
                 root.scrollToEnd = false;
                 root.currentIndex = listView.count - 1
                 //positionViewAtEnd/Index don't work
-                listView.contentY = listView.contentHeight - listView.height
+                listView.contentY = Math.max(listView.contentHeight - listView.height, 0)
             }
         }
 
