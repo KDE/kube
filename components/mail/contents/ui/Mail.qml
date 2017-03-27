@@ -291,9 +291,24 @@ Controls2.ApplicationWindow {
                         }
 
                         ToolButton {
-                            visible: model.showStatus
-                            iconName: model.statusIcon
+                            id: statusIcon
+                            visible: false
+                            iconName: ""
                             enabled: false
+                            states: [
+                                State {
+                                    name: "busy"; when: model.status == KubeAccountsFramework.AccountsModel.BusyStatus
+                                    PropertyChanges { target: statusIcon; iconName: "view-refresh"; visible: true }
+                                },
+                                State {
+                                    name: "error"; when: model.status == KubeAccountsFramework.AccountsModel.ErrorStatus
+                                    PropertyChanges { target: statusIcon; iconName: "emblem-error"; visible: true }
+                                },
+                                State {
+                                    name: "checkmark"; when: model.status == KubeAccountsFramework.AccountsModel.ConnectedStatus
+                                    PropertyChanges { target: statusIcon; iconName: "checkmark"; visible: true }
+                                }
+                            ]
                         }
                     }
                 }

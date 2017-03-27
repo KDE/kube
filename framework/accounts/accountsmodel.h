@@ -34,6 +34,14 @@ class AccountsModel : public QIdentityProxyModel
 
     Q_PROPERTY (QByteArray accountId READ accountId WRITE setAccountId)
 public:
+    enum Status {
+        OfflineStatus,
+        ConnectedStatus,
+        BusyStatus,
+        ErrorStatus
+    };
+    Q_ENUMS(Status)
+
     AccountsModel(QObject *parent = Q_NULLPTR);
     ~AccountsModel();
 
@@ -43,9 +51,7 @@ public:
         Name  = Qt::UserRole + 1,
         Icon,
         AccountId,
-        Status,
-        StatusIcon,
-        ShowStatus
+        Status
     };
     Q_ENUMS(Roles)
 

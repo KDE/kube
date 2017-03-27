@@ -45,8 +45,6 @@ QHash< int, QByteArray > AccountsModel::roleNames() const
     roles[Icon] = "icon";
     roles[AccountId] = "accountId";
     roles[Status] = "status";
-    roles[StatusIcon] = "statusIcon";
-    roles[ShowStatus] = "showStatus";
 
     return roles;
 }
@@ -63,17 +61,15 @@ QVariant AccountsModel::data(const QModelIndex &idx, int role) const
         case AccountId:
             return account->identifier();
         case Status:
-            return account->getStatus();
-        case StatusIcon:
-            if (account->getStatus() == Sink::ApplicationDomain::ErrorStatus) {
-                return "emblem-error";
-            } else if (account->getStatus() == Sink::ApplicationDomain::BusyStatus) {
-                return "view-refresh";
-            } else if (account->getStatus() == Sink::ApplicationDomain::ConnectedStatus) {
-                return "checkmark";
+            switch (account->getStatus()) {
+                case Sink::ApplicationDomain::ErrorStatus:
+                    return ErrorStatus;
+                case Sink::ApplicationDomain::BusyStatus:
+                    return BusyStatus;
+                case Sink::ApplicationDomain::ConnectedStatus:
+                    return ConnectedStatus;
             }
-        case ShowStatus:
-            return (account->getStatus() != Sink::ApplicationDomain::OfflineStatus);
+            return OfflineStatus;
     }
     return QIdentityProxyModel::data(idx, role);
 }
