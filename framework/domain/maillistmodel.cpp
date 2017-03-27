@@ -158,6 +158,18 @@ bool MailListModel::lessThan(const QModelIndex &left, const QModelIndex &right) 
     return leftDate < rightDate;
 }
 
+bool MailListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    auto idx = sourceModel()->index(sourceRow, 0, sourceParent);
+    auto regExp = filterRegExp();
+    if (regExp.isEmpty()) {
+        return true;
+    }
+    auto mail = idx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
+    return mail->getSubject().contains(regExp) ||
+        mail->getSender().name.contains(regExp);
+}
+
 void MailListModel::runQuery(const Sink::Query &query)
 {
     m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
