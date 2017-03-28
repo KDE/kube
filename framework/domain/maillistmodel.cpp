@@ -190,6 +190,10 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
     }
     mCurrentQueryItem = folder->identifier();
     Sink::Query query = Sink::StandardQueries::threadLeaders(*folder);
+    if (!folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash)) {
+        //Filter trash if this is not a trash folder
+        query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
+    }
     query.setFlags(Sink::Query::LiveQuery);
     query.limit(100);
     query.request<Mail::Subject>();
