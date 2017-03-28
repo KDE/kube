@@ -36,6 +36,8 @@ PeopleModel::PeopleModel(QObject *parent)
     query.request<Contact::Emails>();
     query.request<Contact::Addressbook>();
     query.request<Contact::Vcard>();
+    query.request<Contact::Firstname>();
+    query.request<Contact::Lastname>();
     runQuery(query);
 }
 
@@ -68,6 +70,13 @@ QHash< int, QByteArray > PeopleModel::roleNames() const
     return roles;
 }
 
+static QStringList toStringList(const QList<Sink::ApplicationDomain::Contact::Email> &list)
+{
+    QStringList out;
+    std::transform(list.constBegin(), list.constEnd(), std::back_inserter(out), [] (const Sink::ApplicationDomain::Contact::Email &s) { return s.email; });
+    return out;
+}
+
 QVariant PeopleModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
@@ -76,7 +85,7 @@ QVariant PeopleModel::data(const QModelIndex &idx, int role) const
         case Name:
             return contact->getFn();
         case Emails:
-            return QVariant::fromValue(contact->getEmails());
+            return QVariant::fromValue(toStringList(contact->getEmails()));
         case Addressbook:
             return contact->getAddressbook();
         case Type:
@@ -84,9 +93,9 @@ QVariant PeopleModel::data(const QModelIndex &idx, int role) const
         case DomainObject:
             return QVariant::fromValue(contact);
         case FirstName:
-            return "FIRSTNAME";
+            return contact->getFirstname();
         case LastName:
-            return contact->getFn();
+            return contact->getLastname();
     }
     return QSortFilterProxyModel::data(idx, role);
 }
