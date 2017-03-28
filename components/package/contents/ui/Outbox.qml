@@ -86,9 +86,18 @@ Button {
                         }
                         text: model.subject
 
-                        //FIXME use theme color
-                        color: model.status == "error" ? KubeTheme.Colors.warningColor : KubeTheme.Colors.textColor
-                        opacity: model.status == "sent" ? 0.5 : 1
+                        color: KubeTheme.Colors.textColor
+                        opacity: 1
+                        states: [
+                            State {
+                                name: "inprogress"; when: model.status == KubeFramework.OutboxModel.InProgressStatus
+                                PropertyChanges { target: subjectLabel; text: "Sending: " + model.subject }
+                            },
+                            State {
+                                name: "error"; when: model.status == KubeFramework.OutboxModel.ErrorStatus
+                                PropertyChanges { target: subjectLabel; color: KubeTheme.Colors.warningColor }
+                            }
+                        ]
                     }
                 }
 

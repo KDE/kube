@@ -71,7 +71,7 @@ QVariant OutboxModel::data(const QModelIndex &idx, int role) const
         case Date:
             return mail->getDate();
         case Status:
-            return QString("pending"); //TODO
+            return PendingStatus;
         case Id:
             return mail->identifier();
         case DomainObject:

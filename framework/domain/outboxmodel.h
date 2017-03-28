@@ -31,6 +31,13 @@ class OutboxModel : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
+    enum Status {
+        PendingStatus,
+        InProgressStatus,
+        ErrorStatus
+    };
+    Q_ENUMS(Status)
+
     OutboxModel(QObject *parent = Q_NULLPTR);
     ~OutboxModel();
 
