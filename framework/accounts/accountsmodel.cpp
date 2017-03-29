@@ -68,8 +68,10 @@ QVariant AccountsModel::data(const QModelIndex &idx, int role) const
                     return BusyStatus;
                 case Sink::ApplicationDomain::ConnectedStatus:
                     return ConnectedStatus;
+                case Sink::ApplicationDomain::OfflineStatus:
+                    return OfflineStatus;
             }
-            return OfflineStatus;
+            return NoStatus;
     }
     return QIdentityProxyModel::data(idx, role);
 }

@@ -308,6 +308,10 @@ Controls2.ApplicationWindow {
                                 State {
                                     name: "checkmark"; when: model.status == KubeAccountsFramework.AccountsModel.ConnectedStatus
                                     PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.connected; visible: true }
+                                },
+                                State {
+                                    name: "disconnected"; when: model.status == KubeAccountsFramework.AccountsModel.OfflineStatus
+                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.noNetworkConnection; visible: true }
                                 }
                             ]
                         }
