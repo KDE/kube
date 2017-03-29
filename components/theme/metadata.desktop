@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Kube Theme
+X-KDE-PluginInfo-Name=org.kube.components.theme
+Exec=kpackagelauncherqml -a org.kube.components.theme
+X-Plasma-MainScript=ui/main.qml
+X-KDE-ServiceTypes=KPackage/GenericQML
+Icon=kmail2
+Type=Service
