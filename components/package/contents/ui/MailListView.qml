@@ -185,7 +185,7 @@ Item {
                     name: "hovered"
                     when: mouseArea.containsMouse && !mouseArea.drag.active
 
-                    PropertyChanges {target: background; color: Kirigami.Theme.buttonHoverColor; opacity: 0.7}
+                    PropertyChanges {target: background; color: KubeTheme.Colors.highlightColor; opacity: 0.7}
                     PropertyChanges {target: subject; color: KubeTheme.Colors.highlightedTextColor}
                     PropertyChanges {target: sender; color: KubeTheme.Colors.highlightedTextColor}
                     PropertyChanges {target: date; color: KubeTheme.Colors.highlightedTextColor}
