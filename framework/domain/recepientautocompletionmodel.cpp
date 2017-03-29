@@ -24,6 +24,10 @@
 #include <QSet>
 #include <QDebug>
 #include <QTimer>
+#include <sink/store.h>
+#include <sink/applicationdomaintype.h>
+
+using namespace Sink::ApplicationDomain;
 
 RecipientAutocompletionModel::RecipientAutocompletionModel(QObject *parent)
     : QSortFilterProxyModel(),
@@ -74,6 +78,17 @@ void RecipientAutocompletionModel::load()
     for (const auto &entry : list) {
         mSourceModel->appendRow(add(entry));
     }
+    Sink::Query query;
+    query.request<Contact::Fn>();
+    query.request<Contact::Emails>();
+    Sink::Store::fetchAll<Contact>(query)
+        .then([this] (const QList<Contact::Ptr> &list) {
+            for (const auto &c : list) {
+                for (const auto &email : c->getEmails()) {
+                    addToModel(email.email, c->getFn());
+                }
+            }
+        }).exec();
 }
 
 QHash< int, QByteArray > RecipientAutocompletionModel::roleNames() const
@@ -84,7 +99,8 @@ QHash< int, QByteArray > RecipientAutocompletionModel::roleNames() const
     return roles;
 }
 
-void RecipientAutocompletionModel::addEntry(const QByteArray &address, const QByteArray &name)
+
+bool RecipientAutocompletionModel::addToModel(const QString &address, const QString &name)
 {
     auto add = [] (const QString &n) {
         auto item = new QStandardItem{n};
@@ -100,6 +116,14 @@ void RecipientAutocompletionModel::addEntry(const QByteArray &address, const QBy
     auto matches = mSourceModel->findItems(formattedName);
     if (matches.isEmpty()) {
         mSourceModel->appendRow(add(formattedName));
+        return true;
+    }
+    return false;
+}
+
+void RecipientAutocompletionModel::addEntry(const QByteArray &address, const QByteArray &name)
+{
+    if (addToModel(address, name)) {
         mTimer->start(100);
     }
 }

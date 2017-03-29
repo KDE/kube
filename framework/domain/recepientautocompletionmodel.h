@@ -41,6 +41,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
+    bool addToModel(const QString &address, const QString &name);
     void addEntry(const QByteArray &address, const QByteArray &name);
     void setFilter(const QString &);
 
