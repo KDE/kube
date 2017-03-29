@@ -26,7 +26,7 @@ Item {
     property string backgroundColor: "#eff0f1"
     property string viewBackgroundColor: "#fcfcfc"
     property string highlightColor: "#3daee9"
-    property string highlighedTextColor: "#fcfcfc"
+    property string highlightedTextColor: "#fcfcfc"
 
 
     property string positveColor: "#27ae60"

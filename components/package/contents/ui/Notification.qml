@@ -73,7 +73,7 @@ MouseArea {
 
         font.pixelSize: 16
 
-        color: KubeTheme.Colors.highlighedTextColor
+        color: KubeTheme.Colors.highlightedTextColor
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
         wrapMode: Text.Wrap
