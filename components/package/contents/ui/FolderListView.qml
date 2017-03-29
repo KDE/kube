@@ -22,7 +22,7 @@ import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
-
+import org.kube.components.theme 1.0 as KubeTheme
 import org.kube.framework.domain 1.0 as KubeFramework
 
 Rectangle {
@@ -31,7 +31,7 @@ Rectangle {
     property variant currentFolder: null
     property variant accountId
 
-    color: Kirigami.Theme.textColor
+    color: KubeTheme.Colors.textColor
 
     KubeFramework.FolderController {
         id: folderController
@@ -98,7 +98,7 @@ Rectangle {
         style: TreeViewStyle {
 
             rowDelegate: Rectangle {
-                color: styleData.selected ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                color: styleData.selected ? KubeTheme.Colors.highlightColor : KubeTheme.Colors.textColor
 
                 height: Kirigami.Units.gridUnit * 1.5
                 width: 20
@@ -106,7 +106,7 @@ Rectangle {
             }
 
             frame: Rectangle {
-                color: Kirigami.Theme.textColor
+                color: KubeTheme.Colors.textColor
             }
 
             branchDelegate: Item {
@@ -117,7 +117,7 @@ Rectangle {
 
                     anchors.centerIn: parent
 
-                    color: Kirigami.Theme.viewBackgroundColor
+                    color: KubeTheme.Colors.viewBackgroundColor
                     text: styleData.isExpanded ? "-" : "+"
                 }
 
@@ -126,14 +126,14 @@ Rectangle {
 
             itemDelegate: Rectangle {
 
-                color: styleData.selected ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                color: styleData.selected ? KubeTheme.Colors.highlightColor : KubeTheme.Colors.textColor
 
                 DropArea {
                     anchors.fill: parent
 
                     Rectangle {
                         anchors.fill: parent
-                        color: Kirigami.Theme.viewBackgroundColor
+                        color: KubeTheme.Colors.viewBackgroundColor
 
                         opacity: 0.3
 
@@ -161,7 +161,7 @@ Rectangle {
 
                         text: styleData.value
 
-                        color: Kirigami.Theme.viewBackgroundColor
+                        color: KubeTheme.Colors.viewBackgroundColor
                     }
                     ToolButton {
                         id: statusIcon
@@ -188,8 +188,8 @@ Rectangle {
                 }
             }
 
-            backgroundColor: Kirigami.Theme.textColor
-            highlightedTextColor: Kirigami.Theme.highlightedTextColor
+            backgroundColor: KubeTheme.Colors.textColor
+            highlightedTextColor: KubeTheme.Colors.highlightedTextColor
         }
     }
 }
