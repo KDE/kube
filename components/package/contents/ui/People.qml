@@ -23,7 +23,9 @@ import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.components.theme 1.0 as KubeTheme
 import org.kube.framework.domain 1.0 as KubeFramework
+
 
 
 Popup {
@@ -96,7 +98,7 @@ Popup {
 
         Rectangle {
             id: peoplePageRoot
-            color: Kirigami.Theme.viewBackgroundColor
+            color: KubeTheme.Colors.viewBackgroundColor
 
             Flickable {
 
@@ -171,7 +173,7 @@ Popup {
 
                                         text: model.firstName
                                         elide: Text.ElideRight
-                                        color: Kirigami.Theme.textColor
+                                        color: KubeTheme.Colors.textColor
                                     }
 
                                     Text {
@@ -179,7 +181,7 @@ Popup {
 
                                         text: model.lastName
                                         elide: Text.ElideRight
-                                        color: Kirigami.Theme.textColor
+                                        color: KubeTheme.Colors.textColor
                                     }
                                 }
                             }
@@ -201,7 +203,7 @@ Popup {
                 contact: popup.currentContact
             }
 
-            color: Kirigami.Theme.viewBackgroundColor
+            color: KubeTheme.Colors.viewBackgroundColor
 
             Item {
 
@@ -307,7 +309,7 @@ Popup {
 
                                 text: "Sauerkraut AG"
 
-                                color: Kirigami.Theme.textColor
+                                color: KubeTheme.Colors.textColor
                             }
                         }
                     }
@@ -324,7 +326,7 @@ Popup {
                             Row {
                                 spacing: Kirigami.Units.smallSpacing
                                 Text { text: "(main)" }
-                                Text { text: modelData ; color: Kirigami.Theme.highlightColor }
+                                Text { text: modelData ; color: KubeTheme.Colors.highlightColor }
                                 Item { width: Kirigami.Units.smallSpacing; height: 1 }
                             }
                         }
@@ -332,14 +334,14 @@ Popup {
                         Row {
                             spacing: Kirigami.Units.smallSpacing
                             Text { text: "(alias)"}
-                            Text { text: "test.testerson@gmail.com"; color: Kirigami.Theme.highlightColor }
+                            Text { text: "test.testerson@gmail.com"; color: KubeTheme.Colors.highlightColor }
                             Item { width: Kirigami.Units.smallSpacing; height: 1 }
                         }
 
                         Row {
                             spacing: Kirigami.Units.smallSpacing
                             Text { text: "(private)"}
-                            Text { text: "test@gmail.com"; color: Kirigami.Theme.highlightColor }
+                            Text { text: "test@gmail.com"; color: KubeTheme.Colors.highlightColor }
                             Item { width: Kirigami.Units.smallSpacing; height: 1 }
                         }
                     }
