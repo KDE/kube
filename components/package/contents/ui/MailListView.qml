@@ -22,6 +22,7 @@ import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.components.theme 1.0 as KubeTheme
 
 import org.kube.framework.domain 1.0 as KubeFramework
 
@@ -164,31 +165,31 @@ Item {
                     PropertyChanges {target: delegateRoot; parent: root}
 
                     PropertyChanges {target: delegateRoot; opacity: 0.7}
-                    PropertyChanges {target: background; color: Kirigami.Theme.highlightColor}
-                    PropertyChanges {target: subject; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: sender; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: date; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: threadCounter; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: background; color: KubeTheme.Colors.highlightColor}
+                    PropertyChanges {target: subject; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: sender; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: KubeTheme.Colors.highlightedTextColor}
                 },
                 State {
                     name: "selected"
                     when: listView.currentIndex == index && !mouseArea.drag.active
 
-                    PropertyChanges {target: background; color: Kirigami.Theme.highlightColor}
-                    PropertyChanges {target: subject; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: sender; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: date; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: threadCounter; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: background; color: KubeTheme.Colors.highlightColor}
+                    PropertyChanges {target: subject; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: sender; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: KubeTheme.Colors.highlightedTextColor}
                 },
                 State {
                     name: "hovered"
                     when: mouseArea.containsMouse && !mouseArea.drag.active
 
                     PropertyChanges {target: background; color: Kirigami.Theme.buttonHoverColor; opacity: 0.7}
-                    PropertyChanges {target: subject; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: sender; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: date; color: Kirigami.Theme.highlightedTextColor}
-                    PropertyChanges {target: threadCounter; color: Kirigami.Theme.highlightedTextColor}
+                    PropertyChanges {target: subject; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: sender; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: KubeTheme.Colors.highlightedTextColor}
                 }
                 ]
 
@@ -216,9 +217,9 @@ Item {
 
                     anchors.fill: parent
 
-                    color: Kirigami.Theme.viewBackgroundColor
+                    color: KubeTheme.Colors.viewBackgroundColor
 
-                    border.color: Kirigami.Theme.backgroundColor
+                    border.color: KubeTheme.Colors.backgroundColor
                     border.width: 1
                 }
 
@@ -244,7 +245,7 @@ Item {
                             id: subject
 
                             text: model.subject
-                            color: model.unread ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                            color: model.unread ? KubeTheme.Colors.highlightColor : KubeTheme.Colors.textColor
 
                             maximumLineCount: 2
                             width: content.width - Kirigami.Units.gridUnit * 3
@@ -257,7 +258,7 @@ Item {
 
                             text: model.senderName
                             font.italic: true
-                            color: Kirigami.Theme.textColor
+                            color: KubeTheme.Colors.textColor
                             width: delegateRoot.width - Kirigami.Units.gridUnit * 3
                             elide: Text.ElideRight
                         }
@@ -272,7 +273,7 @@ Item {
                         }
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                         font.italic: true
-                        color: Kirigami.Theme.disabledTextColor
+                        color: KubeTheme.Colors.disabledTextColor
                         font.pointSize: 9
                     }
 
@@ -283,7 +284,7 @@ Item {
                             right: parent.right
                         }
                         text: model.threadSize
-                        color: model.unread ?  Kirigami.Theme.highlightColor  : Kirigami.Theme.disabledTextColor
+                        color: model.unread ?  KubeTheme.Colors.highlightColor  : KubeTheme.Colors.disabledTextColor
                         visible: model.threadSize > 1
                     }
                 }
