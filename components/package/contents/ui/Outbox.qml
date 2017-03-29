@@ -25,6 +25,7 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
+import org.kube.components.theme 1.0 as KubeTheme
 
 Button {
     id: root
@@ -72,8 +73,8 @@ Button {
                     height: Kirigami.Units.gridUnit * 3
                     width: listView.width
 
-                    color: Kirigami.Theme.viewBackgroundColor
-                    border.color: Kirigami.Theme.backgroundColor
+                    color: KubeTheme.Colors.viewBackgroundColor
+                    border.color: KubeTheme.Colors.backgroundColor
                     border.width: 1
 
                     Label {
@@ -86,7 +87,7 @@ Button {
                         text: model.subject
 
                         //FIXME use theme color
-                        color: model.status == "error" ? "red" : Kirigami.Theme.textColor
+                        color: model.status == "error" ? KubeTheme.Colors.warningColor : KubeTheme.Colors.textColor
                         opacity: model.status == "sent" ? 0.5 : 1
                     }
                 }
