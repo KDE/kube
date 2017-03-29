@@ -114,6 +114,12 @@ Controls2.ApplicationWindow {
         }
     }
 
+    //Model
+    KubeAccountsFramework.AccountsModel {
+        id: currentAccountModel
+        accountId: accountSwitcher.accountId
+    }
+
     //BEGIN Shortcuts
     Shortcut {
         sequence: StandardKey.Refresh
@@ -273,11 +279,8 @@ Controls2.ApplicationWindow {
                 }
 
                 Repeater {
-                    model: KubeAccountsFramework.AccountsModel {
-                        accountId: accountSwitcher.accountId
-                    }
-
-                    RowLayout {
+                    model: currentAccountModel
+                    Row {
                         anchors {
                             bottom: parent.bottom
                             left: parent.left
@@ -325,13 +328,41 @@ Controls2.ApplicationWindow {
                 anchors {
                     top: accountName.bottom
                     topMargin: Kirigami.Units.smallSpacing
-                    bottom: outbox.top
+                    bottom: statusBar.top
                     left: parent.left
                     right: parent.right
                 }
 
                 focus: true
                 accountId: accountSwitcher.accountId
+            }
+
+            Item {
+                id: statusBar
+                anchors {
+                    topMargin: Kirigami.Units.smallSpacing
+                    bottom: outbox.top
+                    left: parent.left
+                    right: parent.right
+                }
+
+                height: Kirigami.Units.gridUnit * 1
+
+                Repeater {
+                    model: currentAccountModel
+                    Text {
+                        id: statusText
+                        anchors.centerIn: parent
+                        visible: false
+                        color: KubeTheme.Colors.textColor
+                        states: [
+                            State {
+                                name: "disconnected"; when: model.status == KubeAccountsFramework.AccountsModel.OfflineStatus
+                                PropertyChanges { target: statusText; text: "Offline"; visible: true }
+                            }
+                        ]
+                    }
+                }
             }
 
             KubeComponents.Outbox {
