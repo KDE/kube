@@ -1,3 +1,4 @@
 module org.kube.components.theme
 
 singleton Colors 1.0 Colors.qml
+singleton Icons 1.0 Icons.qml

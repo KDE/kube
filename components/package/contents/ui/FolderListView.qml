@@ -171,17 +171,17 @@ Rectangle {
                         states: [
                             State {
                                 name: "busy"; when: model.status == KubeFramework.FolderListModel.InProgressStatus
-                                PropertyChanges { target: statusIcon; iconName: "view-refresh"; visible: styleData.selected }
+                                PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.busy ; visible: styleData.selected }
                             },
                             State {
                                 name: "error"; when: model.status == KubeFramework.FolderListModel.ErrorStatus
                                 //The error status should only be visible for a moment, otherwise we'll eventually always show errors everywhere.
-                                PropertyChanges { target: statusIcon; iconName: "emblem-error"; visible: styleData.selected }
+                                PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.error; visible: styleData.selected }
                             },
                             State {
                                 name: "checkmark"; when: model.status == KubeFramework.FolderListModel.SuccessStatus
                                 //The success status should only be visible for a moment, otherwise we'll eventually always show checkmarks everywhere.
-                                PropertyChanges { target: statusIcon; iconName: "checkmark"; visible: styleData.selected }
+                                PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.success; visible: styleData.selected }
                             }
                         ]
                     }

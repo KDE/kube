@@ -31,6 +31,7 @@ import org.kube.framework.notifications 1.0 as KubeNotifications
 import org.kube.framework.accounts 1.0 as KubeAccountsFramework
 import org.kube.components 1.0 as KubeComponents
 import org.kube.components.accounts 1.0 as KubeAccounts
+import org.kube.components.theme 1.0 as KubeTheme
 
 Controls2.ApplicationWindow {
     id: app
@@ -298,15 +299,15 @@ Controls2.ApplicationWindow {
                             states: [
                                 State {
                                     name: "busy"; when: model.status == KubeAccountsFramework.AccountsModel.BusyStatus
-                                    PropertyChanges { target: statusIcon; iconName: "view-refresh"; visible: true }
+                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.busy; visible: true }
                                 },
                                 State {
                                     name: "error"; when: model.status == KubeAccountsFramework.AccountsModel.ErrorStatus
-                                    PropertyChanges { target: statusIcon; iconName: "emblem-error"; visible: true }
+                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.error; visible: true }
                                 },
                                 State {
                                     name: "checkmark"; when: model.status == KubeAccountsFramework.AccountsModel.ConnectedStatus
-                                    PropertyChanges { target: statusIcon; iconName: "checkmark"; visible: true }
+                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.connected; visible: true }
                                 }
                             ]
                         }
