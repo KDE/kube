@@ -24,6 +24,7 @@ import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.components.theme 1.0 as KubeTheme
 
 Item {
     id: root
@@ -54,7 +55,7 @@ Item {
         height: root.height * 0.8
         width: root.width * 0.8
 
-        color: Kirigami.Theme.backgroundColor
+        color: KubeTheme.Colors.backgroundColor
 
         MouseArea {
             anchors.fill: parent
