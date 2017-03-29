@@ -19,6 +19,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.components.theme 1.0 as KubeTheme
 
 Item {
     id: root
@@ -33,7 +34,7 @@ Item {
         anchors.fill: parent
 
         id: background
-        color: Kirigami.Theme.disabledTextColor
+        color: KubeTheme.Colors.disabledTextColor
     }
 
     RowLayout {
@@ -49,7 +50,7 @@ Item {
             height: Kirigami.Units.gridUnit
             width: Kirigami.Units.gridUnit
 
-            color: Kirigami.Theme.backgroundColor
+            color: KubeTheme.Colors.backgroundColor
 
             Kirigami.Icon {
                 height: parent.height
@@ -61,7 +62,7 @@ Item {
 
         Text {
             text: root.name
-            color: Kirigami.Theme.backgroundColor
+            color: KubeTheme.Colors.backgroundColor
         }
     }
 }
