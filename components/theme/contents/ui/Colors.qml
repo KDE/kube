@@ -27,8 +27,8 @@ Item {
     property string viewBackgroundColor: "#fcfcfc"
     property string highlightColor: "#3daee9"
 
-//     property string positveColor: ""
-//     property string warningColor: ""
-//     property string negativeColor: ""
+     property string positveColor: "#27ae60"
+     property string warningColor: "#f67400"
+     property string negativeColor: "#ed1515"
 }
 
