@@ -38,7 +38,8 @@ public:
         OfflineStatus,
         ConnectedStatus,
         BusyStatus,
-        ErrorStatus
+        ErrorStatus,
+        NoStatus
     };
     Q_ENUMS(Status)
 
