@@ -25,10 +25,14 @@
 #include <QString>
 
 #include <sink/standardqueries.h>
+#include <sink/notifier.h>
+#include <sink/notification.h>
 
 
 OutboxModel::OutboxModel(QObject *parent)
-    : QSortFilterProxyModel()
+    : QSortFilterProxyModel(),
+    mNotifier(new Sink::Notifier{Sink::Query{}.containsFilter<Sink::ApplicationDomain::SinkResource::Capabilities>(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport)}),
+    mStatus(NoStatus)
 {
     setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
@@ -42,6 +46,25 @@ OutboxModel::OutboxModel(QObject *parent)
     runQuery(query);
     connect(this, &QAbstractItemModel::rowsInserted, this, &OutboxModel::countChanged);
     connect(this, &QAbstractItemModel::rowsRemoved, this, &OutboxModel::countChanged);
+
+    mNotifier->registerHandler([this] (const Sink::Notification &n) {
+        if (n.type == Sink::Notification::Status) {
+            switch (n.code) { 
+                case Sink::ApplicationDomain::Status::ErrorStatus:
+                    mStatus = ErrorStatus;
+                    break;
+                case Sink::ApplicationDomain::Status::BusyStatus:
+                    mStatus = InProgressStatus;
+                    break;
+                default:
+                    mStatus = NoStatus;
+                    break;
+            }
+            emit statusChanged();
+        }
+
+    });
+
 }
 
 OutboxModel::~OutboxModel()
@@ -94,11 +117,16 @@ bool OutboxModel::lessThan(const QModelIndex &left, const QModelIndex &right) co
 
 void OutboxModel::runQuery(const Sink::Query &query)
 {
-    m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
-    setSourceModel(m_model.data());
+    mModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+    setSourceModel(mModel.data());
 }
 
 int OutboxModel::count() const
 {
     return rowCount();
+}
+
+int OutboxModel::status() const
+{
+    return mStatus;
 }

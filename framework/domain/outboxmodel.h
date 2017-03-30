@@ -21,6 +21,7 @@
 #pragma once
 
 #include <sink/store.h>
+#include <sink/notifier.h>
 
 #include <QSortFilterProxyModel>
 #include <QSharedPointer>
@@ -31,8 +32,11 @@ class OutboxModel : public QSortFilterProxyModel
     Q_OBJECT
 
     Q_PROPERTY (int count READ count NOTIFY countChanged)
+    Q_PROPERTY (int status READ status NOTIFY statusChanged)
+
 public:
     enum Status {
+        NoStatus,
         PendingStatus,
         InProgressStatus,
         ErrorStatus
@@ -60,9 +64,14 @@ public:
     void runQuery(const Sink::Query &query);
 
     int count() const;
+    int status() const;
+
 signals:
+    void statusChanged();
     void countChanged();
 
 private:
-    QSharedPointer<QAbstractItemModel> m_model;
+    QSharedPointer<QAbstractItemModel> mModel;
+    QSharedPointer<Sink::Notifier> mNotifier;
+    int mStatus;
 };

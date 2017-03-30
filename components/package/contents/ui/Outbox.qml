@@ -19,6 +19,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
+import QtQuick.Controls 1.3 as Controls
 
 import org.kde.kirigami 1.0 as Kirigami
 
@@ -30,7 +31,33 @@ import org.kube.components.theme 1.0 as KubeTheme
 Button {
     id: root
 
-    text: "outbox"
+    text: outboxModel.count > 0 ? "outbox (" + outboxModel.count + ")" : "outbox"
+    contentItem: Item {
+        Text {
+            text: parent.text
+            font: parent.font
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+        }
+        Controls.ToolButton {
+            id: statusIcon
+            anchors {
+                right: parent.right
+            }
+            visible: false
+            states: [
+                State {
+                    name: "busy"; when: outboxModel.status == KubeFramework.OutboxModel.InProgressStatus 
+                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.busy; visible: true }
+                },
+                State {
+                    name: "error"; when: outboxModel.status == KubeFramework.OutboxModel.ErrorStatus 
+                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.error; visible: true }
+                }
+            ]
+        }
+    }
 
     onClicked: {
         dialog.visible = dialog.visible ? false : true
@@ -43,13 +70,6 @@ Button {
     KubeFramework.OutboxModel {
         id: outboxModel
     }
-
-    states: [
-        State {
-            name: "noempty"; when: outboxModel.count > 0
-            PropertyChanges { target: root; text: "outbox (" + outboxModel.count + ")" }
-        }
-    ]
 
     Popup {
         id: dialog
