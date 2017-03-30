@@ -39,7 +39,7 @@ OutboxModel::OutboxModel(QObject *parent)
 
     using namespace Sink::ApplicationDomain;
     auto query = Sink::StandardQueries::outboxMails();
-    query.setFlags(Sink::Query::LiveQuery);
+    query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
     query.request<Mail::Subject>();
     query.request<Mail::Date>();
     query.request<Mail::Folder>();
@@ -48,6 +48,7 @@ OutboxModel::OutboxModel(QObject *parent)
     connect(this, &QAbstractItemModel::rowsRemoved, this, &OutboxModel::countChanged);
 
     mNotifier->registerHandler([this] (const Sink::Notification &n) {
+        //TODO aggregate status from multiple resources
         if (n.type == Sink::Notification::Status) {
             switch (n.code) { 
                 case Sink::ApplicationDomain::Status::ErrorStatus:
@@ -95,8 +96,16 @@ QVariant OutboxModel::data(const QModelIndex &idx, int role) const
             return mail->getSubject();
         case Date:
             return mail->getDate();
-        case Status:
+        case Status: {
+            const auto status = srcIdx.data(Sink::Store::StatusRole).toInt();
+            if (status == Sink::ApplicationDomain::SyncStatus::SyncInProgress) {
+                return InProgressStatus;
+            }
+            if (status == Sink::ApplicationDomain::SyncStatus::SyncError) {
+                return ErrorStatus;
+            }
             return PendingStatus;
+        }
         case Id:
             return mail->identifier();
         case DomainObject:
