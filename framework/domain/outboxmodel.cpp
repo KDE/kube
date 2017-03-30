@@ -40,6 +40,8 @@ OutboxModel::OutboxModel(QObject *parent)
     query.request<Mail::Date>();
     query.request<Mail::Folder>();
     runQuery(query);
+    connect(this, &QAbstractItemModel::rowsInserted, this, &OutboxModel::countChanged);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, &OutboxModel::countChanged);
 }
 
 OutboxModel::~OutboxModel()
@@ -96,3 +98,7 @@ void OutboxModel::runQuery(const Sink::Query &query)
     setSourceModel(m_model.data());
 }
 
+int OutboxModel::count() const
+{
+    return rowCount();
+}

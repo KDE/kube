@@ -40,6 +40,17 @@ Button {
         id: outboxController
     }
 
+    KubeFramework.OutboxModel {
+        id: outboxModel
+    }
+
+    states: [
+        State {
+            name: "noempty"; when: outboxModel.count > 0
+            PropertyChanges { target: root; text: "outbox (" + outboxModel.count + ")" }
+        }
+    ]
+
     Popup {
         id: dialog
 
@@ -65,7 +76,7 @@ Button {
                 width: parent.width
                 height: count * Kirigami.Units.gridUnit * 3
 
-                model: KubeFramework.OutboxModel {}
+                model: outboxModel
 
                 delegate: Rectangle {
                     id: delegateRoot

@@ -30,6 +30,7 @@ class OutboxModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
+    Q_PROPERTY (int count READ count NOTIFY countChanged)
 public:
     enum Status {
         PendingStatus,
@@ -57,6 +58,10 @@ public:
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
     void runQuery(const Sink::Query &query);
+
+    int count() const;
+signals:
+    void countChanged();
 
 private:
     QSharedPointer<QAbstractItemModel> m_model;
