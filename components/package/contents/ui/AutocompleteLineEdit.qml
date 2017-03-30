@@ -21,6 +21,7 @@ import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.components.theme 1.0 as KubeTheme
 
 Controls2.TextField {
     id: textField
@@ -84,7 +85,7 @@ Controls2.TextField {
         contentHeight: rect.height
 
         Rectangle {
-            color: Kirigami.Theme.backgroundColor
+            color: KubeTheme.Colors.backgroundColor
             id: rect
             anchors.top: popup.top
             anchors.left: popup.left
@@ -127,7 +128,7 @@ Controls2.TextField {
 
                             Text{
                                 text: model.text
-                                color: listDelegate.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
+                                color: listDelegate.checked ? KubeTheme.Colors.highlightedTextColor : Kirigami.Theme.textColor
                             }
                         }
                     }
