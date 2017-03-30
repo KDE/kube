@@ -85,13 +85,17 @@ Controls2.TextField {
         contentHeight: rect.height
 
         Rectangle {
-            color: KubeTheme.Colors.backgroundColor
             id: rect
+
             anchors.top: popup.top
             anchors.left: popup.left
+
             height: listView.contentHeight
             width: textField.width
-            border.color: "Black"
+
+            border.color: KubeTheme.Colors.textColor
+            color: KubeTheme.Colors.backgroundColor
+
             radius: 5
             ListView {
                 id: listView
@@ -128,7 +132,7 @@ Controls2.TextField {
 
                             Text{
                                 text: model.text
-                                color: listDelegate.checked ? KubeTheme.Colors.highlightedTextColor : Kirigami.Theme.textColor
+                                color: listDelegate.checked ? KubeTheme.Colors.highlightedTextColor : KubeTheme.Colors.textColor
                             }
                         }
                     }
