@@ -145,7 +145,7 @@ Controls2.ApplicationWindow {
     Rectangle {
         anchors.fill: parent
 
-        color: Kirigami.Theme.backgroundColor
+        color: KubeTheme.Colors.backgroundColor
     }
     //END background
 
@@ -164,7 +164,7 @@ Controls2.ApplicationWindow {
             Layout.maximumWidth: app.width * 0.25
             Layout.minimumWidth: Kirigami.Units.gridUnit * 5
 
-            color: Kirigami.Theme.textColor
+            color: KubeTheme.Colors.textColor
 
             Controls2.ToolBar {
                 id: toolBar
@@ -220,7 +220,7 @@ Controls2.ApplicationWindow {
                     margins: Kirigami.Units.largeSpacing
                 }
 
-                color: "#27ae60"
+                color: KubeTheme.Colors.positveColor
                 clip: true
 
                 height: Kirigami.Units.gridUnit * 1.5
@@ -229,7 +229,7 @@ Controls2.ApplicationWindow {
                     anchors.centerIn: parent
 
                     text: qsTr("New Email")
-                    color: "white"
+                    color: KubeTheme.Colors.highlightedTextColor
                 }
                 //iconName: "mail-message-new"
                 //Controls2.Tooltip.text: "compose new email"
@@ -291,7 +291,7 @@ Controls2.ApplicationWindow {
                         Text {
                             text: model.name
                             font.weight: Font.DemiBold
-                            color: "white"
+                            color: KubeTheme.Colors.highlightedTextColor
                         }
 
                         ToolButton {
