@@ -27,6 +27,8 @@ import QtQml 2.2 as QtQml
 import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.framework.actions 1.0 as KubeAction
 
+import org.kube.components.theme 1.0 as KubeTheme
+
 Rectangle {
     id: root
 
@@ -42,7 +44,7 @@ Rectangle {
         currentMail = null;
     }
 
-    color: Kirigami.Theme.backgroundColor
+    color: KubeTheme.Colors.backgroundColor
 
     ListView {
         id: listView
@@ -201,7 +203,7 @@ Rectangle {
                     opacity: 0.2
                 }
 
-                color: Kirigami.Theme.viewBackgroundColor
+                color: KubeTheme.Colors.viewBackgroundColor
 
                 //BEGIN header
                 Item {
@@ -248,7 +250,7 @@ Rectangle {
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy hh:mm")
 
                         font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
-                        color: Kirigami.Theme.textColor
+                        color: KubeTheme.Colors.textColor
                         opacity: 0.75
                     }
 
@@ -278,7 +280,7 @@ Rectangle {
                                 text: model.senderName
 
                                 font.weight: Font.DemiBold
-                                color: Kirigami.Theme.textColor
+                                color: KubeTheme.Colors.textColor
                                 opacity: 0.75
                             }
 
@@ -289,7 +291,7 @@ Rectangle {
                                 width: parent.width - senderName.width - date_label.width - Kirigami.Units.largeSpacing
                                 elide: Text.ElideRight
 
-                                color: Kirigami.Theme.textColor
+                                color: KubeTheme.Colors.textColor
                                 opacity: 0.75
 
                                 clip: true
@@ -305,7 +307,7 @@ Rectangle {
 
                             elide: Text.ElideRight
 
-                            color: Kirigami.Theme.textColor
+                            color: KubeTheme.Colors.textColor
                             opacity: 0.75
                             font.italic: true
                         }
@@ -319,7 +321,7 @@ Rectangle {
 
                             elide: Text.ElideRight
 
-                            color: Kirigami.Theme.textColor
+                            color: KubeTheme.Colors.textColor
                             opacity: 0.75
                         }
 
@@ -331,7 +333,7 @@ Rectangle {
                             text:"to: " + model.to
 
                             wrapMode: Text.WordWrap
-                            color: Kirigami.Theme.textColor
+                            color: KubeTheme.Colors.textColor
                             opacity: 0.75
                         }
 
@@ -343,7 +345,7 @@ Rectangle {
                             text:"cc: " + model.cc
 
                             wrapMode: Text.WordWrap
-                            color: Kirigami.Theme.textColor
+                            color: KubeTheme.Colors.textColor
                             opacity: 0.75
                         }
 
@@ -355,7 +357,7 @@ Rectangle {
                             text:"bcc: " + model.bcc
 
                             wrapMode: Text.WordWrap
-                            color: Kirigami.Theme.textColor
+                            color: KubeTheme.Colors.textColor
                             opacity: 0.75
                         }
 
@@ -370,7 +372,7 @@ Rectangle {
                         height: Kirigami.Units.gridUnit
                         width: height
 
-                        color: Kirigami.Theme.backgroundColor
+                        color: KubeTheme.Colors.backgroundColor
 
                         Controls1.ToolButton {
                             anchors.fill: parent
@@ -388,7 +390,7 @@ Rectangle {
                         height: Kirigami.Units.gridUnit
                         width: height
 
-                        color: Kirigami.Theme.backgroundColor
+                        color: KubeTheme.Colors.backgroundColor
 
                         Controls1.ToolButton {
                             anchors.fill: parent
@@ -412,7 +414,7 @@ Rectangle {
 
                         height: 1
 
-                        color: Kirigami.Theme.textColor
+                        color: KubeTheme.Colors.textColor
                         opacity: 0.5
                     }
                 }
@@ -478,7 +480,7 @@ Rectangle {
                     }
                     visible: model.incomplete
                     text: "Incomplete body..."
-                    color: Kirigami.Theme.textColor
+                    color: KubeTheme.Colors.textColor
                     enabled: false
                     states: [
                         State {
@@ -512,7 +514,7 @@ Rectangle {
                         }
 
                         text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
-                        color: Kirigami.Theme.textColor
+                        color: KubeTheme.Colors.textColor
                         opacity: 0.5
                         enabled: model.trash ? mailController.removeAction.enabled : mailController.moveToTrashAction.enabled
                         MouseArea {
