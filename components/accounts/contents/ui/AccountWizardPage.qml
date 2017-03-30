@@ -24,6 +24,7 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.accounts 1.0 as KubeAccounts
+import org.kube.components.theme 1.0 as KubeTheme
 
 Item {
     id: root
@@ -53,7 +54,7 @@ Item {
         Kirigami.Heading {
             id: heading
             text: loader.item.heading
-            color: Kirigami.Theme.highlightColor
+            color: KubeTheme.Colors.highlightColor
         }
 
         Kirigami.Label {
@@ -66,7 +67,7 @@ Item {
 
             width: parent.width
             text: loader.item.subheadline
-            color: Kirigami.Theme.disabledTextColor
+            color: KubeTheme.Colors.disabledTextColor
             wrapMode: Text.Wrap
         }
 

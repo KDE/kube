@@ -17,7 +17,7 @@
 */
 
 import QtQuick 2.7
-import org.kde.kirigami 1.0 as Kirigami
+import org.kube.components.theme 1.0 as KubeTheme
 
 Item {
     id: textItem
@@ -47,7 +47,7 @@ Item {
             text: model.content
             wrapMode: Text.WordWrap
 
-            color: model.embeded ? Kirigami.Theme.diabledTextColor : Kirigami.Theme.textColor
+            color: model.embeded ? KubeTheme.Colors.diabledTextColor : KubeTheme.Colors.textColor
         }
 
         //BEGIN debug

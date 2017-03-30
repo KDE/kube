@@ -23,6 +23,7 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.accounts 1.0 as KubeAccounts
+import org.kube.components.theme 1.0 as KubeTheme
 
 Item {
 
@@ -52,7 +53,7 @@ Item {
             id: heading
             text: "Connect your Gmail account"
 
-            color: Kirigami.Theme.highlightColor
+            color: KubeTheme.Colors.highlightColor
         }
 
         Kirigami.Label {
@@ -67,7 +68,7 @@ Item {
 
             text: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube."
 
-            color: Kirigami.Theme.disabledTextColor
+            color: KubeTheme.Colors.disabledTextColor
 
             wrapMode: Text.Wrap
         }
