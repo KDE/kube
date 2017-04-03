@@ -22,6 +22,7 @@ import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.components 1.0 as KubeComponents
 import org.kube.components.theme 1.0 as KubeTheme
 import org.kube.framework.domain 1.0 as KubeFramework
 
@@ -163,11 +164,10 @@ Rectangle {
 
                         color: KubeTheme.Colors.viewBackgroundColor
                     }
-                    ToolButton {
+                    KubeComponents.Icon {
                         id: statusIcon
                         visible: false
                         iconName: ""
-                        enabled: false
                         states: [
                             State {
                                 name: "busy"; when: model.status == KubeFramework.FolderListModel.InProgressStatus

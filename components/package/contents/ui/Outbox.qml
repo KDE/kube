@@ -40,7 +40,7 @@ Button {
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
         }
-        Controls.ToolButton {
+        KubeComponents.Icon {
             id: statusIcon
             anchors {
                 right: parent.right
