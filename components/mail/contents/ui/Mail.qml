@@ -210,35 +210,19 @@ Controls2.ApplicationWindow {
                 }
             }
 
-            Rectangle {
+            KubeComponents.Button {
                 id: newMailButton
-
                 anchors {
                     top: toolBar.bottom
                     left: parent.left
                     right: parent.right
                     margins: Kirigami.Units.largeSpacing
                 }
-
                 color: KubeTheme.Colors.positveColor
-                clip: true
-
                 height: Kirigami.Units.gridUnit * 1.5
-
-                Text {
-                    anchors.centerIn: parent
-
-                    text: qsTr("New Email")
-                    color: KubeTheme.Colors.highlightedTextColor
-                }
-                //iconName: "mail-message-new"
-                //Controls2.Tooltip.text: "compose new email"
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        composer.open()
-                    }
+                text: qsTr("New Email")
+                onClicked: {
+                    composer.open()
                 }
             }
 
