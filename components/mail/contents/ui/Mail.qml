@@ -294,7 +294,7 @@ Controls2.ApplicationWindow {
                             color: KubeTheme.Colors.highlightedTextColor
                         }
 
-                        ToolButton {
+                        KubeComponents.Icon {
                             id: statusIcon
                             visible: false
                             iconName: ""

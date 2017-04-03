@@ -12,3 +12,4 @@ OverlayDialog 1.0 OverlayDialog.qml
 Outbox 1.0 Outbox.qml
 People 1.0 People.qml
 Notification 1.0 Notification.qml
+Icon 1.0 Icon.qml
