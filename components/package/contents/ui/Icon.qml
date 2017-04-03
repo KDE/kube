@@ -29,16 +29,10 @@ Item {
     height: implicitHeight
 
     onIconNameChanged: setImageSource()
-    onIconSourceChanged: setImageSource()
 
     function setImageSource() {
-        // Icon names have precedence over icon URLs
-        if (root.iconName.indexOf("/") != -1)
-            image.source = root.iconName;
-        else if (root.iconName != "")
+        if (root.iconName != "")
             image.source = "image://kube/" + root.iconName;
-        else if (root.iconSource != "")
-            image.source = root.iconSource;
         else
             image.source = "";
     }
