@@ -337,7 +337,7 @@ Controls2.ApplicationWindow {
                         id: statusText
                         anchors.centerIn: parent
                         visible: false
-                        color: KubeTheme.Colors.textColor
+                        color: KubeTheme.Colors.highlightedTextColor
                         states: [
                             State {
                                 name: "disconnected"; when: model.status == KubeAccountsFramework.AccountsModel.OfflineStatus
