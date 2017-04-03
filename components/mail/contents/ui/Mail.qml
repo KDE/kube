@@ -22,7 +22,6 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
 import QtQuick.Controls 2.0 as Controls2
-import org.kde.kirigami 1.0 as Kirigami
 
 import org.kube.framework.actions 1.0 as KubeAction
 import org.kube.framework.settings 1.0 as KubeSettings
@@ -160,9 +159,9 @@ Controls2.ApplicationWindow {
         width: app.width
 
         Rectangle {
-            width: Kirigami.Units.gridUnit * 10
+            width: KubeTheme.Units.gridUnit * 10
             Layout.maximumWidth: app.width * 0.25
-            Layout.minimumWidth: Kirigami.Units.gridUnit * 5
+            Layout.minimumWidth: KubeTheme.Units.gridUnit * 5
 
             color: KubeTheme.Colors.textColor
 
@@ -178,19 +177,19 @@ Controls2.ApplicationWindow {
                 RowLayout {
                     anchors.centerIn: parent
 
-                    spacing: Kirigami.Units.largeSpacing
+                    spacing: KubeTheme.Units.largeSpacing
 
                     KubeComponents.AccountSwitcher {
                         id: accountSwitcher
 
                         iconName: "kdenlive-menu"
-                        height: Kirigami.Units.gridUnit * 1.5
+                        height: KubeTheme.Units.gridUnit * 1.5
                         width: height
                     }
 
                     ToolButton {
                         iconName: "user"
-                        height: Kirigami.Units.gridUnit * 1.5
+                        height: KubeTheme.Units.gridUnit * 1.5
                         width: height
 
                         onClicked: {
@@ -200,7 +199,7 @@ Controls2.ApplicationWindow {
 
                     ToolButton {
                         iconName: "search"
-                        height: Kirigami.Units.gridUnit * 1.5
+                        height: KubeTheme.Units.gridUnit * 1.5
                         width: height
 
                         onClicked: {
@@ -216,10 +215,10 @@ Controls2.ApplicationWindow {
                     top: toolBar.bottom
                     left: parent.left
                     right: parent.right
-                    margins: Kirigami.Units.largeSpacing
+                    margins: KubeTheme.Units.largeSpacing
                 }
                 color: KubeTheme.Colors.positveColor
-                height: Kirigami.Units.gridUnit * 1.5
+                height: KubeTheme.Units.gridUnit * 1.5
                 text: qsTr("New Email")
                 onClicked: {
                     composer.open()
@@ -248,11 +247,11 @@ Controls2.ApplicationWindow {
 
                 anchors {
                     top: newMailButton.bottom
-                    topMargin: Kirigami.Units.smallSpacing
+                    topMargin: KubeTheme.Units.smallSpacing
                 }
 
                 width: parent.width
-                height: Kirigami.Units.gridUnit * 2
+                height: KubeTheme.Units.gridUnit * 2
 
                 MouseArea {
                     anchors.fill: parent
@@ -265,10 +264,11 @@ Controls2.ApplicationWindow {
                 Repeater {
                     model: currentAccountModel
                     Row {
+                        spacing: KubeTheme.Units.smallSpacing
                         anchors {
                             bottom: parent.bottom
                             left: parent.left
-                            leftMargin: Kirigami.Units.smallSpacing
+                            leftMargin: KubeTheme.Units.smallSpacing
                         }
                         Layout.fillHeight: true
 
@@ -282,7 +282,6 @@ Controls2.ApplicationWindow {
                             id: statusIcon
                             visible: false
                             iconName: ""
-                            enabled: false
                             states: [
                                 State {
                                     name: "busy"; when: model.status == KubeAccountsFramework.AccountsModel.BusyStatus
@@ -311,7 +310,7 @@ Controls2.ApplicationWindow {
 
                 anchors {
                     top: accountName.bottom
-                    topMargin: Kirigami.Units.smallSpacing
+                    topMargin: KubeTheme.Units.smallSpacing
                     bottom: statusBar.top
                     left: parent.left
                     right: parent.right
@@ -324,13 +323,13 @@ Controls2.ApplicationWindow {
             Item {
                 id: statusBar
                 anchors {
-                    topMargin: Kirigami.Units.smallSpacing
+                    topMargin: KubeTheme.Units.smallSpacing
                     bottom: outbox.top
                     left: parent.left
                     right: parent.right
                 }
 
-                height: Kirigami.Units.gridUnit * 1
+                height: KubeTheme.Units.gridUnit
 
                 Repeater {
                     model: currentAccountModel
@@ -357,17 +356,17 @@ Controls2.ApplicationWindow {
                     left: parent.left
                     right: parent.right
                 }
-                height: Kirigami.Units.gridUnit * 1.5
+                height: KubeTheme.Units.gridUnit * 1.5
             }
         }
 
         KubeComponents.MailListView  {
             id: mailListView
             parentFolder: folderListView.currentFolder
-            width: Kirigami.Units.gridUnit * 20
+            width: KubeTheme.Units.gridUnit * 20
             height: parent.height
             Layout.maximumWidth: app.width * 0.4
-            Layout.minimumWidth: Kirigami.Units.gridUnit * 10
+            Layout.minimumWidth: KubeTheme.Units.gridUnit * 10
             focus: true
         }
 
@@ -419,7 +418,7 @@ Controls2.ApplicationWindow {
         id: search
 
         width: app.width * 0.6
-        height: Kirigami.Units.gridUnit * 3
+        height: KubeTheme.Units.gridUnit * 3
 
         x: app.width * 0.2
         y: app.height * 0.2
