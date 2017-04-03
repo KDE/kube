@@ -18,7 +18,6 @@
 
 import QtQuick 2.7
 import org.kube.components.theme 1.0 as KubeTheme
-import org.kde.kirigami 1.0 as Kirigami
 
 Rectangle {
     id: root
@@ -37,7 +36,7 @@ Rectangle {
     Row {
         id: content
         anchors.centerIn: parent
-        spacing: Kirigami.Units.smallSpacing
+        spacing: KubeTheme.Units.smallSpacing
         Text {
             id: text
             anchors.verticalCenter: parent.verticalCenter
