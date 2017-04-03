@@ -357,6 +357,7 @@ Controls2.ApplicationWindow {
                     left: parent.left
                     right: parent.right
                 }
+                height: Kirigami.Units.gridUnit * 1.5
             }
         }
 

@@ -28,36 +28,23 @@ import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components 1.0 as KubeComponents
 import org.kube.components.theme 1.0 as KubeTheme
 
-Button {
+KubeComponents.Button {
     id: root
 
-    text: outboxModel.count > 0 ? "outbox (" + outboxModel.count + ")" : "outbox"
-    contentItem: Item {
-        Text {
-            text: parent.text
-            font: parent.font
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
+    text: outboxModel.count > 0 ? "Outbox (" + outboxModel.count + ")" : "Outbox"
+    color: "transparent"
+    textColor: KubeTheme.Colors.highlightedTextColor
+    iconName: ""
+    states: [
+        State {
+            name: "busy"; when: outboxModel.status == KubeFramework.OutboxModel.InProgressStatus
+            PropertyChanges { target: root; iconName: KubeTheme.Icons.busy }
+        },
+        State {
+            name: "error"; when: outboxModel.status == KubeFramework.OutboxModel.ErrorStatus
+            PropertyChanges { target: root; iconName: KubeTheme.Icons.error }
         }
-        KubeComponents.Icon {
-            id: statusIcon
-            anchors {
-                right: parent.right
-            }
-            visible: false
-            states: [
-                State {
-                    name: "busy"; when: outboxModel.status == KubeFramework.OutboxModel.InProgressStatus 
-                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.busy; visible: true }
-                },
-                State {
-                    name: "error"; when: outboxModel.status == KubeFramework.OutboxModel.ErrorStatus 
-                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.error; visible: true }
-                }
-            ]
-        }
-    }
+    ]
 
     onClicked: {
         dialog.visible = dialog.visible ? false : true

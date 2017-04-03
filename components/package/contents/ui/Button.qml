@@ -18,6 +18,7 @@
 
 import QtQuick 2.7
 import org.kube.components.theme 1.0 as KubeTheme
+import org.kde.kirigami 1.0 as Kirigami
 
 Rectangle {
     id: root
@@ -25,13 +26,29 @@ Rectangle {
     signal clicked()
     property alias text: text.text
     property color textColor: KubeTheme.Colors.highlightedTextColor
+    property string iconName: ""
+    property alias implicitHeight: content.implicitHeight
+    property alias implicitWidth: content.implicitWidth
+    width: implicitWidth
+    height: implicitHeight
 
     clip: true
 
-    Text {
-        id: text
+    Row {
+        id: content
         anchors.centerIn: parent
-        color: root.textColor
+        spacing: Kirigami.Units.smallSpacing
+        Text {
+            id: text
+            anchors.verticalCenter: parent.verticalCenter
+            color: root.textColor
+        }
+        Icon {
+            id: icon
+            anchors.verticalCenter: parent.verticalCenter
+            iconName: root.iconName
+            visible: iconName != ""
+        }
     }
 
     MouseArea {
