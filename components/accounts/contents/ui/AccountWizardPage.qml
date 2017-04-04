@@ -36,7 +36,7 @@ Item {
     }
 
     Controls.ToolButton {
-        iconName: "go-previous"
+        iconName: KubeTheme.Icons.goBack
         tooltip: "go back"
         onClicked: {
             stack.pop()
@@ -48,7 +48,7 @@ Item {
 
         anchors {
             fill: parent
-            margins: Kirigami.Units.largeSpacing * 2
+            margins: KubeTheme.Units.largeSpacing * 2
         }
 
         Kirigami.Heading {
@@ -77,7 +77,7 @@ Item {
                 top:subHeadline.bottom
                 left: parent.left
                 right: parent.right
-                topMargin: Kirigami.Units.largeSpacing * 2
+                topMargin: KubeTheme.Units.largeSpacing * 2
             }
 
             Loader {
@@ -105,12 +105,12 @@ Item {
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
-                topMargin: Kirigami.Units.largeSpacing * 2
+                topMargin: KubeTheme.Units.largeSpacing * 2
             }
 
             columns: 2
-            columnSpacing: Kirigami.Units.largeSpacing
-            rowSpacing: Kirigami.Units.largeSpacing
+            columnSpacing: KubeTheme.Units.largeSpacing
+            rowSpacing: KubeTheme.Units.largeSpacing
 
             Item {
                 Layout.fillHeight: true

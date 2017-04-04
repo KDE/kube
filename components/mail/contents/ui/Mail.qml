@@ -181,14 +181,13 @@ Controls2.ApplicationWindow {
 
                     KubeComponents.AccountSwitcher {
                         id: accountSwitcher
-
-                        iconName: "kdenlive-menu"
+                        iconName: KubeTheme.Icons.menu
                         height: KubeTheme.Units.gridUnit * 1.5
                         width: height
                     }
 
                     ToolButton {
-                        iconName: "user"
+                        iconName: KubeTheme.Icons.user
                         height: KubeTheme.Units.gridUnit * 1.5
                         width: height
 
@@ -198,7 +197,7 @@ Controls2.ApplicationWindow {
                     }
 
                     ToolButton {
-                        iconName: "search"
+                        iconName: KubeTheme.Icons.search
                         height: KubeTheme.Units.gridUnit * 1.5
                         width: height
 

@@ -84,13 +84,13 @@ Rectangle {
         }
 
         header: Item {
-            height: Kirigami.Units.gridUnit * 0.5
+            height: KubeTheme.Units.gridUnit * 0.5
             width: parent.width
 
         }
 
         footer: Item {
-            height: Kirigami.Units.gridUnit
+            height: KubeTheme.Units.gridUnit
             width: parent.width
         }
 
@@ -185,14 +185,14 @@ Rectangle {
                 }
             }
 
-            height: sheet.height + Kirigami.Units.gridUnit
+            height: sheet.height + KubeTheme.Units.gridUnit
             width: parent.width
 
             Rectangle {
                 id: sheet
                 anchors.centerIn: parent
-                implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + Kirigami.Units.largeSpacing
-                width: parent.width - Kirigami.Units.gridUnit * 2
+                implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + KubeTheme.Units.largeSpacing
+                width: parent.width - KubeTheme.Units.gridUnit * 2
 
                 //Overlay for non-active mails
                 Rectangle {
@@ -213,10 +213,10 @@ Rectangle {
                         top: parent.top
                         left: parent.left
                         right: parent.right
-                        margins: Kirigami.Units.largeSpacing
+                        margins: KubeTheme.Units.largeSpacing
                     }
 
-                    height: headerContent.height + Kirigami.Units.smallSpacing
+                    height: headerContent.height + KubeTheme.Units.smallSpacing
 
                     states: [
                         State {
@@ -262,7 +262,7 @@ Rectangle {
                             horizontalCenter: parent.horizontalCenter
                         }
 
-                        //spacing: Kirigami.Units.smallSpacing
+                        //spacing: KubeTheme.Units.smallSpacing
 
                         width: parent.width
 
@@ -271,7 +271,7 @@ Rectangle {
 
                             width: parent.width
 
-                            spacing: Kirigami.Units.smallSpacing
+                            spacing: KubeTheme.Units.smallSpacing
                             clip: true
 
                             Text {
@@ -288,7 +288,7 @@ Rectangle {
 
                                 text: model.sender
 
-                                width: parent.width - senderName.width - date_label.width - Kirigami.Units.largeSpacing
+                                width: parent.width - senderName.width - date_label.width - KubeTheme.Units.largeSpacing
                                 elide: Text.ElideRight
 
                                 color: KubeTheme.Colors.textColor
@@ -315,7 +315,7 @@ Rectangle {
                         Text {
                             id: recipients
 
-                            width: parent.width - goDown.width - Kirigami.Units.smallSpacing
+                            width: parent.width - goDown.width - KubeTheme.Units.smallSpacing
 
                             text:"to: "+ model.to + " "  + model.cc + " " +  model.bcc
 
@@ -328,7 +328,7 @@ Rectangle {
                         Text {
                             id: to
 
-                            width: parent.width - goDown.width - Kirigami.Units.smallSpacing
+                            width: parent.width - goDown.width - KubeTheme.Units.smallSpacing
 
                             text:"to: " + model.to
 
@@ -340,7 +340,7 @@ Rectangle {
                         Text {
                             id: cc
 
-                            width: parent.width - goDown.width - Kirigami.Units.smallSpacing
+                            width: parent.width - goDown.width - KubeTheme.Units.smallSpacing
 
                             text:"cc: " + model.cc
 
@@ -352,7 +352,7 @@ Rectangle {
                         Text {
                             id: bcc
 
-                            width: parent.width - goDown.width - Kirigami.Units.smallSpacing
+                            width: parent.width - goDown.width - KubeTheme.Units.smallSpacing
 
                             text:"bcc: " + model.bcc
 
@@ -369,7 +369,7 @@ Rectangle {
                             right: seperator.right
                         }
 
-                        height: Kirigami.Units.gridUnit
+                        height: KubeTheme.Units.gridUnit
                         width: height
 
                         color: KubeTheme.Colors.backgroundColor
@@ -377,7 +377,7 @@ Rectangle {
                         Controls1.ToolButton {
                             anchors.fill: parent
 
-                            iconName: "go-down"
+                            iconName: KubeTheme.Icons.goDown
                         }
                     }
 
@@ -387,7 +387,7 @@ Rectangle {
                             right: seperator.right
                         }
 
-                        height: Kirigami.Units.gridUnit
+                        height: KubeTheme.Units.gridUnit
                         width: height
 
                         color: KubeTheme.Colors.backgroundColor
@@ -395,7 +395,7 @@ Rectangle {
                         Controls1.ToolButton {
                             anchors.fill: parent
 
-                            iconName: header.state === "details" ? "go-up" : "go-down"
+                            iconName: header.state === "details" ? KubeTheme.Icons.goUp : KubeTheme.Icons.goDown
 
                             onClicked: {
                                 header.state === "details" ? header.state = "small" : header.state = "details"
@@ -425,14 +425,14 @@ Rectangle {
 
                     anchors {
                         top: header.bottom
-                        topMargin: Kirigami.Units.smallSpacing
+                        topMargin: KubeTheme.Units.smallSpacing
                         right: header.right
                     }
 
-                    width: header.width - Kirigami.Units.largeSpacing
+                    width: header.width - KubeTheme.Units.largeSpacing
 
                     layoutDirection: Qt.RightToLeft
-                    spacing: Kirigami.Units.smallSpacing
+                    spacing: KubeTheme.Units.smallSpacing
                     clip: true
 
                     Repeater {
@@ -456,12 +456,12 @@ Rectangle {
                         top: header.bottom
                         left: header.left
                         right: header.right
-                        leftMargin: Kirigami.Units.largeSpacing
-                        rightMargin: Kirigami.Units.largeSpacing
-                        topMargin: Math.max(attachments.height, Kirigami.Units.largeSpacing)
+                        leftMargin: KubeTheme.Units.largeSpacing
+                        rightMargin: KubeTheme.Units.largeSpacing
+                        topMargin: Math.max(attachments.height, KubeTheme.Units.largeSpacing)
                     }
 
-                    width: header.width - Kirigami.Units.largeSpacing * 2
+                    width: header.width - KubeTheme.Units.largeSpacing * 2
                     height: desiredHeight
 
                     message: model.mimeMessage
@@ -474,9 +474,9 @@ Rectangle {
                         top: header.bottom
                         left: header.left
                         right: header.right
-                        leftMargin: Kirigami.Units.largeSpacing
-                        rightMargin: Kirigami.Units.largeSpacing
-                        topMargin: Math.max(attachments.height, Kirigami.Units.largeSpacing)
+                        leftMargin: KubeTheme.Units.largeSpacing
+                        rightMargin: KubeTheme.Units.largeSpacing
+                        topMargin: Math.max(attachments.height, KubeTheme.Units.largeSpacing)
                     }
                     visible: model.incomplete
                     text: "Incomplete body..."
@@ -498,14 +498,14 @@ Rectangle {
 
                     anchors.bottom: parent.bottom
 
-                    height: Kirigami.Units.gridUnit * 2
+                    height: KubeTheme.Units.gridUnit * 2
                     width: parent.width
 
                     Text {
                         anchors{
                             verticalCenter: parent.verticalCenter
                             left: parent.left
-                            leftMargin: Kirigami.Units.largeSpacing
+                            leftMargin: KubeTheme.Units.largeSpacing
                         }
 
                         KubeFramework.MailController {
@@ -535,7 +535,7 @@ Rectangle {
                         anchors{
                             verticalCenter: parent.verticalCenter
                             right: parent.right
-                            rightMargin: Kirigami.Units.largeSpacing
+                            rightMargin: KubeTheme.Units.largeSpacing
                         }
 
                         KubeAction.Context {
@@ -558,7 +558,7 @@ Rectangle {
                             context: maillistcontext
                         }
 
-                        iconName: model.draft ? "document-edit" : "mail-reply-sender"
+                        iconName: model.draft ? KubeTheme.Icons.edit : KubeTheme.Icons.replyToSender
                         onClicked: {
                             if (model.draft) {
                                 editAction.execute()

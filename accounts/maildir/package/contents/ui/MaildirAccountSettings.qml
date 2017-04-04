@@ -57,8 +57,8 @@ Item {
                 fill: parent
             }
             columns: 2
-            columnSpacing: Kirigami.Units.largeSpacing
-            rowSpacing: Kirigami.Units.largeSpacing
+            columnSpacing: KubeTheme.Units.largeSpacing
+            rowSpacing: KubeTheme.Units.largeSpacing
 
             Controls.Label {
                 text: "Title of Account"
@@ -88,7 +88,7 @@ Item {
                 }
 
                 Controls.Button {
-                    iconName: "folder"
+                    iconName: KubeTheme.Icons.folder
 
                     onClicked: {
                         fileDialogComponent.createObject(parent)

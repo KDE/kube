@@ -27,5 +27,23 @@ Item {
     property string noNetworkConnection: "network-disconnect"
     property string connected: "checkmark"
     property string success: "checkmark"
+
+    property string markAsRead: "mail-mark-unread-new"
+    property string markImportant: "mail-mark-important"
+    property string undo: "edit-undo"
+    property string moveToTrash: "edit-delete"
+    property string edit: "document-edit"
+    property string replyToSender: "mail-reply-sender"
+
+    property string menu: "application-menu"
+    property string user: "im-user"
+    property string search: "edit-find"
+    property string goBack: "go-previous"
+    property string goDown: "go-down"
+    property string goUp: "go-down"
+
+    property string addNew: "list-add-new"
+    property string folder: "folder"
+
 }
 

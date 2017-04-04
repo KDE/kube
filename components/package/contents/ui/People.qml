@@ -49,7 +49,7 @@ Popup {
 
                 anchors.verticalCenter: parent.verticalCenter
 
-                iconName: "go-previous"
+                iconName: KubeTheme.Icons.goBack
 
                 onClicked: stack.pop()
 
@@ -69,11 +69,11 @@ Popup {
 
                 anchors {
                     right: parent.right
-                    rightMargin: Kirigami.Units.smallSpacing
+                    rightMargin: KubeTheme.Units.smallSpacing
                     verticalCenter: parent.verticalCenter
                 }
 
-                iconName: "list-add-new"
+                iconName: KubeTheme.Icons.addNew
             }
         }
 
@@ -117,13 +117,13 @@ Popup {
 
                         anchors {
                             top: parent.top
-                            topMargin: Kirigami.Units.largeSpacing
+                            topMargin: KubeTheme.Units.largeSpacing
                             left: parent.left
-                            leftMargin: Kirigami.Units.largeSpacing
+                            leftMargin: KubeTheme.Units.largeSpacing
                         }
 
-                        spacing: Kirigami.Units.largeSpacing
-                        width: peoplePageRoot.width - Kirigami.Units.largeSpacing * 2
+                        spacing: KubeTheme.Units.largeSpacing
+                        width: peoplePageRoot.width - KubeTheme.Units.largeSpacing * 2
 
                         Repeater {
 
@@ -134,8 +134,8 @@ Popup {
                             delegate: Rectangle {
                                 id: delegateRoot
 
-                                height: Kirigami.Units.gridUnit * 3
-                                width: Kirigami.Units.gridUnit * 10
+                                height: KubeTheme.Units.gridUnit * 3
+                                width: KubeTheme.Units.gridUnit * 10
 
                                 border.width: 1
                                 border.color: "lightgrey"
@@ -164,12 +164,12 @@ Popup {
 
                                     anchors {
                                         left: avatarPlaceholder.right
-                                        margins: Kirigami.Units.smallSpacing
+                                        margins: KubeTheme.Units.smallSpacing
                                         verticalCenter: parent.verticalCenter
                                     }
 
                                     Text {
-                                        width: delegateRoot.width - avatarPlaceholder.width - Kirigami.Units.smallSpacing * 2
+                                        width: delegateRoot.width - avatarPlaceholder.width - KubeTheme.Units.smallSpacing * 2
 
                                         text: model.firstName
                                         elide: Text.ElideRight
@@ -177,7 +177,7 @@ Popup {
                                     }
 
                                     Text {
-                                        width: delegateRoot.width - avatarPlaceholder.width - Kirigami.Units.smallSpacing * 2
+                                        width: delegateRoot.width - avatarPlaceholder.width - KubeTheme.Units.smallSpacing * 2
 
                                         text: model.lastName
                                         elide: Text.ElideRight
@@ -210,7 +210,7 @@ Popup {
                 anchors {
                     top: parent.top
                     left: parent.left
-                    leftMargin: Kirigami.Units.largeSpacing
+                    leftMargin: KubeTheme.Units.largeSpacing
                 }
 
                 width: parent.width
@@ -231,17 +231,17 @@ Popup {
 
                     width: personPageRoot.width
 
-                    spacing: Kirigami.Units.largeSpacing
+                    spacing: KubeTheme.Units.largeSpacing
 
                     Item {
                         width: parent.width
-                        height: Kirigami.Units.smallSpacing
+                        height: KubeTheme.Units.smallSpacing
                     }
 
                     Item {
 
-                        height: Kirigami.Units.gridUnit * 8
-                        width: personPageRoot.width - Kirigami.Units.largeSpacing
+                        height: KubeTheme.Units.gridUnit * 8
+                        width: personPageRoot.width - KubeTheme.Units.largeSpacing
 
                         Rectangle {
                             id: avatar
@@ -258,7 +258,7 @@ Popup {
                             anchors {
                                 top: avatar.top
                                 left: avatar.right
-                                leftMargin: Kirigami.Units.largeSpacing
+                                leftMargin: KubeTheme.Units.largeSpacing
                             }
 
                             text: contactController.name //"Michael Tester"
@@ -270,7 +270,7 @@ Popup {
                             anchors {
                                 top: nameLabel.bottom
                                 left: avatar.right
-                                leftMargin: Kirigami.Units.largeSpacing
+                                leftMargin: KubeTheme.Units.largeSpacing
                             }
 
                             text: "CIO"
@@ -282,11 +282,11 @@ Popup {
                             anchors {
                                 bottom: avatar.bottom
                                 left: avatar.right
-                                leftMargin: Kirigami.Units.largeSpacing
+                                leftMargin: KubeTheme.Units.largeSpacing
                             }
 
-                            height: Kirigami.Units.gridUnit * 3
-                            width: Kirigami.Units.gridUnit * 10
+                            height: KubeTheme.Units.gridUnit * 3
+                            width: KubeTheme.Units.gridUnit * 10
 
                             border.width: 1
                             border.color: "lightgrey"
@@ -304,7 +304,7 @@ Popup {
                                 anchors {
                                     verticalCenter: av.verticalCenter
                                     left: av.right
-                                    leftMargin: Kirigami.Units.smallSpacing
+                                    leftMargin: KubeTheme.Units.smallSpacing
                                 }
 
                                 text: "Sauerkraut AG"
@@ -317,65 +317,65 @@ Popup {
                     Flow {
                         id: emails
 
-                        width: personPageRoot.width - Kirigami.Units.largeSpacing
+                        width: personPageRoot.width - KubeTheme.Units.largeSpacing
 
                         Repeater {
 
                             model: contactController.emails
 
                             Row {
-                                spacing: Kirigami.Units.smallSpacing
+                                spacing: KubeTheme.Units.smallSpacing
                                 Text { text: "(main)" }
                                 Text { text: modelData ; color: KubeTheme.Colors.highlightColor }
-                                Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                                Item { width: KubeTheme.Units.smallSpacing; height: 1 }
                             }
                         }
 
                         Row {
-                            spacing: Kirigami.Units.smallSpacing
+                            spacing: KubeTheme.Units.smallSpacing
                             Text { text: "(alias)"}
                             Text { text: "test.testerson@gmail.com"; color: KubeTheme.Colors.highlightColor }
-                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
                         }
 
                         Row {
-                            spacing: Kirigami.Units.smallSpacing
+                            spacing: KubeTheme.Units.smallSpacing
                             Text { text: "(private)"}
                             Text { text: "test@gmail.com"; color: KubeTheme.Colors.highlightColor }
-                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
                         }
                     }
 
                     Flow {
                         id: phone
 
-                        width: personPageRoot.width - Kirigami.Units.largeSpacing
-                        spacing: Kirigami.Units.smallSpacing
+                        width: personPageRoot.width - KubeTheme.Units.largeSpacing
+                        spacing: KubeTheme.Units.smallSpacing
 
                         Row {
-                            spacing: Kirigami.Units.smallSpacing
+                            spacing: KubeTheme.Units.smallSpacing
                             Text { text: "(inhouse)"}
                             Text { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
                         }
                         Row {
-                            spacing: Kirigami.Units.smallSpacing
+                            spacing: KubeTheme.Units.smallSpacing
                             Text { text: "(mobile)"}
                             Text { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
                         }
                         Row {
-                            spacing: Kirigami.Units.smallSpacing
+                            spacing: KubeTheme.Units.smallSpacing
                             Text { text: "(private)"}
                             Text { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: Kirigami.Units.smallSpacing; height: 1 }
+                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
                         }
                     }
 
                     Column {
                         id: address
 
-                        width: personPageRoot.width - Kirigami.Units.largeSpacing
+                        width: personPageRoot.width - KubeTheme.Units.largeSpacing
 
                         Text { text: "Albertstrasse 35a"}
                         Text { text: "81767 Teststadt"}
@@ -386,7 +386,7 @@ Popup {
 //
 //                         width: parent.width
 //
-//                         spacing: Kirigami.Units.smallSpacing
+//                         spacing: KubeTheme.Units.smallSpacing
 //
 //                         Text {
 //
@@ -396,7 +396,7 @@ Popup {
 //                         GroupGrid {
 //                             id: groups
 //
-//                             width: root.width - Kirigami.Units.largeSpacing
+//                             width: root.width - KubeTheme.Units.largeSpacing
 //
 //                             model: GroupModel1 {}
 //                         }
@@ -406,7 +406,7 @@ Popup {
 //
 //                         width: parent.width
 //
-//                         spacing: Kirigami.Units.smallSpacing
+//                         spacing: KubeTheme.Units.smallSpacing
 //
 //                         Text {
 //                             id: commonPeopleLabel
@@ -417,7 +417,7 @@ Popup {
 //                         PeopleGrid {
 //                             id: commonPeople
 //
-//                             width: root.width - Kirigami.Units.largeSpacing
+//                             width: root.width - KubeTheme.Units.largeSpacing
 //
 //                             model: PeopleModel2 {}
 //                         }
@@ -425,7 +425,7 @@ Popup {
 
                         Item {
                             width: parent.width
-                            height: Kirigami.Units.largeSpacing
+                            height: KubeTheme.Units.largeSpacing
                         }
                     }
                 }

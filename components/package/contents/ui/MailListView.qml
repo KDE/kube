@@ -21,9 +21,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.components.theme 1.0 as KubeTheme
-
 import org.kube.framework.domain 1.0 as KubeFramework
 
 Item {
@@ -46,10 +44,10 @@ Item {
         Row {
             anchors.centerIn: parent
 
-            spacing: Kirigami.Units.smallSpacing
+            spacing: KubeTheme.Units.smallSpacing
 
             Controls.ToolButton {
-                iconName: "mail-mark-unread-new"
+                iconName: KubeTheme.Icons.markAsRead
                 text: qsTr("Mark As Read")
                 enabled: mailController.markAsReadAction.enabled
                 tooltip: qsTr("mark mail as read")
@@ -59,7 +57,7 @@ Item {
             }
 
             Controls.ToolButton {
-                iconName: "mail-mark-important"
+                iconName: KubeTheme.Icons.markImportant
                 text: qsTr("Mark Important")
                 enabled: mailController.markAsImportantAction.enabled
                 tooltip: qsTr("mark mail as important")
@@ -69,7 +67,7 @@ Item {
             }
 
             Controls.ToolButton {
-                iconName: "edit-delete"
+                iconName: KubeTheme.Icons.moveToTrash
                 text: qsTr("Delete Mail")
                 enabled: mailController.moveToTrashAction.enabled
                 tooltip: qsTr("delete email")
@@ -79,7 +77,7 @@ Item {
             }
 
             Controls.ToolButton {
-                iconName: "edit-undo"
+                iconName: KubeTheme.Icons.undo
                 text: qsTr("Restore Mail")
                 enabled: mailController.restoreFromTrashAction.enabled
                 tooltip: qsTr("restore email")
@@ -153,7 +151,7 @@ Item {
                 property variant mail : model.domainObject
 
                 width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
-                height: Kirigami.Units.gridUnit * 5
+                height: KubeTheme.Units.gridUnit * 5
 
                 states: [
                 State {
@@ -231,14 +229,14 @@ Item {
                         bottom: parent.bottom
                         left: parent.left
                         right: parent.right
-                        margins: Kirigami.Units.smallSpacing
+                        margins: KubeTheme.Units.smallSpacing
                     }
 
                     Column {
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: parent.left
-                            leftMargin: Kirigami.Units.largeSpacing
+                            leftMargin: KubeTheme.Units.largeSpacing
                         }
 
                         Text{
@@ -248,7 +246,7 @@ Item {
                             color: model.unread ? KubeTheme.Colors.highlightColor : KubeTheme.Colors.textColor
 
                             maximumLineCount: 2
-                            width: content.width - Kirigami.Units.gridUnit * 3
+                            width: content.width - KubeTheme.Units.gridUnit * 3
                             wrapMode: Text.WrapAnywhere
                             elide: Text.ElideRight
                         }
@@ -259,7 +257,7 @@ Item {
                             text: model.senderName
                             font.italic: true
                             color: KubeTheme.Colors.textColor
-                            width: delegateRoot.width - Kirigami.Units.gridUnit * 3
+                            width: delegateRoot.width - KubeTheme.Units.gridUnit * 3
                             elide: Text.ElideRight
                         }
                     }
