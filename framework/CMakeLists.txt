@@ -33,6 +33,9 @@ enable_testing()
 
 set(SINK_RESOURCE_PLUGINS_PATH ${QT_PLUGIN_INSTALL_DIR}/sink/resources)
 
+install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/framework)
+install(DIRECTORY qml DESTINATION ${QML_INSTALL_DIR}/org/kube/framework)
+
 # The actions framework
 add_subdirectory(actions)
 # The settings framework

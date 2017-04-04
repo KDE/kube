@@ -1,3 +1,0 @@
-module org.kube.framework.notifications
-
-plugin notificationplugin

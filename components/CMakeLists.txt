@@ -29,9 +29,6 @@ macro(install_component name)
     kpackage_install_package(${name} org.kube.components.${name} "genericqml")
 endmacro(install_component)
 
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
-install(DIRECTORY package/contents/ui/ DESTINATION ${QML_INSTALL_DIR}/org/kube/components)
-
 install_component(mail)
 install_component(accounts)
 install_component(mailviewer)

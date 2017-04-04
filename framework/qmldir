@@ -1,4 +1,4 @@
-module org.kube.components
+module org.kube.framework
 
 Avatar 1.0 Avatar.qml
 FocusComposer 1.0 FocusComposer.qml
@@ -15,3 +15,9 @@ Notification 1.0 Notification.qml
 Icon 1.0 Icon.qml
 Button 1.0 Button.qml
 PositiveButton 1.0 PositiveButton.qml
+
+plugin mailplugin
+plugin actionplugin
+plugin notificationplugin
+plugin settingsplugin
+plugin accountsplugin
