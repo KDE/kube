@@ -25,8 +25,8 @@ Item {
     property string error: "error"
     property string busy: "view-refresh"
     property string noNetworkConnection: "network-disconnect"
-    property string connected: "checkmark"
-    property string success: "checkmark"
+    property string connected: "dialog-ok"
+    property string success: "dialog-ok"
 
     property string markAsRead: "mail-mark-unread-new"
     property string markImportant: "mail-mark-important"
