@@ -88,7 +88,7 @@ Controls.ToolButton {
                 }
             }
 
-            Controls2.Button {
+            KubeComponents.PositiveButton {
                 id: newAccountButton
 
                 anchors {
