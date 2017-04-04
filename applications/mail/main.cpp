@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
     QtWebEngine::initialize();
     WebUrlRequestInterceptor *wuri = new WebUrlRequestInterceptor();
     QQuickWebEngineProfile::defaultProfile()->setRequestInterceptor(wuri);
+    QIcon::setThemeName("kube");
 
     auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.mail");
     Q_ASSERT(package.isValid());

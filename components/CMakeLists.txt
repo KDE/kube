@@ -36,6 +36,3 @@ install_component(mail)
 install_component(accounts)
 install_component(mailviewer)
 install_component(theme)
-
-include(${CMAKE_SOURCE_DIR}/KF5KirigamiMacros.cmake)
-kirigami_package_breeze_icons(ICONS applications-graphics view-list-icons folder-sync view-list-details configure document-edit dialog-cancel document-decrypt mail-reply-sender bookmarks folder)
