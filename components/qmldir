@@ -14,3 +14,4 @@ People 1.0 People.qml
 Notification 1.0 Notification.qml
 Icon 1.0 Icon.qml
 Button 1.0 Button.qml
+PositiveButton 1.0 PositiveButton.qml

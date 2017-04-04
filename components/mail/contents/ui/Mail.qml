@@ -209,17 +209,18 @@ Controls2.ApplicationWindow {
                 }
             }
 
-            KubeComponents.Button {
+            KubeComponents.PositiveButton {
                 id: newMailButton
+
                 anchors {
                     top: toolBar.bottom
                     left: parent.left
                     right: parent.right
                     margins: KubeTheme.Units.largeSpacing
                 }
-                color: KubeTheme.Colors.positveColor
-                height: KubeTheme.Units.gridUnit * 1.5
+
                 text: qsTr("New Email")
+
                 onClicked: {
                     composer.open()
                 }
