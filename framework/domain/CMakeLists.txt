@@ -36,7 +36,6 @@ target_link_libraries(mailplugin actionplugin settingsplugin sink mimetreeparser
 
 add_subdirectory(actions/tests)
 
-install(TARGETS mailplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/domain)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/framework/domain)
+install(TARGETS mailplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
 add_subdirectory(mimetreeparser)

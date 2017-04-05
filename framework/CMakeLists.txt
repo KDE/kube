@@ -32,9 +32,10 @@ include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/KMime)
 enable_testing()
 
 set(SINK_RESOURCE_PLUGINS_PATH ${QT_PLUGIN_INSTALL_DIR}/sink/resources)
+set(FRAMEWORK_INSTALL_DIR ${QML_INSTALL_DIR}/org/kube/framework)
 
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/framework)
-install(DIRECTORY qml DESTINATION ${QML_INSTALL_DIR}/org/kube/framework)
+install(DIRECTORY qml DESTINATION ${FRAMEWORK_INSTALL_DIR})
+install(FILES qmldir DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
 # The actions framework
 add_subdirectory(actions)
