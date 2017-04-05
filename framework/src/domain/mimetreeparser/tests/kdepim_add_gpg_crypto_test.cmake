@@ -3,7 +3,8 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-set( GNUPGHOME ${CMAKE_BINARY_DIR}/framework/domain/mimetreeparser/tests/gnupg_home )
+set( MIMETREEPARSERRELPATH framework/src/domain/mimetreeparser)
+set( GNUPGHOME ${CMAKE_BINARY_DIR}/${MIMETREEPARSERRELPATH}/tests/gnupg_home )
 add_definitions( -DGNUPGHOME="${GNUPGHOME}" )
 
 macro (ADD_GPG_CRYPTO_TEST _target _testname)
@@ -32,7 +33,7 @@ macro (ADD_GPG_CRYPTO_TEST _target _testname)
         -D_filename=${_executable}.shell -D_library_path_variable=${_library_path_variable}
         -D_ld_library_path="${_ld_library_path}" -D_executable=$<TARGET_FILE:${_target}>
         -D_gnupghome="${GNUPGHOME}"
-        -P ${CMAKE_SOURCE_DIR}/framework/domain/mimetreeparser/tests/kdepim_generate_crypto_test_wrapper.cmake
+        -P ${CMAKE_SOURCE_DIR}/${MIMETREEPARSERRELPATH}/tests/kdepim_generate_crypto_test_wrapper.cmake
       )
 
       set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${_executable}.shell" )
@@ -50,7 +51,7 @@ macro (ADD_GPG_CRYPTO_TEST _target _testname)
          -D_filename="${_executable}.bat"
          -D_ld_library_path="${_ld_library_path}" -D_executable="${_executable}"
          -D_gnupghome="${GNUPGHOME}"
-         -P ${CMAKE_SOURCE_DIR}/framework/domain/mimetreeparser/tests/kdepim_generate_crypto_test_wrapper.cmake
+         -P ${CMAKE_SOURCE_DIR}/${MIMETREEPARSERRELPATH}/tests/kdepim_generate_crypto_test_wrapper.cmake
          )
 
       add_test(NAME ${_testname} COMMAND ${_executable}.bat)

@@ -1,3 +1,5 @@
+include_directories(../framework/src/)
+
 add_subdirectory(maildir)
 add_subdirectory(imap)
 add_subdirectory(kolabnow)

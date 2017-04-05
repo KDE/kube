@@ -27,8 +27,6 @@ find_package(KAsync CONFIG REQUIRED)
 find_package(KF5 REQUIRED COMPONENTS Package Mime)
 
 include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/)
-#FIXME
-include_directories(../../framework/)
 
 set(SRCS
     maildirsettings.cpp
