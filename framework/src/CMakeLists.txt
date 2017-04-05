@@ -11,10 +11,6 @@ find_package(KF5Package CONFIG REQUIRED)
 add_definitions("-Wall -std=c++0x -g")
 
 include_directories(.)
-#include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/)
-#include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/KMime)
-
-enable_testing()
 
 set(SRCS
     frameworkplugin.cpp
