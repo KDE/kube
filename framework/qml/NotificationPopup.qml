@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.framework 1.0 as Kube
 
 
 MouseArea {
