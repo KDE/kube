@@ -21,7 +21,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Window 2.1
 import QtTest 1.0
-import org.kube.components.mail 1.0 as KubeMail
+import org.kube.components.kube 1.0 as Kube
 
 
 TestCase {
@@ -30,7 +30,7 @@ TestCase {
     height: 400
     name: "ApplicationStart"
 
-    KubeMail.Mail {
+    Kube.Kube {
     }
 
     function test_stuff() {

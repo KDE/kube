@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     QQuickWebEngineProfile::defaultProfile()->setRequestInterceptor(wuri);
     QIcon::setThemeName("kube");
 
-    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.mail");
+    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.kube");
     Q_ASSERT(package.isValid());
     QQmlApplicationEngine engine;
     engine.addImageProvider(QLatin1String("kube"), new KubeImageProvider);

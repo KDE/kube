@@ -18,6 +18,6 @@
   </screenshots>
   <project_group>KDE</project_group>
   <provides>
-    <binary>kube-mail</binary>
+    <binary>kube</binary>
   </provides>
 </component>

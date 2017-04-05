@@ -1,4 +1,4 @@
-project(kube-mail)
+project(kube)
 
 cmake_minimum_required(VERSION 2.8.12)
 cmake_policy(SET CMP0063 NEW)
@@ -32,15 +32,15 @@ set (QT_MIN_VERSION "5.6.0")
 find_package(KF5 REQUIRED COMPONENTS Package)
 
 # install executable
-set(kube_mail_SRCS main.cpp)
+set(SRCS main.cpp)
 
 if(APPLE OR WIN32)
     # Sets the icon on Windows and OSX
     file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/*-apps-kube_icon.*")
-    ecm_add_app_icon(kube_mail_SRCS ICONS ${ICONS_SRCS})
+    ecm_add_app_icon(SRCS ICONS ${ICONS_SRCS})
 endif()
 
-add_executable(${PROJECT_NAME} ${kube_mail_SRCS})
+add_executable(${PROJECT_NAME} ${SRCS})
 qt5_use_modules(${PROJECT_NAME} Gui Quick Widgets WebEngine)
 target_link_libraries(${PROJECT_NAME} KF5::Package)
 

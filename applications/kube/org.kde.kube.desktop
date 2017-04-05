@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Kube
 Type=Application
-Exec=kube-mail
+Exec=kube
 Icon=kube_icon
 GenericName=Mail Client
 Comment=Send, receive and manage your mail with Kube
