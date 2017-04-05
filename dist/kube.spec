@@ -56,11 +56,9 @@ pushd build
 %make_install
 popd
 
-#rm -rf %{buildroot}%{_prefix}/mkspecs/modules/qt_KMime.pri
-
 %files
 %doc
-%{_bindir}/kube-mail
+%{_bindir}/kube
 %dir %{_libdir}/qt5/
 %dir %{_libdir}/qt5/qml/
 %dir %{_libdir}/qt5/qml/org/
@@ -68,6 +66,7 @@ popd
 %{_libdir}/libmimetreeparser.so
 %{_datadir}/appdata/org.kde.kube.appdata.xml
 %{_datadir}/applications/org.kde.kube.desktop
+%{_datadir}/icons/kube
 %{_datadir}/icons/hicolor/256x256/apps/kube_icon.png
 %{_datadir}/icons/hicolor/scalable/apps/kube_icon.svg
 %{_datadir}/icons/hicolor/scalable/apps/kube_logo.svg
