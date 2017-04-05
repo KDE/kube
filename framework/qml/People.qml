@@ -23,9 +23,7 @@ import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
-import org.kube.components.theme 1.0 as KubeTheme
-import org.kube.framework.domain 1.0 as KubeFramework
-
+import org.kube.framework 1.0 as Kube
 
 
 Popup {
@@ -49,7 +47,7 @@ Popup {
 
                 anchors.verticalCenter: parent.verticalCenter
 
-                iconName: KubeTheme.Icons.goBack
+                iconName: Kube.Icons.goBack
 
                 onClicked: stack.pop()
 
@@ -69,11 +67,11 @@ Popup {
 
                 anchors {
                     right: parent.right
-                    rightMargin: KubeTheme.Units.smallSpacing
+                    rightMargin: Kube.Units.smallSpacing
                     verticalCenter: parent.verticalCenter
                 }
 
-                iconName: KubeTheme.Icons.addNew
+                iconName: Kube.Icons.addNew
             }
         }
 
@@ -98,7 +96,7 @@ Popup {
 
         Rectangle {
             id: peoplePageRoot
-            color: KubeTheme.Colors.viewBackgroundColor
+            color: Kube.Colors.viewBackgroundColor
 
             Flickable {
 
@@ -117,25 +115,25 @@ Popup {
 
                         anchors {
                             top: parent.top
-                            topMargin: KubeTheme.Units.largeSpacing
+                            topMargin: Kube.Units.largeSpacing
                             left: parent.left
-                            leftMargin: KubeTheme.Units.largeSpacing
+                            leftMargin: Kube.Units.largeSpacing
                         }
 
-                        spacing: KubeTheme.Units.largeSpacing
-                        width: peoplePageRoot.width - KubeTheme.Units.largeSpacing * 2
+                        spacing: Kube.Units.largeSpacing
+                        width: peoplePageRoot.width - Kube.Units.largeSpacing * 2
 
                         Repeater {
 
-                            model: KubeFramework.PeopleModel {
+                            model: Kube.PeopleModel {
                                 filter: searchBar.text
                             }
 
                             delegate: Rectangle {
                                 id: delegateRoot
 
-                                height: KubeTheme.Units.gridUnit * 3
-                                width: KubeTheme.Units.gridUnit * 10
+                                height: Kube.Units.gridUnit * 3
+                                width: Kube.Units.gridUnit * 10
 
                                 border.width: 1
                                 border.color: "lightgrey"
@@ -164,24 +162,24 @@ Popup {
 
                                     anchors {
                                         left: avatarPlaceholder.right
-                                        margins: KubeTheme.Units.smallSpacing
+                                        margins: Kube.Units.smallSpacing
                                         verticalCenter: parent.verticalCenter
                                     }
 
                                     Text {
-                                        width: delegateRoot.width - avatarPlaceholder.width - KubeTheme.Units.smallSpacing * 2
+                                        width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
 
                                         text: model.firstName
                                         elide: Text.ElideRight
-                                        color: KubeTheme.Colors.textColor
+                                        color: Kube.Colors.textColor
                                     }
 
                                     Text {
-                                        width: delegateRoot.width - avatarPlaceholder.width - KubeTheme.Units.smallSpacing * 2
+                                        width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
 
                                         text: model.lastName
                                         elide: Text.ElideRight
-                                        color: KubeTheme.Colors.textColor
+                                        color: Kube.Colors.textColor
                                     }
                                 }
                             }
@@ -198,19 +196,19 @@ Popup {
         Rectangle {
             id: personPageRoot
 
-            KubeFramework.ContactController {
+            Kube.ContactController {
                 id: contactController
                 contact: popup.currentContact
             }
 
-            color: KubeTheme.Colors.viewBackgroundColor
+            color: Kube.Colors.viewBackgroundColor
 
             Item {
 
                 anchors {
                     top: parent.top
                     left: parent.left
-                    leftMargin: KubeTheme.Units.largeSpacing
+                    leftMargin: Kube.Units.largeSpacing
                 }
 
                 width: parent.width
@@ -231,17 +229,17 @@ Popup {
 
                     width: personPageRoot.width
 
-                    spacing: KubeTheme.Units.largeSpacing
+                    spacing: Kube.Units.largeSpacing
 
                     Item {
                         width: parent.width
-                        height: KubeTheme.Units.smallSpacing
+                        height: Kube.Units.smallSpacing
                     }
 
                     Item {
 
-                        height: KubeTheme.Units.gridUnit * 8
-                        width: personPageRoot.width - KubeTheme.Units.largeSpacing
+                        height: Kube.Units.gridUnit * 8
+                        width: personPageRoot.width - Kube.Units.largeSpacing
 
                         Rectangle {
                             id: avatar
@@ -258,7 +256,7 @@ Popup {
                             anchors {
                                 top: avatar.top
                                 left: avatar.right
-                                leftMargin: KubeTheme.Units.largeSpacing
+                                leftMargin: Kube.Units.largeSpacing
                             }
 
                             text: contactController.name //"Michael Tester"
@@ -270,7 +268,7 @@ Popup {
                             anchors {
                                 top: nameLabel.bottom
                                 left: avatar.right
-                                leftMargin: KubeTheme.Units.largeSpacing
+                                leftMargin: Kube.Units.largeSpacing
                             }
 
                             text: "CIO"
@@ -282,11 +280,11 @@ Popup {
                             anchors {
                                 bottom: avatar.bottom
                                 left: avatar.right
-                                leftMargin: KubeTheme.Units.largeSpacing
+                                leftMargin: Kube.Units.largeSpacing
                             }
 
-                            height: KubeTheme.Units.gridUnit * 3
-                            width: KubeTheme.Units.gridUnit * 10
+                            height: Kube.Units.gridUnit * 3
+                            width: Kube.Units.gridUnit * 10
 
                             border.width: 1
                             border.color: "lightgrey"
@@ -304,12 +302,12 @@ Popup {
                                 anchors {
                                     verticalCenter: av.verticalCenter
                                     left: av.right
-                                    leftMargin: KubeTheme.Units.smallSpacing
+                                    leftMargin: Kube.Units.smallSpacing
                                 }
 
                                 text: "Sauerkraut AG"
 
-                                color: KubeTheme.Colors.textColor
+                                color: Kube.Colors.textColor
                             }
                         }
                     }
@@ -317,65 +315,65 @@ Popup {
                     Flow {
                         id: emails
 
-                        width: personPageRoot.width - KubeTheme.Units.largeSpacing
+                        width: personPageRoot.width - Kube.Units.largeSpacing
 
                         Repeater {
 
                             model: contactController.emails
 
                             Row {
-                                spacing: KubeTheme.Units.smallSpacing
+                                spacing: Kube.Units.smallSpacing
                                 Text { text: "(main)" }
-                                Text { text: modelData ; color: KubeTheme.Colors.highlightColor }
-                                Item { width: KubeTheme.Units.smallSpacing; height: 1 }
+                                Text { text: modelData ; color: Kube.Colors.highlightColor }
+                                Item { width: Kube.Units.smallSpacing; height: 1 }
                             }
                         }
 
                         Row {
-                            spacing: KubeTheme.Units.smallSpacing
+                            spacing: Kube.Units.smallSpacing
                             Text { text: "(alias)"}
-                            Text { text: "test.testerson@gmail.com"; color: KubeTheme.Colors.highlightColor }
-                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
+                            Text { text: "test.testerson@gmail.com"; color: Kube.Colors.highlightColor }
+                            Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
 
                         Row {
-                            spacing: KubeTheme.Units.smallSpacing
+                            spacing: Kube.Units.smallSpacing
                             Text { text: "(private)"}
-                            Text { text: "test@gmail.com"; color: KubeTheme.Colors.highlightColor }
-                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
+                            Text { text: "test@gmail.com"; color: Kube.Colors.highlightColor }
+                            Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
                     }
 
                     Flow {
                         id: phone
 
-                        width: personPageRoot.width - KubeTheme.Units.largeSpacing
-                        spacing: KubeTheme.Units.smallSpacing
+                        width: personPageRoot.width - Kube.Units.largeSpacing
+                        spacing: Kube.Units.smallSpacing
 
                         Row {
-                            spacing: KubeTheme.Units.smallSpacing
+                            spacing: Kube.Units.smallSpacing
                             Text { text: "(inhouse)"}
                             Text { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
+                            Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
                         Row {
-                            spacing: KubeTheme.Units.smallSpacing
+                            spacing: Kube.Units.smallSpacing
                             Text { text: "(mobile)"}
                             Text { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
+                            Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
                         Row {
-                            spacing: KubeTheme.Units.smallSpacing
+                            spacing: Kube.Units.smallSpacing
                             Text { text: "(private)"}
                             Text { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: KubeTheme.Units.smallSpacing; height: 1 }
+                            Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
                     }
 
                     Column {
                         id: address
 
-                        width: personPageRoot.width - KubeTheme.Units.largeSpacing
+                        width: personPageRoot.width - Kube.Units.largeSpacing
 
                         Text { text: "Albertstrasse 35a"}
                         Text { text: "81767 Teststadt"}
@@ -386,7 +384,7 @@ Popup {
 //
 //                         width: parent.width
 //
-//                         spacing: KubeTheme.Units.smallSpacing
+//                         spacing: Kube.Units.smallSpacing
 //
 //                         Text {
 //
@@ -396,7 +394,7 @@ Popup {
 //                         GroupGrid {
 //                             id: groups
 //
-//                             width: root.width - KubeTheme.Units.largeSpacing
+//                             width: root.width - Kube.Units.largeSpacing
 //
 //                             model: GroupModel1 {}
 //                         }
@@ -406,7 +404,7 @@ Popup {
 //
 //                         width: parent.width
 //
-//                         spacing: KubeTheme.Units.smallSpacing
+//                         spacing: Kube.Units.smallSpacing
 //
 //                         Text {
 //                             id: commonPeopleLabel
@@ -417,7 +415,7 @@ Popup {
 //                         PeopleGrid {
 //                             id: commonPeople
 //
-//                             width: root.width - KubeTheme.Units.largeSpacing
+//                             width: root.width - Kube.Units.largeSpacing
 //
 //                             model: PeopleModel2 {}
 //                         }
@@ -425,7 +423,7 @@ Popup {
 
                         Item {
                             width: parent.width
-                            height: KubeTheme.Units.largeSpacing
+                            height: Kube.Units.largeSpacing
                         }
                     }
                 }

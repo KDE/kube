@@ -20,8 +20,8 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Layouts 1.1
 
-import org.kube.framework.domain 1.0 as KubeFramework
 import org.kube.components.mailviewer 1.0 as MV
+import org.kube.framework 1.0 as Kube
 
 Item {
     id: root
@@ -67,7 +67,7 @@ Item {
         model: messageParser.newTree
     }
 
-    KubeFramework.MessageParser {
+    Kube.MessageParser {
         id: messageParser
         message: root.message
     }

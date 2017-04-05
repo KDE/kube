@@ -17,14 +17,13 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.1 as Controls
-import org.kube.components.theme 1.0 as KubeTheme
+import QtQuick.Controls 2.0 as Controls
 
 Controls.AbstractButton {
     id: root
 
-    width: mainText.implicitWidth + KubeTheme.Units.largeSpacing * 2
-    height: mainText.implicitHeight + KubeTheme.Units.smallSpacing * 2
+    width: mainText.implicitWidth + Kube.Units.largeSpacing * 2
+    height: mainText.implicitHeight + Kube.Units.smallSpacing * 2
 
     clip: true
 
@@ -33,7 +32,7 @@ Controls.AbstractButton {
 
         anchors.fill: parent
 
-        color: KubeTheme.Colors.positveColor
+        color: Kube.Colors.positveColor
     }
 
     Text {
@@ -41,7 +40,7 @@ Controls.AbstractButton {
 
         anchors.centerIn: parent
 
-        color: KubeTheme.Colors.highlightedTextColor
+        color: Kube.Colors.highlightedTextColor
         text: root.text
     }
 }

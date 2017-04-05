@@ -22,21 +22,20 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.framework 1.0 as Kube
 
-import org.kube.framework.accounts 1.0 as KubeAccounts
-import org.kube.components.theme 1.0 as KubeTheme
 
 Item {
     id: root
     property string accountType
 
-    KubeAccounts.AccountFactory {
+    Kube.AccountFactory {
         id: accountFactory
         accountType: root.accountType
     }
 
     Controls.ToolButton {
-        iconName: KubeTheme.Icons.goBack
+        iconName: Kube.Icons.goBack
         tooltip: "go back"
         onClicked: {
             stack.pop()
@@ -48,13 +47,13 @@ Item {
 
         anchors {
             fill: parent
-            margins: KubeTheme.Units.largeSpacing * 2
+            margins: Kube.Units.largeSpacing * 2
         }
 
         Kirigami.Heading {
             id: heading
             text: loader.item.heading
-            color: KubeTheme.Colors.highlightColor
+            color: Kube.Colors.highlightColor
         }
 
         Kirigami.Label {
@@ -67,7 +66,7 @@ Item {
 
             width: parent.width
             text: loader.item.subheadline
-            color: KubeTheme.Colors.disabledTextColor
+            color: Kube.Colors.disabledTextColor
             wrapMode: Text.Wrap
         }
 
@@ -77,7 +76,7 @@ Item {
                 top:subHeadline.bottom
                 left: parent.left
                 right: parent.right
-                topMargin: KubeTheme.Units.largeSpacing * 2
+                topMargin: Kube.Units.largeSpacing * 2
             }
 
             Loader {
@@ -105,12 +104,12 @@ Item {
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
-                topMargin: KubeTheme.Units.largeSpacing * 2
+                topMargin: Kube.Units.largeSpacing * 2
             }
 
             columns: 2
-            columnSpacing: KubeTheme.Units.largeSpacing
-            rowSpacing: KubeTheme.Units.largeSpacing
+            columnSpacing: Kube.Units.largeSpacing
+            rowSpacing: Kube.Units.largeSpacing
 
             Item {
                 Layout.fillHeight: true

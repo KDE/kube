@@ -2,7 +2,6 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 
 import org.kde.kirigami 1.0 as Kirigami
-import org.kube.components.theme 1.0 as KubeTheme
 
 
 MouseArea {
@@ -26,7 +25,7 @@ MouseArea {
 
     function notify(text) {
         popup.title = text
-        bg.color = KubeTheme.Colors.textColor
+        bg.color = Kube.Colors.textColor
         show()
     }
 
@@ -73,7 +72,7 @@ MouseArea {
 
         font.pixelSize: 16
 
-        color: KubeTheme.Colors.highlightedTextColor
+        color: Kube.Colors.highlightedTextColor
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
         wrapMode: Text.Wrap

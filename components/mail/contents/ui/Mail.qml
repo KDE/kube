@@ -23,14 +23,8 @@ import QtQuick.Layouts 1.1
 
 import QtQuick.Controls 2.0 as Controls2
 
-import org.kube.framework.actions 1.0 as KubeAction
-import org.kube.framework.settings 1.0 as KubeSettings
-import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.framework.notifications 1.0 as KubeNotifications
-import org.kube.framework.accounts 1.0 as KubeAccountsFramework
-import org.kube.components 1.0 as KubeComponents
+import org.kube.framework 1.0 as Kube
 import org.kube.components.accounts 1.0 as KubeAccounts
-import org.kube.components.theme 1.0 as KubeTheme
 
 Controls2.ApplicationWindow {
     id: app
@@ -42,11 +36,11 @@ Controls2.ApplicationWindow {
 
     visible: true
 
-    KubeNotifications.NotificationHandler {
+    Kube.NotificationHandler {
         id: notificationHandler
         function handler(n) {
             console.warn("We got a notification: ", n.message)
-            if (n.type == KubeNotifications.Notification.Warning) {
+            if (n.type == Kube.Notification.Warning) {
                 console.warn("And it's a warning!", n.type)
             }
             notificationPopup.notify(n.message);
@@ -54,7 +48,7 @@ Controls2.ApplicationWindow {
     }
 
     //BEGIN Actions
-    KubeAction.Context {
+    Kube.Context {
         id: maillistcontext
         property variant mail
         property bool isDraft
@@ -62,7 +56,7 @@ Controls2.ApplicationWindow {
         isDraft: mailListView.isDraft
     }
 
-    KubeAction.Action {
+    Kube.Action {
         id: replyAction
         actionId: "org.kde.kube.actions.reply"
         context: maillistcontext
@@ -70,7 +64,7 @@ Controls2.ApplicationWindow {
     //END Actions
 
     //BEGIN ActionHandler
-    KubeAction.ActionHandler {
+    Kube.ActionHandler {
         actionId: "org.kde.kube.actions.reply"
         function isReady(context) {
             return context.mail ? true : false;
@@ -82,7 +76,7 @@ Controls2.ApplicationWindow {
         }
     }
 
-    KubeAction.ActionHandler {
+    Kube.ActionHandler {
         actionId: "org.kde.kube.actions.edit"
         function isReady(context) {
             return context.mail && context.isDraft;
@@ -95,7 +89,7 @@ Controls2.ApplicationWindow {
     //END ActionHandler
 
     //Controller
-    KubeFramework.MailController {
+    Kube.MailController {
         id: mailController
         Binding on threadLeader {
             //!! checks for the availability of the type
@@ -104,7 +98,7 @@ Controls2.ApplicationWindow {
         }
     }
 
-    KubeFramework.FolderController {
+    Kube.FolderController {
         id: folderController
         Binding on folder {
             //!! checks for the availability of the type
@@ -114,7 +108,7 @@ Controls2.ApplicationWindow {
     }
 
     //Model
-    KubeAccountsFramework.AccountsModel {
+    Kube.AccountsModel {
         id: currentAccountModel
         accountId: accountSwitcher.accountId
     }
@@ -144,7 +138,7 @@ Controls2.ApplicationWindow {
     Rectangle {
         anchors.fill: parent
 
-        color: KubeTheme.Colors.backgroundColor
+        color: Kube.Colors.backgroundColor
     }
     //END background
 
@@ -159,11 +153,11 @@ Controls2.ApplicationWindow {
         width: app.width
 
         Rectangle {
-            width: KubeTheme.Units.gridUnit * 10
+            width: Kube.Units.gridUnit * 10
             Layout.maximumWidth: app.width * 0.25
-            Layout.minimumWidth: KubeTheme.Units.gridUnit * 5
+            Layout.minimumWidth: Kube.Units.gridUnit * 5
 
-            color: KubeTheme.Colors.textColor
+            color: Kube.Colors.textColor
 
             Controls2.ToolBar {
                 id: toolBar
@@ -177,18 +171,18 @@ Controls2.ApplicationWindow {
                 RowLayout {
                     anchors.centerIn: parent
 
-                    spacing: KubeTheme.Units.largeSpacing
+                    spacing: Kube.Units.largeSpacing
 
-                    KubeComponents.AccountSwitcher {
+                    Kube.AccountSwitcher {
                         id: accountSwitcher
-                        iconName: KubeTheme.Icons.menu
-                        height: KubeTheme.Units.gridUnit * 1.5
+                        iconName: Kube.Icons.menu
+                        height: Kube.Units.gridUnit * 1.5
                         width: height
                     }
 
                     ToolButton {
-                        iconName: KubeTheme.Icons.user
-                        height: KubeTheme.Units.gridUnit * 1.5
+                        iconName: Kube.Icons.user
+                        height: Kube.Units.gridUnit * 1.5
                         width: height
 
                         onClicked: {
@@ -197,8 +191,8 @@ Controls2.ApplicationWindow {
                     }
 
                     ToolButton {
-                        iconName: KubeTheme.Icons.search
-                        height: KubeTheme.Units.gridUnit * 1.5
+                        iconName: Kube.Icons.search
+                        height: Kube.Units.gridUnit * 1.5
                         width: height
 
                         onClicked: {
@@ -208,14 +202,14 @@ Controls2.ApplicationWindow {
                 }
             }
 
-            KubeComponents.PositiveButton {
+            Kube.PositiveButton {
                 id: newMailButton
 
                 anchors {
                     top: toolBar.bottom
                     left: parent.left
                     right: parent.right
-                    margins: KubeTheme.Units.largeSpacing
+                    margins: Kube.Units.largeSpacing
                 }
 
                 text: qsTr("New Email")
@@ -228,7 +222,7 @@ Controls2.ApplicationWindow {
             Item {
                 id: accountName
 
-                KubeFramework.FolderController {
+                Kube.FolderController {
                     id: accountNameFolderController
                     accountId: accountSwitcher.accountId
                 }
@@ -247,11 +241,11 @@ Controls2.ApplicationWindow {
 
                 anchors {
                     top: newMailButton.bottom
-                    topMargin: KubeTheme.Units.smallSpacing
+                    topMargin: Kube.Units.smallSpacing
                 }
 
                 width: parent.width
-                height: KubeTheme.Units.gridUnit * 2
+                height: Kube.Units.gridUnit * 2
 
                 MouseArea {
                     anchors.fill: parent
@@ -264,40 +258,40 @@ Controls2.ApplicationWindow {
                 Repeater {
                     model: currentAccountModel
                     Row {
-                        spacing: KubeTheme.Units.smallSpacing
+                        spacing: Kube.Units.smallSpacing
                         anchors {
                             bottom: parent.bottom
                             left: parent.left
-                            leftMargin: KubeTheme.Units.smallSpacing
+                            leftMargin: Kube.Units.smallSpacing
                         }
                         Layout.fillHeight: true
 
                         Text {
                             text: model.name
                             font.weight: Font.DemiBold
-                            color: KubeTheme.Colors.highlightedTextColor
+                            color: Kube.Colors.highlightedTextColor
                         }
 
-                        KubeComponents.Icon {
+                        Kube.Icon {
                             id: statusIcon
                             visible: false
                             iconName: ""
                             states: [
                                 State {
-                                    name: "busy"; when: model.status == KubeAccountsFramework.AccountsModel.BusyStatus
-                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.busy; visible: true }
+                                    name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy; visible: true }
                                 },
                                 State {
-                                    name: "error"; when: model.status == KubeAccountsFramework.AccountsModel.ErrorStatus
-                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.error; visible: true }
+                                    name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.error; visible: true }
                                 },
                                 State {
-                                    name: "checkmark"; when: model.status == KubeAccountsFramework.AccountsModel.ConnectedStatus
-                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.connected; visible: true }
+                                    name: "checkmark"; when: model.status == Kube.AccountsModel.ConnectedStatus
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.connected; visible: true }
                                 },
                                 State {
-                                    name: "disconnected"; when: model.status == KubeAccountsFramework.AccountsModel.OfflineStatus
-                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.noNetworkConnection; visible: true }
+                                    name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.noNetworkConnection; visible: true }
                                 }
                             ]
                         }
@@ -305,12 +299,12 @@ Controls2.ApplicationWindow {
                 }
             }
 
-            KubeComponents.FolderListView {
+            Kube.FolderListView {
                 id: folderListView
 
                 anchors {
                     top: accountName.bottom
-                    topMargin: KubeTheme.Units.smallSpacing
+                    topMargin: Kube.Units.smallSpacing
                     bottom: statusBar.top
                     left: parent.left
                     right: parent.right
@@ -323,13 +317,13 @@ Controls2.ApplicationWindow {
             Item {
                 id: statusBar
                 anchors {
-                    topMargin: KubeTheme.Units.smallSpacing
+                    topMargin: Kube.Units.smallSpacing
                     bottom: outbox.top
                     left: parent.left
                     right: parent.right
                 }
 
-                height: KubeTheme.Units.gridUnit
+                height: Kube.Units.gridUnit
 
                 Repeater {
                     model: currentAccountModel
@@ -337,10 +331,10 @@ Controls2.ApplicationWindow {
                         id: statusText
                         anchors.centerIn: parent
                         visible: false
-                        color: KubeTheme.Colors.highlightedTextColor
+                        color: Kube.Colors.highlightedTextColor
                         states: [
                             State {
-                                name: "disconnected"; when: model.status == KubeAccountsFramework.AccountsModel.OfflineStatus
+                                name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
                                 PropertyChanges { target: statusText; text: "Offline"; visible: true }
                             }
                         ]
@@ -348,7 +342,7 @@ Controls2.ApplicationWindow {
                 }
             }
 
-            KubeComponents.Outbox {
+            Kube.Outbox {
                 id: outbox
 
                 anchors {
@@ -356,21 +350,21 @@ Controls2.ApplicationWindow {
                     left: parent.left
                     right: parent.right
                 }
-                height: KubeTheme.Units.gridUnit * 1.5
+                height: Kube.Units.gridUnit * 1.5
             }
         }
 
-        KubeComponents.MailListView  {
+        Kube.MailListView  {
             id: mailListView
             parentFolder: folderListView.currentFolder
-            width: KubeTheme.Units.gridUnit * 20
+            width: Kube.Units.gridUnit * 20
             height: parent.height
             Layout.maximumWidth: app.width * 0.4
-            Layout.minimumWidth: KubeTheme.Units.gridUnit * 10
+            Layout.minimumWidth: Kube.Units.gridUnit * 10
             focus: true
         }
 
-        KubeComponents.ConversationView {
+        Kube.ConversationView {
             id: mailView
             mail: mailListView.currentMail
             Layout.fillWidth: true
@@ -379,7 +373,7 @@ Controls2.ApplicationWindow {
     //END Main content
 
     //BEGIN Composer
-    KubeComponents.FocusComposer {
+    Kube.FocusComposer {
         id: composer
 
         height: app.height * 0.85
@@ -403,7 +397,7 @@ Controls2.ApplicationWindow {
     //END AccountWizard
 
     //BEGIN Notification
-    KubeComponents.Notification {
+    Kube.NotificationPopup {
         id: notificationPopup
 
         anchors {
@@ -418,7 +412,7 @@ Controls2.ApplicationWindow {
         id: search
 
         width: app.width * 0.6
-        height: KubeTheme.Units.gridUnit * 3
+        height: Kube.Units.gridUnit * 3
 
         x: app.width * 0.2
         y: app.height * 0.2
@@ -447,7 +441,7 @@ Controls2.ApplicationWindow {
     //END Search
 
     //BEGIN People
-    KubeComponents.People {
+    Kube.People {
         id: people
 
         height: app.height * 0.85

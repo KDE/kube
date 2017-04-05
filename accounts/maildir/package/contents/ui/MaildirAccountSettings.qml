@@ -25,7 +25,6 @@ import QtQuick.Dialogs 1.0 as Dialogs
 
 import org.kde.kirigami 1.0 as Kirigami
 
-import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.accounts.maildir 1.0 as MaildirAccount
 
 Item {
@@ -57,8 +56,8 @@ Item {
                 fill: parent
             }
             columns: 2
-            columnSpacing: KubeTheme.Units.largeSpacing
-            rowSpacing: KubeTheme.Units.largeSpacing
+            columnSpacing: Kube.Units.largeSpacing
+            rowSpacing: Kube.Units.largeSpacing
 
             Controls.Label {
                 text: "Title of Account"
@@ -88,7 +87,7 @@ Item {
                 }
 
                 Controls.Button {
-                    iconName: KubeTheme.Icons.folder
+                    iconName: Kube.Icons.folder
 
                     onClicked: {
                         fileDialogComponent.createObject(parent)

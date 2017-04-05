@@ -21,8 +21,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
-import org.kube.components.theme 1.0 as KubeTheme
-import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework 1.0 as Kube
 
 Item {
     id: root
@@ -44,10 +43,10 @@ Item {
         Row {
             anchors.centerIn: parent
 
-            spacing: KubeTheme.Units.smallSpacing
+            spacing: Kube.Units.smallSpacing
 
             Controls.ToolButton {
-                iconName: KubeTheme.Icons.markAsRead
+                iconName: Kube.Icons.markAsRead
                 text: qsTr("Mark As Read")
                 enabled: mailController.markAsReadAction.enabled
                 tooltip: qsTr("mark mail as read")
@@ -57,7 +56,7 @@ Item {
             }
 
             Controls.ToolButton {
-                iconName: KubeTheme.Icons.markImportant
+                iconName: Kube.Icons.markImportant
                 text: qsTr("Mark Important")
                 enabled: mailController.markAsImportantAction.enabled
                 tooltip: qsTr("mark mail as important")
@@ -67,7 +66,7 @@ Item {
             }
 
             Controls.ToolButton {
-                iconName: KubeTheme.Icons.moveToTrash
+                iconName: Kube.Icons.moveToTrash
                 text: qsTr("Delete Mail")
                 enabled: mailController.moveToTrashAction.enabled
                 tooltip: qsTr("delete email")
@@ -77,7 +76,7 @@ Item {
             }
 
             Controls.ToolButton {
-                iconName: KubeTheme.Icons.undo
+                iconName: Kube.Icons.undo
                 text: qsTr("Restore Mail")
                 enabled: mailController.restoreFromTrashAction.enabled
                 tooltip: qsTr("restore email")
@@ -132,7 +131,7 @@ Item {
             root.isDraft = currentItem.currentData.draft;
         }
 
-        model: KubeFramework.MailListModel {
+        model: Kube.MailListModel {
             parentFolder: root.parentFolder
             filter: root.filterString
         }
@@ -151,7 +150,7 @@ Item {
                 property variant mail : model.domainObject
 
                 width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
-                height: KubeTheme.Units.gridUnit * 5
+                height: Kube.Units.gridUnit * 5
 
                 states: [
                 State {
@@ -163,31 +162,31 @@ Item {
                     PropertyChanges {target: delegateRoot; parent: root}
 
                     PropertyChanges {target: delegateRoot; opacity: 0.7}
-                    PropertyChanges {target: background; color: KubeTheme.Colors.highlightColor}
-                    PropertyChanges {target: subject; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: sender; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: threadCounter; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: background; color: Kube.Colors.highlightColor}
+                    PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
                 },
                 State {
                     name: "selected"
                     when: listView.currentIndex == index && !mouseArea.drag.active
 
-                    PropertyChanges {target: background; color: KubeTheme.Colors.highlightColor}
-                    PropertyChanges {target: subject; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: sender; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: threadCounter; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: background; color: Kube.Colors.highlightColor}
+                    PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
                 },
                 State {
                     name: "hovered"
                     when: mouseArea.containsMouse && !mouseArea.drag.active
 
-                    PropertyChanges {target: background; color: KubeTheme.Colors.highlightColor; opacity: 0.7}
-                    PropertyChanges {target: subject; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: sender; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; color: KubeTheme.Colors.highlightedTextColor}
-                    PropertyChanges {target: threadCounter; color: KubeTheme.Colors.highlightedTextColor}
+                    PropertyChanges {target: background; color: Kube.Colors.highlightColor; opacity: 0.7}
+                    PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
                 }
                 ]
 
@@ -215,9 +214,9 @@ Item {
 
                     anchors.fill: parent
 
-                    color: KubeTheme.Colors.viewBackgroundColor
+                    color: Kube.Colors.viewBackgroundColor
 
-                    border.color: KubeTheme.Colors.backgroundColor
+                    border.color: Kube.Colors.backgroundColor
                     border.width: 1
                 }
 
@@ -229,24 +228,24 @@ Item {
                         bottom: parent.bottom
                         left: parent.left
                         right: parent.right
-                        margins: KubeTheme.Units.smallSpacing
+                        margins: Kube.Units.smallSpacing
                     }
 
                     Column {
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: parent.left
-                            leftMargin: KubeTheme.Units.largeSpacing
+                            leftMargin: Kube.Units.largeSpacing
                         }
 
                         Text{
                             id: subject
 
                             text: model.subject
-                            color: model.unread ? KubeTheme.Colors.highlightColor : KubeTheme.Colors.textColor
+                            color: model.unread ? Kube.Colors.highlightColor : Kube.Colors.textColor
 
                             maximumLineCount: 2
-                            width: content.width - KubeTheme.Units.gridUnit * 3
+                            width: content.width - Kube.Units.gridUnit * 3
                             wrapMode: Text.WrapAnywhere
                             elide: Text.ElideRight
                         }
@@ -256,8 +255,8 @@ Item {
 
                             text: model.senderName
                             font.italic: true
-                            color: KubeTheme.Colors.textColor
-                            width: delegateRoot.width - KubeTheme.Units.gridUnit * 3
+                            color: Kube.Colors.textColor
+                            width: delegateRoot.width - Kube.Units.gridUnit * 3
                             elide: Text.ElideRight
                         }
                     }
@@ -271,7 +270,7 @@ Item {
                         }
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                         font.italic: true
-                        color: KubeTheme.Colors.disabledTextColor
+                        color: Kube.Colors.disabledTextColor
                         font.pointSize: 9
                     }
 
@@ -282,7 +281,7 @@ Item {
                             right: parent.right
                         }
                         text: model.threadSize
-                        color: model.unread ?  KubeTheme.Colors.highlightColor  : KubeTheme.Colors.disabledTextColor
+                        color: model.unread ?  Kube.Colors.highlightColor  : Kube.Colors.disabledTextColor
                         visible: model.threadSize > 1
                     }
                 }

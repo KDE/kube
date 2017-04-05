@@ -17,7 +17,6 @@
 */
 
 import QtQuick 2.7
-import org.kube.components.theme 1.0 as KubeTheme
 
 Item {
     id: textItem
@@ -47,7 +46,7 @@ Item {
             text: model.content
             wrapMode: Text.WordWrap
 
-            color: model.embeded ? KubeTheme.Colors.diabledTextColor : KubeTheme.Colors.textColor
+            color: model.embeded ? Kube.Colors.diabledTextColor : Kube.Colors.textColor
         }
 
         //BEGIN debug

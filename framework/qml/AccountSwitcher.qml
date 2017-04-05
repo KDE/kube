@@ -24,11 +24,8 @@ import QtQuick.Controls 1.4 as Controls
 import QtQml 2.2 as QtQml
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.framework 1.0 as Kube
 
-import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.framework.accounts 1.0 as KubeAccounts
-import org.kube.components 1.0 as KubeComponents
-import org.kube.components.theme 1.0 as KubeTheme
 
 Controls.ToolButton {
     id: accountSwitcher
@@ -38,12 +35,12 @@ Controls.ToolButton {
 
     width: parent.width
 
-    KubeFramework.FolderController {
+    Kube.FolderController {
         id: folderController
         accountId: accountId
     }
 
-    KubeAccounts.AccountsModel {
+    Kube.AccountsModel {
         id: accountsModel
     }
 
@@ -88,7 +85,7 @@ Controls.ToolButton {
                 }
             }
 
-            KubeComponents.PositiveButton {
+            Kube.PositiveButton {
                 id: newAccountButton
 
                 anchors {
@@ -170,16 +167,16 @@ Controls.ToolButton {
                             enabled: false
                             states: [
                                 State {
-                                    name: "busy"; when: model.status == KubeAccountsFramework.AccountsModel.BusyStatus
-                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.busy; visible: true }
+                                    name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy; visible: true }
                                 },
                                 State {
-                                    name: "error"; when: model.status == KubeAccountsFramework.AccountsModel.ErrorStatus
-                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.error; visible: true }
+                                    name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.error; visible: true }
                                 },
                                 State {
-                                    name: "checkmark"; when: model.status == KubeAccountsFramework.AccountsModel.ConnectedStatus
-                                    PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.connected; visible: true }
+                                    name: "checkmark"; when: model.status == Kube.AccountsModel.ConnectedStatus
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.connected; visible: true }
                                 }
                             ]
                         }
@@ -203,7 +200,7 @@ Controls.ToolButton {
 
                         Component {
                             id: editAccountComponent
-                            KubeComponents.EditAccountDialog {
+                            Kube.EditAccountDialog {
                                 anchors.fill: parent
                             }
                         }

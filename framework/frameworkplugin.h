@@ -1,4 +1,5 @@
 /*
+    Copyright (c) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
     Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
@@ -16,14 +17,17 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "notificationplugin.h"
 
-#include "notificationhandler.h"
+#pragma once
 
-#include <QtQml>
+#include <QQmlEngine>
+#include <QQmlExtensionPlugin>
 
-void NotificationPlugin::registerTypes (const char *uri)
+class FrameworkPlugin : public QQmlExtensionPlugin
 {
-    qmlRegisterType<Kube::NotificationHandler>(uri, 1, 0, "NotificationHandler");
-    qmlRegisterType<Kube::Notification>(uri, 1, 0, "Notification");
-}
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+
+public:
+    virtual void registerTypes(const char *uri);
+};

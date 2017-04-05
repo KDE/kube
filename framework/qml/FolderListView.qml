@@ -22,9 +22,7 @@ import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
-import org.kube.components 1.0 as KubeComponents
-import org.kube.components.theme 1.0 as KubeTheme
-import org.kube.framework.domain 1.0 as KubeFramework
+import org.kube.framework 1.0 as Kube
 
 Rectangle {
     id: root
@@ -32,9 +30,9 @@ Rectangle {
     property variant currentFolder: null
     property variant accountId
 
-    color: KubeTheme.Colors.textColor
+    color: Kube.Colors.textColor
 
-    KubeFramework.FolderController {
+    Kube.FolderController {
         id: folderController
         Binding on folder {
             //!! checks for the availability of the type
@@ -71,14 +69,14 @@ Rectangle {
             role: "name"
         }
 
-        model: KubeFramework.FolderListModel {
+        model: Kube.FolderListModel {
             id: folderListModel
             accountId: root.accountId
         }
 
         onCurrentIndexChanged: {
             model.fetchMore(currentIndex)
-            root.currentFolder = model.data(currentIndex, KubeFramework.FolderListModel.DomainObject)
+            root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
         }
 
         alternatingRowColors: false
@@ -90,7 +88,7 @@ Rectangle {
             onClicked: {
                 var index = parent.indexAt(mouse.x, mouse.y)
                 if (index.valid) {
-                    folderController.folder = treeView.model.data(index, KubeFramework.FolderListModel.DomainObject)
+                    folderController.folder = treeView.model.data(index, Kube.FolderListModel.DomainObject)
                     contextMenu.popup()
                 }
             }
@@ -99,7 +97,7 @@ Rectangle {
         style: TreeViewStyle {
 
             rowDelegate: Rectangle {
-                color: styleData.selected ? KubeTheme.Colors.highlightColor : KubeTheme.Colors.textColor
+                color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
 
                 height: Kirigami.Units.gridUnit * 1.5
                 width: 20
@@ -107,7 +105,7 @@ Rectangle {
             }
 
             frame: Rectangle {
-                color: KubeTheme.Colors.textColor
+                color: Kube.Colors.textColor
             }
 
             branchDelegate: Item {
@@ -118,7 +116,7 @@ Rectangle {
 
                     anchors.centerIn: parent
 
-                    color: KubeTheme.Colors.viewBackgroundColor
+                    color: Kube.Colors.viewBackgroundColor
                     text: styleData.isExpanded ? "-" : "+"
                 }
 
@@ -127,14 +125,14 @@ Rectangle {
 
             itemDelegate: Rectangle {
 
-                color: styleData.selected ? KubeTheme.Colors.highlightColor : KubeTheme.Colors.textColor
+                color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
 
                 DropArea {
                     anchors.fill: parent
 
                     Rectangle {
                         anchors.fill: parent
-                        color: KubeTheme.Colors.viewBackgroundColor
+                        color: Kube.Colors.viewBackgroundColor
 
                         opacity: 0.3
 
@@ -162,34 +160,34 @@ Rectangle {
 
                         text: styleData.value
 
-                        color: KubeTheme.Colors.viewBackgroundColor
+                        color: Kube.Colors.viewBackgroundColor
                     }
-                    KubeComponents.Icon {
+                    Kube.Icon {
                         id: statusIcon
                         visible: false
                         iconName: ""
                         states: [
                             State {
-                                name: "busy"; when: model.status == KubeFramework.FolderListModel.InProgressStatus
-                                PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.busy ; visible: styleData.selected }
+                                name: "busy"; when: model.status == Kube.FolderListModel.InProgressStatus
+                                PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy ; visible: styleData.selected }
                             },
                             State {
-                                name: "error"; when: model.status == KubeFramework.FolderListModel.ErrorStatus
+                                name: "error"; when: model.status == Kube.FolderListModel.ErrorStatus
                                 //The error status should only be visible for a moment, otherwise we'll eventually always show errors everywhere.
-                                PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.error; visible: styleData.selected }
+                                PropertyChanges { target: statusIcon; iconName: Kube.Icons.error; visible: styleData.selected }
                             },
                             State {
-                                name: "checkmark"; when: model.status == KubeFramework.FolderListModel.SuccessStatus
+                                name: "checkmark"; when: model.status == Kube.FolderListModel.SuccessStatus
                                 //The success status should only be visible for a moment, otherwise we'll eventually always show checkmarks everywhere.
-                                PropertyChanges { target: statusIcon; iconName: KubeTheme.Icons.success; visible: styleData.selected }
+                                PropertyChanges { target: statusIcon; iconName: Kube.Icons.success; visible: styleData.selected }
                             }
                         ]
                     }
                 }
             }
 
-            backgroundColor: KubeTheme.Colors.textColor
-            highlightedTextColor: KubeTheme.Colors.highlightedTextColor
+            backgroundColor: Kube.Colors.textColor
+            highlightedTextColor: Kube.Colors.highlightedTextColor
         }
     }
 }

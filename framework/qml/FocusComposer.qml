@@ -21,14 +21,14 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0 as Controls2
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.framework 1.0 as Kube
 
-import org.kube.framework.domain 1.0 as KubeFramework
 
 Controls2.Popup {
     id: root
 
     //Controller
-    KubeFramework.ComposerController {
+    Kube.ComposerController {
         id: composerController
         onDone: {
             clear();

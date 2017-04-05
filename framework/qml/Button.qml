@@ -17,14 +17,13 @@
  */
 
 import QtQuick 2.7
-import org.kube.components.theme 1.0 as KubeTheme
 
 Rectangle {
     id: root
 
     signal clicked()
     property alias text: text.text
-    property color textColor: KubeTheme.Colors.highlightedTextColor
+    property color textColor: Kube.Colors.highlightedTextColor
     property string iconName: ""
     property alias implicitHeight: content.implicitHeight
     property alias implicitWidth: content.implicitWidth
@@ -36,7 +35,7 @@ Rectangle {
     Row {
         id: content
         anchors.centerIn: parent
-        spacing: KubeTheme.Units.smallSpacing
+        spacing: Kube.Units.smallSpacing
         Text {
             id: text
             anchors.verticalCenter: parent.verticalCenter

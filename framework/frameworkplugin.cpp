@@ -18,24 +18,32 @@
     02110-1301, USA.
 */
 
-#include "mailplugin.h"
+#include "frameworkplugin.h"
 
-#include "maillistmodel.h"
-#include "folderlistmodel.h"
-#include "composercontroller.h"
-#include "messageparser.h"
-#include "retriever.h"
-#include "outboxmodel.h"
-#include "outboxcontroller.h"
-#include "mailcontroller.h"
-#include "foldercontroller.h"
-#include "mouseproxy.h"
-#include "contactcontroller.h"
-#include "peoplemodel.h"
+#include "domain/maillistmodel.h"
+#include "domain/folderlistmodel.h"
+#include "domain/composercontroller.h"
+#include "domain/messageparser.h"
+#include "domain/retriever.h"
+#include "domain/outboxmodel.h"
+#include "domain/outboxcontroller.h"
+#include "domain/mailcontroller.h"
+#include "domain/foldercontroller.h"
+#include "domain/mouseproxy.h"
+#include "domain/contactcontroller.h"
+#include "domain/peoplemodel.h"
+#include "accounts/accountsmodel.h"
+#include "accounts/accountfactory.h"
+#include "settings/settings.h"
+#include "notifications/notificationhandler.h"
+#include "actions/action.h"
+#include "actions/context.h"
+#include "actions/actionhandler.h"
+#include "actions/actionresult.h"
 
 #include <QtQml>
 
-void MailPlugin::registerTypes (const char *uri)
+void FrameworkPlugin::registerTypes (const char *uri)
 {
     qmlRegisterType<FolderListModel>(uri, 1, 0, "FolderListModel");
     qmlRegisterType<MailListModel>(uri, 1, 0, "MailListModel");
@@ -49,4 +57,16 @@ void MailPlugin::registerTypes (const char *uri)
     qmlRegisterType<MouseProxy>(uri, 1, 0, "MouseProxy");
     qmlRegisterType<ContactController>(uri, 1, 0,"ContactController");
     qmlRegisterType<PeopleModel>(uri, 1, 0,"PeopleModel");
+
+    qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
+    qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
+
+    qmlRegisterType<Kube::Settings>(uri, 1, 0, "Settings");
+    qmlRegisterType<Kube::NotificationHandler>(uri, 1, 0, "NotificationHandler");
+    qmlRegisterType<Kube::Notification>(uri, 1, 0, "Notification");
+
+    qmlRegisterType<Kube::Context>(uri, 1, 0, "Context");
+    qmlRegisterType<Kube::Action>(uri, 1, 0, "Action");
+    qmlRegisterType<Kube::ActionHandler>(uri, 1, 0, "ActionHandler");
+    qmlRegisterType<Kube::ActionResult>(uri, 1, 0, "ActionResult");
 }

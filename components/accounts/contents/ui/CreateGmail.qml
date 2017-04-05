@@ -22,17 +22,15 @@ import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 
-import org.kube.framework.accounts 1.0 as KubeAccounts
-import org.kube.components.theme 1.0 as KubeTheme
 
 Item {
 
-    KubeAccounts.GmailController {
+    Kube.GmailController {
         id: account
     }
 
     Controls.ToolButton {
-        iconName: KubeTheme.Icons.goBack
+        iconName: Kube.Icons.goBack
 
         tooltip: "go back"
 
@@ -46,14 +44,14 @@ Item {
 
         anchors {
             fill: parent
-            margins: KubeTheme.Units.largeSpacing * 2
+            margins: Kube.Units.largeSpacing * 2
         }
 
         Kirigami.Heading {
             id: heading
             text: "Connect your Gmail account"
 
-            color: KubeTheme.Colors.highlightColor
+            color: Kube.Colors.highlightColor
         }
 
         Kirigami.Label {
@@ -68,7 +66,7 @@ Item {
 
             text: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube."
 
-            color: KubeTheme.Colors.disabledTextColor
+            color: Kube.Colors.disabledTextColor
 
             wrapMode: Text.Wrap
         }
@@ -79,12 +77,12 @@ Item {
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
-                topMargin: KubeTheme.Units.largeSpacing * 2
+                topMargin: Kube.Units.largeSpacing * 2
             }
 
             columns: 2
-            columnSpacing: KubeTheme.Units.largeSpacing
-            rowSpacing: KubeTheme.Units.largeSpacing
+            columnSpacing: Kube.Units.largeSpacing
+            rowSpacing: Kube.Units.largeSpacing
 
             Controls.Label {
                 text: "Title of Account"

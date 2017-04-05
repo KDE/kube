@@ -20,10 +20,10 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.framework 1.0 as Kube
 
-import org.kube.components 1.0 as KubeComponents
 
-KubeComponents.OverlayDialog {
+Kube.OverlayDialog {
     id: dialog
 
     property variant accountId

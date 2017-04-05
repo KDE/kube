@@ -21,13 +21,11 @@ import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.framework 1.0 as Kube
 
 import QtQml 2.2 as QtQml
 
-import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.framework.actions 1.0 as KubeAction
 
-import org.kube.components.theme 1.0 as KubeTheme
 
 Rectangle {
     id: root
@@ -44,7 +42,7 @@ Rectangle {
         currentMail = null;
     }
 
-    color: KubeTheme.Colors.backgroundColor
+    color: Kube.Colors.backgroundColor
 
     ListView {
         id: listView
@@ -79,18 +77,18 @@ Rectangle {
 
         clip: true
 
-        model: KubeFramework.MailListModel {
+        model: Kube.MailListModel {
             mail: root.mail
         }
 
         header: Item {
-            height: KubeTheme.Units.gridUnit * 0.5
+            height: Kube.Units.gridUnit * 0.5
             width: parent.width
 
         }
 
         footer: Item {
-            height: KubeTheme.Units.gridUnit
+            height: Kube.Units.gridUnit
             width: parent.width
         }
 
@@ -144,7 +142,7 @@ Rectangle {
         //which will break lot's of things.
         cacheBuffer: 100000
 
-        KubeFramework.MailController {
+        Kube.MailController {
             id: mailController
             Binding on mail {
                 //!! checks for the availability of the type
@@ -167,7 +165,7 @@ Rectangle {
 
         //Intercept all scroll events,
         //necessary due to the webengineview
-        KubeFramework.MouseProxy {
+        Kube.MouseProxy {
             anchors.fill: parent
             target: listView
             forwardWheelEvents: true
@@ -185,14 +183,14 @@ Rectangle {
                 }
             }
 
-            height: sheet.height + KubeTheme.Units.gridUnit
+            height: sheet.height + Kube.Units.gridUnit
             width: parent.width
 
             Rectangle {
                 id: sheet
                 anchors.centerIn: parent
-                implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + KubeTheme.Units.largeSpacing
-                width: parent.width - KubeTheme.Units.gridUnit * 2
+                implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + Kube.Units.largeSpacing
+                width: parent.width - Kube.Units.gridUnit * 2
 
                 //Overlay for non-active mails
                 Rectangle {
@@ -203,7 +201,7 @@ Rectangle {
                     opacity: 0.2
                 }
 
-                color: KubeTheme.Colors.viewBackgroundColor
+                color: Kube.Colors.viewBackgroundColor
 
                 //BEGIN header
                 Item {
@@ -213,10 +211,10 @@ Rectangle {
                         top: parent.top
                         left: parent.left
                         right: parent.right
-                        margins: KubeTheme.Units.largeSpacing
+                        margins: Kube.Units.largeSpacing
                     }
 
-                    height: headerContent.height + KubeTheme.Units.smallSpacing
+                    height: headerContent.height + Kube.Units.smallSpacing
 
                     states: [
                         State {
@@ -250,7 +248,7 @@ Rectangle {
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy hh:mm")
 
                         font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
-                        color: KubeTheme.Colors.textColor
+                        color: Kube.Colors.textColor
                         opacity: 0.75
                     }
 
@@ -262,7 +260,7 @@ Rectangle {
                             horizontalCenter: parent.horizontalCenter
                         }
 
-                        //spacing: KubeTheme.Units.smallSpacing
+                        //spacing: Kube.Units.smallSpacing
 
                         width: parent.width
 
@@ -271,7 +269,7 @@ Rectangle {
 
                             width: parent.width
 
-                            spacing: KubeTheme.Units.smallSpacing
+                            spacing: Kube.Units.smallSpacing
                             clip: true
 
                             Text {
@@ -280,7 +278,7 @@ Rectangle {
                                 text: model.senderName
 
                                 font.weight: Font.DemiBold
-                                color: KubeTheme.Colors.textColor
+                                color: Kube.Colors.textColor
                                 opacity: 0.75
                             }
 
@@ -288,10 +286,10 @@ Rectangle {
 
                                 text: model.sender
 
-                                width: parent.width - senderName.width - date_label.width - KubeTheme.Units.largeSpacing
+                                width: parent.width - senderName.width - date_label.width - Kube.Units.largeSpacing
                                 elide: Text.ElideRight
 
-                                color: KubeTheme.Colors.textColor
+                                color: Kube.Colors.textColor
                                 opacity: 0.75
 
                                 clip: true
@@ -307,7 +305,7 @@ Rectangle {
 
                             elide: Text.ElideRight
 
-                            color: KubeTheme.Colors.textColor
+                            color: Kube.Colors.textColor
                             opacity: 0.75
                             font.italic: true
                         }
@@ -315,49 +313,49 @@ Rectangle {
                         Text {
                             id: recipients
 
-                            width: parent.width - goDown.width - KubeTheme.Units.smallSpacing
+                            width: parent.width - goDown.width - Kube.Units.smallSpacing
 
                             text:"to: "+ model.to + " "  + model.cc + " " +  model.bcc
 
                             elide: Text.ElideRight
 
-                            color: KubeTheme.Colors.textColor
+                            color: Kube.Colors.textColor
                             opacity: 0.75
                         }
 
                         Text {
                             id: to
 
-                            width: parent.width - goDown.width - KubeTheme.Units.smallSpacing
+                            width: parent.width - goDown.width - Kube.Units.smallSpacing
 
                             text:"to: " + model.to
 
                             wrapMode: Text.WordWrap
-                            color: KubeTheme.Colors.textColor
+                            color: Kube.Colors.textColor
                             opacity: 0.75
                         }
 
                         Text {
                             id: cc
 
-                            width: parent.width - goDown.width - KubeTheme.Units.smallSpacing
+                            width: parent.width - goDown.width - Kube.Units.smallSpacing
 
                             text:"cc: " + model.cc
 
                             wrapMode: Text.WordWrap
-                            color: KubeTheme.Colors.textColor
+                            color: Kube.Colors.textColor
                             opacity: 0.75
                         }
 
                         Text {
                             id: bcc
 
-                            width: parent.width - goDown.width - KubeTheme.Units.smallSpacing
+                            width: parent.width - goDown.width - Kube.Units.smallSpacing
 
                             text:"bcc: " + model.bcc
 
                             wrapMode: Text.WordWrap
-                            color: KubeTheme.Colors.textColor
+                            color: Kube.Colors.textColor
                             opacity: 0.75
                         }
 
@@ -369,15 +367,15 @@ Rectangle {
                             right: seperator.right
                         }
 
-                        height: KubeTheme.Units.gridUnit
+                        height: Kube.Units.gridUnit
                         width: height
 
-                        color: KubeTheme.Colors.backgroundColor
+                        color: Kube.Colors.backgroundColor
 
                         Controls1.ToolButton {
                             anchors.fill: parent
 
-                            iconName: KubeTheme.Icons.goDown
+                            iconName: Kube.Icons.goDown
                         }
                     }
 
@@ -387,15 +385,15 @@ Rectangle {
                             right: seperator.right
                         }
 
-                        height: KubeTheme.Units.gridUnit
+                        height: Kube.Units.gridUnit
                         width: height
 
-                        color: KubeTheme.Colors.backgroundColor
+                        color: Kube.Colors.backgroundColor
 
                         Controls1.ToolButton {
                             anchors.fill: parent
 
-                            iconName: header.state === "details" ? KubeTheme.Icons.goUp : KubeTheme.Icons.goDown
+                            iconName: header.state === "details" ? Kube.Icons.goUp : Kube.Icons.goDown
 
                             onClicked: {
                                 header.state === "details" ? header.state = "small" : header.state = "details"
@@ -414,7 +412,7 @@ Rectangle {
 
                         height: 1
 
-                        color: KubeTheme.Colors.textColor
+                        color: Kube.Colors.textColor
                         opacity: 0.5
                     }
                 }
@@ -425,14 +423,14 @@ Rectangle {
 
                     anchors {
                         top: header.bottom
-                        topMargin: KubeTheme.Units.smallSpacing
+                        topMargin: Kube.Units.smallSpacing
                         right: header.right
                     }
 
-                    width: header.width - KubeTheme.Units.largeSpacing
+                    width: header.width - Kube.Units.largeSpacing
 
                     layoutDirection: Qt.RightToLeft
-                    spacing: KubeTheme.Units.smallSpacing
+                    spacing: Kube.Units.smallSpacing
                     clip: true
 
                     Repeater {
@@ -456,12 +454,12 @@ Rectangle {
                         top: header.bottom
                         left: header.left
                         right: header.right
-                        leftMargin: KubeTheme.Units.largeSpacing
-                        rightMargin: KubeTheme.Units.largeSpacing
-                        topMargin: Math.max(attachments.height, KubeTheme.Units.largeSpacing)
+                        leftMargin: Kube.Units.largeSpacing
+                        rightMargin: Kube.Units.largeSpacing
+                        topMargin: Math.max(attachments.height, Kube.Units.largeSpacing)
                     }
 
-                    width: header.width - KubeTheme.Units.largeSpacing * 2
+                    width: header.width - Kube.Units.largeSpacing * 2
                     height: desiredHeight
 
                     message: model.mimeMessage
@@ -474,21 +472,21 @@ Rectangle {
                         top: header.bottom
                         left: header.left
                         right: header.right
-                        leftMargin: KubeTheme.Units.largeSpacing
-                        rightMargin: KubeTheme.Units.largeSpacing
-                        topMargin: Math.max(attachments.height, KubeTheme.Units.largeSpacing)
+                        leftMargin: Kube.Units.largeSpacing
+                        rightMargin: Kube.Units.largeSpacing
+                        topMargin: Math.max(attachments.height, Kube.Units.largeSpacing)
                     }
                     visible: model.incomplete
                     text: "Incomplete body..."
-                    color: KubeTheme.Colors.textColor
+                    color: Kube.Colors.textColor
                     enabled: false
                     states: [
                         State {
-                            name: "inprogress"; when: model.status == KubeFramework.MailListModel.InProgressStatus
+                            name: "inprogress"; when: model.status == Kube.MailListModel.InProgressStatus
                             PropertyChanges { target: incompleteBody; text: "Downloading message..." }
                         },
                         State {
-                            name: "error"; when: model.status == KubeFramework.MailListModel.ErrorStatus
+                            name: "error"; when: model.status == Kube.MailListModel.ErrorStatus
                             PropertyChanges { target: incompleteBody; text: "Failed to download message..." }
                         }
                     ]
@@ -498,23 +496,23 @@ Rectangle {
 
                     anchors.bottom: parent.bottom
 
-                    height: KubeTheme.Units.gridUnit * 2
+                    height: Kube.Units.gridUnit * 2
                     width: parent.width
 
                     Text {
                         anchors{
                             verticalCenter: parent.verticalCenter
                             left: parent.left
-                            leftMargin: KubeTheme.Units.largeSpacing
+                            leftMargin: Kube.Units.largeSpacing
                         }
 
-                        KubeFramework.MailController {
+                        Kube.MailController {
                             id: mailController
                             mail: model.mail
                         }
 
                         text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
-                        color: KubeTheme.Colors.textColor
+                        color: Kube.Colors.textColor
                         opacity: 0.5
                         enabled: model.trash ? mailController.removeAction.enabled : mailController.moveToTrashAction.enabled
                         MouseArea {
@@ -535,10 +533,10 @@ Rectangle {
                         anchors{
                             verticalCenter: parent.verticalCenter
                             right: parent.right
-                            rightMargin: KubeTheme.Units.largeSpacing
+                            rightMargin: Kube.Units.largeSpacing
                         }
 
-                        KubeAction.Context {
+                        Kube.Context {
                             id: mailcontext
                             property variant mail
                             property bool isDraft
@@ -546,19 +544,19 @@ Rectangle {
                             isDraft: model.draft
                         }
 
-                        KubeAction.Action {
+                        Kube.Action {
                             id: replyAction
                             actionId: "org.kde.kube.actions.reply"
                             context: maillistcontext
                         }
 
-                        KubeAction.Action {
+                        Kube.Action {
                             id: editAction
                             actionId: "org.kde.kube.actions.edit"
                             context: maillistcontext
                         }
 
-                        iconName: model.draft ? KubeTheme.Icons.edit : KubeTheme.Icons.replyToSender
+                        iconName: model.draft ? Kube.Icons.edit : Kube.Icons.replyToSender
                         onClicked: {
                             if (model.draft) {
                                 editAction.execute()

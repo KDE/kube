@@ -20,7 +20,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
-import org.kube.components.theme 1.0  as KubeTheme
+import org.kube.framework 1.0 as Kube
 
 Controls2.Popup {
     id: popup
@@ -50,7 +50,7 @@ Controls2.Popup {
             Kirigami.Heading {
                 id: heading
                 text: "Select your new account type"
-                color: KubeTheme.Colors.highlightColor
+                color: Kube.Colors.highlightColor
             }
 
             ColumnLayout {

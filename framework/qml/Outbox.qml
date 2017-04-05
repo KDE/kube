@@ -22,27 +22,24 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls 1.3 as Controls
 
 import org.kde.kirigami 1.0 as Kirigami
+import org.kube.framework 1.0 as Kube
 
-import org.kube.framework.actions 1.0 as KubeAction
-import org.kube.framework.domain 1.0 as KubeFramework
-import org.kube.components 1.0 as KubeComponents
-import org.kube.components.theme 1.0 as KubeTheme
 
-KubeComponents.Button {
+Kube.Button {
     id: root
 
     text: outboxModel.count > 0 ? "Outbox (" + outboxModel.count + ")" : "Outbox"
     color: "transparent"
-    textColor: KubeTheme.Colors.highlightedTextColor
+    textColor: Kube.Colors.highlightedTextColor
     iconName: ""
     states: [
         State {
-            name: "busy"; when: outboxModel.status == KubeFramework.OutboxModel.InProgressStatus
-            PropertyChanges { target: root; iconName: KubeTheme.Icons.busy }
+            name: "busy"; when: outboxModel.status == Kube.OutboxModel.InProgressStatus
+            PropertyChanges { target: root; iconName: Kube.Icons.busy }
         },
         State {
-            name: "error"; when: outboxModel.status == KubeFramework.OutboxModel.ErrorStatus
-            PropertyChanges { target: root; iconName: KubeTheme.Icons.error }
+            name: "error"; when: outboxModel.status == Kube.OutboxModel.ErrorStatus
+            PropertyChanges { target: root; iconName: Kube.Icons.error }
         }
     ]
 
@@ -50,11 +47,11 @@ KubeComponents.Button {
         dialog.visible = dialog.visible ? false : true
     }
 
-    KubeFramework.OutboxController {
+    Kube.OutboxController {
         id: outboxController
     }
 
-    KubeFramework.OutboxModel {
+    Kube.OutboxModel {
         id: outboxModel
     }
 
@@ -91,8 +88,8 @@ KubeComponents.Button {
                     height: Kirigami.Units.gridUnit * 3
                     width: listView.width
 
-                    color: KubeTheme.Colors.viewBackgroundColor
-                    border.color: KubeTheme.Colors.backgroundColor
+                    color: Kube.Colors.viewBackgroundColor
+                    border.color: Kube.Colors.backgroundColor
                     border.width: 1
 
                     Label {
@@ -104,16 +101,16 @@ KubeComponents.Button {
                         }
                         text: model.subject
 
-                        color: KubeTheme.Colors.textColor
+                        color: Kube.Colors.textColor
                         opacity: 1
                         states: [
                             State {
-                                name: "inprogress"; when: model.status == KubeFramework.OutboxModel.InProgressStatus
+                                name: "inprogress"; when: model.status == Kube.OutboxModel.InProgressStatus
                                 PropertyChanges { target: subjectLabel; text: "Sending: " + model.subject }
                             },
                             State {
-                                name: "error"; when: model.status == KubeFramework.OutboxModel.ErrorStatus
-                                PropertyChanges { target: subjectLabel; color: KubeTheme.Colors.warningColor }
+                                name: "error"; when: model.status == Kube.OutboxModel.ErrorStatus
+                                PropertyChanges { target: subjectLabel; color: Kube.Colors.warningColor }
                             }
                         ]
                     }

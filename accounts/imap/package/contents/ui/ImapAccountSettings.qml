@@ -23,7 +23,6 @@ import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 1.0 as Kirigami
 
-import org.kube.framework.settings 1.0 as KubeSettings
 import org.kube.accounts.imap 1.0 as ImapAccount
 
 Item {

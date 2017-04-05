@@ -37,7 +37,7 @@ set(SRCS
 
 add_library(gmailaccountplugin SHARED ${SRCS})
 qt5_use_modules(gmailaccountplugin Core Quick Qml)
-target_link_libraries(gmailaccountplugin sink settingsplugin mailplugin)
+target_link_libraries(gmailaccountplugin sink frameworkplugin)
 
 kpackage_install_package(package org.kube.accounts.gmail "genericqml")
 

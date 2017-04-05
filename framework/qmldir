@@ -11,7 +11,7 @@ EditAccountDialog 1.0 EditAccountDialog.qml
 OverlayDialog 1.0 OverlayDialog.qml
 Outbox 1.0 Outbox.qml
 People 1.0 People.qml
-Notification 1.0 Notification.qml
+NotificationPopup 1.0 Notification.qml
 Icon 1.0 Icon.qml
 Button 1.0 Button.qml
 PositiveButton 1.0 PositiveButton.qml
@@ -19,8 +19,4 @@ singleton Colors 1.0 Colors.qml
 singleton Icons 1.0 Icons.qml
 singleton Units 1.0 Units.qml
 
-plugin mailplugin
-plugin actionplugin
-plugin notificationplugin
-plugin settingsplugin
-plugin accountsplugin
+plugin frameworkplugin
