@@ -25,37 +25,55 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
-Kube.Button {
+Rectangle {
     id: root
-
-    text: outboxModel.count > 0 ? "Outbox (" + outboxModel.count + ")" : "Outbox"
-    color: "transparent"
-    textColor: Kube.Colors.highlightedTextColor
-    iconName: ""
-    states: [
-        State {
-            name: "busy"; when: outboxModel.status == Kube.OutboxModel.InProgressStatus
-            PropertyChanges { target: root; iconName: Kube.Icons.busy }
-        },
-        State {
-            name: "error"; when: outboxModel.status == Kube.OutboxModel.ErrorStatus
-            PropertyChanges { target: root; iconName: Kube.Icons.error }
-        }
-    ]
-
-    onClicked: {
-        dialog.visible = dialog.visible ? false : true
-    }
 
     Kube.OutboxController {
         id: outboxController
     }
-
     Kube.OutboxModel {
         id: outboxModel
     }
 
-    Popup {
+    states: [
+        State {
+            name: "busy"; when: outboxModel.status == Kube.OutboxModel.InProgressStatus
+            PropertyChanges { target: icon; iconName: Kube.Icons.busy_inverted }
+        },
+        State {
+            name: "error"; when: outboxModel.status == Kube.OutboxModel.ErrorStatus
+            PropertyChanges { target: icon; iconName: Kube.Icons.error_inverted }
+        }
+    ]
+
+    color: Kube.Colors.textColor
+    clip: true
+
+    Row {
+        anchors.centerIn: parent
+        spacing: Kube.Units.smallSpacing
+        Text {
+            id: text
+            anchors.verticalCenter: parent.verticalCenter
+            text: outboxModel.count > 0 ? "Outbox (" + outboxModel.count + ")" : "Outbox"
+            color: Kube.Colors.highlightedTextColor
+        }
+        Icon {
+            id: icon
+            anchors.verticalCenter: parent.verticalCenter
+            iconName: ""
+            visible: iconName != ""
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            dialog.visible = dialog.visible ? false : true
+        }
+    }
+
+    Kube.Popup {
         id: dialog
 
         height: content.height + Kirigami.Units.smallSpacing * 2
