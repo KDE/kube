@@ -48,23 +48,27 @@ def copyFile(rootDir, dir, file):
 
         #Create symlinks for normal and dark version
         dst = "./breeze/icons" + path.join(reldir, file)
-        ensure_dir(dst)
-        os.symlink(linkto, dst)
+        if not os.path.exists(dst):
+            ensure_dir(dst)
+            os.symlink(linkto, dst)
 
         invertedDst = "./breeze/icons" + path.join(reldir, file.replace(".svg", "-inverted.svg"))
-        ensure_dir(invertedDst)
-        os.symlink(linkto.replace(".svg", "-inverted.svg"), invertedDst)
+        if not os.path.exists(invertedDst):
+            ensure_dir(invertedDst)
+            os.symlink(linkto.replace(".svg", "-inverted.svg"), invertedDst)
     else:
         # A regular icon, just copy normal and dark version
         dst = "./breeze/icons" + path.join(reldir, file)
-        print("Copying: " + path.join(dir, file) + " to " + dst)
-        ensure_dir(dst)
-        copy2(src, dst)
+        if not os.path.exists(dst):
+            print("Copying: " + path.join(dir, file) + " to " + dst)
+            ensure_dir(dst)
+            copy2(src, dst)
 
         invertedDst = "./breeze/icons" + path.join(reldir, file.replace(".svg", "-inverted.svg"))
-        print("Copying: " + src.replace("icons", "icons-dark") + " to " + invertedDst)
-        ensure_dir(invertedDst)
-        copy2(src.replace("icons", "icons-dark"), invertedDst)
+        if not os.path.exists(invertedDst):
+            print("Copying: " + src.replace("icons", "icons-dark") + " to " + invertedDst)
+            ensure_dir(invertedDst)
+            copy2(src.replace("icons", "icons-dark"), invertedDst)
 
 dir="upstreamBreeze"
 if not os.path.exists(dir):
