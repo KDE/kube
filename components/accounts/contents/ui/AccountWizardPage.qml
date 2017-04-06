@@ -35,6 +35,7 @@ Item {
     }
 
     Controls.ToolButton {
+        id: backButton
         iconName: Kube.Icons.goBack
         tooltip: "go back"
         onClicked: {
@@ -44,10 +45,11 @@ Item {
 
     //Item to avoid anchors conflict with stack
     Item {
-
-        anchors {
-            fill: parent
-            margins: Kube.Units.largeSpacing * 2
+        anchors{
+            top: backButton.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
         }
 
         Kirigami.Heading {
@@ -98,8 +100,9 @@ Item {
         }
 
         //This is where we should place the account wizard ui
-        GridLayout {
+        Item {
             id: footer
+
             anchors {
                 bottom: parent.bottom
                 left: parent.left
@@ -107,36 +110,28 @@ Item {
                 topMargin: Kube.Units.largeSpacing * 2
             }
 
-            columns: 2
-            columnSpacing: Kube.Units.largeSpacing
-            rowSpacing: Kube.Units.largeSpacing
-
-            Item {
-                Layout.fillHeight: true
-            }
-
-            Kirigami.Label {
-                text: ""
-            }
-
-            Item {
-                Layout.fillWidth: true
-
-                Controls.Button {
-                    text: "Discard"
-
-                    onClicked: {
-                        popup.close()
-                    }
+            Kube.Button {
+                anchors {
+                    left: parent.left
+                    bottom: parent.bottom
                 }
 
-                Controls.Button {
-                    anchors.right: parent.right
-                    text: "Save"
-                    onClicked: {
-                        loader.item.save()
-                        popup.close()
-                    }
+                text: "Discard"
+                onClicked: {
+                    popup.close()
+                }
+            }
+
+            Kube.PositiveButton {
+                anchors {
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+
+                text: "Save"
+                onClicked: {
+                    loader.item.save()
+                    popup.close()
                 }
             }
         }

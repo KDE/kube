@@ -22,7 +22,7 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
-Controls2.Popup {
+Kube.Popup {
     id: popup
 
     modal: true
@@ -43,10 +43,8 @@ Controls2.Popup {
         id: mainView
 
         Item {
-            anchors {
-                fill: parent
-                margins: Kirigami.Units.largeSpacing * 2
-            }
+            anchors.fill: parent
+
             Kirigami.Heading {
                 id: heading
                 text: "Select your new account type"
@@ -54,9 +52,7 @@ Controls2.Popup {
             }
 
             ColumnLayout {
-
                 anchors.centerIn: parent
-
                 width: parent.width * 0.4
 
                 spacing: Kirigami.Units.largeSpacing
