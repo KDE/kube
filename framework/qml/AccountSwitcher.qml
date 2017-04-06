@@ -180,7 +180,7 @@ Controls.ToolButton {
                             ]
                         }
                     }
-                    Controls2.Button {
+                    Kube.Button {
 
                         anchors {
                             right: parent.right
