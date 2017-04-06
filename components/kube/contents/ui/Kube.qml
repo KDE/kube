@@ -433,7 +433,7 @@ Controls2.ApplicationWindow {
                 placeholderText: "Search...   is not available in this beta"
             }
 
-            Controls2.Button {
+            Kube.Button {
                 text: "Go"
 
                 onClicked: {
