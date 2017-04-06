@@ -23,8 +23,8 @@ wantedIcons = [
     "mail-mark-unread-new.svg",
     "mail-reply-sender.svg",
     "network-disconnect.svg",
-    "view-refresh.svg"
-    "go-down.svg"
+    "view-refresh.svg",
+    "go-down.svg",
     "go-previous.svg"
 ]
 
