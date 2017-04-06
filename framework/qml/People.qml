@@ -26,7 +26,7 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
-Popup {
+Kube.Popup {
     id: popup
 
     property var currentContact
@@ -38,15 +38,13 @@ Popup {
 
         anchors.fill: parent
 
-        ToolBar {
+        Item {
             id: toolbar
 
+            height: searchBar.height + Kube.Units.smallSpacing
             width: parent.width
 
             Controls.ToolButton {
-
-                anchors.verticalCenter: parent.verticalCenter
-
                 iconName: Kube.Icons.goBack
 
                 onClicked: stack.pop()
@@ -56,7 +54,8 @@ Popup {
 
             TextField {
                 id: searchBar
-                anchors.centerIn: parent
+
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 placeholderText: "Search..."
 
@@ -64,11 +63,9 @@ Popup {
             }
 
             Controls.ToolButton {
-
                 anchors {
                     right: parent.right
                     rightMargin: Kube.Units.smallSpacing
-                    verticalCenter: parent.verticalCenter
                 }
 
                 iconName: Kube.Icons.addNew

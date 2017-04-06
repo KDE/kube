@@ -411,7 +411,7 @@ Controls2.ApplicationWindow {
     //END Notification
 
     //BEGIN Search
-    Controls2.Popup {
+    Kube.Popup {
         id: search
 
         width: app.width * 0.6
@@ -424,7 +424,8 @@ Controls2.ApplicationWindow {
         focus: true
 
         RowLayout {
-            anchors.fill: parent
+            anchors.centerIn: parent
+            width: parent.width
 
             Controls2.TextField {
                 id: searchField

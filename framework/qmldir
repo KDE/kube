@@ -14,6 +14,7 @@ People 1.0 People.qml
 NotificationPopup 1.0 NotificationPopup.qml
 Icon 1.0 Icon.qml
 Button 1.0 Button.qml
+Popup 1.0 Popup.qml
 PositiveButton 1.0 PositiveButton.qml
 singleton Colors 1.0 Colors.qml
 singleton Icons 1.0 Icons.qml

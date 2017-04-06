@@ -24,7 +24,7 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
-Controls2.Popup {
+Kube.Popup {
     id: root
 
     //Controller
@@ -59,7 +59,6 @@ Controls2.Popup {
 
             anchors {
                 fill: parent
-                margins: Kirigami.Units.largeSpacing
             }
 
             ColumnLayout {

@@ -48,7 +48,7 @@ Controls.ToolButton {
         popup.open()
     }
 
-    Controls2.Popup {
+    Kube.Popup {
         id: popup
 
         height: listView.count == 0 ? Kirigami.Units.gridUnit * 4 : Kirigami.Units.gridUnit * 2 + listView.count * Kirigami.Units.gridUnit * 3
