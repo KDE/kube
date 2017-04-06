@@ -236,19 +236,19 @@ Controls2.ApplicationWindow {
                             states: [
                                 State {
                                     name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
-                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy; visible: true }
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy_inverted; visible: true }
                                 },
                                 State {
                                     name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
-                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.error; visible: true }
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.error_inverted; visible: true }
                                 },
                                 State {
                                     name: "checkmark"; when: model.status == Kube.AccountsModel.ConnectedStatus
-                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.connected; visible: true }
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.connected_inverted; visible: true }
                                 },
                                 State {
                                     name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.noNetworkConnection; visible: true }
+                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.noNetworkConnection_inverted; visible: true }
                                 }
                             ]
                         }

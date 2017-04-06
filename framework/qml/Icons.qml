@@ -23,10 +23,13 @@ import QtQuick 2.7
 
 Item {
     property string error: "error"
+    property string error_inverted: "error-inverted"
     property string busy: "view-refresh"
-    property string noNetworkConnection: "network-disconnect"
+    property string busy_inverted: "view-refresh-inverted"
+    property string noNetworkConnection_inverted: "network-disconnect-inverted"
     property string connected: "dialog-ok"
-    property string success: "dialog-ok"
+    property string connected_inverted: "dialog-ok-inverted"
+    property string success_inverted: "dialog-ok-inverted"
 
     property string markAsRead: "mail-mark-unread-new"
     property string markImportant: "mail-mark-important"
