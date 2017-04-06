@@ -159,7 +159,7 @@ Kube.Popup {
                             }
                         }
 
-                        Controls2.Button {
+                        Kube.Button {
                             id: ccButton
 
                             text: "Cc"
@@ -169,7 +169,7 @@ Kube.Popup {
                             }
                         }
 
-                        Controls2.Button {
+                        Kube.Button {
                             id: bccButton
 
                             text: "Bcc"
@@ -214,7 +214,7 @@ Kube.Popup {
 
                     width: parent.width
 
-                    Controls2.Button {
+                    Kube.Button {
                         text: "Discard"
 
                         onClicked: {
@@ -227,19 +227,21 @@ Kube.Popup {
                     }
 
 
-                    Controls2.Button {
-                        text: "Save as Draft"
+                    Kube.Button {
+                        id: saveDraftButton
 
-                        enabled: saveAsDraftAction.enabled
+                        text: "Save as Draft"
+                        //TODO enabled: saveAsDraftAction.enabled
                         onClicked: {
                             saveAsDraftAction.execute()
                         }
                     }
 
-                    Controls2.Button {
-                        text: "Send"
+                    Kube.PositiveButton {
+                        width: saveDraftButton.width
 
-                        enabled: sendAction.enabled
+                        text: "Send"
+                        //TODO enabled: sendAction.enabled
                         onClicked: {
                             sendAction.execute()
                         }
