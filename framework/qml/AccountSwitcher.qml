@@ -69,7 +69,7 @@ Controls.ToolButton {
             height: Kirigami.Units.gridUnit * 2
             width: parent.width
 
-            Controls2.Button {
+            Kube.Button {
                 anchors {
                     left: parent.left
                     bottom: parent.bottom
