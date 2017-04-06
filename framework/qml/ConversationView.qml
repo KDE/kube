@@ -360,24 +360,6 @@ Rectangle {
                         }
 
                     }
-                    Rectangle {
-                        id: goDown
-                        anchors {
-                            bottom: seperator.top
-                            right: seperator.right
-                        }
-
-                        height: Kube.Units.gridUnit
-                        width: height
-
-                        color: Kube.Colors.backgroundColor
-
-                        Controls1.ToolButton {
-                            anchors.fill: parent
-
-                            iconName: Kube.Icons.goDown
-                        }
-                    }
 
                     Rectangle {
                         anchors {
