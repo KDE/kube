@@ -44,7 +44,6 @@ Controls.ToolButton {
         id: accountsModel
     }
 
-
     onClicked: {
         popup.open()
     }
@@ -55,7 +54,7 @@ Controls.ToolButton {
         height: listView.count == 0 ? Kirigami.Units.gridUnit * 4 : Kirigami.Units.gridUnit * 2 + listView.count * Kirigami.Units.gridUnit * 3
         width: Kirigami.Units.gridUnit * 20
 
-        y: accountSwitcher.height
+        y: accountSwitcher.y - height
 
         modal: true
         focus: true

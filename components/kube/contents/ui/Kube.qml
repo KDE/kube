@@ -152,61 +152,18 @@ Controls2.ApplicationWindow {
         height: app.height
         width: app.width
 
-        Rectangle {
+         Rectangle {
             width: Kube.Units.gridUnit * 10
             Layout.maximumWidth: app.width * 0.25
             Layout.minimumWidth: Kube.Units.gridUnit * 5
 
             color: Kube.Colors.textColor
 
-            Controls2.ToolBar {
-                id: toolBar
-
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-
-                RowLayout {
-                    anchors.centerIn: parent
-
-                    spacing: Kube.Units.largeSpacing
-
-                    Kube.AccountSwitcher {
-                        id: accountSwitcher
-                        iconName: Kube.Icons.menu
-                        height: Kube.Units.gridUnit * 1.5
-                        width: height
-                    }
-
-                    ToolButton {
-                        iconName: Kube.Icons.user
-                        height: Kube.Units.gridUnit * 1.5
-                        width: height
-
-                        onClicked: {
-                            people.open()
-                        }
-                    }
-
-                    ToolButton {
-                        iconName: Kube.Icons.search
-                        height: Kube.Units.gridUnit * 1.5
-                        width: height
-
-                        onClicked: {
-                            search.open()
-                        }
-                    }
-                }
-            }
-
             Kube.PositiveButton {
                 id: newMailButton
 
                 anchors {
-                    top: toolBar.bottom
+                    top: parent.top
                     left: parent.left
                     right: parent.right
                     margins: Kube.Units.largeSpacing
@@ -346,12 +303,58 @@ Controls2.ApplicationWindow {
                 id: outbox
 
                 anchors {
-                    bottom: parent.bottom
+                    bottom: toolBar.top
                     left: parent.left
                     right: parent.right
                 }
                 height: Kube.Units.gridUnit * 1.5
             }
+
+
+            Item {
+                id: toolBar
+
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                }
+                height: Kube.Units.gridUnit * 2
+
+                RowLayout {
+                    anchors.centerIn: parent
+
+                    spacing: Kube.Units.largeSpacing
+
+                    Kube.AccountSwitcher {
+                        id: accountSwitcher
+                        iconName: Kube.Icons.menu_inverted
+                        height: Kube.Units.gridUnit * 1.5
+                        width: height
+                    }
+
+                    ToolButton {
+                        iconName: Kube.Icons.user_inverted
+                        height: Kube.Units.gridUnit * 1.5
+                        width: height
+
+                        onClicked: {
+                            people.open()
+                        }
+                    }
+
+                    ToolButton {
+                        iconName: Kube.Icons.search_inverted
+                        height: Kube.Units.gridUnit * 1.5
+                        width: height
+
+                        onClicked: {
+                            search.open()
+                        }
+                    }
+                }
+            }
+
         }
 
         Kube.MailListView  {
