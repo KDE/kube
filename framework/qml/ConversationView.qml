@@ -362,6 +362,8 @@ Rectangle {
                     }
 
                     Rectangle {
+                        id: goDown
+
                         anchors {
                             bottom: seperator.top
                             right: seperator.right
