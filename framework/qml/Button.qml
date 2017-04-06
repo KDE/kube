@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
+ *  Copyright (C) 2017 Michael Bohlender, <bohlender@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,43 +16,40 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.7
+import QtQuick 2.8
+import QtQuick.Templates 2.1 as T
+import org.kube.framework 1.0
 
-import org.kube.framework 1.0 as Kube
-
-Rectangle {
+T.Button {
     id: root
 
-    signal clicked()
-    property alias text: text.text
-    property color textColor: Kube.Colors.highlightedTextColor
-    property string iconName: ""
-    property alias implicitHeight: content.implicitHeight
-    property alias implicitWidth: content.implicitWidth
-    width: implicitWidth
-    height: implicitHeight
+    width: Math.max(Units.gridUnit, contentItem.implicitWidth + leftPadding + rightPadding)
+    height: contentItem.implicitHeight + Units.smallSpacing * 2
+
+    padding: Units.largeSpacing
+    topPadding: Units.smallSpacing * 2
+    bottomPadding: Units.smallSpacing *2
 
     clip: true
+    hoverEnabled: true
 
-    Row {
-        id: content
-        anchors.centerIn: parent
-        spacing: Kube.Units.smallSpacing
-        Text {
-            id: text
-            anchors.verticalCenter: parent.verticalCenter
-            color: root.textColor
-        }
-        Icon {
-            id: icon
-            anchors.verticalCenter: parent.verticalCenter
-            iconName: root.iconName
-            visible: iconName != ""
+    background: Rectangle {
+        color: root.pressed ? Colors.highlightColor : Colors.buttonColor
+
+        Rectangle {
+            anchors.fill: parent
+            visible: root.hovered
+            color: Colors.viewBackgroundColor
+            opacity: 0.1
         }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: root.clicked()
+    contentItem: Text {
+        text: root.text
+        //TODO font
+        elide: Text.ElideRight
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        color: Colors.textColor
     }
 }
