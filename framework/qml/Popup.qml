@@ -16,8 +16,9 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.8
-import QtQuick.Templates 2.1 as T
+import QtQuick 2.7
+//FIXME This should really be QtQuick.Templates, but that is crashing with qt 5.7, so we'll have to wait for a bit.
+import QtQuick.Controls 2.0 as T
 import org.kube.framework 1.0
 
 T.Popup {

@@ -16,8 +16,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.8
-import QtQuick.Templates 2.1 as T
+import QtQuick 2.7
+import QtQuick.Templates 2.0 as T
 import org.kube.framework 1.0
 
 T.Button {
