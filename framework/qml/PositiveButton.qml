@@ -34,7 +34,7 @@ T.Button {
     hoverEnabled: true
 
     background: Rectangle {
-        color: root.pressed ? Colors.highlightColor : Colors.positveColor
+        color: root.pressed ? Colors.highlightColor : Colors.positiveColor
 
         Rectangle {
             anchors.fill: parent

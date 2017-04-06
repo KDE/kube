@@ -29,7 +29,7 @@ Item {
     property string highlightedTextColor: "#fcfcfc"
 
 
-    property string positveColor: "#27ae60"
+    property string positiveColor: "#27ae60"
     property string warningColor: "#f67400"
     property string negativeColor: "#ed1515"
 }
