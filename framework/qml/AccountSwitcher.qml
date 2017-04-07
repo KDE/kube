@@ -56,10 +56,6 @@ Controls.ToolButton {
 
         y: accountSwitcher.y - height
 
-        modal: true
-        focus: true
-        closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
-
         Item {
             id: buttons
             anchors {

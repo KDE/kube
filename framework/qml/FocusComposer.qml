@@ -46,8 +46,7 @@ Kube.Popup {
     }
     //END functions
 
-    modal: true
-    focus: true
+    //Don't close the composer due to an accidental click outside
     closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
 
     Item {

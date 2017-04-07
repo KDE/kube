@@ -420,9 +420,6 @@ Controls2.ApplicationWindow {
         x: app.width * 0.2
         y: app.height * 0.2
 
-        modal: true
-        focus: true
-
         RowLayout {
             anchors.centerIn: parent
             width: parent.width

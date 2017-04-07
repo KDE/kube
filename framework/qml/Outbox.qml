@@ -82,8 +82,6 @@ Rectangle {
         y: - dialog.height + root.height
         x: root.width
 
-        modal: true
-
         Item  {
             id: content
 
