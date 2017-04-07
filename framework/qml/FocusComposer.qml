@@ -146,7 +146,7 @@ Kube.Popup {
 
                     RowLayout {
 
-                        Controls2.ComboBox {
+                        Kube.ComboBox {
                             id: identityCombo
                             model: composerController.identitySelector.model
                             textRole: "displayName"
