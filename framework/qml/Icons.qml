@@ -29,6 +29,7 @@ Item {
     property string noNetworkConnection_inverted: "network-disconnect-inverted"
     property string connected: "dialog-ok"
     property string connected_inverted: "dialog-ok-inverted"
+    property string success: "dialog-ok"
     property string success_inverted: "dialog-ok-inverted"
 
     property string markAsRead: "mail-mark-unread-new"
