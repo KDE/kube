@@ -34,13 +34,13 @@ T.Button {
     hoverEnabled: true
 
     background: Rectangle {
-        color: root.pressed ? Colors.highlightColor : Colors.positiveColor
+        color: Colors.positiveColor
 
         Rectangle {
             anchors.fill: parent
-            visible: root.hovered
-            color: Colors.viewBackgroundColor
-            opacity: 0.1
+            visible: root.hovered || root.pressed
+            color: root.pressed ? Colors.textColor : Colors.viewBackgroundColor
+            opacity: 0.2
         }
     }
 
