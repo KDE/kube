@@ -34,7 +34,4 @@ class OutboxController : public Kube::Controller
 
 public:
     explicit OutboxController();
-
-private:
-    QScopedPointer<Kube::ControllerAction> mSynchronizeOutboxAction;
 };
