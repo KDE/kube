@@ -20,19 +20,20 @@
 
 #include <QObject>
 #include "controller.h"
+#include "sink/applicationdomaintype.h"
 
 class OutboxController : public Kube::Controller
 {
     Q_OBJECT
-    Q_PROPERTY (Kube::ControllerAction* sendOutboxAction READ sendOutboxAction CONSTANT)
+
+    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail::Ptr, Mail, mail)
+    KUBE_CONTROLLER_ACTION(sendOutbox)
+    //Trigger a move to drafts and then trigger an edit
+    KUBE_CONTROLLER_ACTION(edit)
+    KUBE_CONTROLLER_ACTION(moveToTrash)
 
 public:
     explicit OutboxController();
-
-    Kube::ControllerAction* sendOutboxAction() const;
-
-private slots:
-    void sendOutbox();
 
 private:
     QScopedPointer<Kube::ControllerAction> mSynchronizeOutboxAction;

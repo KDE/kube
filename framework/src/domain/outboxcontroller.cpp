@@ -21,21 +21,19 @@
 #include <sink/store.h>
 #include <sink/log.h>
 
+using namespace Sink;
+using namespace Sink::ApplicationDomain;
+
 OutboxController::OutboxController()
     : Kube::Controller(),
-    mSynchronizeOutboxAction{new Kube::ControllerAction{this, &OutboxController::sendOutbox}}
+    action_sendOutbox{new Kube::ControllerAction{this, &OutboxController::sendOutbox}},
+    action_edit{new Kube::ControllerAction{this, &OutboxController::edit}},
+    action_moveToTrash{new Kube::ControllerAction{this, &OutboxController::moveToTrash}}
 {
-}
-
-Kube::ControllerAction* OutboxController::sendOutboxAction() const
-{
-    return mSynchronizeOutboxAction.data();
 }
 
 void OutboxController::sendOutbox()
 {
-    using namespace Sink;
-    using namespace Sink::ApplicationDomain;
     Query query;
     query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
     auto job = Store::fetchAll<SinkResource>(query)
@@ -43,5 +41,20 @@ void OutboxController::sendOutbox()
             return Store::synchronize(SyncScope{}.resourceFilter(resource->identifier()));
         });
     run(job);
+}
+
+void OutboxController::moveToTrash()
+{
+    auto mail = getMail();
+    mail->setTrash(true);
+    run(Store::modify(*mail));
+}
+
+void OutboxController::edit()
+{
+    auto mail = getMail();
+    mail->setDraft(true);
+    run(Store::modify(*mail));
+    //TODO trigger edit when item has been moved
 }
 

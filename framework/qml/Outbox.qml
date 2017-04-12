@@ -130,6 +130,36 @@ Rectangle {
                             }
                         ]
                     }
+
+                    Row {
+                        anchors {
+                            right: parent.right
+                            rightMargin: Kube.Units.smallSpacing
+                            verticalCenter: parent.verticalCenter
+                        }
+
+                        spacing: Kube.Units.smallSpacing
+
+                        Controls.ToolButton {
+                            iconName: Kube.Icons.moveToTrash
+                            text: qsTr("Delete Mail")
+                            tooltip: text
+                            onClicked: {
+                                outboxController.mail = model.domainObject
+                                outboxController.moveToTrashAction.execute()
+                            }
+                        }
+
+                        Controls.ToolButton {
+                            iconName: Kube.Icons.edit
+                            text: qsTr("Edit")
+                            tooltip: text
+                            onClicked: {
+                                outboxController.mail = model.domainObject
+                                outboxController.editAction.execute()
+                            }
+                        }
+                    }
                 }
 
                 clip: true
@@ -147,6 +177,7 @@ Rectangle {
                 visible: listView.count != 0
 
                 text: qsTr("Send now")
+                enabled: outboxController.sendOutboxAction.enabled
                 onClicked: {
                     outboxController.sendOutboxAction.execute()
                 }
