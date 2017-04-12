@@ -240,7 +240,7 @@ Kube.Popup {
                         width: saveDraftButton.width
 
                         text: "Send"
-                        //TODO enabled: sendAction.enabled
+                        enabled: sendAction.enabled
                         onClicked: {
                             sendAction.execute()
                         }
