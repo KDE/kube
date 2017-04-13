@@ -149,9 +149,10 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
             if (loadAsDraft) {
                 setMessage(mail);
             } else {
-                auto reply = MailTemplates::reply(mail);
-                //We assume reply
-                setMessage(reply);
+                MailTemplates::reply(mail, [this] (const KMime::Message::Ptr &reply) {
+                    //We assume reply
+                    setMessage(reply);
+                });
             }
         } else {
             qWarning() << "Retrieved empty message";

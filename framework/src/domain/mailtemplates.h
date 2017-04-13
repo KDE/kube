@@ -21,8 +21,9 @@
 
 #include <QByteArray>
 #include <KMime/Message>
+#include <functional>
 
 namespace MailTemplates
 {
-    KMime::Message::Ptr reply(const KMime::Message::Ptr &message);
+    void reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback);
 };

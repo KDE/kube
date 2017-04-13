@@ -1,6 +1,6 @@
 Name:           kube
 Version:        0.2
-Release:	    3%{?dist}
+Release:	    4%{?dist}
 Summary:        kube
 
 Group:          Applications/Desktop
@@ -20,7 +20,6 @@ BuildRequires:  kf5-messagelib-devel
 BuildRequires:  lmdb-devel
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
-BuildRequires:  qt5-qtwebkit-devel
 BuildRequires:  qt5-qtwebengine-devel
 BuildRequires:  sink-devel
 BuildRequires:  libcurl-devel

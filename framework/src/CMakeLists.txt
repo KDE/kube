@@ -52,7 +52,7 @@ set(SRCS
 )
 
 add_library(frameworkplugin SHARED ${SRCS})
-qt5_use_modules(frameworkplugin Core Quick Qml WebKitWidgets Test)
+qt5_use_modules(frameworkplugin Core Quick Qml WebEngineWidgets Test)
 target_link_libraries(frameworkplugin sink mimetreeparser KF5::MimeTreeParser KF5::Codecs KF5::Package KAsync)
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 

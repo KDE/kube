@@ -20,15 +20,16 @@
 */
 #include "mailtemplates.h"
 
+#include <functional>
 #include <QByteArray>
 #include <QList>
 #include <QDebug>
-#include <QImage>
-#include <QWebPage>
-#include <QWebFrame>
+#include <QWebEnginePage>
+#include <QWebEngineProfile>
+#include <QWebEngineSettings>
+#include <QWebEngineScript>
 #include <QSysInfo>
 #include <QTextCodec>
-#include <QApplication>
 
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
@@ -279,6 +280,7 @@ void makeValidHtml(QString &body, const QString &headElement)
     }
 }
 
+//FIXME strip signature works partially for HTML mails
 QString stripSignature(const QString &msg)
 {
     // Following RFC 3676, only > before --
@@ -340,65 +342,96 @@ QString stripSignature(const QString &msg)
     return res;
 }
 
-QString plainMessageText(MimeTreeParser::ObjectTreeParser &otp, bool aStripSignature)
+void setupPage(QWebEnginePage *page)
 {
-    QString result = otp.plainTextContent();
-    if (result.isEmpty()) {   //HTML-only mails
-        QWebPage doc;
-        doc.mainFrame()->setHtml(otp.htmlContent());
-        result = doc.mainFrame()->toPlainText();
+        page->profile()->setHttpCacheType(QWebEngineProfile::MemoryHttpCache);
+        page->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
+        page->settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::PluginsEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, false);
+        page->settings()->setAttribute(QWebEngineSettings::JavascriptCanAccessClipboard, false);
+        page->settings()->setAttribute(QWebEngineSettings::LocalStorageEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::XSSAuditingEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::ErrorPageEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, false);
+        page->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls, false);
+        page->settings()->setAttribute(QWebEngineSettings::HyperlinkAuditingEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::ScreenCaptureEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::WebGLEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::AutoLoadIconsForPage, false);
+        page->settings()->setAttribute(QWebEngineSettings::Accelerated2dCanvasEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::WebGLEnabled, false);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+        page->settings()->setAttribute(QWebEngineSettings::FocusOnNavigationEnabled, false);
+        page->settings()->setAttribute(QWebEngineSettings::AllowRunningInsecureContent, false);
+#endif
+}
+
+void plainMessageText(const QString &plainTextContent, const QString &htmlContent, bool aStripSignature, const std::function<void(const QString &)> &callback)
+{
+    QString result = plainTextContent;
+    if (plainTextContent.isEmpty()) {   //HTML-only mails
+        auto page = new QWebEnginePage;
+        setupPage(page);
+        page->setHtml(htmlContent);
+        page->toPlainText([=] (const QString &plaintext) {
+            page->deleteLater();
+            callback(plaintext);
+        });
+        return;
     }
 
     if (aStripSignature) {
         result = stripSignature(result);
     }
-
-    return result;
+    callback(result);
 }
 
-QString htmlMessageText(MimeTreeParser::ObjectTreeParser &otp, bool aStripSignature, QString &headElement)
+QString extractHeaderBodyScript()
 {
-    QString htmlElement = otp.htmlContent();
+    const QString source = QStringLiteral("(function() {"
+                                          "var res = {"
+                                          "    body: document.getElementsByTagName('body')[0].innerHTML,"
+                                          "    header: document.getElementsByTagName('head')[0].innerHTML"
+                                          "};"
+                                          "return res;"
+                                          "})()");
+    return source;
+}
+
+void htmlMessageText(const QString &plainTextContent, const QString &htmlContent, bool aStripSignature, const std::function<void(const QString &body, QString &head)> &callback)
+{
+    QString htmlElement = htmlContent;
 
     if (htmlElement.isEmpty()) {   //plain mails only
-        QString htmlReplace = otp.plainTextContent().toHtmlEscaped();
+        QString htmlReplace = plainTextContent.toHtmlEscaped();
         htmlReplace = htmlReplace.replace(QStringLiteral("\n"), QStringLiteral("<br />"));
         htmlElement = QStringLiteral("<html><head></head><body>%1</body></html>\n").arg(htmlReplace);
     }
 
-    //QWebPage relies on this
-    Q_ASSERT(QApplication::style());
-    QWebPage page;
-    page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-    page.settings()->setAttribute(QWebSettings::JavaEnabled, false);
-    page.settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-    page.settings()->setAttribute(QWebSettings::AutoLoadImages, false);
+    auto page = new QWebEnginePage;
+    setupPage(page);
 
-    page.currentFrame()->setHtml(htmlElement);
-
-    //TODO to be tested/verified if this is not an issue
-    page.settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
-    const QString bodyElement = page.currentFrame()->evaluateJavaScript(
-                                    QStringLiteral("document.getElementsByTagName('body')[0].innerHTML")).toString();
-
-    headElement = page.currentFrame()->evaluateJavaScript(
-                       QStringLiteral("document.getElementsByTagName('head')[0].innerHTML")).toString();
-
-    page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-
-    if (!bodyElement.isEmpty()) {
-        if (aStripSignature) {
-            //FIXME strip signature works partially for HTML mails
-            return stripSignature(bodyElement);
+    page->setHtml(htmlElement);
+    page->runJavaScript(extractHeaderBodyScript(), QWebEngineScript::ApplicationWorld, [=](const QVariant &result){
+        page->deleteLater();
+        const QVariantMap map = result.toMap();
+        auto bodyElement = map.value(QStringLiteral("body")).toString();
+        auto headerElement = map.value(QStringLiteral("header")).toString();
+        if (!bodyElement.isEmpty()) {
+            if (aStripSignature) {
+                callback(stripSignature(bodyElement), headerElement);
+            }
+            return callback(bodyElement, headerElement);
         }
-        return bodyElement;
-    }
 
-    if (aStripSignature) {
-        //FIXME strip signature works partially for HTML mails
-        return stripSignature(htmlElement);
-    }
-    return htmlElement;
+        if (aStripSignature) {
+            return callback(stripSignature(htmlElement), headerElement);
+        }
+        return callback(htmlElement, headerElement);
+    });
 }
 
 QString formatQuotePrefix(const QString &wildString, const QString &fromDisplayString)
@@ -536,7 +569,7 @@ enum ReplyStrategy {
     ReplyNone
 };
 
-KMime::Message::Ptr MailTemplates::reply(const KMime::Message::Ptr &origMsg)
+void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback)
 {
     //FIXME
     const bool alwaysPlain = true;
@@ -776,26 +809,32 @@ KMime::Message::Ptr MailTemplates::reply(const KMime::Message::Ptr &origMsg)
     //Strip signature for replies
     const bool stripSignature = true;
 
-    //Quoted body
-    QString plainQuote = quotedPlainText(plainMessageText(otp, stripSignature), origMsg->from()->displayString());
-    if (plainQuote.endsWith(QLatin1Char('\n'))) {
-        plainQuote.chop(1);
-    }
-    plainBody.append(plainQuote);
-    QString headElement;
-    htmlBody.append(quotedHtmlText(htmlMessageText(otp, stripSignature, headElement)));
+    const auto plainTextContent = otp.plainTextContent();
+    const auto htmlContent = otp.htmlContent();
 
-    if (alwaysPlain) {
-        htmlBody.clear();
-    } else {
-        makeValidHtml(htmlBody, headElement);
-    }
+    plainMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body) {
+        //Quoted body
+        QString plainQuote = quotedPlainText(body, origMsg->from()->displayString());
+        if (plainQuote.endsWith(QLatin1Char('\n'))) {
+            plainQuote.chop(1);
+        }
+        //The plain body is complete
+        auto plainBodyResult = plainBody + plainQuote;
+        htmlMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body, const QString &headElement) {
+            //The html body is complete
+            auto htmlBodyResult = htmlBody + quotedHtmlText(body);
+            if (alwaysPlain) {
+                htmlBodyResult.clear();
+            } else {
+                makeValidHtml(htmlBodyResult, headElement);
+            }
 
-    addProcessedBodyToMessage(msg, plainBody, htmlBody, false);
-
-    applyCharset(msg, origMsg);
-
-    msg->assemble();
-
-    return msg;
+            //Assemble the message
+            addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false);
+            applyCharset(msg, origMsg);
+            msg->assemble();
+            //We're done
+            callback(msg);
+        });
+    });
 }
