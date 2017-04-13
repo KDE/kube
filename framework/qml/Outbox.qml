@@ -68,9 +68,7 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: {
-            dialog.visible = dialog.visible ? false : true
-        }
+        onClicked: dialog.open()
     }
 
     Kube.Popup {
