@@ -40,6 +40,15 @@ Kube.Popup {
     property variant sendAction: composerController.sendAction
     property variant saveAsDraftAction: composerController.saveAsDraftAction
 
+    onClosed: {
+        composerController.clear()
+        to.text = ""
+        cc.visible = false
+        cc.text = ""
+        bcc.visible = false
+        bcc.text = ""
+    }
+
     //BEGIN functions
     function loadMessage(message, loadAsDraft) {
         composerController.loadMessage(message, loadAsDraft)
