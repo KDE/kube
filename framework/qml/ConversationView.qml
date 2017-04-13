@@ -186,6 +186,18 @@ Rectangle {
             height: sheet.height + Kube.Units.gridUnit
             width: parent.width
 
+            MouseArea {
+                anchors.fill: parent
+                enabled: parent.enabled
+                hoverEnabled: true
+                onEntered: {
+                    root.currentIndex = index
+                }
+                onClicked: {
+                    root.currentIndex = index
+                }
+            }
+
             Rectangle {
                 id: sheet
                 anchors.centerIn: parent
