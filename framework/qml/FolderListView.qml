@@ -77,6 +77,7 @@ Rectangle {
         onCurrentIndexChanged: {
             model.fetchMore(currentIndex)
             root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
+            folderController.synchronizeAction.execute()
         }
 
         alternatingRowColors: false
