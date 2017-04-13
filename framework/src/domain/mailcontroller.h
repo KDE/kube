@@ -31,6 +31,7 @@ class MailController : public Kube::Controller
     KUBE_CONTROLLER_ACTION(markAsRead)
     KUBE_CONTROLLER_ACTION(markAsUnread)
     KUBE_CONTROLLER_ACTION(markAsImportant)
+    KUBE_CONTROLLER_ACTION(toggleImportant)
     KUBE_CONTROLLER_ACTION(moveToTrash)
     KUBE_CONTROLLER_ACTION(restoreFromTrash)
     KUBE_CONTROLLER_ACTION(remove)

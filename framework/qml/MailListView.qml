@@ -48,28 +48,40 @@ Item {
             Controls.ToolButton {
                 iconName: Kube.Icons.markAsRead
                 text: qsTr("Mark As Read")
+                tooltip: text
                 enabled: mailController.markAsReadAction.enabled
-                tooltip: qsTr("mark mail as read")
+                visible: enabled
                 onClicked: {
                     mailController.markAsReadAction.execute()
                 }
             }
 
             Controls.ToolButton {
-                iconName: Kube.Icons.markImportant
-                text: qsTr("Mark Important")
-                enabled: mailController.markAsImportantAction.enabled
-                tooltip: qsTr("mark mail as important")
+                iconName: Kube.Icons.markAsUnread
+                text: qsTr("Mark As Unread")
+                tooltip: text
+                enabled: mailController.markAsUnreadAction.enabled
+                visible: enabled
                 onClicked: {
-                    mailController.markAsImportantAction.execute()
+                    mailController.markAsUnreadAction.execute()
+                }
+            }
+
+            Controls.ToolButton {
+                iconName: Kube.Icons.markImportant
+                text: qsTr("Toggle Important")
+                tooltip: text
+                enabled: mailController.toggleImportantAction.enabled
+                onClicked: {
+                    mailController.toggleImportantAction.execute()
                 }
             }
 
             Controls.ToolButton {
                 iconName: Kube.Icons.moveToTrash
                 text: qsTr("Delete Mail")
+                tooltip: text
                 enabled: mailController.moveToTrashAction.enabled
-                tooltip: qsTr("delete email")
                 onClicked: {
                     mailController.moveToTrashAction.execute()
                 }
@@ -78,8 +90,9 @@ Item {
             Controls.ToolButton {
                 iconName: Kube.Icons.undo
                 text: qsTr("Restore Mail")
+                tooltip: text
                 enabled: mailController.restoreFromTrashAction.enabled
-                tooltip: qsTr("restore email")
+                visible: enabled
                 onClicked: {
                     mailController.restoreFromTrashAction.execute()
                 }

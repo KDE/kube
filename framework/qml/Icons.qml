@@ -33,6 +33,7 @@ Item {
     property string success_inverted: "dialog-ok-inverted"
 
     property string markAsRead: "mail-mark-unread-new"
+    property string markAsUnread: "mail-mark-unread-new"
     property string markImportant: "mail-mark-important"
     property string undo: "edit-undo"
     property string moveToTrash: "edit-delete"

@@ -32,12 +32,14 @@ MailController::MailController()
     action_markAsRead{new Kube::ControllerAction{this, &MailController::markAsRead}},
     action_markAsUnread{new Kube::ControllerAction{this, &MailController::markAsUnread}},
     action_markAsImportant{new Kube::ControllerAction{this, &MailController::markAsImportant}},
+    action_toggleImportant{new Kube::ControllerAction{this, &MailController::toggleImportant}},
     action_moveToTrash{new Kube::ControllerAction{this, &MailController::moveToTrash}},
     action_restoreFromTrash{new Kube::ControllerAction{this, &MailController::restoreFromTrash}},
     action_remove{new Kube::ControllerAction{this, &MailController::remove}},
     action_moveToFolder{new Kube::ControllerAction{this, &MailController::moveToFolder}}
 {
     QObject::connect(this, &MailController::mailChanged, &MailController::updateActions);
+    QObject::connect(this, &MailController::threadLeaderChanged, &MailController::updateActions);
     updateActions();
 }
 
@@ -63,6 +65,11 @@ void MailController::updateActions()
         action_restoreFromTrash->setEnabled(mail->getTrash());
         action_markAsRead->setEnabled(mail->getUnread());
         action_markAsUnread->setEnabled(!mail->getUnread());
+    } else {
+        action_moveToTrash->setEnabled(false);
+        action_restoreFromTrash->setEnabled(false);
+        action_markAsRead->setEnabled(false);
+        action_markAsUnread->setEnabled(false);
     }
 }
 
@@ -87,6 +94,14 @@ void MailController::markAsImportant()
     runModification([] (ApplicationDomain::Mail &mail) {
         mail.setImportant(true);
         SinkLog() << "Mark as important " << mail.identifier();
+    });
+}
+
+void MailController::toggleImportant()
+{
+    runModification([] (ApplicationDomain::Mail &mail) {
+        mail.setImportant(!mail.getImportant());
+        SinkLog() << "Toggle important " << mail.identifier() << mail.getImportant();
     });
 }
 
