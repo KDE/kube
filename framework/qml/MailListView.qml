@@ -28,11 +28,42 @@ Item {
     property variant parentFolder
     property variant currentMail: null
     property bool isDraft : false
+    property bool isImportant : false
+    property bool isTrash : false
+    property bool isUnread : false
     property int currentIndex
     property string filterString: searchBar.text;
 
     onParentFolderChanged: {
         currentMail = null
+    }
+
+    Kube.MailController {
+        id: mailController
+        Binding on mail {
+            //!! checks for the availability of the type
+            when: !!root.currentMail
+            value: root.currentMail
+        }
+        unread: root.isUnread
+        trash: root.isUnread
+        important: root.isUnread
+        draft: root.isUnread
+        operateOnThreads: mailListModel.isThreaded
+    }
+
+    Shortcut {
+        sequence: StandardKey.Delete
+        onActivated: mailController.moveToTrashAction.execute()
+        enabled: mailController.moveToTrashAction.enabled
+    }
+    Shortcut {
+        sequence: StandardKey.MoveToNextLine
+        onActivated: root.currentIndex++
+    }
+    Shortcut {
+        sequence: StandardKey.MoveToPreviousLine
+        onActivated: root.currentIndex--
     }
 
     ToolBar {
@@ -142,9 +173,13 @@ Item {
         onCurrentItemChanged: {
             root.currentMail = currentItem.currentData.domainObject;
             root.isDraft = currentItem.currentData.draft;
+            root.isTrash = currentItem.currentData.trash;
+            root.isImportant = currentItem.currentData.important;
+            root.isUnread = currentItem.currentData.unread;
         }
 
         model: Kube.MailListModel {
+            id: mailListModel
             parentFolder: root.parentFolder
             filter: root.filterString
         }

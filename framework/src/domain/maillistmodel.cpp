@@ -114,9 +114,17 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
         case Date:
             return mail->getDate();
         case Unread:
-            return mail->getProperty("unreadCollected").toList().contains(true);
+            if (mIsThreaded) {
+                return mail->getProperty("unreadCollected").toList().contains(true);
+            } else {
+                return mail->getUnread();
+            }
         case Important:
-            return mail->getProperty("importantCollected").toList().contains(true);
+            if (mIsThreaded) {
+                return mail->getProperty("importantCollected").toList().contains(true);
+            } else {
+                return mail->getImportant();
+            }
         case Draft:
             return mail->getDraft();
         case Sent:
@@ -133,7 +141,11 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             }
             return mail->getMimeMessage();
         case ThreadSize:
-            return mail->getProperty("count").toInt();
+            if (mIsThreaded) {
+                return mail->getProperty("count").toInt();
+            } else {
+                return 1;
+            }
         case Mail:
             return QVariant::fromValue(mail);
         case Incomplete:
@@ -176,6 +188,11 @@ void MailListModel::runQuery(const Sink::Query &query)
     setSourceModel(m_model.data());
 }
 
+bool MailListModel::isThreaded() const
+{
+    return mIsThreaded;
+}
+
 void MailListModel::setParentFolder(const QVariant &parentFolder)
 {
     using namespace Sink::ApplicationDomain;
@@ -189,11 +206,33 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
         return;
     }
     mCurrentQueryItem = folder->identifier();
-    Sink::Query query = Sink::StandardQueries::threadLeaders(*folder);
+    if (folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::drafts) ||
+        folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::sent)) {
+        mIsThreaded = false;
+    } else {
+        mIsThreaded = true;
+    }
+    emit isThreadedChanged();
+
+    Sink::Query query = [&] {
+        if (mIsThreaded) {
+            return Sink::StandardQueries::threadLeaders(*folder);
+        } else {
+            Sink::Query query;
+            query.setId("threadleaders-unthreaded");
+            if (!folder->resourceInstanceIdentifier().isEmpty()) {
+                query.resourceFilter(folder->resourceInstanceIdentifier());
+            }
+            query.filter<Sink::ApplicationDomain::Mail::Folder>(*folder);
+            query.sort<Sink::ApplicationDomain::Mail::Date>();
+            return query;
+        }
+    }();
     if (!folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash)) {
         //Filter trash if this is not a trash folder
         query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
     }
+
     query.setFlags(Sink::Query::LiveQuery);
     query.limit(100);
     query.request<Mail::Subject>();

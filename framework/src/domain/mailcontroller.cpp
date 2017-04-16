@@ -39,7 +39,10 @@ MailController::MailController()
     action_moveToFolder{new Kube::ControllerAction{this, &MailController::moveToFolder}}
 {
     QObject::connect(this, &MailController::mailChanged, &MailController::updateActions);
-    QObject::connect(this, &MailController::threadLeaderChanged, &MailController::updateActions);
+    QObject::connect(this, &MailController::importantChanged, &MailController::updateActions);
+    QObject::connect(this, &MailController::draftChanged, &MailController::updateActions);
+    QObject::connect(this, &MailController::trashChanged, &MailController::updateActions);
+    QObject::connect(this, &MailController::unreadChanged, &MailController::updateActions);
     updateActions();
 }
 
@@ -47,24 +50,21 @@ void MailController::runModification(const std::function<void(ApplicationDomain:
 {
     if (auto mail = getMail()) {
         f(*mail);
-        run(Store::modify(*mail));
-    } else if (auto mail = getThreadLeader()) {
-        f(*mail);
-        run(Store::modify(Sink::StandardQueries::completeThread(*mail), *mail));
+        if (getOperateOnThreads()) {
+            run(Store::modify(Sink::StandardQueries::completeThread(*mail), *mail));
+        } else {
+            run(Store::modify(*mail));
+        }
     }
 }
 
 void MailController::updateActions()
 {
-    auto mail = getMail();
-    if (!mail) {
-        mail= getThreadLeader();
-    }
-    if (mail) {
-        action_moveToTrash->setEnabled(!mail->getTrash());
-        action_restoreFromTrash->setEnabled(mail->getTrash());
-        action_markAsRead->setEnabled(mail->getUnread());
-        action_markAsUnread->setEnabled(!mail->getUnread());
+    if (auto mail = getMail()) {
+        action_moveToTrash->setEnabled(!getTrash());
+        action_restoreFromTrash->setEnabled(getTrash());
+        action_markAsRead->setEnabled(getUnread());
+        action_markAsUnread->setEnabled(getUnread());
     } else {
         action_moveToTrash->setEnabled(false);
         action_restoreFromTrash->setEnabled(false);
@@ -99,8 +99,8 @@ void MailController::markAsImportant()
 
 void MailController::toggleImportant()
 {
-    runModification([] (ApplicationDomain::Mail &mail) {
-        mail.setImportant(!mail.getImportant());
+    runModification([this] (ApplicationDomain::Mail &mail) {
+        mail.setImportant(!getImportant());
         SinkLog() << "Toggle important " << mail.identifier() << mail.getImportant();
     });
 }

@@ -149,6 +149,7 @@ Rectangle {
                 when: !!root.currentMail
                 value: root.currentMail
             }
+            operateOnThreads: false
         }
 
         Timer {

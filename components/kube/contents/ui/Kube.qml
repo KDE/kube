@@ -89,15 +89,6 @@ Controls2.ApplicationWindow {
     //END ActionHandler
 
     //Controller
-    Kube.MailController {
-        id: mailController
-        Binding on threadLeader {
-            //!! checks for the availability of the type
-            when: !!mailListView.currentMail
-            value: mailListView.currentMail
-        }
-    }
-
     Kube.FolderController {
         id: folderController
         Binding on folder {
@@ -118,19 +109,6 @@ Controls2.ApplicationWindow {
         sequence: StandardKey.Refresh
         onActivated: folderController.synchronizeAction.execute()
         enabled: folderController.synchronizeAction.enabled
-    }
-    Shortcut {
-        sequence: StandardKey.Delete
-        onActivated: mailController.moveToTrashAction.execute()
-        enabled: mailController.moveToTrashAction.enabled
-    }
-    Shortcut {
-        sequence: StandardKey.MoveToNextLine
-        onActivated: mailListView.currentIndex++
-    }
-    Shortcut {
-        sequence: StandardKey.MoveToPreviousLine
-        onActivated: mailListView.currentIndex--
     }
     //END Shortcuts
 

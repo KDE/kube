@@ -32,6 +32,7 @@ class MailListModel : public QSortFilterProxyModel
     Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
     Q_PROPERTY (QVariant mail READ mail WRITE setMail)
     Q_PROPERTY (QString filter READ filter WRITE setFilter)
+    Q_PROPERTY (bool isThreaded READ isThreaded NOTIFY isThreadedChanged)
 
 public:
     enum Status {
@@ -48,6 +49,8 @@ public:
 
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+
+    bool isThreaded() const;
 
     enum Roles {
         Subject  = Qt::UserRole + 1,
@@ -84,6 +87,9 @@ public:
     void setFilter(const QString &mail);
     QString filter() const;
 
+signals:
+    void isThreadedChanged();
+
 private:
     void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail);
 
@@ -91,4 +97,5 @@ private:
     bool mFetchMails = false;
     QSet<QByteArray> mFetchedMails;
     QByteArray mCurrentQueryItem;
+    bool mIsThreaded = true;
 };

@@ -25,9 +25,15 @@
 class MailController : public Kube::Controller
 {
     Q_OBJECT
+    //Use this instead of mail property to get overall status of thread.
+    KUBE_CONTROLLER_PROPERTY(bool, Unread, unread)
+    KUBE_CONTROLLER_PROPERTY(bool, Important, important)
+    KUBE_CONTROLLER_PROPERTY(bool, Trash, trash)
+    KUBE_CONTROLLER_PROPERTY(bool, Draft, draft)
+
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail::Ptr, Mail, mail)
-    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail::Ptr, ThreadLeader, threadLeader)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Folder::Ptr, TargetFolder, targetFolder)
+    KUBE_CONTROLLER_PROPERTY(bool, OperateOnThreads, operateOnThreads)
     KUBE_CONTROLLER_ACTION(markAsRead)
     KUBE_CONTROLLER_ACTION(markAsUnread)
     KUBE_CONTROLLER_ACTION(markAsImportant)
