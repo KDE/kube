@@ -29,6 +29,7 @@ Rectangle {
 
     property variant currentFolder: null
     property variant accountId
+    property bool isTrashFolder: false
 
     color: Kube.Colors.textColor
 
@@ -77,6 +78,7 @@ Rectangle {
         onCurrentIndexChanged: {
             model.fetchMore(currentIndex)
             root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
+            root.isTrashFolder = model.data(currentIndex, Kube.FolderListModel.Trash)
             folderController.synchronizeAction.execute()
         }
 

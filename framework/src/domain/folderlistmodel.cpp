@@ -53,6 +53,7 @@ QHash< int, QByteArray > FolderListModel::roleNames() const
     roles[Id] = "id";
     roles[DomainObject] = "domainObject";
     roles[Status] = "status";
+    roles[Trash] = "trash";
 
     return roles;
 }
@@ -81,6 +82,11 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
             }
             return NoStatus;
         }
+        case Trash:
+            if (folder) {
+                return folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash);
+            }
+            return false;
     }
     return QSortFilterProxyModel::data(idx, role);
 }

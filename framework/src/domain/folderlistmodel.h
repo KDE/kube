@@ -54,7 +54,8 @@ public:
         Icon,
         Id,
         DomainObject,
-        Status
+        Status,
+        Trash
     };
     Q_ENUMS(Roles)
 

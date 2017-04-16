@@ -349,6 +349,8 @@ Controls2.ApplicationWindow {
             id: mailView
             mail: mailListView.currentMail
             Layout.fillWidth: true
+            hideTrash: !folderListView.isTrashFolder
+            hideNonTrash: folderListView.isTrashFolder
         }
     }
     //END Main content

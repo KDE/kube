@@ -34,6 +34,9 @@ Rectangle {
     property int currentIndex: 0;
     property bool scrollToEnd: true;
     property variant currentMail: null;
+    property bool hideTrash: true;
+    property bool hideNonTrash: false;
+
     onCurrentIndexChanged: {
         markAsReadTimer.restart();
     }
@@ -186,6 +189,7 @@ Rectangle {
 
             height: sheet.height + Kube.Units.gridUnit
             width: parent.width
+            visible: !((root.hideTrash && model.trash) || (root.hideNonTrash && !model.trash))
 
             MouseArea {
                 anchors.fill: parent
@@ -321,6 +325,20 @@ Rectangle {
                             color: Kube.Colors.textColor
                             opacity: 0.75
                             font.italic: true
+                            states: [
+                                State {
+                                    name: "trash"; when: model.trash
+                                    PropertyChanges { target: subject; text: "Trash: " + model.subject }
+                                },
+                                State {
+                                    name: "draft"; when: model.draft
+                                    PropertyChanges { target: subject; text: "Draft: " + model.subject }
+                                },
+                                State {
+                                    name: "sent"; when: model.sent
+                                    PropertyChanges { target: subject; text: "Sent: " + model.subject }
+                                }
+                            ]
                         }
 
                         Text {
