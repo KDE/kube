@@ -28,6 +28,8 @@ import org.kube.framework 1.0 as Kube
 Rectangle {
     id: root
 
+    visible: outboxModel.count > 0
+
     Kube.OutboxController {
         id: outboxController
     }
@@ -55,7 +57,7 @@ Rectangle {
         Text {
             id: text
             anchors.verticalCenter: parent.verticalCenter
-            text: outboxModel.count > 0 ? "Outbox (" + outboxModel.count + ")" : "Outbox"
+            text: outboxModel.count > 0 ? "Pending (" + outboxModel.count + ")" : "Outbox"
             color: Kube.Colors.highlightedTextColor
         }
         Icon {
