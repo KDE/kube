@@ -407,13 +407,14 @@ Controls2.ApplicationWindow {
             Controls2.TextField {
                 id: searchField
                 Layout.fillWidth: true
-                placeholderText: "Search...   is not available in this beta"
+                placeholderText: "Filter...     (only applies to the mail list for now)"
             }
 
             Kube.Button {
                 text: "Go"
 
                 onClicked: {
+                    mailListView.filterString = searchField.text
                     search.close()
                 }
             }

@@ -32,7 +32,7 @@ Item {
     property bool isTrash : false
     property bool isUnread : false
     property int currentIndex
-    property string filterString: searchBar.text;
+    property string filterString
 
     onParentFolderChanged: {
         currentMail = null
@@ -131,13 +131,6 @@ Item {
         }
     }
 
-    TextField {
-        id: searchBar
-        anchors.top: toolbar.bottom
-        width: parent.width
-        placeholderText: qsTr("Filter...")
-    }
-
     Label {
         anchors.top: searchBar.bottom
         visible: listView.count === 0
@@ -148,7 +141,7 @@ Item {
     ListView {
         id: listView
 
-        anchors.top: searchBar.bottom
+        anchors.top: toolbar.bottom
 
         width: parent.width
         height: parent.height - toolbar.height
