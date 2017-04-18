@@ -190,7 +190,7 @@ Kube.Popup {
                     }
                 }
 
-                Controls2.TextField {
+                Kube.TextField {
                     id: subject
 
                     Layout.fillWidth: true

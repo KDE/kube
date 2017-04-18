@@ -47,5 +47,7 @@ T.TextField {
 
     background: Rectangle {
         color: Colors.viewBackgroundColor
+        border.width: 1
+        border.color: Colors.buttonColor
     }
 }
