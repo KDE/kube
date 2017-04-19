@@ -60,7 +60,7 @@ MouseArea {
         opacity: 0.6
     }
 
-    Label {
+    Kube.Label {
         id: message
 
         anchors {
