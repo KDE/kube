@@ -130,7 +130,7 @@ Kube.TextField {
                                 left: parent.left
                             }
 
-                            Text{
+                            Kube.Label{
                                 text: model.text
                                 color: listDelegate.checked ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
                             }
