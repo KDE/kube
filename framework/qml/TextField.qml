@@ -38,9 +38,9 @@ T.TextField {
         width: root.width - (root.leftPadding + root.rightPadding)
         height: root.height - (root.topPadding + root.bottomPadding)
 
+        visible: root.text == ""
         text: root.placeholderText
         //TODO font:
-
         color: Colors.disabledTextColor
         elide: Text.ElideRight
     }
