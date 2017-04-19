@@ -60,7 +60,7 @@ Item {
             }
         }
 
-        Text {
+        Label {
             text: root.name
             color: Kube.Colors.backgroundColor
         }
