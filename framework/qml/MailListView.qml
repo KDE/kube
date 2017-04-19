@@ -131,8 +131,8 @@ Item {
         }
     }
 
-    Label {
-        anchors.top: searchBar.bottom
+    Kube.Label {
+        anchors.centerIn: parent
         visible: listView.count === 0
         //TODO depending on whether we synchronized already or not the label should change.
         text: "Nothing here..."
@@ -279,30 +279,29 @@ Item {
                             leftMargin: Kube.Units.largeSpacing
                         }
 
-                        Text{
+                        Kube.Label{
                             id: subject
+
+                            width: content.width - Kube.Units.gridUnit * 3
 
                             text: model.subject
                             color: model.unread ? Kube.Colors.highlightColor : Kube.Colors.textColor
-
                             maximumLineCount: 2
-                            width: content.width - Kube.Units.gridUnit * 3
                             wrapMode: Text.WrapAnywhere
                             elide: Text.ElideRight
                         }
 
-                        Text {
+                        Kube.Label {
                             id: sender
 
                             text: model.senderName
                             font.italic: true
-                            color: Kube.Colors.textColor
                             width: delegateRoot.width - Kube.Units.gridUnit * 3
                             elide: Text.ElideRight
                         }
                     }
 
-                    Text {
+                    Kube.Label {
                         id: date
 
                         anchors {
@@ -315,7 +314,7 @@ Item {
                         font.pointSize: 9
                     }
 
-                    Text {
+                    Kube.Label {
                         id: threadCounter
 
                         anchors {
