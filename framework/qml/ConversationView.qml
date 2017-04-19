@@ -254,7 +254,7 @@ Rectangle {
 
                     state: "small"
 
-                    Text {
+                    Kube.Label {
                         id: date_label
 
                         anchors {
@@ -265,7 +265,6 @@ Rectangle {
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy hh:mm")
 
                         font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
-                        color: Kube.Colors.textColor
                         opacity: 0.75
                     }
 
@@ -289,40 +288,32 @@ Rectangle {
                             spacing: Kube.Units.smallSpacing
                             clip: true
 
-                            Text {
+                            Kube.Label {
                                 id: senderName
 
                                 text: model.senderName
-
                                 font.weight: Font.DemiBold
-                                color: Kube.Colors.textColor
                                 opacity: 0.75
                             }
 
-                            Text {
+                            Kube.Label {
+                                width: parent.width - senderName.width - date_label.width - Kube.Units.largeSpacing
+
 
                                 text: model.sender
-
-                                width: parent.width - senderName.width - date_label.width - Kube.Units.largeSpacing
                                 elide: Text.ElideRight
-
-                                color: Kube.Colors.textColor
                                 opacity: 0.75
-
                                 clip: true
                             }
                         }
 
-                        Text {
+                        Kube.Label {
                             id: subject
 
                             width: to.width
 
                             text: model.subject
-
                             elide: Text.ElideRight
-
-                            color: Kube.Colors.textColor
                             opacity: 0.75
                             font.italic: true
                             states: [
@@ -341,52 +332,43 @@ Rectangle {
                             ]
                         }
 
-                        Text {
+                        Kube.Label {
                             id: recipients
 
                             width: parent.width - goDown.width - Kube.Units.smallSpacing
 
                             text:"to: "+ model.to + " "  + model.cc + " " +  model.bcc
-
                             elide: Text.ElideRight
-
-                            color: Kube.Colors.textColor
                             opacity: 0.75
                         }
 
-                        Text {
+                        Kube.Label {
                             id: to
 
                             width: parent.width - goDown.width - Kube.Units.smallSpacing
 
                             text:"to: " + model.to
-
                             wrapMode: Text.WordWrap
-                            color: Kube.Colors.textColor
                             opacity: 0.75
                         }
 
-                        Text {
+                        Kube.Label {
                             id: cc
 
                             width: parent.width - goDown.width - Kube.Units.smallSpacing
 
                             text:"cc: " + model.cc
-
                             wrapMode: Text.WordWrap
-                            color: Kube.Colors.textColor
                             opacity: 0.75
                         }
 
-                        Text {
+                        Kube.Label {
                             id: bcc
 
                             width: parent.width - goDown.width - Kube.Units.smallSpacing
 
                             text:"bcc: " + model.bcc
-
                             wrapMode: Text.WordWrap
-                            color: Kube.Colors.textColor
                             opacity: 0.75
                         }
 
@@ -481,7 +463,7 @@ Rectangle {
                     visible: !model.incomplete
                 }
 
-                Label {
+                Kube.Label {
                     id: incompleteBody
                     anchors {
                         top: header.bottom
@@ -514,7 +496,7 @@ Rectangle {
                     height: Kube.Units.gridUnit * 2
                     width: parent.width
 
-                    Text {
+                    Kube.Label {
                         anchors{
                             verticalCenter: parent.verticalCenter
                             left: parent.left
@@ -527,7 +509,6 @@ Rectangle {
                         }
 
                         text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
-                        color: Kube.Colors.textColor
                         opacity: 0.5
                         enabled: model.trash ? mailController.removeAction.enabled : mailController.moveToTrashAction.enabled
                         MouseArea {
