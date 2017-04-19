@@ -32,13 +32,11 @@ T.ComboBox {
     spacing: Units.largeSpacing
     padding: Units.smallSpacing
 
-    contentItem: Text {
+    contentItem: Label {
         leftPadding: Units.smallSpacing
         rightPadding: Units.largeSpacing
 
-        color: Colors.textColor
         text: root.displayText
-        //TODO font:
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
@@ -80,7 +78,7 @@ T.ComboBox {
         width: root.popup.width
         height: Units.gridUnit * 1.5
 
-        contentItem: Text {
+        contentItem: Label {
             padding: Units.smallSpacing
             text: root.textRole ? (Array.isArray(root.model) ? modelData[root.textRole] : model[root.textRole]) : modelData
             color:  root.highlightedIndex === index ? Colors.highlightedTextColor : Colors.textColor
