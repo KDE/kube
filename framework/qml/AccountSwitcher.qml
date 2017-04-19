@@ -151,7 +151,7 @@ Controls.ToolButton {
 
                         Layout.fillHeight: true
 
-                        Controls2.Label {
+                        Kube.Label {
                             text: model.name
                         }
 
