@@ -404,7 +404,7 @@ Controls2.ApplicationWindow {
             anchors.centerIn: parent
             width: parent.width
 
-            Controls2.TextField {
+            Kube.TextField {
                 id: searchField
                 Layout.fillWidth: true
                 placeholderText: "Filter...     (only applies to the mail list for now)"
