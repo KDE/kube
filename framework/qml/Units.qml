@@ -27,6 +27,7 @@ Item {
     property int largeSpacing: gridUnit
     property variant fontMetrics: TextMetrics {
         text: "M"
+        font.family: "Noto Sans"
     }
 }
 

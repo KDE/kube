@@ -20,34 +20,7 @@ import QtQuick 2.7
 import QtQuick.Templates 2.0 as T
 import org.kube.framework 1.0
 
-T.Button {
-    id: root
-
-    width: Math.max(Units.gridUnit, contentItem.implicitWidth + leftPadding + rightPadding)
-    height: contentItem.implicitHeight + Units.smallSpacing * 2
-
-    padding: Units.largeSpacing
-    topPadding: Units.smallSpacing * 2
-    bottomPadding: Units.smallSpacing *2
-
-    clip: true
-    hoverEnabled: true
-
-    background: Rectangle {
-        color: Colors.buttonColor
-
-        Rectangle {
-            anchors.fill: parent
-            visible: root.hovered || root.pressed
-            color: root.pressed ? Colors.textColor : Colors.viewBackgroundColor
-            opacity: 0.2
-        }
-    }
-
-    contentItem: Label {
-        text: root.text
-        elide: Text.ElideRight
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-    }
+T.Label {
+    color: Colors.textColor
+    font.family: "Noto Sans"
 }

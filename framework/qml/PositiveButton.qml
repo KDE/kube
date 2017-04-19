@@ -44,9 +44,8 @@ T.Button {
         }
     }
 
-    contentItem: Text {
+    contentItem: Label {
         text: root.text
-        //TODO font
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

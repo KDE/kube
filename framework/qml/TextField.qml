@@ -29,8 +29,9 @@ T.TextField {
     padding: Units.smallSpacing
 
     color: Colors.textColor
+    font.family: "Noto Sans"
 
-    Text {
+    Label {
         id: placeholder
         x: root.leftPadding
         y: root.topPadding
@@ -40,7 +41,6 @@ T.TextField {
 
         visible: root.text == ""
         text: root.placeholderText
-        //TODO font:
         color: Colors.disabledTextColor
         elide: Text.ElideRight
     }
