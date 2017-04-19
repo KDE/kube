@@ -55,7 +55,7 @@ Kube.Popup {
                 anchors.centerIn: parent
                 width: parent.width * 0.4
 
-                spacing: Kirigami.Units.largeSpacing
+                spacing: Kube.Units.largeSpacing
 
                 Repeater {
                     //TODO replace by model of available accounts

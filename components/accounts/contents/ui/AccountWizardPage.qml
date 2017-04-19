@@ -58,7 +58,7 @@ Item {
             color: Kube.Colors.highlightColor
         }
 
-        Kirigami.Label {
+        Kube.Label {
             id: subHeadline
 
             anchors {
