@@ -115,8 +115,7 @@ Rectangle {
 
                 width: 16; height: 16
 
-                Text  {
-
+                Kube.Label  {
                     anchors.centerIn: parent
 
                     color: Kube.Colors.viewBackgroundColor
@@ -155,7 +154,7 @@ Rectangle {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
                     }
-                    Text {
+                    Kube.Label {
                         anchors {
                             verticalCenter: parent.verticalCenter
                             leftMargin: Kirigami.Units.smallSpacing
