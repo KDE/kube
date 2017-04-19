@@ -54,7 +54,7 @@ Rectangle {
     Row {
         anchors.centerIn: parent
         spacing: Kube.Units.smallSpacing
-        Text {
+        Kube.Label {
             id: text
             anchors.verticalCenter: parent.verticalCenter
             text: outboxModel.count > 0 ? "Pending (" + outboxModel.count + ")" : "Outbox"
@@ -108,7 +108,7 @@ Rectangle {
                     border.color: Kube.Colors.backgroundColor
                     border.width: 1
 
-                    Label {
+                    Kube.Label {
                         id: subjectLabel
                         anchors {
                             verticalCenter: parent.verticalCenter
@@ -165,7 +165,7 @@ Rectangle {
                 clip: true
             }
 
-            Button {
+            Kube.Button {
                 id: sendNowButton
 
                 anchors {
@@ -183,7 +183,7 @@ Rectangle {
                 }
             }
 
-            Label {
+            Kube.Label {
                 anchors.centerIn: parent
 
                 visible: listView.count == 0
