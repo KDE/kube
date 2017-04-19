@@ -201,9 +201,9 @@ Controls2.ApplicationWindow {
                         }
                         Layout.fillHeight: true
 
-                        Text {
+                        Kube.Label{
                             text: model.name
-                            font.weight: Font.DemiBold
+                            font.weight: Font.Bold
                             color: Kube.Colors.highlightedTextColor
                         }
 
@@ -262,7 +262,7 @@ Controls2.ApplicationWindow {
 
                 Repeater {
                     model: currentAccountModel
-                    Text {
+                    Kube.Label {
                         id: statusText
                         anchors.centerIn: parent
                         visible: false
