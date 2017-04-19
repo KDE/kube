@@ -19,12 +19,9 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.4 as Controls
-import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0 as Dialogs
-
-import org.kde.kirigami 1.0 as Kirigami
-
+import org.kube.framework 1.0 as Kube
 import org.kube.accounts.maildir 1.0 as MaildirAccount
 
 Item {
@@ -59,11 +56,11 @@ Item {
             columnSpacing: Kube.Units.largeSpacing
             rowSpacing: Kube.Units.largeSpacing
 
-            Controls.Label {
+            Kube.Label {
                 text: "Title of Account"
                 Layout.alignment: Qt.AlignRight
             }
-            Controls.TextField {
+            Kube.TextField {
                 Layout.fillWidth: true
                 placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
                 text: maildirSettings.accountName
@@ -72,14 +69,14 @@ Item {
                 }
             }
 
-            Controls2.Label {
+            Kube.Label {
                 text: "Path"
                 Layout.alignment: Qt.AlignRight
             }
             RowLayout {
                 Layout.fillWidth: true
 
-                Controls.TextField {
+                Kube.TextField {
                     id: path
                     Layout.fillWidth: true
                     enabled: false

@@ -20,9 +20,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
-
-import org.kde.kirigami 1.0 as Kirigami
-
+import org.kube.framework 1.0 as Kube
 import org.kube.accounts.kolabnow 1.0 as KolabnowAccount
 
 Item {
@@ -55,14 +53,14 @@ Item {
                 fill: parent
             }
             columns: 2
-            columnSpacing: Kirigami.Units.largeSpacing
-            rowSpacing: Kirigami.Units.largeSpacing
+            columnSpacing: Kube.Units.largeSpacing
+            rowSpacing: Kube.Units.largeSpacing
 
-            Controls.Label {
+            Kube.Label {
                 text: "Title of Account"
                 Layout.alignment: Qt.AlignRight
             }
-            Controls.TextField {
+            Kube.TextField {
                 Layout.fillWidth: true
                 placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
                 text: kolabnowSettings.accountName
@@ -71,11 +69,11 @@ Item {
                 }
             }
 
-            Controls.Label {
+            Kube.Label {
                 text: "Name"
                 Layout.alignment: Qt.AlignRight
             }
-            Controls.TextField {
+            Kube.TextField {
                 Layout.fillWidth: true
                 placeholderText: "Your name"
                 text: kolabnowSettings.userName
@@ -84,11 +82,11 @@ Item {
                 }
             }
 
-            Controls.Label {
+            Kube.Label {
                 text: "Email address"
                 Layout.alignment: Qt.AlignRight
             }
-            Controls.TextField {
+            Kube.TextField {
                 Layout.fillWidth: true
 
                 text: kolabnowSettings.emailAddress
@@ -98,14 +96,14 @@ Item {
                 placeholderText: "Your email address"
             }
 
-            Controls.Label {
+            Kube.Label {
                 text: "Password"
                 Layout.alignment: Qt.AlignRight
             }
             RowLayout {
                 Layout.fillWidth: true
 
-                Controls.TextField {
+                Kube.TextField {
                     id: pwField
                     Layout.fillWidth: true
 
