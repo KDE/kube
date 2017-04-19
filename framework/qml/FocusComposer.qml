@@ -77,7 +77,7 @@ Kube.Popup {
 
                     columns: 2
 
-                    Controls2.Label {
+                    Kube.Label {
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         text: "To"
                     }
@@ -99,7 +99,7 @@ Kube.Popup {
                     }
 
 
-                    Controls2.Label {
+                    Kube.Label {
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         text: "Cc"
                         visible: cc.visible
@@ -124,7 +124,7 @@ Kube.Popup {
                         }
                     }
 
-                    Controls2.Label {
+                    Kube.Label {
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         text: "Bcc"
                         visible: bcc.visible
@@ -149,7 +149,7 @@ Kube.Popup {
                         }
                     }
 
-                    Controls2.Label {
+                    Kube.Label {
                         text: "From"
                     }
 
