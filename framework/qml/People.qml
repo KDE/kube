@@ -52,14 +52,13 @@ Kube.Popup {
                 visible: stack. depth > 1
             }
 
-            TextField {
+            Kube.TextField {
                 id: searchBar
 
                 anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width * 0.5
 
                 placeholderText: "Search..."
-
-                width: parent.width * 0.5
             }
 
             Controls.ToolButton {
@@ -163,20 +162,18 @@ Kube.Popup {
                                         verticalCenter: parent.verticalCenter
                                     }
 
-                                    Text {
+                                    Kube.Label {
                                         width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
 
                                         text: model.firstName
                                         elide: Text.ElideRight
-                                        color: Kube.Colors.textColor
                                     }
 
-                                    Text {
+                                    Kube.Label {
                                         width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
 
                                         text: model.lastName
                                         elide: Text.ElideRight
-                                        color: Kube.Colors.textColor
                                     }
                                 }
                             }
@@ -247,6 +244,7 @@ Kube.Popup {
                             color: "lightgrey"
                         }
 
+                        //TODO replace with Kube.Heading once it is there
                         Kirigami.Heading {
                             id: nameLabel
 
@@ -256,10 +254,10 @@ Kube.Popup {
                                 leftMargin: Kube.Units.largeSpacing
                             }
 
-                            text: contactController.name //"Michael Tester"
+                            text: contactController.name
                         }
 
-                        Text {
+                        Kube.Label {
                             id: jobTitle
 
                             anchors {
@@ -295,7 +293,7 @@ Kube.Popup {
                                 color: "lightgrey"
                             }
 
-                            Text {
+                            Kube.Label {
                                 anchors {
                                     verticalCenter: av.verticalCenter
                                     left: av.right
@@ -303,8 +301,6 @@ Kube.Popup {
                                 }
 
                                 text: "Sauerkraut AG"
-
-                                color: Kube.Colors.textColor
                             }
                         }
                     }
@@ -320,23 +316,23 @@ Kube.Popup {
 
                             Row {
                                 spacing: Kube.Units.smallSpacing
-                                Text { text: "(main)" }
-                                Text { text: modelData ; color: Kube.Colors.highlightColor }
+                                Kube.Label { text: "(main)" }
+                                Kube.Label { text: modelData ; color: Kube.Colors.highlightColor }
                                 Item { width: Kube.Units.smallSpacing; height: 1 }
                             }
                         }
 
                         Row {
                             spacing: Kube.Units.smallSpacing
-                            Text { text: "(alias)"}
-                            Text { text: "test.testerson@gmail.com"; color: Kube.Colors.highlightColor }
+                            Kube.Label { text: "(alias)"}
+                            Kube.Label { text: "test.testerson@gmail.com"; color: Kube.Colors.highlightColor }
                             Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
 
                         Row {
                             spacing: Kube.Units.smallSpacing
-                            Text { text: "(private)"}
-                            Text { text: "test@gmail.com"; color: Kube.Colors.highlightColor }
+                            Kube.Label { text: "(private)"}
+                            Kube.Label { text: "test@gmail.com"; color: Kube.Colors.highlightColor }
                             Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
                     }
@@ -349,20 +345,20 @@ Kube.Popup {
 
                         Row {
                             spacing: Kube.Units.smallSpacing
-                            Text { text: "(inhouse)"}
-                            Text { text: "+49812324932"; opacity: 0.6 }
+                            Kube.Label { text: "(inhouse)"}
+                            Kube.Label { text: "+49812324932"; opacity: 0.6 }
                             Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
                         Row {
                             spacing: Kube.Units.smallSpacing
-                            Text { text: "(mobile)"}
-                            Text { text: "+49812324932"; opacity: 0.6 }
+                            Kube.Label { text: "(mobile)"}
+                            Kube.Label { text: "+49812324932"; opacity: 0.6 }
                             Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
                         Row {
                             spacing: Kube.Units.smallSpacing
-                            Text { text: "(private)"}
-                            Text { text: "+49812324932"; opacity: 0.6 }
+                            Kube.Label { text: "(private)"}
+                            Kube.Label { text: "+49812324932"; opacity: 0.6 }
                             Item { width: Kube.Units.smallSpacing; height: 1 }
                         }
                     }
@@ -372,9 +368,9 @@ Kube.Popup {
 
                         width: personPageRoot.width - Kube.Units.largeSpacing
 
-                        Text { text: "Albertstrasse 35a"}
-                        Text { text: "81767 Teststadt"}
-                        Text { text: "GERMANY" }
+                        Kube.Label { text: "Albertstrasse 35a"}
+                        Kube.Label { text: "81767 Teststadt"}
+                        Kube.Label { text: "GERMANY" }
                     }
 
 //                     Column {
