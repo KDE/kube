@@ -231,6 +231,8 @@ Controls2.ApplicationWindow {
                     anchors {
                         top: newMailButton.bottom
                         topMargin: Kube.Units.smallSpacing
+                        left: parent.left
+                        leftMargin: Kube.Units.smallSpacing
                     }
 
                     width: parent.width
