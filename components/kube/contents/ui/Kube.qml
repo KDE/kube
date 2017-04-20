@@ -121,11 +121,7 @@ Controls2.ApplicationWindow {
     //END background
 
     //BEGIN Main content
-
     RowLayout  {
-
-        anchors.fill: parent
-
         spacing: 0
 
         Rectangle {
@@ -179,9 +175,7 @@ Controls2.ApplicationWindow {
         }
 
         SplitView {
-
             height: app.height
-
             Layout.fillWidth: true
 
             Rectangle {
@@ -369,7 +363,6 @@ Controls2.ApplicationWindow {
                         }
                     }
                 }
-
             }
 
             Kube.MailListView  {
