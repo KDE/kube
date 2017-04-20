@@ -124,6 +124,8 @@ Controls2.ApplicationWindow {
     RowLayout  {
         spacing: 0
 
+        width: parent.width
+
         Rectangle {
             id: sideBar
 
