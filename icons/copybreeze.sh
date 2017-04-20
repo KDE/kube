@@ -25,7 +25,8 @@ wantedIcons = [
     "network-disconnect.svg",
     "view-refresh.svg",
     "go-down.svg",
-    "go-previous.svg"
+    "go-previous.svg",
+    "mail-message.svg"
 ]
 
 def ensure_dir(file_path):

@@ -43,6 +43,7 @@ Item {
     property string menu_inverted: "application-menu-inverted"
     property string user_inverted: "im-user-inverted"
     property string search_inverted: "edit-find-inverted"
+    property string mail_inverted: "mail-message-inverted"
     property string goBack: "go-previous"
     property string goDown: "go-down"
     property string goUp: "go-down"
