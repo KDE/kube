@@ -20,14 +20,16 @@
 pragma Singleton
 
 import QtQuick 2.7
+import org.kube.framework 1.0 as Kube
 
 Item {
     property int gridUnit: fontMetrics.height
     property int smallSpacing: gridUnit/4
     property int largeSpacing: gridUnit
+
     property variant fontMetrics: TextMetrics {
         text: "M"
-        font.family: "Noto Sans"
+        font.family: Kube.Font.fontFamily
     }
 }
 
