@@ -121,97 +121,151 @@ Controls2.ApplicationWindow {
     //END background
 
     //BEGIN Main content
-    SplitView {
-        anchors {
-            top: app.top
-            left: app.left
-        }
 
-        height: app.height
-        width: app.width
+    RowLayout  {
 
-         Rectangle {
-            width: Kube.Units.gridUnit * 10
-            Layout.maximumWidth: app.width * 0.25
-            Layout.minimumWidth: Kube.Units.gridUnit * 5
+        anchors.fill: parent
 
-            color: Kube.Colors.textColor
+        spacing: 0
 
-            Kube.PositiveButton {
-                id: newMailButton
+        Rectangle {
+            id: sideBar
 
+            width: Kube.Units.gridUnit + Kube.Units.largeSpacing
+            height: app.height
+            color: "#232629"//Kube.Colors.textColor
+
+            Column {
                 anchors {
                     top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    margins: Kube.Units.largeSpacing
+                    topMargin: Kube.Units.largeSpacing
+                    horizontalCenter: parent.horizontalCenter
                 }
 
-                text: qsTr("New Email")
+                spacing: Kube.Units.largeSpacing - Kube.Units.smallSpacing
 
-                onClicked: {
-                    composer.open()
+                ToolButton {
+                    iconName: Kube.Icons.search_inverted
+                    height: Kube.Units.gridUnit * 1.5
+                    width: height
+
+                    onClicked: {
+                        search.open()
+                    }
+                }
+
+                ToolButton {
+                    height: Kube.Units.gridUnit * 1.5
+                    width: height
+
+                    iconName: Kube.Icons.mail_inverted
+
+                    onClicked: {
+                        //TODO
+                    }
+                }
+
+                ToolButton {
+                    height: Kube.Units.gridUnit * 1.5
+                    width: height
+
+                    iconName: Kube.Icons.user_inverted
+
+                    onClicked: {
+                        people.open()
+                    }
                 }
             }
+        }
 
-            Item {
-                id: accountName
+        SplitView {
 
-                Kube.FolderController {
-                    id: accountNameFolderController
-                    accountId: accountSwitcher.accountId
-                }
+            height: app.height
 
-                Menu {
-                    id: contextMenu
-                    title: "Edit"
+            Layout.fillWidth: true
 
-                    MenuItem {
-                        text: "Synchronize"
-                        onTriggered: {
-                            accountNameFolderController.synchronizeAction.execute()
-                        }
+            Rectangle {
+                width: Kube.Units.gridUnit * 10
+                Layout.maximumWidth: app.width * 0.25
+                Layout.minimumWidth: Kube.Units.gridUnit * 5
+
+                color: Kube.Colors.textColor
+
+                Kube.PositiveButton {
+                    id: newMailButton
+
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        right: parent.right
+                        margins: Kube.Units.largeSpacing
                     }
-                }
 
-                anchors {
-                    top: newMailButton.bottom
-                    topMargin: Kube.Units.smallSpacing
-                }
+                    text: qsTr("New Email")
 
-                width: parent.width
-                height: Kube.Units.gridUnit * 2
-
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.RightButton
                     onClicked: {
-                        contextMenu.popup()
+                        composer.open()
                     }
                 }
 
-                Repeater {
-                    model: currentAccountModel
-                    Row {
-                        spacing: Kube.Units.smallSpacing
-                        anchors {
-                            bottom: parent.bottom
-                            left: parent.left
-                            leftMargin: Kube.Units.smallSpacing
-                        }
-                        Layout.fillHeight: true
+                Item {
+                    id: accountName
 
-                        Kube.Label{
-                            text: model.name
-                            font.weight: Font.Bold
-                            color: Kube.Colors.highlightedTextColor
-                        }
+                    Kube.FolderController {
+                        id: accountNameFolderController
+                        accountId: accountSwitcher.accountId
+                    }
 
-                        Kube.Icon {
-                            id: statusIcon
-                            visible: false
-                            iconName: ""
-                            states: [
+                    Menu {
+                        id: contextMenu
+                        title: "Edit"
+
+                        MenuItem {
+                            text: "Synchronize"
+                            onTriggered: {
+                                accountNameFolderController.synchronizeAction.execute()
+                            }
+                        }
+                    }
+
+                    anchors {
+                        top: newMailButton.bottom
+                        topMargin: Kube.Units.smallSpacing
+                    }
+
+                    width: parent.width
+                    height: Kube.Units.gridUnit * 2
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.RightButton
+                        onClicked: {
+                            contextMenu.popup()
+                        }
+                    }
+
+                    Repeater {
+                        model: currentAccountModel
+                        Row {
+                            spacing: Kube.Units.smallSpacing
+                            anchors {
+                                bottom: parent.bottom
+                                left: parent.left
+                                leftMargin: Kube.Units.smallSpacing
+                            }
+                            Layout.fillHeight: true
+
+                            Kube.Label{
+                                text: model.name
+                                font.weight: Font.Bold
+                                color: Kube.Colors.highlightedTextColor
+                            }
+
+                            Kube.Icon {
+                                id: statusIcon
+                                visible: false
+                                iconName: ""
+                                states: [
                                 State {
                                     name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
                                     PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy_inverted; visible: true }
@@ -228,129 +282,110 @@ Controls2.ApplicationWindow {
                                     name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
                                     PropertyChanges { target: statusIcon; iconName: Kube.Icons.noNetworkConnection_inverted; visible: true }
                                 }
-                            ]
+                                ]
+                            }
                         }
                     }
                 }
-            }
 
-            Kube.FolderListView {
-                id: folderListView
+                Kube.FolderListView {
+                    id: folderListView
 
-                anchors {
-                    top: accountName.bottom
-                    topMargin: Kube.Units.smallSpacing
-                    bottom: statusBar.top
-                    left: parent.left
-                    right: parent.right
+                    anchors {
+                        top: accountName.bottom
+                        topMargin: Kube.Units.smallSpacing
+                        bottom: statusBar.top
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    focus: true
+                    accountId: accountSwitcher.accountId
                 }
 
-                focus: true
-                accountId: accountSwitcher.accountId
-            }
+                Item {
+                    id: statusBar
+                    anchors {
+                        topMargin: Kube.Units.smallSpacing
+                        bottom: outbox.top
+                        left: parent.left
+                        right: parent.right
+                    }
 
-            Item {
-                id: statusBar
-                anchors {
-                    topMargin: Kube.Units.smallSpacing
-                    bottom: outbox.top
-                    left: parent.left
-                    right: parent.right
-                }
+                    height: Kube.Units.gridUnit
 
-                height: Kube.Units.gridUnit
-
-                Repeater {
-                    model: currentAccountModel
-                    Kube.Label {
-                        id: statusText
-                        anchors.centerIn: parent
-                        visible: false
-                        color: Kube.Colors.highlightedTextColor
-                        states: [
+                    Repeater {
+                        model: currentAccountModel
+                        Kube.Label {
+                            id: statusText
+                            anchors.centerIn: parent
+                            visible: false
+                            color: Kube.Colors.highlightedTextColor
+                            states: [
                             State {
                                 name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
                                 PropertyChanges { target: statusText; text: "Offline"; visible: true }
                             }
-                        ]
-                    }
-                }
-            }
-
-            Kube.Outbox {
-                id: outbox
-
-                anchors {
-                    bottom: toolBar.top
-                    left: parent.left
-                    right: parent.right
-                }
-                height: Kube.Units.gridUnit * 1.5
-            }
-
-
-            Item {
-                id: toolBar
-
-                anchors {
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: parent.right
-                }
-                height: Kube.Units.gridUnit * 2
-
-                RowLayout {
-                    anchors.centerIn: parent
-
-                    spacing: Kube.Units.largeSpacing
-
-                    Kube.AccountSwitcher {
-                        id: accountSwitcher
-                        iconName: Kube.Icons.menu_inverted
-                        height: Kube.Units.gridUnit * 1.5
-                        width: height
-                    }
-
-                    ToolButton {
-                        iconName: Kube.Icons.user_inverted
-                        height: Kube.Units.gridUnit * 1.5
-                        width: height
-
-                        onClicked: {
-                            people.open()
-                        }
-                    }
-
-                    ToolButton {
-                        iconName: Kube.Icons.search_inverted
-                        height: Kube.Units.gridUnit * 1.5
-                        width: height
-
-                        onClicked: {
-                            search.open()
+                            ]
                         }
                     }
                 }
+
+                Kube.Outbox {
+                    id: outbox
+
+                    anchors {
+                        bottom: toolBar.top
+                        left: parent.left
+                        right: parent.right
+                    }
+                    height: Kube.Units.gridUnit * 1.5
+                }
+
+
+                Item {
+                    id: toolBar
+
+                    anchors {
+                        bottom: parent.bottom
+                        left: parent.left
+                        right: parent.right
+                    }
+                    height: Kube.Units.gridUnit * 2
+
+                    RowLayout {
+                        anchors.centerIn: parent
+
+                        spacing: Kube.Units.largeSpacing
+
+                        Kube.AccountSwitcher {
+                            id: accountSwitcher
+                            iconName: Kube.Icons.menu_inverted
+                            height: Kube.Units.gridUnit * 1.5
+                            width: height
+                        }
+                    }
+                }
+
             }
 
-        }
+            Kube.MailListView  {
+                id: mailListView
+                parentFolder: folderListView.currentFolder
+                width: Kube.Units.gridUnit * 20
+                height: parent.height
+                Layout.maximumWidth: app.width * 0.4
+                Layout.minimumWidth: Kube.Units.gridUnit * 10
+                focus: true
+            }
 
-        Kube.MailListView  {
-            id: mailListView
-            parentFolder: folderListView.currentFolder
-            width: Kube.Units.gridUnit * 20
-            height: parent.height
-            Layout.maximumWidth: app.width * 0.4
-            Layout.minimumWidth: Kube.Units.gridUnit * 10
-            focus: true
-        }
-
-        Kube.ConversationView {
-            id: mailView
-            mail: mailListView.currentMail
-            Layout.fillWidth: true
-            hideTrash: !folderListView.isTrashFolder
-            hideNonTrash: folderListView.isTrashFolder
+            Kube.ConversationView {
+                id: mailView
+                mail: mailListView.currentMail
+                Layout.fillWidth: true
+                hideTrash: !folderListView.isTrashFolder
+                hideNonTrash: folderListView.isTrashFolder
+            }
         }
     }
     //END Main content
