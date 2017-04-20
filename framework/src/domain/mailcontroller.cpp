@@ -64,12 +64,14 @@ void MailController::updateActions()
         action_moveToTrash->setEnabled(!getTrash());
         action_restoreFromTrash->setEnabled(getTrash());
         action_markAsRead->setEnabled(getUnread());
-        action_markAsUnread->setEnabled(getUnread());
+        action_markAsUnread->setEnabled(!getUnread());
+        action_markAsImportant->setEnabled(!getImportant());
     } else {
         action_moveToTrash->setEnabled(false);
         action_restoreFromTrash->setEnabled(false);
         action_markAsRead->setEnabled(false);
         action_markAsUnread->setEnabled(false);
+        action_markAsImportant->setEnabled(false);
     }
 }
 

@@ -46,9 +46,9 @@ Item {
             value: root.currentMail
         }
         unread: root.isUnread
-        trash: root.isUnread
-        important: root.isUnread
-        draft: root.isUnread
+        trash: root.isTrash
+        important: root.isImportant
+        draft: root.isDraft
         operateOnThreads: mailListModel.isThreaded
     }
 
