@@ -232,7 +232,7 @@ Controls2.ApplicationWindow {
                         top: newMailButton.bottom
                         topMargin: Kube.Units.smallSpacing
                         left: parent.left
-                        leftMargin: Kube.Units.smallSpacing
+                        leftMargin: Kube.Units.largeSpacing
                     }
 
                     width: parent.width
@@ -299,6 +299,7 @@ Controls2.ApplicationWindow {
                         bottom: statusBar.top
                         left: parent.left
                         right: parent.right
+                        leftMargin: Kube.Units.largeSpacing
                     }
 
                     focus: true
