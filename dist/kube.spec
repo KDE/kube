@@ -30,9 +30,10 @@ BuildRequires:  gpgme >= 1.8.0
 Requires:       qt5-qtquick1
 Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2-devel
-Requires:       sink >= 0.2.0
+Requires:       sink >= 0.3
 Requires:       kirigami
 Requires:       kf5-messagelib
+Requires:       google-noto-sans
 
 %description
 kube
