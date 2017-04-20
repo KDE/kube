@@ -18,18 +18,18 @@
 
 import QtQuick 2.7
 import QtQuick.Templates 2.0 as T
-import org.kube.framework 1.0
+import org.kube.framework 1.0 as Kube
 
 T.TextField {
     id: root
 
-    implicitHeight: Units.gridUnit + Units.smallSpacing * 2
-    implicitWidth: Units.gridUnit * 5 + Units.smallSpacing * 2
+    implicitHeight: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2
+    implicitWidth: Kube.Units.gridUnit * 5 + Kube.Units.smallSpacing * 2
 
-    padding: Units.smallSpacing
+    padding: Kube.Units.smallSpacing
 
-    color: Colors.textColor
-    font.family: "Noto Sans"
+    color: Kube.Colors.textColor
+    font.family: Kube.Font.fontFamily
 
     Label {
         id: placeholder
@@ -41,13 +41,13 @@ T.TextField {
 
         visible: root.text == ""
         text: root.placeholderText
-        color: Colors.disabledTextColor
+        color: Kube.Colors.disabledTextColor
         elide: Text.ElideRight
     }
 
     background: Rectangle {
-        color: Colors.viewBackgroundColor
+        color: Kube.Colors.viewBackgroundColor
         border.width: 1
-        border.color: Colors.buttonColor
+        border.color: Kube.Colors.buttonColor
     }
 }

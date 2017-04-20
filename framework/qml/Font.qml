@@ -1,6 +1,5 @@
 /*
   Copyright (C) 2017 Michael Bohlender, <bohlender@kolabsys.com>
-  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,16 +19,10 @@
 pragma Singleton
 
 import QtQuick 2.7
-import org.kube.framework 1.0 as Kube
 
 Item {
-    property int gridUnit: fontMetrics.height
-    property int smallSpacing: gridUnit/4
-    property int largeSpacing: gridUnit
+    id: root
 
-    property variant fontMetrics: TextMetrics {
-        text: "M"
-        font.family: Kube.Font.fontFamily
-    }
+    property string fontFamily: "Noto Sans"
 }
 
