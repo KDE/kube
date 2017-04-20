@@ -22,5 +22,7 @@ Label 1.0 Label.qml
 singleton Colors 1.0 Colors.qml
 singleton Icons 1.0 Icons.qml
 singleton Units 1.0 Units.qml
+singleton Font 1.0 Font.qml
+
 
 plugin frameworkplugin
