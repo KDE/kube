@@ -219,6 +219,7 @@ Controls2.ApplicationWindow {
                         left: newMailButton.left
                         right: parent.right
                     }
+                    width: parent.width - Kube.Units.largeSpacing
                 }
             }
 //TODO bring back status bar and outbox
