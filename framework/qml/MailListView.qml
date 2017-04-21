@@ -66,71 +66,6 @@ Item {
         onActivated: root.currentIndex--
     }
 
-    ToolBar {
-        id: toolbar
-
-        width: parent.width
-
-        Row {
-            anchors.centerIn: parent
-
-            spacing: Kube.Units.smallSpacing
-
-            Controls.ToolButton {
-                iconName: Kube.Icons.markAsRead
-                text: qsTr("Mark As Read")
-                tooltip: text
-                enabled: mailController.markAsReadAction.enabled
-                visible: enabled
-                onClicked: {
-                    mailController.markAsReadAction.execute()
-                }
-            }
-
-            Controls.ToolButton {
-                iconName: Kube.Icons.markAsUnread
-                text: qsTr("Mark As Unread")
-                tooltip: text
-                enabled: mailController.markAsUnreadAction.enabled
-                visible: enabled
-                onClicked: {
-                    mailController.markAsUnreadAction.execute()
-                }
-            }
-
-            Controls.ToolButton {
-                iconName: Kube.Icons.markImportant
-                text: qsTr("Toggle Important")
-                tooltip: text
-                enabled: mailController.toggleImportantAction.enabled
-                onClicked: {
-                    mailController.toggleImportantAction.execute()
-                }
-            }
-
-            Controls.ToolButton {
-                iconName: Kube.Icons.moveToTrash
-                text: qsTr("Delete Mail")
-                tooltip: text
-                enabled: mailController.moveToTrashAction.enabled
-                onClicked: {
-                    mailController.moveToTrashAction.execute()
-                }
-            }
-
-            Controls.ToolButton {
-                iconName: Kube.Icons.undo
-                text: qsTr("Restore Mail")
-                tooltip: text
-                enabled: mailController.restoreFromTrashAction.enabled
-                visible: enabled
-                onClicked: {
-                    mailController.restoreFromTrashAction.execute()
-                }
-            }
-        }
-    }
-
     Kube.Label {
         anchors.centerIn: parent
         visible: listView.count === 0
@@ -141,11 +76,7 @@ Item {
     ListView {
         id: listView
 
-        anchors.top: toolbar.bottom
-
-        width: parent.width
-        height: parent.height - toolbar.height
-
+        anchors.fill: parent
         focus: true
         clip: true
 
@@ -227,9 +158,8 @@ Item {
                     PropertyChanges {target: background; color: Kube.Colors.highlightColor; opacity: 0.6}
                     PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; visible: false}
+                    PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: buttons; visible: true}
                 }
                 ]
 
@@ -331,7 +261,7 @@ Item {
                 Row {
                     id: buttons
 
-                    property bool containsMouse: importantButton.hovered || deleteButton.hovered || unreadButton.hovered
+                    property bool containsMouse: importantButton.hovered || deleteButton.hovered || unreadButton.hovered || readButton.hovered
 
                     anchors {
                         right: parent.right
@@ -344,20 +274,52 @@ Item {
                     opacity: 0.7
 
                     Kube.Button {
+                        id: readButton
+                        text: "r"
+                        enabled: mailController.markAsReadAction.enabled
+                        visible: enabled
+                        onClicked: {
+                            mailController.markAsReadAction.execute()
+                        }
+                    }
+                    Kube.Button {
                         id: unreadButton
-
                         text: "u"
+                        enabled: mailController.markAsUnreadAction.enabled
+                        visible: enabled
+                        onClicked: {
+                            mailController.markAsUnreadAction.execute()
+                        }
                     }
 
                     Kube.Button {
                         id: importantButton
-
                         text: "i"
+                        enabled: mailController.toggleImportantAction.enabled
+                        visible: enabled
+                        onClicked: {
+                            mailController.toggleImportantAction.execute()
+                        }
                     }
 
                     Kube.Button {
                         id: deleteButton
                         text: "d"
+                        enabled: mailController.moveToTrashAction.enabled
+                        visible: enabled
+                        onClicked: {
+                            mailController.moveToTrashAction.execute()
+                        }
+                    }
+
+                    Kube.Button {
+                        id: restoreButton
+                        text: "re"
+                        enabled: mailController.restoreFromTrashAction.enabled
+                        visible: enabled
+                        onClicked: {
+                            mailController.restoreFromTrashAction.execute()
+                        }
                     }
                 }
             }
