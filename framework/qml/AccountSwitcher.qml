@@ -34,6 +34,7 @@ Controls.ToolButton {
     property variant accountName
 
     width: parent.width
+    iconName: Kube.Icons.menu_inverted
 
     Kube.FolderController {
         id: folderController

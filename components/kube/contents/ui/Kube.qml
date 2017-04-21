@@ -173,6 +173,11 @@ Controls2.ApplicationWindow {
                         people.open()
                     }
                 }
+
+                Kube.AccountSwitcher {
+                    height: Kube.Units.gridUnit * 1.5
+                    width: height
+                }
             }
         }
 
