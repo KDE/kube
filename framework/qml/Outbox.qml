@@ -25,7 +25,7 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
-Rectangle {
+Controls.ToolButton {
     id: root
 
     visible: outboxModel.count > 0
@@ -36,42 +36,32 @@ Rectangle {
     Kube.OutboxModel {
         id: outboxModel
     }
+    iconName: Kube.Icons.outbox
 
     states: [
         State {
             name: "busy"; when: outboxModel.status == Kube.OutboxModel.InProgressStatus
-            PropertyChanges { target: icon; iconName: Kube.Icons.busy_inverted }
+            PropertyChanges { target: root; iconName: Kube.Icons.busy_inverted }
         },
         State {
             name: "error"; when: outboxModel.status == Kube.OutboxModel.ErrorStatus
-            PropertyChanges { target: icon; iconName: Kube.Icons.error_inverted }
+            PropertyChanges { target: root; iconName: Kube.Icons.error_inverted }
         }
     ]
 
-    color: Kube.Colors.textColor
-    clip: true
-
-    Row {
-        anchors.centerIn: parent
-        spacing: Kube.Units.smallSpacing
-        Kube.Label {
-            id: text
-            anchors.verticalCenter: parent.verticalCenter
-            text: outboxModel.count > 0 ? "Pending (" + outboxModel.count + ")" : "Outbox"
-            color: Kube.Colors.highlightedTextColor
+    Kube.Label {
+        id: text
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
         }
-        Icon {
-            id: icon
-            anchors.verticalCenter: parent.verticalCenter
-            iconName: ""
-            visible: iconName != ""
-        }
+        width: Kube.Units.smallSpacing
+        text: outboxModel.count
+        color: Kube.Colors.disabledTextColor
+        font.pointSize: 9
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: dialog.open()
-    }
+    onClicked: dialog.open()
 
     Kube.Popup {
         id: dialog

@@ -39,6 +39,8 @@ Item {
     property string moveToTrash: "edit-delete"
     property string edit: "document-edit"
     property string replyToSender: "mail-reply-sender"
+    property string outbox: "mail-folder-outbox"
+    property string outbox_inverted: "mail-folder-outbox-inverted"
 
     property string menu_inverted: "application-menu-inverted"
     property string user_inverted: "im-user-inverted"

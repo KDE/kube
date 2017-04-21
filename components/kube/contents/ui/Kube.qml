@@ -179,6 +179,19 @@ Controls2.ApplicationWindow {
                     width: height
                 }
             }
+            Column {
+                anchors {
+                    bottom: parent.bottom
+                    bottomMargin: Kube.Units.smallSpacing
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+                spacing: Kube.Units.largeSpacing - Kube.Units.smallSpacing
+                Kube.Outbox {
+                    height: Kube.Units.gridUnit * 1.5
+                    width: height
+                }
+            }
         }
 
         SplitView {
@@ -222,7 +235,7 @@ Controls2.ApplicationWindow {
                     width: parent.width - Kube.Units.largeSpacing
                 }
             }
-//TODO bring back status bar and outbox
+//TODO bring back status bar
 //                 Item {
 //                     id: statusBar
 //                     anchors {
@@ -249,17 +262,6 @@ Controls2.ApplicationWindow {
 //                             ]
 //                         }
 //                     }
-//                 }
-//
-//                 Kube.Outbox {
-//                     id: outbox
-//
-//                     anchors {
-//                         bottom: toolBar.top
-//                         left: parent.left
-//                         right: parent.right
-//                     }
-//                     height: Kube.Units.gridUnit * 1.5
 //                 }
 
             Kube.MailListView  {
