@@ -57,6 +57,22 @@ Item {
             rowSpacing: Kube.Units.largeSpacing
 
             Kube.Label {
+                text: "Please note that GMail requires you to configure your account to allow IMAP connections from Kube:
+<ol type=''>
+<li> See <a href='https://support.google.com/mail/answer/7126229'>https://support.google.com/mail/answer/7126229</a> to configure your account to allow IMAP connections.
+<li> Visit <a href='https://myaccount.google.com/lesssecureapps'>https://myaccount.google.com/lesssecureapps</a> and enable the setting to allow Kube to connect to your account."
+                Layout.alignment: Qt.AlignCenter
+                Layout.columnSpan: 2
+                onLinkActivated: Qt.openUrlExternally(link)
+                textFormat: Text.StyledText
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
+                    cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+                }
+            }
+
+            Kube.Label {
                 text: "Title of Account"
                 Layout.alignment: Qt.AlignRight
             }
