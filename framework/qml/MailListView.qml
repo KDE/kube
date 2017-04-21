@@ -216,18 +216,20 @@ Item {
                     PropertyChanges {target: background; color: Kube.Colors.highlightColor}
                     PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; visible: false}
+                    PropertyChanges {target: buttons; visible: true}
                 },
                 State {
                     name: "hovered"
-                    when: mouseArea.containsMouse && !mouseArea.drag.active
+                    when: ( mouseArea.containsMouse || buttons.containsMouse ) && !mouseArea.drag.active
 
-                    PropertyChanges {target: background; color: Kube.Colors.highlightColor; opacity: 0.7}
+                    PropertyChanges {target: background; color: Kube.Colors.highlightColor; opacity: 0.6}
                     PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; visible: false}
                     PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: buttons; visible: true}
                 }
                 ]
 
@@ -323,6 +325,39 @@ Item {
                         text: model.threadSize
                         color: model.unread ?  Kube.Colors.highlightColor  : Kube.Colors.disabledTextColor
                         visible: model.threadSize > 1
+                    }
+                }
+
+                Row {
+                    id: buttons
+
+                    property bool containsMouse: importantButton.hovered || deleteButton.hovered || unreadButton.hovered
+
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                        margins: Kube.Units.smallSpacing
+                    }
+
+                    visible: false
+                    spacing: Kube.Units.smallSpacing
+                    opacity: 0.7
+
+                    Kube.Button {
+                        id: unreadButton
+
+                        text: "u"
+                    }
+
+                    Kube.Button {
+                        id: importantButton
+
+                        text: "i"
+                    }
+
+                    Kube.Button {
+                        id: deleteButton
+                        text: "d"
                     }
                 }
             }
