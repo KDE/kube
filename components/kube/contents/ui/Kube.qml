@@ -101,7 +101,7 @@ Controls2.ApplicationWindow {
     //Model
     Kube.AccountsModel {
         id: currentAccountModel
-        accountId: accountSwitcher.accountId
+        accountId: accountFolderview.accountId
     }
 
     //BEGIN Shortcuts
@@ -204,172 +204,61 @@ Controls2.ApplicationWindow {
                     }
                 }
 
-                Item {
-                    id: accountName
-
-                    Kube.FolderController {
-                        id: accountNameFolderController
-                        accountId: accountSwitcher.accountId
-                    }
-
-                    Menu {
-                        id: contextMenu
-                        title: "Edit"
-
-                        MenuItem {
-                            text: "Synchronize"
-                            onTriggered: {
-                                accountNameFolderController.synchronizeAction.execute()
-                            }
-                        }
-                    }
+                Kube.InlineAccountSwitcher {
+                    id: accountFolderview
 
                     anchors {
                         top: newMailButton.bottom
-                        topMargin: Kube.Units.smallSpacing
-                        left: parent.left
-                        leftMargin: Kube.Units.largeSpacing
-                    }
-
-                    width: parent.width
-                    height: Kube.Units.gridUnit * 2
-
-                    MouseArea {
-                        anchors.fill: parent
-                        acceptedButtons: Qt.RightButton
-                        onClicked: {
-                            contextMenu.popup()
-                        }
-                    }
-
-                    Repeater {
-                        model: currentAccountModel
-                        Row {
-                            spacing: Kube.Units.smallSpacing
-                            anchors {
-                                bottom: parent.bottom
-                                left: parent.left
-                                leftMargin: Kube.Units.smallSpacing
-                            }
-                            Layout.fillHeight: true
-
-                            Kube.Label{
-                                text: model.name
-                                font.weight: Font.Bold
-                                color: Kube.Colors.highlightedTextColor
-                            }
-
-                            Kube.Icon {
-                                id: statusIcon
-                                visible: false
-                                iconName: ""
-                                states: [
-                                State {
-                                    name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
-                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy_inverted; visible: true }
-                                },
-                                State {
-                                    name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
-                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.error_inverted; visible: true }
-                                },
-                                State {
-                                    name: "checkmark"; when: model.status == Kube.AccountsModel.ConnectedStatus
-                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.connected_inverted; visible: true }
-                                },
-                                State {
-                                    name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-                                    PropertyChanges { target: statusIcon; iconName: Kube.Icons.noNetworkConnection_inverted; visible: true }
-                                }
-                                ]
-                            }
-                        }
-                    }
-                }
-
-                Kube.FolderListView {
-                    id: folderListView
-
-                    anchors {
-                        top: accountName.bottom
-                        topMargin: Kube.Units.smallSpacing
-                        bottom: statusBar.top
-                        left: parent.left
-                        right: parent.right
-                        leftMargin: Kube.Units.largeSpacing
-                    }
-
-                    focus: true
-                    accountId: accountSwitcher.accountId
-                }
-
-                Item {
-                    id: statusBar
-                    anchors {
-                        topMargin: Kube.Units.smallSpacing
-                        bottom: outbox.top
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    height: Kube.Units.gridUnit
-
-                    Repeater {
-                        model: currentAccountModel
-                        Kube.Label {
-                            id: statusText
-                            anchors.centerIn: parent
-                            visible: false
-                            color: Kube.Colors.highlightedTextColor
-                            states: [
-                            State {
-                                name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-                                PropertyChanges { target: statusText; text: "Offline"; visible: true }
-                            }
-                            ]
-                        }
-                    }
-                }
-
-                Kube.Outbox {
-                    id: outbox
-
-                    anchors {
-                        bottom: toolBar.top
-                        left: parent.left
-                        right: parent.right
-                    }
-                    height: Kube.Units.gridUnit * 1.5
-                }
-
-
-                Item {
-                    id: toolBar
-
-                    anchors {
+                        topMargin: Kube.Units.largeSpacing
                         bottom: parent.bottom
-                        left: parent.left
+                        left: newMailButton.left
                         right: parent.right
-                    }
-                    height: Kube.Units.gridUnit * 2
-
-                    RowLayout {
-                        anchors.centerIn: parent
-
-                        spacing: Kube.Units.largeSpacing
-
-                        Kube.AccountSwitcher {
-                            id: accountSwitcher
-                            iconName: Kube.Icons.menu_inverted
-                            height: Kube.Units.gridUnit * 1.5
-                            width: height
-                        }
                     }
                 }
             }
+//TODO bring back status bar and outbox
+//                 Item {
+//                     id: statusBar
+//                     anchors {
+//                         topMargin: Kube.Units.smallSpacing
+//                         bottom: outbox.top
+//                         left: parent.left
+//                         right: parent.right
+//                     }
+//
+//                     height: Kube.Units.gridUnit
+//
+//                     Repeater {
+//                         model: currentAccountModel
+//                         Kube.Label {
+//                             id: statusText
+//                             anchors.centerIn: parent
+//                             visible: false
+//                             color: Kube.Colors.highlightedTextColor
+//                             states: [
+//                             State {
+//                                 name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
+//                                 PropertyChanges { target: statusText; text: "Offline"; visible: true }
+//                             }
+//                             ]
+//                         }
+//                     }
+//                 }
+//
+//                 Kube.Outbox {
+//                     id: outbox
+//
+//                     anchors {
+//                         bottom: toolBar.top
+//                         left: parent.left
+//                         right: parent.right
+//                     }
+//                     height: Kube.Units.gridUnit * 1.5
+//                 }
 
             Kube.MailListView  {
                 id: mailListView
-                parentFolder: folderListView.currentFolder
+                parentFolder: accountFolderview.currentFolder
                 width: Kube.Units.gridUnit * 20
                 height: parent.height
                 Layout.maximumWidth: app.width * 0.4
@@ -381,8 +270,8 @@ Controls2.ApplicationWindow {
                 id: mailView
                 mail: mailListView.currentMail
                 Layout.fillWidth: true
-                hideTrash: !folderListView.isTrashFolder
-                hideNonTrash: folderListView.isTrashFolder
+                hideTrash: !accountFolderview.isTrashFolder
+                hideNonTrash: accountFolderview.isTrashFolder
             }
         }
     }

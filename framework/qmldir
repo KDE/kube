@@ -6,6 +6,7 @@ ConversationView 1.0 ConversationView.qml
 FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml
 AccountSwitcher 1.0 AccountSwitcher.qml
+InlineAccountSwitcher 1.0 InlineAccountSwitcher.qml
 NewAccountDialog 1.0 NewAccountDialog.qml
 EditAccountDialog 1.0 EditAccountDialog.qml
 OverlayDialog 1.0 OverlayDialog.qml
@@ -23,6 +24,5 @@ singleton Colors 1.0 Colors.qml
 singleton Icons 1.0 Icons.qml
 singleton Units 1.0 Units.qml
 singleton Font 1.0 Font.qml
-
 
 plugin frameworkplugin

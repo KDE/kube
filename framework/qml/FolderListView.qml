@@ -21,7 +21,6 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 Rectangle {
@@ -39,18 +38,6 @@ Rectangle {
             //!! checks for the availability of the type
             when: !!root.currentFolder
             value: root.currentFolder
-        }
-    }
-
-    Menu {
-        id: contextMenu
-        title: "Edit"
-
-        MenuItem {
-            text: "Synchronize"
-            onTriggered: {
-                folderController.synchronizeAction.execute()
-            }
         }
     }
 
@@ -80,29 +67,18 @@ Rectangle {
             root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
             root.isTrashFolder = model.data(currentIndex, Kube.FolderListModel.Trash)
             folderController.synchronizeAction.execute()
+            console.error(model.data)
         }
 
         alternatingRowColors: false
         headerVisible: false
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.RightButton
-            onClicked: {
-                var index = parent.indexAt(mouse.x, mouse.y)
-                if (index.valid) {
-                    folderController.folder = treeView.model.data(index, Kube.FolderListModel.DomainObject)
-                    contextMenu.popup()
-                }
-            }
-        }
 
         style: TreeViewStyle {
 
             rowDelegate: Rectangle {
                 color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
 
-                height: Kirigami.Units.gridUnit * 1.5
+                height: Kube.Units.gridUnit * 1.5
                 width: 20
 
             }
@@ -157,7 +133,7 @@ Rectangle {
                     Kube.Label {
                         anchors {
                             verticalCenter: parent.verticalCenter
-                            leftMargin: Kirigami.Units.smallSpacing
+                            leftMargin: Kube.Units.smallSpacing
                         }
 
                         text: styleData.value
