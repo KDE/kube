@@ -148,6 +148,7 @@ Item {
                     PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: buttons; visible: true}
                 }
                 ]
 
