@@ -26,7 +26,6 @@ import org.kube.framework 1.0 as Kube
 import QtQml 2.2 as QtQml
 
 
-
 Rectangle {
     id: root
 
@@ -36,7 +35,6 @@ Rectangle {
     property variant currentMail: null;
     property bool hideTrash: true;
     property bool hideNonTrash: false;
-
 
     Kube.Listener {
         filter: Kube.Messages.mailSelection
@@ -161,25 +159,13 @@ Rectangle {
         //which will break lot's of things.
         cacheBuffer: 100000
 
-        Kube.MailController {
-            id: mailController
-            Binding on mail {
-                //!! checks for the availability of the type
-                when: !!root.currentMail
-                value: root.currentMail
-            }
-            operateOnThreads: false
-        }
-
         Timer {
             id: markAsReadTimer
             interval: 2000
             running: false
             repeat: false
             onTriggered: {
-                if (mailController.markAsReadAction.enabled) {
-                    mailController.markAsReadAction.execute();
-                }
+                Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": root.currentMail})
             }
         }
 
@@ -519,22 +505,16 @@ Rectangle {
                             leftMargin: Kube.Units.largeSpacing
                         }
 
-                        Kube.MailController {
-                            id: mailController
-                            mail: model.mail
-                        }
-
                         text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
                         opacity: 0.5
-                        enabled: model.trash ? mailController.removeAction.enabled : mailController.moveToTrashAction.enabled
                         MouseArea {
                             anchors.fill: parent
                             enabled: parent.enabled
                             onClicked: {
                                 if (model.trash) {
-                                    mailController.removeAction.execute();
+                                    Kube.Fabric.postMessage(Kube.Messages.remove, {"mail": model.mail})
                                 } else {
-                                    mailController.moveToTrashAction.execute();
+                                    Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                                 }
                             }
                         }
