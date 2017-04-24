@@ -50,6 +50,7 @@ set(SRCS
     accounts/accountsmodel.cpp
     notifications/notificationhandler.cpp
     fabric.cpp
+    sinkfabric.cpp
 )
 
 add_library(frameworkplugin SHARED ${SRCS})

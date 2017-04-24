@@ -36,59 +36,35 @@ Controls2.ApplicationWindow {
 
     visible: true
 
-    Kube.NotificationHandler {
-        id: notificationHandler
-        function handler(n) {
-            console.warn("We got a notification: ", n.message)
-            if (n.type == Kube.Notification.Warning) {
-                console.warn("And it's a warning!", n.type)
+    Kube.Listener {
+        filter: Kube.Messages.notification
+        onMessageReceived: {
+            console.warn("We got a notification: ", message.message)
+            if (message.type == Kube.Notification.Warning) {
+                console.warn("And it's a warning!", message.type)
             }
-            notificationPopup.notify(n.message);
+            notificationPopup.notify(message.message);
         }
     }
 
-    //BEGIN Actions
-    Kube.Context {
-        id: maillistcontext
-        property variant mail
-        property bool isDraft
-        mail: mailListView.currentMail
-        isDraft: mailListView.isDraft
-    }
-
-    Kube.Action {
-        id: replyAction
-        actionId: "org.kde.kube.actions.reply"
-        context: maillistcontext
-    }
-    //END Actions
-
-    //BEGIN ActionHandler
-    Kube.ActionHandler {
-        actionId: "org.kde.kube.actions.reply"
-        function isReady(context) {
-            return context.mail ? true : false;
-        }
-
-        function handler(context) {
-            composer.loadMessage(context.mail, false)
+    Kube.Listener {
+        filter: Kube.Messages.reply
+        onMessageReceived: {
+            composer.loadMessage(message.mail, false)
             composer.open()
         }
     }
 
-    Kube.ActionHandler {
-        actionId: "org.kde.kube.actions.edit"
-        function isReady(context) {
-            return context.mail && context.isDraft;
-        }
-        function handler(context) {
-            composer.loadMessage(context.mail, true)
+    Kube.Listener {
+        filter: Kube.Messages.edit
+        onMessageReceived: {
+            composer.loadMessage(message.mail, true)
             composer.open()
         }
     }
-    //END ActionHandler
 
     //Controller
+    //TODO replace
     Kube.FolderController {
         id: folderController
     }

@@ -548,32 +548,12 @@ Rectangle {
                             rightMargin: Kube.Units.largeSpacing
                         }
 
-                        Kube.Context {
-                            id: mailcontext
-                            property variant mail
-                            property bool isDraft
-                            mail: model.mail
-                            isDraft: model.draft
-                        }
-
-                        Kube.Action {
-                            id: replyAction
-                            actionId: "org.kde.kube.actions.reply"
-                            context: maillistcontext
-                        }
-
-                        Kube.Action {
-                            id: editAction
-                            actionId: "org.kde.kube.actions.edit"
-                            context: maillistcontext
-                        }
-
                         iconName: model.draft ? Kube.Icons.edit : Kube.Icons.replyToSender
                         onClicked: {
                             if (model.draft) {
-                                editAction.execute()
+                                Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail, "isDraft": model.draft})
                             } else {
-                                replyAction.execute()
+                                Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail, "isDraft": model.draft})
                             }
                         }
                     }

@@ -27,6 +27,16 @@ Item {
 
     //Actions
     property string moveToTrash: "moveToTrash"
+    property string restoreFromTrash: "restoreFromTrash"
+    property string markAsRead: "markAsRead"
+    property string markAsUnread: "markAsUnread"
+    property string toggleImportant: "toggleImportant"
+    property string moveToFolder: "moveToFolder"
+
+    property string notification: "notification"
     property string search: "search"
+    property string synchronize: "synchronize"
+    property string reply: "reply"
+    property string edit: "edit"
 }
 

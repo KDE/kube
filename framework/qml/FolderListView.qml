@@ -30,17 +30,6 @@ Rectangle {
 
     color: Kube.Colors.textColor
 
-    Kube.FolderController {
-        id: folderController
-    }
-    Kube.Listener {
-        id: controllerListener
-        filter: Kube.Messages.folderSelection
-        onMessageReceived: {
-            folderController.folder = message.folder
-        }
-    }
-
     TreeView {
         id: treeView
 
@@ -66,7 +55,7 @@ Rectangle {
             model.fetchMore(currentIndex)
             Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder":model.data(currentIndex, Kube.FolderListModel.DomainObject),
                                                            "trash":model.data(currentIndex, Kube.FolderListModel.Trash)})
-            folderController.synchronizeAction.execute()
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder":model.data(currentIndex, Kube.FolderListModel.DomainObject)})
             console.error(model.data)
         }
 
@@ -117,9 +106,7 @@ Rectangle {
                         visible: parent.containsDrag
                     }
                     onDropped: {
-                        folderController.folder = model.domainObject
-                        folderController.mail = drop.source.mail
-                        folderController.moveToFolderAction.execute()
+                        Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder":model.domainObject})
                         drop.accept(Qt.MoveAction)
                         drop.source.visible = false
                     }

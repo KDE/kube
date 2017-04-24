@@ -31,12 +31,15 @@ Item {
     property bool isImportant : false
     property bool isTrash : false
     property bool isUnread : false
+    property variant currentMail: null
+
+    onCurrentMailChanged: Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail":currentMail})
 
     Kube.Listener {
         filter: Kube.Messages.folderSelection
         onMessageReceived: {
             parentFolder = message.folder
-            Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail":null})
+            currentMail = null
         }
     }
 
@@ -47,35 +50,10 @@ Item {
         }
     }
 
-    Kube.MailController {
-        id: mailController
-        unread: root.isUnread
-        trash: root.isTrash
-        important: root.isImportant
-        draft: root.isDraft
-        operateOnThreads: mailListModel.isThreaded
-    }
-
-    Kube.Listener {
-        id: controllerListener
-        filter: Kube.Messages.mailSelection
-        onMessageReceived: {
-            mailController.mail = message.mail
-        }
-    }
-
     Shortcut {
         sequence: StandardKey.Delete
-        onActivated: mailController.moveToTrashAction.execute()
-        enabled: mailController.moveToTrashAction.enabled
-    }
-    Shortcut {
-        sequence: StandardKey.MoveToNextLine
-        onActivated: root.currentIndex++
-    }
-    Shortcut {
-        sequence: StandardKey.MoveToPreviousLine
-        onActivated: root.currentIndex--
+        enabled: isTrash
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail":currentMail})
     }
 
     Kube.Label {
@@ -106,7 +84,7 @@ Item {
         //END keyboard nav
 
         onCurrentItemChanged: {
-            Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail":currentItem.currentData.mail})
+            root.currentMail = currentItem.currentData.mail;
             root.isDraft = currentItem.currentData.draft;
             root.isTrash = currentItem.currentData.trash;
             root.isImportant = currentItem.currentData.important;
@@ -286,50 +264,40 @@ Item {
                     Kube.Button {
                         id: readButton
                         text: "r"
-                        enabled: mailController.markAsReadAction.enabled
                         visible: enabled
-                        onClicked: {
-                            mailController.markAsReadAction.execute()
-                        }
+                        enabled: model.unread
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
                     }
                     Kube.Button {
                         id: unreadButton
                         text: "u"
-                        enabled: mailController.markAsUnreadAction.enabled
                         visible: enabled
-                        onClicked: {
-                            mailController.markAsUnreadAction.execute()
-                        }
+                        enabled: !model.unread
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
                     }
 
                     Kube.Button {
                         id: importantButton
                         text: "i"
-                        enabled: mailController.toggleImportantAction.enabled
                         visible: enabled
-                        onClicked: {
-                            mailController.toggleImportantAction.execute()
-                        }
+                        enabled: !!model.mail
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.toggleImportant, {"mail": model.mail, "important": model.important})
                     }
 
                     Kube.Button {
                         id: deleteButton
                         text: "d"
-                        enabled: mailController.moveToTrashAction.enabled
                         visible: enabled
-                        onClicked: {
-                            mailController.moveToTrashAction.execute()
-                        }
+                        enabled: !!model.mail
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                     }
 
                     Kube.Button {
                         id: restoreButton
                         text: "re"
-                        enabled: mailController.restoreFromTrashAction.enabled
                         visible: enabled
-                        onClicked: {
-                            mailController.restoreFromTrashAction.execute()
-                        }
+                        enabled: !!model.trash
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
                     }
                 }
             }
