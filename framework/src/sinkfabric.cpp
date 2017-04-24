@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-#include <actions/actionhandler.h>
-
 #include <QFile>
 
 #include <sink/store.h>

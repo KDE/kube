@@ -14,16 +14,10 @@ include_directories(.)
 
 set(SRCS
     frameworkplugin.cpp
-    actions/action.cpp
-    actions/actionhandler.cpp
-    actions/actionbroker.cpp
-    actions/actionresult.cpp
-    actions/context.cpp
     settings/settings.cpp
     domain/attachmentmodel.cpp
     domain/maillistmodel.cpp
     domain/folderlistmodel.cpp
-    domain/actions/sinkactions.cpp
     domain/objecttreesource.cpp
     domain/stringhtmlwriter.cpp
     domain/composercontroller.cpp
@@ -54,7 +48,6 @@ qt5_use_modules(frameworkplugin Core Quick Qml WebEngineWidgets Test)
 target_link_libraries(frameworkplugin sink mimetreeparser KF5::MimeTreeParser KF5::Codecs KF5::Package KAsync)
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
-add_subdirectory(domain/actions/tests)
 add_subdirectory(domain/mimetreeparser)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

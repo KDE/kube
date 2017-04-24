@@ -32,10 +32,6 @@
 #include "accounts/accountsmodel.h"
 #include "accounts/accountfactory.h"
 #include "settings/settings.h"
-#include "actions/action.h"
-#include "actions/context.h"
-#include "actions/actionhandler.h"
-#include "actions/actionresult.h"
 #include "fabric.h"
 
 #include <QtQml>
@@ -63,11 +59,6 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
 
     qmlRegisterType<Kube::Settings>(uri, 1, 0, "Settings");
-
-    qmlRegisterType<Kube::Context>(uri, 1, 0, "Context");
-    qmlRegisterType<Kube::Action>(uri, 1, 0, "Action");
-    qmlRegisterType<Kube::ActionHandler>(uri, 1, 0, "ActionHandler");
-    qmlRegisterType<Kube::ActionResult>(uri, 1, 0, "ActionResult");
 
     qmlRegisterType<Kube::Fabric::Listener>(uri, 1, 0, "Listener");
     qmlRegisterSingletonType<Kube::Fabric::Fabric>(uri, 1, 0, "Fabric", example_qobject_singletontype_provider);

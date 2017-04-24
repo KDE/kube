@@ -1,6 +1,0 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-cmake_policy(SET CMP0063 NEW)
-add_executable(actiontest actiontest.cpp)
-add_test(actiontest sinkactiontest)
-qt5_use_modules(actiontest Core Test)
-target_link_libraries(actiontest actionplugin)
