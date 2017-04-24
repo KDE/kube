@@ -36,11 +36,6 @@ Controls.ToolButton {
     width: parent.width
     iconName: Kube.Icons.menu_inverted
 
-    Kube.FolderController {
-        id: folderController
-        accountId: accountId
-    }
-
     Kube.AccountsModel {
         id: accountsModel
     }
@@ -74,9 +69,8 @@ Controls.ToolButton {
 
                 //iconName: "view-refresh"
                 text: "Sync"
-                enabled: folderController.synchronizeAction.enabled
                 onClicked: {
-                    folderController.synchronizeAction.execute()
+                    Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": accountSwitcher.accountId})
                     popup.close()
                 }
             }

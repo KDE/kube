@@ -26,9 +26,6 @@
 #include "domain/messageparser.h"
 #include "domain/retriever.h"
 #include "domain/outboxmodel.h"
-#include "domain/outboxcontroller.h"
-#include "domain/mailcontroller.h"
-#include "domain/foldercontroller.h"
 #include "domain/mouseproxy.h"
 #include "domain/contactcontroller.h"
 #include "domain/peoplemodel.h"
@@ -57,10 +54,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");
     qmlRegisterType<Retriever>(uri, 1, 0, "Retriever");
-    qmlRegisterType<OutboxController>(uri, 1, 0, "OutboxController");
     qmlRegisterType<OutboxModel>(uri, 1, 0, "OutboxModel");
-    qmlRegisterType<MailController>(uri, 1, 0, "MailController");
-    qmlRegisterType<FolderController>(uri, 1, 0, "FolderController");
     qmlRegisterType<MouseProxy>(uri, 1, 0, "MouseProxy");
     qmlRegisterType<ContactController>(uri, 1, 0,"ContactController");
     qmlRegisterType<PeopleModel>(uri, 1, 0,"PeopleModel");

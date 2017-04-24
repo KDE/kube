@@ -53,6 +53,15 @@ public:
                 Store::synchronize(SyncScope()).exec();
             }
         }
+        if (id == "sendOutbox"/*Kube::Messages::synchronize*/) {
+            Query query;
+            query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
+            auto job = Store::fetchAll<SinkResource>(query)
+                .each([=](const SinkResource::Ptr &resource) -> KAsync::Job<void> {
+                    return Store::synchronize(SyncScope{}.resourceFilter(resource->identifier()));
+                });
+            job.exec();
+        }
         if (id == "markAsRead"/*Kube::Messages::synchronize*/) {
             if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
                 mail->setUnread(false);
@@ -74,6 +83,12 @@ public:
         if (id == "moveToTrash"/*Kube::Messages::synchronize*/) {
             if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
                 mail->setTrash(true);
+                Store::modify(*mail).exec();
+            }
+        }
+        if (id == "moveToDrafts"/*Kube::Messages::synchronize*/) {
+            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
+                mail->setDraft(true);
                 Store::modify(*mail).exec();
             }
         }

@@ -32,6 +32,7 @@ Item {
     property string markAsUnread: "markAsUnread"
     property string toggleImportant: "toggleImportant"
     property string moveToFolder: "moveToFolder"
+    property string moveToDrafts: "moveToDrafts"
 
     property string notification: "notification"
     property string search: "search"

@@ -39,12 +39,9 @@ set(SRCS
     domain/settings/accountsettings.cpp
     domain/selector.cpp
     domain/completer.cpp
-    domain/controller.cpp
-    domain/outboxcontroller.cpp
-    domain/mailcontroller.cpp
-    domain/foldercontroller.cpp
     domain/mouseproxy.cpp
     domain/contactcontroller.cpp
+    domain/controller.cpp
     domain/peoplemodel.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp

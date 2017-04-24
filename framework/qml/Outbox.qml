@@ -30,9 +30,6 @@ Controls.ToolButton {
 
     visible: outboxModel.count > 0
 
-    Kube.OutboxController {
-        id: outboxController
-    }
     Kube.OutboxModel {
         id: outboxModel
     }
@@ -134,10 +131,7 @@ Controls.ToolButton {
                             iconName: Kube.Icons.moveToTrash
                             text: qsTr("Delete Mail")
                             tooltip: text
-                            onClicked: {
-                                outboxController.mail = model.domainObject
-                                outboxController.moveToTrashAction.execute()
-                            }
+                            onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.domainObject})
                         }
 
                         Controls.ToolButton {
@@ -145,8 +139,9 @@ Controls.ToolButton {
                             text: qsTr("Edit")
                             tooltip: text
                             onClicked: {
-                                outboxController.mail = model.domainObject
-                                outboxController.editAction.execute()
+                                Kube.Fabric.postMessage(Kube.Messages.moveToDrafts, {"mail": model.domainObject})
+                                //TODO stage upon completion
+                                //Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.domainObject})
                             }
                         }
                     }
@@ -167,10 +162,7 @@ Controls.ToolButton {
                 visible: listView.count != 0
 
                 text: qsTr("Send now")
-                enabled: outboxController.sendOutboxAction.enabled
-                onClicked: {
-                    outboxController.sendOutboxAction.execute()
-                }
+                onClicked: Kube.Fabric.postMessage(Kube.Messages.sendOutbox, {})
             }
 
             Kube.Label {

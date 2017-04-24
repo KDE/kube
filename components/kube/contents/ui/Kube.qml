@@ -63,18 +63,6 @@ Controls2.ApplicationWindow {
         }
     }
 
-    //Controller
-    //TODO replace
-    Kube.FolderController {
-        id: folderController
-    }
-    Kube.Listener {
-        id: controllerListener
-        filter: Kube.Messages.folderSelection
-        onMessageReceived: {
-            folderController.folder = message.folder
-        }
-    }
 
     //Model
     Kube.AccountsModel {
@@ -84,9 +72,17 @@ Controls2.ApplicationWindow {
 
     //BEGIN Shortcuts
     Shortcut {
+        id: syncShortcut
+        property variant folder: null
         sequence: StandardKey.Refresh
-        onActivated: folderController.synchronizeAction.execute()
-        enabled: folderController.synchronizeAction.enabled
+        enabled: !!folder
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": folder})
+    }
+    Kube.Listener {
+        filter: Kube.Messages.folderSelection
+        onMessageReceived: {
+            syncShortcut.folder = message.folder
+        }
     }
     //END Shortcuts
 
