@@ -342,7 +342,7 @@ Controls2.ApplicationWindow {
                 text: "Go"
 
                 onClicked: {
-                    mailListView.filterString = searchField.text
+                    Kube.Fabric.postMessage(Kube.Messages.search, {"filterString": searchField.text})
                     search.close()
                 }
             }

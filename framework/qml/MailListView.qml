@@ -25,8 +25,6 @@ import org.kube.framework 1.0 as Kube
 
 Item {
     id: root
-    //InterfaceProperties
-    property string filterString
     //Private properties
     property variant parentFolder: null
     property bool isDraft : false
@@ -39,6 +37,13 @@ Item {
         onMessageReceived: {
             parentFolder = message.folder
             Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail":null})
+        }
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.search
+        onMessageReceived: {
+            mailListModel.filter = message.filterString
         }
     }
 
@@ -111,7 +116,6 @@ Item {
         model: Kube.MailListModel {
             id: mailListModel
             parentFolder: root.parentFolder
-            filter: root.filterString
         }
 
         delegate: Item {

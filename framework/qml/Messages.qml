@@ -27,5 +27,6 @@ Item {
 
     //Actions
     property string moveToTrash: "moveToTrash"
+    property string search: "search"
 }
 
