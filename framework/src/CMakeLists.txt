@@ -48,7 +48,6 @@ set(SRCS
     domain/peoplemodel.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
-    notifications/notificationhandler.cpp
     fabric.cpp
     sinkfabric.cpp
 )

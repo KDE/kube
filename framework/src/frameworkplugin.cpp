@@ -35,7 +35,6 @@
 #include "accounts/accountsmodel.h"
 #include "accounts/accountfactory.h"
 #include "settings/settings.h"
-#include "notifications/notificationhandler.h"
 #include "actions/action.h"
 #include "actions/context.h"
 #include "actions/actionhandler.h"
@@ -70,8 +69,6 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
 
     qmlRegisterType<Kube::Settings>(uri, 1, 0, "Settings");
-    qmlRegisterType<Kube::NotificationHandler>(uri, 1, 0, "NotificationHandler");
-    qmlRegisterType<Kube::Notification>(uri, 1, 0, "Notification");
 
     qmlRegisterType<Kube::Context>(uri, 1, 0, "Context");
     qmlRegisterType<Kube::Action>(uri, 1, 0, "Action");
