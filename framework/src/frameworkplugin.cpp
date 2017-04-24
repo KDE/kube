@@ -40,8 +40,16 @@
 #include "actions/context.h"
 #include "actions/actionhandler.h"
 #include "actions/actionresult.h"
+#include "fabric.h"
 
 #include <QtQml>
+
+static QObject *example_qobject_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return new Kube::Fabric::Fabric;
+}
 
 void FrameworkPlugin::registerTypes (const char *uri)
 {
@@ -69,4 +77,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<Kube::Action>(uri, 1, 0, "Action");
     qmlRegisterType<Kube::ActionHandler>(uri, 1, 0, "ActionHandler");
     qmlRegisterType<Kube::ActionResult>(uri, 1, 0, "ActionResult");
+
+    qmlRegisterType<Kube::Fabric::Listener>(uri, 1, 0, "Listener");
+    qmlRegisterSingletonType<Kube::Fabric::Fabric>(uri, 1, 0, "Fabric", example_qobject_singletontype_provider);
 }

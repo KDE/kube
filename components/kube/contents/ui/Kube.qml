@@ -91,10 +91,12 @@ Controls2.ApplicationWindow {
     //Controller
     Kube.FolderController {
         id: folderController
-        Binding on folder {
-            //!! checks for the availability of the type
-            when: !!folderListView.currentFolder
-            value: folderListView.currentFolder
+    }
+    Kube.Listener {
+        id: controllerListener
+        filter: Kube.Messages.folderSelection
+        onMessageReceived: {
+            folderController.folder = message.folder
         }
     }
 
@@ -266,7 +268,6 @@ Controls2.ApplicationWindow {
 
             Kube.MailListView  {
                 id: mailListView
-                parentFolder: accountFolderview.currentFolder
                 width: Kube.Units.gridUnit * 20
                 height: parent.height
                 Layout.maximumWidth: app.width * 0.4
@@ -276,10 +277,7 @@ Controls2.ApplicationWindow {
 
             Kube.ConversationView {
                 id: mailView
-                mail: mailListView.currentMail
                 Layout.fillWidth: true
-                hideTrash: !accountFolderview.isTrashFolder
-                hideNonTrash: accountFolderview.isTrashFolder
             }
         }
     }

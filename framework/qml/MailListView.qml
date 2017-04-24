@@ -25,31 +25,38 @@ import org.kube.framework 1.0 as Kube
 
 Item {
     id: root
-    property variant parentFolder
-    property variant currentMail: null
+    //InterfaceProperties
+    property string filterString
+    //Private properties
+    property variant parentFolder: null
     property bool isDraft : false
     property bool isImportant : false
     property bool isTrash : false
     property bool isUnread : false
-    property int currentIndex
-    property string filterString
 
-    onParentFolderChanged: {
-        currentMail = null
+    Kube.Listener {
+        filter: Kube.Messages.folderSelection
+        onMessageReceived: {
+            parentFolder = message.folder
+            Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail":null})
+        }
     }
 
     Kube.MailController {
         id: mailController
-        Binding on mail {
-            //!! checks for the availability of the type
-            when: !!root.currentMail
-            value: root.currentMail
-        }
         unread: root.isUnread
         trash: root.isTrash
         important: root.isImportant
         draft: root.isDraft
         operateOnThreads: mailListModel.isThreaded
+    }
+
+    Kube.Listener {
+        id: controllerListener
+        filter: Kube.Messages.mailSelection
+        onMessageReceived: {
+            mailController.mail = message.mail
+        }
     }
 
     Shortcut {
@@ -93,9 +100,8 @@ Item {
         }
         //END keyboard nav
 
-        currentIndex: root.currentIndex
         onCurrentItemChanged: {
-            root.currentMail = currentItem.currentData.domainObject;
+            Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail":currentItem.currentData.mail})
             root.isDraft = currentItem.currentData.draft;
             root.isTrash = currentItem.currentData.trash;
             root.isImportant = currentItem.currentData.important;

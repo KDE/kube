@@ -24,8 +24,6 @@ Rectangle {
     id: root
 
     property string currentAccount: null
-    property var currentFolder: null
-    property bool isTrashFolder: false
 
     Kube.AccountsModel {
         id: accountsModel
@@ -109,10 +107,6 @@ Rectangle {
                     accountId: model.accountId
                     visible: model.accountId == root.currentAccount
 
-                    onCurrentFolderChanged: {
-                        root.currentFolder = currentFolder
-                        root.isTrashFolder = isTrashFolder
-                    }
                 }
             }
         }

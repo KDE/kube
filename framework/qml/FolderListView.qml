@@ -26,18 +26,18 @@ import org.kube.framework 1.0 as Kube
 Rectangle {
     id: root
 
-    property variant currentFolder: null
     property variant accountId
-    property bool isTrashFolder: false
 
     color: Kube.Colors.textColor
 
     Kube.FolderController {
         id: folderController
-        Binding on folder {
-            //!! checks for the availability of the type
-            when: !!root.currentFolder
-            value: root.currentFolder
+    }
+    Kube.Listener {
+        id: controllerListener
+        filter: Kube.Messages.folderSelection
+        onMessageReceived: {
+            folderController.folder = message.folder
         }
     }
 
@@ -64,8 +64,8 @@ Rectangle {
 
         onCurrentIndexChanged: {
             model.fetchMore(currentIndex)
-            root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
-            root.isTrashFolder = model.data(currentIndex, Kube.FolderListModel.Trash)
+            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder":model.data(currentIndex, Kube.FolderListModel.DomainObject),
+                                                           "trash":model.data(currentIndex, Kube.FolderListModel.Trash)})
             folderController.synchronizeAction.execute()
             console.error(model.data)
         }

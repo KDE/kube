@@ -49,6 +49,7 @@ set(SRCS
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
     notifications/notificationhandler.cpp
+    fabric.cpp
 )
 
 add_library(frameworkplugin SHARED ${SRCS})
