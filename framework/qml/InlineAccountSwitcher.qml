@@ -37,9 +37,16 @@ Rectangle {
 
         Repeater {
             model: accountsModel
+            onItemAdded: {
+                //Autoselect the first account to appear
+                if (!currentAccount) {
+                    root.currentAccount = item.currentData.accountId
+                }
+            }
 
             delegate: Item {
                 id: accountDelagte
+                property variant currentData: model
 
                 height: Kube.Units.gridUnit
                 width: root.width
