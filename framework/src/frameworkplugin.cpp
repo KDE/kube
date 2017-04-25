@@ -36,7 +36,7 @@
 
 #include <QtQml>
 
-static QObject *example_qobject_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+static QObject *fabric_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
@@ -61,5 +61,5 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<Kube::Settings>(uri, 1, 0, "Settings");
 
     qmlRegisterType<Kube::Fabric::Listener>(uri, 1, 0, "Listener");
-    qmlRegisterSingletonType<Kube::Fabric::Fabric>(uri, 1, 0, "Fabric", example_qobject_singletontype_provider);
+    qmlRegisterSingletonType<Kube::Fabric::Fabric>(uri, 1, 0, "Fabric", fabric_singletontype_provider);
 }
