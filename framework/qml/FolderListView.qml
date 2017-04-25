@@ -51,13 +51,15 @@ Rectangle {
             accountId: root.accountId
         }
 
-        onCurrentIndexChanged: {
-            model.fetchMore(currentIndex)
-            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder":model.data(currentIndex, Kube.FolderListModel.DomainObject),
-                                                           "trash":model.data(currentIndex, Kube.FolderListModel.Trash)})
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder":model.data(currentIndex, Kube.FolderListModel.DomainObject)})
-            console.error(model.data)
+        onActivated: {
+            //TODO do some event compression in case of double clicks
+            model.fetchMore(currentIndex);
+            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
+                                                                    "trash": model.data(index, Kube.FolderListModel.Trash)});
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": model.data(index, Kube.FolderListModel.DomainObject)});
         }
+        //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
+        onClicked: treeView.activated(index)
 
         alternatingRowColors: false
         headerVisible: false
