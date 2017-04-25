@@ -102,8 +102,8 @@ Controls2.ApplicationWindow {
             id: sideBar
 
             anchors {
-                top: parent.top
-                bottom: parent.bottom
+                top: mainContent.top
+                bottom: mainContent.bottom
             }
             width: Kube.Units.gridUnit + Kube.Units.largeSpacing
             color: Kube.Colors.statusbarColor
@@ -171,8 +171,8 @@ Controls2.ApplicationWindow {
 
         SplitView {
             anchors {
-                top: parent.top
-                bottom: parent.bottom
+                top: mainContent.top
+                bottom: mainContent.bottom
             }
             Layout.fillWidth: true
 
@@ -181,6 +181,7 @@ Controls2.ApplicationWindow {
                 Layout.minimumWidth: Kube.Units.gridUnit * 5
 
                 color: Kube.Colors.textColor
+                focus: true
 
                 Kube.PositiveButton {
                     id: newMailButton
@@ -202,6 +203,7 @@ Controls2.ApplicationWindow {
                 Kube.InlineAccountSwitcher {
                     id: accountFolderview
 
+                    activeFocusOnTab: true
                     anchors {
                         top: newMailButton.bottom
                         topMargin: Kube.Units.largeSpacing
@@ -245,7 +247,6 @@ Controls2.ApplicationWindow {
                 width: Kube.Units.gridUnit * 20
                 height: parent.height
                 Layout.minimumWidth: Kube.Units.gridUnit * 10
-                focus: true
             }
 
             Kube.ConversationView {

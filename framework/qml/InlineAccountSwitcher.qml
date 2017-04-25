@@ -20,23 +20,15 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
-Rectangle {
+FocusScope {
     id: root
-
     property string currentAccount: null
-
-    Kube.AccountsModel {
-        id: accountsModel
-    }
-
-    color: Kube.Colors.textColor
-    clip: true
 
     ColumnLayout {
         anchors.fill: parent
 
         Repeater {
-            model: accountsModel
+            model: Kube.AccountsModel {}
             onItemAdded: {
                 //Autoselect the first account to appear
                 if (!currentAccount) {
@@ -45,12 +37,13 @@ Rectangle {
             }
 
             delegate: Item {
-                id: accountDelagte
+                id: accountDelegate
                 property variant currentData: model
+                property bool isCurrent: (model.accountId == root.currentAccount)
 
                 height: Kube.Units.gridUnit
                 width: root.width
-                Layout.fillHeight: model.accountId == root.currentAccount
+                Layout.fillHeight: isCurrent
 
                 Rectangle {
                     id: accountLabel
@@ -59,6 +52,10 @@ Rectangle {
                     width: parent.width
 
                     color: Kube.Colors.textColor
+                    activeFocusOnTab: !isCurrent
+                    Keys.onReturnPressed: {
+                        root.currentAccount = model.accountId
+                    }
 
                     MouseArea {
                         anchors.fill: parent
@@ -111,10 +108,10 @@ Rectangle {
                         right: parent.right
                         bottom: parent.bottom
                     }
+                    activeFocusOnTab: true
 
-                    accountId: model.accountId
-                    visible: model.accountId == root.currentAccount
-
+                    accountId: currentData.accountId
+                    visible: isCurrent
                 }
             }
         }

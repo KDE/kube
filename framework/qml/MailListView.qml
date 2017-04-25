@@ -67,7 +67,6 @@ Item {
         id: listView
 
         anchors.fill: parent
-        focus: true
         clip: true
 
         ScrollBar.vertical: ScrollBar{

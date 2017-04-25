@@ -29,6 +29,5 @@ T.Popup {
     background: Rectangle {
         color: Colors.backgroundColor
     }
-    focus: true
     modal: true
 }
