@@ -252,6 +252,7 @@ Controls2.ApplicationWindow {
             Kube.ConversationView {
                 id: mailView
                 Layout.fillWidth: true
+                Layout.minimumWidth: Kube.Units.gridUnit * 5
             }
         }
     }
