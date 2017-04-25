@@ -106,7 +106,7 @@ Controls2.ApplicationWindow {
                 bottom: parent.bottom
             }
             width: Kube.Units.gridUnit + Kube.Units.largeSpacing
-            color: "#232629"//Kube.Colors.textColor
+            color: Kube.Colors.statusbarColor
 
             Column {
                 anchors {
