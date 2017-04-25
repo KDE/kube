@@ -30,6 +30,7 @@ Rectangle {
     }
 
     color: Kube.Colors.textColor
+    clip: true
 
     ColumnLayout {
         anchors.fill: parent
