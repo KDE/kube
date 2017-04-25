@@ -20,6 +20,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.0
 
 import QtQuick.Controls 2.0 as Controls2
 
@@ -29,11 +30,8 @@ import org.kube.components.accounts 1.0 as KubeAccounts
 Controls2.ApplicationWindow {
     id: app
 
-    //FIXME remove fixed pixel hight
-    //for now just convinience during testing
-    height: 1080 * 0.8
-    width: 1920  * 0.8
-
+    height: Screen.desktopAvailableHeight * 0.8
+    width: Screen.desktopAvailableWidth * 0.8
     visible: true
 
     Kube.Listener {
@@ -96,15 +94,18 @@ Controls2.ApplicationWindow {
 
     //BEGIN Main content
     RowLayout  {
+        id: mainContent
         spacing: 0
-
-        width: parent.width
+        anchors.fill: parent
 
         Rectangle {
             id: sideBar
 
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+            }
             width: Kube.Units.gridUnit + Kube.Units.largeSpacing
-            height: app.height
             color: "#232629"//Kube.Colors.textColor
 
             Column {
@@ -169,12 +170,14 @@ Controls2.ApplicationWindow {
         }
 
         SplitView {
-            height: app.height
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+            }
             Layout.fillWidth: true
 
             Rectangle {
                 width: Kube.Units.gridUnit * 10
-                Layout.maximumWidth: app.width * 0.25
                 Layout.minimumWidth: Kube.Units.gridUnit * 5
 
                 color: Kube.Colors.textColor
@@ -206,7 +209,6 @@ Controls2.ApplicationWindow {
                         left: newMailButton.left
                         right: parent.right
                     }
-                    width: parent.width - Kube.Units.largeSpacing
                 }
             }
 //TODO bring back status bar
@@ -242,7 +244,6 @@ Controls2.ApplicationWindow {
                 id: mailListView
                 width: Kube.Units.gridUnit * 20
                 height: parent.height
-                Layout.maximumWidth: app.width * 0.4
                 Layout.minimumWidth: Kube.Units.gridUnit * 10
                 focus: true
             }
