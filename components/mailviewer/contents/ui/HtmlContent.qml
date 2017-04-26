@@ -18,6 +18,7 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.3
+//TODO import QtWebEngine 1.4
 import QtWebEngine 1.3
 
 Item {
@@ -42,6 +43,8 @@ Item {
                 console.warn("Error is ", loadRequest.errorString);
             }
         }
+        //TODO The webview should not steal focus (depends on webengine 1.4)
+        //focusOnNavigationEnabled: false
         settings {
             webGLEnabled: false
             touchIconsEnabled: false
@@ -63,6 +66,10 @@ Item {
             autoLoadIconsForPage: false
             accelerated2dCanvasEnabled: false
         }
+        //TODO Disable the context menu (depends on webengine 1.4)
+        // onContextMenuRequested: function(request) {
+        //     request.accepted = true
+        // }
     }
     onContentChanged: {
         htmlView.loadHtml(content, "file:///");
