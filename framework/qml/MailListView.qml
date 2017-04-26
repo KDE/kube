@@ -152,7 +152,7 @@ FocusScope {
                     PropertyChanges {target: background; color: Kube.Colors.highlightColor; opacity: 0.6}
                     PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: date; visible: false}
                     PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: buttons; visible: true}
                 }
