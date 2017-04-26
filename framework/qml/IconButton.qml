@@ -35,7 +35,9 @@ T.Button {
     hoverEnabled: true
 
     background: Rectangle {
-        color: Kube.Colors.buttonColor
+        color: "#2980b9" //FIXME
+
+        visible: root.hovered == true
 
         Rectangle {
             anchors.fill: parent
