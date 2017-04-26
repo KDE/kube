@@ -23,7 +23,7 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-Item {
+FocusScope {
     id: root
     //Private properties
     property variant parentFolder: null
@@ -68,12 +68,19 @@ Item {
 
         anchors.fill: parent
         clip: true
+        focus: true
 
         ScrollBar.vertical: ScrollBar{
             id: scrollbar
         }
 
         //BEGIN keyboard nav
+        onActiveFocusChanged: {
+            if (activeFocus && currentIndex < 0) {
+                currentIndex = 0
+            }
+        }
+
         Keys.onDownPressed: {
             incrementCurrentIndex()
         }
