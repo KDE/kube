@@ -261,40 +261,40 @@ Item {
                     spacing: Kube.Units.smallSpacing
                     opacity: 0.7
 
-                    Kube.Button {
+                    Kube.IconButton {
                         id: readButton
-                        text: "r"
+                        iconName: Kube.Icons.markAsRead
                         visible: enabled
                         enabled: model.unread
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
                     }
-                    Kube.Button {
+                    Kube.IconButton {
                         id: unreadButton
-                        text: "u"
+                        iconName: Kube.Icons.markAsUnread
                         visible: enabled
                         enabled: !model.unread
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
                     }
 
-                    Kube.Button {
+                    Kube.IconButton {
                         id: importantButton
-                        text: "i"
+                        iconName: Kube.Icons.markImportant
                         visible: enabled
                         enabled: !!model.mail
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.toggleImportant, {"mail": model.mail, "important": model.important})
                     }
 
-                    Kube.Button {
+                    Kube.IconButton {
                         id: deleteButton
-                        text: "d"
+                        iconName: Kube.Icons.moveToTrash
                         visible: enabled
                         enabled: !!model.mail
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                     }
 
-                    Kube.Button {
+                    Kube.IconButton {
                         id: restoreButton
-                        text: "re"
+                        iconName: Kube.Icons.undo
                         visible: enabled
                         enabled: !!model.trash
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})

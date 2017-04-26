@@ -14,6 +14,7 @@ Outbox 1.0 Outbox.qml
 People 1.0 People.qml
 NotificationPopup 1.0 NotificationPopup.qml
 Icon 1.0 Icon.qml
+IconButton 1.0 IconButton.qml
 Button 1.0 Button.qml
 Popup 1.0 Popup.qml
 ComboBox 1.0 ComboBox.qml
