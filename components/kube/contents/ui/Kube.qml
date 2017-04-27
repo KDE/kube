@@ -117,7 +117,7 @@ Controls2.ApplicationWindow {
 
                 spacing: Kube.Units.largeSpacing - Kube.Units.smallSpacing
 
-                ToolButton {
+                Kube.IconButton {
                     iconName: Kube.Icons.search_inverted
                     height: Kube.Units.gridUnit * 1.5
                     width: height
@@ -127,7 +127,7 @@ Controls2.ApplicationWindow {
                     }
                 }
 
-                ToolButton {
+                Kube.IconButton {
                     height: Kube.Units.gridUnit * 1.5
                     width: height
 
@@ -138,7 +138,7 @@ Controls2.ApplicationWindow {
                     }
                 }
 
-                ToolButton {
+                Kube.IconButton {
                     height: Kube.Units.gridUnit * 1.5
                     width: height
 
@@ -147,11 +147,6 @@ Controls2.ApplicationWindow {
                     onClicked: {
                         people.open()
                     }
-                }
-
-                Kube.AccountSwitcher {
-                    height: Kube.Units.gridUnit * 1.5
-                    width: height
                 }
             }
             Column {
@@ -163,6 +158,11 @@ Controls2.ApplicationWindow {
 
                 spacing: Kube.Units.largeSpacing - Kube.Units.smallSpacing
                 Kube.Outbox {
+                    height: Kube.Units.gridUnit * 1.5
+                    width: height
+                }
+
+                Kube.AccountSwitcher {
                     height: Kube.Units.gridUnit * 1.5
                     width: height
                 }
