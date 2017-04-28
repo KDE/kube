@@ -1,6 +1,6 @@
 Name:           kube
 Version:        0.3
-Release:	    1%{?dist}
+Release:	    2%{?dist}
 Summary:        kube
 
 Group:          Applications/Desktop
@@ -33,7 +33,7 @@ Requires:       qt5-qtquickcontrols2-devel
 Requires:       sink >= 0.3
 Requires:       kirigami
 Requires:       kf5-messagelib
-Requires:       google-noto-sans
+Requires:       google-noto-sans-fonts
 
 %description
 kube
