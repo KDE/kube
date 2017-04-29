@@ -27,13 +27,12 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
-Controls.ToolButton {
+Kube.IconButton {
     id: accountSwitcher
 
     property variant accountId
     property variant accountName
 
-    width: parent.width
     iconName: Kube.Icons.menu_inverted
 
     Kube.AccountsModel {

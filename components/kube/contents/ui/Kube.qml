@@ -154,10 +154,7 @@ Controls2.ApplicationWindow {
                     width: height
                 }
 
-                Kube.AccountSwitcher {
-                    height: Kube.Units.gridUnit * 1.5
-                    width: height
-                }
+                Kube.AccountSwitcher {}
             }
         }
 
