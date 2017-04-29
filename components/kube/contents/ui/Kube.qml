@@ -111,7 +111,7 @@ Controls2.ApplicationWindow {
             Column {
                 anchors {
                     top: parent.top
-                    topMargin: Kube.Units.largeSpacing
+                    topMargin: Kube.Units.smallSpacing
                     horizontalCenter: parent.horizontalCenter
                 }
 
@@ -119,8 +119,6 @@ Controls2.ApplicationWindow {
 
                 Kube.IconButton {
                     iconName: Kube.Icons.search_inverted
-                    height: Kube.Units.gridUnit * 1.5
-                    width: height
 
                     onClicked: {
                         search.open()
@@ -128,9 +126,6 @@ Controls2.ApplicationWindow {
                 }
 
                 Kube.IconButton {
-                    height: Kube.Units.gridUnit * 1.5
-                    width: height
-
                     iconName: Kube.Icons.mail_inverted
 
                     onClicked: {
@@ -139,9 +134,6 @@ Controls2.ApplicationWindow {
                 }
 
                 Kube.IconButton {
-                    height: Kube.Units.gridUnit * 1.5
-                    width: height
-
                     iconName: Kube.Icons.user_inverted
 
                     onClicked: {
