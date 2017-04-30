@@ -246,7 +246,7 @@ void AccountSettings::loadIdentity()
 
 void AccountSettings::loadCardDavResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Contact::storage))
         .then([this](const SinkResource &resource) {
             mCardDavIdentifier = resource.identifier();
             mCardDavServer = resource.getProperty("server").toString();
