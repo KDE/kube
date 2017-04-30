@@ -32,6 +32,11 @@ Kube.Popup {
     property var currentContact
 
     modal: true
+    onVisibleChanged: {
+        if (visible) {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"});
+        }
+    }
 
     Item {
         id: peopleRoot

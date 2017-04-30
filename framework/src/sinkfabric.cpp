@@ -46,6 +46,10 @@ public:
                 auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(folder->identifier()));
                 scope.setType<ApplicationDomain::Mail>();
                 Store::synchronize(scope).exec();
+            } else if (message["type"].value<QString>() == "contacts") {
+                auto scope = SyncScope();
+                scope.setType<ApplicationDomain::Contact>();
+                Store::synchronize(scope).exec();
             } else {
                 SinkLog() << "Synchronizing all";
                 Store::synchronize(SyncScope()).exec();
