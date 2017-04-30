@@ -30,4 +30,5 @@ T.Popup {
         color: Colors.backgroundColor
     }
     modal: true
+    focus: true
 }
