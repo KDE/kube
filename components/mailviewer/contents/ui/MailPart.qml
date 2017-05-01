@@ -21,14 +21,13 @@ import QtQuick 2.4
 Item {
     id: root
     property alias rootIndex: visualModel.rootIndex
-    property bool debug: true
+    property alias model: visualModel.model
+    property alias debug: visualModel.debug
     height: partListView.height + 10
     width: parent.width
 
     MailDataModel {
         id: visualModel
-        debug: root.debug
-        model: messageParser.newTree
     }
 
     ListView {

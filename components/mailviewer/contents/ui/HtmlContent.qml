@@ -23,7 +23,7 @@ import QtWebEngine 1.3
 
 Item {
     id: root
-    property string content: model.content
+    property string content
     //We have to give it a minimum size so the html content starts to expand
     property int contentHeight: 10;
 

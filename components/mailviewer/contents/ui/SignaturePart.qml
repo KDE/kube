@@ -21,14 +21,15 @@ import QtQuick 2.4
 Item {
     id: signature
     property alias rootIndex: visualModel.rootIndex
-    property bool debug: true
+    property alias model: visualModel.model
+    property alias debug: visualModel.debug
+    property variant securityLevel
+    property string type
     height: partListView.height
     width: parent.width
 
     MailDataModel {
         id: visualModel
-        debug: signature.debug
-        model: messageParser.newTree
     }
     Column {
         id: partListView
@@ -41,7 +42,7 @@ Item {
         Text {
             width: parent.width
             visible: signature.debug
-            text: model.type
+            text: type
         }
         BorderImage {
             width: parent.width
@@ -49,7 +50,7 @@ Item {
             border { left: 5; top: 5; right: 6; bottom: 6 }
             horizontalTileMode: BorderImage.Round
             verticalTileMode: BorderImage.Round
-            source: /* "securityborders"+ */ model.securityLevel +".png"
+            source: /* "securityborders"+ */ securityLevel +".png"
             ListView {
                 model: visualModel
                 anchors {

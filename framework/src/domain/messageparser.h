@@ -48,6 +48,7 @@ class MessageParser : public QObject
     Q_OBJECT
     Q_PROPERTY (QVariant message READ message WRITE setMessage)
     Q_PROPERTY (QString html READ html NOTIFY htmlChanged)
+    Q_PROPERTY (bool isSimpleHtml READ isSimpleHtml NOTIFY htmlChanged)
     Q_PROPERTY (QAbstractItemModel* partTree READ partTree NOTIFY htmlChanged)
     Q_PROPERTY (QAbstractItemModel* newTree READ newTree NOTIFY htmlChanged)
     Q_PROPERTY (QAbstractItemModel* attachments READ attachments NOTIFY htmlChanged)
@@ -57,6 +58,7 @@ public:
     ~MessageParser();
 
     QString html() const;
+    bool isSimpleHtml() const;
 
     QVariant message() const;
     void setMessage(const QVariant &to);

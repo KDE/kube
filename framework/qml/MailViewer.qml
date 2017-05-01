@@ -26,21 +26,23 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property variant message;
-    property string html;
     property int desiredHeight: mailViewer.height + 20
-    property variant attachments
+    property variant attachments: messageParser.attachments
 
     clip: true
 
     MV.MailViewer {
+        anchors.top: root.top
         id: mailViewer
+        model: messageParser.newTree
         debug: false
         width: parent.width
     }
 
     Controls1.TreeView {
         id: mailStructure
-        anchors.top: messageParser.attachments.rowCount() > 0 ? attachments.bottom : mailViewer.bottom
+        // anchors.fill: parent
+        // anchors.top: root.attachments.rowCount() > 0 ? attachments.bottom : mailViewer.bottom
         visible: mailViewer.debug
         width: parent.width
         height: 400
@@ -71,6 +73,4 @@ Item {
         id: messageParser
         message: root.message
     }
-    attachments: messageParser.attachments
-    html: messageParser.html
 }

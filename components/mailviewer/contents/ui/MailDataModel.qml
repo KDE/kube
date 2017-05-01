@@ -22,6 +22,27 @@ import QtQml.Models 2.2
 DelegateModel {
     id: mailDataModel
     property bool debug: true
+    function getPartType(type, hasModelChildren, forcePlain) {
+        switch (type) {
+            case "PlainTextContent":
+            case "Content":
+                return "plain";
+            case "HtmlContent":
+                if (forcePlain) {
+                    return "plain";
+                }
+                return "html";
+            case "Signature":
+                return "signature";
+            case "Encryption":
+                return "encryption";
+        }
+        if (hasModelChildren) {
+            return "envelope";
+        }
+        return "";
+    }
+
     delegate: Item {
         id: partColumn
         width: parent.width
@@ -36,30 +57,47 @@ DelegateModel {
             width: parent.width
         }
         Component.onCompleted: {
-            switch (model.type) {
-                case "PlainTextContent":
-                case "Content":
-                    partLoader.source = "TextContent.qml"
-                    partLoader.item.debug = mailDataModel.debug
-                    return;
-                case "HtmlContent":
-                    partLoader.source = "HtmlContent.qml"
-                    return;
-                case "Signature":
-                    partLoader.source = "SignaturePart.qml"
-                    partLoader.item.rootIndex = mailDataModel.modelIndex(index)
-                    partLoader.item.debug = mailDataModel.debug
-                    return;
-                case "Encryption":
-                    partLoader.source = "EncryptionPart.qml"
-                    partLoader.item.rootIndex = mailDataModel.modelIndex(index)
-                    partLoader.item.debug = mailDataModel.debug
-                    return;
-            }
-            if (model.hasModelChildren) {
-                partLoader.source = "MailPart.qml"
-                partLoader.item.rootIndex = mailDataModel.modelIndex(index)
-                partLoader.item.debug = mailDataModel.debug
+            var isHtml = false
+            var forcePlain = false
+            var partType = getPartType(model.type, model.hasModelChildren, forcePlain);
+
+            switch (partType) {
+                case "plain":
+                    partLoader.setSource("TextContent.qml",
+                                        {"isHtml": isHtml,
+                                        "content": model.content,
+                                        "embedded": model.embeded,
+                                        "type": model.type,
+                                        "debug": debug})
+                    break
+                case "html":
+                    partLoader.setSource("HtmlContent.qml",
+                                        {"content": model.content,
+                                        "debug": debug})
+                    break;
+                case "signature":
+                    partLoader.setSource("SignaturePart.qml",
+                                        {"rootIndex": mailDataModel.modelIndex(index),
+                                        "securityLevel": model.securityLevel,
+                                        "type": model.type,
+                                        "debug": debug})
+                    break;
+                case "encryption":
+                    partLoader.setSource("EncryptionPart.qml",
+                                        {"rootIndex": mailDataModel.modelIndex(index),
+                                        "securityLevel": model.securityLevel,
+                                        "type": model.type,
+                                        "model": mailDataModel.model,
+                                        "errorType": model.errorType,
+                                        "errorString": model.errorString,
+                                        "debug": debug})
+                    break;
+                case "envelope":
+                    partLoader.setSource("MailPart.qml",
+                                        {"rootIndex": mailDataModel.modelIndex(index),
+                                        "model": mailDataModel.model,
+                                        "debug": debug})
+                    break;
             }
         }
     }

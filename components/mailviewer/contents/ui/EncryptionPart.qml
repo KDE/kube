@@ -21,14 +21,16 @@ import QtQuick 2.4
 Item {
     id: encryption
     property alias rootIndex: visualModel.rootIndex
-    property bool debug: true
+    property alias model: visualModel.model
+    property alias debug: visualModel.debug
+    property variant securityLevel
+    property variant errorType
+    property string errorString
     height: partListView.height
     width: parent.width
 
     MailDataModel {
         id: visualModel
-        debug: encryption.debug
-        model: messageParser.newTree
     }
 
     Column {
@@ -45,8 +47,8 @@ Item {
             text: model.type
         }
         Text {
-            visible: model.errorType || encryption.debug
-            text: model.errorType + ": " + model.errorString
+            visible: errorType || encryption.debug
+            text: errorType + ": " + errorString
         }
         BorderImage {
             width: parent.width
@@ -55,7 +57,7 @@ Item {
             horizontalTileMode: BorderImage.Round
             verticalTileMode: BorderImage.Round
 
-            source: /* "securityborders"+ */ model.securityLevel +".png"
+            source: /* "securityborders"+ */ securityLevel +".png"
             ListView {
                 model: visualModel
                 anchors {

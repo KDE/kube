@@ -23,7 +23,11 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: textItem
 
+    property string content
     property bool debug: true
+    property bool embedded: true
+    property bool isHtml: true
+    property string type
 
     width: partColumn.width
     height: textColumn.height
@@ -45,17 +49,18 @@ Item {
             readOnly: true
             selectByMouse: true
 
-            text: model.content
+            text: content
             wrapMode: Text.WordWrap
+            textFormat: textItem.isHtml ? Text.RichText : Text.PlainText
 
-            color: model.embeded ? Kube.Colors.diabledTextColor : Kube.Colors.textColor
+            color: embedded ? Kube.Colors.diabledTextColor : Kube.Colors.textColor
         }
 
         //BEGIN debug
         Text {
             width: parent.width
             visible: textItem.debug
-            text: model.type
+            text: type
         }
         //END debug
     }

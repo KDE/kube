@@ -62,6 +62,11 @@ QString MessageParser::html() const
     return d->mHtml;
 }
 
+bool MessageParser::isSimpleHtml() const
+{
+    return d->mHtml.contains("foobar");
+}
+
 QVariant MessageParser::message() const
 {
     return QVariant();
