@@ -129,7 +129,7 @@ Controls2.ApplicationWindow {
                     iconName: Kube.Icons.mail_inverted
 
                     onClicked: {
-                        //TODO
+                        kubeViews.currentIndex = 0
                     }
                 }
 
@@ -137,7 +137,7 @@ Controls2.ApplicationWindow {
                     iconName: Kube.Icons.user_inverted
 
                     onClicked: {
-                        people.open()
+                        kubeViews.currentIndex = 1
                     }
                 }
             }
@@ -246,19 +246,4 @@ Controls2.ApplicationWindow {
         }
     }
     //END Search
-
-    //BEGIN People
-    Kube.Popup {
-        id: people
-        height: app.height * 0.85
-        width: app.width * 0.85
-
-        x: app.width * 0.075
-        y: app.height * 0.075
-
-        Kube.People {
-            anchors.fill: parent
-        }
-    }
-    //END People
 }
