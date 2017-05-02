@@ -64,7 +64,7 @@ Controls2.ApplicationWindow {
     Kube.Listener {
         filter: Kube.Messages.compose
         onMessageReceived: {
-            composer.open()
+            kubeViews.currentIndex = 2
         }
     }
 
@@ -159,7 +159,25 @@ Controls2.ApplicationWindow {
         }
         StackLayout {
             id: kubeViews
+
+            property var stack: [0]
+
+            function goToPreviousView()
+            {
+                //Pop off current view
+                stack.pop()
+                //Then go to the previous view
+                kubeViews.currentIndex = stack.pop()
+            }
+
             currentIndex: 0
+            onCurrentIndexChanged: {
+                if (stack.length > 100) {
+                    //Cut off the first 50 once we grow to 100 (so we don't grow forever)
+                    stack = stack.slice(50);
+                }
+                stack.push(currentIndex)
+            }
             anchors {
                 top: mainContent.top
                 bottom: mainContent.bottom
@@ -173,6 +191,7 @@ Controls2.ApplicationWindow {
             }
             ComposerView {
                 id: composerView
+                onDone: kubeViews.goToPreviousView()
             }
         }
     }

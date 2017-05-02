@@ -26,11 +26,14 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
 
+    signal done
+
     //Controller
     Kube.ComposerController {
         id: composerController
         onDone: {
             clear();
+            root.done()
         }
     }
 
@@ -38,15 +41,15 @@ Item {
     property variant sendAction: composerController.sendAction
     property variant saveAsDraftAction: composerController.saveAsDraftAction
 
-    //FIXME
-    // onClosed: {
-    //     composerController.clear()
-    //     to.text = ""
-    //     cc.visible = false
-    //     cc.text = ""
-    //     bcc.visible = false
-    //     bcc.text = ""
-    // }
+    onDone: {
+        console.warn("focus composer done")
+        composerController.clear()
+        to.text = ""
+        cc.visible = false
+        cc.text = ""
+        bcc.visible = false
+        bcc.text = ""
+    }
 
     //BEGIN functions
     function loadMessage(message, loadAsDraft) {
@@ -222,8 +225,7 @@ Item {
                         text: "Discard"
 
                         onClicked: {
-                            //FIXME
-                            // root.close()
+                            root.done()
                         }
                     }
 
