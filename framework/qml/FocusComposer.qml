@@ -31,25 +31,12 @@ Item {
     //Controller
     Kube.ComposerController {
         id: composerController
-        onDone: {
-            clear();
-            root.done()
-        }
+        onDone: root.done()
     }
 
     //actions
     property variant sendAction: composerController.sendAction
     property variant saveAsDraftAction: composerController.saveAsDraftAction
-
-    onDone: {
-        console.warn("focus composer done")
-        composerController.clear()
-        to.text = ""
-        cc.visible = false
-        cc.text = ""
-        bcc.visible = false
-        bcc.text = ""
-    }
 
     //BEGIN functions
     function loadMessage(message, loadAsDraft) {

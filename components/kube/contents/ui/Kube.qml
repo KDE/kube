@@ -63,9 +63,7 @@ Controls2.ApplicationWindow {
 
     Kube.Listener {
         filter: Kube.Messages.compose
-        onMessageReceived: {
-            kubeViews.currentIndex = 2
-        }
+        onMessageReceived: kubeViews.openComposer()
     }
 
     //BEGIN Shortcuts
@@ -127,18 +125,12 @@ Controls2.ApplicationWindow {
 
                 Kube.IconButton {
                     iconName: Kube.Icons.mail_inverted
-
-                    onClicked: {
-                        kubeViews.currentIndex = 0
-                    }
+                    onClicked: kubeViews.setMailView()
                 }
 
                 Kube.IconButton {
                     iconName: Kube.Icons.user_inverted
-
-                    onClicked: {
-                        kubeViews.currentIndex = 1
-                    }
+                    onClicked: kubeViews.setPeopleView()
                 }
             }
             Column {
@@ -157,41 +149,42 @@ Controls2.ApplicationWindow {
                 Kube.AccountSwitcher {}
             }
         }
-        StackLayout {
+        StackView {
             id: kubeViews
 
-            property var stack: [0]
-
-            function goToPreviousView()
-            {
-                //Pop off current view
-                stack.pop()
-                //Then go to the previous view
-                kubeViews.currentIndex = stack.pop()
-            }
-
-            currentIndex: 0
-            onCurrentIndexChanged: {
-                if (stack.length > 100) {
-                    //Cut off the first 50 once we grow to 100 (so we don't grow forever)
-                    stack = stack.slice(50);
-                }
-                stack.push(currentIndex)
-            }
             anchors {
                 top: mainContent.top
                 bottom: mainContent.bottom
             }
             Layout.fillWidth: true
+            initialItem: mailView
+
+            function setPeopleView() {
+                //TODO replacing here while a composer is open is destructive
+                kubeViews.push({item: peopleView, replace: true, immediate: true})
+            }
+            function setMailView() {
+                //TODO replacing here while a composer is open is destructive
+                kubeViews.push({item: mailView, replace: true, immediate: true})
+            }
+            function openComposer() {
+                kubeViews.push({item: composerView, immediate: true})
+            }
+
+
+            //Not components so we maintain state
             MailView {
                 id: mailView
             }
             PeopleView {
                 id: peopleView
             }
-            ComposerView {
+            //A component so it's always destroyed when we're done
+            Component {
                 id: composerView
-                onDone: kubeViews.goToPreviousView()
+                ComposerView {
+                    onDone: kubeViews.pop({immediate: true})
+                }
             }
         }
     }
