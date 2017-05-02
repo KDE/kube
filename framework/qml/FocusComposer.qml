@@ -20,11 +20,10 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0 as Controls2
 
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
-Kube.Popup {
+Item {
     id: root
 
     //Controller
@@ -32,7 +31,6 @@ Kube.Popup {
         id: composerController
         onDone: {
             clear();
-            root.close()
         }
     }
 
@@ -40,23 +38,21 @@ Kube.Popup {
     property variant sendAction: composerController.sendAction
     property variant saveAsDraftAction: composerController.saveAsDraftAction
 
-    onClosed: {
-        composerController.clear()
-        to.text = ""
-        cc.visible = false
-        cc.text = ""
-        bcc.visible = false
-        bcc.text = ""
-    }
+    //FIXME
+    // onClosed: {
+    //     composerController.clear()
+    //     to.text = ""
+    //     cc.visible = false
+    //     cc.text = ""
+    //     bcc.visible = false
+    //     bcc.text = ""
+    // }
 
     //BEGIN functions
     function loadMessage(message, loadAsDraft) {
         composerController.loadMessage(message, loadAsDraft)
     }
     //END functions
-
-    //Don't close the composer due to an accidental click outside
-    closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
 
     Item {
 
@@ -226,7 +222,8 @@ Kube.Popup {
                         text: "Discard"
 
                         onClicked: {
-                            root.close()
+                            //FIXME
+                            // root.close()
                         }
                     }
 

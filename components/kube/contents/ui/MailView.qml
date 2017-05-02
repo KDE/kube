@@ -25,8 +25,6 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 SplitView {
-    Layout.fillWidth: true
-
     Rectangle {
         width: Kube.Units.gridUnit * 10
         Layout.minimumWidth: Kube.Units.gridUnit * 5
@@ -47,7 +45,7 @@ SplitView {
             text: qsTr("New Email")
 
             onClicked: {
-                composer.open()
+                Kube.Fabric.postMessage(Kube.Messages.compose, {})
             }
         }
 
@@ -63,36 +61,38 @@ SplitView {
                 right: parent.right
             }
         }
-    }
 
-//TODO bring back status bar
-//                 Item {
-//                     id: statusBar
-//                     anchors {
-//                         topMargin: Kube.Units.smallSpacing
-//                         bottom: outbox.top
-//                         left: parent.left
-//                         right: parent.right
-//                     }
-//
-//                     height: Kube.Units.gridUnit
-//
-//                     Repeater {
-//                         model: currentAccountModel
-//                         Kube.Label {
-//                             id: statusText
-//                             anchors.centerIn: parent
-//                             visible: false
-//                             color: Kube.Colors.highlightedTextColor
-//                             states: [
-//                             State {
-//                                 name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-//                                 PropertyChanges { target: statusText; text: "Offline"; visible: true }
-//                             }
-//                             ]
-//                         }
-//                     }
-//                 }
+        Item {
+            id: statusBar
+            anchors {
+                topMargin: Kube.Units.smallSpacing
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+            }
+
+            height: Kube.Units.gridUnit
+
+            Repeater {
+                model: Kube.AccountsModel {
+                    accountId: accountFolderview.accountId
+                }
+
+                Kube.Label {
+                    id: statusText
+                    anchors.centerIn: parent
+                    visible: false
+                    color: Kube.Colors.highlightedTextColor
+                    states: [
+                    State {
+                        name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
+                        PropertyChanges { target: statusText; text: "Offline"; visible: true }
+                    }
+                    ]
+                }
+            }
+        }
+    }
 
     Kube.MailListView  {
         id: mailListView

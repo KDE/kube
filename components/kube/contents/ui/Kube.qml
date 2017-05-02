@@ -61,11 +61,11 @@ Controls2.ApplicationWindow {
         }
     }
 
-
-    //Model
-    Kube.AccountsModel {
-        id: currentAccountModel
-        accountId: accountFolderview.accountId
+    Kube.Listener {
+        filter: Kube.Messages.compose
+        onMessageReceived: {
+            composer.open()
+        }
     }
 
     //BEGIN Shortcuts
@@ -171,19 +171,28 @@ Controls2.ApplicationWindow {
             PeopleView {
                 id: peopleView
             }
+            ComposerView {
+                id: composerView
+            }
         }
     }
     //END Main content
 
     //BEGIN Composer
-    Kube.FocusComposer {
-        id: composer
-
+    Kube.Popup {
         height: app.height * 0.85
         width: app.width * 0.85
 
         x: app.width * 0.075
         y: app.height * 0.075
+
+        //Don't close the composer due to an accidental click outside
+        closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
+
+        Kube.FocusComposer {
+            id: composer
+            anchors.fill: parent
+        }
     }
     //END Composer
 

@@ -19,13 +19,14 @@
 
 
 import QtQuick 2.7
-import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.1
-
 import org.kube.framework 1.0 as Kube
 
-Kube.People {
-    id: people
-
-    Layout.fillWidth: true
+Item {
+    Kube.People {
+        id: people
+        anchors {
+            fill: parent
+            margins: Kube.Units.smallSpacing
+        }
+    }
 }
