@@ -27,17 +27,10 @@
 #include <QModelIndex>
 
 #include <memory>
-#include <MimeTreeParser/MessagePart>
 
 class QAbstractItemModel;
 
 class Parser;
-class Part;
-class Encryption;
-class Signature;
-typedef std::shared_ptr<Part> PartPtr;
-class Content;
-typedef std::shared_ptr<Content> ContentPtr;
 class MessagePartPrivate;
 
 class NewModelPrivate;
@@ -47,9 +40,6 @@ class MessageParser : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (QVariant message READ message WRITE setMessage)
-    Q_PROPERTY (QString html READ html NOTIFY htmlChanged)
-    Q_PROPERTY (bool isSimpleHtml READ isSimpleHtml NOTIFY htmlChanged)
-    Q_PROPERTY (QAbstractItemModel* partTree READ partTree NOTIFY htmlChanged)
     Q_PROPERTY (QAbstractItemModel* newTree READ newTree NOTIFY htmlChanged)
     Q_PROPERTY (QAbstractItemModel* attachments READ attachments NOTIFY htmlChanged)
 
@@ -57,12 +47,8 @@ public:
     explicit MessageParser(QObject *parent = Q_NULLPTR);
     ~MessageParser();
 
-    QString html() const;
-    bool isSimpleHtml() const;
-
     QVariant message() const;
     void setMessage(const QVariant &to);
-    QAbstractItemModel *partTree() const;
     QAbstractItemModel *newTree() const;
     QAbstractItemModel *attachments() const;
 
@@ -72,36 +58,6 @@ signals:
 private:
     std::unique_ptr<MessagePartPrivate> d;
 };
-
-class PartModel : public QAbstractItemModel {
-    Q_OBJECT
-public:
-    PartModel(QSharedPointer<MimeTreeParser::MessagePart> partTree, std::shared_ptr<Parser> parser);
-
-public:
-    enum Roles {
-        Text  = Qt::UserRole + 1,
-        IsHtml,
-        IsEncrypted,
-        IsAttachment,
-        HasContent,
-        Type,
-        IsHidden
-    };
-
-    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-
-private:
-    QSharedPointer<MimeTreeParser::MessagePart> mPartTree;
-    QMap<QByteArray, QUrl> mEmbeddedPartMap;
-    std::shared_ptr<Parser> mParser;
-};
-
 
 class NewModel : public QAbstractItemModel {
     Q_OBJECT

@@ -23,7 +23,6 @@ set(SRCS
     domain/composercontroller.cpp
     domain/messageparser.cpp
     domain/messageparser_new.cpp
-    domain/messageparser_old.cpp
     domain/mailtemplates.cpp
     domain/modeltest.cpp
     domain/retriever.cpp
