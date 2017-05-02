@@ -48,16 +48,14 @@ Controls2.ApplicationWindow {
     Kube.Listener {
         filter: Kube.Messages.reply
         onMessageReceived: {
-            composer.loadMessage(message.mail, false)
-            composer.open()
+            kubeViews.openComposerWithMail(message.mail, false)
         }
     }
 
     Kube.Listener {
         filter: Kube.Messages.edit
         onMessageReceived: {
-            composer.loadMessage(message.mail, true)
-            composer.open()
+            kubeViews.openComposerWithMail(message.mail, true)
         }
     }
 
@@ -170,6 +168,9 @@ Controls2.ApplicationWindow {
             function openComposer() {
                 kubeViews.push({item: composerView, immediate: true})
             }
+            function openComposerWithMail(mail, openAsDraft) {
+                kubeViews.push({item: composerView, immediate: true, properties: {message: mail, loadAsDraft: openAsDraft}})
+            }
 
 
             //Not components so we maintain state
@@ -189,24 +190,6 @@ Controls2.ApplicationWindow {
         }
     }
     //END Main content
-
-    //BEGIN Composer
-    Kube.Popup {
-        height: app.height * 0.85
-        width: app.width * 0.85
-
-        x: app.width * 0.075
-        y: app.height * 0.075
-
-        //Don't close the composer due to an accidental click outside
-        closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
-
-        Kube.FocusComposer {
-            id: composer
-            anchors.fill: parent
-        }
-    }
-    //END Composer
 
     //BEGIN AccountWizard
     KubeAccounts.AccountWizard {

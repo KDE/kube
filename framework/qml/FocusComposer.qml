@@ -27,6 +27,12 @@ Item {
     id: root
 
     signal done
+    property bool loadAsDraft: false
+    property variant message: {}
+
+    //actions
+    property variant sendAction: composerController.sendAction
+    property variant saveAsDraftAction: composerController.saveAsDraftAction
 
     //Controller
     Kube.ComposerController {
@@ -34,15 +40,12 @@ Item {
         onDone: root.done()
     }
 
-    //actions
-    property variant sendAction: composerController.sendAction
-    property variant saveAsDraftAction: composerController.saveAsDraftAction
 
-    //BEGIN functions
-    function loadMessage(message, loadAsDraft) {
-        composerController.loadMessage(message, loadAsDraft)
+    Component.onCompleted: {
+        if (root.message) {
+            composerController.loadMessage(root.message, root.loadAsDraft)
+        }
     }
-    //END functions
 
     Item {
 

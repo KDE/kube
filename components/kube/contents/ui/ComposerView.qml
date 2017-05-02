@@ -24,6 +24,8 @@ import org.kube.framework 1.0 as Kube
 Item {
     id:root
     signal done
+    property alias message: composer.message
+    property alias loadAsDraft: composer.loadAsDraft
 
     Kube.FocusComposer {
         id: composer
