@@ -26,12 +26,11 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
-Kube.Popup {
-    id: popup
+Item {
+    id: root
 
     property var currentContact
 
-    modal: true
     onVisibleChanged: {
         if (visible) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"});
@@ -143,7 +142,7 @@ Kube.Popup {
                                     anchors.fill: parent
 
                                     onClicked: {
-                                        popup.currentContact = model.domainObject
+                                        root.currentContact = model.domainObject
                                         stack.push(personPage)
                                     }
                                 }
@@ -197,7 +196,7 @@ Kube.Popup {
 
             Kube.ContactController {
                 id: contactController
-                contact: popup.currentContact
+                contact: root.currentContact
             }
 
             color: Kube.Colors.viewBackgroundColor

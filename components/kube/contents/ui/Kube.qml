@@ -19,7 +19,7 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 
 import QtQuick.Controls 2.0 as Controls2
@@ -157,91 +157,19 @@ Controls2.ApplicationWindow {
                 Kube.AccountSwitcher {}
             }
         }
-
-        SplitView {
+        StackLayout {
+            id: kubeViews
+            currentIndex: 0
             anchors {
                 top: mainContent.top
                 bottom: mainContent.bottom
             }
             Layout.fillWidth: true
-
-            Rectangle {
-                width: Kube.Units.gridUnit * 10
-                Layout.minimumWidth: Kube.Units.gridUnit * 5
-
-                color: Kube.Colors.textColor
-                focus: true
-
-                Kube.PositiveButton {
-                    id: newMailButton
-
-                    anchors {
-                        top: parent.top
-                        left: parent.left
-                        right: parent.right
-                        margins: Kube.Units.largeSpacing
-                    }
-
-                    text: qsTr("New Email")
-
-                    onClicked: {
-                        composer.open()
-                    }
-                }
-
-                Kube.InlineAccountSwitcher {
-                    id: accountFolderview
-
-                    activeFocusOnTab: true
-                    anchors {
-                        top: newMailButton.bottom
-                        topMargin: Kube.Units.largeSpacing
-                        bottom: parent.bottom
-                        left: newMailButton.left
-                        right: parent.right
-                    }
-                }
-            }
-//TODO bring back status bar
-//                 Item {
-//                     id: statusBar
-//                     anchors {
-//                         topMargin: Kube.Units.smallSpacing
-//                         bottom: outbox.top
-//                         left: parent.left
-//                         right: parent.right
-//                     }
-//
-//                     height: Kube.Units.gridUnit
-//
-//                     Repeater {
-//                         model: currentAccountModel
-//                         Kube.Label {
-//                             id: statusText
-//                             anchors.centerIn: parent
-//                             visible: false
-//                             color: Kube.Colors.highlightedTextColor
-//                             states: [
-//                             State {
-//                                 name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-//                                 PropertyChanges { target: statusText; text: "Offline"; visible: true }
-//                             }
-//                             ]
-//                         }
-//                     }
-//                 }
-
-            Kube.MailListView  {
-                id: mailListView
-                width: Kube.Units.gridUnit * 20
-                height: parent.height
-                Layout.minimumWidth: Kube.Units.gridUnit * 10
-            }
-
-            Kube.ConversationView {
+            MailView {
                 id: mailView
-                Layout.fillWidth: true
-                Layout.minimumWidth: Kube.Units.gridUnit * 5
+            }
+            PeopleView {
+                id: peopleView
             }
         }
     }
@@ -320,15 +248,17 @@ Controls2.ApplicationWindow {
     //END Search
 
     //BEGIN People
-    Kube.People {
+    Kube.Popup {
         id: people
-
         height: app.height * 0.85
         width: app.width * 0.85
 
         x: app.width * 0.075
         y: app.height * 0.075
 
+        Kube.People {
+            anchors.fill: parent
+        }
     }
     //END People
 }
