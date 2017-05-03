@@ -18,24 +18,21 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
-
+import QtQuick.Controls 1.3 as Controls
 import org.kube.framework 1.0 as Kube
 
 Rectangle {
-    id: app
-
-    height: 800
-    width: 1400
-
     color: Kube.Colors.backgroundColor
 
-    RowLayout {
+    anchors.fill: parent
 
-        anchors.fill: parent
+    Controls.SplitView {
+        height: parent.height
+        width: parent.width
 
         Item {
             id: accountList
-            width: 300
+            width: Kube.Units.gridUnit * 15
             Layout.fillHeight: true
 
             Kube.PositiveButton {
@@ -91,28 +88,21 @@ Rectangle {
             }
         }
 
-        Rectangle {
-            height: parent.height
-            width: 1
-            color: Kube.Colors.buttonColor
-        }
-
         Item {
-
             height: parent.height
-            width: 200
+            width: Kube.Units.gridUnit * 20
             Layout.fillWidth: true
 
             Kube.EditAccount {
                 id: edit
-
                 anchors {
                     top: parent.top
                     left: parent.left
                     right: parent.right
                     bottom: parent.bottom
-                    margins: Kube.Units.largeSpacing
+                    bottomMargin: Kube.Units.largeSpacing
                 }
+
             }
         }
     }
