@@ -19,8 +19,6 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.4 as Controls
-import QtQuick.Controls 2.0 as Controls2
 import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
@@ -38,7 +36,7 @@ Item {
 
         anchors {
             fill: parent
-            margins: Kirigami.Units.largeSpacing * 2
+            margins: Kube.Units.largeSpacing * 2
         }
 
         Kirigami.Heading {
@@ -47,7 +45,7 @@ Item {
             color: Kube.Colors.highlightColor
         }
 
-        Kirigami.Label {
+        Kube.Label {
             id: subHeadline
 
             anchors {
@@ -67,7 +65,7 @@ Item {
                 top:subHeadline.bottom
                 left: parent.left
                 right: parent.right
-                topMargin: Kirigami.Units.largeSpacing * 2
+                topMargin: Kube.Units.largeSpacing * 2
             }
 
             Loader {
@@ -96,25 +94,25 @@ Item {
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
-                topMargin: Kirigami.Units.largeSpacing * 2
+                topMargin: Kube.Units.largeSpacing * 2
             }
 
             columns: 2
-            columnSpacing: Kirigami.Units.largeSpacing
-            rowSpacing: Kirigami.Units.largeSpacing
+            columnSpacing: Kube.Units.largeSpacing
+            rowSpacing: Kube.Units.largeSpacing
 
             Item {
                 Layout.fillHeight: true
             }
 
-            Kirigami.Label {
+            Kube.Label {
                 text: ""
             }
 
             Item {
                 Layout.fillWidth: true
 
-                Controls.Button {
+                Kube.Button {
                     text: "Discard"
 
                     onClicked: {
@@ -123,7 +121,7 @@ Item {
                     }
                 }
 
-                Controls.Button {
+                Kube.Button {
                     anchors.right: parent.right
                     text: "Save"
                     onClicked: {
