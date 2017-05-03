@@ -23,9 +23,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 
 import QtQuick.Controls 2.0 as Controls2
-
 import org.kube.framework 1.0 as Kube
-import org.kube.components.accounts 1.0 as KubeAccounts
 
 Controls2.ApplicationWindow {
     id: app
@@ -208,18 +206,6 @@ Controls2.ApplicationWindow {
         }
     }
     //END Main content
-
-    //BEGIN AccountWizard
-    KubeAccounts.AccountWizard {
-        id: accountWizard
-
-        height: app.height * 0.85
-        width: app.width * 0.85
-
-        x: app.width * 0.075
-        y: app.height * 0.075
-    }
-    //END AccountWizard
 
     //BEGIN Notification
     Kube.NotificationPopup {

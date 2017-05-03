@@ -20,6 +20,7 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.3 as Controls
 import org.kube.framework 1.0 as Kube
+import org.kube.components.accounts 1.0 as KubeAccounts
 
 Rectangle {
     color: Kube.Colors.backgroundColor
@@ -32,7 +33,7 @@ Rectangle {
 
         Item {
             id: accountList
-            width: Kube.Units.gridUnit * 15
+            width: Kube.Units.gridUnit * 12
             Layout.fillHeight: true
 
             Kube.PositiveButton {
@@ -44,6 +45,8 @@ Rectangle {
                     margins: Kube.Units.largeSpacing
                 }
                 text: "New Account"
+
+                onClicked: accountWizard.open()
             }
 
             ListView {
@@ -104,4 +107,16 @@ Rectangle {
             }
         }
     }
+
+    //BEGIN AccountWizard
+    KubeAccounts.AccountWizard {
+        id: accountWizard
+
+        height: app.height * 0.85
+        width: app.width * 0.85
+
+        x: app.width * 0.075
+        y: app.height * 0.075
+    }
+    //END AccountWizard
 }
