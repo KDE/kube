@@ -79,8 +79,6 @@ Rectangle {
                         anchors.fill: parent
 
                         onClicked: {
-                            console.log("clicked account  \"" + model.accountId + "\"" )
-                            //editAccountComponent.createObject(app, {accountId:model.accountId})
                             edit.accountId = model.accountId
                         }
                     }
