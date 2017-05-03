@@ -152,7 +152,10 @@ Controls2.ApplicationWindow {
                     width: height
                 }
 
-                Kube.AccountSwitcher {}
+                Kube.IconButton {
+                    iconName: Kube.Icons.menu_inverted
+                    onClicked: kubeViews.setAccountsView()
+                }
             }
         }
         StackView {
@@ -173,6 +176,10 @@ Controls2.ApplicationWindow {
                 //TODO replacing here while a composer is open is destructive
                 kubeViews.push({item: mailView, replace: true, immediate: true})
             }
+            function setAccountsView() {
+                kubeViews.push({item: accountsView, replace: true, immediate: true})
+            }
+
             function openComposer() {
                 kubeViews.push({item: composerView, immediate: true})
             }
@@ -191,6 +198,11 @@ Controls2.ApplicationWindow {
                 id: composerView
                 ComposerView {
                     onDone: kubeViews.pop({immediate: true})
+                }
+            }
+            Component {
+                id: accountsView
+                AccountsView {
                 }
             }
         }
