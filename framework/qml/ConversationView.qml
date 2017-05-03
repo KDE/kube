@@ -165,7 +165,9 @@ Rectangle {
             running: false
             repeat: false
             onTriggered: {
-                Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": root.currentMail})
+                if (!!root.currentMail) {
+                    Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": root.currentMail})
+                }
             }
         }
 
