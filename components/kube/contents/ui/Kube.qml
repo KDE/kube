@@ -102,7 +102,15 @@ Controls2.ApplicationWindow {
                 bottom: mainContent.bottom
             }
             width: Kube.Units.gridUnit + Kube.Units.largeSpacing
-            color: Kube.Colors.statusbarColor
+            color: Kube.Colors.textColor
+
+            Rectangle {
+                anchors.right: parent.right
+                width: 1
+                height: parent.height
+                color: Kube.Colors.viewBackgroundColor
+                opacity: 0.3
+            }
 
             Column {
                 anchors {
@@ -171,8 +179,6 @@ Controls2.ApplicationWindow {
             function openComposerWithMail(mail, openAsDraft) {
                 kubeViews.push({item: composerView, immediate: true, properties: {message: mail, loadAsDraft: openAsDraft}})
             }
-
-
             //Not components so we maintain state
             MailView {
                 id: mailView
