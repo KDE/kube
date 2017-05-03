@@ -56,7 +56,7 @@ SplitView {
             anchors {
                 top: newMailButton.bottom
                 topMargin: Kube.Units.largeSpacing
-                bottom: parent.bottom
+                bottom: statusBar.top
                 left: newMailButton.left
                 right: parent.right
             }
