@@ -49,8 +49,10 @@ Item {
 
     Item {
 
-        height: parent.height
-        width: parent.width
+        anchors.centerIn: parent
+
+        width: parent.width - Kube.Units.largeSpacing * 2
+        height: parent.height - Kube.Units.largeSpacing * 2
 
         ColumnLayout {
 
