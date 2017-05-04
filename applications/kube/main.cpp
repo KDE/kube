@@ -20,6 +20,11 @@ public:
 
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) Q_DECL_OVERRIDE
     {
+        //The platform theme plugin can overwrite our setting again once it gets loaded,
+        //so we check on every icon load request...
+        if (QIcon::themeName() != "kube") {
+            QIcon::setThemeName("kube");
+        }
         const auto icon = QIcon::fromTheme(id);
         auto expectedSize = requestedSize;
         if (!icon.availableSizes().contains(requestedSize) && !icon.availableSizes().isEmpty()) {
