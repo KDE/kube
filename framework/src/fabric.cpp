@@ -18,6 +18,7 @@
 */
 
 #include "fabric.h"
+#include "sinkfabric.h"
 
 #include <QDebug>
 
@@ -35,9 +36,18 @@ public:
         return bus;
     }
 
+    void bringUpDeps()
+    {
+        if (!mDepsUp) {
+            mDepsUp = true;
+            SinkFabric::instance();
+        }
+    }
+
     void registerListener(Listener *listener)
     {
         mListener << listener;
+        bringUpDeps();
     }
 
     void unregisterListener(Listener *listener)
@@ -47,6 +57,7 @@ public:
 
     void postMessage(const QString &id, const QVariantMap &message)
     {
+        bringUpDeps();
         for (const auto &l : mListener) {
             l->notify(id, message);
         }
@@ -54,6 +65,7 @@ public:
 
 private:
     QVector<Listener*> mListener;
+    bool mDepsUp = false;
 };
 
 void Fabric::postMessage(const QString &id, const QVariantMap &msg)

@@ -16,6 +16,7 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#include "sinkfabric.h"
 
 #include <QFile>
 
@@ -26,7 +27,7 @@
 
 #include "fabric.h"
 
-SINK_DEBUG_AREA("sinkactions")
+SINK_DEBUG_AREA("sinkfabric")
 
 using namespace Kube;
 using namespace Sink;
@@ -46,13 +47,25 @@ public:
                 auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(folder->identifier()));
                 scope.setType<ApplicationDomain::Mail>();
                 Store::synchronize(scope).exec();
-            } else if (message["type"].value<QString>() == "contacts") {
-                auto scope = SyncScope();
-                scope.setType<ApplicationDomain::Contact>();
-                Store::synchronize(scope).exec();
             } else {
-                SinkLog() << "Synchronizing all";
-                Store::synchronize(SyncScope()).exec();
+                auto accountId = message["accountId"].value<QString>();
+                auto type = message["type"].value<QString>();
+                SyncScope scope;
+                if (!accountId.isEmpty()) {
+                    //FIXME this should work with either string or bytearray, but is apparently very picky
+                    scope.resourceFilter<SinkResource::Account>(accountId.toLatin1());
+                }
+                if (type == "contacts") {
+                    scope.setType<ApplicationDomain::Contact>();
+                }
+                if (type == "mail") {
+                    scope.setType<ApplicationDomain::Mail>();
+                }
+                if (type == "folder") {
+                    scope.setType<ApplicationDomain::Folder>();
+                }
+                SinkLog() << "Synchronizing all. AccountId: " << accountId << " Type: " << type;
+                Store::synchronize(scope).exec();
             }
         }
         if (id == "sendOutbox"/*Kube::Messages::synchronize*/) {
@@ -106,15 +119,14 @@ public:
 
 };
 
-static SinkListener sinkListener;
-
-class NotificationListener {
-    NotificationListener()
+class SinkNotifier {
+public:
+    SinkNotifier()
         : mNotifier{Sink::Query{Sink::Query::LiveQuery}}
     {
         mNotifier.registerHandler([this] (const Sink::Notification &notification) {
             Notification n;
-            qWarning() << "Received notification: " << notification;
+            SinkLog() << "Received notification: " << notification;
             QVariantMap message;
             if (notification.type == Sink::Notification::Warning) {
                 message["type"] = Notification::Warning;
@@ -145,14 +157,41 @@ class NotificationListener {
                 } else {
                     return;
                 }
+            } else if (notification.type == Sink::Notification::Progress) {
+                message["progress"] = notification.progress;
+                message["total"] = notification.total;
+                Fabric::Fabric{}.postMessage("progressNotification", message);
+                return;
             } else {
                 return;
             }
+            Fabric::Fabric{}.postMessage("notification", message);
+
         });
 
     }
 
     Sink::Notifier mNotifier;
-
 };
 
+class SinkFabric::Private
+{
+    SinkNotifier notifier;
+    SinkListener listener;
+};
+
+SinkFabric::SinkFabric()
+    : QObject(),
+    d(new SinkFabric::Private)
+{
+}
+
+SinkFabric::~SinkFabric()
+{
+    delete d;
+}
+SinkFabric &SinkFabric::instance()
+{
+    static SinkFabric instance;
+    return instance;
+}
