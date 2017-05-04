@@ -113,7 +113,7 @@ SplitView {
 
                         contentItem: Item {
                             Rectangle {
-                                width: control.visualPosition * parent.width
+                                width: progressBar.visualPosition * parent.width
                                 height: parent.height
                                 radius: 2
                                 color: Kube.Colors.highlightColor
