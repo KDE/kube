@@ -20,6 +20,7 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 1.3
+import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
@@ -71,24 +72,65 @@ SplitView {
                 right: parent.right
             }
 
-            height: Kube.Units.gridUnit
+            height: Kube.Units.gridUnit * 2
 
             Repeater {
                 model: Kube.AccountsModel {
-                    accountId: accountFolderview.accountId
+                    accountId: accountFolderview.currentAccount
                 }
 
-                Kube.Label {
-                    id: statusText
-                    anchors.centerIn: parent
-                    visible: false
-                    color: Kube.Colors.highlightedTextColor
-                    states: [
-                    State {
-                        name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-                        PropertyChanges { target: statusText; text: "Offline"; visible: true }
+                Column {
+                    anchors.fill: statusBar
+                    spacing: Kube.Units.smallSpacing
+                    Kube.Label {
+                        id: statusText
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        visible: false
+                        color: Kube.Colors.highlightedTextColor
+                        states: [
+                            State {
+                                name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
+                                PropertyChanges { target: statusText; text: "Offline"; visible: true }
+                            },
+                            State {
+                                name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
+                                PropertyChanges { target: statusText; text: "Busy"; visible: true }
+                                PropertyChanges { target: progressBar; visible: true }
+                            }
+                        ]
                     }
-                    ]
+                    Controls2.ProgressBar {
+                        id: progressBar
+                        indeterminate: true
+                        visible: false
+                        height: Kube.Units.smallSpacing
+                        width: parent.width
+
+                        background: Rectangle {
+                            color: Kube.Colors.backgroundColor
+                            radius: 3
+                        }
+
+                        contentItem: Item {
+                            Rectangle {
+                                width: control.visualPosition * parent.width
+                                height: parent.height
+                                radius: 2
+                                color: Kube.Colors.highlightColor
+                            }
+                        }
+
+
+                        Kube.Listener {
+                            filter: Kube.Messages.progressNotification
+                            onMessageReceived: {
+                                progressBar.indeterminate = false
+                                progressBar.from = 0
+                                progressBar.to = message.total
+                                progressBar.value = message.progress
+                            }
+                        }
+                    }
                 }
             }
         }
