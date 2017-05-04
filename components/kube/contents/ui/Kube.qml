@@ -35,10 +35,6 @@ Controls2.ApplicationWindow {
     Kube.Listener {
         filter: Kube.Messages.notification
         onMessageReceived: {
-            console.warn("We got a notification: ", message.message)
-            if (message.type == Kube.Notification.Warning) {
-                console.warn("And it's a warning!", message.type)
-            }
             notificationPopup.notify(message.message);
         }
     }
