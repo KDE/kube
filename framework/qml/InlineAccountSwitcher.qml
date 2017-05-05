@@ -22,7 +22,13 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
-    property string currentAccount: null
+    property string currentAccount
+    onCurrentAccountChanged: {
+        if (!!currentAccount) {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount});
+        }
+
+    }
 
     ColumnLayout {
         anchors.fill: parent
