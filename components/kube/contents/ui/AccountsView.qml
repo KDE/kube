@@ -73,7 +73,13 @@ Rectangle {
                     color: Kube.Colors.viewBackgroundColor
 
                     Kube.Label {
-                        anchors.centerIn: parent
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: Kube.Units.largeSpacing
+                        }
+                        width: parent.width - Kube.Units.largeSpacing * 2
+
                         text: model.name
                     }
 
