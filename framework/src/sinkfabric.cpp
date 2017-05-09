@@ -144,11 +144,23 @@ public:
                     return;
                 }
             } else if (notification.type == Sink::Notification::Error) {
-                if (notification.code == Sink::ApplicationDomain::ConnectionError) {
-                    message["type"] = Notification::Warning;
-                    message["message"] = "Failed to connect to server.";
-                } else {
-                    return;
+                message["type"] = Notification::Warning;
+                message["resource"] = QString{notification.resource};
+                switch(notification.code) {
+                    case Sink::ApplicationDomain::ConnectionError:
+                        message["message"] = "Failed to connect to server.";
+                        break;
+                    case Sink::ApplicationDomain::NoServerError:
+                        message["message"] = "Host not found.";
+                        break;
+                    case Sink::ApplicationDomain::LoginError:
+                        message["message"] = "Failed to login.";
+                        break;
+                    case Sink::ApplicationDomain::ConfigurationError:
+                        message["message"] = "Configuration error.";
+                        break;
+                    default:
+                        message["message"] = "An unknown error occurred: " + notification.message;
                 }
             } else if (notification.type == Sink::Notification::Info) {
                 if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {

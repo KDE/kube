@@ -132,6 +132,10 @@ Controls2.ApplicationWindow {
                     iconName: Kube.Icons.user_inverted
                     onClicked: kubeViews.setPeopleView()
                 }
+                Kube.IconButton {
+                    iconName: Kube.Icons.error_inverted
+                    onClicked: kubeViews.setLogView()
+                }
             }
             Column {
                 anchors {
@@ -173,6 +177,9 @@ Controls2.ApplicationWindow {
             function setAccountsView() {
                 kubeViews.push({item: accountsView, replace: true, immediate: true})
             }
+            function setLogView() {
+                kubeViews.push({item: logView, replace: true, immediate: true})
+            }
 
             function openComposer() {
                 kubeViews.push({item: composerView, immediate: true})
@@ -186,6 +193,10 @@ Controls2.ApplicationWindow {
             }
             PeopleView {
                 id: peopleView
+            }
+            //Not a component because otherwise we can't log stuff
+            LogView {
+                id: logView
             }
             //A component so it's always destroyed when we're done
             Component {
