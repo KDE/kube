@@ -22,6 +22,8 @@ import QtQuick.Controls 1.3 as Controls
 import org.kube.framework 1.0 as Kube
 import org.kube.components.accounts 1.0 as KubeAccounts
 
+import QtQuick.Templates 2.0 as T
+
 Rectangle {
     color: Kube.Colors.backgroundColor
 
@@ -64,31 +66,40 @@ Rectangle {
 
                 model: Kube.AccountsModel {}
 
-                delegate: Rectangle {
+                delegate: T.ItemDelegate {
+                    id: delegateRoot
+
                     height: Kube.Units.gridUnit * 3
                     width: listView.width
 
-                    border.color: Kube.Colors.buttonColor
-                    border.width: 1
-                    color: Kube.Colors.viewBackgroundColor
-
-                    Kube.Label {
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-                            left: parent.left
-                            leftMargin: Kube.Units.largeSpacing
-                        }
-                        width: parent.width - Kube.Units.largeSpacing * 2
-
-                        text: model.name
+                    onClicked: {
+                        edit.accountId = model.accountId
                     }
 
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
+                    contentItem: Item {
+                        Kube.Label {
+                            anchors {
+                                verticalCenter: parent.verticalCenter
+                                left: parent.left
+                                leftMargin: Kube.Units.largeSpacing
+                            }
+                            width: parent.width - Kube.Units.largeSpacing * 2
 
-                        onClicked: {
-                            edit.accountId = model.accountId
+                            text: model.name
+                            color: edit.accountId == model.accountId ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
+                        }
+                    }
+
+                    background: Rectangle {
+                        border.color: Kube.Colors.buttonColor
+                        border.width: 1
+                        color: Kube.Colors.viewBackgroundColor
+
+                        Rectangle {
+                            width: parent.width
+                            height: parent.height
+                            visible: edit.accountId == model.accountId
+                            color: Kube.Colors.highlightColor
                         }
                     }
                 }
