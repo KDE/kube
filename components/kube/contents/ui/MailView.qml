@@ -96,6 +96,10 @@ SplitView {
                                 name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
                                 PropertyChanges { target: statusText; text: "Busy"; visible: true }
                                 PropertyChanges { target: progressBar; visible: true }
+                            },
+                            State {
+                                name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
+                                PropertyChanges { target: statusText; text: "Error"; visible: true }
                             }
                         ]
                     }

@@ -70,40 +70,11 @@ FocusScope {
                         }
                     }
 
-                    Row {
-                        spacing: Kube.Units.smallSpacing
+                    Kube.Label{
                         anchors.verticalCenter: parent.verticalCenter
-                        Layout.fillHeight: true
-
-                        Kube.Label{
-                            text: model.name
-                            font.weight: Font.Bold
-                            color: Kube.Colors.highlightedTextColor
-                        }
-
-                        Kube.Icon {
-                            id: statusIcon
-                            visible: false
-                            iconName: ""
-                            states: [
-                            State {
-                                name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
-                                PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy_inverted; visible: true }
-                            },
-                            State {
-                                name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
-                                PropertyChanges { target: statusIcon; iconName: Kube.Icons.error_inverted; visible: true }
-                            },
-                            State {
-                                name: "checkmark"; when: model.status == Kube.AccountsModel.ConnectedStatus
-                                PropertyChanges { target: statusIcon; iconName: Kube.Icons.connected_inverted; visible: true }
-                            },
-                            State {
-                                name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-                                PropertyChanges { target: statusIcon; iconName: Kube.Icons.noNetworkConnection_inverted; visible: true }
-                            }
-                            ]
-                        }
+                        text: model.name
+                        font.weight: Font.Bold
+                        color: Kube.Colors.highlightedTextColor
                     }
                 }
 

@@ -130,42 +130,13 @@ TreeView {
                 }
             }
 
-            Row {
+            Kube.Label {
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
                 }
-                Kube.Label {
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        leftMargin: Kube.Units.smallSpacing
-                    }
-
-                    text: styleData.value
-
-                    color: Kube.Colors.viewBackgroundColor
-                }
-                Kube.Icon {
-                    id: statusIcon
-                    visible: false
-                    iconName: ""
-                    states: [
-                        State {
-                            name: "busy"; when: model.status == Kube.FolderListModel.InProgressStatus
-                            PropertyChanges { target: statusIcon; iconName: Kube.Icons.busy_inverted ; visible: styleData.selected }
-                        },
-                        State {
-                            name: "error"; when: model.status == Kube.FolderListModel.ErrorStatus
-                            //The error status should only be visible for a moment, otherwise we'll eventually always show errors everywhere.
-                            PropertyChanges { target: statusIcon; iconName: Kube.Icons.error_inverted; visible: styleData.selected }
-                        },
-                        State {
-                            name: "checkmark"; when: model.status == Kube.FolderListModel.SuccessStatus
-                            //The success status should only be visible for a moment, otherwise we'll eventually always show checkmarks everywhere.
-                            PropertyChanges { target: statusIcon; iconName: Kube.Icons.success_inverted; visible: styleData.selected}
-                        }
-                    ]
-                }
+                text: styleData.value
+                color: Kube.Colors.viewBackgroundColor
             }
         }
 
