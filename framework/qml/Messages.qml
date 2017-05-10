@@ -41,5 +41,7 @@ Item {
     property string reply: "reply"
     property string edit: "edit"
     property string compose: "compose"
+
+    property string componentDone: "done"
 }
 

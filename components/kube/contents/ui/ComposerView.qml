@@ -19,20 +19,82 @@
 
 
 import QtQuick 2.7
+import QtQuick.Controls 1.3
+import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Layouts 1.1
+
 import org.kube.framework 1.0 as Kube
 
-Item {
-    id:root
-    signal done
-    property alias message: composer.message
-    property alias loadAsDraft: composer.loadAsDraft
-
-    Kube.FocusComposer {
-        id: composer
+Kube.View {
+    id: root
+    Rectangle {
+        width: Kube.Units.gridUnit * 10
+        Layout.minimumWidth: Kube.Units.gridUnit * 5
         anchors {
-            fill: parent
-            margins: Kube.Units.smallSpacing
+            top: parent.top
+            bottom: parent.bottom
         }
-        onDone: root.done()
+
+        color: Kube.Colors.textColor
+        focus: true
+
+        Column {
+            anchors {
+                fill: parent
+                margins: Kube.Units.largeSpacing
+            }
+            Kube.PositiveButton {
+                id: newMailButton
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: Kube.Units.largeSpacing
+                }
+                text: qsTr("Compose New")
+                onClicked: root.incrementCurrentIndex()
+            }
+        }
+    }
+
+    Rectangle {
+        Layout.fillWidth: true
+        Layout.minimumWidth: Kube.Units.gridUnit * 5
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+        }
+
+        ColumnLayout {
+            anchors {
+                fill: parent
+                margins: Kube.Units.largeSpacing
+            }
+            Kube.TextField {
+                id: subject
+                Layout.fillWidth: true
+
+                placeholderText: "Enter Subject..."
+                // text: composerController.subject
+                // onTextChanged: composerController.subject = text;
+            }
+
+            Controls2.TextArea {
+                id: content
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                // text: composerController.body
+                // onTextChanged: composerController.body = text;
+            }
+        }
+    }
+
+    Rectangle {
+        width: Kube.Units.gridUnit * 10
+        Layout.minimumWidth: Kube.Units.gridUnit * 5
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+        }
     }
 }
