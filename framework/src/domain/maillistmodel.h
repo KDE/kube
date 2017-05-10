@@ -31,6 +31,7 @@ class MailListModel : public QSortFilterProxyModel
     Q_OBJECT
     Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
     Q_PROPERTY (QVariant mail READ mail WRITE setMail)
+    Q_PROPERTY (bool showDrafts READ showDrafts WRITE setShowDrafts)
     Q_PROPERTY (QString filter READ filter WRITE setFilter)
     Q_PROPERTY (bool isThreaded READ isThreaded NOTIFY isThreadedChanged)
 
@@ -86,6 +87,9 @@ public:
 
     void setFilter(const QString &mail);
     QString filter() const;
+
+    void setShowDrafts(bool);
+    bool showDrafts() const;
 
 signals:
     void isThreadedChanged();

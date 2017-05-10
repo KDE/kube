@@ -302,3 +302,35 @@ QVariant MailListModel::mail() const
 }
 
 
+void MailListModel::setShowDrafts(bool)
+{
+    using namespace Sink::ApplicationDomain;
+    Sink::Query query;
+    // query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
+    query.filter<Mail::Draft>(true);
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::Draft>();
+    query.request<Mail::Folder>();
+    query.request<Mail::Sent>();
+    query.request<Mail::Trash>();
+    query.request<Mail::MimeMessage>();
+    query.request<Mail::FullPayloadAvailable>();
+    mFetchMails = true;
+    mFetchedMails.clear();
+    qDebug() << "Running mail query for drafts: ";
+    //Latest mail at the top
+    sort(0, Qt::AscendingOrder);
+    runQuery(query);
+}
+
+bool MailListModel::showDrafts() const
+{
+    return false;
+}

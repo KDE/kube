@@ -117,10 +117,12 @@ Controls2.ApplicationWindow {
 
                 Kube.IconButton {
                     iconName: Kube.Icons.search_inverted
+                    onClicked: search.open()
+                }
 
-                    onClicked: {
-                        search.open()
-                    }
+                Kube.IconButton {
+                    iconName: Kube.Icons.edit_inverted
+                    onClicked: kubeViews.openComposer()
                 }
 
                 Kube.IconButton {
@@ -166,6 +168,11 @@ Controls2.ApplicationWindow {
             Layout.fillWidth: true
             initialItem: mailView
 
+            Kube.Listener {
+                filter: Kube.Messages.componentDone
+                onMessageReceived: kubeViews.pop({immediate: true})
+            }
+
             function setPeopleView() {
                 //TODO replacing here while a composer is open is destructive
                 kubeViews.push({item: peopleView, replace: true, immediate: true})
@@ -202,7 +209,6 @@ Controls2.ApplicationWindow {
             Component {
                 id: composerView
                 ComposerView {
-                    onDone: kubeViews.pop({immediate: true})
                 }
             }
             Component {
