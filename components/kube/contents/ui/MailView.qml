@@ -71,8 +71,24 @@ SplitView {
                 left: parent.left
                 right: parent.right
             }
+            visible: false
 
             height: Kube.Units.gridUnit * 2
+
+            Rectangle {
+                id: border
+                anchors {
+                    right: parent.right
+                    rightMargin: Kube.Units.smallSpacing
+                    left: parent.left
+                    leftMargin: Kube.Units.smallSpacing
+                    bottomMargin: Kube.Units.smallSpacing
+                    topMargin: Kube.Units.smallSpacing
+                }
+                height: 1
+                color: Kube.Colors.viewBackgroundColor
+                opacity: 0.3
+            }
 
             Repeater {
                 model: Kube.AccountsModel {
@@ -80,7 +96,12 @@ SplitView {
                 }
 
                 Column {
-                    anchors.fill: statusBar
+                    anchors {
+                        top: border.bottom
+                        left: statusBar.left
+                        right: statusBar.right
+                        bottom: statusBar.bottom
+                    }
                     spacing: Kube.Units.smallSpacing
                     Kube.Label {
                         id: statusText
@@ -90,25 +111,30 @@ SplitView {
                         states: [
                             State {
                                 name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
+                                PropertyChanges { target: statusBar; visible: true }
                                 PropertyChanges { target: statusText; text: "Offline"; visible: true }
                             },
                             State {
                                 name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
+                                PropertyChanges { target: statusBar; visible: true }
                                 PropertyChanges { target: statusText; text: "Busy"; visible: true }
                                 PropertyChanges { target: progressBar; visible: true }
                             },
                             State {
                                 name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
+                                PropertyChanges { target: statusBar; visible: true }
                                 PropertyChanges { target: statusText; text: "Error"; visible: true }
                             }
                         ]
                     }
                     Controls2.ProgressBar {
                         id: progressBar
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        height: 3
+                        width: parent.width - Kube.Units.smallSpacing * 2
+
                         indeterminate: true
                         visible: false
-                        height: Kube.Units.smallSpacing
-                        width: parent.width
 
                         background: Rectangle {
                             color: Kube.Colors.backgroundColor
