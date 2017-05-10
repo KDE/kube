@@ -41,13 +41,12 @@ Kube.View {
     property variant sendAction: composerController.sendAction
     property variant saveAsDraftAction: composerController.saveAsDraftAction
 
-    Component.onCompleted: loadMessage()
+    Component.onCompleted: loadMessage(root.message, root.loadAsDraft)
 
-    function loadMessage() {
-        if (root.message) {
-            composerController.loadMessage(root.message, root.loadAsDraft)
+    function loadMessage(message, loadAsDraft) {
+        if (message) {
+            composerController.loadMessage(message, loadAsDraft)
         }
-
     }
 
     //Drafts
@@ -93,7 +92,7 @@ Kube.View {
                 clip: true
                 focus: true
 
-                // ScrollBar.vertical: ScrollBar {
+                // Controls2.ScrollBar.vertical: Controls2.ScrollBar {
                 //     id: scrollbar
                 // }
 
@@ -113,7 +112,7 @@ Kube.View {
                 //END keyboard nav
 
                 onCurrentItemChanged: {
-                    //TODO
+                    root.loadMessage(currentItem.currentData.domainObject, true)
                 }
 
                 model: Kube.MailListModel {
@@ -134,7 +133,7 @@ Kube.View {
 
                         // width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
                         width: listView.width
-                        height: Kube.Units.gridUnit * 5
+                        height: Kube.Units.gridUnit * 3
 
                         states: [
                         State {
@@ -155,23 +154,15 @@ Kube.View {
 
                         MouseArea {
                             id: mouseArea
-
                             anchors.fill: parent
-
                             hoverEnabled: true
-
-                            onClicked: {
-                                listView.currentIndex = index
-                            }
+                            onClicked: listView.currentIndex = index
                         }
 
                         Rectangle {
                             id: background
-
                             anchors.fill: parent
-
                             color: Kube.Colors.viewBackgroundColor
-
                             border.color: Kube.Colors.backgroundColor
                             border.width: 1
                         }
@@ -196,9 +187,7 @@ Kube.View {
 
                                 Kube.Label{
                                     id: subject
-
                                     width: content.width - Kube.Units.gridUnit * 3
-
                                     text: model.subject
                                     color: model.unread ? Kube.Colors.highlightColor : Kube.Colors.textColor
                                     maximumLineCount: 2
@@ -334,16 +323,12 @@ Kube.View {
             }
             Kube.Button {
                 text: "Discard"
-
-                onClicked: {
-                    root.done()
-                }
+                onClicked: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
             }
 
             Kube.Label {
                 text: "You are sending this from:"
             }
-
             Kube.ComboBox {
                 id: identityCombo
                 model: composerController.identitySelector.model
