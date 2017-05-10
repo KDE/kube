@@ -127,7 +127,7 @@ SplitView {
                             }
                         ]
                     }
-                    Controls2.ProgressBar {
+                    Kube.ProgressBar {
                         id: progressBar
                         anchors.horizontalCenter: parent.horizontalCenter
                         height: 3
@@ -135,21 +135,6 @@ SplitView {
 
                         indeterminate: true
                         visible: false
-
-                        background: Rectangle {
-                            color: Kube.Colors.backgroundColor
-                            radius: 3
-                        }
-
-                        contentItem: Item {
-                            Rectangle {
-                                width: progressBar.visualPosition * parent.width
-                                height: parent.height
-                                radius: 2
-                                color: Kube.Colors.highlightColor
-                            }
-                        }
-
 
                         Kube.Listener {
                             filter: Kube.Messages.progressNotification

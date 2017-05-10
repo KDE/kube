@@ -17,6 +17,7 @@ Icon 1.0 Icon.qml
 IconButton 1.0 IconButton.qml
 Button 1.0 Button.qml
 Popup 1.0 Popup.qml
+ProgressBar 1.0 ProgressBar.qml
 ComboBox 1.0 ComboBox.qml
 PositiveButton 1.0 PositiveButton.qml
 TextField 1.0 TextField.qml
