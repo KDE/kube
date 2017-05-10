@@ -62,13 +62,14 @@ Kube.View {
         color: Kube.Colors.textColor
         focus: true
 
-        Column {
+        ColumnLayout {
             anchors {
                 fill: parent
                 margins: Kube.Units.largeSpacing
             }
+            spacing: Kube.Units.smallSpacing
+
             Kube.PositiveButton {
-                id: newMailButton
                 anchors {
                     left: parent.left
                     right: parent.right
@@ -78,14 +79,12 @@ Kube.View {
                 onClicked: root.incrementCurrentIndex()
             }
             Kube.Label{
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
                 text: qsTr("Drafts")
+                color: Kube.Colors.highlightedTextColor
             }
             ListView {
                 id: listView
+                Layout.fillHeight: true
                 anchors {
                     left: parent.left
                     right: parent.right
@@ -106,10 +105,10 @@ Kube.View {
                 }
 
                 Keys.onDownPressed: {
-                    incrementCurrentIndex()
+                    listView.incrementCurrentIndex()
                 }
                 Keys.onUpPressed: {
-                    decrementCurrentIndex()
+                    listView.decrementCurrentIndex()
                 }
                 //END keyboard nav
 
@@ -123,8 +122,6 @@ Kube.View {
                 }
 
                 delegate: Item {
-                    id: origin
-
                     property variant currentData: model
 
                     width: delegateRoot.width
@@ -225,9 +222,6 @@ Kube.View {
                         }
                     }
                 }
-            }
-            Item {
-                Layout.fillHeight: true
             }
         }
     }
