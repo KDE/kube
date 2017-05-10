@@ -117,15 +117,11 @@ Controls2.ApplicationWindow {
 
                 Kube.IconButton {
                     iconName: Kube.Icons.search_inverted
-
-                    onClicked: {
-                        search.open()
-                    }
+                    onClicked: search.open()
                 }
 
                 Kube.IconButton {
-                    iconName: Kube.Icons.outbox_inverted
-                    //TODO use a compose icon
+                    iconName: Kube.Icons.edit_inverted
                     onClicked: kubeViews.openComposer()
                 }
 

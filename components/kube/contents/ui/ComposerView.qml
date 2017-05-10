@@ -52,7 +52,7 @@ Kube.View {
 
     //Drafts
     Rectangle {
-        width: Kube.Units.gridUnit * 10
+        width: Kube.Units.gridUnit * 20
         Layout.minimumWidth: Kube.Units.gridUnit * 5
         anchors {
             top: parent.top
@@ -77,6 +77,13 @@ Kube.View {
                 text: qsTr("New Mail")
                 onClicked: root.incrementCurrentIndex()
             }
+            Kube.Label{
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                text: qsTr("Drafts")
+            }
             ListView {
                 id: listView
                 anchors {
@@ -87,7 +94,7 @@ Kube.View {
                 clip: true
                 focus: true
 
-                // Controls2.ScrollBar.vertical: Controls2.ScrollBar {
+                // ScrollBar.vertical: ScrollBar {
                 //     id: scrollbar
                 // }
 
@@ -112,8 +119,7 @@ Kube.View {
 
                 model: Kube.MailListModel {
                     id: mailListModel
-                    //TODO folder query
-                    // parentFolder: root.parentFolder
+                    showDrafts: true
                 }
 
                 delegate: Item {
@@ -129,7 +135,8 @@ Kube.View {
 
                         property variant mail : model.domainObject
 
-                        width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
+                        // width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
+                        width: listView.width
                         height: Kube.Units.gridUnit * 5
 
                         states: [
@@ -238,6 +245,8 @@ Kube.View {
             anchors {
                 fill: parent
                 margins: Kube.Units.largeSpacing
+                leftMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
+                rightMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
             }
             Kube.TextField {
                 id: subject
@@ -261,70 +270,59 @@ Kube.View {
 
     //Recepients
     Rectangle {
-        width: Kube.Units.gridUnit * 10
+        width: Kube.Units.gridUnit * 20
         Layout.minimumWidth: Kube.Units.gridUnit * 5
         anchors {
             top: parent.top
             bottom: parent.bottom
         }
         ColumnLayout {
-            anchors.fill: parent
+            anchors {
+                fill: parent
+                margins: Kube.Units.largeSpacing
+            }
             width: parent.width
 
-            GridLayout {
-                columns: 2
+            Kube.Label {
+                text: "Sending Email to"
+            }
+            Kube.AutocompleteLineEdit {
+                id: to
+                Layout.fillWidth: true
+                text: composerController.to
+                onTextChanged: composerController.to = text
+                model: composerController.recipientCompleter.model
+                onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
+            }
 
-                Kube.Label {
-                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                    text: "To"
-                }
-                Kube.AutocompleteLineEdit {
-                    id: to
-                    Layout.fillWidth: true
-                    text: composerController.to
-                    onTextChanged: composerController.to = text
-                    model: composerController.recipientCompleter.model
-                    onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
-                }
+            Kube.Label {
+                text: "Sending Copy to (CC)"
+            }
+            Kube.AutocompleteLineEdit {
+                id: cc
+                Layout.fillWidth: true
+                text: composerController.cc
+                onTextChanged: composerController.cc = text
+                model: composerController.recipientCompleter.model
+                onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
+            }
 
-                Kube.Label {
-                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                    text: "Cc"
-                }
-                Kube.AutocompleteLineEdit {
-                    id: cc
-                    Layout.fillWidth: true
-                    text: composerController.cc
-                    onTextChanged: composerController.cc = text
-                    model: composerController.recipientCompleter.model
-                    onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
-                }
-
-                Kube.Label {
-                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                    text: "Bcc"
-                }
-                Kube.AutocompleteLineEdit {
-                    id: bcc
-                    Layout.fillWidth: true
-                    text: composerController.bcc
-                    onTextChanged: composerController.bcc = text;
-                    model: composerController.recipientCompleter.model
-                    onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
-                }
+            Kube.Label {
+                text: "Sending Secret Copy to (Bcc)"
+            }
+            Kube.AutocompleteLineEdit {
+                id: bcc
+                Layout.fillWidth: true
+                text: composerController.bcc
+                onTextChanged: composerController.bcc = text;
+                model: composerController.recipientCompleter.model
+                onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
             }
 
             Item {
                 Layout.fillHeight: true
             }
 
-            Kube.Button {
-                text: "Discard"
-
-                onClicked: {
-                    root.done()
-                }
-            }
 
             Item {
                 Layout.fillHeight: true
@@ -340,20 +338,25 @@ Kube.View {
                     saveAsDraftAction.execute()
                 }
             }
+            Kube.Button {
+                text: "Discard"
 
-            RowLayout {
-                Kube.Label {
-                    text: "From"
+                onClicked: {
+                    root.done()
                 }
+            }
 
-                Kube.ComboBox {
-                    id: identityCombo
-                    model: composerController.identitySelector.model
-                    textRole: "displayName"
-                    Layout.fillWidth: true
-                    onCurrentIndexChanged: {
-                        composerController.identitySelector.currentIndex = currentIndex
-                    }
+            Kube.Label {
+                text: "You are sending this from:"
+            }
+
+            Kube.ComboBox {
+                id: identityCombo
+                model: composerController.identitySelector.model
+                textRole: "displayName"
+                Layout.fillWidth: true
+                onCurrentIndexChanged: {
+                    composerController.identitySelector.currentIndex = currentIndex
                 }
             }
 

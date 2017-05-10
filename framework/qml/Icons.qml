@@ -38,6 +38,7 @@ Item {
     property string undo: "edit-undo-inverted"
     property string moveToTrash: "kubetrash"
     property string edit: "document-edit"
+    property string edit_inverted: "document-edit-inverted"
     property string replyToSender: "mail-reply-sender"
     property string outbox: "mail-folder-outbox"
     property string outbox_inverted: "mail-folder-outbox-inverted"
@@ -47,6 +48,7 @@ Item {
     property string search_inverted: "edit-find-inverted"
     property string mail_inverted: "mail-message-inverted"
     property string goBack: "go-previous"
+    property string goBack_inverted: "go-previous-inverted"
     property string goDown: "go-down"
     property string goUp: "go-down"
 

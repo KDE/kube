@@ -48,41 +48,32 @@ Item {
     }
 
     function showRelevantSplits() {
-        console.warn("SplitView ", count);
         var i;
         for (i = 0; i < count; i++) {
             if (i < currentIndex) {
-                console.warn("Hiding: ", i);
                 contentItems[i].visible = false;
             } else if (i > (currentIndex + visibleViews - 1)) {
-                console.warn("Hiding: ", i);
                 contentItems[i].visible = false;
             } else {
-                console.warn("Showing: ", i);
                 contentItems[i].visible = true;
             }
         }
 
     }
 
-    Rectangle {
+    Kube.IconButton {
         anchors {
             top: container.top
             left: container.left
         }
-        color: Kube.Colors.textColor
-        height: Kube.Units.gridUnit * 2
-        width: Kube.Units.gridUnit * 2
         z: 1
-        Kube.IconButton {
-            anchors {
-                verticalCenter: parent.verticalCenter
-                horizontalCenter: parent.horizontalCenter
-            }
-            iconName: Kube.Icons.goBack
-            visible: currentIndex > 0
-            onClicked: decrementCurrentIndex()
+        background: Rectangle {
+            anchors.fill: parent
+            color: Kube.Colors.textColor
         }
+        iconName: Kube.Icons.goBack_inverted
+        visible: currentIndex > 0
+        onClicked: decrementCurrentIndex()
     }
 
     RowLayout {
