@@ -130,7 +130,7 @@ SplitView {
                     Kube.ProgressBar {
                         id: progressBar
                         anchors.horizontalCenter: parent.horizontalCenter
-                        height: 3
+                        height: 2
                         width: parent.width - Kube.Units.smallSpacing * 2
 
                         indeterminate: true
