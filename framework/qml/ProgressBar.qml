@@ -24,14 +24,12 @@ T.ProgressBar {
     id: root
     background: Rectangle {
         color: Kube.Colors.backgroundColor
-        radius: 3
     }
 
     contentItem: Item {
         Rectangle {
             width: root.visualPosition * root.width
             height: root.height
-            radius: 2
             color: Kube.Colors.highlightColor
         }
     }
