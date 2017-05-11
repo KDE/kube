@@ -28,6 +28,7 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
     id: root
 
+    property bool newMessage: false
     property bool loadAsDraft: false
     property variant message: {}
 
@@ -46,6 +47,8 @@ Kube.View {
     function loadMessage(message, loadAsDraft) {
         if (message) {
             composerController.loadMessage(message, loadAsDraft)
+        } else if (newMessage) {
+            subject.forceActiveFocus()
         }
     }
 

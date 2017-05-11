@@ -55,7 +55,7 @@ Controls2.ApplicationWindow {
 
     Kube.Listener {
         filter: Kube.Messages.compose
-        onMessageReceived: kubeViews.openComposer()
+        onMessageReceived: kubeViews.openComposer(true)
     }
 
     //BEGIN Shortcuts
@@ -188,8 +188,8 @@ Controls2.ApplicationWindow {
                 kubeViews.push({item: logView, replace: true, immediate: true})
             }
 
-            function openComposer() {
-                kubeViews.push({item: composerView, immediate: true})
+            function openComposer(newMessage) {
+                kubeViews.push({item: composerView, immediate: true, properties: {newMessage: newMessage}})
             }
             function openComposerWithMail(mail, openAsDraft) {
                 kubeViews.push({item: composerView, immediate: true, properties: {message: mail, loadAsDraft: openAsDraft}})
