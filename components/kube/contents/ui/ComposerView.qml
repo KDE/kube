@@ -61,22 +61,26 @@ Kube.View {
 
     //Drafts
     Rectangle {
-        width: Kube.Units.gridUnit * 20
-        Layout.minimumWidth: Kube.Units.gridUnit * 5
+
         anchors {
             top: parent.top
             bottom: parent.bottom
         }
 
+        width: Kube.Units.gridUnit * 15
+        Layout.minimumWidth: Kube.Units.gridUnit * 5
+
         color: Kube.Colors.textColor
         focus: true
 
         ColumnLayout {
+
             anchors {
                 fill: parent
                 margins: Kube.Units.largeSpacing
             }
-            spacing: Kube.Units.smallSpacing
+
+            spacing: Kube.Units.largeSpacing
 
             Kube.PositiveButton {
                 anchors {
@@ -85,29 +89,28 @@ Kube.View {
                     margins: Kube.Units.largeSpacing
                 }
                 focus: true
-                text: qsTr("New Mail")
+                text: qsTr("New Email")
                 onClicked: {
                     composerController.clear()
                     subject.forceActiveFocus()
                 }
             }
+
             Kube.Label{
                 text: qsTr("Drafts")
                 color: Kube.Colors.highlightedTextColor
             }
+
             ListView {
                 id: listView
-                Layout.fillHeight: true
+
                 anchors {
                     left: parent.left
                     right: parent.right
                 }
 
+                Layout.fillHeight: true
                 clip: true
-
-                // Controls2.ScrollBar.vertical: Controls2.ScrollBar {
-                //     id: scrollbar
-                // }
 
                 //BEGIN keyboard nav
                 onActiveFocusChanged: {
@@ -115,7 +118,6 @@ Kube.View {
                         currentIndex = 0
                     }
                 }
-
                 Keys.onDownPressed: {
                     listView.incrementCurrentIndex()
                 }
@@ -144,9 +146,8 @@ Kube.View {
 
                         property variant mail : model.domainObject
 
-                        // width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
                         width: listView.width
-                        height: Kube.Units.gridUnit * 4
+                        height: Kube.Units.gridUnit * 3
 
                         states: [
                         State {
@@ -189,22 +190,15 @@ Kube.View {
                                 margins: Kube.Units.smallSpacing
                             }
 
-                            Column {
-                                anchors {
-                                    verticalCenter: parent.verticalCenter
-                                    left: parent.left
-                                    leftMargin: Kube.Units.largeSpacing
-                                }
 
-                                Kube.Label{
+                            Kube.Label{
                                     id: subject
-                                    width: content.width - Kube.Units.gridUnit * 3
+                                    width: content.width - Kube.Units.largeSpacing * 2
                                     text: model.subject
                                     color: Kube.Colors.highlightedTextColor
                                     maximumLineCount: 2
                                     wrapMode: Text.WrapAnywhere
                                     elide: Text.ElideRight
-                                }
                             }
 
                             Kube.Label {
@@ -267,22 +261,36 @@ Kube.View {
 
     //Recepients
     Rectangle {
-        width: Kube.Units.gridUnit * 20
-        Layout.minimumWidth: Kube.Units.gridUnit * 5
         anchors {
             top: parent.top
             bottom: parent.bottom
         }
         color: Kube.Colors.backgroundColor
-        ColumnLayout {
+        width: Kube.Units.gridUnit * 15
+
+        Rectangle {
+            height: parent.height
+            width: 1
+            color: Kube.Colors.buttonColor
+        }
+
+        //Content
+        Item {
+            anchors.right: parent.right
+            width: parent.width
+            height: parent.height
+
+            ColumnLayout {
             anchors {
-                fill: parent
+                top: parent.top
+                bottom: bottomButtons.top
+                left: parent.left
+                right: parent.right
                 margins: Kube.Units.largeSpacing
             }
-            width: parent.width
 
             Kube.Label {
-                text: "Sending Email to"
+                text: "Sending Email to:"
             }
             Kube.AutocompleteLineEdit {
                 id: to
@@ -294,7 +302,7 @@ Kube.View {
             }
 
             Kube.Label {
-                text: "Sending Copy to (CC)"
+                text: "Sending Copy to (CC):"
             }
             Kube.AutocompleteLineEdit {
                 id: cc
@@ -306,7 +314,7 @@ Kube.View {
             }
 
             Kube.Label {
-                text: "Sending Secret Copy to (Bcc)"
+                text: "Sending Secret Copy to (Bcc):"
             }
             Kube.AutocompleteLineEdit {
                 id: bcc
@@ -318,34 +326,61 @@ Kube.View {
             }
 
             Item {
+                width: parent.width
                 Layout.fillHeight: true
             }
+        }
 
 
             Item {
-                Layout.fillHeight: true
-            }
-
-
-            Kube.Button {
-                id: saveDraftButton
-
-                text: "Save as Draft"
-                //TODO enabled: saveAsDraftAction.enabled
-                onClicked: {
-                    saveAsDraftAction.execute()
+                id: bottomButtons
+                anchors {
+                    bottom: fromLabel.top
+                    bottomMargin: Kube.Units.largeSpacing
+                    horizontalCenter: parent.horizontalCenter
                 }
-            }
-            Kube.Button {
-                text: "Discard"
-                onClicked: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                width: parent.width - Kube.Units.largeSpacing * 2
+                height: Kube.Units.gridUnit
+
+                Kube.Button {
+                    id: saveDraftButton
+
+                    anchors.right: parent.right
+
+                    text: "Save as Draft"
+                    //TODO enabled: saveAsDraftAction.enabled
+                    onClicked: {
+                        saveAsDraftAction.execute()
+                    }
+                }
+                Kube.Button {
+                    anchors.left: parent.left
+
+                   text: "Discard"
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                }
             }
 
             Kube.Label {
+                id: fromLabel
+                anchors {
+                    bottom: identityCombo.top
+                    bottomMargin: Kube.Units.smallSpacing
+                    left: identityCombo.left
+                }
                 text: "You are sending this from:"
             }
+
             Kube.ComboBox {
                 id: identityCombo
+
+                anchors {
+                    bottom: sendButton.top
+                    bottomMargin: Kube.Units.largeSpacing
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: parent.width - Kube.Units.largeSpacing * 2
+
                 model: composerController.identitySelector.model
                 textRole: "displayName"
                 Layout.fillWidth: true
@@ -355,7 +390,14 @@ Kube.View {
             }
 
             Kube.PositiveButton {
-                width: saveDraftButton.width
+                id: sendButton
+
+                anchors {
+                    bottom: parent.bottom
+                    bottomMargin: Kube.Units.largeSpacing
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: parent.width - Kube.Units.largeSpacing * 2
 
                 text: "Send"
                 enabled: sendAction.enabled
