@@ -134,10 +134,6 @@ Controls2.ApplicationWindow {
                     iconName: Kube.Icons.user_inverted
                     onClicked: kubeViews.setPeopleView()
                 }
-                Kube.IconButton {
-                    iconName: Kube.Icons.error_inverted
-                    onClicked: kubeViews.setLogView()
-                }
             }
             Column {
                 anchors {
@@ -150,6 +146,11 @@ Controls2.ApplicationWindow {
                 Kube.Outbox {
                     height: Kube.Units.gridUnit * 1.5
                     width: height
+                }
+
+                Kube.IconButton {
+                    iconName: Kube.Icons.error_inverted
+                    onClicked: kubeViews.setLogView()
                 }
 
                 Kube.IconButton {
