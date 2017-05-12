@@ -92,6 +92,8 @@ Item {
                 text: imapSettings.emailAddress
                 onTextChanged: {
                     imapSettings.emailAddress = text
+                    imapSettings.imapUsername = text
+                    imapSettings.smtpUsername = text
                 }
                 placeholderText: "Your email address"
             }
