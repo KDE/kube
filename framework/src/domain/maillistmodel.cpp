@@ -326,7 +326,7 @@ void MailListModel::setShowDrafts(bool)
     mFetchedMails.clear();
     qDebug() << "Running mail query for drafts: ";
     //Latest mail at the top
-    sort(0, Qt::AscendingOrder);
+    sort(0, Qt::DescendingOrder);
     runQuery(query);
 }
 
