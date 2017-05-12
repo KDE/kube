@@ -113,11 +113,10 @@ Item {
                 Layout.fillWidth: true
 
                 Kube.Button {
-                    text: "Discard"
+                    text: "Remove Account"
 
                     onClicked: {
                         loader.item.remove()
-                        dialog.closeDialog()
                     }
                 }
 
@@ -126,7 +125,7 @@ Item {
                     text: "Save"
                     onClicked: {
                         loader.item.save()
-                        dialog.closeDialog()
+                        //TODO Feedback that the settings have been saved (popup notification/animation?)
                     }
                 }
             }
