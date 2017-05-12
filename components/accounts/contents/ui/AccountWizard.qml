@@ -43,8 +43,6 @@ Kube.Popup {
         id: mainView
 
         Item {
-            anchors.fill: parent
-
             Kirigami.Heading {
                 id: heading
                 text: "Select your new account type"

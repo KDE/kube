@@ -112,17 +112,18 @@ SplitView {
                             State {
                                 name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
                                 PropertyChanges { target: statusBar; visible: true }
-                                PropertyChanges { target: statusText; text: "Offline"; visible: true }
+                                PropertyChanges { target: statusText; text: "Disconnected"; visible: true }
                             },
                             State {
                                 name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
                                 PropertyChanges { target: statusBar; visible: true }
-                                PropertyChanges { target: statusText; text: "Busy"; visible: true }
+                                PropertyChanges { target: statusText; text: "Synchronizing..."; visible: true }
                                 PropertyChanges { target: progressBar; visible: true }
                             },
                             State {
                                 name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
                                 PropertyChanges { target: statusBar; visible: true }
+                                //TODO get to an error description
                                 PropertyChanges { target: statusText; text: "Error"; visible: true }
                             }
                         ]

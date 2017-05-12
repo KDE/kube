@@ -36,92 +36,10 @@ Controls.SplitView {
             }
         }
 
-        Item {
-            id: statusBar
-            anchors {
-                topMargin: Kube.Units.smallSpacing
-                top: parent.top
-                left: parent.left
-                right: parent.right
-            }
-
-            height: Kube.Units.gridUnit * 2
-
-            Repeater {
-                model: Kube.AccountsModel {
-                    id: accountsModel
-                }
-
-                Column {
-                    anchors.fill: statusBar
-                    spacing: Kube.Units.smallSpacing
-                    Row {
-                        Kube.Label {
-                            color: Kube.Colors.textColor
-                            text: "Account: " + model.name
-                        }
-                        Kube.Label {
-                            id: statusText
-                            color: Kube.Colors.textColor
-                            visible: false
-                            states: [
-                                State {
-                                    name: "disconnected"; when: accountsModel.status == Kube.AccountsModel.OfflineStatus
-                                    PropertyChanges { target: statusText; text: "Offline"; visible: true }
-                                },
-                                State {
-                                    name: "busy"; when: accountsModel.status == Kube.AccountsModel.BusyStatus
-                                    PropertyChanges { target: statusText; text: "Busy"; visible: true }
-                                    PropertyChanges { target: progressBar; visible: true }
-                                }
-                            ]
-                        }
-                    }
-                    Controls2.ProgressBar {
-                        id: progressBar
-                        indeterminate: true
-                        visible: false
-                        height: Kube.Units.smallSpacing
-                        width: parent.width
-
-                        background: Rectangle {
-                            color: Kube.Colors.backgroundColor
-                            radius: 3
-                        }
-
-                        contentItem: Item {
-                            Rectangle {
-                                width: progressBar.visualPosition * parent.width
-                                height: parent.height
-                                radius: 2
-                                color: Kube.Colors.highlightColor
-                            }
-                        }
-
-
-                        Kube.Listener {
-                            filter: Kube.Messages.progressNotification
-                            onMessageReceived: {
-                                progressBar.indeterminate = false
-                                progressBar.from = 0
-                                progressBar.to = message.total
-                                progressBar.value = message.progress
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         ListView {
             id: listView
-
             anchors {
-                top: statusBar.bottom
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-                topMargin: Kube.Units.largeSpacing
+                margins: Kube.Units.largeSpacing
             }
 
             clip: true
@@ -202,30 +120,38 @@ Controls.SplitView {
         property date timestamp
         property string message
         property variant resourceId
-        GridLayout {
-            anchors.fill: parent
-            columns: 2
-            Kube.Label {
-                text: "Resource:"
+        color: Kube.Colors.backgroundColor
+        Rectangle {
+            anchors {
+                fill: parent
+                margins: Kube.Units.largeSpacing
             }
-            Kube.Label {
-                text: details.resourceId
-            }
-            Kube.Label {
-                text: "Timestamp:"
-            }
-            Kube.Label {
-                text: Qt.formatDateTime(details.timestamp, " hh:mm:ss dd MMM yyyy")
-            }
-            Kube.Label {
-                text: "Message:"
-            }
-            Kube.Label {
-                text: details.message
-            }
-            Item {
-                Layout.columnSpan: 2
-                Layout.fillHeight: true
+            color: Kube.Colors.viewBackgroundColor
+            GridLayout {
+                anchors.fill: parent
+                columns: 2
+                Kube.Label {
+                    text: "Resource:"
+                }
+                Kube.Label {
+                    text: details.resourceId
+                }
+                Kube.Label {
+                    text: "Timestamp:"
+                }
+                Kube.Label {
+                    text: Qt.formatDateTime(details.timestamp, " hh:mm:ss dd MMM yyyy")
+                }
+                Kube.Label {
+                    text: "Message:"
+                }
+                Kube.Label {
+                    text: details.message
+                }
+                Item {
+                    Layout.columnSpan: 2
+                    Layout.fillHeight: true
+                }
             }
         }
     }
