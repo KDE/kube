@@ -35,8 +35,6 @@
 #include "recepientautocompletionmodel.h"
 #include "mailtemplates.h"
 
-SINK_DEBUG_AREA("composercontroller");
-
 class IdentitySelector : public Selector {
 public:
     IdentitySelector(ComposerController &controller) : Selector(new IdentitiesModel), mController(controller)

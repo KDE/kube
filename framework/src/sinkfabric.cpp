@@ -27,8 +27,6 @@
 
 #include "fabric.h"
 
-SINK_DEBUG_AREA("sinkfabric")
-
 using namespace Kube;
 using namespace Sink;
 using namespace Sink::ApplicationDomain;

@@ -27,8 +27,6 @@
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
 
-SINK_DEBUG_AREA("accountsettings")
-
 AccountSettings::AccountSettings(QObject *parent)
     : QObject(parent)
 {
