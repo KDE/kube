@@ -89,64 +89,13 @@ SplitView {
                 color: Kube.Colors.viewBackgroundColor
                 opacity: 0.3
             }
-
-            Repeater {
-                model: Kube.AccountsModel {
-                    accountId: accountFolderview.currentAccount
-                }
-
-                Column {
-                    anchors {
-                        top: border.bottom
-                        left: statusBar.left
-                        right: statusBar.right
-                        bottom: statusBar.bottom
-                    }
-                    spacing: Kube.Units.smallSpacing
-                    Kube.Label {
-                        id: statusText
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        visible: false
-                        color: Kube.Colors.highlightedTextColor
-                        states: [
-                            State {
-                                name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-                                PropertyChanges { target: statusBar; visible: true }
-                                PropertyChanges { target: statusText; text: "Disconnected"; visible: true }
-                            },
-                            State {
-                                name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
-                                PropertyChanges { target: statusBar; visible: true }
-                                PropertyChanges { target: statusText; text: "Synchronizing..."; visible: true }
-                                PropertyChanges { target: progressBar; visible: true }
-                            },
-                            State {
-                                name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
-                                PropertyChanges { target: statusBar; visible: true }
-                                //TODO get to an error description
-                                PropertyChanges { target: statusText; text: "Error"; visible: true }
-                            }
-                        ]
-                    }
-                    Kube.ProgressBar {
-                        id: progressBar
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        height: 2
-                        width: parent.width - Kube.Units.smallSpacing * 2
-
-                        indeterminate: true
-                        visible: false
-
-                        Kube.Listener {
-                            filter: Kube.Messages.progressNotification
-                            onMessageReceived: {
-                                progressBar.indeterminate = false
-                                progressBar.from = 0
-                                progressBar.to = message.total
-                                progressBar.value = message.progress
-                            }
-                        }
-                    }
+            Kube.StatusBar {
+                accountId: accountFolderview.currentAccount
+                anchors {
+                    top: border.bottom
+                    left: statusBar.left
+                    right: statusBar.right
+                    bottom: statusBar.bottom
                 }
             }
         }
