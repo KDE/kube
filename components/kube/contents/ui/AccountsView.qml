@@ -27,8 +27,6 @@ import QtQuick.Templates 2.0 as T
 Rectangle {
     color: Kube.Colors.backgroundColor
 
-    anchors.fill: parent
-
     Controls.SplitView {
         height: parent.height
         width: parent.width

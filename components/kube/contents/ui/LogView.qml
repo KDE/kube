@@ -119,7 +119,7 @@ Controls.SplitView {
         id: details
         property date timestamp
         property string message
-        property variant resourceId
+        property string resourceId: ""
         color: Kube.Colors.backgroundColor
         Rectangle {
             anchors {
