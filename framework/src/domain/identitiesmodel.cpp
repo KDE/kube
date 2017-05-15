@@ -25,10 +25,10 @@ using namespace Sink;
 IdentitiesModel::IdentitiesModel(QObject *parent) : QIdentityProxyModel()
 {
     Sink::Query query;
-    query.setFlags(Sink::Query::LiveQuery);
-    query.request<Sink::ApplicationDomain::Identity::Name>()
-        .request<Sink::ApplicationDomain::Identity::Address>()
-        .request<Sink::ApplicationDomain::Identity::Account>();
+    query.setFlags(Query::LiveQuery);
+    query.request<ApplicationDomain::Identity::Name>()
+        .request<ApplicationDomain::Identity::Address>()
+        .request<ApplicationDomain::Identity::Account>();
     runQuery(query);
 }
 
@@ -56,23 +56,24 @@ QHash< int, QByteArray > IdentitiesModel::roleNames() const
 QVariant IdentitiesModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
+    auto identity = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>();
     switch (role) {
         case Name:
-            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getName();
+            return identity->getName();
         case Username:
-            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getName();
+            return identity->getName();
         case Address:
-            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getAddress();
+            return identity->getAddress();
         case IdentityId:
-            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->identifier();
+            return identity->identifier();
         case AccountId:
-            return srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getAccount();
+            return identity->getAccount();
         case AccountName: {
-            const auto accountId = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getAccount();
+            const auto accountId = identity->getAccount();
             return mAccountNames.value(accountId);
         }
         case AccountIcon: {
-            const auto accountId = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Identity::Ptr>()->getAccount();
+            const auto accountId = identity->getAccount();
             return mAccountIcons.value(accountId);
         }
         case DisplayName: {

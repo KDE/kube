@@ -79,11 +79,8 @@ SplitView {
                 id: border
                 anchors {
                     right: parent.right
-                    rightMargin: Kube.Units.smallSpacing
                     left: parent.left
-                    leftMargin: Kube.Units.smallSpacing
-                    bottomMargin: Kube.Units.smallSpacing
-                    topMargin: Kube.Units.smallSpacing
+                    margins: Kube.Units.smallSpacing
                 }
                 height: 1
                 color: Kube.Colors.viewBackgroundColor
