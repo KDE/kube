@@ -382,7 +382,7 @@ Kube.View {
                 width: parent.width - Kube.Units.largeSpacing * 2
 
                 model: composerController.identitySelector.model
-                textRole: "displayName"
+                textRole: "address"
                 Layout.fillWidth: true
                 onCurrentIndexChanged: {
                     composerController.identitySelector.currentIndex = currentIndex
