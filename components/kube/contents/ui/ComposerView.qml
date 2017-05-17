@@ -20,7 +20,6 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 1.3
-import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
