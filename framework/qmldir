@@ -22,6 +22,7 @@ StatusBar 1.0 StatusBar.qml
 ComboBox 1.0 ComboBox.qml
 PositiveButton 1.0 PositiveButton.qml
 TextField 1.0 TextField.qml
+TextArea 1.0 TextArea.qml
 Label 1.0 Label.qml
 View 1.0 View.qml
 AutocompleteLineEdit 1.0 AutocompleteLineEdit.qml

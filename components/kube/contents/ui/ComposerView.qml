@@ -237,6 +237,9 @@ Kube.View {
                 leftMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
                 rightMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
             }
+
+            spacing: Kube.Units.smallSpacing * 2
+
             Kube.TextField {
                 id: subject
                 Layout.fillWidth: true
@@ -247,7 +250,7 @@ Kube.View {
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
             }
 
-            Controls2.TextArea {
+            Kube.TextArea {
                 id: content
                 Layout.fillWidth: true
                 Layout.fillHeight: true
