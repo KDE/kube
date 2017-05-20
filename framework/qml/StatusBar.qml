@@ -42,7 +42,6 @@ Item {
 
         Column {
             anchors.fill: root
-            spacing: Kube.Units.smallSpacing
             Kube.Label {
                 id: statusText
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -52,6 +51,7 @@ Item {
                         name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
                         PropertyChanges { target: root; visible: true }
                         PropertyChanges { target: statusText; text: "Disconnected"; visible: true }
+                        PropertyChanges { target: descriptionText; visible: true }
                     },
                     State {
                         name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
@@ -63,12 +63,23 @@ Item {
                         name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
                         PropertyChanges { target: root; visible: true }
                         PropertyChanges { target: statusText; text: root.errorText; visible: true }
+                        PropertyChanges { target: descriptionText; visible: true }
                     }
                 ]
             }
+            Kube.Label {
+                id: descriptionText
+                anchors.horizontalCenter: parent.horizontalCenter
+                visible: false
+                color: Kube.Colors.disabledTextColor
+                text: root.errorText
+            }
             Kube.ProgressBar {
                 id: progressBar
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    topMargin: Kube.Units.smallSpacing
+                }
                 height: 2
                 width: parent.width - Kube.Units.smallSpacing * 2
 
