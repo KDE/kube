@@ -40,6 +40,7 @@ Controls.SplitView {
             id: listView
             anchors {
                 margins: Kube.Units.largeSpacing
+                fill: parent
             }
 
             clip: true
@@ -64,7 +65,7 @@ Controls.SplitView {
                 color: listView.currentIndex == index ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
 
                 Kube.Label {
-                    id: resource
+                    id: description
                     anchors {
                         top: parent.top
                         topMargin: Kube.Units.smallSpacing
@@ -73,14 +74,14 @@ Controls.SplitView {
                     }
                     height: Kube.Units.gridUnit
                     width: parent.width - Kube.Units.largeSpacing * 2
-                    text: "Resource: " + model.resource
+                    text: "Error"
                 }
 
                 Kube.Label {
                     id: message
                     anchors {
                         topMargin: Kube.Units.smallSpacing
-                        top: resource.bottom
+                        top: description.bottom
                         left: parent.left
                         leftMargin: Kube.Units.largeSpacing
                     }
@@ -88,6 +89,7 @@ Controls.SplitView {
                     width: parent.width - Kube.Units.largeSpacing * 2
                     maximumLineCount: 1
                     elide: Text.ElideRight
+                    color: Kube.Colors.disabledTextColor
 
                     text: model.message
                 }
@@ -119,6 +121,7 @@ Controls.SplitView {
         id: details
         property date timestamp
         property string message
+        //TODO get account name from resource id
         property string resourceId: ""
         color: Kube.Colors.backgroundColor
         Rectangle {
@@ -131,7 +134,7 @@ Controls.SplitView {
                 anchors.fill: parent
                 columns: 2
                 Kube.Label {
-                    text: "Resource:"
+                    text: "Resource Id:"
                 }
                 Kube.Label {
                     text: details.resourceId
@@ -152,6 +155,7 @@ Controls.SplitView {
                     Layout.columnSpan: 2
                     Layout.fillHeight: true
                 }
+                //TODO offer a possible explanation for known errors and a path to resolution.
             }
         }
     }
