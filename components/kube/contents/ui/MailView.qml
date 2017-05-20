@@ -57,26 +57,25 @@ SplitView {
             anchors {
                 top: newMailButton.bottom
                 topMargin: Kube.Units.largeSpacing
-                bottom: statusBar.top
+                bottom: statusBarContainer.top
                 left: newMailButton.left
                 right: parent.right
             }
         }
 
         Item {
-            id: statusBar
+            id: statusBarContainer
             anchors {
                 topMargin: Kube.Units.smallSpacing
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
             }
-            visible: false
-
-            height: Kube.Units.gridUnit * 2
+            height: childrenRect.height
 
             Rectangle {
                 id: border
+                visible: statusBar.visible
                 anchors {
                     right: parent.right
                     left: parent.left
@@ -87,12 +86,13 @@ SplitView {
                 opacity: 0.3
             }
             Kube.StatusBar {
+                id: statusBar
                 accountId: accountFolderview.currentAccount
+                height: Kube.Units.gridUnit * 2
                 anchors {
                     top: border.bottom
-                    left: statusBar.left
-                    right: statusBar.right
-                    bottom: statusBar.bottom
+                    left: statusBarContainer.left
+                    right: statusBarContainer.right
                 }
             }
         }

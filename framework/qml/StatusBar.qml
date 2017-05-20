@@ -25,6 +25,7 @@ Item {
     property string currentFolderName: ""
     property string currentFolderId: ""
     property string errorText: "Error"
+    visible: false
 
     onCurrentFolderIdChanged: root.currentFolderName = ""
     Kube.FolderListModel {
@@ -45,23 +46,22 @@ Item {
             Kube.Label {
                 id: statusText
                 anchors.horizontalCenter: parent.horizontalCenter
-                visible: false
                 color: Kube.Colors.highlightedTextColor
                 states: [
                     State {
                         name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
-                        PropertyChanges { target: statusBar; visible: true }
+                        PropertyChanges { target: root; visible: true }
                         PropertyChanges { target: statusText; text: "Disconnected"; visible: true }
                     },
                     State {
                         name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
-                        PropertyChanges { target: statusBar; visible: true }
+                        PropertyChanges { target: root; visible: true }
                         PropertyChanges { target: statusText; text: root.currentFolderName.length > 0 ? "Synchronizing " + root.currentFolderName: "Synchronizing..."; visible: true }
                         PropertyChanges { target: progressBar; visible: true }
                     },
                     State {
                         name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
-                        PropertyChanges { target: statusBar; visible: true }
+                        PropertyChanges { target: root; visible: true }
                         PropertyChanges { target: statusText; text: root.errorText; visible: true }
                     }
                 ]
