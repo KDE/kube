@@ -22,6 +22,18 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property string accountId: ""
+    property string currentFolderName: ""
+    property string currentFolderId: ""
+    property string errorText: "Error"
+
+    onCurrentFolderIdChanged: root.currentFolderName = ""
+    Kube.FolderListModel {
+        id: folderModel
+        folderId: root.currentFolderId
+        onRowsInserted: root.currentFolderName = folderModel.data(folderModel.index(0, 0), Kube.FolderListModel.Name)
+        onRowsRemoved: root.currentFolderName = ""
+    }
+
     Repeater {
         model: Kube.AccountsModel {
             accountId: root.accountId
@@ -44,14 +56,13 @@ Item {
                     State {
                         name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
                         PropertyChanges { target: statusBar; visible: true }
-                        PropertyChanges { target: statusText; text: "Synchronizing..."; visible: true }
+                        PropertyChanges { target: statusText; text: root.currentFolderName.length > 0 ? "Synchronizing " + root.currentFolderName: "Synchronizing..."; visible: true }
                         PropertyChanges { target: progressBar; visible: true }
                     },
                     State {
                         name: "error"; when: model.status == Kube.AccountsModel.ErrorStatus
                         PropertyChanges { target: statusBar; visible: true }
-                        //TODO get to an error description
-                        PropertyChanges { target: statusText; text: "Error"; visible: true }
+                        PropertyChanges { target: statusText; text: root.errorText; visible: true }
                     }
                 ]
             }
@@ -71,6 +82,17 @@ Item {
                         progressBar.from = 0
                         progressBar.to = message.total
                         progressBar.value = message.progress
+                        if (message.folderId) {
+                            root.currentFolderId = message.folderId
+                        } else {
+                            root.currentFolderId = ""
+                        }
+                    }
+                }
+                Kube.Listener {
+                    filter: Kube.Messages.errorNotification
+                    onMessageReceived: {
+                        root.errorText = message.message
                     }
                 }
             }

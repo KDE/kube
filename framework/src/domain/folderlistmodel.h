@@ -34,6 +34,7 @@ class FolderListModel : public QSortFilterProxyModel
     Q_OBJECT
 
     Q_PROPERTY (QVariant accountId READ accountId WRITE setAccountId)
+    Q_PROPERTY (QVariant folderId READ folderId WRITE setFolderId)
 
 public:
     enum Status {
@@ -63,6 +64,9 @@ public:
 
     void setAccountId(const QVariant &accountId);
     QVariant accountId() const;
+
+    void setFolderId(const QVariant &folderId);
+    QVariant folderId() const;
 protected:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 

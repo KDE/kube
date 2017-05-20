@@ -160,6 +160,7 @@ public:
                     default:
                         message["message"] = "An unknown error occurred: " + notification.message;
                 }
+                Fabric::Fabric{}.postMessage("errorNotification", message);
             } else if (notification.type == Sink::Notification::Info) {
                 if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {
                     message["type"] = Notification::Info;
@@ -170,6 +171,10 @@ public:
             } else if (notification.type == Sink::Notification::Progress) {
                 message["progress"] = notification.progress;
                 message["total"] = notification.total;
+                if (!notification.entities.isEmpty()) {
+                    message["folderId"] = notification.entities.first();
+                }
+                message["resourceId"] = notification.resource;
                 Fabric::Fabric{}.postMessage("progressNotification", message);
                 return;
             } else {

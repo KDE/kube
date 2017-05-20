@@ -36,6 +36,7 @@ Item {
 
     property string notification: "notification"
     property string progressNotification: "progressNotification"
+    property string errorNotification: "errorNotification"
     property string search: "search"
     property string synchronize: "synchronize"
     property string reply: "reply"

@@ -105,7 +105,6 @@ void FolderListModel::setAccountId(const QVariant &accountId)
     auto query = Query();
     query.resourceFilter<SinkResource::Account>(account);
     query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
-    query.requestTree<Folder::Parent>();
     query.request<Folder::Name>()
          .request<Folder::Icon>()
          .request<Folder::Parent>()
@@ -113,6 +112,11 @@ void FolderListModel::setAccountId(const QVariant &accountId)
     query.requestTree<Folder::Parent>();
     query.setId("foldertree" + account);
     runQuery(query);
+}
+
+QVariant FolderListModel::accountId() const
+{
+    return {};
 }
 
 static int getPriority(const Sink::ApplicationDomain::Folder &folder)
@@ -144,8 +148,22 @@ bool FolderListModel::lessThan(const QModelIndex &left, const QModelIndex &right
     return leftPriority < rightPriority;
 }
 
-QVariant FolderListModel::accountId() const
+void FolderListModel::setFolderId(const QVariant &folderId)
 {
-    return QVariant();
+    const auto folder = folderId.toString().toUtf8();
+
+    //Get all folders of an account
+    auto query = Query();
+    query.filter(folder);
+    query.request<Folder::Name>()
+         .request<Folder::Icon>()
+         .request<Folder::Parent>()
+         .request<Folder::SpecialPurpose>();
+    query.setId("folder" + folder);
+    runQuery(query);
 }
 
+QVariant FolderListModel::folderId() const
+{
+    return {};
+}
