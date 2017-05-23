@@ -54,6 +54,9 @@ void MessageParser::setMessage(const QVariant &message)
 
 QAbstractItemModel *MessageParser::newTree() const
 {
+    if (!d->mParser) {
+        return nullptr;
+    }
     const auto model = new NewModel(d->mParser);
     // new ModelTest(model, model);
     return model;
@@ -61,6 +64,9 @@ QAbstractItemModel *MessageParser::newTree() const
 
 QAbstractItemModel *MessageParser::attachments() const
 {
+    if (!d->mParser) {
+        return nullptr;
+    }
     const auto model = new AttachmentModel(d->mParser);
     // new ModelTest(model, model);
     return model;
