@@ -1,0 +1,25 @@
+From test@example.com Fri Sep 11 10:16:06 2015
+From: test <test@example.com>
+To: you@you.com
+Subject: sign only
+Date: Fri, 11 Sep 2015 12:16:06 +0200
+Message-ID: <3182420.pXWeMPZlAJ@tabin.local>
+X-KMail-Identity: 792434561
+User-Agent: KMail/4.13.0.1 (Linux/4.1.5-towo.1-siduction-amd64; KDE/4.14.2; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: application/pkcs7-mime; name="smime.p7m"; smime-type="signed-data"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7m"
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAaCAJIAEZUNvbnRl
+bnQtVHJhbnNmZXItRW5jb2Rpbmc6IDdCaXQKQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFy
+c2V0PSJ1dGYtOCIKCkEgc2ltcGxlIHNpZ25lZCBvbmx5IHRlc3QuAAAAAAAAMYIBkjCCAY4CAQEw
+YjBVMQswCQYDVQQGEwJVUzENMAsGA1UECgwES0RBQjEWMBQGA1UEAwwNdW5pdHRlc3QgY2VydDEf
+MB0GCSqGSIb3DQEJARYQdGVzdEBleGFtcGxlLmNvbQIJANNFIDoYY4XJMAkGBSsOAwIaBQCggYcw
+GAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTMwMTEwMTU0ODEyWjAj
+BgkqhkiG9w0BCQQxFgQUvJ5zI7oyv5fNx1H1wabIa6atsdcwKAYJKoZIhvcNAQkPMRswGTALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwDQYJKoZIhvcNAQEBBQAEgYAHFCw88FPy1n2lu5ql5sD2J4Yi
+2/N9gUQvNQF5F/kd48HncdihLPZRs7eEX7IzDZNeylTmyp2WIiGEwQrIHbxtqU32NRouc09Zv4bu
+iUwUoz1SM2s7qipikwayQMD3d5zWNhszNLBsw8z48uXAzjZAejBCfPP0/w3z7DZDJC2R2QAAAAAA
+AA==
+

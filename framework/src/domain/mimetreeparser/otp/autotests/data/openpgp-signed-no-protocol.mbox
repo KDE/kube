@@ -1,0 +1,35 @@
+Return-Path: <plasma-devel-bounces@kde.org>
+Delivered-To: einar@heavensinferno.net
+Content-Type: multipart/signed; boundary="nextPart1996263.NlFDv9GTkA"; micalg="pgp-sha1"; protocol="application/broken-signature"
+
+
+--nextPart1996263.NlFDv9GTkA
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+hi..
+
+i noticed a new branch when i pulled kde-workspace today (finally!): 
+activities_optional
+
+the lone commit in it was pushed on april 1, so maybe it's an april fools 
+joke, but if it isn't, it looks like someone is trying to do something that 
+makes no sense (and has no chance of being merged into master). so if this is 
+a "for reals" branch, perhaps the motivation behind it can be shared?
+
+-- 
+Aaron J. Seigo
+--nextPart1996263.NlFDv9GTkA
+Content-Type: application/broken-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEUEABECAAYFAlFikxAACgkQ1rcusafx20MHbwCfeXOgTDwtR81XJwAdcQB40Lt7
+t2IAmJpIZxdU+SSruySeEfbQs3VXq/8=
+=BQPF
+-----END PGP SIGNATURE-----
+
+--nextPart1996263.NlFDv9GTkA--

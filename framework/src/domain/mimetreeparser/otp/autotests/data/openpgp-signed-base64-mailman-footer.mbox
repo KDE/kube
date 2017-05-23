@@ -1,0 +1,117 @@
+Return-Path: <kde-pim-bounces@kde.org>
+X-Sieve: CMU Sieve 2.3
+X-Virus-Scanned: amavisd-new at site
+Authentication-Results: linux.site (amavisd-new); dkim=pass (1024-bit key)
+	header.d=kde.org
+Received: from postbox.kde.org (localhost.localdomain [127.0.0.1])
+	by postbox.kde.org (Postfix) with ESMTP id 867B8BF274;
+	Sat, 22 Aug 2015 09:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=kde.org; s=default;
+	t=1440235945; bh=WhGhdxvdvRs04JdzjAkPcBVPmx7putlUE3ka9dvMIoc=;
+	h=From:To:Date:Subject:Reply-To:List-Id:List-Unsubscribe:List-Post:
+	 List-Help:List-Subscribe:From;
+	b=mvxeMMGebkZKq7hekRypkPvt6S8lidA/8vQ3AC5Kft8HDmj8lDUpvOo0VXwCF0OG+
+	 iAOPKxYtxclf8PgYvgK8NIzr56CwcdlNm3/PpoSe20P3I1DGFpDDMFtW5tOD05SSHz
+	 5L6PCQyb+KFW1GrXgcm+eHshzJh3U8nHcyd8Vw2E=
+X-Original-To: kde-pim@kde.org
+Delivered-To: kde-pim@localhost.kde.org
+X-Virus-Scanned: amavisd-new at site
+From: Volker Krause <vkrause@kde.org>
+To: KDEPIM <kde-pim@kde.org>
+Date: Sat, 22 Aug 2015 11:31:38 +0200
+Message-ID: <11737387.KAAPH2KlE3@vkpc5>
+Organization: KDE
+User-Agent: KMail/4.14.3 (Linux/3.16.6-2-desktop; KDE/4.14.7; x86_64;
+ git-c97b13e; 2014-12-30)
+MIME-Version: 1.0
+Subject: [Kde-pim] Phabricator Project Setup
+X-BeenThere: kde-pim@kde.org
+X-Mailman-Version: 2.1.16
+Precedence: list
+Reply-To: KDE PIM <kde-pim@kde.org>
+List-Id: KDE PIM <kde-pim.kde.org>
+List-Unsubscribe: <https://mail.kde.org/mailman/options/kde-pim>,
+ <mailto:kde-pim-request@kde.org?subject=unsubscribe>
+List-Post: <mailto:kde-pim@kde.org>
+List-Help: <mailto:kde-pim-request@kde.org?subject=help>
+List-Subscribe: <https://mail.kde.org/mailman/listinfo/kde-pim>,
+ <mailto:kde-pim-request@kde.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============1910646461178264940=="
+Errors-To: kde-pim-bounces@kde.org
+Sender: "kde-pim" <kde-pim-bounces@kde.org>
+
+
+--===============1910646461178264940==
+Content-Type: multipart/signed; boundary="nextPart2440608.7aDuJBW7cK"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+
+--nextPart2440608.7aDuJBW7cK
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+
+Hi,
+
+I've talked to Ben, the current Phabricator test setup would actually b=
+e=20
+usable for "production" use for task/project management for us, without=
+=20
+causing the sysadmins unreasonable trouble when migrating to the full=20=
+
+production deployment of Phabricator eventually.
+
+Phabricator project layout it orthogonal to repo layout, so we can stru=
+cture=20
+this however we want. Among other teams I see at least the following la=
+youts:
+- single project for everything
+- a project per release
+- a project per component/module (ie. close to the repo layout)
+
+How do we want to structure this?
+
+I would start with a single project to not fragment this too much, as w=
+e have=20
+a relatively small team actually looking into this, so everyone is look=
+ing at=20
+most sub-projects anyway. And should we eventually hit scaling limits, =
+we can=20
+always expand this I think.
+
+We of course should also talk about what we actually want to put in the=
+re. My=20
+current motivation is having a place to collect the tasks for getting m=
+ore of=20
+the former pimlibs into KF5, and anything else I run into on the way th=
+ere=20
+that we eventually should clean up/improve.
+
+regards,
+Volker
+
+--nextPart2440608.7aDuJBW7cK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iD8DBQBV2EF9f5bM1k0S0kcRAk9cAJ4vHEh9JkT3Jy3EfxII7nP9HPmxrQCgjeLF
+eYXCyN9NRAyC6CHeNnWZN10=
+=Y8W4
+-----END PGP SIGNATURE-----
+
+--nextPart2440608.7aDuJBW7cK--
+
+
+--===============1910646461178264940==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KS0RFIFBJTSBt
+YWlsaW5nIGxpc3Qga2RlLXBpbUBrZGUub3JnCmh0dHBzOi8vbWFpbC5rZGUub3JnL21haWxtYW4v
+bGlzdGluZm8va2RlLXBpbQpLREUgUElNIGhvbWUgcGFnZSBhdCBodHRwOi8vcGltLmtkZS5vcmcv
+
+--===============1910646461178264940==--
+

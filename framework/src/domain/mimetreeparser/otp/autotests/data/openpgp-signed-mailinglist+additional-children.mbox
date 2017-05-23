@@ -1,0 +1,126 @@
+Return-Path: <plasma-devel-bounces@kde.org>
+Delivered-To: einar@heavensinferno.net
+Received: from localhost (localhost.localdomain [127.0.0.1])
+    by akihabara.dennogumi.org (Postfix) with ESMTP id 15AB75CD846
+    for <einar@heavensinferno.net>; Mon,  8 Apr 2013 12:15:03 +0200 (CEST)
+Authentication-Results: akihabara.dennogumi.org; dkim=pass
+    (1024-bit key; insecure key) header.i=@kde.org header.b=vQ0NnJ9g;
+    dkim-adsp=pass
+X-Virus-Scanned: Debian amavisd-new at akihabara.dennogumi.org
+X-Spam-Flag: NO
+X-Spam-Score: -3.818
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.818 required=5 tests=[BAYES_50=0.8,
+    RCVD_IN_DNSWL_MED=-2.3, RP_MATCHES_RCVD=-2.328, T_DKIM_INVALID=0.01]
+    autolearn=unavailable
+Received: from akihabara.dennogumi.org ([127.0.0.1])
+    by localhost (akihabara.dennogumi.org [127.0.0.1]) (amavisd-new, port 10024)
+    with ESMTP id RMAq-XNJ040f for <einar@heavensinferno.net>;
+    Mon,  8 Apr 2013 12:14:44 +0200 (CEST)
+Received: from postbox.kde.org (postbox.kde.org [46.4.96.248])
+    by akihabara.dennogumi.org (Postfix) with ESMTP id 321675CD845
+    for <einar@heavensinferno.net>; Mon,  8 Apr 2013 12:14:44 +0200 (CEST)
+Authentication-Results: akihabara.dennogumi.org; dkim=pass
+    (1024-bit key; insecure key) header.i=@kde.org header.b=vQ0NnJ9g;
+    dkim-adsp=pass
+Received: from postbox.kde.org (localhost [IPv6:::1])
+    by postbox.kde.org (Postfix) with ESMTP id 9F5E1B37F95;
+    Mon,  8 Apr 2013 10:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=kde.org; s=default;
+    t=1365416012; bh=ZJtmtbDLoGFwSyJUINdTk4UpuX+xzxcjGp7LSPrKNUs=;
+    h=From:To:Subject:Date:Message-ID:MIME-Version:Reply-To:List-Id:
+     List-Unsubscribe:List-Archive:List-Post:List-Help:List-Subscribe:
+     Content-Type:Sender; b=vQ0NnJ9gjeyPLhPbQx6o9UxmILkS9KrhaKG6luAS/GR
+    6iR3HKXR3HE0BCkTMD5xmKL5ztFMGcU5e79fz0ch0sd2pnZ0y1WVw7KjCxsv/YtO9HM
+    OplAHmhwRI5zH8KKQbyvdPULvssI/ISdViAXmHw04hNPsBjsIGkTPgvNbPFuk=
+X-Original-To: plasma-devel@kde.org
+Delivered-To: plasma-devel@localhost.kde.org
+Received: from mail.bddf.ca (unknown [64.141.113.219])
+ by postbox.kde.org (Postfix) with ESMTP id 782C6B37BE6
+ for <plasma-devel@kde.org>; Mon,  8 Apr 2013 09:51:17 +0000 (UTC)
+Received: from freedom.localnet (242.13.24.31.ftth.as8758.net [31.24.13.242])
+ (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by mail.bddf.ca (Postfix) with ESMTPSA id 0CB712DC040
+ for <plasma-devel@kde.org>; Mon,  8 Apr 2013 03:51:16 -0600 (MDT)
+From: "Aaron J. Seigo" <aseigo@kde.org>
+To: plasma-devel@kde.org
+Subject: activities_optional branch in kde-workspace
+Date: Mon, 08 Apr 2013 11:51:11 +0200
+Message-ID: <4143483.eqrJjo7JEn@freedom>
+User-Agent: KMail/4.11 pre (Linux/3.6.3-1-desktop; KDE/4.10.60; i686;
+ git-da50be0; 2013-03-12)
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.71 on 46.4.96.248
+X-BeenThere: plasma-devel@kde.org
+X-Mailman-Version: 2.1.14
+Precedence: list
+Reply-To: plasma-devel@kde.org
+List-Id: <plasma-devel.kde.org>
+List-Unsubscribe: <https://mail.kde.org/mailman/options/plasma-devel>,
+ <mailto:plasma-devel-request@kde.org?subject=unsubscribe>
+List-Archive: <http://mail.kde.org/pipermail/plasma-devel>
+List-Post: <mailto:plasma-devel@kde.org>
+List-Help: <mailto:plasma-devel-request@kde.org?subject=help>
+List-Subscribe: <https://mail.kde.org/mailman/listinfo/plasma-devel>,
+ <mailto:plasma-devel-request@kde.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============6664737512143839854=="
+Errors-To: plasma-devel-bounces@kde.org
+Sender: plasma-devel-bounces@kde.org
+
+
+--===============6664737512143839854==
+Content-Type: multipart/signed; boundary="nextPart1996263.NlFDv9GTkA"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+
+
+--nextPart1996263.NlFDv9GTkA
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+hi..
+
+i noticed a new branch when i pulled kde-workspace today (finally!): 
+activities_optional
+
+the lone commit in it was pushed on april 1, so maybe it's an april fools 
+joke, but if it isn't, it looks like someone is trying to do something that 
+makes no sense (and has no chance of being merged into master). so if this is 
+a "for reals" branch, perhaps the motivation behind it can be shared?
+
+-- 
+Aaron J. Seigo
+--nextPart1996263.NlFDv9GTkA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEUEABECAAYFAlFikxAACgkQ1rcusafx20MHbwCfeXOgTDwtR81XJwAdcQB40Lt7
+t2IAmJpIZxdU+SSruySeEfbQs3VXq/8=
+=BQPF
+-----END PGP SIGNATURE-----
+--nextPart1996263.NlFDv9GTkA
+Content-Type: text/plain; name="broken.attachment"
+Content-Transfer-Encoding: 7Bit
+
+Let's break a signed message - This messageblock should not be here :D
+
+--nextPart1996263.NlFDv9GTkA--
+
+
+--===============6664737512143839854==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Plasma-devel mailing list
+Plasma-devel@kde.org
+https://mail.kde.org/mailman/listinfo/plasma-devel
+
+--===============6664737512143839854==--
+
+

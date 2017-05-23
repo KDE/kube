@@ -1,0 +1,92 @@
+From test@kolab.org Wed, 08 Sep 2010 17:53:29 +0200
+From: OpenPGP Test <test@kolab.org>
+Subject: Signed Fwd: OpenPGP signed and encrypted
+Date: Wed, 08 Sep 2010 17:53:29 +0200
+User-Agent: KMail/4.6 pre (Linux/2.6.34-rc2-2-default; KDE/4.5.60; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart4350242.cT7m6ulPOV"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7Bit
+
+
+--nextPart4350242.cT7m6ulPOV
+Content-Type: multipart/mixed; boundary="nextPart1512490.WQBKYaOrt8"
+Content-Transfer-Encoding: 7Bit
+
+
+--nextPart1512490.WQBKYaOrt8
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+bla bla bla
+--nextPart1512490.WQBKYaOrt8
+Content-Type: message/rfc822
+Content-Disposition: inline; filename="forwarded message"
+Content-Description: OpenPGP Test <test@kolab.org>: OpenPGP signed and encrypted
+
+From: OpenPGP Test <test@kolab.org>
+To: test@kolab.org
+Subject: OpenPGP signed and encrypted
+Date: Tue, 07 Sep 2010 18:08:44 +0200
+User-Agent: KMail/4.6 pre (Linux/2.6.34-rc2-2-default; KDE/4.5.60; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/encrypted; boundary="nextPart25203163.0xtB501Z4V"; protocol="application/pgp-encrypted"
+Content-Transfer-Encoding: 7Bit
+
+
+--nextPart25203163.0xtB501Z4V
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+
+Version: 1
+--nextPart25203163.0xtB501Z4V
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="msg.asc"
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2.0.15 (GNU/Linux)
+
+hQEMAwzOQ1qnzNo7AQf7BFYWaGiCTGtXY59bSh3LCXNnWZejblYALxIUNXOFEXbm
+y/YA95FmQsy3U5HRCAJV/DY1PEaJz1RTm9bcdIpDC3Ab2YzSwmOwV5fcoUOB2df4
+KjX19Q+2F3JxpPQ0N1gHf4dKfIu19LH+CKeFzUN13aJs5J4A5wlj+NjJikxzmxDS
+kDtNYndynPmo9DJQcsUFw3gpvx5HaHvx1cT4mAB2M5cd2l+vN1jYbaWb0x5Zq41z
+mRNI89aPieC3rcM2289m68fGloNbYvi8mZJu5RrI4Tbi/D7Rjm1y63lHgVV6AN88
+XAzRiedOeF99LoTBulrJdtT8AAgCs8nCetcWpIffdtLpAZiZkzHmYOU7nqGxqpRk
+OVeUTrCn9DW2SMmHjaP4IiKnMvzEycu5F4a72+V1LeMIhMSjTRTq+ZE2PTaqH59z
+QsMn7Nb6GlOICbTptRKNNtyJKO7xXlpT7YtvNKnCyEOkH2XrYH7GvpYCiuQ0/o+7
+SxV436ZejiYIg6DQDXJCoa2DXimGp0C10Jh0HwX0BixpoNtwEjkGRYcX6P/JzkH0
+oBood4Ly+Tiu6iVDisrK3AVGYpIzCrKkE9qULTw4R/jFKR2tcCqGb7Fxtk2LV7Md
+3S+DyOKrvKQ5GNwbp9OE97pwk+Lr1JS3UAvj5f6BR+1PVNcC0i0wWkgwDjPh1eGD
+enMQmorE6+N0uHtH2F4fOxo/TbbA3+zhI25kVW3bO03xyUl/cmQZeb52nvfOvtOo
+gSb2j6bPkzljDMPEzrtJjbFtGHJbPfUQYJgZv9OE2EQIqpg6goIw279alBq6GLIX
+pkO+dRmztzjcDyhcLxMuQ4cTizel/0J/bU7U6lvwHSyZVbT4Ev+opG5K70Hbqbwr
+NZcgdWXbSeesxGM/oQaMeSurOevxVl+/zrTVAek61aRRd1baAYqgi2pf2V7y4oK3
+qkdxzmoFpRdNlfrQW65NZWnHOi9rC9XxANIwnVn3kRcDf+t2K4PrFluI157lXM/o
+wX91j88fazysbJlQ6TjsApO9ETiPOFEBqouxCTtCZzlUgyVG8jpIjdHWFnagHeXH
++lXNdYjxnTWTjTxMOZC9ySMpXkjWdFI1ecxVwu6Ik6RX51rvBJAAXWP75yUjPKJ4
+rRi5oQl/VLl0QznO7lvgMPtUwgDVNWO/r7Kn9B387h9fAJZ/kWFAEDW2yhAzABqO
+rCNKDzBPgfAwCnikCpMoCbOL7SU8BdbzQHD8/Lkv4m0pzliHQ/KkGF710koBzTmF
+N7+wk9pwIuvcrEBQj567
+=GV0c
+-----END PGP MESSAGE-----
+
+--nextPart25203163.0xtB501Z4V--
+
+--nextPart1512490.WQBKYaOrt8--
+
+--nextPart4350242.cT7m6ulPOV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.15 (GNU/Linux)
+
+iQEcBAABAgAGBQJMh7F5AAoJEI2YYMWPJG3mOB0IALeHfwg8u7wK0tDKtKqxQSqC
+2Bbk4pTLuLw/VniQNauDG+kc1eUc5RJk/R31aB1ysiQCV5Q8ucI8c9vCDDMbd+s4
+t2bZUEzMpXrw/aFiHgYGXFAY+tpqZqDGNVRNHWsPYJKtx8cci9E5DLnBJcVXVqib
+3iiHlr9AQOok3PUmpPk1a61q2L0kk8wqRenC0yZXNw5qFn5WW/hFeCOfYB+t+s5N
+IuE6ihFCJIlvGborrvl6VgPJTCyUQ3XgI90vS6ABN8TFlCNr3grXOWUePc2a20or
+xFgh38cnSR64WJajU5K1nUL9/RgfIcs+PvyHuJaRf/iUFkj1jiMEuaSi9jVFco0=
+=bArV
+-----END PGP SIGNATURE-----
+
+--nextPart4350242.cT7m6ulPOV--

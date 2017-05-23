@@ -1,0 +1,34 @@
+From t.glaser@tarent.de Mon Aug 18 10:59:01 2014
+Return-Path: <t.glaser@tarent.de>
+Received: from tgwrk.ig42.org (tgwrk.ig42.org.
+ [2a01:238:4200:4342:321e:80ff:fe12:4223]) by mx.google.com with ESMTPSA id
+ pe6sm40660135wjb.38.2014.08.18.01.59.01 for <t.glaser@tarent.de>
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128); Mon, 18
+ Aug 2014 01:59:01 -0700 (PDT)
+Date: Mon, 18 Aug 2014 10:59:00 +0200 (CEST)
+From: Thorsten Glaser <t.glaser@tarent.de>
+X-X-Sender: tglase@tglase.lan.tarent.de
+To: Thorsten Glaser <t.glaser@tarent.de>
+Subject: Test for Mozilla bug#1054187
+Message-ID: <alpine.DEB.2.11.1408181058220.30583@tglase.lan.tarent.de>
+User-Agent: Alpine 2.11 (DEB 23 2013-08-11)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+hIwDTFSKP3rBSXcBBAClcHW9/6kw8i+XkMes47vcmGBCjIC0UysqkVYyNqT2Y6tb
+s7pdfZFQPVWbdYoxP0WLzGgNFEWttlojWJmaTNiDVLOP22hFuJL3LUxesC1cWE+6
+foCkENDI2YnkAw4o5HTrmHoBlG7N/Nzzu3+1kfUVANSoAhgWd5WJDsXyvPMoD9LA
+7gHZZmq4bK5OwTHvAvdUOstCGd6Wqj5zkVXT59WOfYxYLcrGZ8I62lBS1/90TlJe
+iEolBoaufZT7K2YW7k/+DPYgRIzvWISTccPWpcS7OOyifvK4zOFJeGsVq/DowP52
+Zt1xQj1En5CVUT/MkpvS1rB4BfSuhJETZdtUGveUe0HhcAzbnbIJULdK0p1XAo4O
+q84vmOVD0BtKJVy/+rIW7h4aOr8C66HNDKLiUzWtdEaG97GQwhpQZ05JNsulG9tV
+wyP6UWmDMY/5YuRoVHOYx8NXORHX4E5P151Tr5Fted9TpXI/gOTHHyPK5AiiDG6U
+ja4fgkO6hYnjHxqqooxfGj+pg5atynnbMTALfWoXxmqyKrIB+SKqnsw+sCL3ro2x
+j54EGZZ9wM6AYDQ48lJV5beWgQ55r28HxlhPNl/driNkMZHUazAdsubWo5NqJPXl
+HrHQ4lv53ZUohbpVvdkmsldWhA5me7yRhQHytTQMMfadmSiYZVsy53siQ/5gEhUv
+DQ4ggpUjf8twqR+5TLue5/r/fRXkGfKr5U1w4qcMcFcGwEIbwE+qtIDY0Cw/+xU=
+=Ecl0
+-----END PGP MESSAGE-----

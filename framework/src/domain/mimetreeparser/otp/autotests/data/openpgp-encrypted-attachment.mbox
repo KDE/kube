@@ -1,0 +1,57 @@
+From test@kolab.org Fri May 01 15:13:18 2015
+From: testkey <test@kolab.org>
+To: you@you.com
+Subject: enc attachment
+Date: Fri, 01 May 2015 17:13:18 +0200
+Message-ID: <2401407.XhOc2XYoOt@tabin.local>
+X-KMail-Identity: 1197256126
+User-Agent: KMail/4.13.0.1 (Linux/3.19.1-towo.1-siduction-amd64; KDE/4.14.2; x86_64; git-cd33034; 2015-04-11)
+MIME-Version: 1.0
+Content-Type: multipart/encrypted; boundary="nextPart4793536.cjk9hKXLQ5"; protocol="application/pgp-encrypted"
+
+
+--nextPart4793536.cjk9hKXLQ5
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+Content-Transfer-Encoding: 7Bit
+
+Version: 1
+--nextPart4793536.cjk9hKXLQ5
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="msg.asc"
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+hIwDGJlthTT7oq0BBACLMnR5Mln6JGCccvqZCgM3qUkFWZ7a33b7Nl2g5lSOLX6q
+dlGOr/0jAuqdkRwCDTom3hsrH2vf1kARTSST+5cewngS2CgBTAwwc8JymEagTkKf
+VK/tTnM6G7puMVkwuafpuRggyJAUYvjktgUKOUaXtuxX71g0NagAFQGqlvGuq4UB
+DAMMzkNap8zaOwEH+wWSs5xdV1x37T11EnUvkhoOMu+uId2U7NEx2JdQ/FGJZdti
+mtqfM9GKTtQlGVcn3ISH7Wmrw3x0bsOLuW7oxkU4xIS3tVvibxaaWdmponN5TUai
+Dr4LCTEmG7+jLNopF6V4zPmpQ9YxMwQOm8ITml+auNOg9EtHxavwr3Xd1hOYA92N
+1bkOiHzmb9hQtUy1GfRRk91tRqtRPoaamczLxWV9yROFDRNuSSbZ8oBU/K4YgSTL
+D+/FhCt6MxV0DQzp+UCSL7ZsMx+ldPnZK44Udd17+U3xQDDUffo6cSg6FAF425Rh
+v3ZQP0j7LtSIwDh2Rxc+Is4DuSmfZksL5nLPH5nS6QGJnsVEqVcZgQPktl1Zaeil
+x/6WaWruuJm92G2fd9x2/giTLZnk918BVi/n00xR/n4bnSQmmFhXVqAVjGlG6Tr9
+dxej8dSiFdxO8ZjFe5tguQw76xlCu/9MxmSXTP7Mfvm4jqdcjUOINwHOzR/h2T62
+ZlrmqoxMHm4RN0PQ334tSzQXD4gcoUHL+xq62ATt7/jx0p0pIXPmPVUFopCk8k1E
+m2ErPLnyfGLd4LNZRL03oP0jCjX6Q/LFWLTjCIdU6+aM6nT26CZy98yZV0SRGyhu
+qYxN0aVW+RatmDRWWtouOJllQouQ7ZaqmjHLgyOj32/oT8cYUWWdFswSsnMhJjxb
+r6iajUeAZgiN+zqwgf6j1Z8/mMvb+yirP+Rn9ME1fq3XSYHlnIOxKNBa+St8DdaP
+/ZvrkwNTpVp1GmaZLBXdqdeLmflJ4U/X7wphZGR3sgjOwj0oYotX1Zb8OrtlP5WC
+VXhhrt40e7Ilt2B0x7Xe9DWKByDCqrQUhwxwTS3miiKH9G1VEcHko70O98RjKJQ3
+I4VW6e/Gqv2zAMiiOu1MBTeGfPQItca4bUrVzhKjm27twtZD4wLSQDTQECxrCWHC
+BFAdzvsIry0FIXoO6Vh16Hojq+YZ8tpmknGfpg0pnuRvAdDWU+0uuECXDE0UZFWC
+2g3Bs2Dn2BYYyrI6X92swHz8qP3JvdxN0dpsYMkMdHN4yWXJogNSfXzy2udf0A4P
+NNZMOonhlwH+DBRfcWS0A/j0/fdDCDzR5Ca5dbX7lL4EscbBeoCP1JJyVoOp6DUc
+ICuHJGGrnpNdG9DMa97tqpyGRHTAwI3lJXPKTDEHN9v9XobIyndFgi/tcPLZ7QWz
+9mN94NKLmeYWjrMiRbNQk8BYXR9K17SHb4BkIMdBxRsJjgMEC8qniUH64Nnf8/x4
+yaRCuUo0bkHDE3AqCzZE1R0he66dDkfOIz+mLwcpG8jZWjFm7sXAflBe3jvIc0lm
+NyWQ1WnMkP83fWm/+YqrLLf+tTQtievRPeS1Dd/7v9yqUWEmQ0pUOj3MNf9Ej2KI
+vu5ap7fHIevcBn42BPwQgSnp4YmXEY0ir5Ccwogusnt7QliNSRmkN6Jap4AF
+=AVJ4
+-----END PGP MESSAGE-----
+
+--nextPart4793536.cjk9hKXLQ5--
+

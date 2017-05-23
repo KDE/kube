@@ -1,0 +1,36 @@
+From test@kolab.org Wed, 08 Sep 2010 17:02:52 +0200
+From: OpenPGP Test <test@kolab.org>
+To: test@kolab.org
+Subject: OpenPGP encrypted
+Date: Wed, 08 Sep 2010 17:02:52 +0200
+User-Agent: KMail/4.6 pre (Linux/2.6.34-rc2-2-default; KDE/4.5.60; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/encrypted; boundary="nextPart1357031.ppLHckZtsp"; protocol="application/pgp-encrypted"
+Content-Transfer-Encoding: 7Bit
+
+
+--nextPart1357031.ppLHckZtsp
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+
+Version: 1
+--nextPart1357031.ppLHckZtsp
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="msg.asc"
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2.0.15 (GNU/Linux)
+
+hQEMAwzOQ1qnzNo7AQgAtWfDWWI2JUGuptpackiIxpWViEEpGAeruETubiIPwxNb
+DNmXrMDhbm/zIbPntIGWJDgUMfABZCUgmlJLWhsceDTt+tXnWGha2VYrN2/WsF6/
+Pqs/TavTvMIJQHDaIH5yDDCaMoq/mGSbcu7go2H8Sw7aBEYlM8jGlqc1HziXnZ1q
+3vDiA+4qWfvbNoSRo1kb9Pcq997yg6WqZXH2hJ7cp+hIQ4uTP1/+qgYHMvfPlzQk
+XcDguGbIer88ELhuR5622unGBAB4dqp+5w6n9c6rrCH81qhV4W0nqSEvj1tBj78S
+ZTi6VBAo5eS0e3iOJqMpwUZz6hQUpJw2wnNRGvLgI9KZAag0HkgPdMeANowg7vpE
+L4nU7B0ybhswA2Y7QT/wwCDZu9N1JGeBmy0dgy4sA38Ki27rn2/lIaP0j14JycwM
+RTJ1uwI+ZuQiwXlyYtdFZJWe8nraWARch0oKqhaR7aSsxGWo63eiGEQhkQCBFBb3
+Vg0nNCZRBauEqIESEW5EV2zrJqdfNYcz+f9IP125dnQEKgLZ6FxTt3+v
+=mhNl
+-----END PGP MESSAGE-----
+
+--nextPart1357031.ppLHckZtsp--

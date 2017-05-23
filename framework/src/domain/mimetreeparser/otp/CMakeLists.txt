@@ -54,7 +54,6 @@ set(libmimetreeparser_SRCS
     attachmentstrategy.cpp
     #HTML Writer
     queuehtmlwriter.cpp
-    #    htmlwriter/filehtmlwriter.cpp
     attachmenttemporaryfilesdirs.cpp
     )
 
@@ -69,3 +68,5 @@ target_link_libraries(kube_otp
     Qt5::Gui
 )
 install(TARGETS kube_otp DESTINATION ${LIB_INSTALL_DIR})
+
+add_subdirectory(autotests)

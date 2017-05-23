@@ -1,0 +1,23 @@
+From test@example.com Sat, 13 Apr 2013 01:54:30 +0200
+From: test <test@example.com>
+To: you@you.com
+Subject: test
+Date: Sat, 13 Apr 2013 01:54:30 +0200
+Message-ID: <1576646.QQxzHWx8dA@tabin>
+X-KMail-Identity: 505942601
+User-Agent: KMail/4.10.2 (Linux/3.9.0-rc4-experimental-amd64; KDE/4.10.60; x86_64; git-fc9b82c; 2013-04-11)
+MIME-Version: 1.0
+Content-Type: application/octet-stream;
+  name="smime.p7m"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7m"
+
+MIAGCSqGSIb3DQEHA6CAMIACAQAxgfwwgfkCAQAwYjBVMQswCQYDVQQGEwJVUzENMAsGA1UECgwE
+S0RBQjEWMBQGA1UEAwwNdW5pdHRlc3QgY2VydDEfMB0GCSqGSIb3DQEJARYQdGVzdEBleGFtcGxl
+LmNvbQIJANNFIDoYY4XJMA0GCSqGSIb3DQEBAQUABIGAJwmmaOeidXUHSQGOf2OBIsPYafVqdORe
+y54pEXbXiAfSVUWgI4a9CsiWwcDX8vlaX9ZLLr+L2VmOfr6Yc5214yxzausZVvnUFjy6LUXotuEX
+tSar4EW7XI9DjaZc1l985naMsTx9JUa5GyQ9J6PGqhosAKpKMGgKkFAHaOwE1/IwgAYJKoZIhvcN
+AQcBMBQGCCqGSIb3DQMHBAieDfmz3WGbN6CABHgEpsLrNn0PAZTDUfNomDypvSCl5bQH+9cKm80m
+upMV2r8RBiXS7OaP4SpCxq18afDTTPatvboHIoEX92taTbq8soiAgEs6raSGtEYZNvFL0IYqm7MA
+o5HCOmjiEcInyPf14lL3HnPk10FaP3hh58qTHUh4LPYtL7UECOZELYnUfUVhAAAAAAAAAAAAAA==
+

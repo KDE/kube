@@ -1,0 +1,163 @@
+Return-Path: <bugzilla-bounces@lists.kolabsys.com>
+Received: from kolab01.kolabsys.com ([unix socket])
+	 by kolab01.kolabsys.com (Cyrus v2.4.17-Kolab-2.4.17-1.el6.kolab_3.0) with LMTPA;
+	 Thu, 11 Apr 2013 09:03:01 +0200
+X-Sieve: CMU Sieve 2.4
+Received: from ext-mx01.kolabsys.com (unknown [10.10.20.253])
+	by kolab01.kolabsys.com (Postfix) with ESMTP id 3D8A9C0AE3
+	for <shared+shared/lists/kolabsys.com/bugzilla@kolabsys.com>; Thu, 11 Apr 2013 09:03:01 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by ext-mx01.kolabsys.com (Postfix) with ESMTP id 89D4E10057E
+	for <shared+shared/lists/kolabsys.com/bugzilla@kolabsys.com>; Thu, 11 Apr 2013 09:02:38 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at example.com
+X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "MIME-Version"
+Received: from ext-mx01.kolabsys.com ([127.0.0.1])
+	by localhost (fw01.kolabsys.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id BJxrh9Yst1Ac
+	for <shared+shared/lists/kolabsys.com/bugzilla@kolabsys.com>;
+	Thu, 11 Apr 2013 09:02:38 +0200 (CEST)
+Received: from lists.kolabsys.com (static.253.32.46.78.clients.your-server.de [78.46.32.253])
+	by ext-mx01.kolabsys.com (Postfix) with ESMTP id 609821004A7
+	for <shared+shared/lists/kolabsys.com/bugzilla@kolabsys.com>; Thu, 11 Apr 2013 09:02:38 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lists.kolabsys.com (Postfix) with ESMTP id BFA6941D4EAD;
+	Thu, 11 Apr 2013 09:03:00 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at lists.kolabsys.com
+X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "MIME-Version"
+Received: from lists.kolabsys.com ([127.0.0.1])
+	by localhost (lists.kolabsys.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id TYU5eAMK5J6T; Thu, 11 Apr 2013 09:02:58 +0200 (CEST)
+Received: from lists.kolabsys.com (localhost [127.0.0.1])
+	by lists.kolabsys.com (Postfix) with ESMTP id 182FC41D2A3B;
+	Thu, 11 Apr 2013 09:02:58 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lists.kolabsys.com (Postfix) with ESMTP id A2B3641D4EC2
+	for <bugzilla@lists.kolabsys.com>;
+	Thu, 11 Apr 2013 09:02:56 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at lists.kolabsys.com
+Received: from lists.kolabsys.com ([127.0.0.1])
+	by localhost (lists.kolabsys.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id cyO-CNB3vFwu for <bugzilla@lists.kolabsys.com>;
+	Thu, 11 Apr 2013 09:02:54 +0200 (CEST)
+Received: from ext-mx02.kolabsys.com (ext-mx02.kolabsys.com [94.230.208.222])
+	by lists.kolabsys.com (Postfix) with ESMTP id 1640E41D2A3B
+	for <bugzilla@lists.kolabsys.com>;
+	Thu, 11 Apr 2013 09:02:54 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by ext-mx01.kolabsys.com (Postfix) with ESMTP id 58CBC160522
+	for <bugzilla@lists.kolabsys.com>;
+	Thu, 11 Apr 2013 10:02:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at example.com
+Received: from ext-mx02.kolabsys.com ([127.0.0.1])
+	by localhost (fw02.kolabsys.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 4VjnHg6Y6jo7 for <bugzilla@lists.kolabsys.com>;
+	Thu, 11 Apr 2013 10:02:42 +0200 (CEST)
+Received: from app04.kolabsys.com (unknown [10.10.20.16])
+	by ext-mx02.kolabsys.com (Postfix) with ESMTP id 062DF160521
+	for <bugzilla@lists.kolabsys.com>;
+	Thu, 11 Apr 2013 10:02:42 +0200 (CEST)
+Received: by app04.kolabsys.com (Postfix, from userid 48)
+	id 8E7524048C; Thu, 11 Apr 2013 09:02:51 +0200 (CEST)
+From: Kolab Bugzilla <noreply@kolab.org>
+To: bugzilla@lists.kolabsys.com
+Subject: [Bug 1741] Standard folder name configuration ignored on creating
+	new users
+Date: Thu, 11 Apr 2013 07:02:43 +0000
+X-Bugzilla-Reason: GlobalWatcher
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: None
+X-Bugzilla-Product: UCS
+X-Bugzilla-Component: roundcube
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: wickert@kolabsys.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: machniak@kolabsys.com
+X-Bugzilla-Target-Milestone: 3.1-next
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-1741-12-HOSaBe3Z8l@http.issues.kolab.org/>
+In-Reply-To: <bug-1741-12@http.issues.kolab.org/>
+References: <bug-1741-12@http.issues.kolab.org/>
+X-Bugzilla-URL: http://issues.kolab.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
+X-BeenThere: bugzilla@lists.kolabsys.com
+X-Mailman-Version: 2.1.11
+Precedence: list
+Reply-To: server-team@lists.kolabsys.com
+List-Id: All Bugzilla email notifications <bugzilla.lists.kolabsys.com>
+List-Unsubscribe: <https://lists.kolabsys.com/mailman/options/bugzilla>,
+	<mailto:bugzilla-request@lists.kolabsys.com?subject=unsubscribe>
+List-Archive: <http://lists.kolabsys.com/pipermail/bugzilla>
+List-Post: <mailto:bugzilla@lists.kolabsys.com>
+List-Help: <mailto:bugzilla-request@lists.kolabsys.com?subject=help>
+List-Subscribe: <https://lists.kolabsys.com/mailman/listinfo/bugzilla>,
+	<mailto:bugzilla-request@lists.kolabsys.com?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============1778809852=="
+Mime-version: 1.0
+Sender: bugzilla-bounces@lists.kolabsys.com
+Errors-To: bugzilla-bounces@lists.kolabsys.com
+
+
+--===============1778809852==
+Content-Type: multipart/alternative; boundary="1365663771.ec4d382.10226"; charset="us-ascii"
+
+
+--1365663771.ec4d382.10226
+Date: Thu, 11 Apr 2013 09:02:51 +0200
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+
+https://issues.kolab.org/show_bug.cgi?id=1741
+
+--- Comment #4 from Christoph Wickert <wickert@kolabsys.com> ---
+You can get everything you need on test93-18.
+
+-- 
+You are receiving this mail because:
+You are watching all bug changes.
+
+--1365663771.ec4d382.10226
+Date: Thu, 11 Apr 2013 09:02:51 +0200
+MIME-Version: 1.0
+Content-Type: text/html; charset="UTF-8"
+
+<html>
+    <head>
+      <base href="https://issues.kolab.org/" />
+    </head>
+    <body>
+      <b><a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW --- - Standard folder name configuration ignored on creating new users"
+   href="https://issues.kolab.org/show_bug.cgi?id=1741#c4">Comment # 4</a>
+        on <a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW --- - Standard folder name configuration ignored on creating new users"
+   href="https://issues.kolab.org/show_bug.cgi?id=1741">bug 1741</a>
+        from <span class="vcard"><a class="email" href="mailto:wickert&#64;kolabsys.com" title="Christoph Wickert &lt;wickert&#64;kolabsys.com&gt;"> <span class="fn">Christoph Wickert</span></a>
+</span></b>
+      <pre>You can get everything you need on test93-18.</pre>
+      <span>You are receiving this mail because:</span>
+      <ul>
+          <li>You are watching all bug changes.</li>
+      </ul>
+    </body>
+</html>
+
+--1365663771.ec4d382.10226--
+
+--===============1778809852==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+bugzilla mailing list
+bugzilla@lists.kolabsys.com
+https://lists.kolabsys.com/mailman/listinfo/bugzilla
+
+--===============1778809852==--
+ 

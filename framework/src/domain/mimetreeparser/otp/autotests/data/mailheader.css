@@ -1,0 +1,512 @@
+div.header {
+  margin-bottom: 10pt ! important;
+}
+
+table.textAtm {
+  margin-top: 10pt ! important;
+  margin-bottom: 10pt ! important;
+}
+
+tr.textAtmH,
+tr.textAtmB,
+tr.rfc822B {
+  font-weight: normal ! important;
+}
+
+tr.signInProgressH,
+tr.rfc822H,
+tr.encrH,
+tr.signOkKeyOkH,
+tr.signOkKeyBadH,
+tr.signWarnH,
+tr.signErrH {
+  font-weight: bold ! important;
+}
+
+tr.textAtmH td,
+tr.textAtmB td {
+  padding: 3px ! important;
+}
+
+table.rfc822 {
+  width: 100% ! important;
+  border: solid 1px black ! important;
+  margin-top: 10pt ! important;
+  margin-bottom: 10pt ! important;
+}
+
+table.textAtm,
+table.encr,
+table.signWarn,
+table.signErr,
+table.signOkKeyBad,
+table.signOkKeyOk,
+table.signInProgress,
+div.fancy.header table {
+  width: 100% ! important;
+  border-width: 0px ! important;
+  line-height: normal;
+}
+
+div.htmlWarn {
+  margin: 0px 5% ! important;
+  padding: 10px ! important;
+  text-align: left ! important;
+  line-height: normal;
+}
+
+div.fancy.header > div {
+  font-weight: bold ! important;
+  padding: 4px ! important;
+  line-height: normal;
+}
+
+div.fancy.header table {
+  padding: 2px ! important;
+  text-align: left ! important;
+  border-collapse: separate ! important;
+}
+
+div.fancy.header table th {
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+
+  padding: 0px ! important;
+  white-space: nowrap ! important;
+  border-spacing: 0px ! important;
+  text-align: left ! important;
+  vertical-align: top ! important;
+  background-color: #d6d2d0 ! important;
+  color: #221f1e ! important;
+  border: 1px ! important;
+}
+
+div.fancy.header table td {
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+
+  padding: 0px ! important;
+  border-spacing: 0px ! important;
+  text-align: left ! important;
+  vertical-align: top ! important;
+  width: 100% ! important;
+  background-color: #d6d2d0 ! important;
+  color: #221f1e ! important;
+  border: 1px ! important;
+}
+
+div.fancy.header table a:hover {
+  background-color: transparent ! important;
+}
+
+span.pimsmileytext {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  visibility: hidden;
+}
+
+img.pimsmileyimg {
+}
+
+div.quotelevelmark {
+  position: absolute;
+  margin-left:-10px;
+}
+
+@media screen {
+
+body {
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+  color: #1f1c1b ! important;
+  background-color: #ffffff ! important;
+}
+
+a {
+  color: #0057ae ! important;
+  text-decoration: none ! important;
+}
+
+a.white {
+  color: white ! important;
+}
+
+a.black {
+  color: black ! important;
+}
+
+table.textAtm { background-color: #1f1c1b ! important; }
+
+tr.textAtmH {
+  background-color: #ffffff ! important;
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+}
+
+tr.textAtmB {
+  background-color: #ffffff ! important;
+}
+
+table.signInProgress,
+table.rfc822 {
+  background-color: #ffffff ! important;
+}
+
+tr.signInProgressH,
+tr.rfc822H {
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+}
+
+table.encr {
+  background-color: #0069cc ! important;
+}
+
+tr.encrH {
+  background-color: #0080ff ! important;
+  color: #ffffff ! important;
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+}
+
+tr.encrB { background-color: #e0f0ff ! important; }
+
+table.signOkKeyOk {
+  background-color: #33cc33 ! important;
+}
+
+tr.signOkKeyOkH {
+  background-color: #40ff40 ! important;
+  color: #27ae60 ! important;
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+}
+
+tr.signOkKeyOkB { background-color: #e8ffe8 ! important; }
+
+table.signOkKeyBad {
+  background-color: #cccc33 ! important;
+}
+
+tr.signOkKeyBadH {
+  background-color: #ffff40 ! important;
+  color: #f67400 ! important;
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+}
+
+tr.signOkKeyBadB { background-color: #ffffe8 ! important; }
+
+table.signWarn {
+  background-color: #cccc33 ! important;
+}
+
+tr.signWarnH {
+  background-color: #ffff40 ! important;
+  color: #f67400 ! important;
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+}
+
+tr.signWarnB { background-color: #ffffe8 ! important; }
+
+table.signErr {
+  background-color: #cc0000 ! important;
+}
+
+tr.signErrH {
+  background-color: #ff0000 ! important;
+  color: #da4453 ! important;
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+}
+
+tr.signErrB { background-color: #ffe0e0 ! important; }
+
+div.htmlWarn {
+  border: 2px solid #ff4040 ! important;
+  line-height: normal;
+}
+
+div.header {
+  font-family: "Sans Serif" ! important;
+  font-size: 0px ! important;
+}
+
+div.fancy.header > div {
+  background-color: #43ace8 ! important;
+  color: #ffffff ! important;
+  border: solid #221f1e 1px ! important;
+  line-height: normal;
+}
+
+div.fancy.header > div a[href] { color: #ffffff ! important; }
+
+div.fancy.header > div a[href]:hover { text-decoration: underline ! important; }
+
+div.fancy.header > div.spamheader {
+  background-color: #cdcdcd ! important;
+  border-top: 0px ! important;
+  padding: 3px ! important;
+  color: black ! important;
+  font-weight: bold ! important;
+  font-size: smaller ! important;
+}
+
+div.fancy.header > table.outer {
+  background-color: #d6d2d0 ! important;
+  color: #221f1e ! important;
+  border-bottom: solid #221f1e 1px ! important;
+  border-left: solid #221f1e 1px ! important;
+  border-right: solid #221f1e 1px ! important;
+}
+
+div.senderpic{
+  padding: 0px ! important;
+  font-size:0.8em ! important;
+  border:1px solid #b3aba7 ! important;
+  background-color:#d6d2d0 ! important;
+}
+
+div.senderstatus{
+  text-align:center ! important;
+}
+
+div.quotelevel1 {
+  color: #008000 ! important;
+  font-style: italic ! important;
+}
+
+div.quotelevel2 {
+  color: #007000 ! important;
+  font-style: italic ! important;
+}
+
+div.quotelevel3 {
+  color: #006000 ! important;
+  font-style: italic ! important;
+}
+
+div.deepquotelevel1 {
+  color: #008000 ! important;
+  font-style: italic ! important;
+}
+
+div.deepquotelevel2 {
+  color: #007000 ! important;
+  font-style: italic ! important;
+}
+
+div.deepquotelevel3 {
+  color: #006000 ! important;
+  font-style: italic ! important;
+}
+
+blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #008000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #007000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #006000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #008000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #007000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #006000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #008000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #007000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #006000;
+  unicode-bidi: -webkit-plaintext
+}
+
+.quotemarks{
+  color:transparent;
+  font-size:0px;
+}
+
+}
+@media print {
+
+body {
+  font-family: "Sans Serif" ! important;
+  font-size: 9pt ! important;
+  color: #000000 ! important;
+  background-color: #ffffff ! important
+}
+
+tr.textAtmH,
+tr.signInProgressH,
+tr.rfc822H,
+tr.encrH,
+tr.signOkKeyOkH,
+tr.signOkKeyBadH,
+tr.signWarnH,
+tr.signErrH,
+div.header {
+  font-family: "Sans Serif" ! important;
+  font-size: 9pt ! important;
+}
+
+div.fancy.header > div {
+  background-color: #d6d2d0 ! important;
+  color: #221f1e ! important;
+  padding: 4px ! important;
+  border: solid #221f1e 1px ! important;
+  line-height: normal;
+}
+
+div.fancy.header > div a[href] { color: #221f1e ! important; }
+
+div.fancy.header > table.outer{
+  background-color: #d6d2d0 ! important;
+  color: #221f1e ! important;
+  border-bottom: solid #221f1e 1px ! important;
+  border-left: solid #221f1e 1px ! important;
+  border-right: solid #221f1e 1px ! important;
+}
+
+div.spamheader {
+  display:none ! important;
+}
+
+div.htmlWarn {
+  border: 2px solid #ffffff ! important;
+  line-height: normal;
+}
+
+div.senderpic{
+  font-size:0.8em ! important;
+  border:1px solid black ! important;
+  background-color:#d6d2d0 ! important;
+}
+
+div.senderstatus{
+  text-align:center ! important;
+}
+
+div.noprint {
+  display:none ! important;
+}
+
+blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #008000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #007000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #006000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #008000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #007000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #006000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #008000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #007000;
+  unicode-bidi: -webkit-plaintext
+}
+
+blockquote blockquote blockquote blockquote blockquote blockquote blockquote blockquote blockquote {
+  margin: 4pt 0 4pt 0;
+  padding: 0 0 0 1em;
+  border-left: 2px solid #006000;
+  unicode-bidi: -webkit-plaintext
+}
+
+.quotemarks{
+  color:transparent;
+  font-size:0px;
+}
+
+.quotemarksemptyline{
+  color:transparent;
+  font-size:0px;
+  line-height: 12pt;
+}
+
+}

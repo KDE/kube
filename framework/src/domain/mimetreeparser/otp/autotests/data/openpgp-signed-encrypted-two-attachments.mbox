@@ -1,0 +1,52 @@
+From: firstname.lastname@example.com
+To: test@kolab.org
+Subject: OpenPGP signed+encrypted with 2 text attachments
+Date: Sun, 30 Aug 2015 12:01:20 +0200
+Message-ID: <4368981.7YjI8cQ7Br@vkpc5>
+X-KMail-Identity: 402312391
+X-KMail-Dictionary: en_US
+User-Agent: KMail/5.0.42 pre (Linux/3.16.6-2-desktop; KDE/5.14.0; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/encrypted; boundary="nextPart3246504.5GAivIUY6Q"; protocol="application/pgp-encrypted"
+
+--nextPart3246504.5GAivIUY6Q
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+Content-Transfer-Encoding: 7Bit
+
+Version: 1
+--nextPart3246504.5GAivIUY6Q
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="msg.asc"
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+hQEMAwzOQ1qnzNo7AQf9Ge9nFjtqLOKSQNhobS+0iCB2GUdLP7LCIWu6gBo9pWa+
+9wCNLxwmhqWOYv37RAk6v5VXjCYUX3/7UF7e7epSqo7YjS7VsUOow0gszQjJqocK
+Gd1T1oyNknza6oaRGgVeWPOZVAPb+Gj+3yS8VZa33Aq2ay7F7eI8dvRUN7Z3TuAh
+BOVV+itwHHzanfNG8RoCvokcE1vkANfvI3u7R4Q93U8Q+Qmjh1L5ypPe37N5BtAF
+UCPCiD9XySHjm5PyXx8ImrJDeUgFs1YhYox4B6NKsCcmm7R8NdYZYGNo1kzR4yKV
+FzMu1NUU/bwtvrpRXLe4dBL1pEkO2PpuMYDUR9+WVNLpAafTDbeIHPi/Z8v48seQ
+JxscRehfOB3DG1xrvQTMFJc3UJEBqNMkM9gOxLKOQcCcZp79FMsfWB7EjjlPR1Oh
+gyA5NR+4HxNw75Q5FpZ7qziWvIrb1Kzwfbsb9Dimx+MmiNMX9kUEPqkPo4pspwZ9
+pLCfjYUnikcnYyQ0b2ojsjQmLotYlz8mK0GH9L40zfFb1+oYfuu4Y9FPzHdPzNjx
+aFRY8cJQy1CNkCITsz53kni5rk3zVsapq0+NeBDEBYoUqX815fo0W+HVF7/j/uhT
+lPkJhRnJZPwOr5XgzPk3Yk9GlSRLJiqKF4/G8ya/nKyiNIebKM7DTcldWCmZM95B
+BIftaRN4hvVBhl0ElFnZg0xLP1AePFuuplRQTDuW8gpaNKrxwXiF3d4XJdVmjh/p
+YmnieIhbogUHFXugc3g9rE8c3oHA8b514ajSHUm9DXc0cXqw/DrsxXZtKXb+IDpF
+uv9AiM7bSU7I0h/AlaAL5uU0mL58XhkXXFQtaTbMS+u4Rv/Ie1IsnlWR4QSc4m7x
+91rfC1fIf/U43wwwnR+UjIRyr2vWcgTTpwnsZFDD8eSoJ8WqinazJRlMud6Sv+L6
+gI2wiCYyEYHrFEHy0WuS2nUSMNl5AWm31zB+erfKSLZr4EIFBIy4dJWZKwYhi46Q
+pDbw1Svf7xVdHix+5UkkYy3AY70ipf5bxA7FTJ1geJa86VKShDkqVpU6EtT+YQIJ
+7geWCyskT0DTaPp6qc8QpjajmRYssDcjiTke5WiqLQAjm8BIuny0fNm6kNC8KMS7
+eGmaBI2nB92bgrqlAW+LhvW95YB0dfO8beg3jKk8s6OJ4gicGFEFp6hXFfEsEZiv
+gi7Q2QCVFvCV11884H8rtZYmMRFGmuVUvm6xh/z1xicmfSy0YUowgkA3jpi7o913
+fqmYOHAwzCxv8Zp7xBf9hLT8DxMXdxqYUnJ+FaEMRcFkJ1MAFBpQ9uDbbqAz5bd5
+F3d6o0JSleOOTDlNH7wpN15HYtaCx9v3mXLN9FY4Y1g4mE8wdU0JZn7sFEmgmAkV
+/vj9khHS6eB01GPiCA6sy/u2tSdCQQ==
+=1GHi
+-----END PGP MESSAGE-----
+
+--nextPart3246504.5GAivIUY6Q--

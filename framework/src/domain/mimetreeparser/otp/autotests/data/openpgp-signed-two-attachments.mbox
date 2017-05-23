@@ -1,0 +1,54 @@
+From: firstname.lastname@example.com
+To: test@kolab.org
+Subject: OpenPGP signed with 2 text attachments
+Date: Sun, 30 Aug 2015 12:02:56 +0200
+Message-ID: <2033829.IGepAdxqt9@vkpc5>
+X-KMail-Identity: 402312391
+X-KMail-Dictionary: en_US
+User-Agent: KMail/5.0.42 pre (Linux/3.16.6-2-desktop; KDE/5.14.0; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart3682207.KLrp2sxpbf"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+
+--nextPart3682207.KLrp2sxpbf
+Content-Type: multipart/mixed; boundary="nextPart2397422.QDHKUNdbyg"
+Content-Transfer-Encoding: 7Bit
+
+This is a multi-part message in MIME format.
+
+--nextPart2397422.QDHKUNdbyg
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+this is the main body text
+--nextPart2397422.QDHKUNdbyg
+Content-Disposition: inline; filename="attachment1.txt"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; name="attachment1.txt"
+
+this is attachment one
+--nextPart2397422.QDHKUNdbyg
+Content-Disposition: inline; filename="attachment2.txt"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; name="attachment2.txt"
+
+this is attachment two
+--nextPart2397422.QDHKUNdbyg--
+
+--nextPart3682207.KLrp2sxpbf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEVAwUAVeLU0I2YYMWPJG3mAQL/fgf+LXmO7bKafdd4g5OOVHHyXRprVmX/6hBq
+mZoor29KLIHkvAH9OJi4qBy/ZKwqqKLfttLzHb2UaAfl5kn4f0ckmnwUhU7u32Sm
+JZ0Q50SxrRVFRyvTvPG22ho9IwQUO1YSZrL4wO9v8ZBQ3vkfpmAiUQVxPQMINc8L
+i68xQEm4y1Dtoc+DTUkoIMeOOPnEl6PTMPrwn906K0r30hI4788fEGRn6uOXb+vD
+G/ISlXu+JHIxxf/J5/jVjKNbra+trrfSPzB3piJIjBLEPO5FvLx8SgQFJcJHt/kw
+ps8D5YULj/MVMLlsPtXDdZmbOi/G9pN0tr05MKcXsO5Ywe7n2BhASw==
+=2Nzb
+-----END PGP SIGNATURE-----
+
+--nextPart3682207.KLrp2sxpbf--

@@ -1,0 +1,48 @@
+From you@you.com Sat, 29 Mar 2014 15:04:21 +0100
+FCC: imap://hefee%40netzguerilla.net@mail.netzguerilla.net/Sent
+X-Identity-Key: id1
+X-Account-Key: account4
+Message-ID: <5336D2E5.6010602@you.com>
+Date: Sat, 29 Mar 2014 15:04:21 +0100
+From: you <you@you.com>
+X-Mozilla-Draft-Info: internal/draft; vcard=0; receipt=0; DSN=0; uuencode=0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:24.0) Gecko/20100101 Icedove/24.4.0
+MIME-Version: 1.0
+To: test@kolab.com
+Subject: test
+X-Enigmail-Version: 1.6
+X-Enigmail-Draft-Status: 515
+X-Enigmail-Draft-Status: 739
+Content-Type: multipart/encrypted;
+ protocol="application/pgp-encrypted";
+ boundary="23VWJ4jAoB40SD17lh6TOBXK3fQSEGNu5"
+
+This is an OpenPGP/MIME encrypted message (RFC 4880 and 3156)
+--23VWJ4jAoB40SD17lh6TOBXK3fQSEGNu5
+Content-Type: application/pgp-encrypted
+Content-Description: PGP/MIME version identification
+
+Version: 1
+
+--23VWJ4jAoB40SD17lh6TOBXK3fQSEGNu5
+Content-Type: application/octet-stream; name="encrypted.asc"
+Content-Description: OpenPGP encrypted message
+Content-Disposition: inline; filename="encrypted.asc"
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+hIwDGJlthTT7oq0BA/9NtLLXbiIJVS6pOynwEeSznrQK7kYVla8RM43//JECCkGJ
+azEaSBznabBv6epaFmQtVHLMXlCbZnMmW9loyqPBfMoAms6kKKBdG/jqhus89iXE
++seXngC233Va/gZMb2DxOqIokVNfj9tpR7xQ8wS/jHTDiLNc1GOQC7ku42z2bNLA
+IQFRD/qbBFz89hU4wP4cYoAysOnEDojFrsrnCidTHJOJrndM6PPUtH/jQCyfr/EG
+2tSpJwYKvmT6ly3yqaGLBtRPIxiv+dMe+7yw0t40qbjvvaTGavErEBJEKX5eWbTN
+/sjajHpUHqs6SIiMheH9dr+WfzFONtVbPEgGRmOERhlgTl/nLo86AZpjJroIGKJJ
+tTHCcoQGAWG+N7wrCE1RxR0kkMs4nRozj0TLu6ZyXMs+H063MewTPNxNAiQT1Nbi
+udKWmfLBlxn06p+JDzUKxj8PFwObdbxTvACzbAvBY1aHMQ==
+=mLl3
+-----END PGP MESSAGE-----
+
+--23VWJ4jAoB40SD17lh6TOBXK3fQSEGNu5--
+

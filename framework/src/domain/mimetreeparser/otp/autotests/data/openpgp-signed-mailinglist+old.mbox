@@ -1,0 +1,67 @@
+Return-Path: <plasma-devel-bounces@kde.org>
+Delivered-To: einar@heavensinferno.net
+From: "Aaron J. Seigo" <aseigo@kde.org>
+To: plasma-devel@kde.org
+Subject: activities_optional branch in kde-workspace
+Date: Mon, 08 Apr 2013 11:51:11 +0200
+Message-ID: <4143483.eqrJjo7JEn@freedom>
+User-Agent: KMail/4.11 pre (Linux/3.6.3-1-desktop; KDE/4.10.60; i686;
+ git-da50be0; 2013-03-12)
+X-Mailman-Version: 2.1.14
+Precedence: list
+Reply-To: plasma-devel@kde.org
+List-Id: <plasma-devel.kde.org>
+List-Unsubscribe: <https://mail.kde.org/mailman/options/plasma-devel>,
+ <mailto:plasma-devel-request@kde.org?subject=unsubscribe>
+List-Archive: <http://mail.kde.org/pipermail/plasma-devel>
+List-Post: <mailto:plasma-devel@kde.org>
+List-Help: <mailto:plasma-devel-request@kde.org?subject=help>
+List-Subscribe: <https://mail.kde.org/mailman/listinfo/plasma-devel>,
+ <mailto:plasma-devel-request@kde.org?subject=subscribe>
+Errors-To: plasma-devel-bounces@kde.org
+Sender: plasma-devel-bounces@kde.org
+
+Oh man a header :)
+
+--__--__--
+
+Message:
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart1996263.NlFDv9GTkA"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+
+
+--nextPart1996263.NlFDv9GTkA
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+hi..
+
+i noticed a new branch when i pulled kde-workspace today (finally!): 
+activities_optional
+
+the lone commit in it was pushed on april 1, so maybe it's an april fools 
+joke, but if it isn't, it looks like someone is trying to do something that 
+makes no sense (and has no chance of being merged into master). so if this is 
+a "for reals" branch, perhaps the motivation behind it can be shared?
+
+-- 
+Aaron J. Seigo
+--nextPart1996263.NlFDv9GTkA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEUEABECAAYFAlFikxAACgkQ1rcusafx20MHbwCfeXOgTDwtR81XJwAdcQB40Lt7
+t2IAmJpIZxdU+SSruySeEfbQs3VXq/8=
+=BQPF
+-----END PGP SIGNATURE-----
+
+--__--__--
+
+_______________________________________________
+Plasma-devel mailing list
+Plasma-devel@kde.org
+https://mail.kde.org/mailman/listinfo/plasma-devel

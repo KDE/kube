@@ -1,0 +1,17 @@
+From test@kolab.org Wed, 08 Sep 2010 17:02:52 +0200
+From: OpenPGP Test <test@kolab.org>
+To: test@kolab.org
+Subject: OpenPGP encrypted
+Date: Wed, 08 Sep 2010 17:02:52 +0200
+User-Agent: KMail/4.6 pre (Linux/2.6.34-rc2-2-default; KDE/4.5.60; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/encrypted; boundary="nextPart1357031.ppLHckZtsp"; protocol="application/pgp-encrypted"
+Content-Transfer-Encoding: 7Bit
+
+--nextPart1357031.ppLHckZtsp
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+
+Version: 1
+
+--nextPart1357031.ppLHckZtsp--

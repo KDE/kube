@@ -1,0 +1,129 @@
+Return-Path: <sender@example.org>
+Sender: sender@example.org
+From: Quonk <sender@example.org>
+X-Pgp-Agent: GPGMail
+Content-Type: multipart/signed; boundary="Apple-Mail=_12345678-1234-1234-1234-12345678"; protocol="application/pgp-signature"; micalg=pgp-sha512
+Subject: PDF
+Date: Mon, 16 Jan 2017 15:14:51 +0100
+Message-Id: <199E2891-3080-42B6-ABCD-1230B78EBABC@example.org>
+To: Konqi <konqui@example.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+
+
+--Apple-Mail=_12345678-1234-1234-1234-12345678
+Content-Type: multipart/alternative;
+    boundary="Apple-Mail=_23456789-1234-1234-1234-12345678"
+
+
+--Apple-Mail=_23456789-1234-1234-1234-12345678
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+    charset=utf-8
+
+
+
+=E2=80=A6
+Quonk
+Klar=C3=A4lvdalens Datakonsult AB, a KDAB Group company
+Sweden (HQ) +46-563-540090, Germany +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts | www.kdab.com
+
+
+--Apple-Mail=_23456789-1234-1234-1234-12345678
+Content-Type: multipart/mixed;
+    boundary="Apple-Mail=_34567890-1234-1234-1234-12345678"
+
+
+--Apple-Mail=_34567890-1234-1234-1234-12345678
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+    charset=us-ascii
+
+<html><head><meta http-equiv="Content-Type" content="text/html charset=us-ascii"></head><body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" class=""><div class="">pre attachment</div></body></html>
+--Apple-Mail=_34567890-1234-1234-1234-12345678
+Content-Disposition: attachment; filename="image.png"
+Content-Transfer-Encoding: base64
+Content-Type: image/png; name="image.png"
+
+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
+o/0d59+Lh3Y1HHcAAAAASUVORK5CYII=
+--Apple-Mail=_34567890-1234-1234-1234-12345678
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+    charset=utf-8
+
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Some <span style=" font-weight:600;">HTML</span> text</p>
+</body></html>
+
+--Apple-Mail=_34567890-1234-1234-1234-12345678--
+
+--Apple-Mail=_23456789-1234-1234-1234-12345678--
+
+--Apple-Mail=_12345678-1234-1234-1234-12345678
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+    filename=signature.asc
+Content-Type: application/pgp-signature;
+    name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEG6Mjkys/qoJhMseejZhgxY8kbeYFAlh/rcwACgkQjZhgxY8k
+beYaoQf+Miuj4cnVumYXMopVMHJs6AK6D+uKO4jXHl/XUK3TOg17kFUZDEN/9JFd
+SCN9oD5emzpBl4GSmYBbjvLvXTHTLHviVD6In35+wgMlQL+xfAv91Dx56QslCQMo
+UhDYGgFPiEAfCY2UozQD/R3KWOHFB9bNdtOM0hdT84D35W2PZhzTlz2q3hpq3bYw
+lNhFVebqURh9OEAZglB3Q9oDE13PJDtRLflKquC5ZU8N4Bj23TCOgxv4FzSyyAn/
+XalEKdwYrkZ8p4rRtd0YvAVevDUC4pQNGTgfsXgldoPEGUBXsdlczLPEj2sjLvNu
+HX1GMDrZL/+7DZsURYV5DjhsqWzExQ==
+=q0F6
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_12345678-1234-1234-1234-12345678--
+
+

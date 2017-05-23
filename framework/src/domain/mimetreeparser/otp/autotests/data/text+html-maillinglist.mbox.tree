@@ -1,0 +1,5 @@
+ * MimeTreeParser::MessagePartList
+  * MimeTreeParser::MimeMessagePart
+   * MimeTreeParser::AlternativeMessagePart
+   * MimeTreeParser::AttachmentMessagePart
+    * MimeTreeParser::MessagePart

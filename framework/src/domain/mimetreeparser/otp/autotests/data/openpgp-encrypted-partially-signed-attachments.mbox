@@ -1,0 +1,91 @@
+From: firstname.lastname@example.com
+To: test@kolab.org
+Subject: OpenPGP encrypted one signed and one unsigned attachment
+Date: Sun, 30 Aug 2015 12:08:40 +0200
+Message-ID: <1737262.ESByPkoaL9@vkpc5>
+X-KMail-Identity: 402312391
+X-KMail-Dictionary: en_US
+User-Agent: KMail/5.0.42 pre (Linux/3.16.6-2-desktop; KDE/5.14.0; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="nextPart2760349.k2GQmrcl5a"
+Content-Transfer-Encoding: 7Bit
+
+This is a multi-part message in MIME format.
+
+--nextPart2760349.k2GQmrcl5a
+Content-Type: multipart/encrypted; boundary="nextPart2260160.XvshVD34ka"; protocol="application/pgp-encrypted"
+
+--nextPart2260160.XvshVD34ka
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+Content-Transfer-Encoding: 7Bit
+
+Version: 1
+--nextPart2260160.XvshVD34ka
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="msg.asc"
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+hQEMAwzOQ1qnzNo7AQgAooa+Peu1t5aiX4WvssEnRlapkr62/49/Dbz5assvshdr
+o9zOC+89Qr5P/ea+tC1MO7ek/DfyL9C4EzOMp/r08GeInLqWMc9qLZO//YaT2JUp
+0IZFbpUQ4C2zjXMRuy/PMrltHuCfsvhvHX1YAHp/xjRsKpQoE3mSDzz5sc8/Hj9n
+2eoKoCEW1rgt2qHtV4DD6lvUPo42LMZclJ9GqfoD7WLoEH9ebRLhXr3D00j6xBfy
+//nooAhzQSW8b7GZth4Qc7DKAZMhuEly/kp07nhuPd1fMJDEAB/zh9EYlgnn3STb
+MCdtFs6kMC24uA2eDCH330Bn9OzzWnsVU9ae4XiKnNLpAeactSFRKKvGytBQaloq
+Gvn1+D0Xmw6OsSmRJ84DzKqG4E6bzE+XhMEMnLlqDvZDsOtU/sCGvMK0MM3y5B7M
+ONqWLN3ng3zrGPec5gqfvnWgKpANUrbJkzS8LNjv4hwoKh0tFpghWQiefG0Z9Hw1
+UaYbFwvaFgXcm72oBkynDCleWjQ2vnDE4P38PldqZbAW/Pw1q6Yq8m9MhS1VpbI5
+WBjuRQhgQvMG0LY0gR/3Qor5tX9ASllWnPfWYVuOiSOAe5Hsp7BmELXkWftHii7k
+YW0Qim7jleDaY1MGfFr0vrO/PiYxGTb+4IUyUgEBYEpxa9ozUoeftF6JbHPuEZI0
+ENX8aIVJ9FnpssrR5HlpXieF12ec9ZFeV7mAwcucJ3RXuDcQHQTHgEbfnzTsaEpL
+Hxs+6euOCJXhKOYVrsAlB4IxK0OQm4XHiZ7WBp5Jp7rlSHltdxFpSnHIfqngyCA4
+L+c/gsUEVbNI++iOOhOKVT47XIf+s/xa1Y4XghGbHIA3/pQphYo4U5dTeLoX0OWI
+64tPxliQTKuJ+NAv9Km2bDgvlvn83jsc94THi5u+fIdDEGp7pgoQNXR69Lkz1bsA
+Hh9xqKzVloHu4SsT3OGX+bfTO3jUh8ieU/4tflZMrJ9RkEfE08PzTnopT08FppFx
+QWpHv/fwyJf6Cw1IevM5pVLAShg0sbCPF/xsYTjSyWNib1wFtxkmv5MToCFwkxi5
+b1yT23BNlV5RV6wcjmrum7p2fMwPjbt8X6z+pgUtkD7zImBWeYddMjgSjOFuFEjF
+gpfVoV3OIvMPZMe2jqWsjnjujHJr2z5IZn3A7WI0b4SIDP0sGwsTBiogKqcBNWpn
+O4MKUq9JwC0K/MY7yS1MCLoHfwU18z19Es/flaAgwtXk8IWIcjkkumAwNl+y8Q+I
++8AFGdiXTKld9QVwCKnMS3QivHPuFNL8rfcWKsr1nOhOEhaO+zD94eOOiCbwiXGr
+E6WsewNCVQUN4bxAXl2vRi+9WRctLy7bsuIL5dgUz0CMYkQ+dDmrBflD0nyC
+=TGNA
+-----END PGP MESSAGE-----
+
+--nextPart2260160.XvshVD34ka--
+
+--nextPart2760349.k2GQmrcl5a
+Content-Type: multipart/encrypted; boundary="nextPart22530242.iRl14SoP0Q"; protocol="application/pgp-encrypted"
+
+--nextPart22530242.iRl14SoP0Q
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+Content-Transfer-Encoding: 7Bit
+
+Version: 1
+--nextPart22530242.iRl14SoP0Q
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="msg.asc"
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+hQEMAwzOQ1qnzNo7AQgAtA94bBRwgpo64zcyh+4dzt0Pr2pmNjiS4ZX+a/xzYCmD
+oS1a26s/LVZH+aJYC13l1kEu+6YjKn+ruQvMfhihOxglHBLjmUO17TPFC05AReSn
+amMqPbgS6mOwhlBJHrBa/SVwkxmbMaNBUJ/KxRXFtTW/V4pPWImRvI9mnmpo8fHy
+ZLvVAI3hGe7vPG5Vbdi5/Iu/JzqwlglVsP82gYpLlx7HhWGF4gmTGc6YBwFtzEvS
+eqFtKRDqN60bo4HnNLOEnMaWlYPTpt3QibLWWIbtpA1Gb0Q/1NvDnn3Lyj8H+0WV
+8H6Ks9/cvAuoAMOad6y4gDJb+K/AS7Ha+08/3lMYG9LAAgGe8Qocxg1W3ha1o0Ph
+YSfV2ooebsLiHjwspjYpsX5ijnRj6uNGp5Dt28EIo1ANF+oDiSKEwAMGPBtcnqaO
+FWXy39dP3VXE73nsO+dyTidaATFBlYg+IpPTDSFTgsk7XDV973EpdXvOkBEp/vBv
+EZknuZFOkS0v5QHk9Y/hhlSLACTIEWQpBiFGOwUVSZFXLEY5zQNTbQdRbz3ZYcE9
+mIFzD9Ujw6tIJIOFazhwr9SxxyeaAygWeg4ifmmdhAsmFYum
+=WsAv
+-----END PGP MESSAGE-----
+
+--nextPart22530242.iRl14SoP0Q--
+
+--nextPart2760349.k2GQmrcl5a--

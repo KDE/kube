@@ -1,0 +1,3 @@
+ * MimeTreeParser::MessagePartList
+  * MimeTreeParser::TextMessagePart
+   * MimeTreeParser::SignedMessagePart

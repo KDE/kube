@@ -1,0 +1,7 @@
+From: hans@example.com
+To: karl@example.com
+Subject: Simple Mail Without Content-Type Header
+Date: Sat, 15 May 2010 10:52:24 +0200
+MIME-Version: 1.0
+
+asdfasdf

@@ -1,0 +1,42 @@
+From: firstname.lastname@example.com
+To: test@kolab.org
+Subject: OpenPGP encrypted with 2 text attachments
+Date: Sun, 30 Aug 2015 12:05:17 +0200
+Message-ID: <1505824.VT0nqpAGu0@vkpc5>
+X-KMail-Identity: 402312391
+X-KMail-Dictionary: en_US
+User-Agent: KMail/5.0.42 pre (Linux/3.16.6-2-desktop; KDE/5.14.0; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/encrypted; boundary="nextPart3335835.KxmPgziKxd"; protocol="application/pgp-encrypted"
+
+--nextPart3335835.KxmPgziKxd
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+Content-Transfer-Encoding: 7Bit
+
+Version: 1
+--nextPart3335835.KxmPgziKxd
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="msg.asc"
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+hQEMAwzOQ1qnzNo7AQgA6tTJs017mI+xuhjcSTr3F5X/rJghq0oaXbjk1K0W33p+
+jsEyPTbuUIvI2a+5xHJ3BV+gnnO0Xosz57tGTF/eVAySnGiMse5cu2RQR9b/9EkC
+uzt3tIChyub3GUODG3yzXqkhSiwIImvedWgnJYTJ7eeBkWdizVT0b0byiG2d7Hjq
+hzYzyPJRwuoE36hryDsFycAhPfSsQAirxDJXk4HTsfBCmz7tzJhtt4wKc7z5m8fq
+y+jddnDADq5+tykJS6zemJOzgU3AOQyVJbmsx2vTV1CJdpKPHvTTgghpAaSuVbg0
+tR9BX1nPnA/bgX/V7C+3PwuCvB0ZKmv5d8kaGaTwO9LAhQGaWTfhG1cyy+MJhXdR
+rH63PMkZh/lrvj7qJYofI5iVoe1CiMaX44BiwKVclGf7bEFdzc2NSRvvTSzisN3T
+nSzydEttuEY5jGagQQNT1l1l4I8HAtUgwGtkKZVTAUL6iKHYAqzB77sRs33UJy4k
+ZSIWFnSY8l+HLG+MYKsYCGsvJHkxEHnMiS1EZcmpUFhxOGQpiF2rJ4qnL2jbFWbA
+9N1O5N1N/DJ/YKjwgy/jVVj6AOCrBZrxvKKt2mtG/wVX0F/KSKiEd8mgrLIx1udw
+tibiDAJmDxUk8K0lAdOHBrzBChvysiT/QxCJFcSY6FE99Rral+BWjeyAIQQWvc2B
+cEceZCtzjCOrwvoJwl2uEX+51nmMp+z1EoeyyhmUZZ4y65yOg4P6KGXGcLmIjSbH
+IhsSls1jRkSrypf/wcEd6o7KZdeYbfA=
+=Sud3
+-----END PGP MESSAGE-----
+
+--nextPart3335835.KxmPgziKxd--

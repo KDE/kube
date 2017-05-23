@@ -1,0 +1,40 @@
+From test@example.com Thu, 17 Oct 2013 02:13:03 +0200
+Return-Path: <test@example.com>
+Delivered-To: you@you.com
+Received: from localhost (localhost [127.0.0.1])
+	by test@example.com (Postfix) with ESMTP id B30D8120030
+	for <you@you.com>; Thu, 17 Oct 2013 02:13:05 +0200 (CEST)
+From: test <test@example.com>
+To: you@you.com
+Subject: charset
+Date: Thu, 17 Oct 2013 02:13:03 +0200
+Message-ID: <4081645.yGjUJ4o4Se@example.local>
+User-Agent: KMail/4.12 pre (Linux/3.11-4.towo-siduction-amd64; KDE/4.11.2; x86_64; git-f7f14e3; 2013-10-15)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-15"
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+hIwDGJlthTT7oq0BBACbaRZudMigMTetPZNRgkfEXv4QQowR1jborw0dcgKKqMQ1
+6o67NkpxvmXKGJTfTVCLBX3nk6FKYo6NwlPCyU7X9X0DDk8hvaBdR9wGfrdm5YWX
+GKOzcqJY1EypiMsspXeZvjzEW7O8I956c3vBb/2pM3xqYEK1kh8+d9bVH+cjf4UB
+DAMMzkNap8zaOwEH/1rPShyYL8meJN+/GGgS8+Nf1BW5pSHdAPCg0dnX4QCLEx7u
+GkBU6N4JGYayaCBofibOLacQPhYZdnR5Xb/Pvrx03GrzyzyDp0WyeI9nGNfkani7
+sCRWbzlMPsEvGEvJVnMLNRSk4xhPIWumL4APkw+Mgi6mf+Br8z0RhfnGwyMA53Mr
+pG9VQKlq3v7/aaN40pMjAsxiytcHS515jXrb3Ko4pWbTlAr/eytOEfkLRJgSOpQT
+BY7lWs+UQJqiG8Yn65vS9LMDNJgX9EOGx77Z4u9wvv4ZieOxzgbHGg5kYCoae7ba
+hxZeNjYKscH+E6epbOxM/wlTdr4UTiiW9dMsH0zSwMUB891gToeXq+LDGEPTKVSX
+tsJm4HS/kISJBwrCI4EUqWZML6xQ427NkZGmF2z/sD3kmL66GjspIKnb4zHmXacp
+84n2KrI9s7p6AnKnQjsxvB/4/lpXPCIY5GH7KjySEJiMsHECzeN1dJSL6keykBsx
+DtmYDA+dhZ6UWbwzx/78+mjNREhyp/UiSAmLzlJh89OH/xelAPvKcIosYwz4cY9N
+wjralTmL+Y0aHKeZJOeqPLaXADcPFiZrCNPCH65Ey5GEtDpjLpEbjVbykPV9+YkK
+7JKW6bwMraOl5zmAoR77PWMo3IoYb9q4GuqDr1V2ZGlb7eMH1gj1nfgfVintKC1X
+3jFfy7aK6LIQDVKEwbi0SxVXTKStuliVUy5oX4woDOxmTEotJf1QlKZpn5oF20UP
+tumYrp0SPoP8Bo4EVRVaLupduI5cYce1q/kFj9Iho/wk56MoG9PxMMfsH7oKg3AA
+CqQ6/kM4oJNdN5xIf1EH5HeaNFkDy1jlLznnhwVAZKPo/9ffpg==
+=bPqu
+-----END PGP MESSAGE-----
+
+

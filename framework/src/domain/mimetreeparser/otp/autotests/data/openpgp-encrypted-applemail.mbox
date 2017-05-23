@@ -1,0 +1,52 @@
+Received: from konqi
+From: "Konqui" <konqi@example.org>
+To: "Bird" <bird@example.org>
+Subject: gpg problem 1/2
+Date: Tue, 22 Mar 2016 17:09:18 +0100
+Message-ID: <123456@example.org>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+Content-Type: multipart/mixed;
+        boundary="_003_55514CDCA78D430384C5F0810DF10C7Adsmpgde_"
+MIME-Version: 1.0
+
+ 
+--_003_55514CDCA78D430384C5F0810DF10C7Adsmpgde_
+Content-Type: text/plain; charset="us-ascii"
+
+
+--_003_55514CDCA78D430384C5F0810DF10C7Adsmpgde_
+Content-Type: application/pgp-encrypted;
+        name="PGPMIME Versions Identification"
+Content-Description: PGP/MIME Versions Identification
+Content-Disposition: attachment; filename="PGPMIME Versions Identification";
+        size=77; creation-date="Tue, 22 Mar 2016 16:09:18 GMT";
+        modification-date="Tue, 22 Mar 2016 16:09:18 GMT"
+Content-ID: <D82BB3DF89947646AD6C4C24C8C54BAC@example.org>
+Content-Transfer-Encoding: base64
+
+VmVyc2lvbjogMQ0NCg==
+
+--_003_55514CDCA78D430384C5F0810DF10C7Adsmpgde_
+Content-Type: application/octet-stream; name="encrypted.asc"
+Content-Description: OpenPGP encrypted message.asc
+Content-Disposition: attachment; filename="encrypted.asc"; size=872;
+        creation-date="Tue, 22 Mar 2016 16:09:18 GMT";
+        modification-date="Tue, 22 Mar 2016 16:09:18 GMT"
+Content-ID: <58A712E65AB1824AB726904A6449178F@example.org>
+Content-Transfer-Encoding: base64
+
+LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tClZlcnNpb246IEdudVBHIHYxCkNvbW1lbnQ6IFVz
+aW5nIEdudVBHIHdpdGggSWNlZG92ZSAtIGh0dHA6Ly93d3cuZW5pZ21haWwubmV0LwoKaEl3REdK
+bHRoVFQ3b3EwQkEvOU50TExYYmlJSlZTNnBPeW53RWVTem5yUUs3a1lWbGE4Uk00My8vSkVDQ2tH
+SgphekVhU0J6bmFiQnY2ZXBhRm1RdFZITE1YbENiWm5NbVc5bG95cVBCZk1vQW1zNmtLS0JkRy9q
+cWh1czg5aVhFCitzZVhuZ0MyMzNWYS9nWk1iMkR4T3FJb2tWTmZqOXRwUjd4UTh3Uy9qSFREaUxO
+YzFHT1FDN2t1NDJ6MmJOTEEKSVFGUkQvcWJCRno4OWhVNHdQNGNZb0F5c09uRURvakZyc3JuQ2lk
+VEhKT0pybmRNNlBQVXRIL2pRQ3lmci9FRwoydFNwSndZS3ZtVDZseTN5cWFHTEJ0UlBJeGl2K2RN
+ZSs3eXcwdDQwcWJqdnZhVEdhdkVyRUJKRUtYNWVXYlROCi9zamFqSHBVSHFzNlNJaU1oZUg5ZHIr
+V2Z6Rk9OdFZiUEVnR1JtT0VSaGxnVGwvbkxvODZBWnBqSnJvSUdLSkoKdFRIQ2NvUUdBV0crTjd3
+ckNFMVJ4UjBra01zNG5Sb3pqMFRMdTZaeVhNcytIMDYzTWV3VFBOeE5BaVFUMU5iaQp1ZEtXbWZM
+Qmx4bjA2cCtKRHpVS3hqOFBGd09iZGJ4VHZBQ3piQXZCWTFhSE1RPT0KPW1MbDMKLS0tLS1FTkQg
+UEdQIE1FU1NBR0UtLS0tLQoK
+
+--_003_55514CDCA78D430384C5F0810DF10C7Adsmpgde_--
