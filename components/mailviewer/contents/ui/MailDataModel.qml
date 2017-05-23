@@ -57,15 +57,14 @@ DelegateModel {
             width: parent.width
         }
         Component.onCompleted: {
-            var isHtml = false
-            var forcePlain = false
+            //If the content is not complex, avoid using a full browser
+            var forcePlain = !model.complexHtmlContent
             var partType = getPartType(model.type, model.hasModelChildren, forcePlain);
 
             switch (partType) {
                 case "plain":
                     partLoader.setSource("TextContent.qml",
-                                        {"isHtml": isHtml,
-                                        "content": model.content,
+                                        {"content": model.content,
                                         "embedded": model.embeded,
                                         "type": model.type,
                                         "debug": debug})

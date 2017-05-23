@@ -26,7 +26,6 @@ Item {
     property string content
     property bool debug: true
     property bool embedded: true
-    property bool isHtml: true
     property string type
 
     width: partColumn.width
@@ -43,17 +42,18 @@ Item {
         width: parent.width
         spacing: 5
 
-        TextEdit  {
+        TextEdit {
             width: parent.width
 
             readOnly: true
             selectByMouse: true
 
             text: content
-            wrapMode: Text.WordWrap
-            textFormat: textItem.isHtml ? Text.RichText : Text.PlainText
+            wrapMode: TextEdit.Wrap
+            textFormat: Text.RichText
 
-            color: embedded ? Kube.Colors.diabledTextColor : Kube.Colors.textColor
+            color: embedded ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
+            onLinkActivated: Qt.openUrlExternally(link)
         }
 
         //BEGIN debug

@@ -21,6 +21,7 @@
 #include "mimetreeparser/interface.h"
 
 #include <QDebug>
+#include <QTextDocument>
 
 Q_DECLARE_METATYPE(Part *)
 Q_DECLARE_METATYPE(Content *)
@@ -315,6 +316,7 @@ QHash<int, QByteArray> NewModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[TypeRole] = "type";
     roles[ContentRole] = "content";
+    roles[IsComplexHtmlContentRole] = "complexHtmlContent";
     roles[IsEmbededRole] = "embeded";
     roles[SecurityLevelRole] = "securityLevel";
     roles[EncryptionErrorType] = "errorType";
@@ -422,9 +424,30 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return QString::fromLatin1(content->type());
             case IsEmbededRole:
                 return data(index.parent(), IsEmbededRole);
+            case IsComplexHtmlContentRole: {
+                const auto contentType = data(index, TypeRole).toString();
+                if (contentType == "HtmlContent") {
+                    const auto text = content->encodedContent();
+                    if (text.contains("<!DOCTYPE html PUBLIC")) {
+                        return true;
+                    }
+                    //Media queries are too advanced
+                    if (text.contains("@media")) {
+                        return true;
+                    }
+                    if (text.contains("<style")) {
+                        return true;
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+                break;
+            }
             case ContentRole: {
                 auto text = content->encodedContent();
-                if (data(index, TypeRole).toString() == "HtmlContent") {
+                const auto contentType = data(index, TypeRole).toString();
+                if (contentType == "HtmlContent") {
                     const auto rx = QRegExp("(src)\\s*=\\s*(\"|')(cid:[^\"']+)\\2");
                     int pos = 0;
                     while ((pos = rx.indexIn(text, pos)) != -1) {
@@ -445,6 +468,9 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                             text.replace(rx.cap(0), QString("src=\"data:%1;base64,%2\"").arg(mimetype, QString::fromLatin1(data.toBase64())));
                         }
                     }
+                } else { //We assume plain
+                    //We alwas do richtext (so we get highlighted links and stuff).
+                    return Qt::convertFromPlainText(text);
                 }
                 return text;
             }
