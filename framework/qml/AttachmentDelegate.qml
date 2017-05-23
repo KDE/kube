@@ -65,4 +65,10 @@ Item {
             color: Kube.Colors.backgroundColor
         }
     }
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+
+        }
+    }
 }

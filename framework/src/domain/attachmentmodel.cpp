@@ -95,6 +95,32 @@ QModelIndex AttachmentModel::index(int row, int column, const QModelIndex &paren
     return QModelIndex();
 }
 
+static QString fileName( const KMime::Content *node )
+{
+  QString name = const_cast<KMime::Content*>( node )->contentDisposition()->filename();
+  if ( name.isEmpty() )
+    name = const_cast<KMime::Content*>( node )->contentType()->name();
+
+  name = name.trimmed();
+  return name;
+}
+
+static void saveContent(const KMime::Content *content)
+{
+    const QByteArray data = content->decodedContent();
+    QDataStream ds;
+    QFile file;
+    // save directly
+    file.setFileName("~/Downloads/kubeattachment");
+    if (!file.open(QIODevice::WriteOnly)) {
+        qWarning() << "Failed to save attachment".
+        return;
+    }
+    ds.setDevice(&file);
+    ds.writeRawData(data.data(), data.size());
+    file.close()
+}
+
 QVariant AttachmentModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -121,6 +147,8 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
             return content->encryptions().size() > 0;
         case IsSignedRole:
             return content->signatures().size() > 0;
+        case IsSignedRole:
+            return entry->mailMime()->filename();
         }
     }
     return QVariant();

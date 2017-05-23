@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
+ *  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
