@@ -36,6 +36,7 @@ set(SRCS
     domain/contactcontroller.cpp
     domain/controller.cpp
     domain/peoplemodel.cpp
+    domain/htmlutils.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
     fabric.cpp

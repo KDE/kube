@@ -19,6 +19,7 @@
 
 #include "messageparser.h"
 #include "mimetreeparser/interface.h"
+#include "htmlutils.h"
 
 #include <QDebug>
 #include <QTextDocument>
@@ -470,7 +471,7 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                     }
                 } else { //We assume plain
                     //We alwas do richtext (so we get highlighted links and stuff).
-                    return Qt::convertFromPlainText(text);
+                    return HtmlUtils::linkify(Qt::convertFromPlainText(text));
                 }
                 return text;
             }
