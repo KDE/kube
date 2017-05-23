@@ -25,7 +25,6 @@ import QtQuick.Layouts 1.1
 import org.kube.components.mailviewer 1.0 as MV
 import org.kube.framework 1.0 as Kube
 
-import QtQuick.Layouts 1.1
 import org.kde.kirigami 1.0 as Kirigami
 
 Rectangle {
@@ -43,8 +42,15 @@ Rectangle {
     property variant draft;
     property variant sent;
     property bool incomplete: false;
+    property bool current: false;
 
     implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + Kube.Units.largeSpacing
+
+    Shortcut {
+        sequence: "V"
+        onActivated: debugPopup.open()
+        enabled: root.current
+    }
 
     //Overlay for non-active mails
     Rectangle {
@@ -382,6 +388,75 @@ Rectangle {
                     Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail, "isDraft": model.draft})
                 } else {
                     Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail, "isDraft": model.draft})
+                }
+            }
+        }
+    }
+
+    Kube.Popup {
+        id: debugPopup
+        modal: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+        x: 0
+        y: 0
+        width: root.width
+        height: root.height
+
+        Flickable {
+            id: flickable
+            anchors.fill: parent
+            contentHeight: content.height
+            contentWidth: parent.width
+            Column {
+                id: content
+                width: flickable.width
+                height: childrenRect.height
+
+                Controls1.TreeView {
+                    id: mailStructure
+                    width: parent.width
+                    height: implicitHeight
+                    Controls1.TableViewColumn {
+                        role: "type"
+                        title: "Type"
+                    }
+                    Controls1.TableViewColumn {
+                        role: "embeded"
+                        title: "Embeded"
+                    }
+                    Controls1.TableViewColumn {
+                        role: "securityLevel"
+                        title: "SecurityLevel"
+                    }
+                    Controls1.TableViewColumn {
+                        role: "content"
+                        title: "Content"
+                    }
+                    model: messageParser.newTree
+                    itemDelegate: Item {
+                        property variant currentData: styleData.value
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: styleData.textColor
+                            elide: styleData.elideMode
+                            text: styleData.value
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                textEdit.text = styleData.value
+                            }
+                        }
+                    }
+                }
+                TextEdit {
+                    id: textEdit
+                    width: parent.width
+                    readOnly: true
+                    selectByMouse: true
+                    textFormat: TextEdit.PlainText
+                    wrapMode: TextEdit.Wrap
+                    height: implicitHeight
                 }
             }
         }

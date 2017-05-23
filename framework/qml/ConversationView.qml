@@ -199,12 +199,8 @@ Rectangle {
                 anchors.fill: parent
                 enabled: parent.enabled
                 hoverEnabled: true
-                onEntered: {
-                    root.currentIndex = index
-                }
-                onClicked: {
-                    root.currentIndex = index
-                }
+                onEntered: root.currentIndex = index
+                onClicked: root.currentIndex = index
             }
 
             MailViewer {
@@ -224,6 +220,7 @@ Rectangle {
                 draft: model.draft
                 sent: model.sent
                 incomplete: model.incomplete
+                current: isCurrent
             }
         }
     }
