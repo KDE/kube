@@ -37,7 +37,7 @@
 #include <QObject>
 #include <QSharedPointer>
 
-#include "mimetreeparser/objecttreeparser.h"
+#include "objecttreeparser.h"
 
 namespace MimeTreeParser
 {

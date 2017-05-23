@@ -83,35 +83,6 @@ void BodyPartFormatterBaseFactoryPrivate::insert(const char *type, const char *s
     subtype_reg.insert(std::make_pair(subtype, formatter));
 }
 
-void BodyPartFormatterBaseFactoryPrivate::messageviewer_create_builtin_bodypart_formatters()
-{
-    //FIXME defined in bodypartformatter.cpp
-    // insert("application", "octet-stream", AnyTypeBodyPartFormatter::create());
-    // insert("application", "pgp", ApplicationPgpBodyPartFormatter::create());
-    // insert("application", "pkcs7-mime", ApplicationPkcs7MimeBodyPartFormatter::create());
-    // insert("application", "x-pkcs7-mime", ApplicationPkcs7MimeBodyPartFormatter::create());
-    // insert("application", "pgp-encrypted", ApplicationPGPEncryptedBodyPartFormatter::create());
-    // insert("application", "*", AnyTypeBodyPartFormatter::create());
-
-    // insert("text", "html", TextHtmlBodyPartFormatter::create());
-    // insert("text", "rtf", AnyTypeBodyPartFormatter::create());
-    // insert("text", "plain", MailmanBodyPartFormatter::create());
-    // insert("text", "plain", TextPlainBodyPartFormatter::create());
-    // insert("text", "*", MailmanBodyPartFormatter::create());
-    // insert("text", "*", TextPlainBodyPartFormatter::create());
-
-    // insert("image", "*", ImageTypeBodyPartFormatter::create());
-
-    // insert("message", "rfc822", MessageRfc822BodyPartFormatter::create());
-    // insert("message", "*", AnyTypeBodyPartFormatter::create());
-
-    // insert("multipart", "alternative", MultiPartAlternativeBodyPartFormatter::create());
-    // insert("multipart", "encrypted", MultiPartEncryptedBodyPartFormatter::create());
-    // insert("multipart", "signed", MultiPartSignedBodyPartFormatter::create());
-    // insert("multipart", "*", MultiPartMixedBodyPartFormatter::create());
-    // insert("*", "*", AnyTypeBodyPartFormatter::create());
-}
-
 BodyPartFormatterBaseFactory::BodyPartFormatterBaseFactory()
     : d(new BodyPartFormatterBaseFactoryPrivate(this))
 {

@@ -27,6 +27,7 @@ set(libmimetreeparser_SRCS
     textplain.cpp
     texthtml.cpp
     utils.cpp
+    bodypartformatter_impl.cpp
 
     #Interfaces
     bodypartformatter.cpp
