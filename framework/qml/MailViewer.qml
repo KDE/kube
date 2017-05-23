@@ -55,7 +55,7 @@ Rectangle {
     //Overlay for non-active mails
     Rectangle {
         anchors.fill: parent
-        visible: !wrapper.isCurrent
+        visible: !current
         color: "lightGrey"
         z: 1
         opacity: 0.2
