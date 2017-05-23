@@ -33,7 +33,7 @@
 
 #include "identitiesmodel.h"
 #include "recepientautocompletionmodel.h"
-#include "mailtemplates.h"
+#include "mime/mailtemplates.h"
 
 class IdentitySelector : public Selector {
 public:

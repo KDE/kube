@@ -9,7 +9,7 @@ find_package(KF5Package CONFIG REQUIRED)
 
 add_definitions("-Wall -std=c++0x -g")
 
-include_directories(. domain/mime/mimetreeparser)
+include_directories(. domain/mime/mimetreeparser domain/ domain/mime)
 
 set(SRCS
     frameworkplugin.cpp

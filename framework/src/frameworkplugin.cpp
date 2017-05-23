@@ -23,7 +23,7 @@
 #include "domain/maillistmodel.h"
 #include "domain/folderlistmodel.h"
 #include "domain/composercontroller.h"
-#include "domain/messageparser.h"
+#include "domain/mime/messageparser.h"
 #include "domain/retriever.h"
 #include "domain/outboxmodel.h"
 #include "domain/mouseproxy.h"
