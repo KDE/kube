@@ -37,7 +37,7 @@
 #include "stringhtmlwriter.h"
 #include "objecttreesource.h"
 
-#include <MimeTreeParser/ObjectTreeParser>
+#include <otp/objecttreeparser.h>
 
 namespace KMime {
     namespace Types {

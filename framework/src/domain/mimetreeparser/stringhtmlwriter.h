@@ -30,7 +30,7 @@
 #ifndef __KUBE_FRAMEWORK_MAIL_STRINGHTMLWRITER_H__
 #define __KUBE_FRAMEWORK_MAIL_STRINGHTMLWRITER_H__
 
-#include <MimeTreeParser/HtmlWriter>
+#include <otp/htmlwriter.h>
 
 #include <QFile>
 #include <QTextStream>

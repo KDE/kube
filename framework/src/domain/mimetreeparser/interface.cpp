@@ -29,9 +29,9 @@
 #include <gpgme++/keylistresult.h>
 
 #include <KMime/Content>
-#include <MimeTreeParser/ObjectTreeParser>
-#include <MimeTreeParser/MessagePart>
-#include <MimeTreeParser/NodeHelper>
+#include <otp/objecttreeparser.h>
+#include <otp/messagepart.h>
+#include <otp/nodehelper.h>
 
 #include <QMimeDatabase>
 #include <QMimeType>

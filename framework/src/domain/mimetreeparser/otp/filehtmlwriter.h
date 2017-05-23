@@ -1,12 +1,14 @@
 /*  -*- c++ -*-
+    filehtmlwriter.h
 
-    Copyright (c) 2016 Sandro Knauß <sknauss@kde.org>
+    This file is part of KMail, the KDE mail client.
+    Copyright (c) 2003 Marc Mutz <mutz@kde.org>
 
-    Kube is free software; you can redistribute it and/or modify it
+    KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
 
-    Kube is distributed in the hope that it will be useful, but
+    KMail is distributed in the hope that it will be useful, but
     WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
@@ -27,21 +29,25 @@
     your version.
 */
 
-#ifndef __KUBE_FRAMEWORK_MAIL_STRINGHTMLWRITER_H__
-#define __KUBE_FRAMEWORK_MAIL_STRINGHTMLWRITER_H__
+#ifndef __MIMETREEPARSER_FILEHTMLWRITER_H__
+#define __MIMETREEPARSER_FILEHTMLWRITER_H__
 
-#include <otp/htmlwriter.h>
+#include "mimetreeparser_export.h"
+#include "mimetreeparser/htmlwriter.h"
 
 #include <QFile>
 #include <QTextStream>
 
 class QString;
 
-class StringHtmlWriter : public MimeTreeParser::HtmlWriter
+namespace MimeTreeParser
+{
+
+class MIMETREEPARSER_EXPORT FileHtmlWriter : public HtmlWriter
 {
 public:
-    explicit StringHtmlWriter();
-    virtual ~StringHtmlWriter();
+    explicit FileHtmlWriter(const QString &filename);
+    virtual ~FileHtmlWriter();
 
     void begin(const QString &cssDefs) Q_DECL_OVERRIDE;
     void end() Q_DECL_OVERRIDE;
@@ -51,21 +57,14 @@ public:
     void flush() Q_DECL_OVERRIDE;
     void embedPart(const QByteArray &contentId, const QString &url) Q_DECL_OVERRIDE;
     void extraHead(const QString &str) Q_DECL_OVERRIDE;
-
-    QString html() const;
-    QMap<QByteArray, QUrl> embeddedParts() const;
 private:
-    void insertExtraHead();
-    void resolveCidUrls();
+    void openOrWarn();
 
-    QString mHtml;
-    QString mExtraHead;
-    enum State {
-        Begun,
-        Queued,
-        Ended
-    } mState;
-    QMap<QByteArray, QUrl> mEmbeddedPartMap;
+private:
+    QFile mFile;
+    QTextStream mStream;
 };
 
-#endif // __MESSAGEVIEWER_FILEHTMLWRITER_H__
+} // namespace MimeTreeParser
+
+#endif // __MIMETREEPARSER_FILEHTMLWRITER_H__

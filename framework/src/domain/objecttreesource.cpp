@@ -19,10 +19,10 @@
 
 #include "objecttreesource.h"
 
-#include <MimeTreeParser/AttachmentStrategy>
-#include <MimeTreeParser/BodyPartFormatterBaseFactory>
-#include <MimeTreeParser/MessagePart>
-#include <MimeTreeParser/MessagePartRenderer>
+#include <otp/attachmentstrategy.h>
+#include <otp/bodypartformatterbasefactory.h>
+#include <otp/messagepart.h>
+#include <otp/messagepartrenderer.h>
 
 class ObjectSourcePrivate
 {

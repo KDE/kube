@@ -1,6 +1,5 @@
 
 find_package(Qt5 COMPONENTS REQUIRED Core Qml)
-find_package(KF5MimeTreeParser "5.1.46" CONFIG REQUIRED)
 find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
 find_package(Sink CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
@@ -10,7 +9,7 @@ find_package(KF5Package CONFIG REQUIRED)
 
 add_definitions("-Wall -std=c++0x -g")
 
-include_directories(.)
+include_directories(. domain/mimetreeparser)
 
 set(SRCS
     frameworkplugin.cpp
@@ -45,7 +44,7 @@ set(SRCS
 
 add_library(frameworkplugin SHARED ${SRCS})
 qt5_use_modules(frameworkplugin Core Quick Qml WebEngineWidgets Test)
-target_link_libraries(frameworkplugin sink mimetreeparser KF5::MimeTreeParser KF5::Codecs KF5::Package KAsync)
+target_link_libraries(frameworkplugin sink mimetreeparser KF5::Codecs KF5::Package KAsync)
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
 add_subdirectory(domain/mimetreeparser)
