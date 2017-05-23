@@ -80,12 +80,6 @@ public:
      */
     void magicSetType(KMime::Content *node, bool autoDecode = true);
 
-    /**
-     *  Return this mails subject, with all "forward" and "reply"
-     *  prefixes removed
-     */
-    static QString cleanSubject(KMime::Message *message);
-
     /** Attach an extra node to an existing node */
     void attachExtraContent(KMime::Content *topLevelNode, KMime::Content *content);
 
@@ -163,18 +157,6 @@ public:
     static QByteArray charset(KMime::Content *node);
 
     /**
-     * Check for prefixes @p prefixRegExps in @p str. If none
-     * is found, @p newPrefix + ' ' is prepended to @p str and the
-     * resulting string is returned. If @p replace is true, any
-     * sequence of whitespace-delimited prefixes at the beginning of
-     * @p str is replaced by @p newPrefix.
-     */
-    static QString replacePrefixes(const QString &str,
-                                   const QStringList &prefixRegExps,
-                                   bool replace,
-                                   const QString &newPrefix);
-
-    /**
      * Return a QTextCodec for the specified charset.
      * This function is a bit more tolerant, than QTextCodec::codecForName
      */
@@ -242,15 +224,6 @@ private:
     Q_DISABLE_COPY(NodeHelper)
     bool unencryptedMessage_helper(KMime::Content *node, QByteArray &resultingData, bool addHeaders,
                                    int recursionLevel = 1);
-
-    /** Check for prefixes @p prefixRegExps in #subject(). If none
-        is found, @p newPrefix + ' ' is prepended to the subject and the
-        resulting string is returned. If @p replace is true, any
-        sequence of whitespace-delimited prefixes at the beginning of
-        #subject() is replaced by @p newPrefix
-    **/
-    static QString cleanSubject(KMime::Message *message, const QStringList &prefixRegExps,
-                                bool replace, const QString &newPrefix);
 
     void mergeExtraNodes(KMime::Content *node);
     void cleanFromExtraNodes(KMime::Content *node);
