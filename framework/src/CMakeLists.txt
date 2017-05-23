@@ -9,20 +9,14 @@ find_package(KF5Package CONFIG REQUIRED)
 
 add_definitions("-Wall -std=c++0x -g")
 
-include_directories(. domain/mimetreeparser)
+include_directories(. domain/mime/mimetreeparser)
 
 set(SRCS
     frameworkplugin.cpp
     settings/settings.cpp
-    domain/attachmentmodel.cpp
     domain/maillistmodel.cpp
     domain/folderlistmodel.cpp
-    domain/objecttreesource.cpp
-    domain/stringhtmlwriter.cpp
     domain/composercontroller.cpp
-    domain/messageparser.cpp
-    domain/messageparser_new.cpp
-    domain/mailtemplates.cpp
     domain/modeltest.cpp
     domain/retriever.cpp
     domain/outboxmodel.cpp
@@ -35,7 +29,13 @@ set(SRCS
     domain/contactcontroller.cpp
     domain/controller.cpp
     domain/peoplemodel.cpp
-    domain/htmlutils.cpp
+    domain/mime/htmlutils.cpp
+    domain/mime/messageparser.cpp
+    domain/mime/messageparser_new.cpp
+    domain/mime/mailtemplates.cpp
+    domain/mime/attachmentmodel.cpp
+    domain/mime/objecttreesource.cpp
+    domain/mime/stringhtmlwriter.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
     fabric.cpp
@@ -47,6 +47,6 @@ qt5_use_modules(frameworkplugin Core Quick Qml WebEngineWidgets Test)
 target_link_libraries(frameworkplugin sink mimetreeparser KF5::Codecs KF5::Package KAsync)
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
-add_subdirectory(domain/mimetreeparser)
+add_subdirectory(domain/mime/mimetreeparser)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
