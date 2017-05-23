@@ -36,8 +36,6 @@ namespace Interface
 {
 class MessagePart;
 typedef QSharedPointer<MessagePart> MessagePartPtr;
-class MessagePartRenderer;
-typedef QSharedPointer<MessagePartRenderer> MessagePartRendererPtr;
 }
 }
 
@@ -99,8 +97,6 @@ public:
     virtual bool showExpandQuotesMark() const = 0;
 
     virtual const BodyPartFormatterBaseFactory *bodyPartFormatterFactory() = 0;
-
-    virtual MessagePartRendererPtr messagePartTheme(MessagePartPtr msgPart) = 0;
 
     virtual bool isPrinting() const = 0;
 };

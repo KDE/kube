@@ -25,7 +25,6 @@
 #include <attachmentstrategy.h>
 #include <bodypartformatter.h>
 #include <bodypartformatterbasefactory.h>
-#include <messagepartrenderer.h>
 #include <objecttreesource.h>
 
 namespace MimeTreeParser
@@ -150,10 +149,6 @@ public:
         return nullptr;
     }
 
-    Interface::MessagePartRenderer::Ptr messagePartTheme(Interface::MessagePart::Ptr msgPart) Q_DECL_OVERRIDE {
-        Q_UNUSED(msgPart);
-        return  Interface::MessagePartRenderer::Ptr();
-    }
     bool isPrinting() const Q_DECL_OVERRIDE
     {
         return false;

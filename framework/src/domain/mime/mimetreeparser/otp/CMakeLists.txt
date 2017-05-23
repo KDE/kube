@@ -34,7 +34,6 @@ set(libmimetreeparser_SRCS
     objecttreesource.cpp
     bodypart.cpp
     htmlwriter.cpp
-    messagepartrenderer.cpp
 
     #bodypartformatter.cpp
     bodypartformatterbasefactory.cpp

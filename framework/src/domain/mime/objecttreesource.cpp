@@ -22,7 +22,6 @@
 #include <otp/attachmentstrategy.h>
 #include <otp/bodypartformatterbasefactory.h>
 #include <otp/messagepart.h>
-#include <otp/messagepartrenderer.h>
 
 class ObjectSourcePrivate
 {
@@ -143,10 +142,4 @@ bool ObjectTreeSource::isPrinting() const
 const MimeTreeParser::BodyPartFormatterBaseFactory *ObjectTreeSource::bodyPartFormatterFactory()
 {
     return &(d->mBodyPartFormatterBaseFactory);
-}
-
-MimeTreeParser::Interface::MessagePartRenderer::Ptr ObjectTreeSource::messagePartTheme(MimeTreeParser::Interface::MessagePart::Ptr msgPart)
-{
-    Q_UNUSED(msgPart);
-    return MimeTreeParser::Interface::MessagePartRenderer::Ptr();
 }
