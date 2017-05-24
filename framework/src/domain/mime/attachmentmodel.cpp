@@ -77,7 +77,7 @@ QHash<int, QByteArray> AttachmentModel::roleNames() const
     roles[TypeRole] = "type";
     roles[NameRole] = "name";
     roles[SizeRole] = "size";
-    roles[IconRole] = "icon";
+    roles[IconRole] = "iconName";
     roles[IsEncryptedRole] = "encrypted";
     roles[IsSignedRole] = "signed";
     return roles;
@@ -114,7 +114,7 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
         case NameRole:
             return entry->mailMime()->filename();
         case IconRole:
-            return QIcon::fromTheme(content->mailMime()->mimetype().iconName());
+            return content->mailMime()->mimetype().iconName();
         case SizeRole:
             return sizeHuman(content);
         case IsEncryptedRole:

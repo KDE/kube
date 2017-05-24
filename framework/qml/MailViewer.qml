@@ -283,7 +283,7 @@ Rectangle {
 
             delegate: AttachmentDelegate {
                 name: model.name
-                icon: "mail-attachment"
+                icon: model.iconName
 
                 clip: true
 
