@@ -39,39 +39,24 @@ Item {
 
     Row {
         id: content
-
         anchors.centerIn: parent
-
         spacing: Kube.Units.smallSpacing
-
-        Rectangle {
-            id: mimetype
-
+        Kube.Icon {
+            anchors.verticalCenter: parent.verticalCenter
             height: Kube.Units.gridUnit
             width: Kube.Units.gridUnit
-
-            color: Kube.Colors.backgroundColor
-
-            Kube.Icon {
-                height: parent.height
-                width: height
-                iconName: root.icon
-            }
+            iconName: root.icon
         }
-
         Label {
+            anchors.verticalCenter: parent.verticalCenter
             text: root.name
             color: Kube.Colors.backgroundColor
         }
         Kube.IconButton {
-            height: parent.height
-            width: height
             iconName: Kube.Icons.goDown
             onClicked: root.download()
         }
         Kube.IconButton {
-            height: parent.height
-            width: height
             iconName: Kube.Icons.edit
             onClicked: root.open()
         }
