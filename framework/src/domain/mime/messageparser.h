@@ -112,6 +112,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     Q_INVOKABLE bool saveAttachmentToDisk(const QModelIndex &parent);
+    Q_INVOKABLE bool openAttachment(const QModelIndex &index);
 
 private:
     std::unique_ptr<AttachmentModelPrivate> d;

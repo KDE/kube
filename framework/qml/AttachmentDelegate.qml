@@ -17,8 +17,6 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Layouts 1.1
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 Item {
@@ -26,9 +24,11 @@ Item {
 
     property string name
     property string icon
+    signal open;
+    signal download;
 
-    width: content.width + Kirigami.Units.gridUnit / 2
-    height: content.height + Kirigami.Units.gridUnit / 2
+    width: content.width + Kube.Units.gridUnit / 2
+    height: content.height + Kube.Units.gridUnit / 2
 
     Rectangle {
         anchors.fill: parent
@@ -37,32 +37,43 @@ Item {
         color: Kube.Colors.disabledTextColor
     }
 
-    RowLayout {
+    Row {
         id: content
 
         anchors.centerIn: parent
 
-        spacing: Kirigami.Units.smallSpacing
+        spacing: Kube.Units.smallSpacing
 
         Rectangle {
             id: mimetype
 
-            height: Kirigami.Units.gridUnit
-            width: Kirigami.Units.gridUnit
+            height: Kube.Units.gridUnit
+            width: Kube.Units.gridUnit
 
             color: Kube.Colors.backgroundColor
 
-            Kirigami.Icon {
+            Kube.Icon {
                 height: parent.height
                 width: height
-
-                source: root.icon
+                iconName: root.icon
             }
         }
 
         Label {
             text: root.name
             color: Kube.Colors.backgroundColor
+        }
+        Kube.IconButton {
+            height: parent.height
+            width: height
+            iconName: Kube.Icons.goDown
+            onClicked: root.download()
+        }
+        Kube.IconButton {
+            height: parent.height
+            width: height
+            iconName: Kube.Icons.edit
+            onClicked: root.open()
         }
     }
 }
