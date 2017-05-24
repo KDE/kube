@@ -1,6 +1,6 @@
 Name:           kube
 Version:        0.3
-Release:	    3%{?dist}
+Release:	    4%{?dist}
 Summary:        kube
 
 Group:          Applications/Desktop
@@ -16,7 +16,7 @@ BuildRequires:  kasync-devel
 BuildRequires:  kf5-kpackage-devel
 BuildRequires:  kf5-kcodecs-devel
 BuildRequires:  kf5-kmime-devel
-BuildRequires:  kf5-messagelib-devel
+BuildRequires:  kf5-ki18n-devel
 BuildRequires:  lmdb-devel
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
@@ -32,7 +32,6 @@ Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2-devel
 Requires:       sink >= 0.3
 Requires:       kirigami
-Requires:       kf5-messagelib
 Requires:       google-noto-sans-fonts
 
 %description
@@ -64,6 +63,7 @@ popd
 %dir %{_libdir}/qt5/qml/org/
 %{_libdir}/qt5/qml/org/kube/
 %{_libdir}/libmimetreeparser.so
+%{_libdir}/kube_otp.so
 %{_datadir}/appdata/org.kde.kube.appdata.xml
 %{_datadir}/applications/org.kde.kube.desktop
 %{_datadir}/icons/kube
