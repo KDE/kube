@@ -453,6 +453,24 @@ Rectangle {
                         }
                     }
                 }
+                Controls1.TreeView {
+                    id: attachmentsTree
+                    width: parent.width
+                    height: implicitHeight
+                    Controls1.TableViewColumn {
+                        role: "type"
+                        title: "Type"
+                    }
+                    Controls1.TableViewColumn {
+                        role: "name"
+                        title: "Name"
+                    }
+                    Controls1.TableViewColumn {
+                        role: "size"
+                        title: "Size"
+                    }
+                    model: messageParser.attachments
+                }
                 TextEdit {
                     id: textEdit
                     width: parent.width
