@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
@@ -38,8 +37,8 @@ MouseArea {
         onTriggered: popup.hide()
     }
 
-    width: Math.max(300, message.contentWidth + (Kirigami.Units.largeSpacing * 2))
-    height: Math.max(50, message.contentHeight + (Kirigami.Units.largeSpacing * 2))
+    width: Math.max(300, message.contentWidth + (Kube.Units.largeSpacing * 2))
+    height: Math.max(50, message.contentHeight + (Kube.Units.largeSpacing * 2))
 
     visible: opacity > 0
     opacity: 0.0
@@ -66,9 +65,9 @@ MouseArea {
         anchors {
             verticalCenter: popup.verticalCenter
             left: parent.left
-            leftMargin: Kirigami.Units.largeSpacing
+            leftMargin: Kube.Units.largeSpacing
             right: parent.right
-            rightMargin: Kirigami.Units.largeSpacing
+            rightMargin: Kube.Units.largeSpacing
         }
 
         font.pixelSize: 16

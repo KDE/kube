@@ -21,7 +21,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
 import QtQuick.Controls 1.3 as Controls
 
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
@@ -63,8 +62,8 @@ Controls.ToolButton {
     Kube.Popup {
         id: dialog
 
-        height: content.height + Kirigami.Units.smallSpacing * 2
-        width: content.width + Kirigami.Units.smallSpacing * 2
+        height: content.height + Kube.Units.smallSpacing * 2
+        width: content.width + Kube.Units.smallSpacing * 2
 
         y: - dialog.height + root.height
         x: root.width
@@ -74,21 +73,21 @@ Controls.ToolButton {
 
             anchors.centerIn: parent
 
-            width: Kirigami.Units.gridUnit * 17
-            height: listView.count * Kirigami.Units.gridUnit * 3 + sendNowButton.height + Kirigami.Units.smallSpacing
+            width: Kube.Units.gridUnit * 17
+            height: listView.count * Kube.Units.gridUnit * 3 + sendNowButton.height + Kube.Units.smallSpacing
 
             ListView {
                 id: listView
 
                 width: parent.width
-                height: count * Kirigami.Units.gridUnit * 3
+                height: count * Kube.Units.gridUnit * 3
 
                 model: outboxModel
 
                 delegate: Rectangle {
                     id: delegateRoot
 
-                    height: Kirigami.Units.gridUnit * 3
+                    height: Kube.Units.gridUnit * 3
                     width: listView.width
 
                     color: Kube.Colors.viewBackgroundColor
@@ -100,7 +99,7 @@ Controls.ToolButton {
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: parent.left
-                            leftMargin: Kirigami.Units.largeSpacing
+                            leftMargin: Kube.Units.largeSpacing
                         }
                         text: model.subject
 
@@ -155,7 +154,7 @@ Controls.ToolButton {
 
                 anchors {
                     top: listView.bottom
-                    topMargin: Kirigami.Units.smallSpacing
+                    topMargin: Kube.Units.smallSpacing
                     horizontalCenter: parent.horizontalCenter
                 }
 

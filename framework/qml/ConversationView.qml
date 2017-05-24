@@ -20,7 +20,6 @@ import QtQuick 2.7
 import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 import QtQml 2.2 as QtQml
