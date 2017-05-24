@@ -78,6 +78,7 @@ DelegateModel {
                     partLoader.setSource("SignaturePart.qml",
                                         {"rootIndex": mailDataModel.modelIndex(index),
                                         "securityLevel": model.securityLevel,
+                                        "model": mailDataModel.model,
                                         "type": model.type,
                                         "debug": debug})
                     break;
