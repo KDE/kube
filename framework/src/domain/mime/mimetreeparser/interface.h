@@ -91,6 +91,7 @@ public:
     QByteArray cid() const;
     QByteArray charset() const;
     QString filename() const;
+    bool isText() const;
 
     // Unique identifier to ecactly this KMime::Content
     QByteArray link() const;

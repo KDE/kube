@@ -20,8 +20,11 @@
 #include "messageparser.h"
 #include "mimetreeparser/interface.h"
 
-#include <QIcon>
 #include <QDebug>
+#include <KMime/Content>
+#include <QFile>
+#include <QStandardPaths>
+#include <QDir>
 
 QString sizeHuman(const Content::Ptr &content)
 {
@@ -124,6 +127,39 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
         }
     }
     return QVariant();
+}
+
+bool AttachmentModel::saveAttachmentToDisk(const QModelIndex &index)
+{
+    if (index.internalPointer()) {
+        const auto entry = static_cast<Part *>(index.internalPointer());
+        const auto content = entry->content().at(0);
+        auto filename = entry->mailMime()->filename();
+        auto data = content->mailMime()->decodedContent();
+
+        auto downloadDir = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+        if (downloadDir.isEmpty()) {
+            downloadDir = "~";
+        }
+        downloadDir += "/kube/";
+        QDir{}.mkpath(downloadDir);
+
+        auto fname = downloadDir + filename;
+
+        if (content->mailMime()->isText() && !data.isEmpty()) {
+            // convert CRLF to LF before writing text attachments to disk
+            data = KMime::CRLFtoLF(data);
+        }
+        QFile f(fname);
+        if (!f.open(QIODevice::ReadWrite)) {
+            qWarning() << "Failed to write attachment to file:" << fname << " Error: " << f.errorString();
+            return false;
+        }
+        f.write(data);
+        qInfo() << "Wrote attachment to file: " << fname;
+        return true;
+    }
+    return false;
 }
 
 QModelIndex AttachmentModel::parent(const QModelIndex &index) const

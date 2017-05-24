@@ -288,6 +288,10 @@ Rectangle {
                 clip: true
 
                 //TODO size encrypted signed type
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: messageParser.attachments.saveAttachmentToDisk(messageParser.attachments.index(index, 0))
+                }
             }
         }
     }

@@ -150,6 +150,22 @@ QMimeType MailMime::mimetype() const
     return mimeDb.mimeTypeForName(ct->mimeType());
 }
 
+static KMime::Headers::ContentType *contentType(KMime::Content *node)
+{
+    if (node) {
+        return node->contentType(false);
+    }
+    return nullptr;
+}
+
+bool MailMime::isText() const
+{
+    if (auto ct = contentType(d->mNode)) {
+        return ct->isText();
+    }
+    return false;
+}
+
 MailMime::Ptr MailMime::parent() const
 {
     if (!d->parent) {
