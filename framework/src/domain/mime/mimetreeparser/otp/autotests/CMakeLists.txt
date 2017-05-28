@@ -31,7 +31,7 @@ macro(add_mimetreeparser_crypto_unittest _source)
     set(_test ${_source} util.cpp)
     get_filename_component(_name ${_source} NAME_WE)
     add_executable( ${_name} ${_test} setupenv.cpp)
-    ecm_mark_as_test(mimetreeparser-${_name})
+    ecm_mark_as_test(${_name})
     target_link_libraries( ${_name}
         kube_otp
         Qt5::Test
