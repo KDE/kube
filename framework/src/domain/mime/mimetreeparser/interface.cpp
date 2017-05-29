@@ -20,7 +20,6 @@
 #include "interface.h"
 #include "interface_p.h"
 
-#include "stringhtmlwriter.h"
 #include "objecttreesource.h"
 
 #include <QGpgME/KeyListJob>

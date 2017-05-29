@@ -34,7 +34,6 @@
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
 
-#include "stringhtmlwriter.h"
 #include "objecttreesource.h"
 
 #include <otp/objecttreeparser.h>
