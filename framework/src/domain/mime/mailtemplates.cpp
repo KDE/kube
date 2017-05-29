@@ -788,53 +788,53 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     auto definedLocale = QLocale::system();
 
     //TODO set empty source instead
-    StringHtmlWriter htmlWriter;
-    MimeTreeParser::NodeHelper nodeHelper;
-    ObjectTreeSource source(&htmlWriter);
-    MimeTreeParser::ObjectTreeParser otp(&source, &nodeHelper);
-    otp.setAllowAsync(false);
-    otp.parseObjectTree(origMsg.data());
+    /* StringHtmlWriter htmlWriter; */
+    /* MimeTreeParser::NodeHelper nodeHelper; */
+    /* ObjectTreeSource source(&htmlWriter); */
+    /* MimeTreeParser::ObjectTreeParser otp(&source, &nodeHelper); */
+    /* otp.setAllowAsync(false); */
+    /* otp.parseObjectTree(origMsg.data()); */
 
-    //Add quoted body
-    QString plainBody;
-    QString htmlBody;
+    /* //Add quoted body */
+    /* QString plainBody; */
+    /* QString htmlBody; */
 
-    //On $datetime you wrote:
-    const QDateTime date = origMsg->date()->dateTime();
-    const auto dateTimeString = QString("%1 %2").arg(definedLocale.toString(date.date(), QLocale::LongFormat)).arg(definedLocale.toString(date.time(), QLocale::LongFormat));
-    const auto onDateYouWroteLine = QString("On %1 you wrote:").arg(dateTimeString);
-    plainBody.append(onDateYouWroteLine);
-    htmlBody.append(plainToHtml(onDateYouWroteLine));
+    /* //On $datetime you wrote: */
+    /* const QDateTime date = origMsg->date()->dateTime(); */
+    /* const auto dateTimeString = QString("%1 %2").arg(definedLocale.toString(date.date(), QLocale::LongFormat)).arg(definedLocale.toString(date.time(), QLocale::LongFormat)); */
+    /* const auto onDateYouWroteLine = QString("On %1 you wrote:").arg(dateTimeString); */
+    /* plainBody.append(onDateYouWroteLine); */
+    /* htmlBody.append(plainToHtml(onDateYouWroteLine)); */
 
-    //Strip signature for replies
-    const bool stripSignature = true;
+    /* //Strip signature for replies */
+    /* const bool stripSignature = true; */
 
-    const auto plainTextContent = otp.plainTextContent();
-    const auto htmlContent = otp.htmlContent();
+    /* const auto plainTextContent = otp.plainTextContent(); */
+    /* const auto htmlContent = otp.htmlContent(); */
 
-    plainMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body) {
-        //Quoted body
-        QString plainQuote = quotedPlainText(body, origMsg->from()->displayString());
-        if (plainQuote.endsWith(QLatin1Char('\n'))) {
-            plainQuote.chop(1);
-        }
-        //The plain body is complete
-        auto plainBodyResult = plainBody + plainQuote;
-        htmlMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body, const QString &headElement) {
-            //The html body is complete
-            auto htmlBodyResult = htmlBody + quotedHtmlText(body);
-            if (alwaysPlain) {
-                htmlBodyResult.clear();
-            } else {
-                makeValidHtml(htmlBodyResult, headElement);
-            }
+    /* plainMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body) { */
+    /*     //Quoted body */
+    /*     QString plainQuote = quotedPlainText(body, origMsg->from()->displayString()); */
+    /*     if (plainQuote.endsWith(QLatin1Char('\n'))) { */
+    /*         plainQuote.chop(1); */
+    /*     } */
+    /*     //The plain body is complete */
+    /*     auto plainBodyResult = plainBody + plainQuote; */
+    /*     htmlMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body, const QString &headElement) { */
+    /*         //The html body is complete */
+    /*         auto htmlBodyResult = htmlBody + quotedHtmlText(body); */
+    /*         if (alwaysPlain) { */
+    /*             htmlBodyResult.clear(); */
+    /*         } else { */
+    /*             makeValidHtml(htmlBodyResult, headElement); */
+    /*         } */
 
-            //Assemble the message
-            addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false);
-            applyCharset(msg, origMsg);
-            msg->assemble();
-            //We're done
-            callback(msg);
-        });
-    });
+    /*         //Assemble the message */
+    /*         addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false); */
+    /*         applyCharset(msg, origMsg); */
+    /*         msg->assemble(); */
+    /*         //We're done */
+    /*         callback(msg); */
+    /*     }); */
+    /* }); */
 }
