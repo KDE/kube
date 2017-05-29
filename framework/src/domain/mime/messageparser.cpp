@@ -49,7 +49,13 @@ QVariant MessageParser::message() const
 void MessageParser::setMessage(const QVariant &message)
 {
     d->mParser = std::shared_ptr<Parser>(new Parser(message.toByteArray()));
+    mRawContent = message.toString();
     emit htmlChanged();
+}
+
+QString MessageParser::rawContent() const
+{
+    return mRawContent;
 }
 
 QAbstractItemModel *MessageParser::newTree() const

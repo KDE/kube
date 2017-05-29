@@ -42,6 +42,7 @@ class MessageParser : public QObject
     Q_PROPERTY (QVariant message READ message WRITE setMessage)
     Q_PROPERTY (QAbstractItemModel* newTree READ newTree NOTIFY htmlChanged)
     Q_PROPERTY (QAbstractItemModel* attachments READ attachments NOTIFY htmlChanged)
+    Q_PROPERTY (QString rawContent READ rawContent NOTIFY htmlChanged)
 
 public:
     explicit MessageParser(QObject *parent = Q_NULLPTR);
@@ -51,12 +52,14 @@ public:
     void setMessage(const QVariant &to);
     QAbstractItemModel *newTree() const;
     QAbstractItemModel *attachments() const;
+    QString rawContent() const;
 
 signals:
     void htmlChanged();
 
 private:
     std::unique_ptr<MessagePartPrivate> d;
+    QString mRawContent;
 };
 
 class NewModel : public QAbstractItemModel {
