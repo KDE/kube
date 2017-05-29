@@ -99,11 +99,6 @@ public:
         return nullptr;
     }
 
-    QString createMessageHeader(KMime::Message *message) Q_DECL_OVERRIDE {
-        Q_UNUSED(message);
-        return QString(); //do nothing
-    }
-
     QObject *sourceObject() Q_DECL_OVERRIDE {
         return nullptr;
     }

@@ -66,11 +66,6 @@ const QTextCodec *ObjectTreeSource::overrideCodec()
     return Q_NULLPTR;
 }
 
-QString ObjectTreeSource::createMessageHeader(KMime::Message *message)
-{
-    return QString();
-}
-
 const MimeTreeParser::AttachmentStrategy *ObjectTreeSource::attachmentStrategy()
 {
     return MimeTreeParser::AttachmentStrategy::smart();
