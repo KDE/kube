@@ -317,7 +317,7 @@ Rectangle {
             anchors.top: body.top
             anchors.left: body.left
             anchors.right: body.right
-            model: messageParser.newTree
+            model: messageParser.parts
             debug: false
         }
 
@@ -479,6 +479,16 @@ Rectangle {
                     textFormat: TextEdit.PlainText
                     wrapMode: TextEdit.Wrap
                     height: implicitHeight
+                }
+                TextEdit {
+                    id: rawContent
+                    width: parent.width
+                    readOnly: true
+                    selectByMouse: true
+                    textFormat: TextEdit.PlainText
+                    wrapMode: TextEdit.Wrap
+                    height: implicitHeight
+                    text: messageParser.rawContent
                 }
             }
         }

@@ -18,15 +18,17 @@
 */
 #include "messageparser.h"
 
+#include "partmodel.h"
+#include "attachmentmodel.h"
 #include "modeltest.h"
-#include "mimetreeparser/interface.h"
+#include <mimetreeparser/objecttreeparser.h>
 
 #include <QDebug>
 
 class MessagePartPrivate
 {
 public:
-    std::shared_ptr<Parser> mParser;
+    std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
 };
 
 MessageParser::MessageParser(QObject *parent)
@@ -48,16 +50,24 @@ QVariant MessageParser::message() const
 
 void MessageParser::setMessage(const QVariant &message)
 {
-    d->mParser = std::shared_ptr<Parser>(new Parser(message.toByteArray()));
+    d->mParser = std::make_shared<MimeTreeParser::ObjectTreeParser>();
+    d->mParser->parseObjectTree(message.toByteArray());
+    d->mParser->decryptParts();
+    mRawContent = message.toString();
     emit htmlChanged();
 }
 
-QAbstractItemModel *MessageParser::newTree() const
+QString MessageParser::rawContent() const
+{
+    return mRawContent;
+}
+
+QAbstractItemModel *MessageParser::parts() const
 {
     if (!d->mParser) {
         return nullptr;
     }
-    const auto model = new NewModel(d->mParser);
+    const auto model = new PartModel(d->mParser);
     // new ModelTest(model, model);
     return model;
 }

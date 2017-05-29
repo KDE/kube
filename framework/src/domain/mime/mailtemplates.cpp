@@ -34,10 +34,7 @@
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
 
-#include "stringhtmlwriter.h"
-#include "objecttreesource.h"
-
-#include <otp/objecttreeparser.h>
+#include <mimetreeparser/objecttreeparser.h>
 
 namespace KMime {
     namespace Types {
@@ -788,10 +785,7 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     auto definedLocale = QLocale::system();
 
     //TODO set empty source instead
-    StringHtmlWriter htmlWriter;
-    MimeTreeParser::NodeHelper nodeHelper;
-    ObjectTreeSource source(&htmlWriter);
-    MimeTreeParser::ObjectTreeParser otp(&source, &nodeHelper);
+    MimeTreeParser::ObjectTreeParser otp;
     otp.setAllowAsync(false);
     otp.parseObjectTree(origMsg.data());
 
@@ -813,12 +807,12 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     const auto htmlContent = otp.htmlContent();
 
     plainMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body) {
-        //Quoted body
+        //Quoted body */
         QString plainQuote = quotedPlainText(body, origMsg->from()->displayString());
         if (plainQuote.endsWith(QLatin1Char('\n'))) {
             plainQuote.chop(1);
         }
-        //The plain body is complete
+        //The plain body is complete */
         auto plainBodyResult = plainBody + plainQuote;
         htmlMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body, const QString &headElement) {
             //The html body is complete
@@ -829,7 +823,7 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
                 makeValidHtml(htmlBodyResult, headElement);
             }
 
-            //Assemble the message
+            //Assemble the message */
             addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false);
             applyCharset(msg, origMsg);
             msg->assemble();

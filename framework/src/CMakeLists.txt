@@ -31,11 +31,9 @@ set(SRCS
     domain/peoplemodel.cpp
     domain/mime/htmlutils.cpp
     domain/mime/messageparser.cpp
-    domain/mime/messageparser_new.cpp
-    domain/mime/mailtemplates.cpp
     domain/mime/attachmentmodel.cpp
-    domain/mime/objecttreesource.cpp
-    domain/mime/stringhtmlwriter.cpp
+    domain/mime/partmodel.cpp
+    domain/mime/mailtemplates.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
     fabric.cpp
@@ -44,7 +42,7 @@ set(SRCS
 
 add_library(frameworkplugin SHARED ${SRCS})
 qt5_use_modules(frameworkplugin Core Quick Qml WebEngineWidgets Test)
-target_link_libraries(frameworkplugin sink mimetreeparser KF5::Codecs KF5::Package KAsync)
+target_link_libraries(frameworkplugin sink kube_otp KF5::Codecs KF5::Package KAsync)
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
 add_subdirectory(domain/mime/mimetreeparser)

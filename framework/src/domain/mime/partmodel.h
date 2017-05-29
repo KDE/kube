@@ -16,49 +16,48 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-
 #pragma once
 
 #include <QObject>
-#include <QString>
-#include <QStringList>
 
 #include <QAbstractItemModel>
 #include <QModelIndex>
 
 #include <memory>
 
-class QAbstractItemModel;
-
-class MessagePartPrivate;
-
 namespace MimeTreeParser {
     class ObjectTreeParser;
 }
+class PartModelPrivate;
 
-class MessageParser : public QObject
-{
+class PartModel : public QAbstractItemModel {
     Q_OBJECT
-    Q_PROPERTY (QVariant message READ message WRITE setMessage)
-    Q_PROPERTY (QAbstractItemModel* parts READ parts NOTIFY htmlChanged)
-    Q_PROPERTY (QAbstractItemModel* attachments READ attachments NOTIFY htmlChanged)
-    Q_PROPERTY (QString rawContent READ rawContent NOTIFY htmlChanged)
+public:
+    PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser);
+    ~PartModel();
 
 public:
-    explicit MessageParser(QObject *parent = Q_NULLPTR);
-    ~MessageParser();
+    enum Roles {
+        TypeRole  = Qt::UserRole + 1,
+        ContentsRole,
+        ContentRole,
+        IsEmbededRole,
+        IsEncryptedRole,
+        IsSignedRole,
+        IsErrorRole,
+        SecurityLevelRole,
+        EncryptionErrorType,
+        EncryptionErrorString
+    };
 
-    QVariant message() const;
-    void setMessage(const QVariant &to);
-    QAbstractItemModel *parts() const;
-    QAbstractItemModel *attachments() const;
-    QString rawContent() const;
-
-signals:
-    void htmlChanged();
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
 private:
-    std::unique_ptr<MessagePartPrivate> d;
-    QString mRawContent;
+    std::unique_ptr<PartModelPrivate> d;
 };
 

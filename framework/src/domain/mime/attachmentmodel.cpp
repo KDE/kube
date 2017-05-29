@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2016 Sandro Knauß <knauss@kolabsys.com>
+    Copyright (c) 2017 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +18,9 @@
     02110-1301, USA.
 */
 
-#include "messageparser.h"
-#include "mimetreeparser/interface.h"
+#include "attachmentmodel.h"
+
+#include <mimetreeparser/objecttreeparser.h>
 
 #include <QDebug>
 #include <KMime/Content>
@@ -26,47 +28,48 @@
 #include <QStandardPaths>
 #include <QDesktopServices>
 #include <QDir>
+#include <QUrl>
+#include <QMimeDatabase>
 
-QString sizeHuman(const Content::Ptr &content)
+QString sizeHuman(float size)
 {
-    float num = content->content().size();
     QStringList list;
     list << "KB" << "MB" << "GB" << "TB";
 
     QStringListIterator i(list);
     QString unit("Bytes");
 
-    while(num >= 1024.0 && i.hasNext())
+    while(size >= 1024.0 && i.hasNext())
      {
         unit = i.next();
-        num /= 1024.0;
+        size /= 1024.0;
     }
 
     if (unit == "Bytes") {
-        return QString().setNum(num) + " " + unit;
+        return QString().setNum(size) + " " + unit;
     } else {
-        return QString().setNum(num,'f',2)+" "+unit;
+        return QString().setNum(size,'f',2)+" "+unit;
     }
 }
 
 class AttachmentModelPrivate
 {
 public:
-    AttachmentModelPrivate(AttachmentModel *q_ptr, const std::shared_ptr<Parser> &parser);
+    AttachmentModelPrivate(AttachmentModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser);
 
     AttachmentModel *q;
-    std::shared_ptr<Parser> mParser;
-    QVector<Part::Ptr> mAttachments;
+    std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
+    QVector<MimeTreeParser::MessagePartPtr> mAttachments;
 };
 
-AttachmentModelPrivate::AttachmentModelPrivate(AttachmentModel* q_ptr, const std::shared_ptr<Parser>& parser)
+AttachmentModelPrivate::AttachmentModelPrivate(AttachmentModel* q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser>& parser)
     : q(q_ptr)
     , mParser(parser)
 {
     mAttachments = mParser->collectAttachmentParts();
 }
 
-AttachmentModel::AttachmentModel(std::shared_ptr<Parser> parser)
+AttachmentModel::AttachmentModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser)
     : d(std::unique_ptr<AttachmentModelPrivate>(new AttachmentModelPrivate(this, parser)))
 {
 }
@@ -94,7 +97,7 @@ QModelIndex AttachmentModel::index(int row, int column, const QModelIndex &paren
     }
 
     if (row < d->mAttachments.size()) {
-        return createIndex(row, column, d->mAttachments.at(row).get());
+        return createIndex(row, column, d->mAttachments.at(row).data());
     }
     return QModelIndex();
 }
@@ -110,44 +113,57 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
     }
 
     if (index.internalPointer()) {
-        const auto entry = static_cast<Part *>(index.internalPointer());
-        const auto content = entry->content().at(0);
+        const auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
+        Q_ASSERT(part);
+        auto node = part->node();
+        if (!node) {
+            qWarning() << "no content for attachment";
+            return {};
+        }
+        QMimeDatabase mimeDb;
+        const auto mimetype = mimeDb.mimeTypeForName(QString::fromLatin1(part->mimeType()));
+        const auto content = node->encodedContent();
         switch(role) {
         case TypeRole:
-            return content->mailMime()->mimetype().name();
+            return mimetype.name();
         case NameRole:
-            return entry->mailMime()->filename();
+            return part->filename();
         case IconRole:
-            return content->mailMime()->mimetype().iconName();
+            return mimetype.iconName();
         case SizeRole:
-            return sizeHuman(content);
+            return sizeHuman(content.size());
         case IsEncryptedRole:
-            return content->encryptions().size() > 0;
+            return part->encryptions().size() > 0;
         case IsSignedRole:
-            return content->signatures().size() > 0;
+            return part->signatures().size() > 0;
         }
     }
     return QVariant();
 }
 
-static QString saveAttachmentToDisk(const QModelIndex &index, const QString &path)
+static QString saveAttachmentToDisk(const QModelIndex &index, const QString &path, bool readonly = false)
 {
     if (index.internalPointer()) {
-        const auto entry = static_cast<Part *>(index.internalPointer());
-        const auto content = entry->content().at(0);
-        auto filename = entry->mailMime()->filename();
-        auto data = content->mailMime()->decodedContent();
-        if (content->mailMime()->isText() && !data.isEmpty()) {
+        const auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
+        Q_ASSERT(part);
+        auto node = part->node();
+        auto data = node->decodedContent();
+        if (part->isText()) {
             // convert CRLF to LF before writing text attachments to disk
             data = KMime::CRLFtoLF(data);
         }
-        auto fname = path + filename;
+        auto fname = path + part->filename();
         QFile f(fname);
         if (!f.open(QIODevice::ReadWrite)) {
             qWarning() << "Failed to write attachment to file:" << fname << " Error: " << f.errorString();
             return {};
         }
         f.write(data);
+        if (readonly) {
+            // make file read-only so that nobody gets the impression that he migh edit attached files
+            f.setPermissions(QFileDevice::ReadUser);
+        }
+        f.close();
         qInfo() << "Wrote attachment to file: " << fname;
         return fname;
     }
@@ -170,7 +186,7 @@ bool AttachmentModel::openAttachment(const QModelIndex &index)
 {
     auto downloadDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation)+ "/kube/";
     QDir{}.mkpath(downloadDir);
-    const auto filePath = ::saveAttachmentToDisk(index, downloadDir);
+    const auto filePath = ::saveAttachmentToDisk(index, downloadDir, true);
     if (!filePath.isEmpty()) {
         QDesktopServices::openUrl(QUrl("file://" + filePath));
         return true;
