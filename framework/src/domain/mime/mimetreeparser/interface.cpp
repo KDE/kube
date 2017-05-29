@@ -964,28 +964,24 @@ void ParserPrivate::setMessage(const QByteArray& mimeMessage)
 void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, const Part::Ptr &tree)
 {
     foreach (const auto &mp, start->subParts()) {
-        const auto m = mp.dynamicCast<MimeTreeParser::MessagePart>();
-        const auto text = mp.dynamicCast<MimeTreeParser::TextMessagePart>();
-        const auto alternative = mp.dynamicCast<MimeTreeParser::AlternativeMessagePart>();
-        const auto html = mp.dynamicCast<MimeTreeParser::HtmlMessagePart>();
-        const auto attachment = mp.dynamicCast<MimeTreeParser::AttachmentMessagePart>();
-         if (attachment) {
+         if (const auto attachment = mp.dynamicCast<MimeTreeParser::AttachmentMessagePart>()) {
             auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(attachment);
             tree->d->appendSubPart(part);
-         } else if (text) {
+         } else if (const auto text = mp.dynamicCast<MimeTreeParser::TextMessagePart>()) {
             auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(text);
             tree->d->appendSubPart(part);
-        } else if (alternative) {
+        } else if (const auto alternative = mp.dynamicCast<MimeTreeParser::AlternativeMessagePart>()) {
             auto part = std::make_shared<AlternativePart>();
             part->d->fillFrom(alternative);
             tree->d->appendSubPart(part);
-        } else if (html) {
+        } else if (const auto html = mp.dynamicCast<MimeTreeParser::HtmlMessagePart>()) {
             auto part = std::make_shared<SinglePart>();
             part->d->fillFrom(html);
             tree->d->appendSubPart(part);
         } else {
+            const auto m = mp.dynamicCast<MimeTreeParser::MessagePart>();
             const auto enc = mp.dynamicCast<MimeTreeParser::EncryptedMessagePart>();
             const auto sig = mp.dynamicCast<MimeTreeParser::SignedMessagePart>();
             if (enc || sig) {
