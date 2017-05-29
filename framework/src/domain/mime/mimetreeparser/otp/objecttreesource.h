@@ -67,12 +67,6 @@ public:
     /** Return true if an encrypted mail should be decrypted */
     virtual bool decryptMessage() const = 0;
 
-    /** Return true if external sources should be loaded in a html mail */
-    virtual bool htmlLoadExternal() const = 0;
-
-    /** Return true to include the signature details in the generated html */
-    virtual bool showSignatureDetails() const = 0;
-
     virtual int levelQuote() const = 0;
 
     /** The override codec that should be used for the mail */

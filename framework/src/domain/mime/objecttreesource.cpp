@@ -28,14 +28,12 @@ class ObjectSourcePrivate
 public:
     ObjectSourcePrivate()
         : mAllowDecryption(true)
-        , mHtmlLoadExternal(true)
         , mPreferredMode(MimeTreeParser::Util::Html)
     {
 
     }
     MimeTreeParser::BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     bool mAllowDecryption;
-    bool mHtmlLoadExternal;
     MimeTreeParser::Util::HtmlMode mPreferredMode;
 };
 
@@ -55,24 +53,9 @@ void ObjectTreeSource::setAllowDecryption(bool allowDecryption)
     d->mAllowDecryption = allowDecryption;
 }
 
-bool ObjectTreeSource::htmlLoadExternal() const
-{
-    return d->mHtmlLoadExternal;
-}
-
-void ObjectTreeSource::setHtmlLoadExternal(bool loadExternal)
-{
-    d->mHtmlLoadExternal = loadExternal;
-}
-
 bool ObjectTreeSource::decryptMessage() const
 {
     return d->mAllowDecryption;
-}
-
-bool ObjectTreeSource::showSignatureDetails() const
-{
-    return true;
 }
 
 int ObjectTreeSource::levelQuote() const

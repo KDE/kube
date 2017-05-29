@@ -48,19 +48,8 @@ public:
     TestObjectTreeSource()
         : mAttachmentStrategy(QStringLiteral("smart"))
         , mPreferredMode(Util::Html)
-        , mHtmlLoadExternal(false)
         , mDecryptMessage(false)
     {
-    }
-
-    bool htmlLoadExternal() const Q_DECL_OVERRIDE
-    {
-        return mHtmlLoadExternal;
-    }
-
-    void setHtmlLoadExternal(bool loadExternal)
-    {
-        mHtmlLoadExternal = loadExternal;
     }
 
     void setAttachmentStrategy(QString strategy)
@@ -77,11 +66,6 @@ public:
         return true;
     }
 
-    bool showExpandQuotesMark() const Q_DECL_OVERRIDE
-    {
-        return false;
-    }
-
     const BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE {
         return &mBodyPartFormatterBaseFactory;
     }
@@ -94,16 +78,6 @@ public:
     void setAllowDecryption(bool allowDecryption)
     {
         mDecryptMessage = allowDecryption;
-    }
-
-    void setShowSignatureDetails(bool showSignatureDetails)
-    {
-        mShowSignatureDetails = showSignatureDetails;
-    }
-
-    bool showSignatureDetails() const Q_DECL_OVERRIDE
-    {
-        return mShowSignatureDetails;
     }
 
     void setHtmlMode(MimeTreeParser::Util::HtmlMode mode, const QList<MimeTreeParser::Util::HtmlMode> &availableModes) Q_DECL_OVERRIDE {
@@ -142,9 +116,7 @@ private:
     QString mAttachmentStrategy;
     BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     MimeTreeParser::Util::HtmlMode mPreferredMode;
-    bool mHtmlLoadExternal;
     bool mDecryptMessage;
-    bool mShowSignatureDetails;
 };
 
 }
