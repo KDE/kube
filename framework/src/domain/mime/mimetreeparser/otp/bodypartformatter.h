@@ -70,8 +70,6 @@ public:
     virtual QString plaintextContent() const;
     virtual QString htmlContent() const;
 
-    virtual MimeTreeParser::HtmlWriter *htmlWriter() const;
-    virtual void setHtmlWriter(MimeTreeParser::HtmlWriter *htmlWriter) const;
 private:
     MessagePartPrivate *d;
 

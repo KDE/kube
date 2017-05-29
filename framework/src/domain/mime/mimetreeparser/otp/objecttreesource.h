@@ -84,7 +84,6 @@ public:
     virtual const AttachmentStrategy *attachmentStrategy() = 0;
 
     /** Return the html write object */
-    virtual HtmlWriter *htmlWriter() = 0;
 
     /** The source object behind the interface. */
     virtual QObject *sourceObject() = 0;

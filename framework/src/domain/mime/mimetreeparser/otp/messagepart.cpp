@@ -22,7 +22,6 @@
 #include "attachmentstrategy.h"
 #include "cryptohelper.h"
 #include "objecttreeparser.h"
-#include "htmlwriter.h"
 #include "qgpgmejobexecutor.h"
 
 #include "cryptobodypartmemento.h"
@@ -121,16 +120,7 @@ Interface::ObjectTreeSource *MessagePart::source() const
     return mOtp->mSource;
 }
 
-HtmlWriter *MessagePart::htmlWriter() const
-{
-    Q_ASSERT(mOtp);
-    return mOtp->htmlWriter();
-}
 
-void MessagePart::setHtmlWriter(HtmlWriter *htmlWriter) const
-{
-    mOtp->mHtmlWriter = htmlWriter;
-}
 
 void MessagePart::parseInternal(KMime::Content *node, bool onlyOneMimePart)
 {

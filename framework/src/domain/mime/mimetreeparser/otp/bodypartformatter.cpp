@@ -47,8 +47,7 @@ class MessagePartPrivate
 {
 public:
     MessagePartPrivate(const BodyPart *part)
-        : mHtmlWriter(nullptr)
-        , mPart(part)
+        : mPart(part)
         , mParentPart(nullptr)
         , mCreatedWriter(false)
     {
@@ -56,20 +55,9 @@ public:
 
     ~MessagePartPrivate()
     {
-        if (mCreatedWriter) {
-            delete mHtmlWriter;
-        }
     }
 
-    MimeTreeParser::HtmlWriter *htmlWriter()
-    {
-        if (!mHtmlWriter && mPart) {
-            mHtmlWriter = mPart->objectTreeParser()->htmlWriter();
-        }
-        return mHtmlWriter;
-    }
 
-    MimeTreeParser::HtmlWriter *mHtmlWriter;
     const BodyPart *mPart;
     MessagePart *mParentPart;
     bool mCreatedWriter;
@@ -98,7 +86,6 @@ MessagePart::~MessagePart()
 void MessagePart::html(bool decorate)
 {
     Q_UNUSED(decorate);
-    static_cast<QueueHtmlWriter *>(d->mHtmlWriter)->replay();
 }
 
 QString MessagePart::text() const
@@ -126,22 +113,11 @@ QString MessagePart::plaintextContent() const
     return text();
 }
 
-MimeTreeParser::HtmlWriter *MessagePart::htmlWriter() const
-{
-    return d->htmlWriter();
-}
 
-void MessagePart::setHtmlWriter(MimeTreeParser::HtmlWriter *htmlWriter) const
-{
-    if (d->mHtmlWriter) {
-        d->mHtmlWriter = htmlWriter;
-    }
-}
 
 MessagePart::Ptr BodyPartFormatter::process(BodyPart &part) const
 {
     auto mp = MessagePart::Ptr(new MessagePart(part));
-    mp->setHtmlWriter(new QueueHtmlWriter(mp->htmlWriter()));
     mp->d->mCreatedWriter = true;
     return mp;
 }

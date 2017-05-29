@@ -951,16 +951,11 @@ void ParserPrivate::setMessage(const QByteArray& mimeMessage)
     mMsg->setContent(mailData);
     mMsg->parse();
 
-    // render the mail
-    StringHtmlWriter htmlWriter;
-    ObjectTreeSource source(&htmlWriter);
+    ObjectTreeSource source;
     MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
 
     otp.parseObjectTree(mMsg.data());
     mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
-
-    mEmbeddedPartMap = htmlWriter.embeddedParts();
-    mHtml = htmlWriter.html();
 
     mTree = std::make_shared<Part>();
     createTree(mPartTree, mTree);

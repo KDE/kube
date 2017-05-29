@@ -28,7 +28,7 @@ class ObjectSourcePrivate;
 class ObjectTreeSource : public MimeTreeParser::Interface::ObjectTreeSource
 {
 public:
-    ObjectTreeSource(MimeTreeParser::HtmlWriter *writer);
+    ObjectTreeSource();
     virtual ~ObjectTreeSource();
     void setHtmlLoadExternal(bool loadExternal);
     bool decryptMessage() const Q_DECL_OVERRIDE;
@@ -41,7 +41,7 @@ public:
     const QTextCodec *overrideCodec() Q_DECL_OVERRIDE;
     QString createMessageHeader(KMime::Message *message) Q_DECL_OVERRIDE;
     const MimeTreeParser::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
-    MimeTreeParser::HtmlWriter *htmlWriter() Q_DECL_OVERRIDE;
+    /* MimeTreeParser::HtmlWriter *htmlWriter() Q_DECL_OVERRIDE; */
     QObject *sourceObject() Q_DECL_OVERRIDE;
     bool autoImportKeys() const Q_DECL_OVERRIDE;
     bool showEmoticons() const Q_DECL_OVERRIDE;

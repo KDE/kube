@@ -27,25 +27,22 @@ class ObjectSourcePrivate
 {
 public:
     ObjectSourcePrivate()
-        : mWriter(0)
-        , mAllowDecryption(true)
+        : mAllowDecryption(true)
         , mHtmlLoadExternal(true)
         , mPreferredMode(MimeTreeParser::Util::Html)
     {
 
     }
-    MimeTreeParser::HtmlWriter *mWriter;
     MimeTreeParser::BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     bool mAllowDecryption;
     bool mHtmlLoadExternal;
     MimeTreeParser::Util::HtmlMode mPreferredMode;
 };
 
-ObjectTreeSource::ObjectTreeSource(MimeTreeParser::HtmlWriter *writer)
+ObjectTreeSource::ObjectTreeSource()
         : MimeTreeParser::Interface::ObjectTreeSource()
         , d(new ObjectSourcePrivate)
     {
-        d->mWriter = writer;
     }
 
 ObjectTreeSource::~ObjectTreeSource()
@@ -56,11 +53,6 @@ ObjectTreeSource::~ObjectTreeSource()
 void ObjectTreeSource::setAllowDecryption(bool allowDecryption)
 {
     d->mAllowDecryption = allowDecryption;
-}
-
-MimeTreeParser::HtmlWriter *ObjectTreeSource::htmlWriter()
-{
-    return d->mWriter;
 }
 
 bool ObjectTreeSource::htmlLoadExternal() const

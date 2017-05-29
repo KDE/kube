@@ -98,8 +98,6 @@ public:
     const QVector<Interface::MessagePart::Ptr> &subParts() const;
     bool hasSubParts() const;
 
-    HtmlWriter *htmlWriter() const Q_DECL_OVERRIDE;
-    void setHtmlWriter(HtmlWriter *htmlWriter) const Q_DECL_OVERRIDE;
 
     Interface::ObjectTreeSource *source() const;
     KMime::Content *attachmentNode() const;

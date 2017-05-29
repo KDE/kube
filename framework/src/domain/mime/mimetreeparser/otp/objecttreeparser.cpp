@@ -225,27 +225,6 @@ bool ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processR
             break;
         } else if (dynamic_cast<MimeTreeParser::Interface::MessagePart *>(result.data())) {
             QObject *asyncResultObserver = allowAsync() ? mSource->sourceObject() : nullptr;
-            const auto r = formatter->format(&part, result->htmlWriter(), asyncResultObserver);
-            if (r == Interface::BodyPartFormatter::AsIcon) {
-                processResult.setNeverDisplayInline(true);
-                formatter->adaptProcessResult(processResult);
-                mNodeHelper->setNodeDisplayedEmbedded(node, false);
-                const Interface::MessagePart::Ptr mp = defaultHandling(node, processResult, onlyOneMimePart);
-                if (mp) {
-                    if (auto _mp = mp.dynamicCast<MessagePart>()) {
-                        _mp->setAttachmentFlag(node);
-                    }
-                    mpRet = mp;
-                }
-                bRendered = true;
-                break;
-            } else if (r == Interface::BodyPartFormatter::Ok) {
-                processResult.setNeverDisplayInline(true);
-                formatter->adaptProcessResult(processResult);
-                mpRet = result;
-                bRendered = true;
-                break;
-            }
             continue;
         } else {
             continue;

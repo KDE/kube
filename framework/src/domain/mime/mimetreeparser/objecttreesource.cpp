@@ -41,11 +41,10 @@ public:
     MimeTreeParser::Util::HtmlMode mPreferredMode;
 };
 
-ObjectTreeSource::ObjectTreeSource(MimeTreeParser::HtmlWriter *writer)
+ObjectTreeSource::ObjectTreeSource()
         : MimeTreeParser::Interface::ObjectTreeSource()
         , d(new ObjectSourcePrivate)
     {
-        d->mWriter = writer;
     }
 
 ObjectTreeSource::~ObjectTreeSource()
@@ -58,10 +57,6 @@ void ObjectTreeSource::setAllowDecryption(bool allowDecryption)
     d->mAllowDecryption = allowDecryption;
 }
 
-MimeTreeParser::HtmlWriter *ObjectTreeSource::htmlWriter()
-{
-    return d->mWriter;
-}
 
 bool ObjectTreeSource::htmlLoadExternal() const
 {
