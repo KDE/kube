@@ -57,7 +57,6 @@ typedef QSharedPointer<MessagePart> MessagePartPtr;
 
 class PartMetaData;
 class ViewerPrivate;
-class HtmlWriter;
 class AttachmentStrategy;
 class NodeHelper;
 class MessagePart;
@@ -323,8 +322,6 @@ public:
 
     const AttachmentStrategy *attachmentStrategy() const;
 
-    HtmlWriter *htmlWriter() const;
-
     NodeHelper *nodeHelper() const;
 
     /** Parse beginning at a given node and recursively parsing
@@ -357,7 +354,6 @@ private:
 private:
     Interface::ObjectTreeSource *mSource;
     NodeHelper *mNodeHelper;
-    HtmlWriter *mHtmlWriter;
     QByteArray mPlainTextContentCharset;
     QByteArray mHtmlContentCharset;
     QString mPlainTextContent;

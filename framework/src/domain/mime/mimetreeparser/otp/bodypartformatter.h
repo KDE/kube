@@ -41,7 +41,6 @@
 
 namespace MimeTreeParser
 {
-class HtmlWriter;
 
 namespace Interface
 {

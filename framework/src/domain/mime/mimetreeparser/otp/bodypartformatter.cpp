@@ -33,7 +33,6 @@
 #include "bodypartformatter.h"
 
 #include "bodypart.h"
-#include "queuehtmlwriter.h"
 #include "objecttreeparser.h"
 
 using namespace MimeTreeParser::Interface;
@@ -49,7 +48,6 @@ public:
     MessagePartPrivate(const BodyPart *part)
         : mPart(part)
         , mParentPart(nullptr)
-        , mCreatedWriter(false)
     {
     }
 
@@ -60,7 +58,6 @@ public:
 
     const BodyPart *mPart;
     MessagePart *mParentPart;
-    bool mCreatedWriter;
 
 };
 }
@@ -118,6 +115,5 @@ QString MessagePart::plaintextContent() const
 MessagePart::Ptr BodyPartFormatter::process(BodyPart &part) const
 {
     auto mp = MessagePart::Ptr(new MessagePart(part));
-    mp->d->mCreatedWriter = true;
     return mp;
 }

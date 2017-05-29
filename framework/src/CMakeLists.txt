@@ -35,7 +35,6 @@ set(SRCS
     domain/mime/mailtemplates.cpp
     domain/mime/attachmentmodel.cpp
     domain/mime/objecttreesource.cpp
-    domain/mime/stringhtmlwriter.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
     fabric.cpp

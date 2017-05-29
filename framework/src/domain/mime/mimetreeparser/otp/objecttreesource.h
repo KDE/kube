@@ -29,7 +29,6 @@ class QTextCodec;
 
 namespace MimeTreeParser
 {
-class HtmlWriter;
 class AttachmentStrategy;
 class BodyPartFormatterBaseFactory;
 namespace Interface

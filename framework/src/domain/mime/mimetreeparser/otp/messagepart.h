@@ -53,7 +53,6 @@ class Content;
 namespace MimeTreeParser
 {
 class ObjectTreeParser;
-class HtmlWriter;
 class HTMLBlock;
 typedef QSharedPointer<HTMLBlock> HTMLBlockPtr;
 class CryptoBodyPartMemento;

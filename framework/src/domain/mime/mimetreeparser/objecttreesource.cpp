@@ -27,13 +27,11 @@ class ObjectSourcePrivate
 {
 public:
     ObjectSourcePrivate()
-        : mWriter(0)
-        , mAllowDecryption(true)
+        : mAllowDecryption(true)
         , mPreferredMode(MimeTreeParser::Util::Html)
     {
 
     }
-    MimeTreeParser::HtmlWriter *mWriter;
     MimeTreeParser::BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     bool mAllowDecryption;
     MimeTreeParser::Util::HtmlMode mPreferredMode;

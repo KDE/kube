@@ -46,7 +46,6 @@
 
 #include "utils.h"
 #include "bodypartformatter.h"
-#include "htmlwriter.h"
 #include "util.h"
 
 #include <KMime/Headers>
@@ -66,7 +65,6 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
                                    const AttachmentStrategy *strategy)
     : mSource(topLevelParser->mSource),
       mNodeHelper(topLevelParser->mNodeHelper),
-      mHtmlWriter(topLevelParser->mHtmlWriter),
       mTopLevelContent(topLevelParser->mTopLevelContent),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
       mHasPendingAsyncJobs(false),
@@ -82,7 +80,6 @@ ObjectTreeParser::ObjectTreeParser(Interface::ObjectTreeSource *source,
                                    const AttachmentStrategy *strategy)
     : mSource(source),
       mNodeHelper(nodeHelper),
-      mHtmlWriter(nullptr),
       mTopLevelContent(nullptr),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
       mHasPendingAsyncJobs(false),
@@ -110,7 +107,6 @@ void ObjectTreeParser::init()
 ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser &other)
     : mSource(other.mSource),
       mNodeHelper(other.nodeHelper()),   //TODO(Andras) hm, review what happens if mDeleteNodeHelper was true in the source
-      mHtmlWriter(other.mHtmlWriter),
       mTopLevelContent(other.mTopLevelContent),
       mShowOnlyOneMimePart(other.showOnlyOneMimePart()),
       mHasPendingAsyncJobs(other.hasPendingAsyncJobs()),
@@ -353,10 +349,6 @@ void ProcessResult::setInlineEncryptionState(KMMsgEncryptionState state)
 {
     mInlineEncryptionState = state;
 }
-
-
-
-
 
 void ProcessResult::adjustCryptoStatesOfNode(const KMime::Content *node) const
 {

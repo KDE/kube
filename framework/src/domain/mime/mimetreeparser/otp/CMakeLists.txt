@@ -33,7 +33,6 @@ set(libmimetreeparser_SRCS
     bodypartformatter.cpp
     objecttreesource.cpp
     bodypart.cpp
-    htmlwriter.cpp
 
     #bodypartformatter.cpp
     bodypartformatterbasefactory.cpp
@@ -51,8 +50,6 @@ set(libmimetreeparser_SRCS
     qgpgmejobexecutor.cpp
     util.cpp
     attachmentstrategy.cpp
-    #HTML Writer
-    queuehtmlwriter.cpp
     attachmenttemporaryfilesdirs.cpp
     )
 

@@ -16,28 +16,6 @@
   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
 */
-#include "htmlwriter.h"
-
 #include <KMime/Message>
-
-class TestHtmlWriter : public MimeTreeParser::HtmlWriter
-{
-public:
-    explicit TestHtmlWriter() {}
-    virtual ~TestHtmlWriter() {}
-
-    void begin(const QString &) Q_DECL_OVERRIDE {}
-    void write(const QString &) Q_DECL_OVERRIDE {}
-    void end() Q_DECL_OVERRIDE {}
-    void reset() Q_DECL_OVERRIDE {}
-    void queue(const QString &str) Q_DECL_OVERRIDE {
-        html.append(str);
-    }
-    void flush() Q_DECL_OVERRIDE {}
-    void embedPart(const QByteArray &, const QString &) Q_DECL_OVERRIDE {}
-    void extraHead(const QString &) Q_DECL_OVERRIDE {}
-
-    QString html;
-};
 
 KMime::Message::Ptr readAndParseMail(const QString &mailFile);
