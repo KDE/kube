@@ -1167,7 +1167,6 @@ EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *o
 
     // The link to "Encapsulated message" is clickable, therefore the temp file needs to exists,
     // since the user can click the link and expect to have normal attachment operations there.
-    mOtp->nodeHelper()->writeNodeToTempFile(message.data());
 
     parseInternal(message.data(), false);
 }

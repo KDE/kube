@@ -46,7 +46,6 @@ Interface::MessagePart::Ptr TextPlainBodyPartFormatter::process(Interface::BodyP
 
     QString label = NodeHelper::fileName(node);
 
-    const QString fileName = part.nodeHelper()->writeNodeToTempFile(node);
 
     TextMessagePart::Ptr mp;
     if (isFirstTextPart) {
