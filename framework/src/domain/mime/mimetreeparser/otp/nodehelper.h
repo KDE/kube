@@ -102,15 +102,6 @@ public:
     void setBodyPartMemento(KMime::Content *node, const QByteArray &which,
                             Interface::BodyPartMemento *memento);
 
-    // A flag to remember if the node was embedded. This is useful for attachment nodes, the reader
-    // needs to know if they were displayed inline or not.
-    bool isNodeDisplayedEmbedded(KMime::Content *node) const;
-    void setNodeDisplayedEmbedded(KMime::Content *node, bool displayedEmbedded);
-
-    // Same as above, but this time determines if the node was hidden or not
-    bool isNodeDisplayedHidden(KMime::Content *node) const;
-    void setNodeDisplayedHidden(KMime::Content *node, bool displayedHidden);
-
     /**
      * Writes the given message part to a temporary file and returns the
      * name of this file or QString() if writing failed.

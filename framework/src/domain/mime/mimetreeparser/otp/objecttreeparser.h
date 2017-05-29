@@ -75,7 +75,6 @@ public:
                            bool isImage = false)
         : mInlineSignatureState(inlineSignatureState),
           mInlineEncryptionState(inlineEncryptionState),
-          mNeverDisplayInline(neverDisplayInline),
           mIsImage(isImage),
           mNodeHelper(nodeHelper) {}
 
@@ -85,8 +84,6 @@ public:
     KMMsgEncryptionState inlineEncryptionState() const;
     void setInlineEncryptionState(KMMsgEncryptionState state);
 
-    bool neverDisplayInline() const;
-    void setNeverDisplayInline(bool display);
 
     bool isImage() const;
     void setIsImage(bool image);

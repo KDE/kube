@@ -69,7 +69,6 @@ class MessagePart : public Interface::MessagePart
     Q_PROPERTY(bool attachment READ isAttachment)
     Q_PROPERTY(bool root READ isRoot)
     Q_PROPERTY(bool isHtml READ isHtml)
-    Q_PROPERTY(bool isHidden READ isHidden)
 public:
     typedef QSharedPointer<MessagePart> Ptr;
     MessagePart(ObjectTreeParser *otp,
@@ -86,7 +85,6 @@ public:
     bool isRoot() const;
 
     virtual bool isHtml() const;
-    virtual bool isHidden() const;
 
     PartMetaData *partMetaData();
 
@@ -171,8 +169,6 @@ public:
 
     bool decryptMessage() const;
 
-    bool isHidden() const Q_DECL_OVERRIDE;
-
     bool showLink() const;
     bool showTextFrame() const;
 
@@ -202,17 +198,6 @@ public:
     AttachmentMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool drawFrame, bool showLink, bool decryptMessage);
     virtual ~AttachmentMessagePart();
 
-    IconType asIcon() const;
-    bool neverDisplayInline() const;
-    void setNeverDisplayInline(bool displayInline);
-    bool isImage() const;
-    void setIsImage(bool image);
-
-    bool isHidden() const Q_DECL_OVERRIDE;
-
-private:
-    bool mIsImage;
-    bool mNeverDisplayInline;
 };
 
 class HtmlMessagePart : public MessagePart

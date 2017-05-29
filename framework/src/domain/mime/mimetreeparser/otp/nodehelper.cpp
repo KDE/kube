@@ -174,8 +174,6 @@ void NodeHelper::clear()
         qCDebug(MIMETREEPARSER_LOG) << "mExtraContents deleted for" << it.key();
     }
     mExtraContents.clear();
-    mDisplayEmbeddedNodes.clear();
-    mDisplayHiddenNodes.clear();
 }
 
 void NodeHelper::setEncryptionState(const KMime::Content *node, const KMMsgEncryptionState state)
@@ -558,36 +556,6 @@ void NodeHelper::setBodyPartMemento(KMime::Content *node, const QByteArray &whic
         }
     } else {
         mementos.insert(whichLower, memento);
-    }
-}
-
-bool NodeHelper::isNodeDisplayedEmbedded(KMime::Content *node) const
-{
-    qCDebug(MIMETREEPARSER_LOG) << "IS NODE: " << mDisplayEmbeddedNodes.contains(node);
-    return mDisplayEmbeddedNodes.contains(node);
-}
-
-void NodeHelper::setNodeDisplayedEmbedded(KMime::Content *node, bool displayedEmbedded)
-{
-    qCDebug(MIMETREEPARSER_LOG) << "SET NODE: " << node << displayedEmbedded;
-    if (displayedEmbedded) {
-        mDisplayEmbeddedNodes.insert(node);
-    } else {
-        mDisplayEmbeddedNodes.remove(node);
-    }
-}
-
-bool NodeHelper::isNodeDisplayedHidden(KMime::Content *node) const
-{
-    return mDisplayHiddenNodes.contains(node);
-}
-
-void NodeHelper::setNodeDisplayedHidden(KMime::Content *node, bool displayedHidden)
-{
-    if (displayedHidden) {
-        mDisplayHiddenNodes.insert(node);
-    } else {
-        mDisplayEmbeddedNodes.remove(node);
     }
 }
 

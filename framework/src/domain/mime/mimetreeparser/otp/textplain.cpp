@@ -61,7 +61,6 @@ Interface::MessagePart::Ptr TextPlainBodyPartFormatter::process(Interface::BodyP
     part.processResult()->setInlineSignatureState(mp->signatureState());
     part.processResult()->setInlineEncryptionState(mp->encryptionState());
 
-    part.nodeHelper()->setNodeDisplayedEmbedded(node, true);
 
     return mp;
 }

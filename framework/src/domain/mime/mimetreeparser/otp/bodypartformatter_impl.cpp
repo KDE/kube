@@ -62,10 +62,6 @@ class AnyTypeBodyPartFormatter
 {
     static const AnyTypeBodyPartFormatter *self;
 public:
-    void adaptProcessResult(ProcessResult &result) const Q_DECL_OVERRIDE
-    {
-        result.setNeverDisplayInline(true);
-    }
     static const MimeTreeParser::Interface::BodyPartFormatter *create()
     {
         if (!self) {
@@ -82,11 +78,6 @@ class ImageTypeBodyPartFormatter
 {
     static const ImageTypeBodyPartFormatter *self;
 public:
-    void adaptProcessResult(ProcessResult &result) const Q_DECL_OVERRIDE
-    {
-        result.setNeverDisplayInline(false);
-        result.setIsImage(true);
-    }
     static const MimeTreeParser::Interface::BodyPartFormatter *create()
     {
         if (!self) {
