@@ -38,17 +38,6 @@ const Interface::BodyPartFormatter *TextPlainBodyPartFormatter::create()
     }
     return self;
 }
-Interface::BodyPartFormatter::Result TextPlainBodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
-{
-    Q_UNUSED(writer)
-    const auto p = process(*part);
-    const auto mp = static_cast<MessagePart *>(p.data());
-    if (mp) {
-        mp->html(false);
-        return Ok;
-    }
-    return Failed;
-}
 
 Interface::MessagePart::Ptr TextPlainBodyPartFormatter::process(Interface::BodyPart &part) const
 {

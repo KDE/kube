@@ -62,15 +62,6 @@ class AnyTypeBodyPartFormatter
 {
     static const AnyTypeBodyPartFormatter *self;
 public:
-    Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE
-    {
-        qCDebug(MIMETREEPARSER_LOG) << "Acting as a Interface::BodyPartFormatter!";
-        return AsIcon;
-    }
-
-    // unhide the overload with three arguments
-    using MimeTreeParser::Interface::BodyPartFormatter::format;
-
     void adaptProcessResult(ProcessResult &result) const Q_DECL_OVERRIDE
     {
         result.setNeverDisplayInline(true);
@@ -91,14 +82,6 @@ class ImageTypeBodyPartFormatter
 {
     static const ImageTypeBodyPartFormatter *self;
 public:
-    Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE
-    {
-        return AsIcon;
-    }
-
-    // unhide the overload with three arguments
-    using MimeTreeParser::Interface::BodyPartFormatter::format;
-
     void adaptProcessResult(ProcessResult &result) const Q_DECL_OVERRIDE
     {
         result.setNeverDisplayInline(false);
@@ -121,8 +104,6 @@ class MessageRfc822BodyPartFormatter
     static const MessageRfc822BodyPartFormatter *self;
 public:
     Interface::MessagePart::Ptr process(Interface::BodyPart &) const Q_DECL_OVERRIDE;
-    MimeTreeParser::Interface::BodyPartFormatter::Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE;
-    using MimeTreeParser::Interface::BodyPartFormatter::format;
     static const MimeTreeParser::Interface::BodyPartFormatter *create();
 };
 
@@ -140,24 +121,6 @@ Interface::MessagePart::Ptr MessageRfc822BodyPartFormatter::process(Interface::B
 {
     const KMime::Message::Ptr message = part.content()->bodyAsMessage();
     return MessagePart::Ptr(new EncapsulatedRfc822MessagePart(part.objectTreeParser(), part.content(), message));
-}
-
-Interface::BodyPartFormatter::Result MessageRfc822BodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
-{
-    Q_UNUSED(writer)
-    const ObjectTreeParser *otp = part->objectTreeParser();
-    const auto p = process(*part);
-    const auto mp =  static_cast<MessagePart *>(p.data());
-    if (mp) {
-        if (!otp->attachmentStrategy()->inlineNestedMessages() && !otp->showOnlyOneMimePart()) {
-            return Failed;
-        } else {
-            mp->html(true);
-            return Ok;
-        }
-    } else {
-        return Failed;
-    }
 }
 
 typedef TextPlainBodyPartFormatter ApplicationPgpBodyPartFormatter;

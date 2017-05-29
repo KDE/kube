@@ -31,8 +31,6 @@ class TextPlainBodyPartFormatter : public Interface::BodyPartFormatter
     static const TextPlainBodyPartFormatter *self;
 public:
     Interface::MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE;
-    Interface::BodyPartFormatter::Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE;
-    using Interface::BodyPartFormatter::format;
     static const Interface::BodyPartFormatter *create();
 };
 

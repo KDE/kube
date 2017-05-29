@@ -41,18 +41,6 @@ const Interface::BodyPartFormatter *MultiPartSignedBodyPartFormatter::create()
     }
     return self;
 }
-Interface::BodyPartFormatter::Result MultiPartSignedBodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
-{
-    Q_UNUSED(writer)
-    const auto p = process(*part);
-    const auto mp = static_cast<MessagePart *>(p.data());
-    if (mp) {
-        mp->html(false);
-        return Ok;
-    }
-    return Failed;
-}
-
 Interface::MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     KMime::Content *node = part.content();

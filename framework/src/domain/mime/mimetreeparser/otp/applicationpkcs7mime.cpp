@@ -44,17 +44,6 @@ const Interface::BodyPartFormatter *ApplicationPkcs7MimeBodyPartFormatter::creat
     }
     return self;
 }
-Interface::BodyPartFormatter::Result ApplicationPkcs7MimeBodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
-{
-    Q_UNUSED(writer)
-    const auto p = process(*part);
-    const auto mp = static_cast<MessagePart *>(p.data());
-    if (mp) {
-        mp->html(false);
-        return Ok;
-    }
-    return Failed;
-}
 
 Interface::MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyPart &part) const
 {

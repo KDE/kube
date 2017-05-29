@@ -89,26 +89,6 @@ public:
     */
     enum Result { Ok, NeedContent, AsIcon, Failed };
 
-    /**
-    Format body part \a part by generating some HTML and writing
-    that to \a writer.
-
-    @return the result code (see above)
-    */
-    virtual Result format(BodyPart *part, MimeTreeParser::HtmlWriter *writer) const = 0;
-
-    /**
-      Variant of format that allows implementors to hook notifications up to
-      a listener interested in the result, for async operations.
-
-      @return the result code (see above)
-    */
-    virtual Result format(BodyPart *part, MimeTreeParser::HtmlWriter *writer, QObject *asyncResultObserver) const
-    {
-        Q_UNUSED(asyncResultObserver);
-        return format(part, writer);
-    }
-
     virtual void adaptProcessResult(ProcessResult &result) const
     {
         Q_UNUSED(result);

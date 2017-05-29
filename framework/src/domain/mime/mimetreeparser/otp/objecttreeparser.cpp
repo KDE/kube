@@ -225,6 +225,7 @@ bool ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processR
             break;
         } else if (dynamic_cast<MimeTreeParser::Interface::MessagePart *>(result.data())) {
             QObject *asyncResultObserver = allowAsync() ? mSource->sourceObject() : nullptr;
+            formatter->adaptProcessResult(processResult);
             continue;
         } else {
             continue;
@@ -340,9 +341,6 @@ Interface::MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *no
         QString fileName = mNodeHelper->writeNodeToTempFile(node);
         QString href = QUrl::fromLocalFile(fileName).url();
         QByteArray cid = node->contentID()->identifier();
-        if (htmlWriter()) {
-            htmlWriter()->embedPart(cid, href);
-        }
         nodeHelper()->setNodeDisplayedEmbedded(node, true);
         mNodeHelper->setNodeDisplayedHidden(node, true);
         return mp;
@@ -453,13 +451,6 @@ const AttachmentStrategy *ObjectTreeParser::attachmentStrategy() const
     return mAttachmentStrategy;
 }
 
-HtmlWriter *ObjectTreeParser::htmlWriter() const
-{
-    if (mHtmlWriter) {
-        return mHtmlWriter;
-    }
-    return mSource->htmlWriter();
-}
 
 MimeTreeParser::NodeHelper *ObjectTreeParser::nodeHelper() const
 {

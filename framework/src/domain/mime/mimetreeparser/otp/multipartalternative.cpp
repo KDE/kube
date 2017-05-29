@@ -39,17 +39,6 @@ const Interface::BodyPartFormatter *MultiPartAlternativeBodyPartFormatter::creat
     }
     return self;
 }
-Interface::BodyPartFormatter::Result MultiPartAlternativeBodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
-{
-    Q_UNUSED(writer)
-    const auto p = process(*part);
-    const auto mp = static_cast<MessagePart *>(p.data());
-    if (mp) {
-        mp->html(false);
-        return Ok;
-    }
-    return Failed;
-}
 
 Interface::MessagePart::Ptr MultiPartAlternativeBodyPartFormatter::process(Interface::BodyPart &part) const
 {

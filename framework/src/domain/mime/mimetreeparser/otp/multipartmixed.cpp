@@ -37,18 +37,6 @@ const Interface::BodyPartFormatter *MultiPartMixedBodyPartFormatter::create()
     }
     return self;
 }
-Interface::BodyPartFormatter::Result MultiPartMixedBodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
-{
-    Q_UNUSED(writer)
-    const auto p = process(*part);
-    const auto mp = static_cast<MessagePart *>(p.data());
-    if (mp) {
-        mp->html(false);
-        return Ok;
-    }
-    return Failed;
-}
-
 Interface::MessagePart::Ptr MultiPartMixedBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     if (part.content()->contents().isEmpty()) {
