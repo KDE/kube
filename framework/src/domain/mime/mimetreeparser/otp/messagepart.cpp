@@ -199,10 +199,9 @@ QString MessagePartList::htmlContent() const
 
 //-----TextMessageBlock----------------------
 
-TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool drawFrame, bool showLink, bool decryptMessage)
+TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool showLink, bool decryptMessage)
     : MessagePartList(otp)
     , mNode(node)
-    , mDrawFrame(drawFrame)
     , mShowLink(showLink)
     , mDecryptMessage(decryptMessage)
 {
@@ -319,15 +318,10 @@ bool TextMessagePart::showLink() const
     return mShowLink;
 }
 
-bool TextMessagePart::showTextFrame() const
-{
-    return mDrawFrame;
-}
-
 //-----AttachmentMessageBlock----------------------
 
-AttachmentMessagePart::AttachmentMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool drawFrame, bool showLink, bool decryptMessage)
-    : TextMessagePart(otp, node, drawFrame, showLink, decryptMessage)
+AttachmentMessagePart::AttachmentMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool showLink, bool decryptMessage)
+    : TextMessagePart(otp, node, showLink, decryptMessage)
 {
 
 }

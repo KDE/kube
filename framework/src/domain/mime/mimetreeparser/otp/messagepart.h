@@ -161,7 +161,7 @@ class TextMessagePart : public MessagePartList
     Q_OBJECT
 public:
     typedef QSharedPointer<TextMessagePart> Ptr;
-    TextMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool drawFrame, bool showLink, bool decryptMessage);
+    TextMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool showLink, bool decryptMessage);
     virtual ~TextMessagePart();
 
     KMMsgSignatureState signatureState() const;
@@ -170,7 +170,6 @@ public:
     bool decryptMessage() const;
 
     bool showLink() const;
-    bool showTextFrame() const;
 
 protected:
     KMime::Content *mNode;
@@ -180,7 +179,6 @@ private:
 
     KMMsgSignatureState mSignatureState;
     KMMsgEncryptionState mEncryptionState;
-    bool mDrawFrame;
     bool mShowLink;
     bool mDecryptMessage;
     bool mIsHidden;
@@ -195,7 +193,7 @@ class AttachmentMessagePart : public TextMessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<AttachmentMessagePart> Ptr;
-    AttachmentMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool drawFrame, bool showLink, bool decryptMessage);
+    AttachmentMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool showLink, bool decryptMessage);
     virtual ~AttachmentMessagePart();
 
 };
