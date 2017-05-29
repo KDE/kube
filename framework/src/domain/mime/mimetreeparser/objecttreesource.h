@@ -43,9 +43,6 @@ public:
     const MimeTreeParser::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
     QObject *sourceObject() Q_DECL_OVERRIDE;
     bool autoImportKeys() const Q_DECL_OVERRIDE;
-    bool showEmoticons() const Q_DECL_OVERRIDE;
-    bool showExpandQuotesMark() const Q_DECL_OVERRIDE;
-    bool isPrinting() const Q_DECL_OVERRIDE;
     const MimeTreeParser::BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE;
 private:
     ObjectSourcePrivate *const d;

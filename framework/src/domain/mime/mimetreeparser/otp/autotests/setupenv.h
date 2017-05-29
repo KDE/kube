@@ -77,11 +77,6 @@ public:
         return true;
     }
 
-    bool showEmoticons() const Q_DECL_OVERRIDE
-    {
-        return false;
-    }
-
     bool showExpandQuotesMark() const Q_DECL_OVERRIDE
     {
         return false;
@@ -142,11 +137,6 @@ public:
 
     QObject *sourceObject() Q_DECL_OVERRIDE {
         return nullptr;
-    }
-
-    bool isPrinting() const Q_DECL_OVERRIDE
-    {
-        return false;
     }
 private:
     QString mAttachmentStrategy;

@@ -91,13 +91,7 @@ public:
     /** should keys be imported automatically **/
     virtual bool autoImportKeys() const = 0;
 
-    virtual bool showEmoticons() const = 0;
-
-    virtual bool showExpandQuotesMark() const = 0;
-
     virtual const BodyPartFormatterBaseFactory *bodyPartFormatterFactory() = 0;
-
-    virtual bool isPrinting() const = 0;
 };
 }
 }
