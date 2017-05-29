@@ -222,9 +222,6 @@ bool ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processR
             mpRet = result;
             bRendered = true;
             break;
-        } else if (dynamic_cast<MimeTreeParser::Interface::MessagePart *>(result.data())) {
-            QObject *asyncResultObserver = allowAsync() ? mSource->sourceObject() : nullptr;
-            continue;
         } else {
             continue;
         }
