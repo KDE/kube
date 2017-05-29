@@ -199,10 +199,9 @@ QString MessagePartList::htmlContent() const
 
 //-----TextMessageBlock----------------------
 
-TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool showLink, bool decryptMessage)
+TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool decryptMessage)
     : MessagePartList(otp)
     , mNode(node)
-    , mShowLink(showLink)
     , mDecryptMessage(decryptMessage)
 {
     if (!mNode) {
@@ -313,15 +312,10 @@ KMMsgSignatureState TextMessagePart::signatureState() const
     return mSignatureState;
 }
 
-bool TextMessagePart::showLink() const
-{
-    return mShowLink;
-}
-
 //-----AttachmentMessageBlock----------------------
 
-AttachmentMessagePart::AttachmentMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool showLink, bool decryptMessage)
-    : TextMessagePart(otp, node, showLink, decryptMessage)
+AttachmentMessagePart::AttachmentMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool decryptMessage)
+    : TextMessagePart(otp, node, decryptMessage)
 {
 
 }
