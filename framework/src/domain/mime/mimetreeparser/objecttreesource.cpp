@@ -61,11 +61,6 @@ bool ObjectTreeSource::decryptMessage() const
     return d->mAllowDecryption;
 }
 
-int ObjectTreeSource::levelQuote() const
-{
-    return 1;
-}
-
 const QTextCodec *ObjectTreeSource::overrideCodec()
 {
     return Q_NULLPTR;

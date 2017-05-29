@@ -67,8 +67,6 @@ public:
     /** Return true if an encrypted mail should be decrypted */
     virtual bool decryptMessage() const = 0;
 
-    virtual int levelQuote() const = 0;
-
     /** The override codec that should be used for the mail */
     virtual const QTextCodec *overrideCodec() = 0;
 

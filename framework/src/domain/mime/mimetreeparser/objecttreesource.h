@@ -34,7 +34,6 @@ public:
     void setHtmlMode(MimeTreeParser::Util::HtmlMode mode, const QList<MimeTreeParser::Util::HtmlMode> &availableModes) Q_DECL_OVERRIDE;
     MimeTreeParser::Util::HtmlMode preferredMode() const Q_DECL_OVERRIDE;
     void setAllowDecryption(bool allowDecryption);
-    int levelQuote() const Q_DECL_OVERRIDE;
     const QTextCodec *overrideCodec() Q_DECL_OVERRIDE;
     QString createMessageHeader(KMime::Message *message) Q_DECL_OVERRIDE;
     const MimeTreeParser::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;

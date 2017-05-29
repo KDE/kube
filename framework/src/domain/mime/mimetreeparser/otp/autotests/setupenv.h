@@ -95,11 +95,6 @@ public:
         mPreferredMode = mode;
     }
 
-    int levelQuote() const Q_DECL_OVERRIDE
-    {
-        return 1;
-    }
-
     const QTextCodec *overrideCodec() Q_DECL_OVERRIDE {
         return nullptr;
     }
