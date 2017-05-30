@@ -172,7 +172,6 @@ void ObjectTreeParser::parseObjectTree(KMime::Content *node)
 
     if (mParsedPart) {
         mParsedPart->fix();
-        mParsedPart->copyContentFrom();
         if (auto mp = toplevelTextNode(mParsedPart)) {
             if (auto _mp = mp.dynamicCast<TextMessagePart>()) {
                 extractNodeInfos(_mp->mNode, true);
