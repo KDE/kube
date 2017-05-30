@@ -172,7 +172,6 @@ private:
     KMMsgSignatureState mSignatureState;
     KMMsgEncryptionState mEncryptionState;
     bool mDecryptMessage;
-    bool mIsHidden;
 
     friend class DefaultRendererPrivate;
     friend class ObjectTreeParser;
