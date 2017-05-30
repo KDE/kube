@@ -304,6 +304,15 @@ private slots:
         QVERIFY(!parser.getPart(QUrl("cid:")));
         QVERIFY(!parser.getPart(QUrl("cid:unknown")));
     }
+
+    void testCidLinkInForwardedInline()
+    {
+        Parser parser(readMailFromFile("cid-links-forwarded-inline.mbox"));
+        printTree(parser.d->mTree,QString());
+        QCOMPARE(parser.getPart(QUrl("cid:1496058170592c093a661dd956000502@info")), parser.d->mTree->subParts().at(1));
+        QVERIFY(!parser.getPart(QUrl("cid:")));
+        QVERIFY(!parser.getPart(QUrl("cid:unknown")));
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)
