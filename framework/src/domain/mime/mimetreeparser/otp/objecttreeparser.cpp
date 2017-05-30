@@ -171,7 +171,6 @@ void ObjectTreeParser::parseObjectTree(KMime::Content *node)
     mParsedPart = parseObjectTreeInternal(node, showOnlyOneMimePart());
 
     if (mParsedPart) {
-        mParsedPart->fix();
         if (auto mp = toplevelTextNode(mParsedPart)) {
             if (auto _mp = mp.dynamicCast<TextMessagePart>()) {
                 extractNodeInfos(_mp->mNode, true);

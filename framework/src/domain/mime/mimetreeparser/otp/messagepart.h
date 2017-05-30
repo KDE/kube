@@ -87,9 +87,6 @@ public:
 
     PartMetaData *partMetaData();
 
-    /* only a function that should be removed if the refactoring is over */
-    virtual void fix() const;
-
     void appendSubPart(const Interface::MessagePart::Ptr &messagePart);
     const QVector<Interface::MessagePart::Ptr> &subParts() const;
     bool hasSubParts() const;
@@ -202,7 +199,6 @@ public:
 
     QString text() const Q_DECL_OVERRIDE;
 
-    void fix() const Q_DECL_OVERRIDE;
     bool isHtml() const Q_DECL_OVERRIDE;
 
 private:
@@ -233,8 +229,6 @@ public:
     QString htmlContent() const Q_DECL_OVERRIDE;
 
     QList<Util::HtmlMode> availableModes();
-
-    void fix() const Q_DECL_OVERRIDE;
 private:
     KMime::Content *mNode;
 
@@ -276,8 +270,6 @@ public:
     virtual ~EncapsulatedRfc822MessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
-
-    void fix() const Q_DECL_OVERRIDE;
 private:
     const KMime::Message::Ptr mMessage;
     KMime::Content *mNode;

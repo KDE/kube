@@ -135,16 +135,6 @@ QString MessagePart::renderInternalText() const
     return text;
 }
 
-void MessagePart::fix() const
-{
-    foreach (const auto &mp, subParts()) {
-        const auto m = mp.dynamicCast<MessagePart>();
-        if (m) {
-            m->fix();
-        }
-    }
-}
-
 void MessagePart::appendSubPart(const Interface::MessagePart::Ptr &messagePart)
 {
     messagePart->setParentPart(this);
@@ -337,12 +327,6 @@ HtmlMessagePart::~HtmlMessagePart()
 {
 }
 
-void HtmlMessagePart::fix() const
-{
-    mOtp->mHtmlContent += mBodyHTML;
-    mOtp->mHtmlContentCharset = mCharset;
-}
-
 QString HtmlMessagePart::text() const
 {
     return mBodyHTML;
@@ -460,18 +444,6 @@ QString AlternativeMessagePart::text() const
         return mChildParts[Util::MultipartPlain]->text();
     }
     return QString();
-}
-
-void AlternativeMessagePart::fix() const
-{
-    if (mChildParts.contains(Util::MultipartPlain)) {
-        mChildParts[Util::MultipartPlain]->fix();
-    }
-
-    const auto mode = preferredMode();
-    if (mode != Util::MultipartPlain && mChildParts.contains(mode)) {
-        mChildParts[mode]->fix();
-    }
 }
 
 bool AlternativeMessagePart::isHtml() const
@@ -1158,6 +1130,3 @@ QString EncapsulatedRfc822MessagePart::text() const
     return renderInternalText();
 }
 
-void EncapsulatedRfc822MessagePart::fix() const
-{
-}
