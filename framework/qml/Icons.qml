@@ -50,6 +50,7 @@ Item {
     property string goBack: "go-previous"
     property string goBack_inverted: "go-previous-inverted"
     property string goDown: "go-down"
+    property string goDown_inverted: "go-down-inverted"
     property string goUp: "go-down"
 
     property string addNew: "list-add-new"

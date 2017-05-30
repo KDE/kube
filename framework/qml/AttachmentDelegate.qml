@@ -27,8 +27,8 @@ Item {
     signal open;
     signal download;
 
-    width: content.width + Kube.Units.gridUnit / 2
-    height: content.height + Kube.Units.gridUnit / 2
+    width: content.width + Kube.Units.smallSpacing
+    height: content.height + Kube.Units.smallSpacing
 
     Rectangle {
         anchors.fill: parent
@@ -53,11 +53,11 @@ Item {
             color: Kube.Colors.backgroundColor
         }
         Kube.IconButton {
-            iconName: Kube.Icons.goDown
+            iconName: Kube.Icons.goDown_inverted
             onClicked: root.download()
         }
         Kube.IconButton {
-            iconName: Kube.Icons.edit
+            iconName: Kube.Icons.edit_inverted
             onClicked: root.open()
         }
     }
