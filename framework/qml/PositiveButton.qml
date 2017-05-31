@@ -36,9 +36,12 @@ T.Button {
     background: Rectangle {
         color: Colors.positiveColor
 
+        border.width: 2
+        border.color: root.focus ? Colors.highlightColor : Colors.positiveColor
+
         Rectangle {
             anchors.fill: parent
-            visible: root.hovered || root.pressed || root.activeFocus
+            visible: root.hovered || root.pressed
             color: root.pressed ? Colors.textColor : Colors.viewBackgroundColor
             opacity: 0.2
         }
@@ -46,6 +49,7 @@ T.Button {
 
     contentItem: Label {
         text: root.text
+        font.underline: root.focus
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

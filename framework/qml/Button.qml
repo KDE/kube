@@ -36,9 +36,12 @@ T.Button {
     background: Rectangle {
         color: Colors.buttonColor
 
+        border.width: 2
+        border.color: root.focus ? Colors.highlightColor : Colors.buttonColor
+
         Rectangle {
             anchors.fill: parent
-            visible: root.hovered || root.pressed || root.activeFocus
+            visible: root.hovered || root.pressed
             color: root.pressed ? Colors.textColor : Colors.viewBackgroundColor
             opacity: 0.2
         }
