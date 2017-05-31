@@ -950,16 +950,20 @@ void ParserPrivate::setMessage(const QByteArray& mimeMessage)
     mMsg->setContent(mailData);
     mMsg->parse();
 
-    ObjectTreeSource source;
-    MimeTreeParser::ObjectTreeParser otp(&source, mNodeHelper.get());
-
-    otp.parseObjectTree(mMsg.data());
-    mPartTree = otp.parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
+    //FIXME this is a leak
+    auto source = new ObjectTreeSource;
+    mOtp = std::make_shared<MimeTreeParser::ObjectTreeParser>(source, mNodeHelper.get());
+    mOtp->parseObjectTree(mMsg.data());
+    mPartTree = mOtp->parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
 
     mTree = std::make_shared<Part>();
     createTree(mPartTree, mTree);
 }
 
+std::shared_ptr<MimeTreeParser::ObjectTreeParser> Parser::otp()
+{
+    return d->mOtp;
+}
 
 void ParserPrivate::createTree(const MimeTreeParser::MessagePart::Ptr &start, const Part::Ptr &tree)
 {
@@ -1030,9 +1034,6 @@ Part::Ptr Parser::getPart(const QUrl &url)
 {
     if (url.scheme() == QStringLiteral("cid") && !url.path().isEmpty()) {
         const auto cid = url.path();
-        return find(d->mTree, [&cid](const Part::Ptr &p){
-             const auto mime = p->mailMime();
-             return mime->cid() == cid;
         });
     }
     return Part::Ptr();

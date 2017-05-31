@@ -34,6 +34,7 @@ namespace MimeTreeParser
 {
     class MessagePart;
     class NodeHelper;
+    class ObjectTreeParser;
     typedef QSharedPointer<MessagePart> MessagePartPtr;
 }
 
@@ -51,6 +52,7 @@ public:
     MimeTreeParser::MessagePartPtr mPartTree;
     KMime::MessagePtr mMsg;
     std::shared_ptr<MimeTreeParser::NodeHelper> mNodeHelper;
+    std::shared_ptr<MimeTreeParser::ObjectTreeParser> mOtp;
     QString mHtml;
     QMap<QByteArray, QUrl> mEmbeddedPartMap;
 };

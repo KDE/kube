@@ -327,7 +327,10 @@ public:
     /** Parse beginning at a given node and recursively parsing
       the children of that node and it's next sibling. */
     void parseObjectTree(KMime::Content *node);
+    void parseObjectTree(const QByteArray &mimeMessage);
     MessagePartPtr parsedPart() const;
+    KMime::Content *find(const std::function<bool(KMime::Content *)> &select);
+    QVector<Interface::MessagePartPtr> collectContentParts();
 
 private:
     void extractNodeInfos(KMime::Content *curNode, bool isFirstTextPart);
@@ -350,7 +353,6 @@ private:
     const QTextCodec *codecFor(KMime::Content *node) const;
 
     void copyContentFrom(const ObjectTreeParser *other);
-
 private:
     Interface::ObjectTreeSource *mSource;
     NodeHelper *mNodeHelper;
@@ -380,6 +382,7 @@ private:
     QString mCollapseIcon;
     QString mExpandIcon;
     bool mDeleteNodeHelper;
+    KMime::Message::Ptr mMsg;
 
     friend class PartNodeBodyPart;
     friend class MessagePart;

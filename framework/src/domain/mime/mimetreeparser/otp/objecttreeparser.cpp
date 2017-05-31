@@ -163,7 +163,83 @@ void ObjectTreeParser::copyContentFrom(const ObjectTreeParser *other)
     }
 }
 
+static KMime::Content *find(KMime::Content *node, const std::function<bool(KMime::Content *)> &select)
+{
+    QByteArray mediaType("text");
+    QByteArray subType("plain");
+    if (node->contentType(false) && !node->contentType()->mediaType().isEmpty() &&
+            !node->contentType()->subType().isEmpty()) {
+        mediaType = node->contentType()->mediaType();
+        subType = node->contentType()->subType();
+    }
+    if (select(node)) {
+        return node;
+    }
+    for (const auto c: node->contents()) {
+        if (const auto n = find(c, select)) {
+            return n;
+        }
+    }
+    return nullptr;
+}
+
+
+KMime::Content *ObjectTreeParser::find(const std::function<bool(KMime::Content *)> &select)
+{
+    return ::find(mTopLevelContent, select);
+}
+
+static QVector<Interface::MessagePart::Ptr> collect(Interface::MessagePart::Ptr start, const std::function<bool(const MessagePartPtr &)> &filter, const std::function<bool(const MessagePartPtr &)> &select)
+{
+    MessagePartPtr ptr = start.dynamicCast<MessagePart>();
+    Q_ASSERT(ptr);
+    if (!filter(ptr)) {
+        return {};
+    }
+
+    QVector<Interface::MessagePart::Ptr> list;
+    if (select(ptr)) {
+        list << start;
+    }
+    if (ptr) {
+        for (const auto &p: ptr->subParts()) {
+            list << ::collect(p, filter, select);
+        }
+    }
+    return list;
+}
+
+QVector<Interface::MessagePart::Ptr> ObjectTreeParser::collectContentParts()
+{
+    QVector<Interface::MessagePart::Ptr> contentParts = ::collect(mParsedPart,
+        [] (const MessagePartPtr &part) {
+            // return p->type() != "EncapsulatedPart";
+            return true;
+        },
+        [] (const MessagePartPtr &part) {
+            if (const auto attachment = dynamic_cast<MimeTreeParser::AttachmentMessagePart*>(part.data())) {
+            } else if (const auto text = dynamic_cast<MimeTreeParser::TextMessagePart*>(part.data())) {
+                return true;
+            } else if (const auto alternative = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(part.data())) {
+                return true;
+            } else if (const auto html = dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
+                return true;
+            }
+            return false;
+        });
+    return contentParts;
+}
+
 //-----------------------------------------------------------------------------
+
+void ObjectTreeParser::parseObjectTree(const QByteArray &mimeMessage)
+{
+    const auto mailData = KMime::CRLFtoLF(mimeMessage);
+    mMsg = KMime::Message::Ptr(new KMime::Message);
+    mMsg->setContent(mailData);
+    mMsg->parse();
+    parseObjectTree(mMsg.data());
+}
 
 void ObjectTreeParser::parseObjectTree(KMime::Content *node)
 {

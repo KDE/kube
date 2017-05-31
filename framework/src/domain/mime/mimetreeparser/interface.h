@@ -26,6 +26,8 @@
 #include <QDateTime>
 #include <QUrl>
 #include <QMimeType>
+#include <KMime/Message>
+#include <otp/objecttreeparser.h>
 
 class Part;
 class PartPrivate;
@@ -48,8 +50,6 @@ class EncapsulatedPartPrivate;
 class Content;
 class ContentPrivate;
 
-class CertContent;
-class CertContentPrivate;
 
 class EncryptionError;
 
@@ -165,30 +165,10 @@ public:
  * checking a cert (if it is a valid cert)
  */
 
-class CertContent : public Content
-{
-public:
-    typedef std::shared_ptr<CertContent> Ptr;
-    CertContent(const QByteArray &content, Part *parent);
 
-    QByteArray type() const Q_DECL_OVERRIDE;
-    enum CertType {
-        Pgp,
-        SMime
-    };
 
-    enum CertSubType {
-        Public,
-        Private
-    };
 
-    CertType certType() const;
-    CertSubType certSubType() const;
-    int keyLength() const;
 
-private:
-    std::unique_ptr<CertContentPrivate> d;
-};
 
 class Part
 {
@@ -361,12 +341,16 @@ public:
 
     QVector<Part::Ptr> collect(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select, std::function<bool(const Content::Ptr &)> filter) const;
     Part::Ptr find(const Part::Ptr &start, std::function<bool(const Part::Ptr &)> select) const;
+    KMime::Content *find(const std::function<bool(KMime::Content *)> &select);
     QVector<Part::Ptr> collectContentParts() const;
     QVector<Part::Ptr> collectAttachmentParts() const;
     //template <> QVector<ContentPart::Ptr> collect<ContentPart>() const;
 
     //template <> static StatusObject<SignatureVerificationResult> verifySignature(const Signature signature) const;
     //template <> static StatusObject<Part> decrypt(const EncryptedPart part) const;
+
+
+    std::shared_ptr<MimeTreeParser::ObjectTreeParser> otp();
 
 signals:
     void partsChanged();
