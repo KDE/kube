@@ -50,7 +50,7 @@ T.ComboBox {
 
     background: Rectangle {
         border.width: 1
-        border.color: Colors.buttonColor
+        border.color: root.focus ? Colors.highlightColor : Colors.buttonColor
         color: Colors.viewBackgroundColor
     }
 
