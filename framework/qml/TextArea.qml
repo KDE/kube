@@ -34,6 +34,6 @@ T.TextArea {
     background: Rectangle {
         color: Kube.Colors.viewBackgroundColor
         border.width: 1
-        border.color: Kube.Colors.buttonColor
+        border.color: root.focus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
     }
 }
