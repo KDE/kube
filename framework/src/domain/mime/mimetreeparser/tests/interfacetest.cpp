@@ -64,6 +64,28 @@ private:
 
 private slots:
 
+    // void testTextMail()
+    // {
+    //     Parser parser(readMailFromFile("plaintext.mbox"));
+    //     printTree(parser.d->mTree,QString());
+    //     auto contentPartList = parser.collectContentParts();
+    //     QCOMPARE(contentPartList.size(), 1);
+    //     auto contentPart = contentPartList[0];
+    //     QVERIFY((bool)contentPart);
+    //     QCOMPARE(contentPart->availableContents(), QVector<QByteArray>() << "plaintext");
+    //     auto contentList = contentPart->content("plaintext");
+    //     QCOMPARE(contentList.size(), 1);
+    //     QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/").toLocal8Bit());
+    //     QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
+    //     QCOMPARE(contentList[0]->signatures().size(), 0);
+
+    //     contentList = contentPart->content("html");
+    //     QCOMPARE(contentList.size(), 0);
+    //     auto contentAttachmentList = parser.collectAttachmentParts();
+    //     QCOMPARE(contentAttachmentList.size(), 0);
+    // }
+
     void testTextMail()
     {
         MimeTreeParser::ObjectTreeParser otp;
@@ -109,31 +131,18 @@ private slots:
     //     QCOMPARE(contentAttachmentList.size(), 0);
     // }
     
-    // void testAlternative()
-    // {
-    //     Parser parser(readMailFromFile("alternative.mbox"));
-    //     printTree(parser.d->mTree,QString());
-    //     auto contentPartList = parser.collectContentParts();
-    //     QCOMPARE(contentPartList.size(), 1);
-    //     auto contentPart = contentPartList[0];
-    //     QVERIFY((bool)contentPart);
-    //     QCOMPARE(contentPart->availableContents(), QVector<QByteArray>() << "html" << "plaintext");
-    //     auto contentList = contentPart->content("plaintext");
-    //     QCOMPARE(contentList.size(), 1);
-    //     QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
-    //     QCOMPARE(contentList[0]->signatures().size(), 0);
-
-    //     contentList = contentPart->content("html");
-    //     QCOMPARE(contentList.size(), 1);
-    //     QCOMPARE(contentList[0]->content(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>\n\n").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
-    //     QCOMPARE(contentList[0]->signatures().size(), 0);
-    //     auto contentAttachmentList = parser.collectAttachmentParts();
-    //     QCOMPARE(contentAttachmentList.size(), 0);
-    // }
+    void testAlternative()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("alternative.mbox"));
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::AlternativeMessagePart>();
+        QVERIFY(bool(part));
+        QCOMPARE(part->plaintextContent(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n"));
+        // QCOMPARE(part->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(part->htmlContent(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>\n\n"));
+    }
 
     //  void testTextHtml()
     // {
@@ -158,6 +167,18 @@ private slots:
     //     QCOMPARE(contentAttachmentList.size(), 0);
     // }
 
+    void testTextHtml()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("html.mbox"));
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::HtmlMessagePart>();
+        QVERIFY(bool(part));
+        QCOMPARE(part->htmlContent(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>"));
+        // QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
+    }
+
     // void testSMimeEncrypted()
     // {
     //     Parser parser(readMailFromFile("smime-encrypted.mbox"));
@@ -176,6 +197,18 @@ private slots:
     //     auto contentAttachmentList = parser.collectAttachmentParts();
     //     QCOMPARE(contentAttachmentList.size(), 0);
     // }
+
+    void testSMimeEncrypted()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("smime-encrypted.mbox"));
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QVERIFY(bool(part));
+        QCOMPARE(part->text(), QStringLiteral("The quick brown fox jumped over the lazy dog."));
+        // QCOMPARE(part->charset(), QStringLiteral("us-ascii").toLocal8Bit());
+    }
 
     // void testOpenPGPEncryptedAttachment()
     // {
@@ -203,6 +236,30 @@ private slots:
     //     QCOMPARE(contentAttachmentList[1]->encryptions().size(), 0);
     //     QCOMPARE(contentAttachmentList[1]->signatures().size(), 0);
     // }
+    //
+    void testOpenPGPEncryptedAttachment()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QVERIFY(bool(part));
+        QCOMPARE(part->text(), QStringLiteral("test text"));
+        // QCOMPARE(part->charset(), QStringLiteral("us-ascii").toLocal8Bit());
+    //     QCOMPARE(contentList[0]->encryptions().size(), 1);
+    //     QCOMPARE(contentList[0]->signatures().size(), 1);
+    //     auto contentAttachmentList = parser.collectAttachmentParts();
+    //     QCOMPARE(contentAttachmentList.size(), 2);
+    //     QCOMPARE(contentAttachmentList[0]->availableContents(), QVector<QByteArray>() << "text/plain");
+    //     QCOMPARE(contentAttachmentList[0]->content().size(), 1);
+    //     QCOMPARE(contentAttachmentList[0]->encryptions().size(), 1);
+    //     QCOMPARE(contentAttachmentList[0]->signatures().size(), 1);
+    //     QCOMPARE(contentAttachmentList[1]->availableContents(), QVector<QByteArray>() << "image/png");
+    //     QCOMPARE(contentAttachmentList[1]->content().size(), 1);
+    //     QCOMPARE(contentAttachmentList[1]->encryptions().size(), 0);
+    //     QCOMPARE(contentAttachmentList[1]->signatures().size(), 0);
+    }
 
     // void testOpenPGPInline()
     // {
@@ -224,6 +281,24 @@ private slots:
     //     auto contentAttachmentList = parser.collectAttachmentParts();
     //     QCOMPARE(contentAttachmentList.size(), 0);
     // }
+ 
+    void testOpenPGPInline()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("openpgp-inline-charset-encrypted.mbox"));
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QVERIFY(bool(part));
+        QEXPECT_FAIL("", "Somethings wrong with the encoding", Continue);
+        QCOMPARE(part->text(), QStringLiteral("asdasd asd asd asdf sadf sdaf sadf äöü"));
+        // QCOMPARE(contentList[0]->charset(), QStringLiteral("ISO-8859-15").toLocal8Bit());
+
+        // QCOMPARE(contentList[0]->encryptions().size(), 1);
+        // QCOMPARE(contentList[0]->signatures().size(), 1);
+        // auto contentAttachmentList = parser.collectAttachmentParts();
+        // QCOMPARE(contentAttachmentList.size(), 0);
+    }
 
     // void testOpenPPGInlineWithNonEncText()
     // {
@@ -249,6 +324,27 @@ private slots:
     //     auto contentAttachmentList = parser.collectAttachmentParts();
     //     QCOMPARE(contentAttachmentList.size(), 0);
     // }
+
+    void testOpenPPGInlineWithNonEncText()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("openpgp-inline-encrypted+nonenc.mbox"));
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part1 = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QVERIFY(bool(part1));
+        QCOMPARE(part1->text(), QStringLiteral("Not encrypted not signed :(\n\nsome random text"));
+        // QCOMPARE(part1->charset(), QStringLiteral("us-ascii").toLocal8Bit());
+
+        // QCOMPARE(part1->text(), QStringLiteral("Not encrypted not signed :(\n\n"));
+        // QCOMPARE(part1->charset(), QStringLiteral("us-ascii").toLocal8Bit());
+        // QCOMPARE(contentList[1]->content(), QStringLiteral("some random text").toLocal8Bit());
+        // QCOMPARE(contentList[1]->charset(), QStringLiteral("us-ascii").toLocal8Bit());
+        // QCOMPARE(contentList[1]->encryptions().size(), 1);
+        // QCOMPARE(contentList[1]->signatures().size(), 0);
+        // auto contentAttachmentList = parser.collectAttachmentParts();
+        // QCOMPARE(contentAttachmentList.size(), 0);
+    }
 
     // void testEncryptionBlock()
     // {
