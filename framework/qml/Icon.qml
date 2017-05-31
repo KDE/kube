@@ -39,10 +39,11 @@ Item {
 
     Image {
         id: image
-        anchors.fill: parent
+        anchors.centerIn: parent
         sourceSize.width: width
         sourceSize.height: height
         cache: true
         smooth: true
+        fillMode: Image.PreserveAspectFit
     }
 }
