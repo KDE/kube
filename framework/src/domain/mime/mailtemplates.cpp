@@ -34,8 +34,6 @@
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
 
-#include "objecttreesource.h"
-
 #include <otp/objecttreeparser.h>
 
 namespace KMime {

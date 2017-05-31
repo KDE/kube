@@ -2,7 +2,6 @@ include_directories(.)
 
 set(mimetreeparser_SRCS
     interface.cpp
-    objecttreesource.cpp
 )
 
 add_library(mimetreeparser SHARED ${mimetreeparser_SRCS})

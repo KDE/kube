@@ -278,6 +278,8 @@ class ObjectTreeParser
     ObjectTreeParser(const ObjectTreeParser &other);
 
 public:
+    explicit ObjectTreeParser();
+
     explicit ObjectTreeParser(Interface::ObjectTreeSource *source,
                               NodeHelper *nodeHelper = nullptr,
                               bool showOneMimePart = false,

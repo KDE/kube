@@ -21,8 +21,86 @@
 #include "bodypartformatter.h"
 #include "messagepart.h"
 
+#include "attachmentstrategy.h"
+#include "otp/bodypartformatterbasefactory.h"
+#include "messagepart.h"
+
 using namespace MimeTreeParser;
 
 Interface::ObjectTreeSource::~ObjectTreeSource()
 {
 }
+
+
+class MimeTreeParser::ObjectSourcePrivate
+{
+public:
+    ObjectSourcePrivate()
+        : mAllowDecryption(true)
+        , mPreferredMode(MimeTreeParser::Util::Html)
+    {
+
+    }
+    MimeTreeParser::BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
+    bool mAllowDecryption;
+    MimeTreeParser::Util::HtmlMode mPreferredMode;
+};
+
+DefaultObjectTreeSource::DefaultObjectTreeSource()
+        : MimeTreeParser::Interface::ObjectTreeSource()
+        , d(new ObjectSourcePrivate)
+    {
+    }
+
+DefaultObjectTreeSource::~DefaultObjectTreeSource()
+{
+    delete d;
+}
+
+void DefaultObjectTreeSource::setAllowDecryption(bool allowDecryption)
+{
+    d->mAllowDecryption = allowDecryption;
+}
+
+
+bool DefaultObjectTreeSource::decryptMessage() const
+{
+    return d->mAllowDecryption;
+}
+
+const QTextCodec *DefaultObjectTreeSource::overrideCodec()
+{
+    return Q_NULLPTR;
+}
+
+const MimeTreeParser::AttachmentStrategy *DefaultObjectTreeSource::attachmentStrategy()
+{
+    return MimeTreeParser::AttachmentStrategy::smart();
+}
+
+QObject *DefaultObjectTreeSource::sourceObject()
+{
+    return Q_NULLPTR;
+}
+
+void DefaultObjectTreeSource::setHtmlMode(MimeTreeParser::Util::HtmlMode mode, const QList<MimeTreeParser::Util::HtmlMode> &availableModes)
+{
+      Q_UNUSED(mode);
+      Q_UNUSED(availableModes);
+}
+
+MimeTreeParser::Util::HtmlMode DefaultObjectTreeSource::preferredMode() const
+{
+    return d->mPreferredMode;
+}
+
+bool DefaultObjectTreeSource::autoImportKeys() const
+{
+    return false;
+}
+
+const BodyPartFormatterBaseFactory *DefaultObjectTreeSource::bodyPartFormatterFactory()
+{
+    return &(d->mBodyPartFormatterBaseFactory);
+}
+

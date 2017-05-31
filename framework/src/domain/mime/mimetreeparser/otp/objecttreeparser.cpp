@@ -60,6 +60,19 @@
 
 using namespace MimeTreeParser;
 
+
+ObjectTreeParser::ObjectTreeParser()
+    : mSource(new DefaultObjectTreeSource),
+      mNodeHelper(nullptr),
+      mTopLevelContent(nullptr),
+      mShowOnlyOneMimePart(false),
+      mHasPendingAsyncJobs(false),
+      mAllowAsync(false),
+      mAttachmentStrategy(nullptr)
+{
+    init();
+}
+
 ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
                                    bool showOnlyOneMimePart,
                                    const AttachmentStrategy *strategy)

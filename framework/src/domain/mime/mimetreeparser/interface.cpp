@@ -20,8 +20,6 @@
 #include "interface.h"
 #include "interface_p.h"
 
-#include "objecttreesource.h"
-
 #include <QGpgME/KeyListJob>
 #include <QGpgME/Protocol>
 #include <gpgme++/key.h>
@@ -950,9 +948,7 @@ void ParserPrivate::setMessage(const QByteArray& mimeMessage)
     mMsg->setContent(mailData);
     mMsg->parse();
 
-    //FIXME this is a leak
-    auto source = new ObjectTreeSource;
-    mOtp = std::make_shared<MimeTreeParser::ObjectTreeParser>(source, mNodeHelper.get());
+    mOtp = std::make_shared<MimeTreeParser::ObjectTreeParser>();
     mOtp->parseObjectTree(mMsg.data());
     mPartTree = mOtp->parsedPart().dynamicCast<MimeTreeParser::MessagePart>();
 

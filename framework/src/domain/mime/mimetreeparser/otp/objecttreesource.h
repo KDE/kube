@@ -83,5 +83,25 @@ public:
     virtual const BodyPartFormatterBaseFactory *bodyPartFormatterFactory() = 0;
 };
 }
+
+class ObjectSourcePrivate;
+class DefaultObjectTreeSource : public Interface::ObjectTreeSource
+{
+public:
+    DefaultObjectTreeSource();
+    virtual ~DefaultObjectTreeSource();
+    bool decryptMessage() const Q_DECL_OVERRIDE;
+    void setHtmlMode(MimeTreeParser::Util::HtmlMode mode, const QList<MimeTreeParser::Util::HtmlMode> &availableModes) Q_DECL_OVERRIDE;
+    MimeTreeParser::Util::HtmlMode preferredMode() const Q_DECL_OVERRIDE;
+    void setAllowDecryption(bool allowDecryption);
+    const QTextCodec *overrideCodec() Q_DECL_OVERRIDE;
+    const MimeTreeParser::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
+    QObject *sourceObject() Q_DECL_OVERRIDE;
+    bool autoImportKeys() const Q_DECL_OVERRIDE;
+    const MimeTreeParser::BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE;
+private:
+    ObjectSourcePrivate *const d;
+};
+
 }
 #endif

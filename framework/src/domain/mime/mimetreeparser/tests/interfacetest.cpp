@@ -22,7 +22,6 @@
 
 #include <otp/objecttreeparser.h>
 #include <otp/messagepart.h>
-#include <objecttreesource.h>
 
 #include <QTest>
 
@@ -67,11 +66,9 @@ private slots:
 
     void testTextMail()
     {
-        MimeTreeParser::NodeHelper nodeHelper;
-        ObjectTreeSource source;
-        auto otp = std::make_shared<MimeTreeParser::ObjectTreeParser>(&source, &nodeHelper);
-        otp->parseObjectTree(readMailFromFile("plaintext.mbox"));
-        auto partList = otp->collectContentParts();
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("plaintext.mbox"));
+        auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
         QCOMPARE(part->text(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/"));

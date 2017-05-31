@@ -34,7 +34,6 @@ set(SRCS
     domain/mime/messageparser_new.cpp
     domain/mime/mailtemplates.cpp
     domain/mime/attachmentmodel.cpp
-    domain/mime/objecttreesource.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
     fabric.cpp
