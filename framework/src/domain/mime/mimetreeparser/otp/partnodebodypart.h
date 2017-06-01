@@ -68,8 +68,6 @@ public:
 
     Interface::BodyPartMemento *memento() const Q_DECL_OVERRIDE;
     void setBodyPartMemento(Interface::BodyPartMemento *memento) Q_DECL_OVERRIDE;
-    BodyPart::Display defaultDisplay() const Q_DECL_OVERRIDE;
-    void setDefaultDisplay(BodyPart::Display);
     KMime::Content *content() const Q_DECL_OVERRIDE
     {
         return mContent;
@@ -97,7 +95,6 @@ public:
 private:
     KMime::Content *mTopLevelContent;
     KMime::Content *mContent;
-    BodyPart::Display mDefaultDisplay;
     NodeHelper *mNodeHelper;
     ObjectTreeParser *mObjectTreeParser;
     ProcessResult *mProcessResult;

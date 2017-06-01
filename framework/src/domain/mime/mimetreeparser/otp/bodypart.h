@@ -168,12 +168,6 @@ public:
     */
     virtual void setBodyPartMemento(BodyPartMemento *) = 0;
 
-    enum Display { None, AsIcon, Inline };
-    /**
-      @return whether this body part should be displayed iconic or inline
-      */
-    virtual Display defaultDisplay() const = 0;
-
     /** Returns the KMime::Content node represented here. Makes most of the above obsolete
         and probably should be used in the interfaces in the first place.
     */

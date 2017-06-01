@@ -46,8 +46,10 @@ static int serial = 0;
 
 PartNodeBodyPart::PartNodeBodyPart(ObjectTreeParser *otp, ProcessResult *result, KMime::Content *topLevelContent, KMime::Content *content,
                                    NodeHelper *nodeHelper)
-    : Interface::BodyPart(), mTopLevelContent(topLevelContent), mContent(content),
-      mDefaultDisplay(Interface::BodyPart::None), mNodeHelper(nodeHelper)
+    : Interface::BodyPart()
+    , mTopLevelContent(topLevelContent)
+    , mContent(content)
+    , mNodeHelper(nodeHelper)
     , mObjectTreeParser(otp)
     , mProcessResult(result)
 {}
@@ -107,16 +109,6 @@ void PartNodeBodyPart::setBodyPartMemento(Interface::BodyPartMemento *memento)
     /*TODO(Andras) Volker suggests to use a ContentIndex->Memento mapping
     Also review if the reader's bodyPartMemento should be set or the NodeHelper's one */
     mNodeHelper->setBodyPartMemento(mContent, "__plugin__", memento);
-}
-
-Interface::BodyPart::Display PartNodeBodyPart::defaultDisplay() const
-{
-    return mDefaultDisplay;
-}
-
-void PartNodeBodyPart::setDefaultDisplay(Interface::BodyPart::Display d)
-{
-    mDefaultDisplay = d;
 }
 
 Interface::ObjectTreeSource *PartNodeBodyPart::source() const
