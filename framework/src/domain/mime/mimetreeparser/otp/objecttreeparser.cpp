@@ -36,7 +36,6 @@
 
 #include "objecttreeparser.h"
 
-#include "attachmentstrategy.h"
 #include "bodypartformatterbasefactory.h"
 #include "nodehelper.h"
 #include "messagepart.h"
@@ -68,37 +67,34 @@ ObjectTreeParser::ObjectTreeParser()
       mTopLevelContent(nullptr),
       mShowOnlyOneMimePart(false),
       mHasPendingAsyncJobs(false),
-      mAllowAsync(false),
-      mAttachmentStrategy(nullptr)
+      mAllowAsync(false)
 {
     init();
 }
 
 ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
-                                   bool showOnlyOneMimePart,
-                                   const AttachmentStrategy *strategy)
+                                   bool showOnlyOneMimePart
+                                   )
     : mSource(topLevelParser->mSource),
       mNodeHelper(topLevelParser->mNodeHelper),
       mTopLevelContent(topLevelParser->mTopLevelContent),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
       mHasPendingAsyncJobs(false),
-      mAllowAsync(topLevelParser->mAllowAsync),
-      mAttachmentStrategy(strategy)
+      mAllowAsync(topLevelParser->mAllowAsync)
 {
     init();
 }
 
 ObjectTreeParser::ObjectTreeParser(Interface::ObjectTreeSource *source,
                                    MimeTreeParser::NodeHelper *nodeHelper,
-                                   bool showOnlyOneMimePart,
-                                   const AttachmentStrategy *strategy)
+                                   bool showOnlyOneMimePart
+                                   )
     : mSource(source),
       mNodeHelper(nodeHelper),
       mTopLevelContent(nullptr),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
       mHasPendingAsyncJobs(false),
-      mAllowAsync(false),
-      mAttachmentStrategy(strategy)
+      mAllowAsync(false)
 {
     init();
 }
@@ -106,10 +102,6 @@ ObjectTreeParser::ObjectTreeParser(Interface::ObjectTreeSource *source,
 void ObjectTreeParser::init()
 {
     Q_ASSERT(mSource);
-    if (!attachmentStrategy()) {
-        mAttachmentStrategy = mSource->attachmentStrategy();
-    }
-
     if (!mNodeHelper) {
         mNodeHelper = new NodeHelper();
         mDeleteNodeHelper = true;
@@ -125,7 +117,6 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser &other)
       mShowOnlyOneMimePart(other.showOnlyOneMimePart()),
       mHasPendingAsyncJobs(other.hasPendingAsyncJobs()),
       mAllowAsync(other.allowAsync()),
-      mAttachmentStrategy(other.attachmentStrategy()),
       mDeleteNodeHelper(false)
 {
 
@@ -379,10 +370,6 @@ MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, ProcessResult
             continue;
         }
         PartNodeBodyPart part(this, &processResult, mTopLevelContent, node, mNodeHelper);
-        // Set the default display strategy for this body part relying on the
-        // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
-        part.setDefaultDisplay((Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay(node));
-
         if (const MessagePart::Ptr result = formatter->process(part)) {
             return result;
         }
@@ -555,12 +542,6 @@ void ObjectTreeParser::setShowOnlyOneMimePart(bool show)
 {
     mShowOnlyOneMimePart = show;
 }
-
-const AttachmentStrategy *ObjectTreeParser::attachmentStrategy() const
-{
-    return mAttachmentStrategy;
-}
-
 
 MimeTreeParser::NodeHelper *ObjectTreeParser::nodeHelper() const
 {

@@ -49,7 +49,6 @@ set(libmimetreeparser_SRCS
     mimetreeparser_debug.cpp
     qgpgmejobexecutor.cpp
     util.cpp
-    attachmentstrategy.cpp
     attachmenttemporaryfilesdirs.cpp
     )
 

@@ -22,7 +22,6 @@
 #define MESSAGECORE_TESTS_UTIL_H
 
 #include <gpgme++/key.h>
-#include <attachmentstrategy.h>
 #include <bodypartformatter.h>
 #include <bodypartformatterbasefactory.h>
 #include <objecttreesource.h>
@@ -46,19 +45,9 @@ class TestObjectTreeSource : public MimeTreeParser::Interface::ObjectTreeSource
 {
 public:
     TestObjectTreeSource()
-        : mAttachmentStrategy(QStringLiteral("smart"))
-        , mPreferredMode(Util::Html)
+        : mPreferredMode(Util::Html)
         , mDecryptMessage(false)
     {
-    }
-
-    void setAttachmentStrategy(QString strategy)
-    {
-        mAttachmentStrategy = strategy;
-    }
-
-    const AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE {
-        return  AttachmentStrategy::create(mAttachmentStrategy);
     }
 
     bool autoImportKeys() const Q_DECL_OVERRIDE
@@ -103,7 +92,6 @@ public:
         return nullptr;
     }
 private:
-    QString mAttachmentStrategy;
     BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     MimeTreeParser::Util::HtmlMode mPreferredMode;
     bool mDecryptMessage;

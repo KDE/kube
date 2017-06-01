@@ -19,7 +19,6 @@
 
 #include "messagepart.h"
 #include "mimetreeparser_debug.h"
-#include "attachmentstrategy.h"
 #include "cryptohelper.h"
 #include "objecttreeparser.h"
 #include "qgpgmejobexecutor.h"
@@ -133,7 +132,7 @@ QString MessagePart::filename() const
     if (!mNode) {
         return QString();
     }
-    const auto cd = d->mNode->contentDisposition(false);
+    const auto cd = mNode->contentDisposition(false);
     if (!cd) {
         return QString();
     }

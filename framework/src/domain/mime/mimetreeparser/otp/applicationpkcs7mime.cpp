@@ -21,7 +21,6 @@
 
 #include "utils.h"
 
-#include "attachmentstrategy.h"
 #include "objecttreeparser.h"
 #include "messagepart.h"
 

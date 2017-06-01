@@ -47,7 +47,6 @@
 #include "bodypartformatterbasefactory.h"
 #include "bodypartformatterbasefactory_p.h"
 
-#include "attachmentstrategy.h"
 #include "objecttreeparser.h"
 #include "messagepart.h"
 

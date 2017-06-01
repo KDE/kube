@@ -21,7 +21,6 @@
 #include "bodypartformatter.h"
 #include "messagepart.h"
 
-#include "attachmentstrategy.h"
 #include "otp/bodypartformatterbasefactory.h"
 #include "messagepart.h"
 
@@ -71,11 +70,6 @@ bool DefaultObjectTreeSource::decryptMessage() const
 const QTextCodec *DefaultObjectTreeSource::overrideCodec()
 {
     return Q_NULLPTR;
-}
-
-const MimeTreeParser::AttachmentStrategy *DefaultObjectTreeSource::attachmentStrategy()
-{
-    return MimeTreeParser::AttachmentStrategy::smart();
 }
 
 QObject *DefaultObjectTreeSource::sourceObject()

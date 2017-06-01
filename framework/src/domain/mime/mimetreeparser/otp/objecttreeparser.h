@@ -52,7 +52,6 @@ namespace MimeTreeParser
 
 class PartMetaData;
 class ViewerPrivate;
-class AttachmentStrategy;
 class NodeHelper;
 class MimeMessagePart;
 
@@ -276,12 +275,12 @@ public:
 
     explicit ObjectTreeParser(Interface::ObjectTreeSource *source,
                               NodeHelper *nodeHelper = nullptr,
-                              bool showOneMimePart = false,
-                              const AttachmentStrategy *attachmentStrategy = nullptr);
+                              bool showOneMimePart = false
+                              );
 
     explicit ObjectTreeParser(const ObjectTreeParser *topLevelParser,
-                              bool showOneMimePart = false,
-                              const AttachmentStrategy *attachmentStrategy = nullptr);
+                              bool showOneMimePart = false
+                              );
     virtual ~ObjectTreeParser();
 
     void setAllowAsync(bool allow);
@@ -316,8 +315,6 @@ public:
 
     bool showOnlyOneMimePart() const;
     void setShowOnlyOneMimePart(bool show);
-
-    const AttachmentStrategy *attachmentStrategy() const;
 
     NodeHelper *nodeHelper() const;
 
@@ -378,7 +375,6 @@ private:
 
     bool mHasPendingAsyncJobs;
     bool mAllowAsync;
-    const AttachmentStrategy *mAttachmentStrategy;
     // DataUrl Icons cache
     QString mCollapseIcon;
     QString mExpandIcon;

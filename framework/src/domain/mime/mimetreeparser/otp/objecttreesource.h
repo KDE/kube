@@ -29,7 +29,6 @@ class QTextCodec;
 
 namespace MimeTreeParser
 {
-class AttachmentStrategy;
 class BodyPartFormatterBaseFactory;
 }
 
@@ -64,11 +63,6 @@ public:
     /** The override codec that should be used for the mail */
     virtual const QTextCodec *overrideCodec() = 0;
 
-    /** Return the wanted attachment startegy */
-    virtual const AttachmentStrategy *attachmentStrategy() = 0;
-
-    /** Return the html write object */
-
     /** The source object behind the interface. */
     virtual QObject *sourceObject() = 0;
 
@@ -90,7 +84,6 @@ public:
     MimeTreeParser::Util::HtmlMode preferredMode() const Q_DECL_OVERRIDE;
     void setAllowDecryption(bool allowDecryption);
     const QTextCodec *overrideCodec() Q_DECL_OVERRIDE;
-    const MimeTreeParser::AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
     QObject *sourceObject() Q_DECL_OVERRIDE;
     bool autoImportKeys() const Q_DECL_OVERRIDE;
     const MimeTreeParser::BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE;

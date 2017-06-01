@@ -19,7 +19,6 @@
 
 #include "texthtml.h"
 
-#include "attachmentstrategy.h"
 #include "objecttreeparser.h"
 #include "messagepart.h"
 
