@@ -452,16 +452,17 @@ private slots:
     //     QCOMPARE(contentAttachmentList.size(), 0);
     }
 
-    // void testAttachmentPart()
-    // {
-    //     Parser parser(readMailFromFile("cid-links.mbox"));
-    //     const auto relatedImage = parser.d->mTree->subParts().at(1);
-    //     QCOMPARE(relatedImage->availableContents(),  QVector<QByteArray>() <<  "image/jpeg");
-    //     auto contentList = relatedImage->content();
-    //     QCOMPARE(contentList.size(), 1);
-    //     contentList = relatedImage->content("image/jpeg");
-    //     QCOMPARE(contentList.size(), 1);
-    // }
+    void testAttachmentPart()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("cid-links.mbox"));
+        otp.print();
+        auto partList = otp.collectAttachmentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QVERIFY(bool(part));
+
+    }
 
     // void testCidLink()
     // {
@@ -508,10 +509,7 @@ private slots:
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::AlternativeMessagePart>();
         QVERIFY(bool(part));
-        qWarning() << part->metaObject()->className();
-        qWarning() << part->htmlContent();
         auto resolvedContent = otp.resolveCidLinks(part->htmlContent());
-        qWarning() << resolvedContent;
         QVERIFY(!resolvedContent.contains("cid:"));
     //     Parser parser(readMailFromFile("cid-links-forwarded-inline.mbox"));
     //     printTree(parser.d->mTree,QString());

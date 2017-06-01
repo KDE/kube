@@ -18,7 +18,6 @@
 */
 
 #include "messageparser.h"
-#include "mimetreeparser/interface.h"
 #include "mimetreeparser/otp/objecttreeparser.h"
 #include "mimetreeparser/otp/messagepart.h"
 #include "htmlutils.h"
@@ -30,20 +29,20 @@
 class NewModelPrivate
 {
 public:
-    NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> &parser);
+    NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser);
     ~NewModelPrivate();
 
     void createTree();
     NewModel *q;
     QVector<MimeTreeParser::Interface::MessagePartPtr> mParts;
-    std::shared_ptr<Parser> mParser;
+    std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
 };
 
-NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<Parser> &parser)
+NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser)
     : q(q_ptr)
     , mParser(parser)
 {
-    mParts = mParser->otp()->collectContentParts();
+    mParts = mParser->collectContentParts();
     qWarning() << "Collected content parts: " << mParts.size();
 }
 
@@ -51,7 +50,7 @@ NewModelPrivate::~NewModelPrivate()
 {
 }
 
-NewModel::NewModel(std::shared_ptr<Parser> parser)
+NewModel::NewModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser)
     : d(std::unique_ptr<NewModelPrivate>(new NewModelPrivate(this, parser)))
 {
 }
@@ -155,7 +154,7 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return QStringLiteral("Content%1");
             case TypeRole:
                 // TODO this is matched in the maildatamodel
-                return "Content";
+                return "HtmlContent";
             case IsEmbededRole:
                 return false;
             case IsComplexHtmlContentRole: {
@@ -181,7 +180,7 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
                 qWarning() << "Encoded content: " << text;
                 if (messagePart->isHtml()) {
-                    return d->mParser->otp()->resolveCidLinks(text);
+                    return d->mParser->resolveCidLinks(text);
                 } else { //We assume plain
                     //We alwas do richtext (so we get highlighted links and stuff).
                     return HtmlUtils::linkify(Qt::convertFromPlainText(text));

@@ -19,14 +19,14 @@
 #include "messageparser.h"
 
 #include "modeltest.h"
-#include "mimetreeparser/interface.h"
+#include <otp/objecttreeparser.h>
 
 #include <QDebug>
 
 class MessagePartPrivate
 {
 public:
-    std::shared_ptr<Parser> mParser;
+    std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
 };
 
 MessageParser::MessageParser(QObject *parent)
@@ -48,7 +48,8 @@ QVariant MessageParser::message() const
 
 void MessageParser::setMessage(const QVariant &message)
 {
-    d->mParser = std::shared_ptr<Parser>(new Parser(message.toByteArray()));
+    d->mParser = std::make_shared<MimeTreeParser::ObjectTreeParser>();
+    d->mParser->parseObjectTree(message.toByteArray());
     mRawContent = message.toString();
     emit htmlChanged();
 }

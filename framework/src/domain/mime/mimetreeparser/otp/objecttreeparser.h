@@ -334,6 +334,7 @@ public:
     MessagePartPtr parsedPart() const;
     KMime::Content *find(const std::function<bool(KMime::Content *)> &select);
     QVector<Interface::MessagePartPtr> collectContentParts();
+    QVector<Interface::MessagePartPtr> collectAttachmentParts();
 
     /** Embedd content referenced by cid by inlining */
     QString resolveCidLinks(const QString &html);

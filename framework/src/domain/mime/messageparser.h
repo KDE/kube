@@ -30,11 +30,14 @@
 
 class QAbstractItemModel;
 
-class Parser;
 class MessagePartPrivate;
 
 class NewModelPrivate;
 class AttachmentModelPrivate;
+
+namespace MimeTreeParser {
+    class ObjectTreeParser;
+}
 
 class MessageParser : public QObject
 {
@@ -65,7 +68,7 @@ private:
 class NewModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    NewModel(std::shared_ptr<Parser> parser);
+    NewModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser);
     ~NewModel();
 
 public:
@@ -94,7 +97,7 @@ private:
 class AttachmentModel : public QAbstractItemModel {
      Q_OBJECT
 public:
-    AttachmentModel(std::shared_ptr<Parser> parser);
+    AttachmentModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser);
     ~AttachmentModel();
 
 public:
