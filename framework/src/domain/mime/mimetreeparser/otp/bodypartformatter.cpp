@@ -42,78 +42,10 @@ namespace MimeTreeParser
 namespace Interface
 {
 
-class MessagePartPrivate
-{
-public:
-    MessagePartPrivate(const BodyPart *part)
-        : mPart(part)
-        , mParentPart(nullptr)
-    {
-    }
-
-    ~MessagePartPrivate()
-    {
-    }
-
-
-    const BodyPart *mPart;
-    MessagePart *mParentPart;
-
-};
-}
-}
-
-MessagePart::MessagePart()
-    : QObject()
-    , d(new MessagePartPrivate(nullptr))
-{
-}
-
-MessagePart::MessagePart(const BodyPart &part)
-    : QObject()
-    , d(new MessagePartPrivate(&part))
-{
-}
-
-MessagePart::~MessagePart()
-{
-    delete d;
-}
-
-void MessagePart::html(bool decorate)
-{
-    Q_UNUSED(decorate);
-}
-
-QString MessagePart::text() const
-{
-    return QString();
-}
-
-MessagePart *MessagePart::parentPart() const
-{
-    return d->mParentPart;
-}
-
-void MessagePart::setParentPart(MessagePart *parentPart)
-{
-    d->mParentPart = parentPart;
-}
-
-QString MessagePart::htmlContent() const
-{
-    return text();
-}
-
-QString MessagePart::plaintextContent() const
-{
-    return text();
-}
-
-
-
 MessagePart::Ptr BodyPartFormatter::process(BodyPart &part) const
 {
-    auto mp = MessagePart::Ptr(new MessagePart(part));
+    auto mp = MessagePart::Ptr(new MessagePart());
     return mp;
+}
+}
 }

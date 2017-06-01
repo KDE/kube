@@ -30,7 +30,7 @@ class MultiPartAlternativeBodyPartFormatter : public Interface::BodyPartFormatte
 {
     static const MultiPartAlternativeBodyPartFormatter *self;
 public:
-    Interface::MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE;
+    MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE;
     static const Interface::BodyPartFormatter *create();
 };
 

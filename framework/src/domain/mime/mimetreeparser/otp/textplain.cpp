@@ -39,7 +39,7 @@ const Interface::BodyPartFormatter *TextPlainBodyPartFormatter::create()
     return self;
 }
 
-Interface::MessagePart::Ptr TextPlainBodyPartFormatter::process(Interface::BodyPart &part) const
+MessagePart::Ptr TextPlainBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     KMime::Content *node = part.content();
     const bool isFirstTextPart = (node->topLevel()->textContent() == node);

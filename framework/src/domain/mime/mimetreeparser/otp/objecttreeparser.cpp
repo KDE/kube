@@ -192,18 +192,11 @@ static void print(KMime::Content *node, const QString prefix = {})
     }
 }
 
-static void print(const Interface::MessagePart &messagePart, const QByteArray pre = {})
+static void print(const MessagePart &messagePart, const QByteArray pre = {})
 {
     qWarning() << pre << "#" << messagePart.metaObject()->className();
-    auto mp = dynamic_cast<const MimeTreeParser::MessagePart*>(&messagePart);
-    if (mp) {
-        // if (auto alt = dynamic_cast<const MimeTreeParser::AlternativeMessagePart*>(&messagePart)) {
-        //     qWarning() << pre << ":" << alt->htmlContent();
-        //     qWarning() << pre << ":" << alt->plaintextContent();
-        // }
-        for (const auto &p: mp->subParts()) {
-            print(*p, pre + " ");
-        }
+    for (const auto &p: messagePart.subParts()) {
+        print(*p, pre + " ");
     }
 }
 
@@ -243,7 +236,7 @@ KMime::Content *ObjectTreeParser::find(const std::function<bool(KMime::Content *
     return ::find(mTopLevelContent, select);
 }
 
-static QVector<Interface::MessagePart::Ptr> collect(Interface::MessagePart::Ptr start, const std::function<bool(const MessagePartPtr &)> &filter, const std::function<bool(const MessagePartPtr &)> &select)
+static QVector<MessagePart::Ptr> collect(MessagePart::Ptr start, const std::function<bool(const MessagePartPtr &)> &filter, const std::function<bool(const MessagePartPtr &)> &select)
 {
     MessagePartPtr ptr = start.dynamicCast<MessagePart>();
     Q_ASSERT(ptr);
@@ -251,7 +244,7 @@ static QVector<Interface::MessagePart::Ptr> collect(Interface::MessagePart::Ptr 
         return {};
     }
 
-    QVector<Interface::MessagePart::Ptr> list;
+    QVector<MessagePart::Ptr> list;
     if (select(ptr)) {
         list << start;
     }
@@ -263,9 +256,9 @@ static QVector<Interface::MessagePart::Ptr> collect(Interface::MessagePart::Ptr 
     return list;
 }
 
-QVector<Interface::MessagePart::Ptr> ObjectTreeParser::collectContentParts()
+QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts()
 {
-    QVector<Interface::MessagePart::Ptr> contentParts = ::collect(mParsedPart,
+    QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
         [] (const MessagePartPtr &part) {
             // return p->type() != "EncapsulatedPart";
             return true;
@@ -285,9 +278,9 @@ QVector<Interface::MessagePart::Ptr> ObjectTreeParser::collectContentParts()
     return contentParts;
 }
 
-QVector<Interface::MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
+QVector<MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
 {
-    QVector<Interface::MessagePart::Ptr> contentParts = ::collect(mParsedPart,
+    QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
         [] (const MessagePartPtr &part) {
             return true;
         },
@@ -295,6 +288,7 @@ QVector<Interface::MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
             if (const auto attachment = dynamic_cast<MimeTreeParser::AttachmentMessagePart*>(part.data())) {
                 return true;
             }
+            return false;
         });
     return contentParts;
 }
@@ -374,7 +368,7 @@ MessagePartPtr ObjectTreeParser::parsedPart() const
     return mParsedPart;
 }
 
-bool ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, Interface::MessagePartPtr &mpRet, bool onlyOneMimePart)
+bool ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, MessagePartPtr &mpRet, bool onlyOneMimePart)
 {
     bool bRendered = false;
     const auto sub = mSource->bodyPartFormatterFactory()->subtypeRegistry(mediaType.constData());
@@ -390,7 +384,7 @@ bool ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processR
         part.setDefaultDisplay((Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay(node));
 
 
-        const Interface::MessagePart::Ptr result = formatter->process(part);
+        const MessagePart::Ptr result = formatter->process(part);
         if (!result) {
             continue;
         }
@@ -453,7 +447,7 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
             subType = node->contentType()->subType();
         }
 
-        Interface::MessagePartPtr mp;
+        MessagePartPtr mp;
         if (processType(node, processResult, mediaType, subType, mp, onlyOneMimePart)) {
             if (mp) {
                 parsedPart->appendSubPart(mp);
@@ -485,9 +479,9 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
     return parsedPart;
 }
 
-Interface::MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node, ProcessResult &result, bool onlyOneMimePart)
+MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node, ProcessResult &result, bool onlyOneMimePart)
 {
-    Interface::MessagePart::Ptr mp;
+    MessagePart::Ptr mp;
     ProcessResult processResult(mNodeHelper);
 
     if (node->contentType()->mimeType() == QByteArrayLiteral("application/octet-stream") &&

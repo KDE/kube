@@ -18,6 +18,7 @@
 */
 
 #include "utils.h"
+#include "nodehelper.h"
 
 using namespace MimeTreeParser;
 

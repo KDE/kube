@@ -45,7 +45,7 @@ const Interface::BodyPartFormatter *ApplicationPkcs7MimeBodyPartFormatter::creat
     return self;
 }
 
-Interface::MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyPart &part) const
+MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     KMime::Content *node = part.content();
 

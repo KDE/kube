@@ -30,7 +30,7 @@ class TextPlainBodyPartFormatter : public Interface::BodyPartFormatter
 {
     static const TextPlainBodyPartFormatter *self;
 public:
-    Interface::MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE;
+    MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE;
     static const Interface::BodyPartFormatter *create();
 };
 

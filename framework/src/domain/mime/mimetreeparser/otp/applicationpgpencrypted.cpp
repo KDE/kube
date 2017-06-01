@@ -42,7 +42,7 @@ const Interface::BodyPartFormatter *ApplicationPGPEncryptedBodyPartFormatter::cr
     return self;
 }
 
-Interface::MessagePart::Ptr ApplicationPGPEncryptedBodyPartFormatter::process(Interface::BodyPart &part) const
+MessagePart::Ptr ApplicationPGPEncryptedBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     KMime::Content *node(part.content());
 

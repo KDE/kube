@@ -20,8 +20,9 @@
 #ifndef __MIMETREEPARSER_MESSAGEPART_H__
 #define __MIMETREEPARSER_MESSAGEPART_H__
 
-#include "bodypartformatter.h"
 #include "util.h"
+#include "enums.h"
+#include "partmetadata.h"
 
 #include <KMime/Message>
 
@@ -62,20 +63,23 @@ namespace Interface
 class ObjectTreeSource;
 }
 
-class MessagePart : public Interface::MessagePart
+class MessagePart : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool attachment READ isAttachment)
     Q_PROPERTY(bool root READ isRoot)
     Q_PROPERTY(bool isHtml READ isHtml)
+    Q_PROPERTY(QString plaintextContent READ plaintextContent)
+    Q_PROPERTY(QString htmlContent READ htmlContent)
 public:
     typedef QSharedPointer<MessagePart> Ptr;
+    MessagePart();
     MessagePart(ObjectTreeParser *otp,
                 const QString &text);
 
     virtual ~MessagePart();
 
-    virtual QString text() const Q_DECL_OVERRIDE;
+    virtual QString text() const;
     void setText(const QString &text);
     void setAttachmentFlag(KMime::Content *node);
     bool isAttachment() const;
@@ -83,12 +87,17 @@ public:
     void setIsRoot(bool root);
     bool isRoot() const;
 
+    void setParentPart(MessagePart *parentPart);
+    MessagePart *parentPart() const;
+
+    virtual QString plaintextContent() const;
+    virtual QString htmlContent() const;
     virtual bool isHtml() const;
 
     PartMetaData *partMetaData();
 
-    void appendSubPart(const Interface::MessagePart::Ptr &messagePart);
-    const QVector<Interface::MessagePart::Ptr> &subParts() const;
+    void appendSubPart(const MessagePart::Ptr &messagePart);
+    const QVector<MessagePart::Ptr> &subParts() const;
     bool hasSubParts() const;
 
 
@@ -102,9 +111,10 @@ protected:
     QString mText;
     ObjectTreeParser *mOtp;
     PartMetaData mMetaData;
+    MessagePart *mParentPart;
 
 private:
-    QVector<Interface::MessagePart::Ptr> mBlocks;
+    QVector<MessagePart::Ptr> mBlocks;
 
     KMime::Content *mAttachmentNode;
     bool mRoot;

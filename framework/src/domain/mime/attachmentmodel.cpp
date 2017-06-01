@@ -59,7 +59,7 @@ public:
 
     AttachmentModel *q;
     std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
-    QVector<MimeTreeParser::Interface::MessagePartPtr> mAttachments;
+    QVector<MimeTreeParser::MessagePartPtr> mAttachments;
 };
 
 AttachmentModelPrivate::AttachmentModelPrivate(AttachmentModel* q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser>& parser)
@@ -122,7 +122,7 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
     }
 
     if (index.internalPointer()) {
-        const auto part = dynamic_cast<MimeTreeParser::MessagePart*>(static_cast<MimeTreeParser::Interface::MessagePart*>(index.internalPointer()));
+        const auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
         Q_ASSERT(part);
         auto node = part->attachmentNode();
         if (!node) {
@@ -160,7 +160,7 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
 static QString saveAttachmentToDisk(const QModelIndex &index, const QString &path, bool readonly = false)
 {
     if (index.internalPointer()) {
-        const auto part = dynamic_cast<MimeTreeParser::MessagePart*>(static_cast<MimeTreeParser::Interface::MessagePart*>(index.internalPointer()));
+        const auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
         Q_ASSERT(part);
         auto node = part->attachmentNode();
         auto data = node->decodedContent();

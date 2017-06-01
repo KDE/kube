@@ -94,7 +94,7 @@ class MessageRfc822BodyPartFormatter
 {
     static const MessageRfc822BodyPartFormatter *self;
 public:
-    Interface::MessagePart::Ptr process(Interface::BodyPart &) const Q_DECL_OVERRIDE;
+    MessagePart::Ptr process(Interface::BodyPart &) const Q_DECL_OVERRIDE;
     static const MimeTreeParser::Interface::BodyPartFormatter *create();
 };
 
@@ -108,7 +108,7 @@ const MimeTreeParser::Interface::BodyPartFormatter *MessageRfc822BodyPartFormatt
     return self;
 }
 
-Interface::MessagePart::Ptr MessageRfc822BodyPartFormatter::process(Interface::BodyPart &part) const
+MessagePart::Ptr MessageRfc822BodyPartFormatter::process(Interface::BodyPart &part) const
 {
     const KMime::Message::Ptr message = part.content()->bodyAsMessage();
     return MessagePart::Ptr(new EncapsulatedRfc822MessagePart(part.objectTreeParser(), part.content(), message));

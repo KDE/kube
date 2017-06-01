@@ -38,6 +38,7 @@
 #include <QSharedPointer>
 
 #include "objecttreeparser.h"
+#include "messagepart.h"
 
 namespace MimeTreeParser
 {
@@ -47,33 +48,6 @@ namespace Interface
 
 class BodyPartURLHandler;
 class BodyPart;
-class MessagePartPrivate;
-
-class MessagePart : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QString plaintextContent READ plaintextContent)
-    Q_PROPERTY(QString htmlContent READ htmlContent)
-public:
-    typedef QSharedPointer<MessagePart> Ptr;
-    explicit MessagePart();
-    explicit MessagePart(const BodyPart &part);
-    virtual ~MessagePart();
-
-    virtual void html(bool decorate);
-    virtual QString text() const;
-
-    void setParentPart(MessagePart *parentPart);
-    MessagePart *parentPart() const;
-
-    virtual QString plaintextContent() const;
-    virtual QString htmlContent() const;
-
-private:
-    MessagePartPrivate *d;
-
-    friend class BodyPartFormatter;
-};
 
 class BodyPartFormatter
 {

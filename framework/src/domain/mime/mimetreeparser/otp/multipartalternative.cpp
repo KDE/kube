@@ -40,7 +40,7 @@ const Interface::BodyPartFormatter *MultiPartAlternativeBodyPartFormatter::creat
     return self;
 }
 
-Interface::MessagePart::Ptr MultiPartAlternativeBodyPartFormatter::process(Interface::BodyPart &part) const
+MessagePart::Ptr MultiPartAlternativeBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     KMime::Content *node = part.content();
     if (node->contents().isEmpty()) {

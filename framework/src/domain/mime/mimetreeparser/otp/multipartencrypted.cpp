@@ -42,7 +42,7 @@ const Interface::BodyPartFormatter *MultiPartEncryptedBodyPartFormatter::create(
     return self;
 }
 
-Interface::MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(Interface::BodyPart &part) const
+MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     KMime::Content *node = part.content();
 

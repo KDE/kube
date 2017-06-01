@@ -56,7 +56,7 @@ bool MailmanBodyPartFormatter::isMailmanMessage(KMime::Content *curNode) const
     return false;
 }
 
-Interface::MessagePart::Ptr MailmanBodyPartFormatter::process(Interface::BodyPart &part) const
+MessagePart::Ptr MailmanBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     KMime::Content *curNode = part.content();
 

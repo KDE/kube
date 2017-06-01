@@ -51,11 +51,20 @@
 using namespace MimeTreeParser;
 
 //------MessagePart-----------------------
+MessagePart::MessagePart()
+    : mOtp(nullptr)
+    , mAttachmentNode(nullptr)
+    , mParentPart(nullptr)
+    , mRoot(false)
+{
+}
+
 MessagePart::MessagePart(ObjectTreeParser *otp,
                          const QString &text)
     : mText(text)
     , mOtp(otp)
     , mAttachmentNode(nullptr)
+    , mParentPart(nullptr)
     , mRoot(false)
 {
 }
@@ -109,6 +118,26 @@ bool MessagePart::isHtml() const
     return false;
 }
 
+MessagePart *MessagePart::parentPart() const
+{
+    return mParentPart;
+}
+
+void MessagePart::setParentPart(MessagePart *parentPart)
+{
+    mParentPart = parentPart;
+}
+
+QString MessagePart::htmlContent() const
+{
+    return text();
+}
+
+QString MessagePart::plaintextContent() const
+{
+    return text();
+}
+
 Interface::ObjectTreeSource *MessagePart::source() const
 {
     Q_ASSERT(mOtp);
@@ -135,13 +164,13 @@ QString MessagePart::renderInternalText() const
     return text;
 }
 
-void MessagePart::appendSubPart(const Interface::MessagePart::Ptr &messagePart)
+void MessagePart::appendSubPart(const MessagePart::Ptr &messagePart)
 {
     messagePart->setParentPart(this);
     mBlocks.append(messagePart);
 }
 
-const QVector<Interface::MessagePart::Ptr> &MessagePart::subParts() const
+const QVector<MessagePart::Ptr> &MessagePart::subParts() const
 {
     return mBlocks;
 }

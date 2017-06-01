@@ -36,6 +36,7 @@
 
 #include "nodehelper.h"
 #include "objecttreesource.h"
+#include "messagepart.h"
 
 #include <gpgme++/verificationresult.h>
 
@@ -49,17 +50,10 @@ class Content;
 namespace MimeTreeParser
 {
 
-namespace Interface
-{
-class MessagePart;
-typedef QSharedPointer<MessagePart> MessagePartPtr;
-}
-
 class PartMetaData;
 class ViewerPrivate;
 class AttachmentStrategy;
 class NodeHelper;
-class MessagePart;
 class MimeMessagePart;
 
 typedef QSharedPointer<MessagePart> MessagePartPtr;
@@ -333,8 +327,8 @@ public:
     void parseObjectTree(const QByteArray &mimeMessage);
     MessagePartPtr parsedPart() const;
     KMime::Content *find(const std::function<bool(KMime::Content *)> &select);
-    QVector<Interface::MessagePartPtr> collectContentParts();
-    QVector<Interface::MessagePartPtr> collectAttachmentParts();
+    QVector<MessagePartPtr> collectContentParts();
+    QVector<MessagePartPtr> collectAttachmentParts();
 
     /** Embedd content referenced by cid by inlining */
     QString resolveCidLinks(const QString &html);
@@ -348,9 +342,9 @@ private:
     * top-level content.
     */
     MessagePartPtr parseObjectTreeInternal(KMime::Content *node, bool mOnlyOneMimePart);
-    bool processType(KMime::Content *node, MimeTreeParser::ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, Interface::MessagePartPtr &mpRet, bool onlyOneMimePart);
+    bool processType(KMime::Content *node, MimeTreeParser::ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, MessagePartPtr &mpRet, bool onlyOneMimePart);
 
-    Interface::MessagePartPtr defaultHandling(KMime::Content *node, MimeTreeParser::ProcessResult &result, bool onlyOneMimePart);
+    MessagePartPtr defaultHandling(KMime::Content *node, MimeTreeParser::ProcessResult &result, bool onlyOneMimePart);
 
 private:
 

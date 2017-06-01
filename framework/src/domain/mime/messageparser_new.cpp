@@ -34,7 +34,7 @@ public:
 
     void createTree();
     NewModel *q;
-    QVector<MimeTreeParser::Interface::MessagePartPtr> mParts;
+    QVector<MimeTreeParser::MessagePartPtr> mParts;
     std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
 };
 
@@ -96,7 +96,7 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
     }
 
     if (index.internalPointer()) {
-        const auto messagePart = dynamic_cast<MimeTreeParser::MessagePart*>(static_cast<MimeTreeParser::Interface::MessagePart*>(index.internalPointer()));
+        const auto messagePart = dynamic_cast<MimeTreeParser::MessagePart*>(static_cast<MimeTreeParser::MessagePart*>(index.internalPointer()));
         Q_ASSERT(messagePart);
         // if (_data->userType() ==  qMetaTypeId<Signature *>()) {
         //     const auto signature = _data->value<Signature *>();
