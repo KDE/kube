@@ -20,6 +20,7 @@
 #include <otp/messagepart.h>
 
 #include <QTest>
+#include <QDebug>
 
 QByteArray readMailFromFile(const QString &mailFile)
 {

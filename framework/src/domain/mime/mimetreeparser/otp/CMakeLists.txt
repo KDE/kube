@@ -56,11 +56,15 @@ set(libmimetreeparser_SRCS
 add_library(kube_otp ${libmimetreeparser_SRCS})
 
 target_link_libraries(kube_otp
+    PUBLIC
+    KF5::Mime
+)
+
+target_link_libraries(kube_otp
     PRIVATE
     QGpgme
     KF5::Codecs
     KF5::I18n
-    KF5::Mime
     Qt5::Gui
 )
 install(TARGETS kube_otp DESTINATION ${LIB_INSTALL_DIR})
