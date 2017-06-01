@@ -383,9 +383,7 @@ MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, ProcessResult
         // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
         part.setDefaultDisplay((Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay(node));
 
-        const MessagePart::Ptr result = formatter->process(part);
-        if (result) {
-            result->setAttachmentFlag(node);
+        if (const MessagePart::Ptr result = formatter->process(part)) {
             return result;
         }
     }
@@ -451,7 +449,6 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
         //Fallback to the default handler
         } else {
             if (auto mp = defaultHandling(node, processResult, onlyOneMimePart)) {
-                mp->setAttachmentFlag(node);
                 parsedPart->appendSubPart(mp);
             }
         }

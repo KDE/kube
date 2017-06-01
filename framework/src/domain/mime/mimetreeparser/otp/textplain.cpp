@@ -44,9 +44,6 @@ MessagePart::Ptr TextPlainBodyPartFormatter::process(Interface::BodyPart &part) 
     KMime::Content *node = part.content();
     const bool isFirstTextPart = (node->topLevel()->textContent() == node);
 
-    QString label = NodeHelper::fileName(node);
-
-
     TextMessagePart::Ptr mp;
     if (isFirstTextPart) {
         mp = TextMessagePart::Ptr(new TextMessagePart(part.objectTreeParser(), node, part.source()->decryptMessage()));

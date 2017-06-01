@@ -51,19 +51,10 @@
 using namespace MimeTreeParser;
 
 //------MessagePart-----------------------
-MessagePart::MessagePart()
-    : mOtp(nullptr)
-    , mAttachmentNode(nullptr)
-    , mParentPart(nullptr)
-    , mRoot(false)
-{
-}
-
-MessagePart::MessagePart(ObjectTreeParser *otp,
-                         const QString &text)
+MessagePart::MessagePart(ObjectTreeParser *otp, const QString &text, KMime::Content *node)
     : mText(text)
     , mOtp(otp)
-    , mAttachmentNode(nullptr)
+    , mNode(node) //only null for messagepartlist
     , mParentPart(nullptr)
     , mRoot(false)
 {
@@ -73,24 +64,121 @@ MessagePart::~MessagePart()
 {
 }
 
+/*
+QByteArray MailMime::cid() const
+{
+    if (!d->mNode || !d->mNode->contentID()) {
+        return QByteArray();
+    }
+    return d->mNode->contentID()->identifier();
+}
+
+QByteArray MailMime::charset() const
+{
+    if(!d->mNode || !d->mNode->contentType(false)) {
+        return QByteArray();
+    }
+    if (d->mNode->contentType(false)) {
+        return d->mNode->contentType(false)->charset();
+    }
+    return d->mNode->defaultCharset();
+}
+
+bool MailMime::isFirstTextPart() const
+{
+    if (!d->mNode || !d->mNode->topLevel()) {
+        return false;
+    }
+    return (d->mNode->topLevel()->textContent() == d->mNode);
+}
+
+bool MailMime::isFirstPart() const
+{
+   if (!d->mNode || !d->mNode->parent()) {
+       return false;
+   }
+   return (d->mNode->parent()->contents().first() == d->mNode);
+}
+
+bool MailMime::isTopLevelPart() const
+{
+    if (!d->mNode) {
+        return false;
+    }
+    return (d->mNode->topLevel() == d->mNode);
+}
+*/
+
+MessagePart::Disposition MessagePart::disposition() const
+{
+    if (!mNode) {
+        return Invalid;
+    }
+    const auto cd = mNode->contentDisposition(false);
+    if (!cd) {
+        return Invalid;
+    }
+    switch (cd->disposition()){
+        case KMime::Headers::CDinline:
+            return Inline;
+        case KMime::Headers::CDattachment:
+            return Attachment;
+        default:
+            return Invalid;
+    }
+}
+
+QString MessagePart::filename() const
+{
+    if (!mNode) {
+        return QString();
+    }
+    const auto cd = d->mNode->contentDisposition(false);
+    if (!cd) {
+        return QString();
+    }
+    return cd->filename();
+}
+
+static KMime::Headers::ContentType *contentType(KMime::Content *node)
+{
+    if (node) {
+        return node->contentType(false);
+    }
+    return nullptr;
+}
+
+QByteArray MessagePart::mimeType() const
+{
+    if (auto ct = contentType(mNode)) {
+        return ct->mimeType();
+    }
+    return {};
+}
+
+/*
+bool MailMime::isText() const
+{
+    if (auto ct = contentType(d->mNode)) {
+        return ct->isText();
+    }
+    return false;
+}
+*/
+
 PartMetaData *MessagePart::partMetaData()
 {
     return &mMetaData;
 }
 
-void MessagePart::setAttachmentFlag(KMime::Content *node)
-{
-    mAttachmentNode = node;
-}
-
 bool MessagePart::isAttachment() const
 {
-    return mAttachmentNode;
+    return true;
 }
 
-KMime::Content *MessagePart::attachmentNode() const
+KMime::Content *MessagePart::node() const
 {
-    return mAttachmentNode;
+    return mNode;
 }
 
 void MessagePart::setIsRoot(bool root)
@@ -181,8 +269,8 @@ bool MessagePart::hasSubParts() const
 }
 
 //-----MessagePartList----------------------
-MessagePartList::MessagePartList(ObjectTreeParser *otp)
-    : MessagePart(otp, QString())
+MessagePartList::MessagePartList(ObjectTreeParser *otp, KMime::Content *node)
+    : MessagePart(otp, QString(), node)
 {
 }
 
@@ -209,8 +297,7 @@ QString MessagePartList::htmlContent() const
 //-----TextMessageBlock----------------------
 
 TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool decryptMessage)
-    : MessagePartList(otp)
-    , mNode(node)
+    : MessagePartList(otp, node)
     , mDecryptMessage(decryptMessage)
 {
     if (!mNode) {
@@ -338,8 +425,7 @@ AttachmentMessagePart::~AttachmentMessagePart()
 //-----HtmlMessageBlock----------------------
 
 HtmlMessagePart::HtmlMessagePart(ObjectTreeParser *otp, KMime::Content *node, Interface::ObjectTreeSource *source)
-    : MessagePart(otp, QString())
-    , mNode(node)
+    : MessagePart(otp, QString(), node)
     , mSource(source)
 {
     if (!mNode) {
@@ -369,8 +455,7 @@ bool HtmlMessagePart::isHtml() const
 //-----MimeMessageBlock----------------------
 
 MimeMessagePart::MimeMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool onlyOneMimePart)
-    : MessagePart(otp, QString())
-    , mNode(node)
+    : MessagePart(otp, QString(), node)
 {
     if (!mNode) {
         qCWarning(MIMETREEPARSER_LOG) << "not a valid node";
@@ -403,8 +488,7 @@ QString MimeMessagePart::htmlContent() const
 //-----AlternativeMessagePart----------------------
 
 AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Content *node, Util::HtmlMode preferredMode)
-    : MessagePart(otp, QString())
-    , mNode(node)
+    : MessagePart(otp, QString(), node)
     , mPreferredMode(preferredMode)
 {
     KMime::Content *dataIcal = findTypeInDirectChilds(mNode, "text/calendar");
@@ -497,8 +581,7 @@ QString AlternativeMessagePart::htmlContent() const
 //-----CertMessageBlock----------------------
 
 CertMessagePart::CertMessagePart(ObjectTreeParser *otp, KMime::Content *node, const QGpgME::Protocol *cryptoProto, bool autoImport)
-    : MessagePart(otp, QString())
-    , mNode(node)
+    : MessagePart(otp, QString(), node)
     , mAutoImport(autoImport)
     , mCryptoProto(cryptoProto)
 {
@@ -534,10 +617,9 @@ SignedMessagePart::SignedMessagePart(ObjectTreeParser *otp,
                                      const QGpgME::Protocol *cryptoProto,
                                      const QString &fromAddress,
                                      KMime::Content *node)
-    : MessagePart(otp, text)
+    : MessagePart(otp, text, node)
     , mCryptoProto(cryptoProto)
     , mFromAddress(fromAddress)
-    , mNode(node)
 {
     mMetaData.technicalProblem = (mCryptoProto == nullptr);
     mMetaData.isSigned = true;
@@ -859,12 +941,11 @@ EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
         const QGpgME::Protocol *cryptoProto,
         const QString &fromAddress,
         KMime::Content *node)
-    : MessagePart(otp, text)
+    : MessagePart(otp, text, node)
     , mPassphraseError(false)
     , mNoSecKey(false)
     , mCryptoProto(cryptoProto)
     , mFromAddress(fromAddress)
-    , mNode(node)
     , mDecryptMessage(false)
 {
     mMetaData.technicalProblem = (mCryptoProto == nullptr);
@@ -1128,9 +1209,8 @@ QString EncryptedMessagePart::text() const
 }
 
 EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *otp, KMime::Content *node, const KMime::Message::Ptr &message)
-    : MessagePart(otp, QString())
+    : MessagePart(otp, QString(), node)
     , mMessage(message)
-    , mNode(node)
 {
     mMetaData.isEncrypted = false;
     mMetaData.isSigned = false;

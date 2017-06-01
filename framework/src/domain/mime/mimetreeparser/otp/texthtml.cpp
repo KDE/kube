@@ -41,7 +41,5 @@ const Interface::BodyPartFormatter *TextHtmlBodyPartFormatter::create()
 
 MessagePart::Ptr TextHtmlBodyPartFormatter::process(Interface::BodyPart &part) const
 {
-    KMime::Content *node = part.content();
-    HtmlMessagePart::Ptr mp(new HtmlMessagePart(part.objectTreeParser(), node, part.source()));
-    return mp;
+    return HtmlMessagePart::Ptr(new HtmlMessagePart(part.objectTreeParser(), part.content(), part.source()));
 }

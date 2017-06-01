@@ -102,15 +102,6 @@ QModelIndex AttachmentModel::index(int row, int column, const QModelIndex &paren
     return QModelIndex();
 }
 
-static QString filename(KMime::Content *node)
-{
-    const auto disp = node->contentDisposition(false);
-    if (disp) {
-        return disp->filename();
-    }
-    return {};
-}
-
 QVariant AttachmentModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -124,24 +115,19 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
     if (index.internalPointer()) {
         const auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
         Q_ASSERT(part);
-        auto node = part->attachmentNode();
+        auto node = part->node();
         if (!node) {
             qWarning() << "no content for attachment";
             return {};
         }
-        auto ct = node->contentType(false);
-        if (!ct) {
-            qWarning() << "no content type for attachment";
-            return {};
-        }
         QMimeDatabase mimeDb;
-        const auto mimetype = mimeDb.mimeTypeForName(QString::fromLatin1(ct->mimeType()));
+        const auto mimetype = mimeDb.mimeTypeForName(QString::fromLatin1(part->mimeType()));
         const auto content = node->encodedContent();
         switch(role) {
         case TypeRole:
             return mimetype.name();
         case NameRole:
-            return filename(node);
+            return part->filename();
         case IconRole:
             return mimetype.iconName();
         case SizeRole:
@@ -162,14 +148,14 @@ static QString saveAttachmentToDisk(const QModelIndex &index, const QString &pat
     if (index.internalPointer()) {
         const auto part = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
         Q_ASSERT(part);
-        auto node = part->attachmentNode();
+        auto node = part->node();
         auto data = node->decodedContent();
         auto ct = node->contentType(false);
         if (ct && ct->isText()) {
             // convert CRLF to LF before writing text attachments to disk
             data = KMime::CRLFtoLF(data);
         }
-        auto fname = path + filename(node);
+        auto fname = path + part->filename();
         QFile f(fname);
         if (!f.open(QIODevice::ReadWrite)) {
             qWarning() << "Failed to write attachment to file:" << fname << " Error: " << f.errorString();

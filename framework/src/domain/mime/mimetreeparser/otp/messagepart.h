@@ -72,16 +72,18 @@ class MessagePart : public QObject
     Q_PROPERTY(QString plaintextContent READ plaintextContent)
     Q_PROPERTY(QString htmlContent READ htmlContent)
 public:
+    enum Disposition {
+        Inline,
+        Attachment,
+        Invalid
+    };
     typedef QSharedPointer<MessagePart> Ptr;
-    MessagePart();
-    MessagePart(ObjectTreeParser *otp,
-                const QString &text);
+    MessagePart(ObjectTreeParser *otp, const QString &text, KMime::Content *node = nullptr);
 
     virtual ~MessagePart();
 
     virtual QString text() const;
     void setText(const QString &text);
-    void setAttachmentFlag(KMime::Content *node);
     bool isAttachment() const;
 
     void setIsRoot(bool root);
@@ -92,7 +94,12 @@ public:
 
     virtual QString plaintextContent() const;
     virtual QString htmlContent() const;
+
     virtual bool isHtml() const;
+
+    QByteArray mimeType() const;
+    QString filename() const;
+    Disposition disposition() const;
 
     PartMetaData *partMetaData();
 
@@ -102,7 +109,7 @@ public:
 
 
     Interface::ObjectTreeSource *source() const;
-    KMime::Content *attachmentNode() const;
+    KMime::Content *node() const;
 
 protected:
     void parseInternal(KMime::Content *node, bool onlyOneMimePart);
@@ -112,11 +119,10 @@ protected:
     ObjectTreeParser *mOtp;
     PartMetaData mMetaData;
     MessagePart *mParentPart;
+    KMime::Content *mNode;
 
 private:
     QVector<MessagePart::Ptr> mBlocks;
-
-    KMime::Content *mAttachmentNode;
     bool mRoot;
 };
 
@@ -133,8 +139,6 @@ public:
     QString plaintextContent() const Q_DECL_OVERRIDE;
     QString htmlContent() const Q_DECL_OVERRIDE;
 private:
-    KMime::Content *mNode;
-
     friend class AlternativeMessagePart;
     friend class ::PartPrivate;
 };
@@ -144,14 +148,13 @@ class MessagePartList : public MessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<MessagePartList> Ptr;
-    MessagePartList(MimeTreeParser::ObjectTreeParser *otp);
+    MessagePartList(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node = nullptr);
     virtual ~MessagePartList();
 
     QString text() const Q_DECL_OVERRIDE;
 
     QString plaintextContent() const Q_DECL_OVERRIDE;
     QString htmlContent() const Q_DECL_OVERRIDE;
-private:
 };
 
 enum IconType {
@@ -172,9 +175,6 @@ public:
     KMMsgEncryptionState encryptionState() const;
 
     bool decryptMessage() const;
-
-protected:
-    KMime::Content *mNode;
 
 private:
     void parseContent();
@@ -211,7 +211,6 @@ public:
     bool isHtml() const Q_DECL_OVERRIDE;
 
 private:
-    KMime::Content *mNode;
     Interface::ObjectTreeSource *mSource;
     QString mBodyHTML;
     QByteArray mCharset;
@@ -239,8 +238,6 @@ public:
 
     QList<Util::HtmlMode> availableModes();
 private:
-    KMime::Content *mNode;
-
     Util::HtmlMode mPreferredMode;
 
     QMap<Util::HtmlMode, KMime::Content *> mChildNodes;
@@ -263,7 +260,6 @@ public:
     QString text() const Q_DECL_OVERRIDE;
 
 private:
-    KMime::Content *mNode;
     bool mAutoImport;
     GpgME::ImportResult mImportResult;
     const QGpgME::Protocol *mCryptoProto;
@@ -281,7 +277,6 @@ public:
     QString text() const Q_DECL_OVERRIDE;
 private:
     const KMime::Message::Ptr mMessage;
-    KMime::Content *mNode;
 
     friend class DefaultRendererPrivate;
 };
@@ -334,7 +329,6 @@ protected:
     bool mNoSecKey;
     const QGpgME::Protocol *mCryptoProto;
     QString mFromAddress;
-    KMime::Content *mNode;
     bool mDecryptMessage;
     QByteArray mVerifiedText;
     std::vector<GpgME::DecryptionResult::Recipient> mDecryptRecipients;
@@ -383,7 +377,6 @@ private:
 protected:
     const QGpgME::Protocol *mCryptoProto;
     QString mFromAddress;
-    KMime::Content *mNode;
     QByteArray mVerifiedText;
 
     friend EncryptedMessagePart;

@@ -44,6 +44,5 @@ MessagePart::Ptr MultiPartMixedBodyPartFormatter::process(Interface::BodyPart &p
     }
 
     // normal treatment of the parts in the mp/mixed container
-    MimeMessagePart::Ptr mp(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), false));
-    return mp;
+    return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), false));
 }
