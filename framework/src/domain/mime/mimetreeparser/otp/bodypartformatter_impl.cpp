@@ -73,8 +73,7 @@ public:
 
 const AnyTypeBodyPartFormatter *AnyTypeBodyPartFormatter::self = nullptr;
 
-class ImageTypeBodyPartFormatter
-    : public MimeTreeParser::Interface::BodyPartFormatter
+class ImageTypeBodyPartFormatter : public MimeTreeParser::Interface::BodyPartFormatter
 {
     static const ImageTypeBodyPartFormatter *self;
 public:

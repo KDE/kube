@@ -44,8 +44,7 @@ namespace Interface
 
 MessagePart::Ptr BodyPartFormatter::process(BodyPart &part) const
 {
-    auto mp = MessagePart::Ptr(new MessagePart());
-    return mp;
+    return {};
 }
 }
 }

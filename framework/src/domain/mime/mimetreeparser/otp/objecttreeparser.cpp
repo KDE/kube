@@ -368,7 +368,7 @@ MessagePartPtr ObjectTreeParser::parsedPart() const
     return mParsedPart;
 }
 
-bool ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, MessagePartPtr &mpRet, bool onlyOneMimePart)
+MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, bool onlyOneMimePart)
 {
     bool bRendered = false;
     const auto sub = mSource->bodyPartFormatterFactory()->subtypeRegistry(mediaType.constData());
@@ -383,22 +383,13 @@ bool ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processR
         // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
         part.setDefaultDisplay((Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay(node));
 
-
         const MessagePart::Ptr result = formatter->process(part);
-        if (!result) {
-            continue;
-        }
-
-        if (const auto mp = result.dynamicCast<MessagePart>()) {
-            mp->setAttachmentFlag(node);
-            mpRet = result;
-            bRendered = true;
-            break;
-        } else {
-            continue;
+        if (result) {
+            result->setAttachmentFlag(node);
+            return result;
         }
     }
-    return bRendered;
+    return {};
 }
 
 MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node, bool onlyOneMimePart)
@@ -447,22 +438,20 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
             subType = node->contentType()->subType();
         }
 
-        MessagePartPtr mp;
-        if (processType(node, processResult, mediaType, subType, mp, onlyOneMimePart)) {
+        //Try the specific type handler
+        if (auto mp = processType(node, processResult, mediaType, subType, onlyOneMimePart)) {
             if (mp) {
                 parsedPart->appendSubPart(mp);
             }
-        } else if (processType(node, processResult, mediaType, "*", mp, onlyOneMimePart)) {
+        //Fallback to the generic handler
+        } else if (auto mp = processType(node, processResult, mediaType, "*", onlyOneMimePart)) {
             if (mp) {
                 parsedPart->appendSubPart(mp);
             }
+        //Fallback to the default handler
         } else {
-            qCWarning(MIMETREEPARSER_LOG) << "THIS SHOULD NO LONGER HAPPEN:" << mediaType << '/' << subType;
-            const auto mp = defaultHandling(node, processResult, onlyOneMimePart);
-            if (mp) {
-                if (auto _mp = mp.dynamicCast<MessagePart>()) {
-                    _mp->setAttachmentFlag(node);
-                }
+            if (auto mp = defaultHandling(node, processResult, onlyOneMimePart)) {
+                mp->setAttachmentFlag(node);
                 parsedPart->appendSubPart(mp);
             }
         }
@@ -481,28 +470,21 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
 
 MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node, ProcessResult &result, bool onlyOneMimePart)
 {
-    MessagePart::Ptr mp;
     ProcessResult processResult(mNodeHelper);
 
     if (node->contentType()->mimeType() == QByteArrayLiteral("application/octet-stream") &&
             (node->contentType()->name().endsWith(QLatin1String("p7m")) ||
              node->contentType()->name().endsWith(QLatin1String("p7s")) ||
              node->contentType()->name().endsWith(QLatin1String("p7c"))
-            ) &&
-            processType(node, processResult, "application", "pkcs7-mime", mp, onlyOneMimePart)) {
-        return mp;
+            )) {
+        if (auto mp = processType(node, processResult, "application", "pkcs7-mime", onlyOneMimePart)) {
+            return mp;
+        }
     }
 
-    const auto _mp = AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node, mSource->decryptMessage()));
-    result.setInlineSignatureState(_mp->signatureState());
-    result.setInlineEncryptionState(_mp->encryptionState());
-    mp = _mp;
-
-    // always show images in multipart/related when showing in html, not with an additional icon
-
-    // Show it inline if showOnlyOneMimePart(), which means the user clicked the image
-    // in the message structure viewer manually, and therefore wants to see the full image
-
+    const auto mp = AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node, mSource->decryptMessage()));
+    result.setInlineSignatureState(mp->signatureState());
+    result.setInlineEncryptionState(mp->encryptionState());
     return mp;
 }
 

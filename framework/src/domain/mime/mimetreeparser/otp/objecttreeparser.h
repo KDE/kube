@@ -342,7 +342,7 @@ private:
     * top-level content.
     */
     MessagePartPtr parseObjectTreeInternal(KMime::Content *node, bool mOnlyOneMimePart);
-    bool processType(KMime::Content *node, MimeTreeParser::ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, MessagePartPtr &mpRet, bool onlyOneMimePart);
+    MessagePartPtr processType(KMime::Content *node, MimeTreeParser::ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, bool onlyOneMimePart);
 
     MessagePartPtr defaultHandling(KMime::Content *node, MimeTreeParser::ProcessResult &result, bool onlyOneMimePart);
 
