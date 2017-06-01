@@ -247,6 +247,27 @@ static QVector<MessagePart::Ptr> collect(MessagePart::Ptr start, const std::func
     return list;
 }
 
+static bool isAttachment(MessagePart::Ptr part)
+{
+    //TODO
+    //   show everything but the first text/plain body as attachment
+    if (part->disposition() == MessagePart::Inline) {
+        return false;
+    }
+    if (part->disposition() == MessagePart::Attachment) {
+        return true;
+    }
+    // text/* w/o filename parameter should go inline
+    if (part->node()) {
+        const auto ct = part->node()->contentType(false);
+        if (ct && ct->isText() && ct->name().trimmed().isEmpty() && part->filename().trimmed().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
 QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts()
 {
     QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
@@ -256,6 +277,7 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts()
         },
         [] (const MessagePartPtr &part) {
             if (const auto attachment = dynamic_cast<MimeTreeParser::AttachmentMessagePart*>(part.data())) {
+                return false;
             } else if (const auto text = dynamic_cast<MimeTreeParser::TextMessagePart*>(part.data())) {
                 return true;
             } else if (const auto alternative = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(part.data())) {
@@ -263,7 +285,6 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts()
             } else if (const auto html = dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
                 return true;
             }
-            return false;
             return false;
         });
     return contentParts;
