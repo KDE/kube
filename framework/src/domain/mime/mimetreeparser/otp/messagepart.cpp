@@ -71,18 +71,9 @@ QByteArray MailMime::cid() const
     }
     return d->mNode->contentID()->identifier();
 }
+*/
 
-QByteArray MailMime::charset() const
-{
-    if(!d->mNode || !d->mNode->contentType(false)) {
-        return QByteArray();
-    }
-    if (d->mNode->contentType(false)) {
-        return d->mNode->contentType(false)->charset();
-    }
-    return d->mNode->defaultCharset();
-}
-
+/*
 bool MailMime::isFirstTextPart() const
 {
     if (!d->mNode || !d->mNode->topLevel()) {
@@ -147,6 +138,14 @@ static KMime::Headers::ContentType *contentType(KMime::Content *node)
     return nullptr;
 }
 
+QByteArray MessagePart::charset() const
+{
+    if (auto ct = contentType(mNode)) {
+        return ct->charset();
+    }
+    return mNode->defaultCharset();
+}
+
 QByteArray MessagePart::mimeType() const
 {
     if (auto ct = contentType(mNode)) {
@@ -155,15 +154,13 @@ QByteArray MessagePart::mimeType() const
     return {};
 }
 
-/*
-bool MailMime::isText() const
+bool MessagePart::isText() const
 {
-    if (auto ct = contentType(d->mNode)) {
+    if (auto ct = contentType(mNode)) {
         return ct->isText();
     }
     return false;
 }
-*/
 
 PartMetaData *MessagePart::partMetaData()
 {
@@ -434,7 +431,6 @@ HtmlMessagePart::HtmlMessagePart(ObjectTreeParser *otp, KMime::Content *node, In
 
     const QByteArray partBody(mNode->decodedContent());
     mBodyHTML = mOtp->codecFor(mNode)->toUnicode(partBody);
-    mCharset = NodeHelper::charset(mNode);
 }
 
 HtmlMessagePart::~HtmlMessagePart()

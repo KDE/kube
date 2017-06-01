@@ -150,8 +150,7 @@ static QString saveAttachmentToDisk(const QModelIndex &index, const QString &pat
         Q_ASSERT(part);
         auto node = part->node();
         auto data = node->decodedContent();
-        auto ct = node->contentType(false);
-        if (ct && ct->isText()) {
+        if (part->isText()) {
             // convert CRLF to LF before writing text attachments to disk
             data = KMime::CRLFtoLF(data);
         }

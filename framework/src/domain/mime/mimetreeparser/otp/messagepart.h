@@ -98,8 +98,10 @@ public:
     virtual bool isHtml() const;
 
     QByteArray mimeType() const;
+    QByteArray charset() const;
     QString filename() const;
     Disposition disposition() const;
+    bool isText() const;
 
     PartMetaData *partMetaData();
 
