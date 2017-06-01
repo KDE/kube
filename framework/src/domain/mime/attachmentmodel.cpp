@@ -130,7 +130,7 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-static QString saveAttachmentToDisk(const QModelIndex &index, const QString &path)
+static QString saveAttachmentToDisk(const QModelIndex &index, const QString &path, bool readonly = false)
 {
     if (index.internalPointer()) {
         const auto entry = static_cast<Part *>(index.internalPointer());
@@ -148,6 +148,11 @@ static QString saveAttachmentToDisk(const QModelIndex &index, const QString &pat
             return {};
         }
         f.write(data);
+        if (readonly) {
+            // make file read-only so that nobody gets the impression that he migh edit attached files
+            f.setPermissions(QFileDevice::ReadUser);
+        }
+        f.close();
         qInfo() << "Wrote attachment to file: " << fname;
         return fname;
     }
@@ -170,7 +175,7 @@ bool AttachmentModel::openAttachment(const QModelIndex &index)
 {
     auto downloadDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation)+ "/kube/";
     QDir{}.mkpath(downloadDir);
-    const auto filePath = ::saveAttachmentToDisk(index, downloadDir);
+    const auto filePath = ::saveAttachmentToDisk(index, downloadDir, true);
     if (!filePath.isEmpty()) {
         QDesktopServices::openUrl(QUrl("file://" + filePath));
         return true;
