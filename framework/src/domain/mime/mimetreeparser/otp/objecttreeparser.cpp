@@ -57,6 +57,7 @@
 #include <QByteArray>
 #include <QTextCodec>
 #include <QUrl>
+#include <QMimeDatabase>
 
 using namespace MimeTreeParser;
 
@@ -176,6 +177,46 @@ void ObjectTreeParser::copyContentFrom(const ObjectTreeParser *other)
     }
 }
 
+static void print(KMime::Content *node, const QString prefix = {})
+{
+    QByteArray mediaType("text");
+    QByteArray subType("plain");
+    if (node->contentType(false) && !node->contentType()->mediaType().isEmpty() &&
+            !node->contentType()->subType().isEmpty()) {
+        mediaType = node->contentType()->mediaType();
+        subType = node->contentType()->subType();
+    }
+    qWarning() << prefix << "!" << mediaType << subType;
+    for (const auto c: node->contents()) {
+        print(c, prefix + QLatin1String(" "));
+    }
+}
+
+static void print(const Interface::MessagePart &messagePart, const QByteArray pre = {})
+{
+    qWarning() << pre << "#" << messagePart.metaObject()->className();
+    auto mp = dynamic_cast<const MimeTreeParser::MessagePart*>(&messagePart);
+    if (mp) {
+        // if (auto alt = dynamic_cast<const MimeTreeParser::AlternativeMessagePart*>(&messagePart)) {
+        //     qWarning() << pre << ":" << alt->htmlContent();
+        //     qWarning() << pre << ":" << alt->plaintextContent();
+        // }
+        for (const auto &p: mp->subParts()) {
+            print(*p, pre + " ");
+        }
+    }
+}
+
+void ObjectTreeParser::print()
+{
+    if (mTopLevelContent) {
+        ::print(mTopLevelContent);
+    }
+    if (mParsedPart) {
+        ::print(*mParsedPart);
+    }
+}
+
 static KMime::Content *find(KMime::Content *node, const std::function<bool(KMime::Content *)> &select)
 {
     QByteArray mediaType("text");
@@ -241,6 +282,44 @@ QVector<Interface::MessagePart::Ptr> ObjectTreeParser::collectContentParts()
             return false;
         });
     return contentParts;
+}
+
+QString ObjectTreeParser::resolveCidLinks(const QString &html)
+{
+    auto text = html;
+    const auto rx = QRegExp(QLatin1String("(src)\\s*=\\s*(\"|')(cid:[^\"']+)\\2"));
+    int pos = 0;
+    while ((pos = rx.indexIn(text, pos)) != -1) {
+        const auto link = QUrl(rx.cap(3));
+        pos += rx.matchedLength();
+        auto cid = link.path();
+        auto mailMime = const_cast<KMime::Content *>(find([=] (KMime::Content *c) {
+            if (!c || !c->contentID(false)) {
+                return false;
+            }
+            return QString::fromLatin1(c->contentID(false)->identifier()) == cid;
+        }));
+        if (mailMime) {
+            const auto ct = mailMime->contentType(false);
+            if (!ct) {
+                qWarning() << "No content type, skipping";
+                continue;
+            }
+            QMimeDatabase mimeDb;
+            const auto mimetype = mimeDb.mimeTypeForName(QString::fromLatin1(ct->mimeType())).name();
+            if (mimetype.startsWith(QLatin1String("image/"))) {
+                const auto data = mailMime->encodedContent();
+                if (data.isEmpty()) {
+                    qWarning() << "Attachment is empty.";
+                    continue;
+                }
+                text.replace(rx.cap(0), QString::fromLatin1("src=\"data:%1;base64,%2\"").arg(mimetype, QString::fromLatin1(data.toBase64())));
+            }
+        } else {
+            qWarning() << "Failed to find referenced attachment: " << cid;
+        }
+    }
+    return text;
 }
 
 //-----------------------------------------------------------------------------

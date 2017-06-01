@@ -178,54 +178,10 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 break;
             }
             case ContentRole: {
-                auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
+                const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
                 qWarning() << "Encoded content: " << text;
                 if (messagePart->isHtml()) {
-                    const auto rx = QRegExp("(src)\\s*=\\s*(\"|')(cid:[^\"']+)\\2");
-                    int pos = 0;
-                    while ((pos = rx.indexIn(text, pos)) != -1) {
-                        qWarning() << "Found a match at : " << pos;
-                        const auto link = QUrl(rx.cap(3).toUtf8());
-                        pos += rx.matchedLength();
-                        //FIXME this fails for inline forwarded messages
-                        auto cid = link.path();
-                        auto mailMime = const_cast<KMime::Content *>(d->mParser->otp()->find([=] (KMime::Content *c) {
-                            if (!c || !c->contentID(false)) {
-                                return false;
-                            }
-                            qWarning() << "Looking at: " << c->contentID(false)->identifier();
-                            return c->contentID(false)->identifier() == cid;
-                        }));
-
-
-                        // const auto repl = d->mParser->getPart(link);
-                        // if (!repl) {
-                        //     qWarning() << "no part for link : " << link;
-                        //     continue;
-                        // }
-                        // const auto content = repl->content();
-                        // if(content.size() < 1) {
-                        //     qWarning() << "too small : " << content.size();
-                        //     continue;
-                        // }
-                        // const auto mailMime = content.first()->mailMime();
-                        if (mailMime) {
-                            // const auto mimetype = mailMime->mimetype().name();
-
-                            const auto ct = mailMime->contentType(false);
-                            if (ct) {
-                                continue;
-                            }
-
-                            QMimeDatabase mimeDb;
-                            auto mimetype = mimeDb.mimeTypeForName(ct->mimeType()).name();
-
-                            if (mimetype.startsWith("image/")) {
-                                const auto data = mailMime->encodedContent();
-                                text.replace(rx.cap(0), QString("src=\"data:%1;base64,%2\"").arg(mimetype, QString::fromLatin1(data.toBase64())));
-                            }
-                        }
-                    }
+                    return d->mParser->otp()->resolveCidLinks(text);
                 } else { //We assume plain
                     //We alwas do richtext (so we get highlighted links and stuff).
                     return HtmlUtils::linkify(Qt::convertFromPlainText(text));

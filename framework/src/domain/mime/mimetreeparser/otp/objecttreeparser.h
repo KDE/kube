@@ -294,6 +294,7 @@ public:
     bool allowAsync() const;
 
     bool hasPendingAsyncJobs() const;
+    void print();
 
     /**
     * The text of the message, ie. what would appear in the
@@ -333,6 +334,9 @@ public:
     MessagePartPtr parsedPart() const;
     KMime::Content *find(const std::function<bool(KMime::Content *)> &select);
     QVector<Interface::MessagePartPtr> collectContentParts();
+
+    /** Embedd content referenced by cid by inlining */
+    QString resolveCidLinks(const QString &html);
 
 private:
     void extractNodeInfos(KMime::Content *curNode, bool isFirstTextPart);
