@@ -249,8 +249,8 @@ private slots:
         // QCOMPARE(part->charset(), QStringLiteral("us-ascii").toLocal8Bit());
     //     QCOMPARE(contentList[0]->encryptions().size(), 1);
     //     QCOMPARE(contentList[0]->signatures().size(), 1);
-    //     auto contentAttachmentList = parser.collectAttachmentParts();
-    //     QCOMPARE(contentAttachmentList.size(), 2);
+        auto contentAttachmentList = otp.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 2);
     //     QCOMPARE(contentAttachmentList[0]->availableContents(), QVector<QByteArray>() << "text/plain");
     //     QCOMPARE(contentAttachmentList[0]->content().size(), 1);
     //     QCOMPARE(contentAttachmentList[0]->encryptions().size(), 1);
