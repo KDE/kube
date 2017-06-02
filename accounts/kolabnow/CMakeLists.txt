@@ -33,12 +33,22 @@ set(SRCS
 )
 
 add_library(kolabnowaccountplugin SHARED ${SRCS})
-qt5_use_modules(kolabnowaccountplugin Core Quick Qml)
-target_link_libraries(kolabnowaccountplugin sink frameworkplugin)
+target_link_libraries(kolabnowaccountplugin
+    sink
+    frameworkplugin
+    Qt5::Core
+    Qt5::Quick
+    Qt5::Qml
+)
 
 add_library(kolabnowaccount_static STATIC ${SRCS})
-qt5_use_modules(kolabnowaccount_static Core Quick Qml)
-target_link_libraries(kolabnowaccount_static sink frameworkplugin)
+target_link_libraries(kolabnowaccount_static
+    sink
+    frameworkplugin
+    Qt5::Core
+    Qt5::Quick
+    Qt5::Qml
+)
 # add_subdirectory(tests)
 
 kpackage_install_package(package org.kube.accounts.kolabnow "genericqml")

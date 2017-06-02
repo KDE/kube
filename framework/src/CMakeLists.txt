@@ -1,5 +1,5 @@
 
-find_package(Qt5 COMPONENTS REQUIRED Core Qml)
+find_package(Qt5 COMPONENTS REQUIRED Core Quick Qml WebEngineWidgets Test)
 find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
 find_package(Sink CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
@@ -43,8 +43,19 @@ set(SRCS
 )
 
 add_library(frameworkplugin SHARED ${SRCS})
-qt5_use_modules(frameworkplugin Core Quick Qml WebEngineWidgets Test)
-target_link_libraries(frameworkplugin sink kube_otp KF5::Codecs KF5::Package KF5::Contacts KAsync)
+target_link_libraries(frameworkplugin
+    sink
+    kube_otp
+    Qt5::Core
+    Qt5::Quick
+    Qt5::Qml
+    Qt5::WebEngineWidgets
+    Qt5::Test
+    KF5::Codecs
+    KF5::Contacts
+    KF5::Package
+    KAsync
+)
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
 set(BUILD_TESTING ON)

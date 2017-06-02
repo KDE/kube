@@ -19,7 +19,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
 
-find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui)
+find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Concurrent Quick Test Gui)
 
 find_package(Sink CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
@@ -33,12 +33,22 @@ set(SRCS
 )
 
 add_library(imapaccountplugin SHARED ${SRCS})
-qt5_use_modules(imapaccountplugin Core Quick Qml)
-target_link_libraries(imapaccountplugin sink frameworkplugin)
+target_link_libraries(imapaccountplugin
+    sink
+    frameworkplugin
+    Qt5::Core
+    Qt5::Quick
+    Qt5::Qml
+)
 
 add_library(imapaccount_static STATIC ${SRCS})
-qt5_use_modules(imapaccount_static Core Quick Qml)
-target_link_libraries(imapaccount_static sink frameworkplugin)
+target_link_libraries(imapaccount_static
+    sink
+    frameworkplugin
+    Qt5::Core
+    Qt5::Quick
+    Qt5::Qml
+)
 add_subdirectory(tests)
 
 kpackage_install_package(package org.kube.accounts.imap "genericqml")

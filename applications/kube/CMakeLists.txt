@@ -40,8 +40,13 @@ if(APPLE OR WIN32)
 endif()
 
 add_executable(${PROJECT_NAME} ${SRCS})
-qt5_use_modules(${PROJECT_NAME} Gui Quick Widgets WebEngine)
-target_link_libraries(${PROJECT_NAME} KF5::Package)
+target_link_libraries(${PROJECT_NAME}
+    Qt5::Gui
+    Qt5::Quick
+    Qt5::Widgets
+    Qt5::WebEngine
+    KF5::Package
+)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
