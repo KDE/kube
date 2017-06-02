@@ -22,26 +22,6 @@ import QtQml.Models 2.2
 DelegateModel {
     id: mailDataModel
     property bool debug: true
-    function getPartType(type, hasModelChildren, forcePlain) {
-        switch (type) {
-            case "PlainTextContent":
-            case "Content":
-                return "plain";
-            case "HtmlContent":
-                if (forcePlain) {
-                    return "plain";
-                }
-                return "html";
-            case "Signature":
-                return "signature";
-            case "Encryption":
-                return "encryption";
-        }
-        if (hasModelChildren) {
-            return "envelope";
-        }
-        return "";
-    }
 
     delegate: Item {
         id: partColumn
@@ -57,11 +37,7 @@ DelegateModel {
             width: parent.width
         }
         Component.onCompleted: {
-            //If the content is not complex, avoid using a full browser
-            var forcePlain = !model.complexHtmlContent
-            var partType = getPartType(model.type, model.hasModelChildren, forcePlain);
-
-            switch (partType) {
+            switch (model.type) {
                 case "plain":
                     partLoader.setSource("TextContent.qml",
                                         {"content": model.content,

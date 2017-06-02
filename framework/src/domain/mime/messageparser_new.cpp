@@ -64,7 +64,6 @@ QHash<int, QByteArray> NewModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[TypeRole] = "type";
     roles[ContentRole] = "content";
-    roles[IsComplexHtmlContentRole] = "complexHtmlContent";
     roles[IsEmbededRole] = "embeded";
     roles[IsEncryptedRole] = "encrypted";
     roles[IsSignedRole] = "signed";
@@ -97,37 +96,40 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
     }
 
     if (index.internalPointer()) {
-        const auto messagePart = dynamic_cast<MimeTreeParser::MessagePart*>(static_cast<MimeTreeParser::MessagePart*>(index.internalPointer()));
+        const auto messagePart = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
         Q_ASSERT(messagePart);
         switch(role) {
             case Qt::DisplayRole:
                 return QStringLiteral("Content%1");
-            case TypeRole:
-                // TODO this is matched in the maildatamodel
-                return "HtmlContent";
+            case TypeRole: {
+                //For simple html we don't need a browser
+                auto complexHtml = [&] {
+                    if (messagePart->isHtml()) {
+                        const auto text = messagePart->text();
+                        if (text.contains("<!DOCTYPE html PUBLIC")) {
+                            return true;
+                        }
+                        //Media queries are too advanced
+                        if (text.contains("@media")) {
+                            return true;
+                        }
+                        if (text.contains("<style")) {
+                            return true;
+                        }
+                        return false;
+                    } else {
+                        return false;
+                    }
+                }();
+                if (complexHtml) {
+                    return "html";
+                }
+                return "plain";
+            }
             case IsEmbededRole:
                 return false;
             case IsErrorRole:
                 return !messagePart->partMetaData()->errorText.isEmpty();
-            case IsComplexHtmlContentRole: {
-                if (messagePart->isHtml()) {
-                    const auto text = messagePart->text();
-                    if (text.contains("<!DOCTYPE html PUBLIC")) {
-                        return true;
-                    }
-                    //Media queries are too advanced
-                    if (text.contains("@media")) {
-                        return true;
-                    }
-                    if (text.contains("<style")) {
-                        return true;
-                    }
-                    return false;
-                } else {
-                    return false;
-                }
-                break;
-            }
             case ContentRole: {
                 auto errorText = messagePart->partMetaData()->errorText;
                 if (!errorText.isEmpty()) {

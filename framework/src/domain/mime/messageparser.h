@@ -76,7 +76,6 @@ public:
         TypeRole  = Qt::UserRole + 1,
         ContentsRole,
         ContentRole,
-        IsComplexHtmlContentRole,
         IsEmbededRole,
         IsEncryptedRole,
         IsSignedRole,
