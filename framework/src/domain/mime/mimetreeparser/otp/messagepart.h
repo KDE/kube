@@ -301,7 +301,7 @@ public:
                          const QString &text,
                          const QGpgME::Protocol *cryptoProto,
                          const QString &fromAddress,
-                         KMime::Content *node);
+                         KMime::Content *node, KMime::Content *encryptedNode = nullptr);
 
     virtual ~EncryptedMessagePart();
 
@@ -340,6 +340,7 @@ protected:
     bool mDecryptMessage;
     QByteArray mVerifiedText;
     std::vector<GpgME::DecryptionResult::Recipient> mDecryptRecipients;
+    KMime::Content *mEncryptedNode;
 
     friend class DefaultRendererPrivate;
     friend class ::PartPrivate;

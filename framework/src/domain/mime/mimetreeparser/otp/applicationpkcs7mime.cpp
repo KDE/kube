@@ -60,9 +60,7 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
     const QString smimeType = node->contentType()->parameter(QStringLiteral("smime-type")).toLower();
 
     if (smimeType == QLatin1String("certs-only")) {
-
-        CertMessagePart::Ptr mp(new CertMessagePart(part.objectTreeParser(), node, smimeCrypto, part.source()->autoImportKeys()));
-        return mp;
+        return CertMessagePart::Ptr(new CertMessagePart(part.objectTreeParser(), node, smimeCrypto, part.source()->autoImportKeys()));
     }
 
     bool isSigned      = (smimeType == QLatin1String("signed-data"));
@@ -90,35 +88,35 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
         mp = _mp;
         _mp->setIsEncrypted(true);
         _mp->setDecryptMessage(part.source()->decryptMessage());
-        PartMetaData *messagePart(_mp->partMetaData());
-        if (!part.source()->decryptMessage()) {
+        // PartMetaData *messagePart(_mp->partMetaData());
+        // if (!part.source()->decryptMessage()) {
             isEncrypted = true;
             signTestNode = nullptr; // PENDING(marc) to be abs. sure, we'd need to have to look at the content
-        } else {
-            _mp->startDecryption();
-            if (messagePart->isDecryptable) {
-                qCDebug(MIMETREEPARSER_LOG) << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
-                isEncrypted = true;
-                part.nodeHelper()->setEncryptionState(node, KMMsgFullyEncrypted);
-                signTestNode = nullptr;
+        // } else {
+        //     _mp->startDecryption();
+        //     if (messagePart->isDecryptable) {
+        //         qCDebug(MIMETREEPARSER_LOG) << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
+        //         isEncrypted = true;
+        //         part.nodeHelper()->setEncryptionState(node, KMMsgFullyEncrypted);
+        //         signTestNode = nullptr;
 
-            } else {
-                // decryption failed, which could be because the part was encrypted but
-                // decryption failed, or because we didn't know if it was encrypted, tried,
-                // and failed. If the message was not actually encrypted, we continue
-                // assuming it's signed
-                if (_mp->passphraseError() || (smimeType.isEmpty() && messagePart->isEncrypted)) {
-                    isEncrypted = true;
-                    signTestNode = nullptr;
-                }
+        //     } else {
+        //         // decryption failed, which could be because the part was encrypted but
+        //         // decryption failed, or because we didn't know if it was encrypted, tried,
+        //         // and failed. If the message was not actually encrypted, we continue
+        //         // assuming it's signed
+        //         if (_mp->passphraseError() || (smimeType.isEmpty() && messagePart->isEncrypted)) {
+        //             isEncrypted = true;
+        //             signTestNode = nullptr;
+        //         }
 
-                if (isEncrypted) {
-                    qCDebug(MIMETREEPARSER_LOG) << "pkcs7 mime  -  ERROR: COULD NOT DECRYPT enveloped data !";
-                } else {
-                    qCDebug(MIMETREEPARSER_LOG) << "pkcs7 mime  -  NO encryption found";
-                }
-            }
-        }
+        //         if (isEncrypted) {
+        //             qCDebug(MIMETREEPARSER_LOG) << "pkcs7 mime  -  ERROR: COULD NOT DECRYPT enveloped data !";
+        //         } else {
+        //             qCDebug(MIMETREEPARSER_LOG) << "pkcs7 mime  -  NO encryption found";
+        //         }
+        //     }
+        // }
 
         if (isEncrypted) {
             part.nodeHelper()->setEncryptionState(node, KMMsgFullyEncrypted);

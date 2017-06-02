@@ -268,6 +268,18 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
     return contentParts;
 }
 
+void ObjectTreeParser::decryptParts()
+{
+    QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
+        [] (const MessagePartPtr &part) { return true; },
+        [] (const MessagePartPtr &part) {
+            if (const auto enc = dynamic_cast<MimeTreeParser::EncryptedMessagePart*>(part.data())) {
+                enc->startDecryption();
+            }
+            return false;
+        });
+}
+
 QString ObjectTreeParser::resolveCidLinks(const QString &html)
 {
     auto text = html;

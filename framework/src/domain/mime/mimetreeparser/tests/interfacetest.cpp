@@ -97,6 +97,8 @@ private slots:
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(readMailFromFile("smime-encrypted.mbox"));
         otp.print();
+        otp.decryptParts();
+        otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
@@ -113,6 +115,8 @@ private slots:
     {
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
+        otp.print();
+        otp.decryptParts();
         otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
@@ -139,6 +143,8 @@ private slots:
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(readMailFromFile("openpgp-inline-charset-encrypted.mbox"));
         otp.print();
+        otp.decryptParts();
+        otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
@@ -158,6 +164,8 @@ private slots:
     {
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(readMailFromFile("openpgp-inline-encrypted+nonenc.mbox"));
+        otp.print();
+        otp.decryptParts();
         otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
@@ -180,6 +188,8 @@ private slots:
     {
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
+        otp.print();
+        otp.decryptParts();
         otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
@@ -214,6 +224,8 @@ private slots:
     {
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
+        otp.print();
+        otp.decryptParts();
         otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);

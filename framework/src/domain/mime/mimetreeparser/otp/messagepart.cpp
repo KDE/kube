@@ -338,7 +338,7 @@ TextMessagePart::~TextMessagePart()
 
 bool TextMessagePart::decryptMessage() const
 {
-    return mDecryptMessage;
+    return false;
 }
 
 void TextMessagePart::parseContent()
@@ -373,17 +373,14 @@ void TextMessagePart::parseContent()
                 fullySignedOrEncryptedTmp = false;
                 appendSubPart(MessagePart::Ptr(new MessagePart(mOtp, aCodec->toUnicode(block.text()))));
             } else if (block.type() == PgpMessageBlock) {
-                EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(mOtp, QString(), cryptProto, fromAddress, nullptr));
+                KMime::Content *content = new KMime::Content;
+                content->setBody(block.text());
+                content->parse();
+                EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(mOtp, QString(), cryptProto, fromAddress, nullptr, content));
                 mp->setDecryptMessage(decryptMessage());
                 mp->setIsEncrypted(true);
                 appendSubPart(mp);
-                if (!decryptMessage()) {
-                    continue;
-                }
-                mp->startDecryption(block.text(), aCodec);
-                if (mp->partMetaData()->inProgress) {
-                    continue;
-                }
+                continue;
             } else if (block.type() == ClearsignedBlock) {
                 SignedMessagePart::Ptr mp(new SignedMessagePart(mOtp, QString(), cryptProto, fromAddress, nullptr));
                 appendSubPart(mp);
@@ -961,13 +958,14 @@ EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
         const QString &text,
         const QGpgME::Protocol *cryptoProto,
         const QString &fromAddress,
-        KMime::Content *node)
+        KMime::Content *node, KMime::Content *encryptedNode)
     : MessagePart(otp, text, node)
     , mPassphraseError(false)
     , mNoSecKey(false)
     , mCryptoProto(cryptoProto)
     , mFromAddress(fromAddress)
     , mDecryptMessage(false)
+    , mEncryptedNode(encryptedNode)
 {
     mMetaData.technicalProblem = (mCryptoProto == nullptr);
     mMetaData.isSigned = false;
@@ -991,7 +989,7 @@ void EncryptedMessagePart::setDecryptMessage(bool decrypt)
 
 bool EncryptedMessagePart::decryptMessage() const
 {
-    return mDecryptMessage;
+    return false;
 }
 
 void EncryptedMessagePart::setIsEncrypted(bool encrypted)
@@ -1062,8 +1060,7 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
             cannotDecrypt = true;
         } else {
             const QByteArray ciphertext = data.decodedContent();
-            DecryptVerifyBodyPartMemento *newM
-                = new DecryptVerifyBodyPartMemento(job, ciphertext);
+            DecryptVerifyBodyPartMemento *newM = new DecryptVerifyBodyPartMemento(job, ciphertext);
             if (mOtp->allowAsync()) {
                 QObject::connect(newM, &CryptoBodyPartMemento::update,
                                  nodeHelper, &NodeHelper::update);
@@ -1120,6 +1117,7 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
             if (bDecryptionOk) {
                 mDecryptedData = plainText;
+                setText(QString::fromUtf8(mDecryptedData.constData()));
             } else {
                 mNoSecKey = true;
                 foreach (const GpgME::DecryptionResult::Recipient &recipient, decryptResult.recipients()) {
@@ -1154,12 +1152,12 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
 void EncryptedMessagePart::startDecryption(KMime::Content *data)
 {
-    if (!mNode && !data) {
-        return;
-    }
 
     if (!data) {
-        data = mNode;
+        data = mEncryptedNode;
+        if (!data) {
+            data = mNode;
+        }
     }
 
     mMetaData.isEncrypted = true;
@@ -1175,25 +1173,22 @@ void EncryptedMessagePart::startDecryption(KMime::Content *data)
         setText(QString::fromUtf8(mDecryptedData.constData()));
     }
 
-    if (mMetaData.isEncrypted && !decryptMessage()) {
-        mMetaData.isDecryptable = true;
-    }
+    // if (mMetaData.isEncrypted && !decryptMessage()) {
+    //     mMetaData.isDecryptable = true;
+    // }
 
     if (mNode && !mMetaData.isSigned) {
         mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
+        auto tempNode = new KMime::Content();
+        tempNode->setContent(KMime::CRLFtoLF(mDecryptedData.constData()));
+        tempNode->parse();
 
-        if (decryptMessage()) {
-            auto tempNode = new KMime::Content();
-            tempNode->setContent(KMime::CRLFtoLF(mDecryptedData.constData()));
-            tempNode->parse();
-
-            if (!tempNode->head().isEmpty()) {
-                tempNode->contentDescription()->from7BitString("encrypted data");
-            }
-            mOtp->mNodeHelper->attachExtraContent(mNode, tempNode);
-
-            parseInternal(tempNode, false);
+        if (!tempNode->head().isEmpty()) {
+            tempNode->contentDescription()->from7BitString("encrypted data");
         }
+        mOtp->mNodeHelper->attachExtraContent(mNode, tempNode);
+
+        parseInternal(tempNode, false);
     }
 }
 
@@ -1243,9 +1238,6 @@ EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *o
         qCWarning(MIMETREEPARSER_LOG) << "Node is of type message/rfc822 but doesn't have a message!";
         return;
     }
-
-    // The link to "Encapsulated message" is clickable, therefore the temp file needs to exists,
-    // since the user can click the link and expect to have normal attachment operations there.
 
     parseInternal(message.data(), false);
 }

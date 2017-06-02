@@ -50,6 +50,7 @@ void MessageParser::setMessage(const QVariant &message)
 {
     d->mParser = std::make_shared<MimeTreeParser::ObjectTreeParser>();
     d->mParser->parseObjectTree(message.toByteArray());
+    d->mParser->decryptParts();
     mRawContent = message.toString();
     emit htmlChanged();
 }

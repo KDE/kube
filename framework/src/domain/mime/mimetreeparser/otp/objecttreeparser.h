@@ -319,6 +319,7 @@ public:
     KMime::Content *find(const std::function<bool(KMime::Content *)> &select);
     QVector<MessagePartPtr> collectContentParts();
     QVector<MessagePartPtr> collectAttachmentParts();
+    void decryptParts();
 
     /** Embedd content referenced by cid by inlining */
     QString resolveCidLinks(const QString &html);
@@ -363,9 +364,6 @@ private:
 
     bool mHasPendingAsyncJobs;
     bool mAllowAsync;
-    // DataUrl Icons cache
-    QString mCollapseIcon;
-    QString mExpandIcon;
     bool mDeleteNodeHelper;
     KMime::Message::Ptr mMsg;
 

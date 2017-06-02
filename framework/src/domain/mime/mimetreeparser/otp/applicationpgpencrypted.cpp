@@ -64,23 +64,7 @@ MessagePart::Ptr ApplicationPGPEncryptedBodyPartFormatter::process(Interface::Bo
 
     EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(part.objectTreeParser(),
                                  data->decodedText(), QGpgME::openpgp(),
-                                 part.nodeHelper()->fromAsString(data), node));
+                                 part.nodeHelper()->fromAsString(data), node, data));
     mp->setIsEncrypted(true);
-    mp->setDecryptMessage(part.source()->decryptMessage());
-    PartMetaData *messagePart(mp->partMetaData());
-    if (!part.source()->decryptMessage()) {
-        part.nodeHelper()->setNodeProcessed(data, false);  // Set the data node to done to prevent it from being processed
-    } else if (KMime::Content *newNode = part.nodeHelper()->decryptedNodeForContent(data)) {
-        // if we already have a decrypted node for this encrypted node, don't do the decryption again
-        return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), newNode, part.objectTreeParser()->showOnlyOneMimePart()));
-    } else {
-        mp->startDecryption(data);
-        if (!messagePart->inProgress) {
-            part.nodeHelper()->setNodeProcessed(data, false);   // Set the data node to done to prevent it from being processed
-            if (messagePart->isDecryptable && messagePart->isSigned) {
-                part.nodeHelper()->setSignatureState(node, KMMsgFullySigned);
-            }
-        }
-    }
     return mp;
 }
