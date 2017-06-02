@@ -56,9 +56,9 @@ void AttachmentTest::testEncryptedAttachment()
     auto msg = readAndParseMail(mbox);
     NodeHelper nodeHelper;
     Test::TestObjectTreeSource testSource;
-    testSource.setAllowDecryption(true);
     ObjectTreeParser otp(&testSource, &nodeHelper);
     otp.parseObjectTree(msg.data());
+    otp.decryptParts();
 
     auto attachments = msg->attachments();
     auto encAtts = nodeHelper.attachmentsOfExtraContents();

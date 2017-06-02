@@ -83,6 +83,5 @@ MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(Interface::BodyPar
                                  node,
                                  data));
     mp->setIsEncrypted(true);
-    mp->setDecryptMessage(part.source()->decryptMessage());
     return mp;
 }

@@ -318,9 +318,8 @@ QString MessagePartList::htmlContent() const
 
 //-----TextMessageBlock----------------------
 
-TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool decryptMessage)
+TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node)
     : MessagePartList(otp, node)
-    , mDecryptMessage(decryptMessage)
 {
     if (!mNode) {
         qCWarning(MIMETREEPARSER_LOG) << "not a valid node";
@@ -334,11 +333,6 @@ TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node, bo
 TextMessagePart::~TextMessagePart()
 {
 
-}
-
-bool TextMessagePart::decryptMessage() const
-{
-    return false;
 }
 
 void TextMessagePart::parseContent()
@@ -377,7 +371,6 @@ void TextMessagePart::parseContent()
                 content->setBody(block.text());
                 content->parse();
                 EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(mOtp, QString(), cryptProto, fromAddress, nullptr, content));
-                mp->setDecryptMessage(decryptMessage());
                 mp->setIsEncrypted(true);
                 appendSubPart(mp);
                 continue;
@@ -429,8 +422,8 @@ KMMsgSignatureState TextMessagePart::signatureState() const
 
 //-----AttachmentMessageBlock----------------------
 
-AttachmentMessagePart::AttachmentMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool decryptMessage)
-    : TextMessagePart(otp, node, decryptMessage)
+AttachmentMessagePart::AttachmentMessagePart(ObjectTreeParser *otp, KMime::Content *node)
+    : TextMessagePart(otp, node)
 {
 
 }
@@ -964,7 +957,6 @@ EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
     , mNoSecKey(false)
     , mCryptoProto(cryptoProto)
     , mFromAddress(fromAddress)
-    , mDecryptMessage(false)
     , mEncryptedNode(encryptedNode)
 {
     mMetaData.technicalProblem = (mCryptoProto == nullptr);
@@ -980,16 +972,6 @@ EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
 EncryptedMessagePart::~EncryptedMessagePart()
 {
 
-}
-
-void EncryptedMessagePart::setDecryptMessage(bool decrypt)
-{
-    mDecryptMessage = decrypt;
-}
-
-bool EncryptedMessagePart::decryptMessage() const
-{
-    return false;
 }
 
 void EncryptedMessagePart::setIsEncrypted(bool encrypted)
@@ -1020,6 +1002,7 @@ void EncryptedMessagePart::startDecryption(const QByteArray &text, const QTextCo
 
     startDecryption(content);
 
+    auto code = aCodec ? aCodec : mOtp->codecFor(mNode);
     if (!mMetaData.inProgress && mMetaData.isDecryptable) {
         if (hasSubParts()) {
             auto _mp = (subParts()[0]).dynamicCast<SignedMessagePart>();
@@ -1045,8 +1028,6 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     bool cannotDecrypt = false;
     Interface::ObjectTreeSource *_source = source();
     NodeHelper *nodeHelper = mOtp->nodeHelper();
-
-    Q_ASSERT(decryptMessage());
 
     // Check whether the memento contains a result from last time:
     const DecryptVerifyBodyPartMemento *m

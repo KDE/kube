@@ -87,7 +87,6 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
                                              part.nodeHelper()->fromAsString(node), node));
         mp = _mp;
         _mp->setIsEncrypted(true);
-        _mp->setDecryptMessage(part.source()->decryptMessage());
         // PartMetaData *messagePart(_mp->partMetaData());
         // if (!part.source()->decryptMessage()) {
             isEncrypted = true;
@@ -137,7 +136,6 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
                                           aCodec->toUnicode(signaturetext), smimeCrypto,
                                           part.nodeHelper()->fromAsString(node), signTestNode));
         mp = _mp;
-        //mp->setDecryptMessage(part.source()->decryptMessage());
         PartMetaData *messagePart(mp->partMetaData());
         if (smimeCrypto) {
             _mp->startVerificationDetached(signaturetext, nullptr, QByteArray());

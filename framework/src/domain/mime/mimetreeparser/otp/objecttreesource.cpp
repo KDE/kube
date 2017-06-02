@@ -62,11 +62,6 @@ void DefaultObjectTreeSource::setAllowDecryption(bool allowDecryption)
 }
 
 
-bool DefaultObjectTreeSource::decryptMessage() const
-{
-    return d->mAllowDecryption;
-}
-
 const QTextCodec *DefaultObjectTreeSource::overrideCodec()
 {
     return Q_NULLPTR;

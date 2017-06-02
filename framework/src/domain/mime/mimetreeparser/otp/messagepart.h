@@ -176,20 +176,17 @@ class TextMessagePart : public MessagePartList
     Q_OBJECT
 public:
     typedef QSharedPointer<TextMessagePart> Ptr;
-    TextMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool decryptMessage);
+    TextMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node);
     virtual ~TextMessagePart();
 
     KMMsgSignatureState signatureState() const;
     KMMsgEncryptionState encryptionState() const;
-
-    bool decryptMessage() const;
 
 private:
     void parseContent();
 
     KMMsgSignatureState mSignatureState;
     KMMsgEncryptionState mEncryptionState;
-    bool mDecryptMessage;
 
     friend class DefaultRendererPrivate;
     friend class ObjectTreeParser;
@@ -201,7 +198,7 @@ class AttachmentMessagePart : public TextMessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<AttachmentMessagePart> Ptr;
-    AttachmentMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool decryptMessage);
+    AttachmentMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node);
     virtual ~AttachmentMessagePart();
 
 };
@@ -292,7 +289,6 @@ private:
 class EncryptedMessagePart : public MessagePart
 {
     Q_OBJECT
-    Q_PROPERTY(bool decryptMessage READ decryptMessage WRITE setDecryptMessage)
     Q_PROPERTY(bool isEncrypted READ isEncrypted)
     Q_PROPERTY(bool passphraseError READ passphraseError)
 public:
@@ -306,9 +302,6 @@ public:
     virtual ~EncryptedMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
-
-    void setDecryptMessage(bool decrypt);
-    bool decryptMessage() const;
 
     void setIsEncrypted(bool encrypted);
     bool isEncrypted() const;
@@ -337,7 +330,6 @@ protected:
     bool mNoSecKey;
     const QGpgME::Protocol *mCryptoProto;
     QString mFromAddress;
-    bool mDecryptMessage;
     QByteArray mVerifiedText;
     std::vector<GpgME::DecryptionResult::Recipient> mDecryptRecipients;
     KMime::Content *mEncryptedNode;

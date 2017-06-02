@@ -57,9 +57,6 @@ public:
     /** Return the mode that is the preferred to display */
     virtual MimeTreeParser::Util::HtmlMode preferredMode() const = 0;
 
-    /** Return true if an encrypted mail should be decrypted */
-    virtual bool decryptMessage() const = 0;
-
     /** The override codec that should be used for the mail */
     virtual const QTextCodec *overrideCodec() = 0;
 
@@ -79,7 +76,6 @@ class DefaultObjectTreeSource : public Interface::ObjectTreeSource
 public:
     DefaultObjectTreeSource();
     virtual ~DefaultObjectTreeSource();
-    bool decryptMessage() const Q_DECL_OVERRIDE;
     void setHtmlMode(MimeTreeParser::Util::HtmlMode mode, const QList<MimeTreeParser::Util::HtmlMode> &availableModes) Q_DECL_OVERRIDE;
     MimeTreeParser::Util::HtmlMode preferredMode() const Q_DECL_OVERRIDE;
     void setAllowDecryption(bool allowDecryption);

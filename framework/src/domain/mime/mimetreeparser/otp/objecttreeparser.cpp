@@ -479,7 +479,7 @@ MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node, Process
         }
     }
 
-    const auto mp = AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node, mSource->decryptMessage()));
+    const auto mp = AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node));
     result.setInlineSignatureState(mp->signatureState());
     result.setInlineEncryptionState(mp->encryptionState());
     return mp;

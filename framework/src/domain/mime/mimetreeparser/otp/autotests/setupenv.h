@@ -46,7 +46,6 @@ class TestObjectTreeSource : public MimeTreeParser::Interface::ObjectTreeSource
 public:
     TestObjectTreeSource()
         : mPreferredMode(Util::Html)
-        , mDecryptMessage(false)
     {
     }
 
@@ -57,16 +56,6 @@ public:
 
     const BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE {
         return &mBodyPartFormatterBaseFactory;
-    }
-
-    bool decryptMessage() const Q_DECL_OVERRIDE
-    {
-        return mDecryptMessage;
-    }
-
-    void setAllowDecryption(bool allowDecryption)
-    {
-        mDecryptMessage = allowDecryption;
     }
 
     void setHtmlMode(MimeTreeParser::Util::HtmlMode mode, const QList<MimeTreeParser::Util::HtmlMode> &availableModes) Q_DECL_OVERRIDE {
@@ -94,7 +83,6 @@ public:
 private:
     BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
     MimeTreeParser::Util::HtmlMode mPreferredMode;
-    bool mDecryptMessage;
 };
 
 }
