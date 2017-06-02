@@ -140,27 +140,12 @@ bool NodeHelper::nodeProcessed(KMime::Content *node) const
     return mProcessedNodes.contains(node);
 }
 
-static void clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMemento *> &bodyPartMementoMap)
-{
-    for (QMap<QByteArray, Interface::BodyPartMemento *>::iterator
-            it = bodyPartMementoMap.begin(), end = bodyPartMementoMap.end();
-            it != end; ++it) {
-        Interface::BodyPartMemento *memento = it.value();
-        memento->detach();
-        delete memento;
-    }
-    bodyPartMementoMap.clear();
-}
-
 void NodeHelper::clear()
 {
     mProcessedNodes.clear();
     mEncryptionState.clear();
     mSignatureState.clear();
     mOverrideCodecs.clear();
-    std::for_each(mBodyPartMementoMap.begin(), mBodyPartMementoMap.end(),
-                  &clearBodyPartMemento);
-    mBodyPartMementoMap.clear();
     QMap<KMime::Content *, QList<KMime::Content *> >::ConstIterator end(mExtraContents.constEnd());
 
     for (QMap<KMime::Content *, QList<KMime::Content *> >::ConstIterator it = mExtraContents.constBegin(); it != end; ++it) {
@@ -428,48 +413,6 @@ QString NodeHelper::fileName(const KMime::Content *node)
 
     name = name.trimmed();
     return name;
-}
-
-//FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalBodyPartMemento replacement
-Interface::BodyPartMemento *NodeHelper::bodyPartMemento(KMime::Content *node,
-        const QByteArray &which) const
-{
-    const QMap< QString, QMap<QByteArray, Interface::BodyPartMemento *> >::const_iterator nit
-        = mBodyPartMementoMap.find(persistentIndex(node));
-    if (nit == mBodyPartMementoMap.end()) {
-        return nullptr;
-    }
-    const QMap<QByteArray, Interface::BodyPartMemento *>::const_iterator it =
-        nit->find(which.toLower());
-    if (it != nit->end()) {
-        qWarning() << "Cache hit!!!!!!!!!!!!!!!!!";
-        Q_ASSERT(false);
-        return it.value();
-    }
-    return nullptr;
-}
-
-//FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalSetBodyPartMemento replacement
-void NodeHelper::setBodyPartMemento(KMime::Content *node, const QByteArray &which,
-                                    Interface::BodyPartMemento *memento)
-{
-    QMap<QByteArray, Interface::BodyPartMemento *> &mementos
-        = mBodyPartMementoMap[persistentIndex(node)];
-
-    const QByteArray whichLower = which.toLower();
-    const QMap<QByteArray, Interface::BodyPartMemento *>::iterator it =
-        mementos.lowerBound(whichLower);
-
-    if (it != mementos.end() && it.key() == whichLower) {
-        delete it.value();
-        if (memento) {
-            it.value() = memento;
-        } else {
-            mementos.erase(it);
-        }
-    } else {
-        mementos.insert(whichLower, memento);
-    }
 }
 
 /*!

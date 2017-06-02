@@ -657,7 +657,8 @@ bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signa
 
     const QByteArray mementoName = "verification";
 
-    CryptoBodyPartMemento *m = dynamic_cast<CryptoBodyPartMemento *>(nodeHelper->bodyPartMemento(mNode, mementoName));
+    //TODO for the async case remember the memento
+    CryptoBodyPartMemento *m = nullptr;
     Q_ASSERT(!m || mCryptoProto); //No CryptoPlugin and having a bodyPartMemento -> there is something completely wrong
 
     if (!m && mCryptoProto) {
@@ -683,17 +684,18 @@ bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signa
                     mMetaData.inProgress = true;
                     mOtp->mHasPendingAsyncJobs = true;
                 }
+                //FIXME delete memento once done
             } else {
                 m->exec();
             }
-            nodeHelper->setBodyPartMemento(mNode, mementoName, m);
         }
-    } else if (m->isRunning()) {
-        mMetaData.inProgress = true;
-        mOtp->mHasPendingAsyncJobs = true;
-    } else {
-        mMetaData.inProgress = false;
-        mOtp->mHasPendingAsyncJobs = false;
+    //only relevant in async case
+    // } else if (m->isRunning()) {
+    //     mMetaData.inProgress = true;
+    //     mOtp->mHasPendingAsyncJobs = true;
+    // } else {
+    //     mMetaData.inProgress = false;
+    //     mOtp->mHasPendingAsyncJobs = false;
     }
 
     if (m && !mMetaData.inProgress) {
@@ -729,6 +731,10 @@ bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signa
                                    "verified.<br />"
                                    "Reason: %1",
                                    errorMsg);
+    }
+    //TODO don't delete in async case
+    if (m) {
+        delete m;
     }
 
     return mMetaData.isSigned;
@@ -1017,9 +1023,8 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     bool cannotDecrypt = false;
     NodeHelper *nodeHelper = mOtp->nodeHelper();
 
-    // Check whether the memento contains a result from last time:
-    const DecryptVerifyBodyPartMemento *m
-        = dynamic_cast<DecryptVerifyBodyPartMemento *>(nodeHelper->bodyPartMemento(&data, "decryptverify"));
+    // TODO in the async case remember the memento:
+    const DecryptVerifyBodyPartMemento *m = nullptr;
 
     Q_ASSERT(!m || mCryptoProto); //No CryptoPlugin and having a bodyPartMemento -> there is something completely wrong
 
@@ -1045,12 +1050,12 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
                 newM->exec();
                 m = newM;
             }
-            nodeHelper->setBodyPartMemento(&data, "decryptverify", newM);
         }
-    } else if (m->isRunning()) {
-        mMetaData.inProgress = true;
-        mOtp->mHasPendingAsyncJobs = true;
-        m = nullptr;
+        //Only relevant in the async case
+    // } else if (m->isRunning()) {
+    //     mMetaData.inProgress = true;
+    //     mOtp->mHasPendingAsyncJobs = true;
+    //     m = nullptr;
     }
 
     if (m) {
@@ -1115,6 +1120,10 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
                                   + QLatin1String("<br />")
                                   + i18n("Error: %1", mMetaData.errorText);
         }
+    }
+    //TODO don't delete in async case
+    if (m) {
+        delete m;
     }
     return bDecryptionOk;
 }

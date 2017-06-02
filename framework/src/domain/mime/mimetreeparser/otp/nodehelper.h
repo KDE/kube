@@ -37,7 +37,6 @@ namespace MimeTreeParser
 class AttachmentTemporaryFilesDirs;
 namespace Interface
 {
-class BodyPartMemento;
 }
 }
 
@@ -96,11 +95,6 @@ public:
 
     /** Set the charset the user selected for the message to display */
     void setOverrideCodec(KMime::Content *node, const QTextCodec *codec);
-
-    Interface::BodyPartMemento *bodyPartMemento(KMime::Content *node, const QByteArray &which) const;
-
-    void setBodyPartMemento(KMime::Content *node, const QByteArray &which,
-                            Interface::BodyPartMemento *memento);
 
     /**
      * Cleanup the attachment temp files
@@ -222,7 +216,6 @@ private:
     QSet<KMime::Content *> mDisplayHiddenNodes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content *, const QTextCodec *> mOverrideCodecs;
-    QMap<QString, QMap<QByteArray, Interface::BodyPartMemento *> > mBodyPartMementoMap;
     QMap<KMime::Content *, PartMetaData> mPartMetaDatas;
     QMap<KMime::Message::Content *, QList<KMime::Content *> > mExtraContents;
     AttachmentTemporaryFilesDirs *mAttachmentFilesDir;
