@@ -360,6 +360,7 @@ void ObjectTreeParser::parseObjectTree(KMime::Content *node)
     mTopLevelContent = node;
     mParsedPart = parseObjectTreeInternal(node, showOnlyOneMimePart());
 
+    //Gather plaintext and html content
     if (mParsedPart) {
         if (auto mp = toplevelTextNode(mParsedPart)) {
             if (auto _mp = mp.dynamicCast<TextMessagePart>()) {
@@ -369,9 +370,25 @@ void ObjectTreeParser::parseObjectTree(KMime::Content *node)
                     extractNodeInfos(_mp->mChildNodes[Util::MultipartPlain], true);
                 }
             }
-            setPlainTextContent(mp->text());
+            //FIXME this looks like it just overrides what we just extracted...
+            mPlainTextContent = mp->text();
         }
 
+        //Find html parts and copy content
+        QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
+            [] (const MessagePartPtr &part) {
+                return true;
+            },
+            [] (const MessagePartPtr &part) {
+                if (const auto html = dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
+                    return true;
+                }
+                return false;
+            });
+        for (const auto &part : contentParts) {
+            mHtmlContent += part->text();
+            mHtmlContentCharset = part->charset();
+        }
     }
 }
 
@@ -527,11 +544,6 @@ void ObjectTreeParser::extractNodeInfos(KMime::Content *curNode, bool isFirstTex
         mPlainTextContent += curNode->decodedText();
         mPlainTextContentCharset += NodeHelper::charset(curNode);
     }
-}
-
-void ObjectTreeParser::setPlainTextContent(const QString &plainTextContent)
-{
-    mPlainTextContent = plainTextContent;
 }
 
 const QTextCodec *ObjectTreeParser::codecFor(KMime::Content *node) const

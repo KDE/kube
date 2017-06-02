@@ -30,69 +30,20 @@ QByteArray readMailFromFile(const QString &mailFile)
     return file.readAll();
 }
 
-QByteArray join(QVector<QByteArray> vec, QByteArray sep)
-{
-    QByteArray ret;
-    bool bInit = true;
-    foreach(const auto &entry, vec) {
-        if (!bInit) {
-            ret += sep;
-        }
-        bInit = false;
-        ret += entry;
-    }
-    return ret;
-}
-
 class InterfaceTest : public QObject
 {
     Q_OBJECT
-private:
-    // void printTree(const Part::Ptr &start, QString pre)
-    // {
-    //     foreach (const auto &part, start->subParts()) {
-    //         qWarning() << QStringLiteral("%1* %2(%3)")
-    //                         .arg(pre)
-    //                         .arg(QString::fromLatin1(part->type()))
-    //                         .arg(QString::fromLatin1(join(part->availableContents(),", ")));
-    //         printTree(part,pre + QStringLiteral("  "));
-    //     }
-    // }
-
 private slots:
-
-    // void testTextMail()
-    // {
-    //     Parser parser(readMailFromFile("plaintext.mbox"));
-    //     printTree(parser.d->mTree,QString());
-    //     auto contentPartList = parser.collectContentParts();
-    //     QCOMPARE(contentPartList.size(), 1);
-    //     auto contentPart = contentPartList[0];
-    //     QVERIFY((bool)contentPart);
-    //     QCOMPARE(contentPart->availableContents(), QVector<QByteArray>() << "plaintext");
-    //     auto contentList = contentPart->content("plaintext");
-    //     QCOMPARE(contentList.size(), 1);
-    //     QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
-    //     QCOMPARE(contentList[0]->signatures().size(), 0);
-
-    //     contentList = contentPart->content("html");
-    //     QCOMPARE(contentList.size(), 0);
-    //     auto contentAttachmentList = parser.collectAttachmentParts();
-    //     QCOMPARE(contentAttachmentList.size(), 0);
-    // }
-
     void testTextMail()
     {
+        const auto expectedText = QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/");
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(readMailFromFile("plaintext.mbox"));
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
-        QCOMPARE(part->text(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/"));
-        //TODO
-        // QCOMPARE(part->charset(), QStringLiteral("utf-8").toLocal8Bit());
+        QCOMPARE(part->text(), expectedText);
+        QCOMPARE(part->charset(), QStringLiteral("utf-8").toLocal8Bit());
         //
         // QCOMPARE(contentList[0]->encryptions().size(), 0);
         // QCOMPARE(contentList[0]->signatures().size(), 0);
@@ -101,6 +52,9 @@ private slots:
         // QCOMPARE(contentList.size(), 0);
         // auto contentAttachmentList = parser.collectAttachmentParts();
         // QCOMPARE(contentAttachmentList.size(), 0);
+
+        QCOMPARE(otp.plainTextContent(), expectedText);
+        QVERIFY(otp.htmlContent().isEmpty());
     }
 
     // {
@@ -127,7 +81,7 @@ private slots:
     //     auto contentAttachmentList = parser.collectAttachmentParts();
     //     QCOMPARE(contentAttachmentList.size(), 0);
     // }
-    
+
     void testAlternative()
     {
         MimeTreeParser::ObjectTreeParser otp;
@@ -137,12 +91,16 @@ private slots:
         auto part = partList[0].dynamicCast<MimeTreeParser::AlternativeMessagePart>();
         QVERIFY(bool(part));
         QCOMPARE(part->plaintextContent(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n"));
+        //FIXME html charset is different from plain, and both are not ISO-8859-1
         QCOMPARE(part->charset(), QStringLiteral("ISO-8859-1").toLocal8Bit());
         QCOMPARE(part->htmlContent(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>\n\n"));
+        auto contentAttachmentList = otp.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
     }
 
     void testTextHtml()
     {
+        auto expectedText = QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>");
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(readMailFromFile("html.mbox"));
         otp.print();
@@ -150,12 +108,14 @@ private slots:
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::HtmlMessagePart>();
         QVERIFY(bool(part));
-        QCOMPARE(part->htmlContent(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>"));
+        QCOMPARE(part->htmlContent(), expectedText);
         QCOMPARE(part->charset(), QStringLiteral("windows-1252").toLocal8Bit());
     //     QCOMPARE(contentList[0]->encryptions().size(), 0);
     //     QCOMPARE(contentList[0]->signatures().size(), 0);
         auto contentAttachmentList = otp.collectAttachmentParts();
         QCOMPARE(contentAttachmentList.size(), 0);
+        QCOMPARE(otp.htmlContent(), expectedText);
+        QVERIFY(otp.plainTextContent().isEmpty());
     }
 
     void testSMimeEncrypted()
