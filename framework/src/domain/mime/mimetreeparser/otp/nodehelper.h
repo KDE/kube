@@ -158,23 +158,6 @@ public:
 
     QString fromAsString(KMime::Content *node) const;
 
-    KMime::Content *decryptedNodeForContent(KMime::Content *content) const;
-
-    /**
-     * This function returns the unencrypted message that is based on @p originalMessage.
-     * All encrypted MIME parts are removed and replaced by their decrypted plain-text versions.
-     * Encrypted parts that are within signed parts are not replaced, since that would invalidate
-     * the signature.
-     *
-     * This only works if the message was run through ObjectTreeParser::parseObjectTree() with the
-     * currrent NodeHelper before, because parseObjectTree() actually decrypts the message and stores
-     * the decrypted nodes by calling attachExtraContent().
-     *
-     * @return the unencrypted message or an invalid pointer if the original message didn't contain
-     *         a part that needed to be modified.
-     */
-    KMime::Message::Ptr unencryptedMessage(const KMime::Message::Ptr &originalMessage);
-
     /**
      * Returns a list of attachments of attached extra content nodes.
      * This is mainly useful is order to get attachments of encrypted messages.
