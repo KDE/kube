@@ -57,31 +57,6 @@ private slots:
         QVERIFY(otp.htmlContent().isEmpty());
     }
 
-    // {
-    //     Parser parser(readMailFromFile("alternative.mbox"));
-    //     printTree(parser.d->mTree,QString());
-    //     auto contentPartList = parser.collectContentParts();
-    //     QCOMPARE(contentPartList.size(), 1);
-    //     auto contentPart = contentPartList[0];
-    //     QVERIFY((bool)contentPart);
-    //     QCOMPARE(contentPart->availableContents(), QVector<QByteArray>() << "html" << "plaintext");
-    //     auto contentList = contentPart->content("plaintext");
-    //     QCOMPARE(contentList.size(), 1);
-    //     QCOMPARE(contentList[0]->content(), QStringLiteral("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
-    //     QCOMPARE(contentList[0]->signatures().size(), 0);
-
-    //     contentList = contentPart->content("html");
-    //     QCOMPARE(contentList.size(), 1);
-    //     QCOMPARE(contentList[0]->content(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>\n\n").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->charset(), QStringLiteral("utf-8").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
-    //     QCOMPARE(contentList[0]->signatures().size(), 0);
-    //     auto contentAttachmentList = parser.collectAttachmentParts();
-    //     QCOMPARE(contentAttachmentList.size(), 0);
-    // }
-
     void testAlternative()
     {
         MimeTreeParser::ObjectTreeParser otp;
@@ -96,6 +71,8 @@ private slots:
         QCOMPARE(part->htmlContent(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>\n\n"));
         auto contentAttachmentList = otp.collectAttachmentParts();
         QCOMPARE(contentAttachmentList.size(), 0);
+    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
+    //     QCOMPARE(contentList[0]->signatures().size(), 0);
     }
 
     void testTextHtml()
@@ -160,27 +137,6 @@ private slots:
     //     QCOMPARE(contentAttachmentList[1]->signatures().size(), 0);
     }
 
-    // void testOpenPGPInline()
-    // {
-    //     Parser parser(readMailFromFile("openpgp-inline-charset-encrypted.mbox"));
-    //     printTree(parser.d->mTree,QString());
-    //     auto contentPartList = parser.collectContentParts();
-    //     QCOMPARE(contentPartList.size(), 1);
-    //     auto contentPart = contentPartList[0];
-    //     QVERIFY((bool)contentPart);
-    //     QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() << "plaintext");
-    //     QCOMPARE(contentPart->encryptions().size(), 0);
-    //     QCOMPARE(contentPart->signatures().size(), 0);
-    //     auto contentList = contentPart->content("plaintext");
-    //     QCOMPARE(contentList.size(), 1);
-    //     QCOMPARE(contentList[0]->content(), QStringLiteral("asdasd asd asd asdf sadf sdaf sadf äöü").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->charset(), QStringLiteral("ISO-8859-15").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 1);
-    //     QCOMPARE(contentList[0]->signatures().size(), 1);
-    //     auto contentAttachmentList = parser.collectAttachmentParts();
-    //     QCOMPARE(contentAttachmentList.size(), 0);
-    // }
- 
     void testOpenPGPInline()
     {
         MimeTreeParser::ObjectTreeParser otp;
@@ -258,42 +214,28 @@ private slots:
         QCOMPARE(attachment2->filename(), QStringLiteral("image.png"));
     }
 
-    // void testSignatureBlock()
-    // {
-    //     Parser parser(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
-    //     auto contentPartList = parser.collectContentParts();
-    //     auto contentPart = contentPartList[0];
-    //     auto contentList = contentPart->content("plaintext");
-    //     QCOMPARE(contentList.size(), 1);
-    //     QCOMPARE(contentList[0]->signatures().size(), 1);
-    //     auto sig = contentList[0]->signatures()[0];
-    //     QCOMPARE(sig->creationDateTime(), QDateTime(QDate(2015,05,01),QTime(15,12,47)));
-    //     QCOMPARE(sig->expirationDateTime(), QDateTime());
-    //     QCOMPARE(sig->neverExpires(), true);
+    void testSignatureBlock()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("openpgp-encrypted-attachment-and-non-encrypted-attachment.mbox"));
+        otp.print();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QVERIFY(bool(part));
 
-    //     auto key = sig->key();
-    //     QCOMPARE(key->keyid(),QStringLiteral("8D9860C58F246DE6"));
-    //     QCOMPARE(key->name(),QStringLiteral("unittest key"));
-    //     QCOMPARE(key->email(),QStringLiteral("test@kolab.org"));
-    //     QCOMPARE(key->comment(),QStringLiteral("no password"));
-    // }
+        // QCOMPARE(contentList[0]->signatures().size(), 1);
+        // auto sig = contentList[0]->signatures()[0];
+        // QCOMPARE(sig->creationDateTime(), QDateTime(QDate(2015,05,01),QTime(15,12,47)));
+        // QCOMPARE(sig->expirationDateTime(), QDateTime());
+        // QCOMPARE(sig->neverExpires(), true);
 
-    // void testRelatedAlternative()
-    // {
-    //     Parser parser(readMailFromFile("cid-links.mbox"));
-    //     printTree(parser.d->mTree,QString());
-    //     auto contentPartList = parser.collectContentParts();
-    //     QCOMPARE(contentPartList.size(), 1);
-    //     auto contentPart = contentPartList[0];
-    //     QVERIFY((bool)contentPart);
-    //     QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() <<  "html" << "plaintext");
-    //     QCOMPARE(contentPart->encryptions().size(), 0);
-    //     QCOMPARE(contentPart->signatures().size(), 0);
-    //     auto contentList = contentPart->content("plaintext");
-    //     QCOMPARE(contentList.size(), 1);
-    //     auto contentAttachmentList = parser.collectAttachmentParts();
-    //     QCOMPARE(contentAttachmentList.size(), 0);
-    // }
+        // auto key = sig->key();
+        // QCOMPARE(key->keyid(),QStringLiteral("8D9860C58F246DE6"));
+        // QCOMPARE(key->name(),QStringLiteral("unittest key"));
+        // QCOMPARE(key->email(),QStringLiteral("test@kolab.org"));
+        // QCOMPARE(key->comment(),QStringLiteral("no password"));
+    }
 
     void testRelatedAlternative()
     {
