@@ -320,6 +320,7 @@ public:
     QVector<MessagePartPtr> collectContentParts();
     QVector<MessagePartPtr> collectAttachmentParts();
     void decryptParts();
+    void importCertificates();
 
     /** Embedd content referenced by cid by inlining */
     QString resolveCidLinks(const QString &html);

@@ -259,14 +259,13 @@ class CertMessagePart : public MessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<CertMessagePart> Ptr;
-    CertMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, const QGpgME::Protocol *cryptoProto, bool autoImport);
+    CertMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, const QGpgME::Protocol *cryptoProto);
     virtual ~CertMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
+    void import();
 
 private:
-    bool mAutoImport;
-    GpgME::ImportResult mImportResult;
     const QGpgME::Protocol *mCryptoProto;
     friend class DefaultRendererPrivate;
 };

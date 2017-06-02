@@ -49,11 +49,6 @@ public:
     {
     }
 
-    bool autoImportKeys() const Q_DECL_OVERRIDE
-    {
-        return true;
-    }
-
     const BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE {
         return &mBodyPartFormatterBaseFactory;
     }

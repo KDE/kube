@@ -83,11 +83,6 @@ MimeTreeParser::Util::HtmlMode DefaultObjectTreeSource::preferredMode() const
     return d->mPreferredMode;
 }
 
-bool DefaultObjectTreeSource::autoImportKeys() const
-{
-    return false;
-}
-
 const BodyPartFormatterBaseFactory *DefaultObjectTreeSource::bodyPartFormatterFactory()
 {
     return &(d->mBodyPartFormatterBaseFactory);

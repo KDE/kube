@@ -591,30 +591,27 @@ QString AlternativeMessagePart::htmlContent() const
 
 //-----CertMessageBlock----------------------
 
-CertMessagePart::CertMessagePart(ObjectTreeParser *otp, KMime::Content *node, const QGpgME::Protocol *cryptoProto, bool autoImport)
+CertMessagePart::CertMessagePart(ObjectTreeParser *otp, KMime::Content *node, const QGpgME::Protocol *cryptoProto)
     : MessagePart(otp, QString(), node)
-    , mAutoImport(autoImport)
     , mCryptoProto(cryptoProto)
 {
     if (!mNode) {
         qCWarning(MIMETREEPARSER_LOG) << "not a valid node";
         return;
     }
-
-    if (!mAutoImport) {
-        return;
-    }
-
-    const QByteArray certData = node->decodedContent();
-
-    QGpgME::ImportJob *import = mCryptoProto->importJob();
-    QGpgMEJobExecutor executor;
-    mImportResult = executor.exec(import, certData);
 }
 
 CertMessagePart::~CertMessagePart()
 {
 
+}
+
+void CertMessagePart::import()
+{
+    const QByteArray certData = mNode->decodedContent();
+    QGpgME::ImportJob *import = mCryptoProto->importJob();
+    QGpgMEJobExecutor executor;
+    auto result = executor.exec(import, certData);
 }
 
 QString CertMessagePart::text() const

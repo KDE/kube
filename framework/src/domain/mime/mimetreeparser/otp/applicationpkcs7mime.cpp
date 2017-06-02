@@ -60,7 +60,7 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
     const QString smimeType = node->contentType()->parameter(QStringLiteral("smime-type")).toLower();
 
     if (smimeType == QLatin1String("certs-only")) {
-        return CertMessagePart::Ptr(new CertMessagePart(part.objectTreeParser(), node, smimeCrypto, part.source()->autoImportKeys()));
+        return CertMessagePart::Ptr(new CertMessagePart(part.objectTreeParser(), node, smimeCrypto));
     }
 
     bool isSigned      = (smimeType == QLatin1String("signed-data"));

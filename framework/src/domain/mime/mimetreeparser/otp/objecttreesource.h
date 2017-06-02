@@ -63,9 +63,6 @@ public:
     /** The source object behind the interface. */
     virtual QObject *sourceObject() = 0;
 
-    /** should keys be imported automatically **/
-    virtual bool autoImportKeys() const = 0;
-
     virtual const BodyPartFormatterBaseFactory *bodyPartFormatterFactory() = 0;
 };
 }
@@ -81,7 +78,6 @@ public:
     void setAllowDecryption(bool allowDecryption);
     const QTextCodec *overrideCodec() Q_DECL_OVERRIDE;
     QObject *sourceObject() Q_DECL_OVERRIDE;
-    bool autoImportKeys() const Q_DECL_OVERRIDE;
     const MimeTreeParser::BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE;
 private:
     ObjectSourcePrivate *const d;
