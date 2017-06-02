@@ -69,8 +69,7 @@ QHash<int, QByteArray> NewModel::roleNames() const
     roles[IsEncryptedRole] = "encrypted";
     roles[IsSignedRole] = "signed";
     roles[SecurityLevelRole] = "securityLevel";
-    roles[EncryptionErrorType] = "errorType";
-    roles[EncryptionErrorString] = "errorString";
+    roles[IsErrorRole] = "error";
     return roles;
 }
 
@@ -108,6 +107,8 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return "HtmlContent";
             case IsEmbededRole:
                 return false;
+            case IsErrorRole:
+                return !messagePart->partMetaData()->errorText.isEmpty();
             case IsComplexHtmlContentRole: {
                 if (messagePart->isHtml()) {
                     const auto text = messagePart->text();
@@ -128,6 +129,10 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 break;
             }
             case ContentRole: {
+                auto errorText = messagePart->partMetaData()->errorText;
+                if (!errorText.isEmpty()) {
+                    return errorText;
+                }
                 const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
                 if (messagePart->isHtml()) {
                     return d->mParser->resolveCidLinks(text);

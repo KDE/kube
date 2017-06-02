@@ -247,6 +247,13 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts()
                 return true;
             } else if (const auto html = dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
                 return true;
+            } else if (const auto enc = dynamic_cast<MimeTreeParser::EncryptedMessagePart*>(part.data())) {
+                if (dynamic_cast<MimeTreeParser::TextMessagePart*>(enc->parentPart())) {
+                    return false;
+                }
+                if (!enc->hasSubParts() && !enc->partMetaData()->errorText.isEmpty()) {
+                    return true;
+                }
             }
             return false;
         });

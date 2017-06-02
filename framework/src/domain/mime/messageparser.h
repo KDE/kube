@@ -80,6 +80,7 @@ public:
         IsEmbededRole,
         IsEncryptedRole,
         IsSignedRole,
+        IsErrorRole,
         SecurityLevelRole,
         EncryptionErrorType,
         EncryptionErrorString
