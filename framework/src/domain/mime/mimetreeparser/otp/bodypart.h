@@ -51,7 +51,6 @@ class ProcessResult;
 namespace Interface
 {
 
-class ObjectTreeSource;
 
 /**
     @short interface of classes that implement status for BodyPartFormatters.
@@ -152,7 +151,6 @@ public:
      * For making it easier to refactor, add objectTreeParser
      */
     virtual MimeTreeParser::ObjectTreeParser *objectTreeParser() const = 0;
-    virtual MimeTreeParser::Interface::ObjectTreeSource *source() const = 0;
     virtual MimeTreeParser::ProcessResult *processResult() const = 0;
 };
 

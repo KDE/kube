@@ -35,7 +35,6 @@
 #define __MIMETREEPARSER_OBJECTTREEPARSER_H__
 
 #include "nodehelper.h"
-#include "objecttreesource.h"
 #include "messagepart.h"
 
 #include <gpgme++/verificationresult.h>
@@ -269,8 +268,7 @@ class ObjectTreeParser
 public:
     explicit ObjectTreeParser();
 
-    explicit ObjectTreeParser(Interface::ObjectTreeSource *source,
-                              NodeHelper *nodeHelper = nullptr,
+    explicit ObjectTreeParser(NodeHelper *nodeHelper,
                               bool showOneMimePart = false
                               );
 
@@ -342,7 +340,6 @@ private:
 
     const QTextCodec *codecFor(KMime::Content *node) const;
 private:
-    Interface::ObjectTreeSource *mSource;
     NodeHelper *mNodeHelper;
     QByteArray mPlainTextContentCharset;
     QByteArray mHtmlContentCharset;

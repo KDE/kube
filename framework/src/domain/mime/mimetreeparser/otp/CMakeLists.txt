@@ -31,7 +31,6 @@ set(libmimetreeparser_SRCS
 
     #Interfaces
     bodypartformatter.cpp
-    objecttreesource.cpp
     bodypart.cpp
 
     #bodypartformatter.cpp

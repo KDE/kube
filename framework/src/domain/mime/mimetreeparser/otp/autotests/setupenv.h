@@ -24,7 +24,6 @@
 #include <gpgme++/key.h>
 #include <bodypartformatter.h>
 #include <bodypartformatterbasefactory.h>
-#include <objecttreesource.h>
 
 namespace MimeTreeParser
 {
@@ -38,47 +37,6 @@ namespace Test
 * * set KDEHOME
 */
 void setupEnv();
-
-// We can't use EmptySource, since we need to control some emelnets of the source for tests to also test
-// loadExternal and htmlMail.
-class TestObjectTreeSource : public MimeTreeParser::Interface::ObjectTreeSource
-{
-public:
-    TestObjectTreeSource()
-        : mPreferredMode(Util::Html)
-    {
-    }
-
-    const BodyPartFormatterBaseFactory *bodyPartFormatterFactory() Q_DECL_OVERRIDE {
-        return &mBodyPartFormatterBaseFactory;
-    }
-
-    void setHtmlMode(MimeTreeParser::Util::HtmlMode mode, const QList<MimeTreeParser::Util::HtmlMode> &availableModes) Q_DECL_OVERRIDE {
-        Q_UNUSED(mode);
-        Q_UNUSED(availableModes);
-    }
-
-    MimeTreeParser::Util::HtmlMode preferredMode() const Q_DECL_OVERRIDE
-    {
-        return mPreferredMode;
-    }
-
-    void setPreferredMode(MimeTreeParser::Util::HtmlMode mode)
-    {
-        mPreferredMode = mode;
-    }
-
-    const QTextCodec *overrideCodec() Q_DECL_OVERRIDE {
-        return nullptr;
-    }
-
-    QObject *sourceObject() Q_DECL_OVERRIDE {
-        return nullptr;
-    }
-private:
-    BodyPartFormatterBaseFactory mBodyPartFormatterBaseFactory;
-    MimeTreeParser::Util::HtmlMode mPreferredMode;
-};
 
 }
 

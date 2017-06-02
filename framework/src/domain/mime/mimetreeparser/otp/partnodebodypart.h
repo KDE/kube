@@ -88,7 +88,6 @@ public:
         return mProcessResult;
     }
 
-    Interface::ObjectTreeSource *source() const Q_DECL_OVERRIDE;
 private:
     KMime::Content *mTopLevelContent;
     KMime::Content *mContent;

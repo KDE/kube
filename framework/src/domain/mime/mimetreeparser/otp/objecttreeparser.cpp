@@ -62,8 +62,7 @@ using namespace MimeTreeParser;
 
 
 ObjectTreeParser::ObjectTreeParser()
-    : mSource(new DefaultObjectTreeSource),
-      mNodeHelper(nullptr),
+    : mNodeHelper(nullptr),
       mTopLevelContent(nullptr),
       mShowOnlyOneMimePart(false),
       mHasPendingAsyncJobs(false),
@@ -72,12 +71,9 @@ ObjectTreeParser::ObjectTreeParser()
     init();
 }
 
-ObjectTreeParser::ObjectTreeParser(Interface::ObjectTreeSource *source,
-                                   MimeTreeParser::NodeHelper *nodeHelper,
-                                   bool showOnlyOneMimePart
-                                   )
-    : mSource(source),
-      mNodeHelper(nodeHelper),
+ObjectTreeParser::ObjectTreeParser(MimeTreeParser::NodeHelper *nodeHelper,
+                                   bool showOnlyOneMimePart)
+    : mNodeHelper(nodeHelper),
       mTopLevelContent(nullptr),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
       mHasPendingAsyncJobs(false),
@@ -88,7 +84,6 @@ ObjectTreeParser::ObjectTreeParser(Interface::ObjectTreeSource *source,
 
 void ObjectTreeParser::init()
 {
-    Q_ASSERT(mSource);
     if (!mNodeHelper) {
         mNodeHelper = new NodeHelper();
         mDeleteNodeHelper = true;
@@ -395,7 +390,8 @@ MessagePartPtr ObjectTreeParser::parsedPart() const
 
 MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, bool onlyOneMimePart)
 {
-    const auto sub = mSource->bodyPartFormatterFactory()->subtypeRegistry(mediaType.constData());
+    static MimeTreeParser::BodyPartFormatterBaseFactory factory;
+    const auto sub = factory.subtypeRegistry(mediaType.constData());
     auto range =  sub.equal_range(subType.constData());
     for (auto it = range.first; it != range.second; ++it) {
         const auto formatter = (*it).second;
@@ -537,9 +533,6 @@ void ProcessResult::adjustCryptoStatesOfNode(const KMime::Content *node) const
 const QTextCodec *ObjectTreeParser::codecFor(KMime::Content *node) const
 {
     Q_ASSERT(node);
-    if (mSource->overrideCodec()) {
-        return mSource->overrideCodec();
-    }
     return mNodeHelper->codec(node);
 }
 

@@ -47,7 +47,8 @@ MessagePart::Ptr MultiPartAlternativeBodyPartFormatter::process(Interface::BodyP
         return MessagePart::Ptr();
     }
 
-    auto preferredMode = part.source()->preferredMode();
+    //Hardcoded after removing the source
+    auto preferredMode = MimeTreeParser::Util::Html;
     AlternativeMessagePart::Ptr mp(new AlternativeMessagePart(part.objectTreeParser(), node, preferredMode));
     if (mp->mChildNodes.isEmpty()) {
         return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0), false));
@@ -76,7 +77,6 @@ MessagePart::Ptr MultiPartAlternativeBodyPartFormatter::process(Interface::BodyP
         part.nodeHelper()->setNodeProcessed(dataHtml, false);
         preferredMode = Util::MultipartPlain;
     }
-    part.source()->setHtmlMode(preferredMode, mp->availableModes());
     mp->mPreferredMode = preferredMode;
     return mp;
 }

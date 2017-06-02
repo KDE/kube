@@ -222,12 +222,6 @@ QString MessagePart::plaintextContent() const
     return text();
 }
 
-Interface::ObjectTreeSource *MessagePart::source() const
-{
-    Q_ASSERT(mOtp);
-    return mOtp->mSource;
-}
-
 
 
 void MessagePart::parseInternal(KMime::Content *node, bool onlyOneMimePart)
@@ -436,9 +430,8 @@ AttachmentMessagePart::~AttachmentMessagePart()
 
 //-----HtmlMessageBlock----------------------
 
-HtmlMessagePart::HtmlMessagePart(ObjectTreeParser *otp, KMime::Content *node, Interface::ObjectTreeSource *source)
+HtmlMessagePart::HtmlMessagePart(ObjectTreeParser *otp, KMime::Content *node)
     : MessagePart(otp, QString(), node)
-    , mSource(source)
 {
     if (!mNode) {
         qCWarning(MIMETREEPARSER_LOG) << "not a valid node";
@@ -655,7 +648,6 @@ bool SignedMessagePart::isSigned() const
 bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signature, KMime::Content *textNode)
 {
     NodeHelper *nodeHelper = mOtp->nodeHelper();
-    Interface::ObjectTreeSource *_source = source();
 
     mMetaData.isSigned = false;
     mMetaData.technicalProblem = (mCryptoProto == nullptr);
@@ -684,8 +676,8 @@ bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signa
             if (mOtp->allowAsync()) {
                 QObject::connect(m, &CryptoBodyPartMemento::update,
                                  nodeHelper, &NodeHelper::update);
-                QObject::connect(m, SIGNAL(update(MimeTreeParser::UpdateMode)),
-                                 _source->sourceObject(), SLOT(update(MimeTreeParser::UpdateMode)));
+                // QObject::connect(m, SIGNAL(update(MimeTreeParser::UpdateMode)),
+                //                  _source->sourceObject(), SLOT(update(MimeTreeParser::UpdateMode)));
 
                 if (m->start()) {
                     mMetaData.inProgress = true;
@@ -1023,7 +1015,6 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     mMetaData.auditLog.clear();
     bool bDecryptionOk = false;
     bool cannotDecrypt = false;
-    Interface::ObjectTreeSource *_source = source();
     NodeHelper *nodeHelper = mOtp->nodeHelper();
 
     // Check whether the memento contains a result from last time:
@@ -1042,8 +1033,8 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
             if (mOtp->allowAsync()) {
                 QObject::connect(newM, &CryptoBodyPartMemento::update,
                                  nodeHelper, &NodeHelper::update);
-                QObject::connect(newM, SIGNAL(update(MimeTreeParser::UpdateMode)), _source->sourceObject(),
-                                 SLOT(update(MimeTreeParser::UpdateMode)));
+                // QObject::connect(newM, SIGNAL(update(MimeTreeParser::UpdateMode)), _source->sourceObject(),
+                //                  SLOT(update(MimeTreeParser::UpdateMode)));
                 if (newM->start()) {
                     mMetaData.inProgress = true;
                     mOtp->mHasPendingAsyncJobs = true;

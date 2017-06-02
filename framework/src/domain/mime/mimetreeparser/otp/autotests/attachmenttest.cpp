@@ -55,8 +55,7 @@ void AttachmentTest::testEncryptedAttachment()
     QFETCH(QString, mbox);
     auto msg = readAndParseMail(mbox);
     NodeHelper nodeHelper;
-    Test::TestObjectTreeSource testSource;
-    ObjectTreeParser otp(&testSource, &nodeHelper);
+    ObjectTreeParser otp(&nodeHelper);
     otp.parseObjectTree(msg.data());
     otp.decryptParts();
 

@@ -90,7 +90,3 @@ QString PartNodeBodyPart::contentDispositionParameter(const char *param) const
     return mContent->contentDisposition()->parameter(QString::fromLatin1(param));
 }
 
-Interface::ObjectTreeSource *PartNodeBodyPart::source() const
-{
-    return mObjectTreeParser->mSource;
-}

@@ -58,10 +58,6 @@ class HTMLBlock;
 typedef QSharedPointer<HTMLBlock> HTMLBlockPtr;
 class CryptoBodyPartMemento;
 class MultiPartAlternativeBodyPartFormatter;
-namespace Interface
-{
-class ObjectTreeSource;
-}
 
 class SignedMessagePart;
 class EncryptedMessagePart;
@@ -112,8 +108,6 @@ public:
     const QVector<MessagePart::Ptr> &subParts() const;
     bool hasSubParts() const;
 
-
-    Interface::ObjectTreeSource *source() const;
     KMime::Content *node() const;
 
     QVector<SignedMessagePart*> signatures() const;
@@ -208,7 +202,7 @@ class HtmlMessagePart : public MessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<HtmlMessagePart> Ptr;
-    HtmlMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, MimeTreeParser::Interface::ObjectTreeSource *source);
+    HtmlMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node);
     virtual ~HtmlMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
@@ -216,7 +210,6 @@ public:
     bool isHtml() const Q_DECL_OVERRIDE;
 
 private:
-    Interface::ObjectTreeSource *mSource;
     QString mBodyHTML;
     QByteArray mCharset;
 

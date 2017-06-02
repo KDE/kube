@@ -40,5 +40,5 @@ const Interface::BodyPartFormatter *TextHtmlBodyPartFormatter::create()
 
 MessagePart::Ptr TextHtmlBodyPartFormatter::process(Interface::BodyPart &part) const
 {
-    return HtmlMessagePart::Ptr(new HtmlMessagePart(part.objectTreeParser(), part.content(), part.source()));
+    return HtmlMessagePart::Ptr(new HtmlMessagePart(part.objectTreeParser(), part.content()));
 }
