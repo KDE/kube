@@ -324,8 +324,6 @@ public:
     QString resolveCidLinks(const QString &html);
 
 private:
-    void extractNodeInfos(KMime::Content *curNode, bool isFirstTextPart);
-
     /**
     * Does the actual work for parseObjectTree. Unlike parseObjectTree(), this does not change the
     * top-level content.

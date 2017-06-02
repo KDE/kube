@@ -325,16 +325,17 @@ void ObjectTreeParser::parseObjectTree(KMime::Content *node)
 
     //Gather plaintext and html content
     if (mParsedPart) {
+        //Find relevant plaintext parts and set plaintext
         if (auto mp = toplevelTextNode(mParsedPart)) {
             if (auto _mp = mp.dynamicCast<TextMessagePart>()) {
-                extractNodeInfos(_mp->mNode, true);
+                mPlainTextContent += _mp->mNode->decodedText();
+                mPlainTextContentCharset += NodeHelper::charset(_mp->mNode);
             } else if (auto _mp = mp.dynamicCast<AlternativeMessagePart>()) {
                 if (_mp->mChildNodes.contains(Util::MultipartPlain)) {
-                    extractNodeInfos(_mp->mChildNodes[Util::MultipartPlain], true);
+                    mPlainTextContent += _mp->mChildNodes[Util::MultipartPlain]->decodedText();
+                    mPlainTextContentCharset += NodeHelper::charset(_mp->mChildNodes[Util::MultipartPlain]);
                 }
             }
-            //FIXME this looks like it just overrides what we just extracted...
-            mPlainTextContent = mp->text();
         }
 
         //Find html parts and copy content
@@ -498,14 +499,6 @@ void ProcessResult::adjustCryptoStatesOfNode(const KMime::Content *node) const
             (inlineEncryptionState() != KMMsgNotEncrypted)) {
         mNodeHelper->setSignatureState(node, inlineSignatureState());
         mNodeHelper->setEncryptionState(node, inlineEncryptionState());
-    }
-}
-
-void ObjectTreeParser::extractNodeInfos(KMime::Content *curNode, bool isFirstTextPart)
-{
-    if (isFirstTextPart) {
-        mPlainTextContent += curNode->decodedText();
-        mPlainTextContentCharset += NodeHelper::charset(curNode);
     }
 }
 
