@@ -382,7 +382,6 @@ MessagePartPtr ObjectTreeParser::parsedPart() const
 
 MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, bool onlyOneMimePart)
 {
-    bool bRendered = false;
     const auto sub = mSource->bodyPartFormatterFactory()->subtypeRegistry(mediaType.constData());
     auto range =  sub.equal_range(subType.constData());
     for (auto it = range.first; it != range.second; ++it) {
