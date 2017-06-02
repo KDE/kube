@@ -43,6 +43,15 @@ MessagePart::Ptr MultiPartMixedBodyPartFormatter::process(Interface::BodyPart &p
         return MessagePart::Ptr();
     }
 
+    //In case of multipart/related we relay on the order of the parts.
+    //Theoretically there could also be a Start parameter which would break this..
+    //https://tools.ietf.org/html/rfc2387#section-4
+    bool showOnlyOneMimePart = [&] {
+        if (auto ct = part.content()->contentType(false)) {
+            return ct->mimeType() == "multipart/related";
+        }
+        return false;
+    }();
     // normal treatment of the parts in the mp/mixed container
-    return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), false));
+    return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), showOnlyOneMimePart));
 }

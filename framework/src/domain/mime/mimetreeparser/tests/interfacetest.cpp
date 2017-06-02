@@ -143,11 +143,12 @@ private slots:
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
         QVERIFY(bool(part));
-        QEXPECT_FAIL("", "Somethings wrong with the encoding", Continue);
+        QEXPECT_FAIL("", "Something is wrong with the encoding", Continue);
         // qWarning() << part->text();
         QCOMPARE(part->text(), QString::fromUtf8("asdasd asd asd asdf sadf sdaf sadf äöü"));
         QCOMPARE(part->charset(), QStringLiteral("ISO-8859-15").toLocal8Bit());
 
+        //FIXME
         // QCOMPARE(part->encryptions().size(), 1);
         // QCOMPARE(part->signatures().size(), 1);
         QCOMPARE(otp.collectAttachmentParts().size(), 0);
@@ -172,8 +173,7 @@ private slots:
         // QCOMPARE(contentList[1]->charset(), QStringLiteral("us-ascii").toLocal8Bit());
         // QCOMPARE(contentList[1]->encryptions().size(), 1);
         // QCOMPARE(contentList[1]->signatures().size(), 0);
-        auto contentAttachmentList = otp.collectAttachmentParts();
-        QCOMPARE(contentAttachmentList.size(), 0);
+        QCOMPARE(otp.collectAttachmentParts().size(), 0);
     }
 
     void testEncryptionBlock()
@@ -242,18 +242,15 @@ private slots:
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
         QVERIFY(bool(part));
-    //     QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() <<  "html" << "plaintext");
         QCOMPARE(part->encryptions().size(), 0);
         QCOMPARE(part->signatures().size(), 0);
-    //     auto contentList = contentPart->content("plaintext");
-    //     QCOMPARE(contentList.size(), 1);
         QCOMPARE(otp.collectAttachmentParts().size(), 0);
     }
 
     void testAttachmentPart()
     {
         MimeTreeParser::ObjectTreeParser otp;
-        otp.parseObjectTree(readMailFromFile("cid-links.mbox"));
+        otp.parseObjectTree(readMailFromFile("attachment.mbox"));
         otp.print();
         auto partList = otp.collectAttachmentParts();
         QCOMPARE(partList.size(), 1);
@@ -262,14 +259,6 @@ private slots:
         auto att = part->node();
         qWarning() << "Attachment type: " << att->contentType(true)->mimeType();
         QCOMPARE(part->mimeType(), QByteArray("image/jpeg"));
-
-        // Parser parser(readMailFromFile("cid-links.mbox"));
-        // const auto relatedImage = parser.d->mTree->subParts().at(1);
-        // QCOMPARE(relatedImage->availableContents(),  QVector<QByteArray>() <<  "image/jpeg");
-        // auto contentList = relatedImage->content();
-        // QCOMPARE(contentList.size(), 1);
-        // contentList = relatedImage->content("image/jpeg");
-        // QCOMPARE(contentList.size(), 1);
     }
 
     void testCidLink()
