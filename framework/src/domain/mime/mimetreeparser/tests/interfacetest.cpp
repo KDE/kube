@@ -44,14 +44,11 @@ private slots:
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
         QCOMPARE(part->text(), expectedText);
         QCOMPARE(part->charset(), QStringLiteral("utf-8").toLocal8Bit());
-        //
-        // QCOMPARE(contentList[0]->encryptions().size(), 0);
-        // QCOMPARE(contentList[0]->signatures().size(), 0);
 
-        // contentList = contentPart->content("html");
-        // QCOMPARE(contentList.size(), 0);
-        // auto contentAttachmentList = parser.collectAttachmentParts();
-        // QCOMPARE(contentAttachmentList.size(), 0);
+        QCOMPARE(part->encryptions().size(), 0);
+        QCOMPARE(part->signatures().size(), 0);
+
+        QCOMPARE(otp.collectAttachmentParts().size(), 0);
 
         QCOMPARE(otp.plainTextContent(), expectedText);
         QVERIFY(otp.htmlContent().isEmpty());
@@ -69,10 +66,9 @@ private slots:
         //FIXME html charset is different from plain, and both are not ISO-8859-1
         QCOMPARE(part->charset(), QStringLiteral("ISO-8859-1").toLocal8Bit());
         QCOMPARE(part->htmlContent(), QStringLiteral("<html><body><p><span>HTML</span> text</p></body></html>\n\n"));
-        auto contentAttachmentList = otp.collectAttachmentParts();
-        QCOMPARE(contentAttachmentList.size(), 0);
-    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
-    //     QCOMPARE(contentList[0]->signatures().size(), 0);
+        QCOMPARE(otp.collectAttachmentParts().size(), 0);
+        QCOMPARE(part->encryptions().size(), 0);
+        QCOMPARE(part->signatures().size(), 0);
     }
 
     void testTextHtml()
@@ -87,10 +83,11 @@ private slots:
         QVERIFY(bool(part));
         QCOMPARE(part->htmlContent(), expectedText);
         QCOMPARE(part->charset(), QStringLiteral("windows-1252").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 0);
-    //     QCOMPARE(contentList[0]->signatures().size(), 0);
+        QCOMPARE(part->encryptions().size(), 0);
+        QCOMPARE(part->signatures().size(), 0);
         auto contentAttachmentList = otp.collectAttachmentParts();
         QCOMPARE(contentAttachmentList.size(), 0);
+
         QCOMPARE(otp.htmlContent(), expectedText);
         QVERIFY(otp.plainTextContent().isEmpty());
     }
@@ -106,10 +103,10 @@ private slots:
         QVERIFY(bool(part));
         QCOMPARE(part->text(), QStringLiteral("The quick brown fox jumped over the lazy dog."));
         QCOMPARE(part->charset(), QStringLiteral("us-ascii").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 1);
-    //     QCOMPARE(contentList[0]->signatures().size(), 0);
-    //     auto contentAttachmentList = parser.collectAttachmentParts();
-    //     QCOMPARE(contentAttachmentList.size(), 0);
+        QCOMPARE(part->encryptions().size(), 1);
+        QCOMPARE(part->signatures().size(), 0);
+        auto contentAttachmentList = otp.collectAttachmentParts();
+        QCOMPARE(contentAttachmentList.size(), 0);
     }
 
     void testOpenPGPEncryptedAttachment()
@@ -123,18 +120,18 @@ private slots:
         QVERIFY(bool(part));
         QCOMPARE(part->text(), QStringLiteral("test text"));
         QCOMPARE(part->charset(), QStringLiteral("us-ascii").toLocal8Bit());
-    //     QCOMPARE(contentList[0]->encryptions().size(), 1);
-    //     QCOMPARE(contentList[0]->signatures().size(), 1);
+        QCOMPARE(part->encryptions().size(), 1);
+        QCOMPARE(part->signatures().size(), 1);
         auto contentAttachmentList = otp.collectAttachmentParts();
         QCOMPARE(contentAttachmentList.size(), 2);
     //     QCOMPARE(contentAttachmentList[0]->availableContents(), QVector<QByteArray>() << "text/plain");
-    //     QCOMPARE(contentAttachmentList[0]->content().size(), 1);
-    //     QCOMPARE(contentAttachmentList[0]->encryptions().size(), 1);
-    //     QCOMPARE(contentAttachmentList[0]->signatures().size(), 1);
+        // QCOMPARE(contentAttachmentList[0]->content().size(), 1);
+        QCOMPARE(contentAttachmentList[0]->encryptions().size(), 1);
+        QCOMPARE(contentAttachmentList[0]->signatures().size(), 1);
     //     QCOMPARE(contentAttachmentList[1]->availableContents(), QVector<QByteArray>() << "image/png");
     //     QCOMPARE(contentAttachmentList[1]->content().size(), 1);
-    //     QCOMPARE(contentAttachmentList[1]->encryptions().size(), 0);
-    //     QCOMPARE(contentAttachmentList[1]->signatures().size(), 0);
+        QCOMPARE(contentAttachmentList[1]->encryptions().size(), 0);
+        QCOMPARE(contentAttachmentList[1]->signatures().size(), 0);
     }
 
     void testOpenPGPInline()
@@ -151,10 +148,9 @@ private slots:
         QCOMPARE(part->text(), QString::fromUtf8("asdasd asd asd asdf sadf sdaf sadf äöü"));
         QCOMPARE(part->charset(), QStringLiteral("ISO-8859-15").toLocal8Bit());
 
-        // QCOMPARE(contentList[0]->encryptions().size(), 1);
-        // QCOMPARE(contentList[0]->signatures().size(), 1);
-        // auto contentAttachmentList = parser.collectAttachmentParts();
-        // QCOMPARE(contentAttachmentList.size(), 0);
+        // QCOMPARE(part->encryptions().size(), 1);
+        // QCOMPARE(part->signatures().size(), 1);
+        QCOMPARE(otp.collectAttachmentParts().size(), 0);
     }
 
     void testOpenPPGInlineWithNonEncText()
@@ -189,7 +185,7 @@ private slots:
         QCOMPARE(partList.size(), 1);
         auto part1 = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
         QVERIFY(bool(part1));
-    //     QCOMPARE(contentList[0]->encryptions().size(), 1);
+        QCOMPARE(part1->encryptions().size(), 1);
     //     auto enc = contentList[0]->encryptions()[0];
     //     QCOMPARE((int) enc->recipients().size(), 2);
 
@@ -247,12 +243,11 @@ private slots:
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
         QVERIFY(bool(part));
     //     QCOMPARE(contentPart->availableContents(),  QVector<QByteArray>() <<  "html" << "plaintext");
-    //     QCOMPARE(contentPart->encryptions().size(), 0);
-    //     QCOMPARE(contentPart->signatures().size(), 0);
+        QCOMPARE(part->encryptions().size(), 0);
+        QCOMPARE(part->signatures().size(), 0);
     //     auto contentList = contentPart->content("plaintext");
     //     QCOMPARE(contentList.size(), 1);
-    //     auto contentAttachmentList = parser.collectAttachmentParts();
-    //     QCOMPARE(contentAttachmentList.size(), 0);
+        QCOMPARE(otp.collectAttachmentParts().size(), 0);
     }
 
     void testAttachmentPart()

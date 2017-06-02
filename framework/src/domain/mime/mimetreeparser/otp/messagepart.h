@@ -63,6 +63,9 @@ namespace Interface
 class ObjectTreeSource;
 }
 
+class SignedMessagePart;
+class EncryptedMessagePart;
+
 class MessagePart : public QObject
 {
     Q_OBJECT
@@ -112,6 +115,9 @@ public:
 
     Interface::ObjectTreeSource *source() const;
     KMime::Content *node() const;
+
+    QVector<SignedMessagePart*> signatures() const;
+    QVector<EncryptedMessagePart*> encryptions() const;
 
 protected:
     void parseInternal(KMime::Content *node, bool onlyOneMimePart);

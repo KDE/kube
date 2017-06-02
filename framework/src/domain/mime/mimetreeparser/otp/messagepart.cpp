@@ -264,6 +264,32 @@ bool MessagePart::hasSubParts() const
     return !mBlocks.isEmpty();
 }
 
+QVector<SignedMessagePart*> MessagePart::signatures() const
+{
+    QVector<SignedMessagePart*> list;
+    auto parent = parentPart();
+    while (parent) {
+        if (auto sig = dynamic_cast<SignedMessagePart*>(parent)) {
+            list << sig;
+        }
+        parent = parent->parentPart();
+    }
+    return list;
+}
+
+QVector<EncryptedMessagePart*> MessagePart::encryptions() const
+{
+    QVector<EncryptedMessagePart*> list;
+    auto parent = parentPart();
+    while (parent) {
+        if (auto sig = dynamic_cast<EncryptedMessagePart*>(parent)) {
+            list << sig;
+        }
+        parent = parent->parentPart();
+    }
+    return list;
+}
+
 //-----MessagePartList----------------------
 MessagePartList::MessagePartList(ObjectTreeParser *otp, KMime::Content *node)
     : MessagePart(otp, QString(), node)
