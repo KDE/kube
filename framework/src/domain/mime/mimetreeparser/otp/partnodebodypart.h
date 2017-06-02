@@ -64,10 +64,7 @@ public:
     QString contentTypeParameter(const char *param) const Q_DECL_OVERRIDE;
     QString contentDescription() const Q_DECL_OVERRIDE;
     QString contentDispositionParameter(const char *param) const Q_DECL_OVERRIDE;
-    bool hasCompleteBody() const Q_DECL_OVERRIDE;
 
-    Interface::BodyPartMemento *memento() const Q_DECL_OVERRIDE;
-    void setBodyPartMemento(Interface::BodyPartMemento *memento) Q_DECL_OVERRIDE;
     KMime::Content *content() const Q_DECL_OVERRIDE
     {
         return mContent;

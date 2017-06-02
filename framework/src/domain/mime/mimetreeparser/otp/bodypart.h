@@ -53,10 +53,6 @@ namespace Interface
 
 class ObjectTreeSource;
 
-/*FIXME(Andras) review, port
-  class Observer;
-  class Observable;
-*/
 /**
     @short interface of classes that implement status for BodyPartFormatters.
 */
@@ -66,24 +62,6 @@ public:
     virtual ~BodyPartMemento();
 
     virtual void detach() = 0;
-#if 0
-//FIXME(Andras) review, port
-    /** If your BodyPartMemento implementation also implements the
-    Observer interface, simply implement these as
-    <code>return this;</code>, else as <code>return
-    0;</code>. This is needed to avoid forcing a dependency of
-    plugins on internal KMail classes.
-    */
-    virtual Observer *asObserver() = 0;
-
-    /** If your BodyPartMemento implementation also implements the
-    Observable interface, simply implement these as
-    <code>return this;</code>, else as <code>return
-    0;</code>. This is needed to avoid forcing a dependency of
-    plugins on internal KMail classes.
-    */
-    virtual Observable *asObservable() = 0;
-#endif
 };
 
 /**
@@ -149,24 +127,6 @@ public:
     well.
     */
     virtual QString contentDispositionParameter(const char *parameter) const = 0;
-
-    /**
-    @return whether this part already has it's complete body
-    fetched e.g. from an IMAP server.
-    */
-    virtual bool hasCompleteBody() const = 0;
-
-    /**
-    @return the BodyPartMemento set for this part, or null, if
-    none is set.
-    */
-    virtual BodyPartMemento *memento() const = 0;
-
-    /**
-    @return register an implementation of the BodyPartMemento
-    interface as a status object with this part.
-    */
-    virtual void setBodyPartMemento(BodyPartMemento *) = 0;
 
     /** Returns the KMime::Content node represented here. Makes most of the above obsolete
         and probably should be used in the interfaces in the first place.

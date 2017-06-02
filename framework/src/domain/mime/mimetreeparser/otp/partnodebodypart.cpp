@@ -90,27 +90,6 @@ QString PartNodeBodyPart::contentDispositionParameter(const char *param) const
     return mContent->contentDisposition()->parameter(QString::fromLatin1(param));
 }
 
-bool PartNodeBodyPart::hasCompleteBody() const
-{
-    qCWarning(MIMETREEPARSER_LOG) << "Sorry, not yet implemented.";
-    return true;
-}
-
-Interface::BodyPartMemento *PartNodeBodyPart::memento() const
-{
-    /*TODO(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
-    Also review if the reader's bodyPartMemento should be returned or the NodeHelper's one
-    */
-    return mNodeHelper->bodyPartMemento(mContent, "__plugin__");
-}
-
-void PartNodeBodyPart::setBodyPartMemento(Interface::BodyPartMemento *memento)
-{
-    /*TODO(Andras) Volker suggests to use a ContentIndex->Memento mapping
-    Also review if the reader's bodyPartMemento should be set or the NodeHelper's one */
-    mNodeHelper->setBodyPartMemento(mContent, "__plugin__", memento);
-}
-
 Interface::ObjectTreeSource *PartNodeBodyPart::source() const
 {
     return mObjectTreeParser->mSource;
