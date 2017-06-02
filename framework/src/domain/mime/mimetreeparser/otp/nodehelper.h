@@ -101,19 +101,6 @@ public:
 
     void setBodyPartMemento(KMime::Content *node, const QByteArray &which,
                             Interface::BodyPartMemento *memento);
-
-    /**
-     * Writes the given message part to a temporary file and returns the
-     * name of this file or QString() if writing failed.
-     */
-    QString writeNodeToTempFile(KMime::Content *node);
-
-    /**
-     * Returns the temporary file path and name where this node was saved, or an empty url
-     * if it wasn't saved yet with writeNodeToTempFile()
-     */
-    QUrl tempFileUrlFromNode(const KMime::Content *node);
-
     /**
      * Creates a temporary dir for saving attachments, etc.
      * Will be automatically deleted when another message is viewed.

@@ -206,76 +206,6 @@ void NodeHelper::setPartMetaData(KMime::Content *node, const PartMetaData &metaD
     mPartMetaDatas.insert(node, metaData);
 }
 
-QString NodeHelper::writeNodeToTempFile(KMime::Content *node)
-{
-    // If the message part is already written to a file, no point in doing it again.
-    // This function is called twice actually, once from the rendering of the attachment
-    // in the body and once for the header.
-    QUrl existingFileName = tempFileUrlFromNode(node);
-    if (!existingFileName.isEmpty()) {
-        return existingFileName.toLocalFile();
-    }
-
-    QString fname = createTempDir(persistentIndex(node));
-    if (fname.isEmpty()) {
-        return QString();
-    }
-
-    QString fileName = NodeHelper::fileName(node);
-    // strip off a leading path
-    int slashPos = fileName.lastIndexOf(QLatin1Char('/'));
-    if (-1 != slashPos) {
-        fileName = fileName.mid(slashPos + 1);
-    }
-    if (fileName.isEmpty()) {
-        fileName = QStringLiteral("unnamed");
-    }
-    fname += QLatin1Char('/') + fileName;
-
-    qCDebug(MIMETREEPARSER_LOG) << "Create temp file: " << fname;
-    QByteArray data = node->decodedContent();
-    if (node->contentType()->isText() && !data.isEmpty()) {
-        // convert CRLF to LF before writing text attachments to disk
-        data = KMime::CRLFtoLF(data);
-    }
-    QFile f(fname);
-    if (!f.open(QIODevice::ReadWrite)) {
-        qCWarning(MIMETREEPARSER_LOG) << "Failed to write note to file:" << f.errorString();
-        return QString();
-    }
-    f.write(data);
-    mAttachmentFilesDir->addTempFile(fname);
-    // make file read-only so that nobody gets the impression that he might
-    // edit attached files (cf. bug #52813)
-    f.setPermissions(QFileDevice::ReadUser);
-    f.close();
-
-    return fname;
-}
-
-QUrl NodeHelper::tempFileUrlFromNode(const KMime::Content *node)
-{
-    if (!node) {
-        return QUrl();
-    }
-
-    const QString index = persistentIndex(node);
-
-    foreach (const QString &path, mAttachmentFilesDir->temporaryFiles()) {
-        const int right = path.lastIndexOf(QLatin1Char('/'));
-        int left = path.lastIndexOf(QLatin1String(".index."), right);
-        if (left != -1) {
-            left += 7;
-        }
-
-        QStringRef storedIndex(&path, left, right - left);
-        if (left != -1 && storedIndex == index) {
-            return QUrl::fromLocalFile(path);
-        }
-    }
-    return QUrl();
-}
-
 QString NodeHelper::createTempDir(const QString &param)
 {
     QTemporaryFile *tempFile = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") + QLatin1String(".index.") + param);
@@ -533,7 +463,12 @@ Interface::BodyPartMemento *NodeHelper::bodyPartMemento(KMime::Content *node,
     }
     const QMap<QByteArray, Interface::BodyPartMemento *>::const_iterator it =
         nit->find(which.toLower());
-    return it != nit->end() ? it.value() : nullptr;
+    if (it != nit->end()) {
+        qWarning() << "Cache hit!!!!!!!!!!!!!!!!!";
+        Q_ASSERT(false);
+        return it.value();
+    }
+    return nullptr;
 }
 
 //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalSetBodyPartMemento replacement
@@ -584,6 +519,7 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
                     if (!parentIndex.isEmpty()) {
                         indexStr = QString::fromLatin1("%1:%2").arg(parentIndex, indexStr);
                     }
+                    qWarning() << "Persistentindex: " << indexStr;
                     return indexStr;
                 }
             }
@@ -603,12 +539,14 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
                     if (!parentIndex.isEmpty()) {
                         indexStr = QStringLiteral("%1:%2").arg(parentIndex, indexStr);
                     }
+                    qWarning() << "Persistentindex: " << indexStr;
                     return indexStr;
                 }
             }
         }
     }
 
+    qWarning() << "Persistentindex: " << indexStr;
     return indexStr;
 }
 
