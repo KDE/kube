@@ -72,19 +72,6 @@ ObjectTreeParser::ObjectTreeParser()
     init();
 }
 
-ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
-                                   bool showOnlyOneMimePart
-                                   )
-    : mSource(topLevelParser->mSource),
-      mNodeHelper(topLevelParser->mNodeHelper),
-      mTopLevelContent(topLevelParser->mTopLevelContent),
-      mShowOnlyOneMimePart(showOnlyOneMimePart),
-      mHasPendingAsyncJobs(false),
-      mAllowAsync(topLevelParser->mAllowAsync)
-{
-    init();
-}
-
 ObjectTreeParser::ObjectTreeParser(Interface::ObjectTreeSource *source,
                                    MimeTreeParser::NodeHelper *nodeHelper,
                                    bool showOnlyOneMimePart
@@ -108,18 +95,6 @@ void ObjectTreeParser::init()
     } else {
         mDeleteNodeHelper = false;
     }
-}
-
-ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser &other)
-    : mSource(other.mSource),
-      mNodeHelper(other.nodeHelper()),   //TODO(Andras) hm, review what happens if mDeleteNodeHelper was true in the source
-      mTopLevelContent(other.mTopLevelContent),
-      mShowOnlyOneMimePart(other.showOnlyOneMimePart()),
-      mHasPendingAsyncJobs(other.hasPendingAsyncJobs()),
-      mAllowAsync(other.allowAsync()),
-      mDeleteNodeHelper(false)
-{
-
 }
 
 ObjectTreeParser::~ObjectTreeParser()
@@ -154,18 +129,6 @@ QString ObjectTreeParser::plainTextContent() const
 QString ObjectTreeParser::htmlContent() const
 {
     return mHtmlContent;
-}
-
-void ObjectTreeParser::copyContentFrom(const ObjectTreeParser *other)
-{
-    mPlainTextContent += other->plainTextContent();
-    mHtmlContent += other->htmlContent();
-    if (!other->plainTextContentCharset().isEmpty()) {
-        mPlainTextContentCharset = other->plainTextContentCharset();
-    }
-    if (!other->htmlContentCharset().isEmpty()) {
-        mHtmlContentCharset = other->htmlContentCharset();
-    }
 }
 
 static void print(KMime::Content *node, const QString prefix = {})

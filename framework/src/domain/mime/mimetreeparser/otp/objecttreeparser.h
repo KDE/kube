@@ -264,12 +264,8 @@ the Viewer to scroll to the attachment.
 */
 class ObjectTreeParser
 {
-    /**
-    * @internal
-    * Copies the context of @p other, but not it's rawDecryptedBody, plainTextContent or htmlContent.
-    */
+    //Disable copy
     ObjectTreeParser(const ObjectTreeParser &other);
-
 public:
     explicit ObjectTreeParser();
 
@@ -278,9 +274,6 @@ public:
                               bool showOneMimePart = false
                               );
 
-    explicit ObjectTreeParser(const ObjectTreeParser *topLevelParser,
-                              bool showOneMimePart = false
-                              );
     virtual ~ObjectTreeParser();
 
     void setAllowAsync(bool allow);
@@ -348,8 +341,6 @@ private:
     void init();
 
     const QTextCodec *codecFor(KMime::Content *node) const;
-
-    void copyContentFrom(const ObjectTreeParser *other);
 private:
     Interface::ObjectTreeSource *mSource;
     NodeHelper *mNodeHelper;
