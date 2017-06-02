@@ -66,6 +66,8 @@ QHash<int, QByteArray> NewModel::roleNames() const
     roles[ContentRole] = "content";
     roles[IsComplexHtmlContentRole] = "complexHtmlContent";
     roles[IsEmbededRole] = "embeded";
+    roles[IsEncryptedRole] = "encrypted";
+    roles[IsSignedRole] = "signed";
     roles[SecurityLevelRole] = "securityLevel";
     roles[EncryptionErrorType] = "errorType";
     roles[EncryptionErrorString] = "errorString";
@@ -98,57 +100,6 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
     if (index.internalPointer()) {
         const auto messagePart = dynamic_cast<MimeTreeParser::MessagePart*>(static_cast<MimeTreeParser::MessagePart*>(index.internalPointer()));
         Q_ASSERT(messagePart);
-        // if (_data->userType() ==  qMetaTypeId<Signature *>()) {
-        //     const auto signature = _data->value<Signature *>();
-        //     // int i = d->getPos(signature);
-        //     switch(role) {
-        //     case Qt::DisplayRole:
-        //         return QStringLiteral("Signature%1");
-        //     case TypeRole:
-        //         return QStringLiteral("Signature");
-        //     case SecurityLevelRole:
-        //         return QStringLiteral("RED");
-        //     case IsEmbededRole:
-        //         return data(index.parent(), IsEmbededRole);
-        //     }
-        // } else if (_data->userType() ==  qMetaTypeId<Encryption *>()) {
-        //     const auto encryption = _data->value<Encryption *>();
-        //     switch(role) {
-        //     case Qt::DisplayRole:
-        //         return QStringLiteral("Encryption%1");
-        //     case TypeRole:
-        //         return QStringLiteral("Encryption");
-        //     case SecurityLevelRole:
-        //         return QStringLiteral("GREEN");
-        //     case IsEmbededRole:
-        //         return data(index.parent(), IsEmbededRole);
-        //     case EncryptionErrorType:
-        //         {
-        //             switch(encryption->errorType()) {
-        //             case Encryption::NoError:
-        //                 return QString();
-        //             case Encryption::PassphraseError:
-        //                 return QStringLiteral("PassphraseError");
-        //             case Encryption::KeyMissing:
-        //                 return QStringLiteral("KeyMissing");
-        //             default:
-        //                 return QStringLiteral("UnknownError");
-        //             }
-        //         }
-        //     case EncryptionErrorString:
-        //         return encryption->errorString();
-        //     }
-        // if (_data->userType() ==  qMetaTypeId<Part *>()) {
-        //     const auto part = _data->value<Part *>();
-        //     switch (role) {
-        //     case Qt::DisplayRole:
-        //     case TypeRole:
-        //         return QString::fromLatin1(part->type());
-        //     case IsEmbededRole:
-        //         return data(index.parent(), IsEmbededRole);
-        //     }
-        
-        // const auto content = _data->value<Content *>();
         switch(role) {
             case Qt::DisplayRole:
                 return QStringLiteral("Content%1");
@@ -178,7 +129,6 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
             }
             case ContentRole: {
                 const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
-                qWarning() << "Encoded content: " << text;
                 if (messagePart->isHtml()) {
                     return d->mParser->resolveCidLinks(text);
                 } else { //We assume plain
@@ -187,6 +137,10 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 }
                 return text;
             }
+            case IsEncryptedRole:
+                return messagePart->encryptions().size() > 0;
+            case IsSignedRole:
+                return messagePart->signatures().size() > 0;
         }
     }
     return QVariant();

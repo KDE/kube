@@ -133,11 +133,9 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
         case SizeRole:
             return sizeHuman(content.size());
         case IsEncryptedRole:
-            // return content->encryptions().size() > 0;
-            return false;
+            return part->encryptions().size() > 0;
         case IsSignedRole:
-            // return content->signatures().size() > 0;
-            return false;
+            return part->signatures().size() > 0;
         }
     }
     return QVariant();

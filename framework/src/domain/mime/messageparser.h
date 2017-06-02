@@ -78,6 +78,8 @@ public:
         ContentRole,
         IsComplexHtmlContentRole,
         IsEmbededRole,
+        IsEncryptedRole,
+        IsSignedRole,
         SecurityLevelRole,
         EncryptionErrorType,
         EncryptionErrorString
