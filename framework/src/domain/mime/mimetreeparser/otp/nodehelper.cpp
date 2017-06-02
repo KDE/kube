@@ -206,28 +206,6 @@ void NodeHelper::setPartMetaData(KMime::Content *node, const PartMetaData &metaD
     mPartMetaDatas.insert(node, metaData);
 }
 
-QString NodeHelper::createTempDir(const QString &param)
-{
-    QTemporaryFile *tempFile = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") + QLatin1String(".index.") + param);
-    tempFile->open();
-    const QString fname = tempFile->fileName();
-    delete tempFile;
-
-    QFile fFile(fname);
-    if (!(fFile.permissions() & QFileDevice::WriteUser)) {
-        // Not there or not writable
-        if (!QDir().mkpath(fname) ||
-                !fFile.setPermissions(QFileDevice::WriteUser | QFileDevice::ReadUser | QFileDevice::ExeUser)) {
-            return QString(); //failed create
-        }
-    }
-
-    Q_ASSERT(!fname.isNull());
-
-    mAttachmentFilesDir->addTempDir(fname);
-    return fname;
-}
-
 void NodeHelper::forceCleanTempFiles()
 {
     mAttachmentFilesDir->forceCleanTempFiles();

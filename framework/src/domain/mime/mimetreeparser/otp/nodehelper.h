@@ -101,12 +101,6 @@ public:
 
     void setBodyPartMemento(KMime::Content *node, const QByteArray &which,
                             Interface::BodyPartMemento *memento);
-    /**
-     * Creates a temporary dir for saving attachments, etc.
-     * Will be automatically deleted when another message is viewed.
-     * @param param Optional part of the directory name.
-     */
-    QString createTempDir(const QString &param = QString());
 
     /**
      * Cleanup the attachment temp files
