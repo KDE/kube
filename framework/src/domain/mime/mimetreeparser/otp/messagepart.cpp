@@ -369,9 +369,13 @@ void TextMessagePart::parseContent()
                 appendSubPart(mp);
                 continue;
             } else if (block.type() == ClearsignedBlock) {
-                SignedMessagePart::Ptr mp(new SignedMessagePart(mOtp, QString(), cryptProto, fromAddress, nullptr));
+                KMime::Content *content = new KMime::Content;
+                content->setBody(block.text());
+                content->parse();
+                SignedMessagePart::Ptr mp(new SignedMessagePart(mOtp, QString(), cryptProto, fromAddress, nullptr, content));
+                mp->setIsSigned(true);
                 appendSubPart(mp);
-                mp->startVerification(block.text(), aCodec);
+                continue;
             } else {
                 continue;
             }
@@ -617,10 +621,11 @@ SignedMessagePart::SignedMessagePart(ObjectTreeParser *otp,
                                      const QString &text,
                                      const QGpgME::Protocol *cryptoProto,
                                      const QString &fromAddress,
-                                     KMime::Content *node)
+                                     KMime::Content *node, KMime::Content *signedData)
     : MessagePart(otp, text, node)
     , mCryptoProto(cryptoProto)
     , mFromAddress(fromAddress)
+    , mSignedData(signedData)
 {
     mMetaData.technicalProblem = (mCryptoProto == nullptr);
     mMetaData.isSigned = true;
@@ -848,6 +853,21 @@ void SignedMessagePart::sigStatusToMetaData()
     }
 }
 
+void SignedMessagePart::startVerification()
+{
+    if (mSignedData) {
+        const QByteArray cleartext = KMime::LFtoCRLF(mSignedData->encodedContent());
+        const QTextCodec *aCodec(mOtp->codecFor(mSignedData));
+
+        //The case for pkcs7
+        if (mNode == mSignedData) {
+            startVerificationDetached(cleartext, nullptr, {});
+        } else {
+            startVerificationDetached(cleartext, mSignedData, mNode->decodedContent());
+        }
+    }
+}
+
 void SignedMessagePart::startVerification(const QByteArray &text, const QTextCodec *aCodec)
 {
     startVerificationDetached(text, nullptr, QByteArray());
@@ -875,25 +895,16 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
 
 void SignedMessagePart::setVerificationResult(const CryptoBodyPartMemento *m, KMime::Content *textNode)
 {
-    {
-        const auto vm = dynamic_cast<const VerifyDetachedBodyPartMemento *>(m);
-        if (vm) {
-            mSignatures = vm->verifyResult().signatures();
-        }
+    if (const auto vm = dynamic_cast<const VerifyDetachedBodyPartMemento *>(m)) {
+        mSignatures = vm->verifyResult().signatures();
     }
-    {
-        const auto vm = dynamic_cast<const VerifyOpaqueBodyPartMemento *>(m);
-        if (vm) {
-            mVerifiedText = vm->plainText();
-            mSignatures = vm->verifyResult().signatures();
-        }
+    if (const auto vm = dynamic_cast<const VerifyOpaqueBodyPartMemento *>(m)) {
+        mVerifiedText = vm->plainText();
+        mSignatures = vm->verifyResult().signatures();
     }
-    {
-        const auto vm = dynamic_cast<const DecryptVerifyBodyPartMemento *>(m);
-        if (vm) {
-            mVerifiedText = vm->plainText();
-            mSignatures = vm->verifyResult().signatures();
-        }
+    if (const auto vm = dynamic_cast<const DecryptVerifyBodyPartMemento *>(m)) {
+        mVerifiedText = vm->plainText();
+        mSignatures = vm->verifyResult().signatures();
     }
     mMetaData.auditLogError = m->auditLogError();
     mMetaData.auditLog = m->auditLogAsHtml();
@@ -1065,7 +1076,8 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
         mMetaData.isSigned = verifyResult.signatures().size() > 0;
 
         if (verifyResult.signatures().size() > 0) {
-            auto subPart = SignedMessagePart::Ptr(new SignedMessagePart(mOtp, MessagePart::text(), mCryptoProto, mFromAddress, mNode));
+            //We simply attach a signed message part to indicate that this content is also signed
+            auto subPart = SignedMessagePart::Ptr(new SignedMessagePart(mOtp, QString::fromUtf8(plainText), mCryptoProto, mFromAddress, nullptr, nullptr));
             subPart->setVerificationResult(m, nullptr);
             appendSubPart(subPart);
         }
@@ -1105,19 +1117,12 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     }
 
     if (!bDecryptionOk) {
-        QString cryptPlugLibName;
-        if (mCryptoProto) {
-            cryptPlugLibName = mCryptoProto->name();
-        }
-
         if (!mCryptoProto) {
             mMetaData.errorText = i18n("No appropriate crypto plug-in was found.");
         } else if (cannotDecrypt) {
-            mMetaData.errorText = i18n("Crypto plug-in \"%1\" cannot decrypt messages.",
-                                       cryptPlugLibName);
+            mMetaData.errorText = i18n("Crypto plug-in \"%1\" cannot decrypt messages.", mCryptoProto->name());
         } else if (!passphraseError()) {
-            mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", cryptPlugLibName)
-                                  + QLatin1String("<br />")
+            mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", mCryptoProto->name())
                                   + i18n("Error: %1", mMetaData.errorText);
         }
     }

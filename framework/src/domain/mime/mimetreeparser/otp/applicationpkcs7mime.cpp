@@ -132,29 +132,16 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
 
         const QTextCodec *aCodec(part.objectTreeParser()->codecFor(signTestNode));
         const QByteArray signaturetext = signTestNode->decodedContent();
+        part.nodeHelper()->setSignatureState(node, KMMsgFullySigned);
         auto _mp = SignedMessagePart::Ptr(new SignedMessagePart(part.objectTreeParser(),
                                           aCodec->toUnicode(signaturetext), smimeCrypto,
-                                          part.nodeHelper()->fromAsString(node), signTestNode));
+                                          part.nodeHelper()->fromAsString(node), signTestNode, signTestNode));
         mp = _mp;
-        PartMetaData *messagePart(mp->partMetaData());
-        if (smimeCrypto) {
-            _mp->startVerificationDetached(signaturetext, nullptr, QByteArray());
-        } else {
-            messagePart->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
+        if (!smimeCrypto) {
+            mp->partMetaData()->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
         }
 
-        if (_mp->isSigned()) {
-            if (!isSigned) {
-                qCDebug(MIMETREEPARSER_LOG) << "pkcs7 mime  -  signature found  -  opaque signed data !";
-                isSigned = true;
-            }
 
-            if (signTestNode != node) {
-                part.nodeHelper()->setSignatureState(node, KMMsgFullySigned);
-            }
-        } else {
-            qCDebug(MIMETREEPARSER_LOG) << "pkcs7 mime  -  NO signature found   :-(";
-        }
     }
 
     return mp;

@@ -89,13 +89,9 @@ MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(Interface::BodyPart &
 
     SignedMessagePart::Ptr mp(new SignedMessagePart(part.objectTreeParser(),
                               aCodec->toUnicode(cleartext), protocol,
-                              part.nodeHelper()->fromAsString(node), signature));
-    PartMetaData *messagePart(mp->partMetaData());
-
-    if (protocol) {
-        mp->startVerificationDetached(cleartext, signedData, signature->decodedContent());
-    } else {
-        messagePart->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
+                              part.nodeHelper()->fromAsString(node), signature, signedData));
+    if (!protocol) {
+        mp->partMetaData()->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
     }
 
     return mp;

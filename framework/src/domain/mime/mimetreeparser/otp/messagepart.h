@@ -340,7 +340,7 @@ public:
                       const QString &text,
                       const QGpgME::Protocol *cryptoProto,
                       const QString &fromAddress,
-                      KMime::Content *node);
+                      KMime::Content *node, KMime::Content *signedData);
 
     virtual ~SignedMessagePart();
 
@@ -349,6 +349,7 @@ public:
 
     void startVerification(const QByteArray &text, const QTextCodec *aCodec);
     void startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray &signature);
+    void startVerification();
 
     QByteArray mDecryptedData;
     std::vector<GpgME::Signature> mSignatures;
@@ -371,6 +372,7 @@ protected:
     const QGpgME::Protocol *mCryptoProto;
     QString mFromAddress;
     QByteArray mVerifiedText;
+    KMime::Content *mSignedData;
 
     friend EncryptedMessagePart;
     friend class DefaultRendererPrivate;

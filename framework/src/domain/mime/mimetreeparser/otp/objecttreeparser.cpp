@@ -185,6 +185,11 @@ KMime::Content *ObjectTreeParser::find(const std::function<bool(KMime::Content *
     return ::find(mTopLevelContent, select);
 }
 
+/*
+ * Collect message parts bottom up.
+ * Filter to avoid evaluating a subtree.
+ * Select parts to include it in the result set. Selecting a part in a branch will keep any parent parts from being selected.
+ */
 static QVector<MessagePart::Ptr> collect(MessagePart::Ptr start, const std::function<bool(const MessagePartPtr &)> &filter, const std::function<bool(const MessagePartPtr &)> &select)
 {
     MessagePartPtr ptr = start.dynamicCast<MessagePart>();
@@ -194,12 +199,15 @@ static QVector<MessagePart::Ptr> collect(MessagePart::Ptr start, const std::func
     }
 
     QVector<MessagePart::Ptr> list;
-    if (select(ptr)) {
-        list << start;
-    }
     if (ptr) {
         for (const auto &p: ptr->subParts()) {
             list << ::collect(p, filter, select);
+        }
+    }
+    //Don't consider this part if we already selected a subpart
+    if (list.isEmpty()) {
+        if (select(ptr)) {
+            list << start;
         }
     }
     return list;
@@ -243,12 +251,17 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts()
             } else if (const auto html = dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
                 return true;
             } else if (const auto enc = dynamic_cast<MimeTreeParser::EncryptedMessagePart*>(part.data())) {
+                //TODO Find a better way to detect errors
+                if (!enc->hasSubParts() && enc->partMetaData()->errorText != QStringLiteral("Success")) {
+                    return true;
+                }
+                //If we have a textpart with encrypted and unencrypted subparts we want to return the textpart
                 if (dynamic_cast<MimeTreeParser::TextMessagePart*>(enc->parentPart())) {
                     return false;
                 }
-                if (!enc->hasSubParts() && !enc->partMetaData()->errorText.isEmpty()) {
-                    return true;
-                }
+            } else if (const auto enc = dynamic_cast<MimeTreeParser::SignedMessagePart*>(part.data())) {
+                //Signatures without subparts already contain the text
+                return !enc->hasSubParts();
             }
             return false;
         });
@@ -272,11 +285,20 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
 
 void ObjectTreeParser::decryptParts()
 {
-    QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
+    ::collect(mParsedPart,
         [] (const MessagePartPtr &part) { return true; },
         [] (const MessagePartPtr &part) {
             if (const auto enc = dynamic_cast<MimeTreeParser::EncryptedMessagePart*>(part.data())) {
                 enc->startDecryption();
+            }
+            return false;
+        });
+    print();
+    ::collect(mParsedPart,
+        [] (const MessagePartPtr &part) { return true; },
+        [] (const MessagePartPtr &part) {
+            if (const auto enc = dynamic_cast<MimeTreeParser::SignedMessagePart*>(part.data())) {
+                enc->startVerification();
             }
             return false;
         });

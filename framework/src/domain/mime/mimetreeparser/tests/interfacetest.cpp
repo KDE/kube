@@ -149,10 +149,9 @@ private slots:
         QCOMPARE(partList.size(), 1);
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
         QVERIFY(bool(part));
-        QEXPECT_FAIL("", "Something is wrong with the encoding", Continue);
-        // qWarning() << part->text();
+        QCOMPARE(part->charset(), QStringLiteral("ISO-8859-1").toLocal8Bit());
+        QEXPECT_FAIL("", "gpgpme break encoding it seems, or the original file is broken", Continue);
         QCOMPARE(part->text(), QString::fromUtf8("asdasd asd asd asdf sadf sdaf sadf äöü"));
-        QCOMPARE(part->charset(), QStringLiteral("ISO-8859-15").toLocal8Bit());
 
         //FIXME
         // QCOMPARE(part->encryptions().size(), 1);
@@ -297,6 +296,19 @@ private slots:
         QVERIFY(bool(part));
         auto resolvedContent = otp.resolveCidLinks(part->htmlContent());
         QVERIFY(!resolvedContent.contains("cid:"));
+    }
+
+    void testOpenPGPInlineError()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("inlinepgpgencrypted-error.mbox"));
+        otp.print();
+        otp.decryptParts();
+        otp.print();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QVERIFY(bool(part));
     }
 };
 
