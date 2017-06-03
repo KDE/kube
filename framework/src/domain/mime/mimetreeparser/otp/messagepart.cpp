@@ -261,6 +261,9 @@ bool MessagePart::hasSubParts() const
 QVector<SignedMessagePart*> MessagePart::signatures() const
 {
     QVector<SignedMessagePart*> list;
+    if (auto sig = dynamic_cast<SignedMessagePart*>(const_cast<MessagePart*>(this))) {
+        list << sig;
+    }
     auto parent = parentPart();
     while (parent) {
         if (auto sig = dynamic_cast<SignedMessagePart*>(parent)) {
@@ -274,6 +277,9 @@ QVector<SignedMessagePart*> MessagePart::signatures() const
 QVector<EncryptedMessagePart*> MessagePart::encryptions() const
 {
     QVector<EncryptedMessagePart*> list;
+    if (auto sig = dynamic_cast<EncryptedMessagePart*>(const_cast<MessagePart*>(this))) {
+        list << sig;
+    }
     auto parent = parentPart();
     while (parent) {
         if (auto sig = dynamic_cast<EncryptedMessagePart*>(parent)) {
