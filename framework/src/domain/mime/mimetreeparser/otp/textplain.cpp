@@ -50,8 +50,5 @@ MessagePart::Ptr TextPlainBodyPartFormatter::process(Interface::BodyPart &part) 
         mp = TextMessagePart::Ptr(new AttachmentMessagePart(part.objectTreeParser(), node));
     }
 
-    part.processResult()->setInlineSignatureState(mp->signatureState());
-    part.processResult()->setInlineEncryptionState(mp->encryptionState());
-
     return mp;
 }

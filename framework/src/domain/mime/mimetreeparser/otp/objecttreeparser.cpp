@@ -495,9 +495,6 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
         }
         mNodeHelper->setNodeProcessed(node, false);
 
-        // adjust signed/encrypted flags if inline PGP was found
-        processResult.adjustCryptoStatesOfNode(node);
-
         if (onlyOneMimePart) {
             break;
         }
@@ -521,38 +518,7 @@ MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node, Process
     }
 
     const auto mp = AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node));
-    result.setInlineSignatureState(mp->signatureState());
-    result.setInlineEncryptionState(mp->encryptionState());
     return mp;
-}
-
-KMMsgSignatureState ProcessResult::inlineSignatureState() const
-{
-    return mInlineSignatureState;
-}
-
-void ProcessResult::setInlineSignatureState(KMMsgSignatureState state)
-{
-    mInlineSignatureState = state;
-}
-
-KMMsgEncryptionState ProcessResult::inlineEncryptionState() const
-{
-    return mInlineEncryptionState;
-}
-
-void ProcessResult::setInlineEncryptionState(KMMsgEncryptionState state)
-{
-    mInlineEncryptionState = state;
-}
-
-void ProcessResult::adjustCryptoStatesOfNode(const KMime::Content *node) const
-{
-    if ((inlineSignatureState()  != KMMsgNotSigned) ||
-            (inlineEncryptionState() != KMMsgNotEncrypted)) {
-        mNodeHelper->setSignatureState(node, inlineSignatureState());
-        mNodeHelper->setEncryptionState(node, inlineEncryptionState());
-    }
 }
 
 const QTextCodec *ObjectTreeParser::codecFor(KMime::Content *node) const

@@ -116,10 +116,6 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
         //         }
         //     }
         // }
-
-        if (isEncrypted) {
-            part.nodeHelper()->setEncryptionState(node, KMMsgFullyEncrypted);
-        }
     }
 
     // We now try signature verification if necessarry.
@@ -132,7 +128,6 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
 
         const QTextCodec *aCodec(part.objectTreeParser()->codecFor(signTestNode));
         const QByteArray signaturetext = signTestNode->decodedContent();
-        part.nodeHelper()->setSignatureState(node, KMMsgFullySigned);
         auto _mp = SignedMessagePart::Ptr(new SignedMessagePart(part.objectTreeParser(),
                                           aCodec->toUnicode(signaturetext), smimeCrypto,
                                           part.nodeHelper()->fromAsString(node), signTestNode, signTestNode));

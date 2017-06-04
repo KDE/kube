@@ -60,8 +60,6 @@ MessagePart::Ptr ApplicationPGPEncryptedBodyPartFormatter::process(Interface::Bo
         return MessagePart::Ptr(); //new MimeMessagePart(part.objectTreeParser(), node, false));
     }
 
-    part.nodeHelper()->setEncryptionState(node, KMMsgFullyEncrypted);
-
     EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(part.objectTreeParser(),
                                  data->decodedText(), QGpgME::openpgp(),
                                  part.nodeHelper()->fromAsString(data), node, data));

@@ -935,7 +935,6 @@ void SignedMessagePart::setVerificationResult(const CryptoBodyPartMemento *m, KM
     if (mMetaData.isSigned) {
         sigStatusToMetaData();
         if (mNode) {
-            mOtp->nodeHelper()->setSignatureState(mNode, KMMsgFullySigned);
             if (!textNode) {
                 mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
 

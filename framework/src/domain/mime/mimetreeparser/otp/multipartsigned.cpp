@@ -82,8 +82,6 @@ MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(Interface::BodyPart &
 
     part.nodeHelper()->setNodeProcessed(signature, true);
 
-    part.nodeHelper()->setSignatureState(node, KMMsgFullySigned);
-
     const QByteArray cleartext = KMime::LFtoCRLF(signedData->encodedContent());
     const QTextCodec *aCodec(part.objectTreeParser()->codecFor(signedData));
 

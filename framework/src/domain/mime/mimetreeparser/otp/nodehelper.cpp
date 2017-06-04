@@ -143,8 +143,6 @@ bool NodeHelper::nodeProcessed(KMime::Content *node) const
 void NodeHelper::clear()
 {
     mProcessedNodes.clear();
-    mEncryptionState.clear();
-    mSignatureState.clear();
     mOverrideCodecs.clear();
     QMap<KMime::Content *, QList<KMime::Content *> >::ConstIterator end(mExtraContents.constEnd());
 
@@ -161,25 +159,6 @@ void NodeHelper::clear()
     mExtraContents.clear();
 }
 
-void NodeHelper::setEncryptionState(const KMime::Content *node, const KMMsgEncryptionState state)
-{
-    mEncryptionState[node] = state;
-}
-
-KMMsgEncryptionState NodeHelper::encryptionState(const KMime::Content *node) const
-{
-    return mEncryptionState.value(node, KMMsgNotEncrypted);
-}
-
-void NodeHelper::setSignatureState(const KMime::Content *node, const KMMsgSignatureState state)
-{
-    mSignatureState[node] = state;
-}
-
-KMMsgSignatureState NodeHelper::signatureState(const KMime::Content *node) const
-{
-    return mSignatureState.value(node, KMMsgNotSigned);
-}
 
 PartMetaData NodeHelper::partMetaData(KMime::Content *node)
 {
@@ -232,122 +211,6 @@ QByteArray NodeHelper::charset(KMime::Content *node)
     } else {
         return node->defaultCharset();
     }
-}
-
-KMMsgEncryptionState NodeHelper::overallEncryptionState(KMime::Content *node) const
-{
-    KMMsgEncryptionState myState = KMMsgEncryptionStateUnknown;
-    if (!node) {
-        return myState;
-    }
-
-    KMime::Content *parent = node->parent();
-    auto contents = parent ?  parent->contents() : KMime::Content::List();
-    if (contents.isEmpty()) {
-        contents.append(node);
-    }
-    int i = contents.indexOf(const_cast<KMime::Content *>(node));
-    for (; i < contents.size(); ++i) {
-        auto next = contents.at(i);
-        KMMsgEncryptionState otherState = encryptionState(next);
-
-        // NOTE: children are tested ONLY when parent is not encrypted
-        if (otherState == KMMsgNotEncrypted && !next->contents().isEmpty()) {
-            otherState = overallEncryptionState(next->contents().at(0));
-        }
-
-        if (otherState == KMMsgNotEncrypted && !extraContents(next).isEmpty()) {
-            otherState = overallEncryptionState(extraContents(next).at(0));
-        }
-
-        if (next == node) {
-            myState = otherState;
-        }
-
-        switch (otherState) {
-        case KMMsgEncryptionStateUnknown:
-            break;
-        case KMMsgNotEncrypted:
-            if (myState == KMMsgFullyEncrypted) {
-                myState = KMMsgPartiallyEncrypted;
-            } else if (myState != KMMsgPartiallyEncrypted) {
-                myState = KMMsgNotEncrypted;
-            }
-            break;
-        case KMMsgPartiallyEncrypted:
-            myState = KMMsgPartiallyEncrypted;
-            break;
-        case KMMsgFullyEncrypted:
-            if (myState != KMMsgFullyEncrypted) {
-                myState = KMMsgPartiallyEncrypted;
-            }
-            break;
-        case KMMsgEncryptionProblematic:
-            break;
-        }
-    }
-
-    qCDebug(MIMETREEPARSER_LOG) << "\n\n  KMMsgEncryptionState:" << myState;
-
-    return myState;
-}
-
-KMMsgSignatureState NodeHelper::overallSignatureState(KMime::Content *node) const
-{
-    KMMsgSignatureState myState = KMMsgSignatureStateUnknown;
-    if (!node) {
-        return myState;
-    }
-
-    KMime::Content *parent = node->parent();
-    auto contents = parent ? parent->contents() : KMime::Content::List();
-    if (contents.isEmpty()) {
-        contents.append(node);
-    }
-    int i = contents.indexOf(const_cast<KMime::Content *>(node));
-    for (; i < contents.size(); ++i) {
-        auto next = contents.at(i);
-        KMMsgSignatureState otherState = signatureState(next);
-
-        // NOTE: children are tested ONLY when parent is not encrypted
-        if (otherState == KMMsgNotSigned && !next->contents().isEmpty()) {
-            otherState = overallSignatureState(next->contents().at(0));
-        }
-
-        if (otherState == KMMsgNotSigned && !extraContents(next).isEmpty()) {
-            otherState = overallSignatureState(extraContents(next).at(0));
-        }
-
-        if (next == node) {
-            myState = otherState;
-        }
-
-        switch (otherState) {
-        case KMMsgSignatureStateUnknown:
-            break;
-        case KMMsgNotSigned:
-            if (myState == KMMsgFullySigned) {
-                myState = KMMsgPartiallySigned;
-            } else if (myState != KMMsgPartiallySigned) {
-                myState = KMMsgNotSigned;
-            }
-            break;
-        case KMMsgPartiallySigned:
-            myState = KMMsgPartiallySigned;
-            break;
-        case KMMsgFullySigned:
-            if (myState != KMMsgFullySigned) {
-                myState = KMMsgPartiallySigned;
-            }
-            break;
-        case KMMsgSignatureProblematic:
-            break;
-        }
-    }
-
-    qCDebug(MIMETREEPARSER_LOG) << "\n\n  KMMsgSignatureState:" << myState;
-
-    return myState;
 }
 
 void NodeHelper::magicSetType(KMime::Content *node, bool aAutoDecode)

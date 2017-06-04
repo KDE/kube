@@ -60,30 +60,16 @@ typedef QSharedPointer<MimeMessagePart> MimeMessagePartPtr;
 class ProcessResult
 {
 public:
-    explicit ProcessResult(NodeHelper *nodeHelper, KMMsgSignatureState  inlineSignatureState  = KMMsgNotSigned,
-                           KMMsgEncryptionState inlineEncryptionState = KMMsgNotEncrypted,
+    explicit ProcessResult(NodeHelper *nodeHelper,
                            bool neverDisplayInline = false,
                            bool isImage = false)
-        : mInlineSignatureState(inlineSignatureState),
-          mInlineEncryptionState(inlineEncryptionState),
-          mIsImage(isImage),
+        : mIsImage(isImage),
           mNodeHelper(nodeHelper) {}
-
-    KMMsgSignatureState inlineSignatureState() const;
-    void setInlineSignatureState(KMMsgSignatureState state);
-
-    KMMsgEncryptionState inlineEncryptionState() const;
-    void setInlineEncryptionState(KMMsgEncryptionState state);
-
 
     bool isImage() const;
     void setIsImage(bool image);
 
-    void adjustCryptoStatesOfNode(const KMime::Content *node) const;
-
 private:
-    KMMsgSignatureState mInlineSignatureState;
-    KMMsgEncryptionState mInlineEncryptionState;
     bool mNeverDisplayInline : 1;
     bool mIsImage : 1;
     NodeHelper *mNodeHelper;

@@ -74,8 +74,6 @@ MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(Interface::BodyPar
         return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0), false));
     }
 
-    part.nodeHelper()->setEncryptionState(node, KMMsgFullyEncrypted);
-
     EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(part.objectTreeParser(),
                                  data->decodedText(),
                                  useThisCryptProto,
