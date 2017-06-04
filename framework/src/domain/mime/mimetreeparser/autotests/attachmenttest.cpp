@@ -22,6 +22,7 @@
 #include "setupenv.h"
 
 #include <qtest.h>
+#include <QDebug>
 
 using namespace MimeTreeParser;
 
@@ -58,10 +59,10 @@ void AttachmentTest::testEncryptedAttachment()
     ObjectTreeParser otp(&nodeHelper);
     otp.parseObjectTree(msg.data());
     otp.decryptParts();
+    otp.print();
 
-    auto attachments = msg->attachments();
-    auto encAtts = nodeHelper.attachmentsOfExtraContents();
-    QCOMPARE(attachments.size() + encAtts.size(), 2);
+    auto attachmentParts = otp.collectAttachmentParts();
+    QCOMPARE(attachmentParts.size(), 2);
 }
 
 #include "attachmenttest.moc"

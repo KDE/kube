@@ -76,11 +76,6 @@ public:
     /** Get the extra nodes attached to the @param topLevelNode and all sub-nodes of @param topLevelNode */
     QList<KMime::Content *> extraContents(KMime::Content *topLevelNode) const;
 
-    /** Return a modified message (node tree) starting from @param topLevelNode that has the original nodes and the extra nodes.
-        The caller has the responsibility to delete the new message.
-     */
-    KMime::Message *messageWithExtraContent(KMime::Content *topLevelNode);
-
     /** Get a QTextCodec suitable for this message part */
     const QTextCodec *codec(KMime::Content *node);
 
@@ -149,14 +144,6 @@ public:
 
     QString fromAsString(KMime::Content *node) const;
 
-    /**
-     * Returns a list of attachments of attached extra content nodes.
-     * This is mainly useful is order to get attachments of encrypted messages.
-     * Note that this does not include attachments from the primary node tree.
-     * @see KMime::Content::attachments().
-     */
-    QVector<KMime::Content *> attachmentsOfExtraContents() const;
-
 Q_SIGNALS:
     void update(MimeTreeParser::UpdateMode);
 
@@ -164,9 +151,6 @@ private:
     Q_DISABLE_COPY(NodeHelper)
     bool unencryptedMessage_helper(KMime::Content *node, QByteArray &resultingData, bool addHeaders,
                                    int recursionLevel = 1);
-
-    void mergeExtraNodes(KMime::Content *node);
-    void cleanFromExtraNodes(KMime::Content *node);
 
     /** Creates a persistent index string that bridges the gap between the
         permanent nodes and the temporary ones.

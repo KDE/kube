@@ -185,7 +185,10 @@ PartMetaData *MessagePart::partMetaData()
 
 bool MessagePart::isAttachment() const
 {
-    return true;
+    if (mNode) {
+        return KMime::isAttachment(mNode);
+    }
+    return false;
 }
 
 KMime::Content *MessagePart::node() const

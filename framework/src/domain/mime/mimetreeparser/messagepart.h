@@ -83,7 +83,7 @@ public:
 
     virtual QString text() const;
     void setText(const QString &text);
-    bool isAttachment() const;
+    virtual bool isAttachment() const;
 
     void setIsRoot(bool root);
     bool isRoot() const;
@@ -196,6 +196,7 @@ public:
     typedef QSharedPointer<AttachmentMessagePart> Ptr;
     AttachmentMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node);
     virtual ~AttachmentMessagePart();
+    virtual bool isAttachment() const Q_DECL_OVERRIDE { return true; }
 
 };
 

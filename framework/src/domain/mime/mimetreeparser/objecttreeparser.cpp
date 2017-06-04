@@ -278,10 +278,7 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
             return true;
         },
         [] (const MessagePartPtr &part) {
-            if (const auto attachment = dynamic_cast<MimeTreeParser::AttachmentMessagePart*>(part.data())) {
-                return true;
-            }
-            return false;
+            return part->isAttachment();
         });
     return contentParts;
 }
@@ -296,7 +293,6 @@ void ObjectTreeParser::decryptParts()
             }
             return false;
         });
-    print();
     ::collect(mParsedPart,
         [] (const MessagePartPtr &part) { return true; },
         [] (const MessagePartPtr &part) {
