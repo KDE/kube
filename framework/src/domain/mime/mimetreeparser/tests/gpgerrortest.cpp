@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <otp/objecttreeparser.h>
+#include <objecttreeparser.h>
 
 #include <QGpgME/Protocol>
 #include <gpgme++/context.h>

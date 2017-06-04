@@ -16,8 +16,7 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include <otp/objecttreeparser.h>
-#include <otp/messagepart.h>
+#include <objecttreeparser.h>
 
 #include <QTest>
 #include <QDebug>

@@ -19,8 +19,7 @@
 
 #include "partmodel.h"
 
-#include "mimetreeparser/otp/objecttreeparser.h"
-#include "mimetreeparser/otp/messagepart.h"
+#include <mimetreeparser/objecttreeparser.h>
 #include "htmlutils.h"
 
 #include <QDebug>

@@ -1,5 +1,3 @@
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_definitions("-fvisibility=default")
 
 find_package(Qt5 COMPONENTS REQUIRED Core Gui)
@@ -73,4 +71,4 @@ target_link_libraries(kube_otp
 install(TARGETS kube_otp DESTINATION ${LIB_INSTALL_DIR})
 
 add_subdirectory(autotests)
-#add_subdirectory(tests)
+add_subdirectory(tests)

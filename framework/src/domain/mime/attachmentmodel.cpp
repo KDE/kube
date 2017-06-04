@@ -20,8 +20,7 @@
 
 #include "attachmentmodel.h"
 
-#include <otp/objecttreeparser.h>
-#include <otp/messagepart.h>
+#include <mimetreeparser/objecttreeparser.h>
 
 #include <QDebug>
 #include <KMime/Content>

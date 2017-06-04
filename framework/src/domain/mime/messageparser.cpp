@@ -21,7 +21,7 @@
 #include "partmodel.h"
 #include "attachmentmodel.h"
 #include "modeltest.h"
-#include <otp/objecttreeparser.h>
+#include <mimetreeparser/objecttreeparser.h>
 
 #include <QDebug>
 
