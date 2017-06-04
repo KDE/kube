@@ -17,7 +17,8 @@
     02110-1301, USA.
 */
 
-#include "messageparser.h"
+#include "partmodel.h"
+
 #include "mimetreeparser/otp/objecttreeparser.h"
 #include "mimetreeparser/otp/messagepart.h"
 #include "htmlutils.h"
@@ -26,19 +27,19 @@
 #include <QMimeDatabase>
 #include <QTextDocument>
 
-class NewModelPrivate
+class PartModelPrivate
 {
 public:
-    NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser);
-    ~NewModelPrivate();
+    PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser);
+    ~PartModelPrivate();
 
     void createTree();
-    NewModel *q;
+    PartModel *q;
     QVector<MimeTreeParser::MessagePartPtr> mParts;
     std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
 };
 
-NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser)
+PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser)
     : q(q_ptr)
     , mParser(parser)
 {
@@ -46,20 +47,20 @@ NewModelPrivate::NewModelPrivate(NewModel *q_ptr, const std::shared_ptr<MimeTree
     qWarning() << "Collected content parts: " << mParts.size();
 }
 
-NewModelPrivate::~NewModelPrivate()
+PartModelPrivate::~PartModelPrivate()
 {
 }
 
-NewModel::NewModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser)
-    : d(std::unique_ptr<NewModelPrivate>(new NewModelPrivate(this, parser)))
+PartModel::PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser)
+    : d(std::unique_ptr<PartModelPrivate>(new PartModelPrivate(this, parser)))
 {
 }
 
-NewModel::~NewModel()
+PartModel::~PartModel()
 {
 }
 
-QHash<int, QByteArray> NewModel::roleNames() const
+QHash<int, QByteArray> PartModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[TypeRole] = "type";
@@ -74,7 +75,7 @@ QHash<int, QByteArray> NewModel::roleNames() const
     return roles;
 }
 
-QModelIndex NewModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex PartModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (row < 0 || column != 0) {
         return QModelIndex();
@@ -85,7 +86,7 @@ QModelIndex NewModel::index(int row, int column, const QModelIndex &parent) cons
     return QModelIndex();
 }
 
-QVariant NewModel::data(const QModelIndex &index, int role) const
+QVariant PartModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         switch (role) {
@@ -99,6 +100,7 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
 
     if (index.internalPointer()) {
         const auto messagePart = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
+        qWarning() << "Found message part " << messagePart->metaObject()->className() << messagePart->partMetaData()->status << messagePart->error();
         Q_ASSERT(messagePart);
         switch(role) {
             case Qt::DisplayRole:
@@ -162,17 +164,17 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QModelIndex NewModel::parent(const QModelIndex &index) const
+QModelIndex PartModel::parent(const QModelIndex &index) const
 {
     return QModelIndex();
 }
 
-int NewModel::rowCount(const QModelIndex &parent) const
+int PartModel::rowCount(const QModelIndex &parent) const
 {
     return d->mParts.count();
 }
 
-int NewModel::columnCount(const QModelIndex &parent) const
+int PartModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }

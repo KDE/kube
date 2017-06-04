@@ -317,7 +317,7 @@ Rectangle {
             anchors.top: body.top
             anchors.left: body.left
             anchors.right: body.right
-            model: messageParser.newTree
+            model: messageParser.parts
             debug: false
         }
 

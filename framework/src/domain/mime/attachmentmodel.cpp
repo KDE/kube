@@ -18,7 +18,8 @@
     02110-1301, USA.
 */
 
-#include "messageparser.h"
+#include "attachmentmodel.h"
+
 #include <otp/objecttreeparser.h>
 #include <otp/messagepart.h>
 

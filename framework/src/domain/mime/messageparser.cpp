@@ -18,6 +18,8 @@
 */
 #include "messageparser.h"
 
+#include "partmodel.h"
+#include "attachmentmodel.h"
 #include "modeltest.h"
 #include <otp/objecttreeparser.h>
 
@@ -60,12 +62,12 @@ QString MessageParser::rawContent() const
     return mRawContent;
 }
 
-QAbstractItemModel *MessageParser::newTree() const
+QAbstractItemModel *MessageParser::parts() const
 {
     if (!d->mParser) {
         return nullptr;
     }
-    const auto model = new NewModel(d->mParser);
+    const auto model = new PartModel(d->mParser);
     // new ModelTest(model, model);
     return model;
 }
