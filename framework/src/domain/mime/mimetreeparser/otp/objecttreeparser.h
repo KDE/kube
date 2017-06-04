@@ -57,24 +57,6 @@ class MimeMessagePart;
 typedef QSharedPointer<MessagePart> MessagePartPtr;
 typedef QSharedPointer<MimeMessagePart> MimeMessagePartPtr;
 
-class ProcessResult
-{
-public:
-    explicit ProcessResult(NodeHelper *nodeHelper,
-                           bool neverDisplayInline = false,
-                           bool isImage = false)
-        : mIsImage(isImage),
-          mNodeHelper(nodeHelper) {}
-
-    bool isImage() const;
-    void setIsImage(bool image);
-
-private:
-    bool mNeverDisplayInline : 1;
-    bool mIsImage : 1;
-    NodeHelper *mNodeHelper;
-};
-
 /**
 \brief Parses messages and generates HTML display code out of them
 
@@ -315,9 +297,9 @@ private:
     * top-level content.
     */
     MessagePartPtr parseObjectTreeInternal(KMime::Content *node, bool mOnlyOneMimePart);
-    MessagePartPtr processType(KMime::Content *node, MimeTreeParser::ProcessResult &processResult, const QByteArray &mediaType, const QByteArray &subType, bool onlyOneMimePart);
+    MessagePartPtr processType(KMime::Content *node, const QByteArray &mediaType, const QByteArray &subType, bool onlyOneMimePart);
 
-    MessagePartPtr defaultHandling(KMime::Content *node, MimeTreeParser::ProcessResult &result, bool onlyOneMimePart);
+    MessagePartPtr defaultHandling(KMime::Content *node, bool onlyOneMimePart);
 
 private:
 

@@ -128,16 +128,12 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
 
         const QTextCodec *aCodec(part.objectTreeParser()->codecFor(signTestNode));
         const QByteArray signaturetext = signTestNode->decodedContent();
-        auto _mp = SignedMessagePart::Ptr(new SignedMessagePart(part.objectTreeParser(),
+        auto mp = SignedMessagePart::Ptr(new SignedMessagePart(part.objectTreeParser(),
                                           aCodec->toUnicode(signaturetext), smimeCrypto,
                                           part.nodeHelper()->fromAsString(node), signTestNode, signTestNode));
-        mp = _mp;
         if (!smimeCrypto) {
             mp->partMetaData()->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
         }
-
-
     }
-
     return mp;
 }

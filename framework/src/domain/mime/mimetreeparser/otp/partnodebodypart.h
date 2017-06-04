@@ -55,7 +55,7 @@ namespace MimeTreeParser
 class PartNodeBodyPart : public Interface::BodyPart
 {
 public:
-    explicit PartNodeBodyPart(ObjectTreeParser *otp, ProcessResult *result, KMime::Content *topLevelContent, KMime::Content *content,
+    explicit PartNodeBodyPart(ObjectTreeParser *otp, KMime::Content *topLevelContent, KMime::Content *content,
                               NodeHelper *nodeHelper);
 
     QString makeLink(const QString &path) const Q_DECL_OVERRIDE;
@@ -83,17 +83,11 @@ public:
         return mObjectTreeParser;
     }
 
-    ProcessResult *processResult() const Q_DECL_OVERRIDE
-    {
-        return mProcessResult;
-    }
-
 private:
     KMime::Content *mTopLevelContent;
     KMime::Content *mContent;
     NodeHelper *mNodeHelper;
     ObjectTreeParser *mObjectTreeParser;
-    ProcessResult *mProcessResult;
 };
 
 }
