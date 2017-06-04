@@ -307,8 +307,9 @@ private slots:
         otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
-        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        auto part = partList[0].dynamicCast<MimeTreeParser::EncryptedMessagePart>();
         QVERIFY(bool(part));
+        QVERIFY(part->error());
     }
 };
 
