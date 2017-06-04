@@ -134,8 +134,6 @@ private:
 private:
     QList<KMime::Content *> mProcessedNodes;
     QList<KMime::Content *> mNodesUnderProcess;
-    QSet<KMime::Content *> mDisplayEmbeddedNodes;
-    QSet<KMime::Content *> mDisplayHiddenNodes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content *, const QTextCodec *> mOverrideCodecs;
     QMap<KMime::Content *, PartMetaData> mPartMetaDatas;
