@@ -52,15 +52,12 @@ DelegateModel {
                                         "securityLevel": model.securityLevel,
                                         "debug": debug})
                     break;
-                // case "error":
-                //     partLoader.setSource("EncryptionPart.qml",
-                //                         {"rootIndex": mailDataModel.modelIndex(index),
-                //                         "securityLevel": model.securityLevel,
-                //                         "type": model.type,
-                //                         "model": mailDataModel.model,
-                //                         "errorType": model.errorType,
-                //                         "errorString": model.errorString,
-                //                         "debug": debug})
+                case "error":
+                    partLoader.setSource("ErrorPart.qml",
+                                        {
+                                        "errorType": model.errorType,
+                                        "errorString": model.errorString,
+                                        })
                     break;
                 case "envelope":
                     partLoader.setSource("MailPart.qml",
