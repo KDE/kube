@@ -101,6 +101,8 @@ public:
     QString filename() const;
     Disposition disposition() const;
     bool isText() const;
+    int error() const;
+    QString errorString() const;
 
     PartMetaData *partMetaData();
 

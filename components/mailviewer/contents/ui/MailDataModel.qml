@@ -42,31 +42,25 @@ DelegateModel {
                     partLoader.setSource("TextContent.qml",
                                         {"content": model.content,
                                         "embedded": model.embeded,
+                                        "securityLevel": model.securityLevel,
                                         "type": model.type,
                                         "debug": debug})
                     break
                 case "html":
                     partLoader.setSource("HtmlContent.qml",
                                         {"content": model.content,
+                                        "securityLevel": model.securityLevel,
                                         "debug": debug})
                     break;
-                case "signature":
-                    partLoader.setSource("SignaturePart.qml",
-                                        {"rootIndex": mailDataModel.modelIndex(index),
-                                        "securityLevel": model.securityLevel,
-                                        "model": mailDataModel.model,
-                                        "type": model.type,
-                                        "debug": debug})
-                    break;
-                case "encryption":
-                    partLoader.setSource("EncryptionPart.qml",
-                                        {"rootIndex": mailDataModel.modelIndex(index),
-                                        "securityLevel": model.securityLevel,
-                                        "type": model.type,
-                                        "model": mailDataModel.model,
-                                        "errorType": model.errorType,
-                                        "errorString": model.errorString,
-                                        "debug": debug})
+                // case "error":
+                //     partLoader.setSource("EncryptionPart.qml",
+                //                         {"rootIndex": mailDataModel.modelIndex(index),
+                //                         "securityLevel": model.securityLevel,
+                //                         "type": model.type,
+                //                         "model": mailDataModel.model,
+                //                         "errorType": model.errorType,
+                //                         "errorString": model.errorString,
+                //                         "debug": debug})
                     break;
                 case "envelope":
                     partLoader.setSource("MailPart.qml",

@@ -68,6 +68,8 @@ QHash<int, QByteArray> NewModel::roleNames() const
     roles[IsEncryptedRole] = "encrypted";
     roles[IsSignedRole] = "signed";
     roles[SecurityLevelRole] = "securityLevel";
+    roles[EncryptionErrorType] = "errorType";
+    roles[EncryptionErrorString] = "errorString";
     roles[IsErrorRole] = "error";
     return roles;
 }
@@ -102,6 +104,9 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
             case Qt::DisplayRole:
                 return QStringLiteral("Content%1");
             case TypeRole: {
+                if (messagePart->error()) {
+                    return "error";
+                }
                 //For simple html we don't need a browser
                 auto complexHtml = [&] {
                     if (messagePart->isHtml()) {
@@ -129,7 +134,7 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
             case IsEmbededRole:
                 return false;
             case IsErrorRole:
-                return !messagePart->partMetaData()->errorText.isEmpty();
+                return messagePart->error();
             case ContentRole: {
                 auto errorText = messagePart->partMetaData()->errorText;
                 if (!errorText.isEmpty()) {
@@ -148,6 +153,10 @@ QVariant NewModel::data(const QModelIndex &index, int role) const
                 return messagePart->encryptions().size() > 0;
             case IsSignedRole:
                 return messagePart->signatures().size() > 0;
+            case EncryptionErrorType:
+                return messagePart->error();
+            case EncryptionErrorString:
+                return messagePart->errorString();
         }
     }
     return QVariant();

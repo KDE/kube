@@ -162,6 +162,22 @@ bool MessagePart::isText() const
     return false;
 }
 
+int MessagePart::error() const
+{
+    if (dynamic_cast<const EncryptedMessagePart*>(this)) {
+        //TODO Find a better way to detect errors
+        if (mMetaData.errorText != QStringLiteral("Success")) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+QString MessagePart::errorString() const
+{
+    return mMetaData.errorText;
+}
+
 PartMetaData *MessagePart::partMetaData()
 {
     return &mMetaData;

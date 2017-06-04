@@ -245,23 +245,26 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts()
             if (const auto attachment = dynamic_cast<MimeTreeParser::AttachmentMessagePart*>(part.data())) {
                 return false;
             } else if (const auto text = dynamic_cast<MimeTreeParser::TextMessagePart*>(part.data())) {
+                auto enc = dynamic_cast<MimeTreeParser::EncryptedMessagePart*>(text->parentPart());
+                if (enc && enc->error()) {
+                    return false;
+                }
                 return true;
             } else if (const auto alternative = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(part.data())) {
                 return true;
             } else if (const auto html = dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
                 return true;
             } else if (const auto enc = dynamic_cast<MimeTreeParser::EncryptedMessagePart*>(part.data())) {
-                //TODO Find a better way to detect errors
-                if (!enc->hasSubParts() && enc->partMetaData()->errorText != QStringLiteral("Success")) {
+                if (enc->error()) {
                     return true;
                 }
                 //If we have a textpart with encrypted and unencrypted subparts we want to return the textpart
                 if (dynamic_cast<MimeTreeParser::TextMessagePart*>(enc->parentPart())) {
                     return false;
                 }
-            } else if (const auto enc = dynamic_cast<MimeTreeParser::SignedMessagePart*>(part.data())) {
+            } else if (const auto sig = dynamic_cast<MimeTreeParser::SignedMessagePart*>(part.data())) {
                 //Signatures without subparts already contain the text
-                return !enc->hasSubParts();
+                return !sig->hasSubParts();
             }
             return false;
         });
