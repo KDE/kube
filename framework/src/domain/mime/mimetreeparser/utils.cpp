@@ -31,7 +31,6 @@ MimeMessagePart::Ptr MimeTreeParser::createAndParseTempNode(Interface::BodyPart 
     if (!newNode->head().isEmpty()) {
         newNode->contentDescription()->from7BitString(cntDesc);
     }
-    part.nodeHelper()->attachExtraContent(parentNode, newNode);
 
     return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), newNode, false));
 }

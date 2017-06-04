@@ -949,7 +949,6 @@ void SignedMessagePart::setVerificationResult(const CryptoBodyPartMemento *m, KM
                     if (!tempNode->head().isEmpty()) {
                         tempNode->contentDescription()->from7BitString("signed data");
                     }
-                    mOtp->mNodeHelper->attachExtraContent(mNode, tempNode);
 
                     parseInternal(tempNode, false);
                 }
@@ -1193,7 +1192,6 @@ void EncryptedMessagePart::startDecryption(KMime::Content *data)
         if (!tempNode->head().isEmpty()) {
             tempNode->contentDescription()->from7BitString("encrypted data");
         }
-        mOtp->mNodeHelper->attachExtraContent(mNode, tempNode);
 
         parseInternal(tempNode, false);
     }

@@ -46,8 +46,7 @@
 namespace MimeTreeParser
 {
 
-NodeHelper::NodeHelper() :
-    mAttachmentFilesDir(new AttachmentTemporaryFilesDirs())
+NodeHelper::NodeHelper()
 {
     //TODO(Andras) add methods to modify these prefixes
 
@@ -78,11 +77,6 @@ NodeHelper::NodeHelper() :
 
 NodeHelper::~NodeHelper()
 {
-    if (mAttachmentFilesDir) {
-        mAttachmentFilesDir->forceCleanTempFiles();
-        delete mAttachmentFilesDir;
-        mAttachmentFilesDir = nullptr;
-    }
     clear();
 }
 
@@ -109,20 +103,6 @@ void NodeHelper::setNodeUnprocessed(KMime::Content *node, bool recurse)
     }
     mProcessedNodes.removeAll(node);
 
-    //avoid double addition of extra nodes, eg. encrypted attachments
-    const QMap<KMime::Content *, QList<KMime::Content *> >::iterator it = mExtraContents.find(node);
-    if (it != mExtraContents.end()) {
-        Q_FOREACH (KMime::Content *c, it.value()) {
-            KMime::Content *p = c->parent();
-            if (p) {
-                p->removeContent(c);
-            }
-        }
-        qDeleteAll(it.value());
-        qCDebug(MIMETREEPARSER_LOG) << "mExtraContents deleted for" << it.key();
-        mExtraContents.erase(it);
-    }
-
     qCDebug(MIMETREEPARSER_LOG) << "Node UNprocessed: " << node;
     if (recurse) {
         const auto contents = node->contents();
@@ -144,19 +124,6 @@ void NodeHelper::clear()
 {
     mProcessedNodes.clear();
     mOverrideCodecs.clear();
-    QMap<KMime::Content *, QList<KMime::Content *> >::ConstIterator end(mExtraContents.constEnd());
-
-    for (QMap<KMime::Content *, QList<KMime::Content *> >::ConstIterator it = mExtraContents.constBegin(); it != end; ++it) {
-        Q_FOREACH (KMime::Content *c, it.value()) {
-            KMime::Content *p = c->parent();
-            if (p) {
-                p->removeContent(c);
-            }
-        }
-        qDeleteAll(it.value());
-        qCDebug(MIMETREEPARSER_LOG) << "mExtraContents deleted for" << it.key();
-    }
-    mExtraContents.clear();
 }
 
 
@@ -168,25 +135,6 @@ PartMetaData NodeHelper::partMetaData(KMime::Content *node)
 void NodeHelper::setPartMetaData(KMime::Content *node, const PartMetaData &metaData)
 {
     mPartMetaDatas.insert(node, metaData);
-}
-
-void NodeHelper::forceCleanTempFiles()
-{
-    mAttachmentFilesDir->forceCleanTempFiles();
-    delete mAttachmentFilesDir;
-    mAttachmentFilesDir = nullptr;
-}
-
-void NodeHelper::removeTempFiles()
-{
-    //Don't delete it it will delete in class
-    mAttachmentFilesDir->removeTempFiles();
-    mAttachmentFilesDir = new AttachmentTemporaryFilesDirs();
-}
-
-void NodeHelper::addTempFile(const QString &file)
-{
-    mAttachmentFilesDir->addTempFile(file);
 }
 
 bool NodeHelper::isInEncapsulatedMessage(KMime::Content *node)
@@ -278,114 +226,6 @@ QString NodeHelper::fileName(const KMime::Content *node)
     return name;
 }
 
-/*!
-  Creates a persistent index string that bridges the gap between the
-  permanent nodes and the temporary ones.
-
-  Used internally for robust indexing.
-*/
-QString NodeHelper::persistentIndex(const KMime::Content *node) const
-{
-    if (!node) {
-        return QString();
-    }
-
-    QString indexStr = node->index().toString();
-    if (indexStr.isEmpty()) {
-        QMapIterator<KMime::Message::Content *, QList<KMime::Content *> > it(mExtraContents);
-        while (it.hasNext()) {
-            it.next();
-            const auto &extraNodes = it.value();
-            for (int i = 0; i < extraNodes.size(); i++) {
-                if (extraNodes[i] == node) {
-                    indexStr = QString::fromLatin1("e%1").arg(i);
-                    const QString parentIndex = persistentIndex(it.key());
-                    if (!parentIndex.isEmpty()) {
-                        indexStr = QString::fromLatin1("%1:%2").arg(parentIndex, indexStr);
-                    }
-                    qWarning() << "Persistentindex: " << indexStr;
-                    return indexStr;
-                }
-            }
-        }
-    } else {
-        const KMime::Content *const topLevel = node->topLevel();
-        //if the node is an extra node, prepend the index of the extra node to the url
-        QMapIterator<KMime::Message::Content *, QList<KMime::Content *> > it(mExtraContents);
-        while (it.hasNext()) {
-            it.next();
-            const QList<KMime::Content *> &extraNodes = extraContents(it.key());
-            for (int i = 0; i < extraNodes.size(); ++i) {
-                KMime::Content *const extraNode = extraNodes[i];
-                if (topLevel == extraNode) {
-                    indexStr.prepend(QStringLiteral("e%1:").arg(i));
-                    const QString parentIndex = persistentIndex(it.key());
-                    if (!parentIndex.isEmpty()) {
-                        indexStr = QStringLiteral("%1:%2").arg(parentIndex, indexStr);
-                    }
-                    qWarning() << "Persistentindex: " << indexStr;
-                    return indexStr;
-                }
-            }
-        }
-    }
-
-    qWarning() << "Persistentindex: " << indexStr;
-    return indexStr;
-}
-
-KMime::Content *NodeHelper::contentFromIndex(KMime::Content *node, const QString &persistentIndex) const
-{
-    KMime::Content *c = node->topLevel();
-    if (c) {
-        const QStringList pathParts = persistentIndex.split(QLatin1Char(':'), QString::SkipEmptyParts);
-        const int pathPartsSize(pathParts.size());
-        for (int i = 0; i < pathPartsSize; ++i) {
-            const QString &path = pathParts[i];
-            if (path.startsWith(QLatin1Char('e'))) {
-                const QList<KMime::Content *> &extraParts = mExtraContents.value(c);
-                const int idx = path.midRef(1, -1).toInt();
-                c = (idx < extraParts.size()) ? extraParts[idx] : nullptr;
-            } else {
-                c = c->content(KMime::ContentIndex(path));
-            }
-            if (!c) {
-                break;
-            }
-        }
-    }
-    return c;
-}
-
-QString NodeHelper::asHREF(const KMime::Content *node, const QString &place) const
-{
-    return QStringLiteral("attachment:%1?place=%2").arg(persistentIndex(node), place);
-}
-
-KMime::Content *NodeHelper::fromHREF(const KMime::Message::Ptr &mMessage, const QUrl &url) const
-{
-    if (url.isEmpty()) {
-        return mMessage.data();
-    }
-
-    if (!url.isLocalFile()) {
-        return contentFromIndex(mMessage.data(), url.adjusted(QUrl::StripTrailingSlash).path());
-    } else {
-        const QString path = url.toLocalFile();
-        // extract from /<path>/qttestn28554.index.2.3:0:2/unnamed -> "2.3:0:2"
-        // start of the index is something that is not a number followed by a dot: \D.
-        // index is only made of numbers,"." and ":": ([0-9.:]+)
-        // index is the last part of the folder name: /
-        const QRegExp rIndex(QStringLiteral("\\D\\.([e0-9.:]+)/"));
-
-        //search the occurence at most at the end
-        if (rIndex.lastIndexIn(path) != -1) {
-            return  contentFromIndex(mMessage.data(), rIndex.cap(1));
-        }
-        return mMessage.data();
-    }
-}
-
 QString NodeHelper::fixEncoding(const QString &encoding)
 {
     QString returnEncoding = encoding;
@@ -432,28 +272,17 @@ QString NodeHelper::fromAsString(KMime::Content *node) const
 {
     if (auto topLevel = dynamic_cast<KMime::Message *>(node->topLevel())) {
         return topLevel->from()->asUnicodeString();
-    } else {
-        auto realNode = std::find_if(mExtraContents.cbegin(), mExtraContents.cend(),
-        [node](const QList<KMime::Content *> &nodes) {
-            return nodes.contains(node);
-        });
-        if (realNode != mExtraContents.cend()) {
-            return fromAsString(realNode.key());
-        }
+    // } else {
+    //     auto realNode = std::find_if(mExtraContents.cbegin(), mExtraContents.cend(),
+    //     [node](const QList<KMime::Content *> &nodes) {
+    //         return nodes.contains(node);
+    //     });
+    //     if (realNode != mExtraContents.cend()) {
+    //         return fromAsString(realNode.key());
+    //     }
     }
 
     return QString();
-}
-
-void NodeHelper::attachExtraContent(KMime::Content *topLevelNode, KMime::Content *content)
-{
-    qCDebug(MIMETREEPARSER_LOG) << "mExtraContents added for" << topLevelNode << " extra content: " << content;
-    mExtraContents[topLevelNode].append(content);
-}
-
-QList< KMime::Content * > NodeHelper::extraContents(KMime::Content *topLevelnode) const
-{
-    return mExtraContents.value(topLevelnode);
 }
 
 }

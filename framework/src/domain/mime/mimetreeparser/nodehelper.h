@@ -70,32 +70,11 @@ public:
      */
     void magicSetType(KMime::Content *node, bool autoDecode = true);
 
-    /** Attach an extra node to an existing node */
-    void attachExtraContent(KMime::Content *topLevelNode, KMime::Content *content);
-
-    /** Get the extra nodes attached to the @param topLevelNode and all sub-nodes of @param topLevelNode */
-    QList<KMime::Content *> extraContents(KMime::Content *topLevelNode) const;
-
     /** Get a QTextCodec suitable for this message part */
     const QTextCodec *codec(KMime::Content *node);
 
     /** Set the charset the user selected for the message to display */
     void setOverrideCodec(KMime::Content *node, const QTextCodec *codec);
-
-    /**
-     * Cleanup the attachment temp files
-     */
-    void removeTempFiles();
-
-    /**
-     * Add a file to the list of managed temporary files
-     */
-    void addTempFile(const QString &file);
-
-    // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
-    // UrlHandlerManager.
-    QString asHREF(const KMime::Content *node, const QString &place) const;
-    KMime::Content *fromHREF(const KMime::Message::Ptr &mMessage, const QUrl &href) const;
 
     /**
      * @return true if this node is a child or an encapsulated message
@@ -152,19 +131,6 @@ private:
     bool unencryptedMessage_helper(KMime::Content *node, QByteArray &resultingData, bool addHeaders,
                                    int recursionLevel = 1);
 
-    /** Creates a persistent index string that bridges the gap between the
-        permanent nodes and the temporary ones.
-
-        Used internally for robust indexing.
-    **/
-    QString persistentIndex(const KMime::Content *node) const;
-
-    /** Translates the persistentIndex into a node back
-
-        node: any node of the actually message to what the persistentIndex is interpreded
-    **/
-    KMime::Content *contentFromIndex(KMime::Content *node, const QString &persistentIndex) const;
-
 private:
     QList<KMime::Content *> mProcessedNodes;
     QList<KMime::Content *> mNodesUnderProcess;
@@ -173,8 +139,6 @@ private:
     QTextCodec *mLocalCodec;
     QMap<KMime::Content *, const QTextCodec *> mOverrideCodecs;
     QMap<KMime::Content *, PartMetaData> mPartMetaDatas;
-    QMap<KMime::Message::Content *, QList<KMime::Content *> > mExtraContents;
-    AttachmentTemporaryFilesDirs *mAttachmentFilesDir;
 
     friend class NodeHelperTest;
 };
