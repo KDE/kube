@@ -115,6 +115,8 @@ public:
     QVector<SignedMessagePart*> signatures() const;
     QVector<EncryptedMessagePart*> encryptions() const;
 
+    void bindLifetime(KMime::Content *);
+
 protected:
     void parseInternal(KMime::Content *node, bool onlyOneMimePart);
     QString renderInternalText() const;
@@ -124,6 +126,7 @@ protected:
     PartMetaData mMetaData;
     MessagePart *mParentPart;
     KMime::Content *mNode;
+    QVector<KMime::Content*> mNodesToDelete;
 
 private:
     QVector<MessagePart::Ptr> mBlocks;

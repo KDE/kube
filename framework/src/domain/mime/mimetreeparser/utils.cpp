@@ -32,7 +32,9 @@ MimeMessagePart::Ptr MimeTreeParser::createAndParseTempNode(Interface::BodyPart 
         newNode->contentDescription()->from7BitString(cntDesc);
     }
 
-    return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), newNode, false));
+    auto mp = MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), newNode, false));
+    mp->bindLifetime(newNode);
+    return mp;
 }
 
 KMime::Content *MimeTreeParser::findTypeInDirectChilds(KMime::Content *content, const QByteArray &mimeType)

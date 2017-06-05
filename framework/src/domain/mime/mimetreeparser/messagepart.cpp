@@ -61,6 +61,9 @@ MessagePart::MessagePart(ObjectTreeParser *otp, const QString &text, KMime::Cont
 
 MessagePart::~MessagePart()
 {
+    for (auto n : mNodesToDelete) {
+        delete n;
+    }
 }
 
 /*
@@ -309,6 +312,11 @@ QVector<EncryptedMessagePart*> MessagePart::encryptions() const
     return list;
 }
 
+void MessagePart::bindLifetime(KMime::Content *node)
+{
+    mNodesToDelete << node;
+}
+
 //-----MessagePartList----------------------
 MessagePartList::MessagePartList(ObjectTreeParser *otp, KMime::Content *node)
     : MessagePart(otp, QString(), node)
@@ -390,6 +398,7 @@ void TextMessagePart::parseContent()
                 content->setBody(block.text());
                 content->parse();
                 EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(mOtp, QString(), cryptProto, fromAddress, nullptr, content));
+                mp->bindLifetime(content);
                 mp->setIsEncrypted(true);
                 appendSubPart(mp);
                 continue;
@@ -398,6 +407,7 @@ void TextMessagePart::parseContent()
                 content->setBody(block.text());
                 content->parse();
                 SignedMessagePart::Ptr mp(new SignedMessagePart(mOtp, QString(), cryptProto, fromAddress, nullptr, content));
+                mp->bindLifetime(content);
                 mp->setIsSigned(true);
                 appendSubPart(mp);
                 continue;
@@ -945,6 +955,7 @@ void SignedMessagePart::setVerificationResult(const CryptoBodyPartMemento *m, KM
                     auto tempNode = new KMime::Content();
                     tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
                     tempNode->parse();
+                    bindLifetime(tempNode);
 
                     if (!tempNode->head().isEmpty()) {
                         tempNode->contentDescription()->from7BitString("signed data");
@@ -1028,6 +1039,7 @@ void EncryptedMessagePart::startDecryption(const QByteArray &text, const QTextCo
     KMime::Content *content = new KMime::Content;
     content->setBody(text);
     content->parse();
+    bindLifetime(content);
 
     startDecryption(content);
 
@@ -1188,6 +1200,7 @@ void EncryptedMessagePart::startDecryption(KMime::Content *data)
         auto tempNode = new KMime::Content();
         tempNode->setContent(KMime::CRLFtoLF(mDecryptedData.constData()));
         tempNode->parse();
+        bindLifetime(tempNode);
 
         if (!tempNode->head().isEmpty()) {
             tempNode->contentDescription()->from7BitString("encrypted data");
