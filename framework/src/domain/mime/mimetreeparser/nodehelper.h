@@ -34,14 +34,6 @@ class QTextCodec;
 
 namespace MimeTreeParser
 {
-class AttachmentTemporaryFilesDirs;
-namespace Interface
-{
-}
-}
-
-namespace MimeTreeParser
-{
 
 /**
  * @author Andras Mantia <andras@kdab.net>

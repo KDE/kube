@@ -21,7 +21,6 @@
 #include "mimetreeparser_debug.h"
 #include "partmetadata.h"
 #include "bodypart.h"
-#include "attachmenttemporaryfilesdirs.h"
 
 #include <KMime/Content>
 #include <KMime/Message>

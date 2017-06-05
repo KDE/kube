@@ -51,7 +51,6 @@ set(libmimetreeparser_SRCS
     mimetreeparser_debug.cpp
     qgpgmejobexecutor.cpp
     util.cpp
-    attachmenttemporaryfilesdirs.cpp
     )
 
 add_library(kube_otp ${libmimetreeparser_SRCS})
