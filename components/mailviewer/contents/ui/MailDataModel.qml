@@ -18,6 +18,7 @@
 
 import QtQuick 2.4
 import QtQml.Models 2.2
+import org.kube.framework 1.0 as Kube
 
 DelegateModel {
     id: mailDataModel
@@ -25,16 +26,38 @@ DelegateModel {
 
     delegate: Item {
         id: partColumn
+
         width: parent.width
         height: childrenRect.height
-        Loader {
-            id: partLoader
+
+        Row {
             anchors {
                 top: parent.top
                 left: parent.left
+                right: parent.right
             }
-            height: item? item.contentHeight : 0
-            width: parent.width
+            height: partLoader.height
+            spacing: Kube.Units.smallSpacing
+            Rectangle {
+                id: border
+                visible: model.encrypted || model.signed
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                }
+                width: Kube.Units.smallSpacing
+                color: Kube.Colors.positiveColor
+                opacity: 0.5
+            }
+
+            Loader {
+                id: partLoader
+                anchors {
+                    top: parent.top
+                }
+                height: item? item.contentHeight : 0
+                width: parent.width
+            }
         }
         Component.onCompleted: {
             switch (model.type) {
@@ -42,14 +65,12 @@ DelegateModel {
                     partLoader.setSource("TextContent.qml",
                                         {"content": model.content,
                                         "embedded": model.embeded,
-                                        "securityLevel": model.securityLevel,
                                         "type": model.type,
                                         "debug": debug})
                     break
                 case "html":
                     partLoader.setSource("HtmlContent.qml",
                                         {"content": model.content,
-                                        "securityLevel": model.securityLevel,
                                         "debug": debug})
                     break;
                 case "error":

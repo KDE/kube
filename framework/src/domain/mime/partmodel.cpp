@@ -151,9 +151,9 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 return text;
             }
             case IsEncryptedRole:
-                return messagePart->encryptions().size() > 0;
+                return messagePart->encryptionState() != MimeTreeParser::KMMsgNotEncrypted;
             case IsSignedRole:
-                return messagePart->signatures().size() > 0;
+                return messagePart->signatureState() != MimeTreeParser::KMMsgNotSigned;
             case EncryptionErrorType:
                 return messagePart->error();
             case EncryptionErrorString:

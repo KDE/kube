@@ -436,7 +436,7 @@ Rectangle {
                         role: "content"
                         title: "Content"
                     }
-                    model: messageParser.newTree
+                    model: messageParser.parts
                     itemDelegate: Item {
                         property variant currentData: styleData.value
                         Text {

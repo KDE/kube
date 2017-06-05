@@ -33,20 +33,20 @@ enum UpdateMode {
 
 /** Flags for the encryption state. */
 typedef enum {
-    KMMsgEncryptionStateUnknown = ' ',
-    KMMsgNotEncrypted = 'N',
-    KMMsgPartiallyEncrypted = 'P',
-    KMMsgFullyEncrypted = 'F',
-    KMMsgEncryptionProblematic = 'X'
+    KMMsgEncryptionStateUnknown,
+    KMMsgNotEncrypted,
+    KMMsgPartiallyEncrypted,
+    KMMsgFullyEncrypted,
+    KMMsgEncryptionProblematic
 } KMMsgEncryptionState;
 
 /** Flags for the signature state. */
 typedef enum {
-    KMMsgSignatureStateUnknown = ' ',
-    KMMsgNotSigned = 'N',
-    KMMsgPartiallySigned = 'P',
-    KMMsgFullySigned = 'F',
-    KMMsgSignatureProblematic = 'X'
+    KMMsgSignatureStateUnknown,
+    KMMsgNotSigned,
+    KMMsgPartiallySigned,
+    KMMsgFullySigned,
+    KMMsgSignatureProblematic
 } KMMsgSignatureState;
 
 }

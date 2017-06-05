@@ -21,14 +21,13 @@ import QtQuick 2.7
 import org.kube.framework 1.0 as Kube
 
 Item {
-    id: textItem
+    id: root
 
     property string content
     property bool debug: true
     property bool embedded: true
     property string type
 
-    width: partColumn.width
     height: textColumn.height
 
     Column {
@@ -37,9 +36,9 @@ Item {
         anchors {
             top: parent.top
             left: parent.left
+            right: parent.right
         }
 
-        width: parent.width
         spacing: 5
 
         TextEdit {
@@ -59,7 +58,7 @@ Item {
         //BEGIN debug
         Text {
             width: parent.width
-            visible: textItem.debug
+            visible: root.debug
             text: type
         }
         //END debug

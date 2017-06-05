@@ -112,6 +112,9 @@ public:
 
     KMime::Content *node() const;
 
+    virtual KMMsgSignatureState signatureState() const;
+    virtual KMMsgEncryptionState encryptionState() const;
+
     QVector<SignedMessagePart*> signatures() const;
     QVector<EncryptedMessagePart*> encryptions() const;
 
@@ -178,8 +181,8 @@ public:
     TextMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node);
     virtual ~TextMessagePart();
 
-    KMMsgSignatureState signatureState() const;
-    KMMsgEncryptionState encryptionState() const;
+    KMMsgSignatureState signatureState() const Q_DECL_OVERRIDE;
+    KMMsgEncryptionState encryptionState() const Q_DECL_OVERRIDE;
 
 private:
     void parseContent();

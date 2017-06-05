@@ -125,16 +125,22 @@ private slots:
         QCOMPARE(part->charset(), QStringLiteral("us-ascii").toLocal8Bit());
         QCOMPARE(part->encryptions().size(), 1);
         QCOMPARE(part->signatures().size(), 1);
+        QCOMPARE(part->encryptionState(), MimeTreeParser::KMMsgFullyEncrypted);
+        QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
         auto contentAttachmentList = otp.collectAttachmentParts();
         QCOMPARE(contentAttachmentList.size(), 2);
     //     QCOMPARE(contentAttachmentList[0]->availableContents(), QVector<QByteArray>() << "text/plain");
         // QCOMPARE(contentAttachmentList[0]->content().size(), 1);
         QCOMPARE(contentAttachmentList[0]->encryptions().size(), 1);
         QCOMPARE(contentAttachmentList[0]->signatures().size(), 1);
+        QCOMPARE(contentAttachmentList[0]->encryptionState(), MimeTreeParser::KMMsgFullyEncrypted);
+        QCOMPARE(contentAttachmentList[0]->signatureState(), MimeTreeParser::KMMsgFullySigned);
     //     QCOMPARE(contentAttachmentList[1]->availableContents(), QVector<QByteArray>() << "image/png");
     //     QCOMPARE(contentAttachmentList[1]->content().size(), 1);
         QCOMPARE(contentAttachmentList[1]->encryptions().size(), 0);
         QCOMPARE(contentAttachmentList[1]->signatures().size(), 0);
+        QCOMPARE(contentAttachmentList[1]->encryptionState(), MimeTreeParser::KMMsgNotEncrypted);
+        QCOMPARE(contentAttachmentList[1]->signatureState(), MimeTreeParser::KMMsgNotSigned);
     }
 
     void testOpenPGPInline()
@@ -172,6 +178,9 @@ private slots:
         QCOMPARE(part1->text(), QStringLiteral("Not encrypted not signed :(\n\nsome random text"));
         //TODO test if we get the proper subparts with the appropriate encryptions
         QCOMPARE(part1->charset(), QStringLiteral("us-ascii").toLocal8Bit());
+
+        QCOMPARE(part1->encryptionState(), MimeTreeParser::KMMsgPartiallyEncrypted);
+        QCOMPARE(part1->signatureState(), MimeTreeParser::KMMsgNotSigned);
 
         // QCOMPARE(part1->text(), QStringLiteral("Not encrypted not signed :(\n\n"));
         // QCOMPARE(part1->charset(), QStringLiteral("us-ascii").toLocal8Bit());

@@ -312,6 +312,22 @@ QVector<EncryptedMessagePart*> MessagePart::encryptions() const
     return list;
 }
 
+KMMsgEncryptionState MessagePart::encryptionState() const
+{
+    if (!encryptions().isEmpty()) {
+        return KMMsgFullyEncrypted;
+    }
+    return KMMsgNotEncrypted;
+}
+
+KMMsgSignatureState MessagePart::signatureState() const
+{
+    if (!signatures().isEmpty()) {
+        return KMMsgFullySigned;
+    }
+    return KMMsgNotSigned;
+}
+
 void MessagePart::bindLifetime(KMime::Content *node)
 {
     mNodesToDelete << node;
@@ -346,7 +362,9 @@ QString MessagePartList::htmlContent() const
 //-----TextMessageBlock----------------------
 
 TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node)
-    : MessagePartList(otp, node)
+    : MessagePartList(otp, node),
+    mSignatureState(KMMsgSignatureStateUnknown),
+    mEncryptionState(KMMsgEncryptionStateUnknown)
 {
     if (!mNode) {
         qCWarning(MIMETREEPARSER_LOG) << "not a valid node";
@@ -401,7 +419,6 @@ void TextMessagePart::parseContent()
                 mp->bindLifetime(content);
                 mp->setIsEncrypted(true);
                 appendSubPart(mp);
-                continue;
             } else if (block.type() == ClearsignedBlock) {
                 KMime::Content *content = new KMime::Content;
                 content->setBody(block.text());
@@ -410,7 +427,6 @@ void TextMessagePart::parseContent()
                 mp->bindLifetime(content);
                 mp->setIsSigned(true);
                 appendSubPart(mp);
-                continue;
             } else {
                 continue;
             }
@@ -445,11 +461,17 @@ void TextMessagePart::parseContent()
 
 KMMsgEncryptionState TextMessagePart::encryptionState() const
 {
+    if (mEncryptionState == KMMsgNotEncrypted) {
+        return MessagePart::encryptionState();
+    }
     return mEncryptionState;
 }
 
 KMMsgSignatureState TextMessagePart::signatureState() const
 {
+    if (mSignatureState == KMMsgNotSigned) {
+        return MessagePart::signatureState();
+    }
     return mSignatureState;
 }
 
