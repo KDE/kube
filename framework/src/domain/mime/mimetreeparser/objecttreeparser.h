@@ -38,6 +38,7 @@
 #include "messagepart.h"
 
 #include <gpgme++/verificationresult.h>
+#include <functional>
 
 class QString;
 
