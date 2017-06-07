@@ -41,13 +41,12 @@ const Interface::BodyPartFormatter *TextPlainBodyPartFormatter::create()
 MessagePart::Ptr TextPlainBodyPartFormatter::process(Interface::BodyPart &part) const
 {
     KMime::Content *node = part.content();
-    const bool isFirstTextPart = (node->topLevel()->textContent() == node);
 
     TextMessagePart::Ptr mp;
-    if (isFirstTextPart) {
-        mp = TextMessagePart::Ptr(new TextMessagePart(part.objectTreeParser(), node));
+    if (KMime::isAttachment(node)) {
+        mp = AttachmentMessagePart::Ptr(new AttachmentMessagePart(part.objectTreeParser(), node));
     } else {
-        mp = TextMessagePart::Ptr(new AttachmentMessagePart(part.objectTreeParser(), node));
+        mp = TextMessagePart::Ptr(new TextMessagePart(part.objectTreeParser(), node));
     }
 
     return mp;

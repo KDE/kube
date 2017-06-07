@@ -24,7 +24,6 @@ Item {
     id: root
 
     property string content
-    property bool debug: true
     property bool embedded: true
     property string type
 
@@ -54,13 +53,5 @@ Item {
             color: embedded ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
             onLinkActivated: Qt.openUrlExternally(link)
         }
-
-        //BEGIN debug
-        Text {
-            width: parent.width
-            visible: root.debug
-            text: type
-        }
-        //END debug
     }
 }

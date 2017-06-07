@@ -281,6 +281,8 @@ public:
     virtual ~EncapsulatedRfc822MessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
+    QString from() const;
+    QDateTime date() const;
 private:
     const KMime::Message::Ptr mMessage;
 

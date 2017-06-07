@@ -47,7 +47,9 @@ public:
         IsErrorRole,
         SecurityLevelRole,
         EncryptionErrorType,
-        EncryptionErrorString
+        EncryptionErrorString,
+        SenderRole,
+        DateRole
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;

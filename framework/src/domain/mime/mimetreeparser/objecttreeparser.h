@@ -285,6 +285,7 @@ public:
     MessagePartPtr parsedPart() const;
     KMime::Content *find(const std::function<bool(KMime::Content *)> &select);
     QVector<MessagePartPtr> collectContentParts();
+    QVector<MessagePartPtr> collectContentParts(MessagePart::Ptr start);
     QVector<MessagePartPtr> collectAttachmentParts();
     void decryptParts();
     void importCertificates();

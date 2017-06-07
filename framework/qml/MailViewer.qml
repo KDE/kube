@@ -318,7 +318,6 @@ Rectangle {
             anchors.left: body.left
             anchors.right: body.right
             model: messageParser.parts
-            debug: false
         }
 
     }

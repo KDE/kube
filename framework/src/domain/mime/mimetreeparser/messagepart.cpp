@@ -1292,3 +1292,18 @@ QString EncapsulatedRfc822MessagePart::text() const
     return renderInternalText();
 }
 
+QString EncapsulatedRfc822MessagePart::from() const
+{
+    if (auto from = mMessage->from(false)) {
+        return from->asUnicodeString();
+    }
+    return {};
+}
+
+QDateTime EncapsulatedRfc822MessagePart::date() const
+{
+    if (auto date = mMessage->date(false)) {
+        return date->dateTime();
+    }
+    return {};
+}

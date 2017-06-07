@@ -35,6 +35,8 @@ public:
     void createTree();
     PartModel *q;
     QVector<MimeTreeParser::MessagePartPtr> mParts;
+    QHash<MimeTreeParser::MessagePart*, QVector<MimeTreeParser::MessagePartPtr>> mEncapsulatedParts;
+    QHash<MimeTreeParser::MessagePart*, MimeTreeParser::MessagePart*> mParents;
     std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
 };
 
@@ -44,6 +46,14 @@ PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeT
 {
     mParts = mParser->collectContentParts();
     qWarning() << "Collected content parts: " << mParts.size();
+    for (auto p : mParts) {
+        if (auto e = p.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
+            mEncapsulatedParts[e.data()] = mParser->collectContentParts(e);
+            for (auto subPart : mEncapsulatedParts[e.data()]) {
+                mParents[subPart.data()] = e.data();
+            }
+        }
+    }
 }
 
 PartModelPrivate::~PartModelPrivate()
@@ -71,12 +81,23 @@ QHash<int, QByteArray> PartModel::roleNames() const
     roles[EncryptionErrorType] = "errorType";
     roles[EncryptionErrorString] = "errorString";
     roles[IsErrorRole] = "error";
+    roles[SenderRole] = "sender";
+    roles[DateRole] = "date";
     return roles;
 }
 
 QModelIndex PartModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (row < 0 || column != 0) {
+        return QModelIndex();
+    }
+    if (parent.isValid()) {
+        if (auto e = dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer()))) {
+            const auto parts = d->mEncapsulatedParts[e];
+            if (row < parts.size()) {
+                return createIndex(row, column, parts.at(row).data());
+            }
+        }
         return QModelIndex();
     }
     if (row < d->mParts.size()) {
@@ -88,25 +109,34 @@ QModelIndex PartModel::index(int row, int column, const QModelIndex &parent) con
 QVariant PartModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
-        switch (role) {
-        case Qt::DisplayRole:
-            return QString("root");
-        case IsEmbededRole:
-            return false;
-        }
         return QVariant();
     }
 
     if (index.internalPointer()) {
         const auto messagePart = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer());
-        qWarning() << "Found message part " << messagePart->metaObject()->className() << messagePart->partMetaData()->status << messagePart->error();
+        // qWarning() << "Found message part " << messagePart->metaObject()->className() << messagePart->partMetaData()->status << messagePart->error();
         Q_ASSERT(messagePart);
         switch(role) {
             case Qt::DisplayRole:
                 return QStringLiteral("Content%1");
+            case SenderRole: {
+                if (auto e = dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(messagePart)) {
+                    return e->from();
+                }
+                return {};
+            }
+            case DateRole: {
+                if (auto e = dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(messagePart)) {
+                    return e->date();
+                }
+                return {};
+            }
             case TypeRole: {
                 if (messagePart->error()) {
                     return "error";
+                }
+                if (dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(messagePart)) {
+                    return "encapsulated";
                 }
                 //For simple html we don't need a browser
                 auto complexHtml = [&] {
@@ -165,11 +195,39 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
 
 QModelIndex PartModel::parent(const QModelIndex &index) const
 {
-    return QModelIndex();
+    if (index.isValid()) {
+        if (auto e = static_cast<MimeTreeParser::MessagePart*>(index.internalPointer())) {
+            for (const auto &p : d->mParts) {
+                if (p.data() == e) {
+                    return QModelIndex();
+                }
+            }
+            const auto parentPart = d->mParents[e];
+            Q_ASSERT(parentPart);
+            int row = 0;
+            const auto parts = d->mEncapsulatedParts[parentPart];
+            for (const auto &p : parts) {
+                if (p.data() == e) {
+                    break;
+                }
+                row++;
+            }
+            return createIndex(row, 0, parentPart);
+        }
+        return {};
+    }
+    return {};
 }
 
 int PartModel::rowCount(const QModelIndex &parent) const
 {
+    if (parent.isValid()) {
+        if (auto e = dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(static_cast<MimeTreeParser::MessagePart*>(parent.internalPointer()))) {
+            const auto parts = d->mEncapsulatedParts[e];
+            return parts.size();
+        }
+        return 0;
+    }
     return d->mParts.count();
 }
 

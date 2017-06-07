@@ -21,8 +21,7 @@ import QtQml.Models 2.2
 import org.kube.framework 1.0 as Kube
 
 DelegateModel {
-    id: mailDataModel
-    property bool debug: true
+    id: root
 
     delegate: Item {
         id: partColumn
@@ -65,13 +64,13 @@ DelegateModel {
                     partLoader.setSource("TextContent.qml",
                                         {"content": model.content,
                                         "embedded": model.embeded,
-                                        "type": model.type,
-                                        "debug": debug})
+                                        "type": model.type
+                                        })
                     break
                 case "html":
                     partLoader.setSource("HtmlContent.qml",
                                         {"content": model.content,
-                                        "debug": debug})
+                                        })
                     break;
                 case "error":
                     partLoader.setSource("ErrorPart.qml",
@@ -80,11 +79,13 @@ DelegateModel {
                                         "errorString": model.errorString,
                                         })
                     break;
-                case "envelope":
+                case "encapsulated":
                     partLoader.setSource("MailPart.qml",
-                                        {"rootIndex": mailDataModel.modelIndex(index),
-                                        "model": mailDataModel.model,
-                                        "debug": debug})
+                                        {"rootIndex": root.modelIndex(index),
+                                        "model": root.model,
+                                        "sender": model.sender,
+                                        "date": model.date
+                                        })
                     break;
             }
         }

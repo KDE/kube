@@ -319,6 +319,24 @@ private slots:
         QVERIFY(bool(part));
         QVERIFY(part->error());
     }
+
+    void testEncapsulated()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("encapsulated-with-attachment.mbox"));
+        otp.decryptParts();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 2);
+        auto part = partList[1].dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>();
+        QVERIFY(bool(part));
+        QCOMPARE(part->from(), QLatin1String("Thomas McGuire <dontspamme@gmx.net>"));
+        QCOMPARE(part->date().toString(), QLatin1String("Wed Aug 5 10:57:58 2009 GMT+0200"));
+        auto subPartList = otp.collectContentParts(part);
+        QCOMPARE(subPartList.size(), 1);
+        qWarning() << subPartList[0]->metaObject()->className();
+        auto subPart = subPartList[0].dynamicCast<MimeTreeParser::TextMessagePart>();
+        QVERIFY(bool(subPart));
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)

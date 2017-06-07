@@ -22,7 +22,6 @@ Item {
     id: root
     property alias rootIndex: visualModel.rootIndex
     property alias model: visualModel.model
-    property alias debug: visualModel.debug
     height: partListView.height
 
     MailDataModel {

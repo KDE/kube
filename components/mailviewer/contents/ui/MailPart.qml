@@ -18,29 +18,54 @@
 
 import QtQuick 2.4
 
+import org.kube.framework 1.0 as Kube
+
 Item {
     id: root
     property alias rootIndex: visualModel.rootIndex
     property alias model: visualModel.model
-    property alias debug: visualModel.debug
-    height: partListView.height + 10
-    width: parent.width
+    property variant sender
+    property variant date
+    height: childrenRect.height
 
     MailDataModel {
         id: visualModel
     }
 
+    Rectangle {
+        id: border
+        anchors {
+            top: parent.top
+            left: parent.left
+            leftMargin: Kube.Units.smallSpacing
+        }
+        color: "lightgrey"
+        height: partListView.height
+        width: Kube.Units.smallSpacing
+    }
+
+    Text {
+        id: sender
+        anchors {
+            left: border.right
+            leftMargin: Kube.Units.smallSpacing
+        }
+
+        text: "sent by " + root.sender + " on  " + root.date
+        color: "grey"
+    }
     ListView {
         id: partListView
         model: visualModel
         anchors {
-                top: parent.top
-                left: parent.left
-                margins: 5
+            top: sender.bottom
+            left: border.right
+            margins: Kube.Units.smallSpacing
+            leftMargin: Kube.Units.smallSpacing
         }
-        spacing: 5
+        spacing: 7
         height: contentHeight
-        width: parent.width - 10
+        width: parent.width - Kube.Units.smallSpacing * 3
         interactive: false
     }
 }
