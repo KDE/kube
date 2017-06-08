@@ -6,16 +6,12 @@
   <name>Kube</name>
   <summary>E-mail client</summary>
   <description>
-    <p>A modern groupware client based on QtQuick and Sink.
-
-    The code can be found at: git://anongit.kde.org/kube
-
-    The documentation can be found at: http://api.kde.org/doc/kube/.</p>
+    <p>Kube is a modern communication and collaboration client built with QtQuick on top of a high performance, low resource usage core. It provides online and offline access to all your mail, contacts, calendars, notes, todo's and more. With a strong focus on usability, the team works with designers and UX experts from the ground up, to build a product that is not only visually appealing but also a joy to use.</p>
+    <p>Communication and collaboration within large groups and spread over several time zones is complex and something of the norm in modern projects and the existing solutions available are not up to that challenge. Kube is a way to simplify and make communication elegant again by focusing on the key needs of users instead of filling it with any feature that comes to mind. Our strict focus on what is actually needed instead of what is wanted brings a new way of collaboration between group members and a simpler way of handling communication.</p>
   </description>
-  <url type="homepage">https://phabricator.kde.org/project/view/43/</url>
+  <url type="homepage">https://kube.kde.org</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kube</url>
-  <screenshots>
-  </screenshots>
+  <url type="help">http://api.kde.org/doc/kube/</url>
   <project_group>KDE</project_group>
   <provides>
     <binary>kube</binary>
