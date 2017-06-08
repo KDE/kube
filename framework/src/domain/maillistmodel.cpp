@@ -167,6 +167,10 @@ bool MailListModel::lessThan(const QModelIndex &left, const QModelIndex &right) 
 {
     const auto leftDate = left.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>()->getDate();
     const auto rightDate = right.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>()->getDate();
+    if (leftDate == rightDate) {
+        return left.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>()->identifier() <
+                right.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>()->identifier();
+    }
     return leftDate < rightDate;
 }
 
