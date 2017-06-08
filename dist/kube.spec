@@ -62,8 +62,7 @@ popd
 %dir %{_libdir}/qt5/qml/
 %dir %{_libdir}/qt5/qml/org/
 %{_libdir}/qt5/qml/org/kube/
-%{_libdir}/libmimetreeparser.so
-%{_libdir}/kube_otp.so
+%{_libdir}/libkube_otp.so
 %{_datadir}/appdata/org.kde.kube.appdata.xml
 %{_datadir}/applications/org.kde.kube.desktop
 %{_datadir}/icons/kube
