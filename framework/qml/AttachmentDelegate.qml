@@ -37,6 +37,12 @@ Item {
         color: Kube.Colors.disabledTextColor
     }
 
+    MouseArea {
+        anchors.fill: parent
+
+        onClicked: root.open()
+    }
+
     Row {
         id: content
         anchors.centerIn: parent
@@ -55,10 +61,6 @@ Item {
         Kube.IconButton {
             iconName: Kube.Icons.goDown_inverted
             onClicked: root.download()
-        }
-        Kube.IconButton {
-            iconName: Kube.Icons.edit_inverted
-            onClicked: root.open()
         }
     }
 }
