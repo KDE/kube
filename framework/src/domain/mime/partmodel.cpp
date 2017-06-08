@@ -141,7 +141,7 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 //For simple html we don't need a browser
                 auto complexHtml = [&] {
                     if (messagePart->isHtml()) {
-                        const auto text = messagePart->text();
+                        const auto text = messagePart->htmlContent();
                         if (text.contains("<!DOCTYPE html PUBLIC")) {
                             return true;
                         }
