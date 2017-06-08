@@ -44,33 +44,36 @@ Item {
 
         Item {
             id: toolbar
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+            }
 
             height: searchBar.height + Kube.Units.smallSpacing
             width: parent.width
 
-            Controls.ToolButton {
+            Kube.IconButton {
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    leftMargin: Kube.Units.smallSpacing
+                }
+                visible: stack.depth > 1
                 iconName: Kube.Icons.goBack
-
                 onClicked: stack.pop()
-
-                visible: stack. depth > 1
             }
-
             Kube.TextField {
                 id: searchBar
-
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width * 0.5
-
                 placeholderText: "Search..."
             }
-
-            Controls.ToolButton {
+            Kube.IconButton {
                 anchors {
+                    top: parent.top
                     right: parent.right
                     rightMargin: Kube.Units.smallSpacing
                 }
-
                 iconName: Kube.Icons.addNew
             }
         }

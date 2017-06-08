@@ -159,7 +159,7 @@ Controls2.ApplicationWindow {
                 }
             }
         }
-        StackView {
+        Controls2.StackView {
             id: kubeViews
 
             anchors {
@@ -174,38 +174,52 @@ Controls2.ApplicationWindow {
                 onMessageReceived: kubeViews.pop({immediate: true})
             }
 
+            //TODO replacing here while a composer is open is destructive
             function setPeopleView() {
-                //TODO replacing here while a composer is open is destructive
-                kubeViews.push({item: peopleView, replace: true, immediate: true})
+                if (currentItem != peopleView) {
+                    kubeViews.replace(null, peopleView, Controls2.StackView.Immediate)
+                }
             }
             function setMailView() {
-                //TODO replacing here while a composer is open is destructive
-                kubeViews.push({item: mailView, replace: true, immediate: true})
+                if (currentItem != mailView) {
+                    kubeViews.replace(null, mailView, Controls2.StackView.Immediate)
+                }
             }
             function setAccountsView() {
-                kubeViews.push({item: accountsView, replace: true, immediate: true})
+                if (currentItem != accountsView) {
+                    kubeViews.replace(null, accountsView, Controls2.StackView.Immediate)
+                }
             }
             function setLogView() {
-                kubeViews.push({item: logView, replace: true, immediate: true})
+                if (currentItem != logView) {
+                    kubeViews.replace(null, logView, Controls2.StackView.Immediate)
+                }
             }
 
             function openComposer(newMessage) {
-                kubeViews.push({item: composerView, immediate: true, properties: {newMessage: newMessage}})
+                kubeViews.push(composerView, {newMessage: newMessage}, Controls2.StackView.Immediate)
             }
             function openComposerWithMail(mail, openAsDraft) {
-                kubeViews.push({item: composerView, immediate: true, properties: {message: mail, loadAsDraft: openAsDraft}})
+                kubeViews.push(composerView, {message: mail, loadAsDraft: openAsDraft}, Controls2.StackView.Immediate)
             }
-            //Not components so we maintain state
-            MailView {
-                id: mailView
-            }
-            PeopleView {
-                id: peopleView
-            }
-            //Not a component because otherwise we can't log stuff
-            LogView {
-                id: logView
-            }
+
+            //These items are not visible until pushed onto the stack, so we keep them in resources instead of items
+            resources: [
+                //Not components so we maintain state
+                MailView {
+                    id: mailView
+                    anchors.fill: parent
+                },
+                PeopleView {
+                    id: peopleView
+                    anchors.fill: parent
+                },
+                //Not a component because otherwise we can't log stuff
+                LogView {
+                    id: logView
+                    anchors.fill: parent
+                }
+            ]
             //A component so it's always destroyed when we're done
             Component {
                 id: composerView
