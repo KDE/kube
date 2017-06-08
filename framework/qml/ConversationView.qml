@@ -62,6 +62,9 @@ Rectangle {
 
     ListView {
         id: listView
+
+        anchors.fill: parent
+
         function setCurrentIndex()
         {
             /**
@@ -82,13 +85,6 @@ Rectangle {
             } else {
                 root.currentIndex = count - 1;
             }
-        }
-
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
         }
 
         clip: true
@@ -116,7 +112,7 @@ Rectangle {
         boundsBehavior: Flickable.StopAtBounds
 
         //default is 1500, which is not usable with a mouse
-        flickDeceleration: 10000
+        flickDeceleration: 1500
 
         //Optimize for view quality
         pixelAligned: true
