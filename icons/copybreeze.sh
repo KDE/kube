@@ -13,6 +13,7 @@ wantedIcons = [
     "document-decrypt.svg",
     "document-edit.svg",
     "document-encrypt.svg",
+    "document-save.svg",
     "edit-delete.svg",
     "edit-find.svg",
     "edit-undo.svg",

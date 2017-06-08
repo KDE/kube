@@ -59,7 +59,9 @@ Item {
             color: Kube.Colors.backgroundColor
         }
         Kube.IconButton {
-            iconName: Kube.Icons.goDown_inverted
+            height: Kube.Units.gridUnit
+            width: height
+            iconName: Kube.Icons.save_inverted
             onClicked: root.download()
         }
     }

@@ -55,6 +55,7 @@ Item {
 
     property string addNew: "list-add-new"
     property string folder: "folder"
+    property string save_inverted: "document-save-inverted"
 
 }
 
