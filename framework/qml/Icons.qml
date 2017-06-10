@@ -53,7 +53,7 @@ Item {
     property string goDown_inverted: "go-down-inverted"
     property string goUp: "go-down"
 
-    property string addNew: "list-add-new"
+    property string addNew: "list-add"
     property string folder: "folder"
     property string save_inverted: "document-save-inverted"
 
