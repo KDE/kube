@@ -101,7 +101,15 @@ public:
     QString filename() const;
     Disposition disposition() const;
     bool isText() const;
-    int error() const;
+
+    enum Error {
+        NoError = 0,
+        PassphraseError,
+        NoKeyError,
+        UnknownError
+    };
+
+    Error error() const;
     QString errorString() const;
 
     PartMetaData *partMetaData();
@@ -130,6 +138,7 @@ protected:
     MessagePart *mParentPart;
     KMime::Content *mNode;
     QVector<KMime::Content*> mNodesToDelete;
+    Error mError;
 
 private:
     QVector<MessagePart::Ptr> mBlocks;
@@ -293,7 +302,6 @@ class EncryptedMessagePart : public MessagePart
 {
     Q_OBJECT
     Q_PROPERTY(bool isEncrypted READ isEncrypted)
-    Q_PROPERTY(bool passphraseError READ passphraseError)
 public:
     typedef QSharedPointer<EncryptedMessagePart> Ptr;
     EncryptedMessagePart(ObjectTreeParser *otp,
@@ -311,8 +319,6 @@ public:
 
     bool isDecryptable() const;
 
-    bool passphraseError() const;
-
     void startDecryption(const QByteArray &text, const QTextCodec *aCodec);
     void startDecryption(KMime::Content *data = nullptr);
 
@@ -329,8 +335,6 @@ private:
     bool okDecryptMIME(KMime::Content &data);
 
 protected:
-    bool mPassphraseError;
-    bool mNoSecKey;
     const QGpgME::Protocol *mCryptoProto;
     QString mFromAddress;
     QByteArray mVerifiedText;

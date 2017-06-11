@@ -167,10 +167,6 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             case IsErrorRole:
                 return messagePart->error();
             case ContentRole: {
-                auto errorText = messagePart->partMetaData()->errorText;
-                if (!errorText.isEmpty()) {
-                    return errorText;
-                }
                 const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
                 if (messagePart->isHtml()) {
                     return d->mParser->resolveCidLinks(text);

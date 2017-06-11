@@ -57,6 +57,7 @@ MessagePart::MessagePart(ObjectTreeParser *otp, const QString &text, KMime::Cont
     , mNode(node) //only null for messagepartlist
     , mParentPart(nullptr)
     , mRoot(false)
+    , mError(NoError)
 {
 }
 
@@ -166,15 +167,9 @@ bool MessagePart::isText() const
     return false;
 }
 
-int MessagePart::error() const
+MessagePart::Error MessagePart::error() const
 {
-    if (dynamic_cast<const EncryptedMessagePart*>(this)) {
-        //TODO Find a better way to detect errors
-        if (mMetaData.errorText != QStringLiteral("Success")) {
-            return 1;
-        }
-    }
-    return 0;
+    return mError;
 }
 
 QString MessagePart::errorString() const
@@ -685,7 +680,6 @@ SignedMessagePart::SignedMessagePart(ObjectTreeParser *otp,
     , mFromAddress(fromAddress)
     , mSignedData(signedData)
 {
-    mMetaData.technicalProblem = (mCryptoProto == nullptr);
     mMetaData.isSigned = true;
     mMetaData.isGoodSignature = false;
     mMetaData.keyTrust = GpgME::Signature::Unknown;
@@ -713,7 +707,6 @@ bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signa
     NodeHelper *nodeHelper = mOtp->nodeHelper();
 
     mMetaData.isSigned = false;
-    mMetaData.technicalProblem = (mCryptoProto == nullptr);
     mMetaData.keyTrust = GpgME::Signature::Unknown;
     mMetaData.status = i18n("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
@@ -1016,13 +1009,10 @@ EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
         const QString &fromAddress,
         KMime::Content *node, KMime::Content *encryptedNode)
     : MessagePart(otp, text, node)
-    , mPassphraseError(false)
-    , mNoSecKey(false)
     , mCryptoProto(cryptoProto)
     , mFromAddress(fromAddress)
     , mEncryptedNode(encryptedNode)
 {
-    mMetaData.technicalProblem = (mCryptoProto == nullptr);
     mMetaData.isSigned = false;
     mMetaData.isGoodSignature = false;
     mMetaData.isEncrypted = false;
@@ -1052,11 +1042,6 @@ bool EncryptedMessagePart::isDecryptable() const
     return mMetaData.isDecryptable;
 }
 
-bool EncryptedMessagePart::passphraseError() const
-{
-    return mPassphraseError;
-}
-
 void EncryptedMessagePart::startDecryption(const QByteArray &text, const QTextCodec *aCodec)
 {
     KMime::Content *content = new KMime::Content;
@@ -1083,21 +1068,24 @@ void EncryptedMessagePart::startDecryption(const QByteArray &text, const QTextCo
 
 bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 {
-    mPassphraseError = false;
+    mError = NoError;
+    auto passphraseError = false;
+    auto noSecKey = false;
     mMetaData.inProgress = false;
     mMetaData.errorText.clear();
     mMetaData.auditLogError = GpgME::Error();
     mMetaData.auditLog.clear();
-    bool bDecryptionOk = false;
     NodeHelper *nodeHelper = mOtp->nodeHelper();
 
     if (!mCryptoProto) {
+        mError = UnknownError;
         mMetaData.errorText = i18n("No appropriate crypto plug-in was found.");
         return false;
     }
 
     QGpgME::DecryptVerifyJob *job = mCryptoProto->decryptVerifyJob();
     if (!job) {
+        mError = UnknownError;
         mMetaData.errorText = i18n("Crypto plug-in \"%1\" cannot decrypt messages.", mCryptoProto->name());
         return false;
     }
@@ -1119,51 +1107,52 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     }
 
     mDecryptRecipients = decryptResult.recipients();
-    bDecryptionOk = !decryptResult.error();
+    auto decryptionOk = !decryptResult.error();
 
-    if (!bDecryptionOk) {
-        std::stringstream ss;
-        ss << decryptResult << '\n' << verifyResult;
-        qWarning() << ss.str().c_str();
-    }
-
-    if (!bDecryptionOk && mMetaData.isSigned) {
+    if (!decryptionOk && mMetaData.isSigned) {
         //Only a signed part
         mMetaData.isEncrypted = false;
-        bDecryptionOk = true;
         mDecryptedData = plainText;
-    } else {
-        mPassphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
-        mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
-        mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
-        if (mMetaData.isEncrypted && decryptResult.numRecipients() > 0) {
-            mMetaData.keyId = decryptResult.recipient(0).keyID();
-        }
-
-        if (bDecryptionOk) {
-            mDecryptedData = plainText;
-            setText(QString::fromUtf8(mDecryptedData.constData()));
-        } else {
-            mNoSecKey = true;
-            foreach (const GpgME::DecryptionResult::Recipient &recipient, decryptResult.recipients()) {
-                mNoSecKey &= (recipient.status().code() == GPG_ERR_NO_SECKEY);
-            }
-            if (!mPassphraseError && !mNoSecKey) {          // GpgME do not detect passphrase error correctly
-                mPassphraseError = true;
-            }
-        }
+        return true;
     }
 
-    if (!bDecryptionOk) {
-        if(mNoSecKey) {
+    passphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
+    mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
+    mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
+    if (mMetaData.isEncrypted && decryptResult.numRecipients() > 0) {
+        mMetaData.keyId = decryptResult.recipient(0).keyID();
+    }
+
+    if (decryptionOk) {
+        mDecryptedData = plainText;
+        setText(QString::fromUtf8(mDecryptedData.constData()));
+    } else {
+        noSecKey = true;
+        foreach (const GpgME::DecryptionResult::Recipient &recipient, decryptResult.recipients()) {
+            noSecKey &= (recipient.status().code() == GPG_ERR_NO_SECKEY);
+        }
+        if (!passphraseError && !noSecKey) {          // GpgME do not detect passphrase error correctly
+            passphraseError = true;
+        }
+        std::stringstream ss;
+        ss << decryptResult << '\n' << verifyResult;
+        qWarning() << "Decryption failed: " << ss.str().c_str();
+
+        if(noSecKey) {
+            mError = NoKeyError;
             mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data. ", mCryptoProto->name())
                                   + i18n("No key found for recepients.");
-        } else if (!passphraseError()) {
+        } else if (passphraseError) {
+            mError = PassphraseError;
+        } else {
+            mError = UnknownError;
             mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data. ", mCryptoProto->name())
                                   + i18n("Error: %1", mMetaData.errorText);
         }
+        return false;
     }
-    return bDecryptionOk;
+
+    return true;
 }
 
 void EncryptedMessagePart::startDecryption(KMime::Content *data)
