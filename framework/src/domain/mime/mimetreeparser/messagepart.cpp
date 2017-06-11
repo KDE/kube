@@ -1089,108 +1089,79 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     mMetaData.auditLogError = GpgME::Error();
     mMetaData.auditLog.clear();
     bool bDecryptionOk = false;
-    bool cannotDecrypt = false;
     NodeHelper *nodeHelper = mOtp->nodeHelper();
 
-    // TODO in the async case remember the memento:
-    const DecryptVerifyBodyPartMemento *m = nullptr;
-
-    Q_ASSERT(!m || mCryptoProto); //No CryptoPlugin and having a bodyPartMemento -> there is something completely wrong
-
-    if (!m && mCryptoProto) {
-        QGpgME::DecryptVerifyJob *job = mCryptoProto->decryptVerifyJob();
-        if (!job) {
-            cannotDecrypt = true;
-        } else {
-            const QByteArray ciphertext = data.decodedContent();
-            DecryptVerifyBodyPartMemento *newM = new DecryptVerifyBodyPartMemento(job, ciphertext);
-            if (mOtp->allowAsync()) {
-                QObject::connect(newM, &CryptoBodyPartMemento::update,
-                                 nodeHelper, &NodeHelper::update);
-                // QObject::connect(newM, SIGNAL(update(MimeTreeParser::UpdateMode)), _source->sourceObject(),
-                //                  SLOT(update(MimeTreeParser::UpdateMode)));
-                if (newM->start()) {
-                    mMetaData.inProgress = true;
-                    mOtp->mHasPendingAsyncJobs = true;
-                } else {
-                    m = newM;
-                }
-            } else {
-                newM->exec();
-                m = newM;
-            }
-        }
-        //Only relevant in the async case
-    // } else if (m->isRunning()) {
-    //     mMetaData.inProgress = true;
-    //     mOtp->mHasPendingAsyncJobs = true;
-    //     m = nullptr;
+    if (!mCryptoProto) {
+        mMetaData.errorText = i18n("No appropriate crypto plug-in was found.");
+        return false;
     }
 
-    if (m) {
-        const QByteArray &plainText = m->plainText();
-        const GpgME::DecryptionResult &decryptResult = m->decryptResult();
-        const GpgME::VerificationResult &verifyResult = m->verifyResult();
-        mMetaData.isSigned = verifyResult.signatures().size() > 0;
+    QGpgME::DecryptVerifyJob *job = mCryptoProto->decryptVerifyJob();
+    if (!job) {
+        mMetaData.errorText = i18n("Crypto plug-in \"%1\" cannot decrypt messages.", mCryptoProto->name());
+        return false;
+    }
 
-        if (verifyResult.signatures().size() > 0) {
-            //We simply attach a signed message part to indicate that this content is also signed
-            auto subPart = SignedMessagePart::Ptr(new SignedMessagePart(mOtp, QString::fromUtf8(plainText), mCryptoProto, mFromAddress, nullptr, nullptr));
-            subPart->setVerificationResult(m, nullptr);
-            appendSubPart(subPart);
-        }
+    const QByteArray ciphertext = data.decodedContent();
+    auto m = QSharedPointer<DecryptVerifyBodyPartMemento>::create(job, ciphertext);
+    m->exec();
 
-        mDecryptRecipients = decryptResult.recipients();
-        bDecryptionOk = !decryptResult.error();
+    const QByteArray &plainText = m->plainText();
+    const GpgME::DecryptionResult &decryptResult = m->decryptResult();
+    const GpgME::VerificationResult &verifyResult = m->verifyResult();
+    mMetaData.isSigned = verifyResult.signatures().size() > 0;
 
+    if (verifyResult.signatures().size() > 0) {
+        //We simply attach a signed message part to indicate that this content is also signed
+        auto subPart = SignedMessagePart::Ptr(new SignedMessagePart(mOtp, QString::fromUtf8(plainText), mCryptoProto, mFromAddress, nullptr, nullptr));
+        subPart->setVerificationResult(m.data(), nullptr);
+        appendSubPart(subPart);
+    }
+
+    mDecryptRecipients = decryptResult.recipients();
+    bDecryptionOk = !decryptResult.error();
+
+    if (!bDecryptionOk) {
         std::stringstream ss;
         ss << decryptResult << '\n' << verifyResult;
         qWarning() << ss.str().c_str();
+    }
 
-        if (!bDecryptionOk && mMetaData.isSigned) {
-            //Only a signed part
-            mMetaData.isEncrypted = false;
-            bDecryptionOk = true;
+    if (!bDecryptionOk && mMetaData.isSigned) {
+        //Only a signed part
+        mMetaData.isEncrypted = false;
+        bDecryptionOk = true;
+        mDecryptedData = plainText;
+    } else {
+        mPassphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
+        mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
+        mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
+        if (mMetaData.isEncrypted && decryptResult.numRecipients() > 0) {
+            mMetaData.keyId = decryptResult.recipient(0).keyID();
+        }
+
+        if (bDecryptionOk) {
             mDecryptedData = plainText;
+            setText(QString::fromUtf8(mDecryptedData.constData()));
         } else {
-            mPassphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
-            mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
-            mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
-            if (mMetaData.isEncrypted && decryptResult.numRecipients() > 0) {
-                mMetaData.keyId = decryptResult.recipient(0).keyID();
+            mNoSecKey = true;
+            foreach (const GpgME::DecryptionResult::Recipient &recipient, decryptResult.recipients()) {
+                mNoSecKey &= (recipient.status().code() == GPG_ERR_NO_SECKEY);
             }
-
-            if (bDecryptionOk) {
-                mDecryptedData = plainText;
-                setText(QString::fromUtf8(mDecryptedData.constData()));
-            } else {
-                mNoSecKey = true;
-                foreach (const GpgME::DecryptionResult::Recipient &recipient, decryptResult.recipients()) {
-                    mNoSecKey &= (recipient.status().code() == GPG_ERR_NO_SECKEY);
-                }
-                if (!mPassphraseError && !mNoSecKey) {          // GpgME do not detect passphrase error correctly
-                    mPassphraseError = true;
-                }
+            if (!mPassphraseError && !mNoSecKey) {          // GpgME do not detect passphrase error correctly
+                mPassphraseError = true;
             }
         }
     }
 
     if (!bDecryptionOk) {
-        if (!mCryptoProto) {
-            mMetaData.errorText = i18n("No appropriate crypto plug-in was found.");
-        } else if (cannotDecrypt) {
-            mMetaData.errorText = i18n("Crypto plug-in \"%1\" cannot decrypt messages.", mCryptoProto->name());
-        } else if(mNoSecKey) {
+        if(mNoSecKey) {
             mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data. ", mCryptoProto->name())
                                   + i18n("No key found for recepients.");
         } else if (!passphraseError()) {
             mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data. ", mCryptoProto->name())
                                   + i18n("Error: %1", mMetaData.errorText);
         }
-    }
-    //TODO don't delete in async case
-    if (m) {
-        delete m;
     }
     return bDecryptionOk;
 }
