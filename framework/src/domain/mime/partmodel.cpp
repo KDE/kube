@@ -182,8 +182,17 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 return messagePart->signatureState() != MimeTreeParser::KMMsgNotSigned;
             case EncryptionErrorType:
                 return messagePart->error();
-            case EncryptionErrorString:
+            case EncryptionErrorString: {
+                switch (messagePart->error()) {
+                    case MimeTreeParser::MessagePart::NoKeyError:
+                        return tr("No key available.");
+                    case MimeTreeParser::MessagePart::PassphraseError:
+                        return tr("Wrong passphrase.");
+                    case MimeTreeParser::MessagePart::UnknownError:
+                        break;
+                }
                 return messagePart->errorString();
+            }
         }
     }
     return QVariant();
