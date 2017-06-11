@@ -46,6 +46,7 @@
 #include <KLocalizedString>
 
 #include <QTextCodec>
+#include <sstream>
 
 using namespace MimeTreeParser;
 
@@ -1141,9 +1142,10 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
         mDecryptRecipients = decryptResult.recipients();
         bDecryptionOk = !decryptResult.error();
-//        std::stringstream ss;
-//        ss << decryptResult << '\n' << verifyResult;
-//        qCDebug(MIMETREEPARSER_LOG) << ss.str().c_str();
+
+        std::stringstream ss;
+        ss << decryptResult << '\n' << verifyResult;
+        qWarning() << ss.str().c_str();
 
         if (!bDecryptionOk && mMetaData.isSigned) {
             //Only a signed part
@@ -1178,8 +1180,11 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
             mMetaData.errorText = i18n("No appropriate crypto plug-in was found.");
         } else if (cannotDecrypt) {
             mMetaData.errorText = i18n("Crypto plug-in \"%1\" cannot decrypt messages.", mCryptoProto->name());
+        } else if(mNoSecKey) {
+            mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data. ", mCryptoProto->name())
+                                  + i18n("No key found for recepients.");
         } else if (!passphraseError()) {
-            mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", mCryptoProto->name())
+            mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data. ", mCryptoProto->name())
                                   + i18n("Error: %1", mMetaData.errorText);
         }
     }
