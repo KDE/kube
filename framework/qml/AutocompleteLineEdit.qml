@@ -24,10 +24,13 @@ import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 Kube.TextField {
-    id: textField
+    id: root
 
     property string searchTerm
     property variant model
+
+    selectByMouse: true
+
     onTextChanged: {
         if (text.length >= 2) {
             searchTerm = text
@@ -68,8 +71,11 @@ Kube.TextField {
     }
 
     function accept() {
-        textField.text = listView.currentItem.text;
+        if (listView.currentItem) {
+            root.text = listView.currentItem.text;
+        }
         popup.close()
+        root.accepted();
     }
 
     function abort() {
@@ -79,9 +85,9 @@ Kube.TextField {
     Controls2.Popup {
         id: popup
         x: 0
-        y: textField.y + textField.height
+        y: root.height
         padding: 0
-        contentWidth: rect.width
+        width: root.width
         contentHeight: rect.height
 
         Rectangle {
@@ -91,7 +97,7 @@ Kube.TextField {
             anchors.left: popup.left
 
             height: listView.contentHeight
-            width: textField.width
+            width: popup.width
 
             border.color: Kube.Colors.textColor
             color: Kube.Colors.backgroundColor
@@ -99,16 +105,16 @@ Kube.TextField {
             radius: 5
             ListView {
                 id: listView
-                height: childrenRect.height
+                height: contentHeight
                 width: parent.width
                 interactive: true
-                model: textField.model
+                model: root.model
                 delegate: Kirigami.AbstractListItem {
                     id: listDelegate
                     property string text: model.text
 
                     width: listView.width
-                    height: textField.height
+                    height: root.height
 
                     enabled: true
                     supportsMouseEvents: true
@@ -128,11 +134,17 @@ Kube.TextField {
                             anchors {
                                 verticalCenter: parent.verticalCenter
                                 left: parent.left
+                                right: parent.right
                             }
 
                             Kube.Label{
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                }
                                 text: model.text
                                 color: listDelegate.checked ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
+                                elide: Text.ElideRight
                             }
                         }
                     }

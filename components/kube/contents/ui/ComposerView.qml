@@ -287,55 +287,59 @@ Kube.View {
             height: parent.height
 
             ColumnLayout {
-            anchors {
-                top: parent.top
-                bottom: bottomButtons.top
-                left: parent.left
-                right: parent.right
-                margins: Kube.Units.largeSpacing
-            }
+                anchors {
+                    top: parent.top
+                    bottom: bottomButtons.top
+                    left: parent.left
+                    right: parent.right
+                    margins: Kube.Units.largeSpacing
+                }
 
-            Kube.Label {
-                text: "Sending Email to:"
-            }
-            Kube.AutocompleteLineEdit {
-                id: to
-                Layout.fillWidth: true
-                text: composerController.to
-                onTextChanged: composerController.to = text
-                model: composerController.recipientCompleter.model
-                onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
-            }
+                Kube.Label {
+                    text: "Sending Email to:"
+                }
 
-            Kube.Label {
-                text: "Sending Copy to (CC):"
-            }
-            Kube.AutocompleteLineEdit {
-                id: cc
-                Layout.fillWidth: true
-                text: composerController.cc
-                onTextChanged: composerController.cc = text
-                model: composerController.recipientCompleter.model
-                onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
-            }
+                AddresseeListEditor {
+                    id: to
+                    Layout.preferredHeight: to.implicitHeight
+                    Layout.fillWidth: true
+                    completer: composerController.recipientCompleter
+                    model: composerController.toModel
+                    onAdded: composerController.addTo(text)
+                    onRemoved: composerController.removeTo(text)
+                }
 
-            Kube.Label {
-                text: "Sending Secret Copy to (Bcc):"
-            }
-            Kube.AutocompleteLineEdit {
-                id: bcc
-                Layout.fillWidth: true
-                text: composerController.bcc
-                onTextChanged: composerController.bcc = text;
-                model: composerController.recipientCompleter.model
-                onSearchTermChanged: composerController.recipientCompleter.searchString = searchTerm
-            }
+                Kube.Label {
+                    text: "Sending Copy to (CC):"
+                }
+                AddresseeListEditor {
+                    id: cc
+                    Layout.preferredHeight: cc.implicitHeight
+                    Layout.fillWidth: true
+                    completer: composerController.recipientCompleter
+                    model: composerController.ccModel
+                    onAdded: composerController.addCc(text)
+                    onRemoved: composerController.removeCc(text)
+                }
 
-            Item {
-                width: parent.width
-                Layout.fillHeight: true
+                Kube.Label {
+                    text: "Sending Secret Copy to (Bcc):"
+                }
+                AddresseeListEditor {
+                    id: bcc
+                    Layout.preferredHeight: bcc.implicitHeight
+                    Layout.fillWidth: true
+                    completer: composerController.recipientCompleter
+                    model: composerController.bccModel
+                    onAdded: composerController.addBcc(text)
+                    onRemoved: composerController.removeBcc(text)
+                }
+
+                Item {
+                    width: parent.width
+                    Layout.fillHeight: true
+                }
             }
-        }
 
 
             Item {

@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QStringListModel>
 #include <QVariant>
 #include <sink/applicationdomaintype.h>
 #include <KMime/Message>
@@ -47,9 +48,6 @@ class ComposerController : public Kube::Controller
     Q_OBJECT
 
     //Interface properties
-    KUBE_CONTROLLER_PROPERTY(QString, To, to)
-    KUBE_CONTROLLER_PROPERTY(QString, Cc, cc)
-    KUBE_CONTROLLER_PROPERTY(QString, Bcc, bcc)
     KUBE_CONTROLLER_PROPERTY(QString, Subject, subject)
     KUBE_CONTROLLER_PROPERTY(QString, Body, body)
 
@@ -65,6 +63,10 @@ class ComposerController : public Kube::Controller
     Q_PROPERTY (Selector* identitySelector READ identitySelector CONSTANT)
     //Q_PROPERTY (QValidator* subjectValidator READ subjectValidator CONSTANT)
 
+    Q_PROPERTY (QAbstractItemModel* toModel READ toModel CONSTANT)
+    Q_PROPERTY (QAbstractItemModel* ccModel READ ccModel CONSTANT)
+    Q_PROPERTY (QAbstractItemModel* bccModel READ bccModel CONSTANT)
+
     KUBE_CONTROLLER_ACTION(send)
     KUBE_CONTROLLER_ACTION(saveAsDraft)
 
@@ -75,6 +77,17 @@ public:
     Selector *identitySelector() const;
 
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
+
+    QAbstractItemModel *toModel() const;
+    QAbstractItemModel *ccModel() const;
+    QAbstractItemModel *bccModel() const;
+
+    Q_INVOKABLE void addTo(const QString &);
+    Q_INVOKABLE void removeTo(const QString &);
+    Q_INVOKABLE void addCc(const QString &);
+    Q_INVOKABLE void removeCc(const QString &);
+    Q_INVOKABLE void addBcc(const QString &);
+    Q_INVOKABLE void removeBcc(const QString &);
 
 public slots:
     virtual void clear() Q_DECL_OVERRIDE;
@@ -90,4 +103,7 @@ private:
 
     QScopedPointer<Completer> mRecipientCompleter;
     QScopedPointer<Selector> mIdentitySelector;
+    QScopedPointer<QStringListModel> mToModel;
+    QScopedPointer<QStringListModel> mCcModel;
+    QScopedPointer<QStringListModel> mBccModel;
 };

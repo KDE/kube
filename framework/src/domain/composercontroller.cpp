@@ -27,7 +27,6 @@
 #include <QSortFilterProxyModel>
 #include <QList>
 #include <QDebug>
-#include <QQmlEngine>
 #include <sink/store.h>
 #include <sink/log.h>
 
@@ -82,7 +81,10 @@ ComposerController::ComposerController()
     action_send{new Kube::ControllerAction{this, &ComposerController::send}},
     action_saveAsDraft{new Kube::ControllerAction{this, &ComposerController::saveAsDraft}},
     mRecipientCompleter{new RecipientCompleter},
-    mIdentitySelector{new IdentitySelector{*this}}
+    mIdentitySelector{new IdentitySelector{*this}},
+    mToModel{new QStringListModel},
+    mCcModel{new QStringListModel},
+    mBccModel{new QStringListModel}
 {
     updateSaveAsDraftAction();
     // mSendAction->monitorProperty<To>();
@@ -93,10 +95,8 @@ ComposerController::ComposerController()
     // actionDepends<ControllerAction, To, Subject>();
     // TODO do in constructor
 
-    QObject::connect(this, &ComposerController::toChanged, &ComposerController::updateSendAction);
     QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSendAction);
     QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSendAction);
-    QObject::connect(this, &ComposerController::toChanged, &ComposerController::updateSaveAsDraftAction);
     QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSaveAsDraftAction);
     QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSaveAsDraftAction);
     updateSendAction();
@@ -107,6 +107,72 @@ void ComposerController::clear()
     Controller::clear();
     //Reapply account and identity from selection
     mIdentitySelector->reapplyCurrentIndex();
+    mToModel->setStringList({});
+    mCcModel->setStringList({});
+    mBccModel->setStringList({});
+}
+
+QAbstractItemModel *ComposerController::toModel() const
+{
+    return mToModel.data();
+}
+
+void ComposerController::addTo(const QString &s)
+{
+    auto list = mToModel->stringList();
+    list.append(s);
+    mToModel->setStringList(list);
+    updateSendAction();
+}
+
+void ComposerController::removeTo(const QString &s)
+{
+    auto list = mToModel->stringList();
+    list.removeAll(s);
+    mToModel->setStringList(list);
+    updateSendAction();
+}
+
+QAbstractItemModel *ComposerController::ccModel() const
+{
+    return mCcModel.data();
+}
+
+void ComposerController::addCc(const QString &s)
+{
+    auto list = mCcModel->stringList();
+    list.append(s);
+    mCcModel->setStringList(list);
+    updateSendAction();
+}
+
+void ComposerController::removeCc(const QString &s)
+{
+    auto list = mCcModel->stringList();
+    list.removeAll(s);
+    mCcModel->setStringList(list);
+    updateSendAction();
+}
+
+QAbstractItemModel *ComposerController::bccModel() const
+{
+    return mBccModel.data();
+}
+
+void ComposerController::addBcc(const QString &s)
+{
+    auto list = mBccModel->stringList();
+    list.append(s);
+    mBccModel->setStringList(list);
+    updateSendAction();
+}
+
+void ComposerController::removeBcc(const QString &s)
+{
+    auto list = mBccModel->stringList();
+    list.removeAll(s);
+    mBccModel->setStringList(list);
+    updateSendAction();
 }
 
 Completer *ComposerController::recipientCompleter() const
@@ -119,10 +185,42 @@ Selector *ComposerController::identitySelector() const
     return mIdentitySelector.data();
 }
 
+static void applyAddresses(const QStringList &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
+{
+    for (const auto &to : list) {
+        QByteArray displayName;
+        QByteArray addrSpec;
+        QByteArray comment;
+        KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
+        callback(addrSpec, displayName);
+    }
+}
+
+static void applyAddresses(const QString &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
+{
+    applyAddresses(KEmailAddress::splitAddressList(list), callback);
+}
+
+
+static QStringList getStringListFromAddresses(const QString &s)
+{
+    QStringList list;
+    applyAddresses(s, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        if (displayName.isEmpty()) {
+            list << QString{addrSpec};
+        } else {
+            list << QString("%1 <%2>").arg(QString{displayName}).arg(QString{addrSpec});
+        }
+    });
+    return list;
+}
+
 void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 {
-    setTo(msg->to(true)->asUnicodeString());
-    setCc(msg->cc(true)->asUnicodeString());
+    mToModel->setStringList(getStringListFromAddresses(msg->to(true)->asUnicodeString()));
+    mCcModel->setStringList(getStringListFromAddresses(msg->cc(true)->asUnicodeString()));
+    mBccModel->setStringList(getStringListFromAddresses(msg->bcc(true)->asUnicodeString()));
+
     setSubject(msg->subject(true)->asUnicodeString());
     setBody(msg->body());
     setExistingMessage(msg);
@@ -165,32 +263,21 @@ void ComposerController::recordForAutocompletion(const QByteArray &addrSpec, con
     }
 }
 
-void applyAddresses(const QString &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
-{
-    for (const auto &to : KEmailAddress::splitAddressList(list)) {
-        QByteArray displayName;
-        QByteArray addrSpec;
-        QByteArray comment;
-        KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
-        callback(addrSpec, displayName);
-    }
-}
-
 KMime::Message::Ptr ComposerController::assembleMessage()
 {
     auto mail = mExistingMessage;
     if (!mail) {
         mail = KMime::Message::Ptr::create();
     }
-    applyAddresses(getTo(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+    applyAddresses(mToModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->to(true)->addAddress(addrSpec, displayName);
         recordForAutocompletion(addrSpec, displayName);
     });
-    applyAddresses(getCc(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+    applyAddresses(mCcModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->cc(true)->addAddress(addrSpec, displayName);
         recordForAutocompletion(addrSpec, displayName);
     });
-    applyAddresses(getBcc(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+    applyAddresses(mBccModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->bcc(true)->addAddress(addrSpec, displayName);
         recordForAutocompletion(addrSpec, displayName);
     });
@@ -212,7 +299,7 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 
 void ComposerController::updateSendAction()
 {
-    auto enabled = !getTo().isEmpty() && !getSubject().isEmpty() && !getAccountId().isEmpty();
+    auto enabled = !mToModel->stringList().isEmpty() && !getSubject().isEmpty() && !getAccountId().isEmpty();
     sendAction()->setEnabled(enabled);
 }
 
