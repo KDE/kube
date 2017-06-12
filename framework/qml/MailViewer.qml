@@ -52,14 +52,9 @@ Rectangle {
         enabled: root.current
     }
 
-    //Overlay for non-active mails
-    Rectangle {
-        anchors.fill: parent
-        visible: !current
-        color: "lightGrey"
-        z: 1
-        opacity: 0.2
-    }
+    //highlight active mails
+    border.width: current ? 1 : 0
+    border.color: Kube.Colors.highlightColor
 
     color: Kube.Colors.viewBackgroundColor
 
