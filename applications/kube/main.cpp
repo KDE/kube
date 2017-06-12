@@ -27,8 +27,18 @@ public:
         }
         const auto icon = QIcon::fromTheme(id);
         auto expectedSize = requestedSize;
-        if (!icon.availableSizes().contains(requestedSize) && !icon.availableSizes().isEmpty()) {
-            expectedSize = icon.availableSizes().first();
+        //Get the largest size that is still smaller or equal than requested
+        //Except if we only have larger sizes, then just pick the closest one
+        bool first = true;
+        for (const auto s : icon.availableSizes()) {
+            if (first && s.width() > requestedSize.width()) {
+                expectedSize = s;
+                break;
+            }
+            first = false;
+            if (s.width() <= requestedSize.width()) {
+                expectedSize = s;
+            }
         }
         const auto pixmap = icon.pixmap(expectedSize);
         if (size) {
