@@ -122,7 +122,7 @@ Controls2.ApplicationWindow {
 
                 Kube.IconButton {
                     iconName: Kube.Icons.edit_inverted
-                    onClicked: kubeViews.openComposer()
+                    onClicked: kubeViews.openComposer(false)
                 }
 
                 Kube.IconButton {

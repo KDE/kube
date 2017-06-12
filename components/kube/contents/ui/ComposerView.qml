@@ -47,6 +47,7 @@ Kube.View {
         if (message) {
             composerController.loadMessage(message, loadAsDraft)
         } else if (newMessage) {
+            composerController.clear()
             subject.forceActiveFocus()
         }
     }
@@ -54,6 +55,7 @@ Kube.View {
     function closeFirstSplitIfNecessary() {
         //Move the view forward
         if (root.currentIndex == 0) {
+            listView.currentIndex = -1
             root.incrementCurrentIndex()
         }
     }
@@ -126,7 +128,9 @@ Kube.View {
                 //END keyboard nav
 
                 onCurrentItemChanged: {
-                    root.loadMessage(currentItem.currentData.domainObject, true)
+                    if (currentItem) {
+                        root.loadMessage(currentItem.currentData.domainObject, true)
+                    }
                 }
 
                 model: Kube.MailListModel {
