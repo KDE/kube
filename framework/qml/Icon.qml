@@ -23,8 +23,8 @@ Item {
     property string iconName
     property url iconSource
     property alias status: image.status
-    property alias implicitWidth: image.implicitWidth
-    property alias implicitHeight: image.implicitHeight
+    implicitWidth: image.implicitWidth
+    implicitHeight: image.implicitHeight
 
     onIconNameChanged: setImageSource()
 
@@ -37,11 +37,13 @@ Item {
 
     Image {
         id: image
-        anchors.fill: parent
-        sourceSize.width: width
-        sourceSize.height: height
+        anchors.centerIn: parent
+        width: image.implicitWidth
+        height: image.implicitWidth
+        sourceSize.width: root.width
+        sourceSize.height: root.height
         cache: true
         smooth: true
-        fillMode: Image.PreserveAspectFit
+        fillMode: Image.Pad
     }
 }
