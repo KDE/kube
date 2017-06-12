@@ -63,6 +63,7 @@ Item {
             width: height
             iconName: Kube.Icons.save_inverted
             onClicked: root.download()
+            padding: 0
         }
     }
 }

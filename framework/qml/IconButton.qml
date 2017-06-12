@@ -24,7 +24,7 @@ import org.kube.framework 1.0 as Kube
 T.Button {
     id: root
 
-    property var iconName
+    property alias iconName: icon.iconName
 
     width: Kube.Units.gridUnit + padding * 2
     height: Kube.Units.gridUnit + padding * 2
@@ -48,9 +48,7 @@ T.Button {
     }
 
     contentItem: Kube.Icon {
-        width: root.height - Kube.Units.smallSpacing * 2
-        height: width
-        iconName: root.iconName
+        id: icon
     }
 }
 

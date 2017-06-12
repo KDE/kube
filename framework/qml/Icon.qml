@@ -22,11 +22,9 @@ Item {
     id: root
     property string iconName
     property url iconSource
-    property alias implicitHeight: image.implicitHeight
-    property alias implicitWidth: image.implicitWidth
     property alias status: image.status
-    width: implicitWidth
-    height: implicitHeight
+    property alias implicitWidth: image.implicitWidth
+    property alias implicitHeight: image.implicitHeight
 
     onIconNameChanged: setImageSource()
 
@@ -39,7 +37,7 @@ Item {
 
     Image {
         id: image
-        anchors.centerIn: parent
+        anchors.fill: parent
         sourceSize.width: width
         sourceSize.height: height
         cache: true
