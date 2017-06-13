@@ -37,6 +37,9 @@ Item {
 
     Column {
         anchors.fill: parent
+
+        spacing: Kube.Units.smallSpacing
+
         ListView {
             id: listView
             anchors {
@@ -44,8 +47,28 @@ Item {
                 right: parent.right
             }
             height: contentHeight
-            delegate: Text {
-                text: display
+
+            delegate: Rectangle {
+                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3 // 2 for padding, 1 for spacing to the next item
+                width: parent.width
+                color: Kube.Colors.buttonColor
+
+                Kube.Label {
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        margins: Kube.Units.smallSpacing
+                    }
+                    text: display
+                }
+
+                Rectangle {
+                    anchors.bottom: parent.bottom
+
+                    width: parent.width
+                    height: Kube.Units.smallSpacing
+                    color: Kube.Colors.backgroundColor
+                }
             }
         }
         Kube.AutocompleteLineEdit {
