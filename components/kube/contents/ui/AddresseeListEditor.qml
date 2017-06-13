@@ -71,19 +71,38 @@ Item {
                 }
             }
         }
-        Kube.AutocompleteLineEdit {
-            id: lineEdit
-            anchors {
-                left: parent.left
-                right: parent.right
+
+        MouseArea {
+            height: Kube.Units.gridUnit * Kube.Units.smallSpacing * 2
+            width: parent.width
+            hoverEnabled: true
+
+            onClicked: lineEdit.visible = true
+
+            Kube.Label {
+                text: "Add recipient"
+                color: Kube.Colors.highlightColor
+                font.underline: parent.containsMouse
             }
-            placeholderText: "Add recepient"
-            model: root.completer.model
-            onSearchTermChanged: root.completer.searchString = searchTerm
-            onAccepted: {
-                root.added(text);
-                console.warn("Accepted input: ", text)
-                clear()
+
+            Kube.AutocompleteLineEdit {
+                id: lineEdit
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+
+                visible: false
+
+                placeholderText: "Add recepient"
+                model: root.completer.model
+                onSearchTermChanged: root.completer.searchString = searchTerm
+                onAccepted: {
+                    root.added(text);
+                    console.warn("Accepted input: ", text)
+                    clear()
+                    visible = false
+                }
             }
         }
     }
