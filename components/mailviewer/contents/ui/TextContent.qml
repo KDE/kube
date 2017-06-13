@@ -42,6 +42,7 @@ Item {
 
         TextEdit {
             width: parent.width
+            selectionColor: Kube.Colors.highlightColor
 
             readOnly: true
             selectByMouse: true

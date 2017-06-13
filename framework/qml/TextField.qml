@@ -30,6 +30,7 @@ T.TextField {
 
     color: Kube.Colors.textColor
     font.family: Kube.Font.fontFamily
+    selectionColor: Kube.Colors.highlightColor
 
     Label {
         id: placeholder
