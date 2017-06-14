@@ -97,6 +97,7 @@ ComposerController::ComposerController()
                                         {MimeTypeRole, "mimetype"},
                                         {DescriptionRole, "description"},
                                         {IconNameRole, "iconName"},
+                                        {UrlRole, "url"},
                                         {InlineRole, "inline"}});
     updateSaveAsDraftAction();
     // mSendAction->monitorProperty<To>();
@@ -218,13 +219,25 @@ void ComposerController::addAttachment(const QUrl &url)
         item->setData(fileInfo.fileName(), FilenameRole);
         item->setData(false, InlineRole);
         item->setData(mimeType.iconName(), IconNameRole);
+        item->setData(url, UrlRole);
         item->setData(data, ContentRole);
         mAttachmentModel->appendRow(item);
     }
 }
 
-void ComposerController::removeAttachment(const QString &s)
+void ComposerController::removeAttachment(const QUrl &url)
 {
+    auto root = mAttachmentModel->invisibleRootItem();
+    if (root->hasChildren()) {
+        for (int row = 0; row < root->rowCount(); row++) {
+            auto item = root->child(row, 0);
+            const auto url = item->data(UrlRole).toUrl();
+            if (url == item->data(UrlRole).toUrl()) {
+                root->removeRow(row);
+                return;
+            }
+        }
+    }
 }
 
 Completer *ComposerController::recipientCompleter() const

@@ -271,6 +271,7 @@ Kube.View {
                             icon: model.iconName
                             clip: true
                             actionIcon: Kube.Icons.remove
+                            onExecute: composerController.removeAttachment(model.url)
                         }
                     }
                 }

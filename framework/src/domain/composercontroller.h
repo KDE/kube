@@ -92,7 +92,7 @@ public:
     Q_INVOKABLE void addBcc(const QString &);
     Q_INVOKABLE void removeBcc(const QString &);
     Q_INVOKABLE void addAttachment(const QUrl &);
-    Q_INVOKABLE void removeAttachment(const QString &);
+    Q_INVOKABLE void removeAttachment(const QUrl &);
 
 public slots:
     virtual void clear() Q_DECL_OVERRIDE;
@@ -109,7 +109,8 @@ private:
         MimeTypeRole,
         DescriptionRole,
         InlineRole,
-        IconNameRole
+        IconNameRole,
+        UrlRole
     };
 
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
