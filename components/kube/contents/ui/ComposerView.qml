@@ -21,6 +21,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import QtQuick.Dialogs 1.0 as Dialogs
 
 import org.kube.framework 1.0 as Kube
 
@@ -251,6 +252,47 @@ Kube.View {
                 text: composerController.subject
                 onTextChanged: composerController.subject = text;
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
+            }
+
+            Row {
+                Layout.fillWidth: true
+                spacing: Kube.Units.largeSpacing
+                Flow {
+                    id: attachments
+
+                    layoutDirection: Qt.RightToLeft
+                    spacing: Kube.Units.smallSpacing
+                    clip: true
+
+                    Repeater {
+                        model: composerController.attachmentModel
+                        delegate: Kube.AttachmentDelegate {
+                            name: model.filename
+                            icon: model.iconName
+                            clip: true
+                        }
+                    }
+                }
+                Kube.Button {
+                    text: "Attach file"
+
+                    onClicked: {
+                        fileDialogComponent.createObject(parent)
+                    }
+
+                    Component {
+                        id: fileDialogComponent
+                        Dialogs.FileDialog {
+                            id: fileDialog
+                            visible: true
+                            title: "Choose a file to attach"
+                            selectFolder: false
+                            onAccepted: {
+                                composerController.addAttachment(fileDialog.fileUrl)
+                            }
+                        }
+                    }
+                }
             }
 
             Kube.TextArea {

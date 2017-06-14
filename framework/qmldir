@@ -26,6 +26,7 @@ TextArea 1.0 TextArea.qml
 Label 1.0 Label.qml
 View 1.0 View.qml
 AutocompleteLineEdit 1.0 AutocompleteLineEdit.qml
+AttachmentDelegate 1.0 AttachmentDelegate.qml
 singleton Messages 1.0 Messages.qml
 singleton Colors 1.0 Colors.qml
 singleton Icons 1.0 Icons.qml

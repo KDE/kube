@@ -27,6 +27,10 @@
 #include <QSortFilterProxyModel>
 #include <QList>
 #include <QDebug>
+#include <QMimeDatabase>
+#include <QUrlQuery>
+#include <QFileInfo>
+#include <QFile>
 #include <sink/store.h>
 #include <sink/log.h>
 
@@ -84,8 +88,16 @@ ComposerController::ComposerController()
     mIdentitySelector{new IdentitySelector{*this}},
     mToModel{new QStringListModel},
     mCcModel{new QStringListModel},
-    mBccModel{new QStringListModel}
+    mBccModel{new QStringListModel},
+    mAttachmentModel{new QStandardItemModel}
 {
+    mAttachmentModel->setItemRoleNames({{NameRole, "name"},
+                                        {FilenameRole, "filename"},
+                                        {ContentRole, "content"},
+                                        {MimeTypeRole, "mimetype"},
+                                        {DescriptionRole, "description"},
+                                        {IconNameRole, "iconName"},
+                                        {InlineRole, "inline"}});
     updateSaveAsDraftAction();
     // mSendAction->monitorProperty<To>();
     // mSendAction->monitorProperty<Send>([] (const QString &) -> bool{
@@ -175,6 +187,46 @@ void ComposerController::removeBcc(const QString &s)
     updateSendAction();
 }
 
+QAbstractItemModel *ComposerController::attachmentModel() const
+{
+    return mAttachmentModel.data();
+}
+
+void ComposerController::addAttachment(const QUrl &url)
+{
+    QMimeDatabase db;
+    auto mimeType = db.mimeTypeForUrl(url);
+    if (mimeType.name() == QLatin1String("inode/directory")) {
+        qWarning() << "Can't deal with directories yet.";
+    } else {
+        if (!url.isLocalFile()) {
+            qWarning() << "Cannot attach remote file: " << url;
+            return;
+        }
+
+        QFileInfo fileInfo(url.toLocalFile());
+        if (!fileInfo.exists()) {
+            qWarning() << "The file doesn't exist: " << url;
+        }
+
+        QFile file{fileInfo.filePath()};
+        file.open(QIODevice::ReadOnly);
+        const auto data = file.readAll();
+        auto item = new QStandardItem;
+        item->setData(fileInfo.fileName(), NameRole);
+        item->setData(mimeType.name().toLatin1(), MimeTypeRole);
+        item->setData(fileInfo.fileName(), FilenameRole);
+        item->setData(false, InlineRole);
+        item->setData(mimeType.iconName(), IconNameRole);
+        item->setData(data, ContentRole);
+        mAttachmentModel->appendRow(item);
+    }
+}
+
+void ComposerController::removeAttachment(const QString &s)
+{
+}
+
 Completer *ComposerController::recipientCompleter() const
 {
     return mRecipientCompleter.data();
@@ -215,6 +267,56 @@ static QStringList getStringListFromAddresses(const QString &s)
     return list;
 }
 
+void ComposerController::addAttachmentPart(KMime::Content *partToAttach)
+{
+    auto item = new QStandardItem;
+
+    if (partToAttach->contentType()->mimeType() == "multipart/digest" ||
+            partToAttach->contentType()->mimeType() == "message/rfc822") {
+        // if it is a digest or a full message, use the encodedContent() of the attachment,
+        // which already has the proper headers
+        item->setData(partToAttach->encodedContent(), ContentRole);
+    } else {
+        item->setData(partToAttach->decodedContent(), ContentRole);
+    }
+    item->setData(partToAttach->contentType()->mimeType(), MimeTypeRole);
+
+    QMimeDatabase db;
+    auto mimeType = db.mimeTypeForName(partToAttach->contentType()->mimeType());
+    item->setData(mimeType.iconName(), IconNameRole);
+
+    if (partToAttach->contentDescription(false)) {
+        item->setData(partToAttach->contentDescription()->asUnicodeString(), DescriptionRole);
+    }
+    QString name;
+    QString filename;
+    if (partToAttach->contentType(false)) {
+        if (partToAttach->contentType()->hasParameter(QStringLiteral("name"))) {
+            name = partToAttach->contentType()->parameter(QStringLiteral("name"));
+        }
+    }
+    if (partToAttach->contentDisposition(false)) {
+        filename = partToAttach->contentDisposition()->filename();
+        item->setData(partToAttach->contentDisposition()->disposition() == KMime::Headers::CDinline, InlineRole);
+    }
+
+    if (name.isEmpty() && !filename.isEmpty()) {
+        name = filename;
+    }
+    if (filename.isEmpty() && !name.isEmpty()) {
+        filename = name;
+    }
+
+    if (!filename.isEmpty()) {
+        item->setData(filename, FilenameRole);
+    }
+    if (!name.isEmpty()) {
+        item->setData(name, NameRole);
+    }
+
+    mAttachmentModel->appendRow(item);
+}
+
 void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 {
     mToModel->setStringList(getStringListFromAddresses(msg->to(true)->asUnicodeString()));
@@ -223,6 +325,12 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 
     setSubject(msg->subject(true)->asUnicodeString());
     setBody(msg->body());
+
+    //TODO use ObjecTreeParser to get encrypted attachments as well
+    foreach (const auto &att, msg->attachments()) {
+        addAttachmentPart(att);
+    }
+
     setExistingMessage(msg);
 }
 
@@ -236,7 +344,6 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
     Store::fetchOne<Mail>(query).then([this, loadAsDraft](const Mail &mail) {
         setExistingMail(mail);
 
-        //TODO this should probably happen as reaction to the property being set.
         const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
         if (!mailData.isEmpty()) {
             KMime::Message::Ptr mail(new KMime::Message);
@@ -285,12 +392,50 @@ KMime::Message::Ptr ComposerController::assembleMessage()
     mail->from(true)->addAddress(getIdentity());
 
     mail->subject(true)->fromUnicodeString(getSubject(), "utf-8");
-    mail->setBody(getBody().toUtf8());
     if (!mail->messageID()) {
         mail->messageID(true)->generate("org.kde.kube");
     }
     if (!mail->date(true)->dateTime().isValid()) {
         mail->date(true)->setDateTime(QDateTime::currentDateTimeUtc());
+    }
+
+    auto root = mAttachmentModel->invisibleRootItem();
+    if (root->hasChildren()) {
+        mail->contentType(true)->setMimeType("multipart/mixed");
+        mail->contentType()->setBoundary(KMime::multiPartBoundary());
+        mail->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
+        mail->setPreamble("This is a multi-part message in MIME format.\n");
+        for (int row = 0; row < root->rowCount(); row++) {
+            auto item = root->child(row, 0);
+            const auto name = item->data(NameRole).toString();
+            const auto filename = item->data(FilenameRole).toString();
+            const auto mimeType = item->data(MimeTypeRole).toByteArray();
+            const auto isInline = item->data(InlineRole).toBool();
+            const auto content = item->data(ContentRole).toByteArray();
+
+            KMime::Content *part = new KMime::Content;
+            part->contentDisposition(true)->setFilename(filename);
+            if (isInline) {
+                part->contentDisposition(true)->setDisposition(KMime::Headers::CDinline);
+            } else {
+                part->contentDisposition(true)->setDisposition(KMime::Headers::CDattachment);
+            }
+            part->contentType(true)->setMimeType(mimeType);
+            part->contentType(true)->setName(name, "utf-8");
+            //Just always encode attachments base64 so it's safe for binary data
+            part->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEbase64);
+            part->setBody(content);
+
+            mail->addContent(part);
+
+            auto mainMessage = new KMime::Content;
+            mainMessage->setBody(getBody().toUtf8());
+            mainMessage->contentType(true)->setMimeType("text/plain");
+            mail->addContent(mainMessage);
+        }
+    } else {
+        //FIXME same implementation as above for attachments
+        mail->setBody(getBody().toUtf8());
     }
 
     mail->assemble();

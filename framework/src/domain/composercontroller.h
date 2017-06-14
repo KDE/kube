@@ -24,6 +24,7 @@
 #include <QString>
 #include <QStringList>
 #include <QStringListModel>
+#include <QStandardItemModel>
 #include <QVariant>
 #include <sink/applicationdomaintype.h>
 #include <KMime/Message>
@@ -66,6 +67,7 @@ class ComposerController : public Kube::Controller
     Q_PROPERTY (QAbstractItemModel* toModel READ toModel CONSTANT)
     Q_PROPERTY (QAbstractItemModel* ccModel READ ccModel CONSTANT)
     Q_PROPERTY (QAbstractItemModel* bccModel READ bccModel CONSTANT)
+    Q_PROPERTY (QAbstractItemModel* attachmentModel READ attachmentModel CONSTANT)
 
     KUBE_CONTROLLER_ACTION(send)
     KUBE_CONTROLLER_ACTION(saveAsDraft)
@@ -81,6 +83,7 @@ public:
     QAbstractItemModel *toModel() const;
     QAbstractItemModel *ccModel() const;
     QAbstractItemModel *bccModel() const;
+    QAbstractItemModel *attachmentModel() const;
 
     Q_INVOKABLE void addTo(const QString &);
     Q_INVOKABLE void removeTo(const QString &);
@@ -88,6 +91,8 @@ public:
     Q_INVOKABLE void removeCc(const QString &);
     Q_INVOKABLE void addBcc(const QString &);
     Q_INVOKABLE void removeBcc(const QString &);
+    Q_INVOKABLE void addAttachment(const QUrl &);
+    Q_INVOKABLE void removeAttachment(const QString &);
 
 public slots:
     virtual void clear() Q_DECL_OVERRIDE;
@@ -97,8 +102,19 @@ private slots:
     void updateSaveAsDraftAction();
 
 private:
+    enum AttachmentRoles {
+        NameRole = Qt::UserRole + 1,
+        FilenameRole,
+        ContentRole,
+        MimeTypeRole,
+        DescriptionRole,
+        InlineRole,
+        IconNameRole
+    };
+
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
+    void addAttachmentPart(KMime::Content *partToAttach);
     KMime::Message::Ptr assembleMessage();
 
     QScopedPointer<Completer> mRecipientCompleter;
@@ -106,4 +122,5 @@ private:
     QScopedPointer<QStringListModel> mToModel;
     QScopedPointer<QStringListModel> mCcModel;
     QScopedPointer<QStringListModel> mBccModel;
+    QScopedPointer<QStandardItemModel> mAttachmentModel;
 };
