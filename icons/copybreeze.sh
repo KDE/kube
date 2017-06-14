@@ -84,3 +84,5 @@ for root, dirs, files in os.walk(dirToWalk):
     for file in files:
         if any(file == s for s in wantedIcons):
             copyFile(dir, root, file)
+        elif "mimetypes" in root: #Except the explicitly mentioned icons we'll also want all mimetypes
+            copyFile(dir, root, file)

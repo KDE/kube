@@ -13,5 +13,6 @@ ecm_install_icons(ICONS sc-apps-kube_logo.svg DESTINATION share/icons)
 install(DIRECTORY
     breeze/icons/places
     breeze/icons/actions
+    breeze/icons/mimetypes
     DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/kube)
 install(FILES breeze/icons/index.theme DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/kube)
