@@ -300,6 +300,8 @@ Kube.View {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
+                selectByMouse: true
+
                 text: composerController.body
                 onTextChanged: composerController.body = text;
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
