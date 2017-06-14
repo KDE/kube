@@ -270,6 +270,7 @@ Kube.View {
                             name: model.filename
                             icon: model.iconName
                             clip: true
+                            actionIcon: Kube.Icons.remove
                         }
                     }
                 }

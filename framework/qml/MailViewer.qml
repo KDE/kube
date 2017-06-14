@@ -281,12 +281,10 @@ Rectangle {
                 icon: model.iconName
 
                 clip: true
-                onDownload: {
-                    messageParser.attachments.saveAttachmentToDisk(messageParser.attachments.index(index, 0))
-                }
-                onOpen: {
-                    messageParser.attachments.openAttachment(messageParser.attachments.index(index, 0))
-                }
+
+                actionIcon: Kube.Icons.save_inverted
+                onExecute: messageParser.attachments.saveAttachmentToDisk(messageParser.attachments.index(index, 0))
+                onClicked: messageParser.attachments.openAttachment(messageParser.attachments.index(index, 0))
             }
         }
     }

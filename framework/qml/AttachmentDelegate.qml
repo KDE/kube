@@ -24,8 +24,9 @@ Item {
 
     property string name
     property string icon
-    signal open;
-    signal download;
+    property alias actionIcon: actionButton.iconName
+    signal clicked;
+    signal execute;
 
     width: content.width + Kube.Units.smallSpacing
     height: content.height + Kube.Units.smallSpacing
@@ -40,7 +41,7 @@ Item {
     MouseArea {
         anchors.fill: parent
 
-        onClicked: root.open()
+        onClicked: root.clicked()
     }
 
     Row {
@@ -59,10 +60,10 @@ Item {
             color: Kube.Colors.backgroundColor
         }
         Kube.IconButton {
+            id: actionButton
             height: Kube.Units.gridUnit
             width: height
-            iconName: Kube.Icons.save_inverted
-            onClicked: root.download()
+            onClicked: root.execute()
             padding: 0
         }
     }
