@@ -469,7 +469,7 @@ void ComposerController::send()
                 auto resourceId = resources[0]->identifier();
                 SinkLog() << "Sending message via resource: " << resourceId;
                 Mail mail(resourceId);
-                mail.setMimeMessage(message->encodedContent());
+                mail.setMimeMessage(message->encodedContent(true));
                 return Store::create(mail)
                     .then<void>([=] {
                         //Trigger a sync, but don't wait for it.
@@ -518,7 +518,7 @@ void ComposerController::saveAsDraft()
                 .then([=](const SinkResource &resource) {
                     Mail mail(resource.identifier());
                     mail.setDraft(true);
-                    mail.setMimeMessage(message->encodedContent());
+                    mail.setMimeMessage(message->encodedContent(true));
                     return Store::create(mail);
                 })
                 .onError([] (const KAsync::Error &error) {
@@ -527,7 +527,7 @@ void ComposerController::saveAsDraft()
         } else {
             SinkLog() << "Modifying an existing mail" << existingMail.identifier();
             existingMail.setDraft(true);
-            existingMail.setMimeMessage(message->encodedContent());
+            existingMail.setMimeMessage(message->encodedContent(true));
             return Store::modify(existingMail);
         }
     }();
