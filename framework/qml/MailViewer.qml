@@ -392,11 +392,13 @@ Rectangle {
     Kube.Popup {
         id: debugPopup
         modal: true
+        parent: ApplicationWindow.overlay
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-        x: 0
-        y: 0
-        width: root.width
-        height: root.height
+        x: (parent.width - width)/2
+        y: Kube.Units.largeSpacing
+        width: parent.width / 2
+        height: parent.height - Kube.Units.largeSpacing * 2
+        clip: true
 
         Flickable {
             id: flickable
@@ -408,6 +410,20 @@ Rectangle {
                 width: flickable.width
                 height: childrenRect.height
 
+                TextEdit {
+                    id: rawContent
+                    width: parent.width
+                    readOnly: true
+                    selectByMouse: true
+                    textFormat: TextEdit.PlainText
+                    wrapMode: TextEdit.Wrap
+                    height: implicitHeight
+                    text: messageParser.rawContent
+                }
+                Rectangle {
+                    color: "black"
+                    height: 2
+                }
                 Controls1.TreeView {
                     id: mailStructure
                     width: parent.width
@@ -471,16 +487,6 @@ Rectangle {
                     textFormat: TextEdit.PlainText
                     wrapMode: TextEdit.Wrap
                     height: implicitHeight
-                }
-                TextEdit {
-                    id: rawContent
-                    width: parent.width
-                    readOnly: true
-                    selectByMouse: true
-                    textFormat: TextEdit.PlainText
-                    wrapMode: TextEdit.Wrap
-                    height: implicitHeight
-                    text: messageParser.rawContent
                 }
             }
         }
