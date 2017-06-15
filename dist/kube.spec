@@ -1,6 +1,6 @@
 Name:           kube
 Version:        0.3
-Release:	    5%{?dist}
+Release:	    6%{?dist}
 Summary:        kube
 
 Group:          Applications/Desktop
