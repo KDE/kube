@@ -55,11 +55,12 @@ public:
                 }
                 if (type == "contacts") {
                     scope.setType<ApplicationDomain::Contact>();
-                }
-                if (type == "mail") {
+                } else if (type == "mail") {
                     scope.setType<ApplicationDomain::Mail>();
-                }
-                if (type == "folder") {
+                } else if (type == "folder") {
+                    scope.setType<ApplicationDomain::Folder>();
+                } else {
+                    //Only synchronize folders by default for now
                     scope.setType<ApplicationDomain::Folder>();
                 }
                 SinkLog() << "Synchronizing all. AccountId: " << accountId << " Type: " << type;
