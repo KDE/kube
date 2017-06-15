@@ -77,7 +77,10 @@ Item {
             width: parent.width
             hoverEnabled: true
 
-            onClicked: lineEdit.visible = true
+            onClicked: {
+                lineEdit.visible = true
+                lineEdit.forceActiveFocus()
+            }
 
             Kube.Label {
                 text: "Add recipient"
