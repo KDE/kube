@@ -57,9 +57,11 @@ Item {
                     anchors {
                         top: parent.top
                         left: parent.left
+                        right: parent.right
                         margins: Kube.Units.smallSpacing
                     }
                     text: display
+                    elide: Text.ElideRight
                 }
 
                 Rectangle {
