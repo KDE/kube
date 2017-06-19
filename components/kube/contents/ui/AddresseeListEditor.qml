@@ -47,29 +47,33 @@ Item {
                 right: parent.right
             }
             height: contentHeight
-
+            spacing: Kube.Units.smallSpacing
             delegate: Rectangle {
-                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3 // 2 for padding, 1 for spacing to the next item
+                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
                 width: parent.width
                 color: Kube.Colors.buttonColor
-
                 Kube.Label {
                     anchors {
                         top: parent.top
                         left: parent.left
-                        right: parent.right
+                        right: button.left
                         margins: Kube.Units.smallSpacing
                     }
                     text: display
                     elide: Text.ElideRight
                 }
-
-                Rectangle {
-                    anchors.bottom: parent.bottom
-
-                    width: parent.width
-                    height: Kube.Units.smallSpacing
-                    color: Kube.Colors.backgroundColor
+                Kube.IconButton {
+                    id: button
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        right: parent.right
+                        margins: Kube.Units.smallSpacing
+                    }
+                    height: Kube.Units.gridUnit
+                    width: height
+                    onClicked: root.removed(display);
+                    padding: 0
+                    iconName: Kube.Icons.remove
                 }
             }
         }
