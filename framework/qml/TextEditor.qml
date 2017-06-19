@@ -46,6 +46,8 @@ ScrollView {
         }
 
         Kube.TextArea {
+        //TODO drop all sizes and use the following once we have qt 5.9
+        // Controls2.TextArea.flickable: Kube.TextArea {
             id: edit
             width: flick.width
             height: edit.contentHeight > flick.height ? edit.contentHeight : flick.height
