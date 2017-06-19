@@ -297,16 +297,12 @@ Kube.View {
                 }
             }
 
-            Kube.TextArea {
-                id: content
+            Kube.TextEditor {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                selectByMouse: true
-
+                onActiveFocusChanged: closeFirstSplitIfNecessary()
                 text: composerController.body
                 onTextChanged: composerController.body = text;
-                onActiveFocusChanged: closeFirstSplitIfNecessary()
             }
         }
     }
