@@ -54,7 +54,7 @@ Item {
     property string goUp: "go-down"
 
     property string addNew: "list-add"
-    property string remove: "list-remove"
+    property string remove: "kube-list-remove-inverted"
     property string folder: "folder"
     property string save_inverted: "document-save-inverted"
 
