@@ -89,7 +89,7 @@ Item {
             }
 
             Kube.Label {
-                text: "Add recipient"
+                text: "+ Add recipient"
                 color: Kube.Colors.highlightColor
                 font.underline: parent.containsMouse
             }
