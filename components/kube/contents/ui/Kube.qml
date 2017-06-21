@@ -171,7 +171,7 @@ Controls2.ApplicationWindow {
 
             Kube.Listener {
                 filter: Kube.Messages.componentDone
-                onMessageReceived: kubeViews.pop({immediate: true})
+                onMessageReceived: kubeViews.pop(Controls2.StackView.Immediate)
             }
 
             //TODO replacing here while a composer is open is destructive
@@ -186,9 +186,7 @@ Controls2.ApplicationWindow {
                 }
             }
             function setAccountsView() {
-                if (currentItem != accountsView) {
-                    kubeViews.replace(null, accountsView, Controls2.StackView.Immediate)
-                }
+                kubeViews.push(accountsView, {}, Controls2.StackView.Immediate)
             }
             function setLogView() {
                 if (currentItem != logView) {

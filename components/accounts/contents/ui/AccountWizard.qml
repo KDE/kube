@@ -73,6 +73,10 @@ Kube.Popup {
     Component {
         id: wizardPage
         AccountWizardPage {
+            onDone: {
+                popup.close()
+                Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+            }
         }
     }
 }

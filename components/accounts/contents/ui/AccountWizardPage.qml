@@ -28,6 +28,7 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property string accountType
+    signal done()
 
     Kube.AccountFactory {
         id: accountFactory
@@ -118,7 +119,7 @@ Item {
 
                 text: "Discard"
                 onClicked: {
-                    popup.close()
+                    root.done()
                 }
             }
 
@@ -131,7 +132,10 @@ Item {
                 text: "Save"
                 onClicked: {
                     loader.item.save()
-                    popup.close()
+
+                    Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
+
+                    root.done()
                 }
             }
         }
