@@ -26,4 +26,5 @@
 namespace MailTemplates
 {
     void reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback);
+    QString plaintextContent(const KMime::Message::Ptr &origMsg);
 };

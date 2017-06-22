@@ -337,7 +337,7 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
     mBccModel->setStringList(getStringListFromAddresses(msg->bcc(true)->asUnicodeString()));
 
     setSubject(msg->subject(true)->asUnicodeString());
-    setBody(msg->body());
+    setBody(MailTemplates::plaintextContent(msg));
 
     //TODO use ObjecTreeParser to get encrypted attachments as well
     foreach (const auto &att, msg->attachments()) {

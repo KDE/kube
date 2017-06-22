@@ -30,6 +30,7 @@
 #include <QWebEngineScript>
 #include <QSysInfo>
 #include <QTextCodec>
+#include <QTextDocument>
 
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
@@ -784,11 +785,6 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
 
     auto definedLocale = QLocale::system();
 
-    //TODO set empty source instead
-    MimeTreeParser::ObjectTreeParser otp;
-    otp.setAllowAsync(false);
-    otp.parseObjectTree(origMsg.data());
-
     //Add quoted body
     QString plainBody;
     QString htmlBody;
@@ -803,6 +799,8 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     //Strip signature for replies
     const bool stripSignature = true;
 
+    MimeTreeParser::ObjectTreeParser otp;
+    otp.parseObjectTree(origMsg.data());
     const auto plainTextContent = otp.plainTextContent();
     const auto htmlContent = otp.htmlContent();
 
@@ -831,4 +829,18 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
             callback(msg);
         });
     });
+}
+
+QString MailTemplates::plaintextContent(const KMime::Message::Ptr &msg)
+{
+    MimeTreeParser::ObjectTreeParser otp;
+    otp.parseObjectTree(msg.data());
+    const auto plain = otp.plainTextContent();
+    if (plain.isEmpty()) {
+        //Maybe not as good as the webengine version, but works at least for simple html content
+        QTextDocument doc;
+        doc.setHtml(otp.htmlContent());
+        return doc.toPlainText();
+    }
+    return plain;
 }
