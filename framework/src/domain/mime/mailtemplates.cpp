@@ -109,18 +109,13 @@ QString replacePrefixes(const QString &str, const QStringList &prefixRegExps,
     }
 }
 
-QString cleanSubject(const KMime::Message::Ptr &msg, const QStringList &prefixRegExps, bool replace, const QString &newPrefix)
-{
-    return replacePrefixes(msg->subject()->asUnicodeString(), prefixRegExps, replace, newPrefix);
-}
-
 QString forwardSubject(const KMime::Message::Ptr &msg)
 {
     bool replaceForwardPrefix = true;
     QStringList forwardPrefixes;
     forwardPrefixes << "Fwd:";
     forwardPrefixes << "FW:";
-    return cleanSubject(msg, forwardPrefixes, replaceForwardPrefix, QStringLiteral("Fwd:"));
+    return replacePrefixes(msg->subject()->asUnicodeString(), forwardPrefixes, replaceForwardPrefix, QStringLiteral("Fwd:"));
 }
 
 QString replySubject(const KMime::Message::Ptr &msg)
@@ -128,10 +123,10 @@ QString replySubject(const KMime::Message::Ptr &msg)
     bool replaceReplyPrefix = true;
     QStringList replyPrefixes;
     //We're escaping the regex escape sequences. awesome
-    replyPrefixes << "Re\\\\s*:";
-    replyPrefixes << "Re[\\\\d+\\\\]:";
-    replyPrefixes << "Re\\\\d+:";
-    return cleanSubject(msg, replyPrefixes, replaceReplyPrefix, QStringLiteral("Re:"));
+    replyPrefixes << "Re\\s*:";
+    replyPrefixes << "Re[\\d+\\]:";
+    replyPrefixes << "Re\\d+:";
+    return replacePrefixes(msg->subject()->asUnicodeString(), replyPrefixes, replaceReplyPrefix, QStringLiteral("Re:"));
 }
 
 QByteArray getRefStr(const KMime::Message::Ptr &msg)
