@@ -32,7 +32,7 @@ public:
     PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser);
     ~PartModelPrivate();
 
-    void createTree();
+    void findEncapsulated(const MimeTreeParser::EncapsulatedRfc822MessagePart::Ptr &e);
     PartModel *q;
     QVector<MimeTreeParser::MessagePartPtr> mParts;
     QHash<MimeTreeParser::MessagePart*, QVector<MimeTreeParser::MessagePartPtr>> mEncapsulatedParts;
@@ -45,16 +45,24 @@ PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeT
     , mParser(parser)
 {
     mParts = mParser->collectContentParts();
-    qWarning() << "Collected content parts: " << mParts.size();
     for (auto p : mParts) {
         if (auto e = p.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
-            mEncapsulatedParts[e.data()] = mParser->collectContentParts(e);
-            for (auto subPart : mEncapsulatedParts[e.data()]) {
-                mParents[subPart.data()] = e.data();
-            }
+            findEncapsulated(e);
         }
     }
 }
+
+//Recursively find encapsulated messages
+void PartModelPrivate::findEncapsulated(const MimeTreeParser::EncapsulatedRfc822MessagePart::Ptr &e)
+{
+    mEncapsulatedParts[e.data()] = mParser->collectContentParts(e);
+    for (auto subPart : mEncapsulatedParts[e.data()]) {
+        mParents[subPart.data()] = e.data();
+        if (auto encapsulatedSub = subPart.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
+            findEncapsulated(encapsulatedSub);
+        }
+    }
+};
 
 PartModelPrivate::~PartModelPrivate()
 {
