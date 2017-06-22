@@ -167,6 +167,8 @@ Kube.View {
 
                             PropertyChanges {target: background; color: Kube.Colors.highlightColor; opacity: 0.6}
                             PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
+                            PropertyChanges {target: date; visible: false}
+                            PropertyChanges {target: buttons; visible: true}
                         }
                         ]
 
@@ -216,6 +218,29 @@ Kube.View {
                                 font.italic: true
                                 color: Kube.Colors.disabledTextColor
                                 font.pointSize: 9
+                            }
+                        }
+                        Row {
+                            id: buttons
+
+                            property bool containsMouse: deleteButton.hovered
+
+                            anchors {
+                                right: parent.right
+                                bottom: parent.bottom
+                                margins: Kube.Units.smallSpacing
+                            }
+
+                            visible: false
+                            spacing: Kube.Units.smallSpacing
+                            opacity: 0.7
+
+                            Kube.IconButton {
+                                id: deleteButton
+                                iconName: Kube.Icons.moveToTrash
+                                visible: enabled
+                                enabled: !!model.mail
+                                onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                             }
                         }
                     }

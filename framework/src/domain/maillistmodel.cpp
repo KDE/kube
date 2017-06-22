@@ -310,8 +310,9 @@ void MailListModel::setShowDrafts(bool)
 {
     using namespace Sink::ApplicationDomain;
     Sink::Query query;
-    // query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
+    query.setFlags(Sink::Query::LiveQuery);
     query.filter<Mail::Draft>(true);
+    query.filter<Mail::Trash>(false);
     query.request<Mail::Subject>();
     query.request<Mail::Sender>();
     query.request<Mail::To>();
