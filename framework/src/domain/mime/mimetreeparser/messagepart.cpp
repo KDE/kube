@@ -730,20 +730,20 @@ bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signa
             }
         }
         if (m) {
-            if (mOtp->allowAsync()) {
-                QObject::connect(m, &CryptoBodyPartMemento::update,
-                                 nodeHelper, &NodeHelper::update);
-                // QObject::connect(m, SIGNAL(update(MimeTreeParser::UpdateMode)),
-                //                  _source->sourceObject(), SLOT(update(MimeTreeParser::UpdateMode)));
+            // if (mOtp->allowAsync()) {
+            //     QObject::connect(m, &CryptoBodyPartMemento::update,
+            //                      nodeHelper, &NodeHelper::update);
+            //     // QObject::connect(m, SIGNAL(update(MimeTreeParser::UpdateMode)),
+            //     //                  _source->sourceObject(), SLOT(update(MimeTreeParser::UpdateMode)));
 
-                if (m->start()) {
-                    mMetaData.inProgress = true;
-                    mOtp->mHasPendingAsyncJobs = true;
-                }
-                //FIXME delete memento once done
-            } else {
+            //     if (m->start()) {
+            //         mMetaData.inProgress = true;
+            //         mOtp->mHasPendingAsyncJobs = true;
+            //     }
+            //     //FIXME delete memento once done
+            // } else {
                 m->exec();
-            }
+            // }
         }
     //only relevant in async case
     // } else if (m->isRunning()) {

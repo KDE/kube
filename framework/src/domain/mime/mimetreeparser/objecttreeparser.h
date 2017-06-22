@@ -243,10 +243,6 @@ public:
 
     virtual ~ObjectTreeParser();
 
-    void setAllowAsync(bool allow);
-    bool allowAsync() const;
-
-    bool hasPendingAsyncJobs() const;
     void print();
 
     /**
@@ -330,8 +326,6 @@ private:
     /// the children can be completely displayed again.
     bool mShowOnlyOneMimePart;
 
-    bool mHasPendingAsyncJobs;
-    bool mAllowAsync;
     bool mDeleteNodeHelper;
     KMime::Message::Ptr mMsg;
 

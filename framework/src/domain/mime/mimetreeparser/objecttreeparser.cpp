@@ -64,9 +64,7 @@ using namespace MimeTreeParser;
 ObjectTreeParser::ObjectTreeParser()
     : mNodeHelper(nullptr),
       mTopLevelContent(nullptr),
-      mShowOnlyOneMimePart(false),
-      mHasPendingAsyncJobs(false),
-      mAllowAsync(false)
+      mShowOnlyOneMimePart(false)
 {
     init();
 }
@@ -75,9 +73,7 @@ ObjectTreeParser::ObjectTreeParser(MimeTreeParser::NodeHelper *nodeHelper,
                                    bool showOnlyOneMimePart)
     : mNodeHelper(nodeHelper),
       mTopLevelContent(nullptr),
-      mShowOnlyOneMimePart(showOnlyOneMimePart),
-      mHasPendingAsyncJobs(false),
-      mAllowAsync(false)
+      mShowOnlyOneMimePart(showOnlyOneMimePart)
 {
     init();
 }
@@ -98,22 +94,6 @@ ObjectTreeParser::~ObjectTreeParser()
         delete mNodeHelper;
         mNodeHelper = nullptr;
     }
-}
-
-void ObjectTreeParser::setAllowAsync(bool allow)
-{
-    Q_ASSERT(!mHasPendingAsyncJobs);
-    mAllowAsync = allow;
-}
-
-bool ObjectTreeParser::allowAsync() const
-{
-    return mAllowAsync;
-}
-
-bool ObjectTreeParser::hasPendingAsyncJobs() const
-{
-    return mHasPendingAsyncJobs;
 }
 
 QString ObjectTreeParser::plainTextContent() const
@@ -423,9 +403,6 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
     if (!node) {
         return MessagePart::Ptr();
     }
-
-    // reset pending async jobs state (we'll rediscover pending jobs as we go)
-    mHasPendingAsyncJobs = false;
 
     // reset "processed" flags for...
     if (onlyOneMimePart) {
