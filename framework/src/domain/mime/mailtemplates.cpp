@@ -787,7 +787,7 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     //On $datetime you wrote:
     const QDateTime date = origMsg->date()->dateTime();
     const auto dateTimeString = QString("%1 %2").arg(definedLocale.toString(date.date(), QLocale::LongFormat)).arg(definedLocale.toString(date.time(), QLocale::LongFormat));
-    const auto onDateYouWroteLine = QString("On %1 you wrote:").arg(dateTimeString);
+    const auto onDateYouWroteLine = QString("On %1 you wrote:\n").arg(dateTimeString);
     plainBody.append(onDateYouWroteLine);
     htmlBody.append(plainToHtml(onDateYouWroteLine));
 
