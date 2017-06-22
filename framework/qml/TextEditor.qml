@@ -30,15 +30,11 @@ ScrollView {
         id: flick
 
         contentWidth: root.viewport.width
-        contentHeight: edit.height
+        contentHeight: Math.max(edit.contentHeight + edit.topPadding + edit.bottomPadding, flick.height)
         clip: true
 
         function ensureVisible(r)
         {
-            if (contentX >= r.x)
-                contentX = r.x;
-            else if (contentX + width <= r.x + r.width)
-                contentX = r.x+r.width-width;
             if (contentY >= r.y)
                 contentY = r.y;
             else if (contentY + height <= r.y + r.height)
@@ -49,10 +45,11 @@ ScrollView {
         //TODO drop all sizes and use the following once we have qt 5.9
         // Controls2.TextArea.flickable: Kube.TextArea {
             id: edit
-            width: flick.width
-            height: edit.contentHeight > flick.height ? edit.contentHeight : flick.height
+            width: flick.contentWidth - edit.leftPadding - edit.rightPadding
+            height: flick.contentHeight
             selectByMouse: true
             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+            wrapMode: TextEdit.Wrap
         }
     }
 }
