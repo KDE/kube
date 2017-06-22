@@ -21,6 +21,7 @@
 #include "attachmentmodel.h"
 
 #include <mimetreeparser/objecttreeparser.h>
+#include <fabric.h>
 
 #include <QDebug>
 #include <KMime/Content>
@@ -153,9 +154,14 @@ static QString saveAttachmentToDisk(const QModelIndex &index, const QString &pat
             data = KMime::CRLFtoLF(data);
         }
         auto fname = path + part->filename();
+        //A file with that name already exists, we assume it's the right file
+        if (QFileInfo{fname}.exists()) {
+            return fname;
+        }
         QFile f(fname);
         if (!f.open(QIODevice::ReadWrite)) {
             qWarning() << "Failed to write attachment to file:" << fname << " Error: " << f.errorString();
+            Kube::Fabric::Fabric{}.postMessage("notification", {{"message", QObject::tr("Failed to save attachment.")}});
             return {};
         }
         f.write(data);
@@ -179,7 +185,13 @@ bool AttachmentModel::saveAttachmentToDisk(const QModelIndex &index)
     }
     downloadDir += "/kube/";
     QDir{}.mkpath(downloadDir);
-    return !::saveAttachmentToDisk(index, downloadDir).isEmpty();
+
+    auto path = ::saveAttachmentToDisk(index, downloadDir);
+    if (path.isEmpty()) {
+        return false;
+    }
+    Kube::Fabric::Fabric{}.postMessage("notification", {{"message", tr("Saved the attachment to disk: ") + path}});
+    return true;
 }
 
 bool AttachmentModel::openAttachment(const QModelIndex &index)
@@ -188,9 +200,13 @@ bool AttachmentModel::openAttachment(const QModelIndex &index)
     QDir{}.mkpath(downloadDir);
     const auto filePath = ::saveAttachmentToDisk(index, downloadDir, true);
     if (!filePath.isEmpty()) {
-        QDesktopServices::openUrl(QUrl("file://" + filePath));
+        if (!QDesktopServices::openUrl(QUrl("file://" + filePath))) {
+            Kube::Fabric::Fabric{}.postMessage("notification", {{"message", tr("Failed to open attachment.")}});
+            return false;
+        }
         return true;
     }
+    Kube::Fabric::Fabric{}.postMessage("notification", {{"message", tr("Failed to save attachment for opening.")}});
     return false;
 }
 
