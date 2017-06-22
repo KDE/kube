@@ -17,6 +17,7 @@ This section is supposed to outline that.
         * Desktop integration (notifications, startmenu)
     * Offline capability
     * Cryptography
+    * Multi-account support
 
 * To Kontact/Thunderbird/...
     * Simple but powerful UI (assuming we can achieve that)
@@ -63,10 +64,8 @@ Decisions are generally made in discussion with the team, and result in document
 
 Should the team not be able to reach consensus, the team lead makes the final decision.
 
-NOTE: We should probably have a phabricator board for open decisions.
-
 ## Planning
-All planning happens on the [KDE Phabricator instance](https://phabricator.kde.org/project/view/43/).
+All planning happens on the [KDE Phabricator instance](https://phabricator.kde.org/tag/kube/).
 
 ## Releases / Milestones
 Releases will follow achieved milestones. Milestones are assembled from tasks on the roadmap.
@@ -75,7 +74,7 @@ Releases will follow achieved milestones. Milestones are assembled from tasks on
 The product will follow the semantic versioning scheme (semver.org), with each feature release corresponding to a milestone on phabricator.
 
 ## Git repository
-The git repository can be found here: [git://anongit.kde.org/kontact-quick](git://anongit.kde.org/kontact-quick)
+The git repository can be found here: [git://anongit.kde.org/kube](git://anongit.kde.org/kube)
 
 The "development" branch is used for the latest development version, master is always stable and always releasable. Branches for specific versions that receive patch releases may be created as required.
 

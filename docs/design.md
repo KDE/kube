@@ -13,7 +13,7 @@ The overall architecture is split into three layers; Ui, Domain Logic and Infras
 +----------------------------+
 |                            |
 |        Domain Logic        |
-|        Actions/Models      |
+|        Fabric/Models       |
 |                            |
 +--------------+------+------+
 |              |      |      |

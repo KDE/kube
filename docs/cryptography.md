@@ -4,7 +4,7 @@
 
 To get Open PGP support we use GpgME >= 1.8.0. GpgME has now include Gpgme++ and QGpgME, that were living before in kdepim repositories.
 
-GpgME gives use directly PGP and SMime support and needs gpg-agent, gpg2, gpgsm and a pinentry to be installed to work correctly. The package names differ between the distributions on Fedora the are named gnupg2, gnupg2-smime and pinentry-qt (there are several different flavours for diffrent environments. I think the Qt flavour mathes best).
+GpgME gives us directly PGP and SMime support and needs gpg-agent, gpg2, gpgsm and a pinentry to be installed to work correctly. The package names differ between the distributions on Fedora the are named gnupg2, gnupg2-smime and pinentry-qt (there are several different flavours for diffrent environments. I think the Qt flavour matches best).
 
 gnupg using ~/.gnupg as default homedir to store every file it uses. In our test docker environment, we setup all relevat files and added keys without passphrase to test PGP/SMime support. We also incuded one key `With Passphrase "test" <passphrase@example.org>`, that has a phassphrase named `test`.
 
