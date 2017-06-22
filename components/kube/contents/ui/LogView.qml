@@ -50,7 +50,9 @@ Controls.SplitView {
             }
 
             onCurrentItemChanged: {
-                details.resourceId = currentItem.currentData.resource
+                if (details.resourceId) {
+                    details.resourceId = currentItem.currentData.resource
+                }
                 details.message = currentItem.currentData.message
                 details.timestamp = currentItem.currentData.timestamp
             }
@@ -135,9 +137,11 @@ Controls.SplitView {
                 columns: 2
                 Kube.Label {
                     text: "Resource Id:"
+                    visible: details.resourceId
                 }
                 Kube.Label {
                     text: details.resourceId
+                    visible: details.resourceId
                 }
                 Kube.Label {
                     text: "Timestamp:"
