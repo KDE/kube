@@ -26,30 +26,24 @@ ScrollView {
     id: root
     property alias text: edit.text
 
-    Flickable {
-        id: flick
+    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
 
-        contentWidth: root.viewport.width
-        contentHeight: Math.max(edit.contentHeight + edit.topPadding + edit.bottomPadding, flick.height)
-        clip: true
+    function ensureVisible(r)
+    {
+        if (flickableItem.contentY >= r.y)
+            flickableItem.contentY = r.y;
+        else if (flickableItem.contentY + height <= r.y + r.height)
+            flickableItem.contentY = r.y + r.height - height + edit.padding;
+    }
 
-        function ensureVisible(r)
-        {
-            if (contentY >= r.y)
-                contentY = r.y;
-            else if (contentY + height <= r.y + r.height)
-                contentY = r.y+r.height-height;
-        }
-
-        Kube.TextArea {
-        //TODO drop all sizes and use the following once we have qt 5.9
-        // Controls2.TextArea.flickable: Kube.TextArea {
-            id: edit
-            width: flick.contentWidth - edit.leftPadding - edit.rightPadding
-            height: flick.contentHeight
-            selectByMouse: true
-            onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
-            wrapMode: TextEdit.Wrap
-        }
+    Kube.TextArea {
+    //TODO drop all sizes and use the following once we have qt 5.9
+    // Controls2.TextArea.flickable: Kube.TextArea {
+        id: edit
+        width: root.viewport.width
+        height: Math.max(edit.contentHeight + edit.topPadding + edit.bottomPadding, root.height)
+        selectByMouse: true
+        onCursorRectangleChanged: root.ensureVisible(cursorRectangle)
+        wrapMode: TextEdit.Wrap
     }
 }
