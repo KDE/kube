@@ -562,26 +562,9 @@ enum ReplyStrategy {
     ReplyNone
 };
 
-void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback)
+static KMime::Types::Mailbox::List getMailingListAddresses(const KMime::Message::Ptr &origMsg)
 {
-    //FIXME
-    const bool alwaysPlain = true;
-    //FIXME
-    const ReplyStrategy replyStrategy = ReplySmart;
-    KMime::Message::Ptr msg(new KMime::Message);
-    //FIXME
-    //Personal email addresses
-    KMime::Types::AddrSpecList me;
-    KMime::Types::Mailbox::List toList;
-    KMime::Types::Mailbox::List replyToList;
     KMime::Types::Mailbox::List mailingListAddresses;
-
-    // const uint originalIdentity = identityUoid(origMsg);
-    initHeader(msg);
-    replyToList = origMsg->replyTo()->mailboxes();
-
-    msg->contentType()->setCharset("utf-8");
-
     if (origMsg->headerByType("List-Post") &&
             origMsg->headerByType("List-Post")->asUnicodeString().contains(QStringLiteral("mailto:"), Qt::CaseInsensitive)) {
 
@@ -593,7 +576,23 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
             mailingListAddresses << mailbox;
         }
     }
+    return mailingListAddresses;
+}
 
+struct Recipients {
+    KMime::Types::Mailbox::List to;
+    KMime::Types::Mailbox::List cc;
+};
+
+static Recipients getRecipients(const KMime::Message::Ptr &origMsg, const KMime::Types::AddrSpecList &me)
+{
+    const KMime::Types::Mailbox::List replyToList = origMsg->replyTo()->mailboxes();
+    const KMime::Types::Mailbox::List mailingListAddresses = getMailingListAddresses(origMsg);
+
+    KMime::Types::Mailbox::List toList;
+    KMime::Types::Mailbox::List ccList;
+    //FIXME
+    const ReplyStrategy replyStrategy = ReplySmart;
     switch (replyStrategy) {
     case ReplySmart: {
         if (auto hdr = origMsg->headerByType("Mail-Followup-To")) {
@@ -722,9 +721,7 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
                 ccRecipients.pop_front();
             }
 
-            foreach (const KMime::Types::Mailbox &mailbox, ccRecipients) {
-                msg->cc()->addAddress(mailbox);
-            }
+            ccList = ccRecipients;
         }
 
         if (toList.isEmpty() && !recipients.isEmpty()) {
@@ -763,9 +760,29 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
         // the addressees will be set by the caller
         break;
     }
+    return {toList, ccList};
+}
 
-    foreach (const KMime::Types::Mailbox &mailbox, toList) {
+void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback)
+{
+    //FIXME
+    const bool alwaysPlain = true;
+    KMime::Message::Ptr msg(new KMime::Message);
+    //FIXME
+    //Personal email addresses, required to detect the case where we reply to a message we have sent ourselves
+    KMime::Types::AddrSpecList me;
+
+    // const uint originalIdentity = identityUoid(origMsg);
+    initHeader(msg);
+
+    msg->contentType()->setCharset("utf-8");
+
+    const auto recipients = getRecipients(origMsg, me);
+    for (const auto &mailbox : recipients.to) {
         msg->to()->addAddress(mailbox);
+    }
+    for (const auto &mailbox : recipients.cc) {
+        msg->cc(true)->addAddress(mailbox);
     }
 
     const QByteArray refStr = getRefStr(origMsg);
