@@ -19,12 +19,11 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
-import QtQuick.Controls 1.3 as Controls
 
 import org.kube.framework 1.0 as Kube
 
 
-Controls.ToolButton {
+Kube.IconButton {
     id: root
 
     visible: outboxModel.count > 0
@@ -50,6 +49,8 @@ Controls.ToolButton {
         anchors {
             right: parent.right
             bottom: parent.bottom
+            rightMargin: 1
+            bottomMargin: 1
         }
         width: Kube.Units.smallSpacing
         text: outboxModel.count
@@ -126,17 +127,13 @@ Controls.ToolButton {
 
                         spacing: Kube.Units.smallSpacing
 
-                        Controls.ToolButton {
+                        Kube.IconButton {
                             iconName: Kube.Icons.moveToTrash
-                            text: qsTr("Delete Mail")
-                            tooltip: text
                             onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.domainObject})
                         }
 
-                        Controls.ToolButton {
+                        Kube.IconButton {
                             iconName: Kube.Icons.edit
-                            text: qsTr("Edit")
-                            tooltip: text
                             onClicked: {
                                 Kube.Fabric.postMessage(Kube.Messages.moveToDrafts, {"mail": model.domainObject})
                                 //TODO stage upon completion
