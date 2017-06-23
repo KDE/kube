@@ -114,6 +114,20 @@ QModelIndex PartModel::index(int row, int column, const QModelIndex &parent) con
     return QModelIndex();
 }
 
+static QString addCss(const QString &s)
+{
+    //overflow:hidden ensures no scrollbars are ever shown.
+    const auto css = "<style>\n"
+               "body {\n"
+               "overflow:hidden;\n"
+               "}\n"
+               "</style>";
+    const auto header = QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
+                  "<html><head><title></title>")
+                  + css + QLatin1String("</head>\n<body>\n");
+    return header + s + QStringLiteral("</body></html>");
+}
+
 QVariant PartModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -177,7 +191,7 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             case ContentRole: {
                 const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
                 if (messagePart->isHtml()) {
-                    return d->mParser->resolveCidLinks(text);
+                    return addCss(d->mParser->resolveCidLinks(text));
                 } else { //We assume plain
                     //We alwas do richtext (so we get highlighted links and stuff).
                     return HtmlUtils::linkify(Qt::convertFromPlainText(text));
@@ -197,6 +211,8 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                     case MimeTreeParser::MessagePart::PassphraseError:
                         return tr("Wrong passphrase.");
                     case MimeTreeParser::MessagePart::UnknownError:
+                        break;
+                    default:
                         break;
                 }
                 return messagePart->errorString();
