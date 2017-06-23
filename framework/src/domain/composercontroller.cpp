@@ -389,14 +389,17 @@ KMime::Message::Ptr ComposerController::assembleMessage()
     if (!mail) {
         mail = KMime::Message::Ptr::create();
     }
+    mail->to(true)->clear();
     applyAddresses(mToModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->to(true)->addAddress(addrSpec, displayName);
         recordForAutocompletion(addrSpec, displayName);
     });
+    mail->cc(true)->clear();
     applyAddresses(mCcModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->cc(true)->addAddress(addrSpec, displayName);
         recordForAutocompletion(addrSpec, displayName);
     });
+    mail->bcc(true)->clear();
     applyAddresses(mBccModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->bcc(true)->addAddress(addrSpec, displayName);
         recordForAutocompletion(addrSpec, displayName);
