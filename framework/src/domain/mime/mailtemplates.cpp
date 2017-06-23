@@ -77,56 +77,83 @@ void initHeader(const KMime::Message::Ptr &message)
     message->contentType()->setMimeType("text/plain");
 }
 
-QString replacePrefixes(const QString &str, const QStringList &prefixRegExps,
-                        bool replace, const QString &newPrefix)
+QString replacePrefixes(const QString &str, const QStringList &prefixRegExps, const QString &newPrefix)
 {
-    bool recognized = false;
     // construct a big regexp that
     // 1. is anchored to the beginning of str (sans whitespace)
     // 2. matches at least one of the part regexps in prefixRegExps
-    QString bigRegExp = QStringLiteral("^(?:\\s+|(?:%1))+\\s*").arg(prefixRegExps.join(QStringLiteral(")|(?:")));
+    const QString bigRegExp = QStringLiteral("^(?:\\s+|(?:%1))+\\s*").arg(prefixRegExps.join(QStringLiteral(")|(?:")));
     QRegExp rx(bigRegExp, Qt::CaseInsensitive);
-    if (rx.isValid()) {
-        QString tmp = str;
-        if (rx.indexIn(tmp) == 0) {
-            recognized = true;
-            if (replace) {
-                return tmp.replace(0, rx.matchedLength(), newPrefix + QLatin1String(" "));
-            }
-        }
-    } else {
+    if (!rx.isValid()) {
         qWarning() << "bigRegExp = \""
                     << bigRegExp << "\"\n"
                     << "prefix regexp is invalid!";
-        // try good ole Re/Fwd:
-        recognized = str.startsWith(newPrefix);
-    }
-
-    if (!recognized) {
-        return newPrefix + QLatin1String(" ") + str;
-    } else {
+        qWarning() << "Error: " << rx.errorString() << rx;
+        Q_ASSERT(false);
         return str;
     }
+
+    QString tmp = str;
+    //We expect a match at the beginning of the string
+    if (rx.indexIn(tmp) == 0) {
+        return tmp.replace(0, rx.matchedLength(), newPrefix + QLatin1String(" "));
+    }
+    return str;
 }
 
-QString forwardSubject(const KMime::Message::Ptr &msg)
+const QStringList getForwardPrefixes()
 {
-    bool replaceForwardPrefix = true;
+    //See https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations
+    QStringList list;
+    //We want to be able to potentially reply to a variety of languages, so only translating is not enough
+    list << QObject::tr("fwd");
+    list << "fwd";
+    list << "fw";
+    list << "wg";
+    list << "vs";
+    list << "tr";
+    list << "rv";
+    list << "enc";
+    return list;
+}
+
+
+static QString forwardSubject(const QString &s)
+{
+    //The standandard prefix
+    const auto localPrefix = "FW:";
     QStringList forwardPrefixes;
-    forwardPrefixes << "Fwd:";
-    forwardPrefixes << "FW:";
-    return replacePrefixes(msg->subject()->asUnicodeString(), forwardPrefixes, replaceForwardPrefix, QStringLiteral("Fwd:"));
+    for (const auto &prefix : getForwardPrefixes()) {
+        forwardPrefixes << prefix + "\\s*:";
+    }
+    return replacePrefixes(s, forwardPrefixes, localPrefix);
 }
 
-QString replySubject(const KMime::Message::Ptr &msg)
+static QStringList getReplyPrefixes()
 {
-    bool replaceReplyPrefix = true;
+    //See https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations
+    QStringList list;
+    //We want to be able to potentially reply to a variety of languages, so only translating is not enough
+    list << QObject::tr("re");
+    list << "re";
+    list << "aw";
+    list << "sv";
+    list << "antw";
+    list << "ref";
+    return list;
+}
+
+static QString replySubject(const QString &s)
+{
+    //The standandard prefix (latin for "in re", in matter of)
+    const auto localPrefix = "RE:";
     QStringList replyPrefixes;
-    //We're escaping the regex escape sequences. awesome
-    replyPrefixes << "Re\\s*:";
-    replyPrefixes << "Re[\\d+\\]:";
-    replyPrefixes << "Re\\d+:";
-    return replacePrefixes(msg->subject()->asUnicodeString(), replyPrefixes, replaceReplyPrefix, QStringLiteral("Re:"));
+    for (const auto &prefix : getReplyPrefixes()) {
+        replyPrefixes << prefix + "\\s*:";
+        replyPrefixes << prefix + "\\[.+\\]:";
+        replyPrefixes << prefix + "\\d+:";
+    }
+    return replacePrefixes(s, replyPrefixes, localPrefix);
 }
 
 QByteArray getRefStr(const KMime::Message::Ptr &msg)
@@ -793,7 +820,7 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     //In-Reply-To = original msg-id
     msg->inReplyTo()->from7BitString(origMsg->messageID()->as7BitString(false));
 
-    msg->subject()->fromUnicodeString(replySubject(origMsg), "utf-8");
+    msg->subject()->fromUnicodeString(replySubject(origMsg->subject()->asUnicodeString()), "utf-8");
 
     auto definedLocale = QLocale::system();
 
