@@ -59,6 +59,7 @@ void ContactController::loadContact(const QVariant &contact)
         }
         setCompany(addressee.organization());
         setJobTitle(addressee.role());
+        setImageData(addressee.photo().rawData());
     }
 }
 

@@ -39,6 +39,7 @@ set(SRCS
     accounts/accountsmodel.cpp
     fabric.cpp
     sinkfabric.cpp
+    kubeimage.cpp
 )
 
 add_library(frameworkplugin SHARED ${SRCS})

@@ -149,13 +149,13 @@ Item {
                                     }
                                 }
 
-                                Rectangle {
+                                Kube.KubeImage {
                                     id: avatarPlaceholder
 
                                     height: parent.height
                                     width: height
 
-                                    color: "lightgrey"
+                                    imageData: model.imageData
                                 }
 
                                 Column {
@@ -241,13 +241,13 @@ Item {
                         height: Kube.Units.gridUnit * 8
                         width: personPageRoot.width - Kube.Units.largeSpacing
 
-                        Rectangle {
+                        Kube.KubeImage {
                             id: avatar
 
                             height: parent.height
                             width: height
 
-                            color: "lightgrey"
+                            imageData: contactController.imageData
                         }
 
                         //TODO replace with Kube.Heading once it is there

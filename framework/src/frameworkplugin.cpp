@@ -33,6 +33,7 @@
 #include "accounts/accountfactory.h"
 #include "settings/settings.h"
 #include "fabric.h"
+#include "kubeimage.h"
 
 #include <QtQml>
 
@@ -62,4 +63,6 @@ void FrameworkPlugin::registerTypes (const char *uri)
 
     qmlRegisterType<Kube::Fabric::Listener>(uri, 1, 0, "Listener");
     qmlRegisterSingletonType<Kube::Fabric::Fabric>(uri, 1, 0, "Fabric", fabric_singletontype_provider);
+
+    qmlRegisterType<KubeImage>(uri, 1, 0, "KubeImage");
 }

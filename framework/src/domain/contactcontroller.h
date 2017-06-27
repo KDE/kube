@@ -41,6 +41,7 @@ class ContactController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(QString, Country, country)
     KUBE_CONTROLLER_PROPERTY(QString, Company, company)
     KUBE_CONTROLLER_PROPERTY(QString, JobTitle, jobTitle)
+    KUBE_CONTROLLER_PROPERTY(QByteArray, ImageData, imageData)
 
     KUBE_CONTROLLER_ACTION(save)
 

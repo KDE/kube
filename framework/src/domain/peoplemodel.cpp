@@ -38,6 +38,7 @@ PeopleModel::PeopleModel(QObject *parent)
     query.request<Contact::Vcard>();
     query.request<Contact::Firstname>();
     query.request<Contact::Lastname>();
+    query.request<Contact::Photo>();
     runQuery(query);
 }
 
@@ -65,7 +66,8 @@ QHash< int, QByteArray > PeopleModel::roleNames() const
         {Type, "type"},
         {DomainObject, "domainObject"},
         {FirstName, "firstName"},
-        {LastName, "lastName"}
+        {LastName, "lastName"},
+        {ImageData, "imageData"}
         };
     return roles;
 }
@@ -96,6 +98,8 @@ QVariant PeopleModel::data(const QModelIndex &idx, int role) const
             return contact->getFirstname();
         case LastName:
             return contact->getLastname();
+        case ImageData:
+            return contact->getPhoto();
     }
     return QSortFilterProxyModel::data(idx, role);
 }

@@ -51,7 +51,8 @@ public:
         Addressbook,
         DomainObject,
         FirstName,
-        LastName
+        LastName,
+        ImageData
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
