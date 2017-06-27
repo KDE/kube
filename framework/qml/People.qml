@@ -149,14 +149,24 @@ Item {
                                     }
                                 }
 
-                                Kube.KubeImage {
+                                Rectangle {
                                     id: avatarPlaceholder
 
                                     height: parent.height
                                     width: height
-
-                                    imageData: model.imageData
+                                    Kube.KubeImage {
+                                        anchors.fill: parent
+                                        visible: model.imageData != ""
+                                        imageData: model.imageData
+                                    }
+                                    Kube.Icon {
+                                        anchors.fill: parent
+                                        visible: model.imageData == ""
+                                        iconName: Kube.Icons.user
+                                    }
+                                    color: "lightgrey"
                                 }
+
 
                                 Column {
 
@@ -241,13 +251,22 @@ Item {
                         height: Kube.Units.gridUnit * 8
                         width: personPageRoot.width - Kube.Units.largeSpacing
 
-                        Kube.KubeImage {
+                        Rectangle {
                             id: avatar
 
                             height: parent.height
                             width: height
-
-                            imageData: contactController.imageData
+                            Kube.KubeImage {
+                                anchors.fill: parent
+                                visible: contactController.imageData != ""
+                                imageData: contactController.imageData
+                            }
+                            Kube.Icon {
+                                anchors.fill: parent
+                                visible: contactController.imageData == ""
+                                iconName: Kube.Icons.user
+                            }
+                            color: "lightgrey"
                         }
 
                         //TODO replace with Kube.Heading once it is there

@@ -44,6 +44,7 @@ Item {
     property string outbox_inverted: "mail-folder-outbox-inverted"
 
     property string menu_inverted: "application-menu-inverted"
+    property string user: "im-user"
     property string user_inverted: "im-user-inverted"
     property string search_inverted: "edit-find-inverted"
     property string mail_inverted: "mail-message-inverted"
