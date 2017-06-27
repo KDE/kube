@@ -25,8 +25,6 @@ import QtQuick.Layouts 1.1
 import org.kube.components.mailviewer 1.0 as MV
 import org.kube.framework 1.0 as Kube
 
-import org.kde.kirigami 1.0 as Kirigami
-
 Rectangle {
     id: root
 
@@ -107,7 +105,8 @@ Rectangle {
 
             text: Qt.formatDateTime(root.date, "dd MMM yyyy hh:mm")
 
-            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
+            //FIXME font pointsize
+            font.pointSize: 6
             opacity: 0.75
         }
 

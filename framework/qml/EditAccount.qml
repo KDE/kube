@@ -19,7 +19,6 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
@@ -39,7 +38,8 @@ Item {
             margins: Kube.Units.largeSpacing * 2
         }
 
-        Kirigami.Heading {
+        //TODO Kube.Heading
+        Kube.Label {
             id: heading
             text: loader.item.heading
             color: Kube.Colors.highlightColor

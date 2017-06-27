@@ -31,7 +31,6 @@ Requires:       qt5-qtquick1
 Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2-devel
 Requires:       sink >= 0.3
-Requires:       kirigami
 Requires:       google-noto-sans-fonts
 
 %description

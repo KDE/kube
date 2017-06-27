@@ -22,7 +22,6 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 
@@ -252,7 +251,7 @@ Item {
                         }
 
                         //TODO replace with Kube.Heading once it is there
-                        Kirigami.Heading {
+                        Kube.Label {
                             id: nameLabel
 
                             anchors {

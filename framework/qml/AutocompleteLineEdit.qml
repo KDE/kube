@@ -20,7 +20,6 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 Kube.TextField {
@@ -109,20 +108,26 @@ Kube.TextField {
                 width: parent.width
                 interactive: true
                 model: root.model
-                delegate: Kirigami.AbstractListItem {
+                //TODO abstract listItem
+                delegate: Rectangle {
                     id: listDelegate
                     property string text: model.text
 
                     width: listView.width
                     height: root.height
 
-                    enabled: true
-                    supportsMouseEvents: true
+                    //enabled: true
+                    //supportsMouseEvents: true
 
-                    checked: listView.currentIndex == index
-                    onClicked:  {
-                        listView.currentIndex = model.index
-                        accept()
+                    //checked: listView.currentIndex == index
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        onClicked:  {
+                            listView.currentIndex = model.index
+                            accept()
+                        }
                     }
 
                     //Content

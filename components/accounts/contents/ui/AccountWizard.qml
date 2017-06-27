@@ -19,7 +19,6 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0 as Controls2
-import org.kde.kirigami 1.0 as Kirigami
 import org.kube.framework 1.0 as Kube
 
 Kube.Popup {
@@ -43,7 +42,8 @@ Kube.Popup {
         id: mainView
 
         Item {
-            Kirigami.Heading {
+            //TODO Kube.Heading
+            Kube.Label {
                 id: heading
                 text: "Select your new account type"
                 color: Kube.Colors.highlightColor
