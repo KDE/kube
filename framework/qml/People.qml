@@ -272,11 +272,12 @@ Item {
                                 leftMargin: Kube.Units.largeSpacing
                             }
 
-                            text: "CIO"
+                            text: contactController.jobTitle
                         }
 
                         Rectangle {
                             id: company
+                            visible: contactController.company != ""
 
                             anchors {
                                 bottom: avatar.bottom
@@ -306,7 +307,7 @@ Item {
                                     leftMargin: Kube.Units.smallSpacing
                                 }
 
-                                text: "Sauerkraut AG"
+                                text: contactController.company
                             }
                         }
                     }
@@ -328,19 +329,6 @@ Item {
                             }
                         }
 
-                        Row {
-                            spacing: Kube.Units.smallSpacing
-                            Kube.Label { text: "(alias)"}
-                            Kube.Label { text: "test.testerson@gmail.com"; color: Kube.Colors.highlightColor }
-                            Item { width: Kube.Units.smallSpacing; height: 1 }
-                        }
-
-                        Row {
-                            spacing: Kube.Units.smallSpacing
-                            Kube.Label { text: "(private)"}
-                            Kube.Label { text: "test@gmail.com"; color: Kube.Colors.highlightColor }
-                            Item { width: Kube.Units.smallSpacing; height: 1 }
-                        }
                     }
 
                     Flow {
@@ -349,23 +337,15 @@ Item {
                         width: personPageRoot.width - Kube.Units.largeSpacing
                         spacing: Kube.Units.smallSpacing
 
-                        Row {
-                            spacing: Kube.Units.smallSpacing
-                            Kube.Label { text: "(inhouse)"}
-                            Kube.Label { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: Kube.Units.smallSpacing; height: 1 }
-                        }
-                        Row {
-                            spacing: Kube.Units.smallSpacing
-                            Kube.Label { text: "(mobile)"}
-                            Kube.Label { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: Kube.Units.smallSpacing; height: 1 }
-                        }
-                        Row {
-                            spacing: Kube.Units.smallSpacing
-                            Kube.Label { text: "(private)"}
-                            Kube.Label { text: "+49812324932"; opacity: 0.6 }
-                            Item { width: Kube.Units.smallSpacing; height: 1 }
+                        Repeater {
+                            model: contactController.phoneNumbers
+
+                            Row {
+                                spacing: Kube.Units.smallSpacing
+                                Kube.Label { text: "(main)" }
+                                Kube.Label { text: modelData ; opacity: 0.6 }
+                                Item { width: Kube.Units.smallSpacing; height: 1 }
+                            }
                         }
                     }
 
@@ -374,9 +354,9 @@ Item {
 
                         width: personPageRoot.width - Kube.Units.largeSpacing
 
-                        Kube.Label { text: "Albertstrasse 35a"}
-                        Kube.Label { text: "81767 Teststadt"}
-                        Kube.Label { text: "GERMANY" }
+                        Kube.Label { text: contactController.street }
+                        Kube.Label { text: contactController.city }
+                        Kube.Label { text: contactController.country }
                     }
 
 //                     Column {

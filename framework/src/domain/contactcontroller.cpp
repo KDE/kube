@@ -19,6 +19,7 @@
 #include "contactcontroller.h"
 
 #include <sink/applicationdomaintype.h>
+#include <KContacts/VCardConverter>
 
 ContactController::ContactController()
     : Kube::Controller(),
@@ -40,11 +41,24 @@ void ContactController::loadContact(const QVariant &contact)
 {
     if (auto c = contact.value<Sink::ApplicationDomain::Contact::Ptr>()) {
         setName(c->getFn());
-        QStringList emails;
-        for (const auto &e : c->getEmails()) {
-            emails << e.email;
+        const auto &vcard = c->getVcard();
+        KContacts::VCardConverter converter;
+        const auto addressee = converter.parseVCard(vcard);
+        setEmails(addressee.emails());
+        QStringList numbers;
+        for (const auto &n : addressee.phoneNumbers()) {
+            numbers << n.number();
         }
-        setEmails(emails);
+        setPhoneNumbers(numbers);
+
+        for(const auto &a :addressee.addresses()) {
+            setStreet(a.street());
+            setCity(a.locality());
+            setCountry(a.country());
+            break;
+        }
+        setCompany(addressee.organization());
+        setJobTitle(addressee.role());
     }
 }
 

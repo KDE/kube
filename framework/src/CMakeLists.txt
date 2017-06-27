@@ -6,6 +6,7 @@ find_package(KAsync CONFIG REQUIRED)
 find_package(QGpgme CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(KF5Package CONFIG REQUIRED)
+find_package(KF5Contacts CONFIG REQUIRED)
 
 add_definitions("-Wall -std=c++0x -g")
 
@@ -42,7 +43,7 @@ set(SRCS
 
 add_library(frameworkplugin SHARED ${SRCS})
 qt5_use_modules(frameworkplugin Core Quick Qml WebEngineWidgets Test)
-target_link_libraries(frameworkplugin sink kube_otp KF5::Codecs KF5::Package KAsync)
+target_link_libraries(frameworkplugin sink kube_otp KF5::Codecs KF5::Package KF5::Contacts KAsync)
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
 add_subdirectory(domain/mime/mimetreeparser)

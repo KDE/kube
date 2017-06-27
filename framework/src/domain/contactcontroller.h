@@ -35,6 +35,12 @@ class ContactController : public Kube::Controller
     //Interface properties
     KUBE_CONTROLLER_PROPERTY(QString, Name, name)
     KUBE_CONTROLLER_PROPERTY(QStringList, Emails, emails)
+    KUBE_CONTROLLER_PROPERTY(QStringList, PhoneNumbers, phoneNumbers)
+    KUBE_CONTROLLER_PROPERTY(QString, Street, street)
+    KUBE_CONTROLLER_PROPERTY(QString, City, city)
+    KUBE_CONTROLLER_PROPERTY(QString, Country, country)
+    KUBE_CONTROLLER_PROPERTY(QString, Company, company)
+    KUBE_CONTROLLER_PROPERTY(QString, JobTitle, jobTitle)
 
     KUBE_CONTROLLER_ACTION(save)
 
