@@ -52,7 +52,7 @@ Item {
     property string goBack_inverted: "go-previous-inverted"
     property string goDown: "go-down"
     property string goDown_inverted: "go-down-inverted"
-    property string goUp: "go-down"
+    property string goUp: "go-up"
 
     property string addNew: "list-add"
     property string remove: "kube-list-remove-inverted"

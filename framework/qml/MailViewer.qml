@@ -88,8 +88,8 @@ Rectangle {
                 PropertyChanges { target: subject; wrapMode: Text.WrapAnywhere}
                 PropertyChanges { target: recipients; visible: false}
                 PropertyChanges { target: to; visible: true}
-                PropertyChanges { target: cc; visible: true}
-                PropertyChanges { target: bcc; visible: true}
+                PropertyChanges { target: cc; visible: root.cc}
+                PropertyChanges { target: bcc; visible: root.bcc}
             }
         ]
 
@@ -226,6 +226,7 @@ Rectangle {
 
             height: Kube.Units.gridUnit
             width: height
+            visible: root.cc || root.bcc
 
             color: Kube.Colors.backgroundColor
 
