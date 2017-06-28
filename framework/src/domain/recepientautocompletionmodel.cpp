@@ -111,7 +111,7 @@ bool RecipientAutocompletionModel::addToModel(const QString &address, const QStr
         if (name.isEmpty()) {
             return QString(address);
         }
-        return QString("%1 <%2>").arg(QString(address), QString(name));
+        return QString("%1 <%2>").arg(QString(name), QString(address));
     }();
     auto matches = mSourceModel->findItems(formattedName);
     if (matches.isEmpty()) {
