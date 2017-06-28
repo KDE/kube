@@ -53,6 +53,12 @@ Item {
 
             color: embedded ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
             onLinkActivated: Qt.openUrlExternally(link)
+            //TODO This might no longer be necessary starting with Qt 5.8
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
+                cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+            }
         }
     }
 }
