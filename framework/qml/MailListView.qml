@@ -238,7 +238,7 @@ FocusScope {
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                         font.italic: true
                         color: Kube.Colors.disabledTextColor
-                        font.pointSize: 9
+                        font.pointSize: Kube.Units.defaultFontSize * 0.8
                     }
 
                     Kube.Label {
