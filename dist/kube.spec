@@ -1,6 +1,6 @@
 Name:           kube
 Version:        0.3
-Release:	    6%{?dist}
+Release:	    7%{?dist}
 Summary:        kube
 
 Group:          Applications/Desktop
@@ -16,6 +16,7 @@ BuildRequires:  kasync-devel
 BuildRequires:  kf5-kpackage-devel
 BuildRequires:  kf5-kcodecs-devel
 BuildRequires:  kf5-kmime-devel
+BuildRequires:  kf5-kcontacts-devel
 BuildRequires:  kf5-ki18n-devel
 BuildRequires:  lmdb-devel
 BuildRequires:  qt5-qtbase-devel
