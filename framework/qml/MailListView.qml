@@ -214,7 +214,7 @@ FocusScope {
                             text: model.subject
                             color: model.unread ? Kube.Colors.highlightColor : Kube.Colors.textColor
                             maximumLineCount: 2
-                            wrapMode: Text.WrapAnywhere
+                            wrapMode: Text.WordWrap
                             elide: Text.ElideRight
                         }
 
