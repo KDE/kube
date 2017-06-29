@@ -19,6 +19,8 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
+import QtQuick.Templates 2.1 as T
+
 
 import org.kube.framework 1.0 as Kube
 
@@ -109,31 +111,26 @@ Kube.TextField {
                 interactive: true
                 model: root.model
                 //TODO abstract listItem
-                delegate: Rectangle {
+                delegate: T.ItemDelegate {
                     id: listDelegate
-                    property string text: model.text
 
                     width: listView.width
                     height: root.height
+                    padding: Kube.Units.smallSpacing
 
-                    //enabled: true
-                    //supportsMouseEvents: true
+                    text: model.text
 
-                    //checked: listView.currentIndex == index
+                    checked: listView.currentIndex == index
 
-                    MouseArea {
-                        anchors.fill: parent
-
-                        onClicked:  {
-                            listView.currentIndex = model.index
-                            accept()
-                        }
+                    onClicked:  {
+                        listView.currentIndex = model.index
+                        accept()
                     }
 
                     //Content
-                    Item {
-                        width: parent.width
-                        height: parent.height
+                    contentItem: Item {
+                        width: parent.width - padding * 2
+                        height: parent.height - padding * 2
 
                         Column {
                             anchors {
@@ -152,6 +149,13 @@ Kube.TextField {
                                 elide: Text.ElideRight
                             }
                         }
+                    }
+
+                    background: Rectangle {
+                        color: listDelegate.checked ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
+
+                        border.width: 1
+                        color: Kube.Colors.buttonColor
                     }
                 }
             }
