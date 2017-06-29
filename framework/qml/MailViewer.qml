@@ -106,7 +106,7 @@ Rectangle {
             text: Qt.formatDateTime(root.date, "dd MMM yyyy hh:mm")
 
             //FIXME font pointsize
-            font.pointSize: 6
+            font.pointSize: Kube.Units.defaultFontSize * 0.8
             opacity: 0.75
         }
 
