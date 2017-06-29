@@ -155,7 +155,7 @@ Kube.TextField {
                         color: listDelegate.checked ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
 
                         border.width: 1
-                        color: Kube.Colors.buttonColor
+                        border.color: Kube.Colors.buttonColor
                     }
                 }
             }
