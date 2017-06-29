@@ -38,8 +38,7 @@ Item {
             margins: Kube.Units.largeSpacing * 2
         }
 
-        //TODO Kube.Heading
-        Kube.Label {
+        Kube.Heading {
             id: heading
             text: loader.item.heading
             color: Kube.Colors.highlightColor

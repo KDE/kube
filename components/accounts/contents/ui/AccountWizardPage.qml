@@ -52,8 +52,7 @@ Item {
             bottom: parent.bottom
         }
 
-        //TODO Kube.Heading
-        Kube.Label {
+        Kube.Heading {
             id: heading
             text: loader.item.heading
             color: Kube.Colors.highlightColor

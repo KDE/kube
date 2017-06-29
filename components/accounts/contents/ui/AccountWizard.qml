@@ -42,8 +42,7 @@ Kube.Popup {
         id: mainView
 
         Item {
-            //TODO Kube.Heading
-            Kube.Label {
+            Kube.Heading {
                 id: heading
                 text: "Select your new account type"
                 color: Kube.Colors.highlightColor

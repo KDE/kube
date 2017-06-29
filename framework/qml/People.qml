@@ -269,8 +269,7 @@ Item {
                             color: "lightgrey"
                         }
 
-                        //TODO replace with Kube.Heading once it is there
-                        Kube.Label {
+                        Kube.Heading {
                             id: nameLabel
 
                             anchors {

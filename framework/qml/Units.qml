@@ -27,6 +27,8 @@ Item {
     property int smallSpacing: gridUnit/4
     property int largeSpacing: gridUnit
 
+    property int defaultFontSize: fontMetrics.font.pointSize
+
     property variant fontMetrics: TextMetrics {
         text: "M"
         font.family: Kube.Font.fontFamily
