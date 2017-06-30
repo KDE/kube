@@ -27,6 +27,7 @@ wantedIcons = [
     "network-disconnect.svg",
     "view-refresh.svg",
     "go-down.svg",
+    "go-up.svg",
     "go-previous.svg",
     "mail-message.svg",
     "list-add.svg",
