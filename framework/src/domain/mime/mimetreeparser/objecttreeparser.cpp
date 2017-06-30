@@ -60,6 +60,32 @@
 
 using namespace MimeTreeParser;
 
+/*
+ * Collect message parts bottom up.
+ * Filter to avoid evaluating a subtree.
+ * Select parts to include it in the result set. Selecting a part in a branch will keep any parent parts from being selected.
+ */
+static QVector<MessagePart::Ptr> collect(MessagePart::Ptr start, const std::function<bool(const MessagePartPtr &)> &evaluateSubtree, const std::function<bool(const MessagePartPtr &)> &select)
+{
+    MessagePartPtr ptr = start.dynamicCast<MessagePart>();
+    Q_ASSERT(ptr);
+    QVector<MessagePart::Ptr> list;
+    if (evaluateSubtree(ptr)) {
+        for (const auto &p: ptr->subParts()) {
+            list << ::collect(p, evaluateSubtree, select);
+        }
+    }
+
+    //Don't consider this part if we already selected a subpart
+    if (list.isEmpty()) {
+        if (select(ptr)) {
+            list << start;
+        }
+    }
+    return list;
+}
+
+
 
 ObjectTreeParser::ObjectTreeParser()
     : mNodeHelper(nullptr),
@@ -96,14 +122,46 @@ ObjectTreeParser::~ObjectTreeParser()
     }
 }
 
-QString ObjectTreeParser::plainTextContent() const
+QString ObjectTreeParser::plainTextContent()
 {
-    return mPlainTextContent;
+    QString content;
+    if (mParsedPart) {
+        auto plainParts = ::collect(mParsedPart,
+            [] (const MessagePartPtr &part) {
+                return true;
+            },
+            [] (const MessagePartPtr &part) {
+                if (dynamic_cast<MimeTreeParser::TextMessagePart*>(part.data())) {
+                    return true;
+                }
+                return false;
+            });
+        for (const auto &part : plainParts) {
+            content += part->text();
+        }
+    }
+    return content;
 }
 
-QString ObjectTreeParser::htmlContent() const
+QString ObjectTreeParser::htmlContent()
 {
-    return mHtmlContent;
+    QString content;
+    if (mParsedPart) {
+        QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
+            [] (const MessagePartPtr &part) {
+                return true;
+            },
+            [] (const MessagePartPtr &part) {
+                if (dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
+                    return true;
+                }
+                return false;
+            });
+        for (const auto &part : contentParts) {
+            content += part->text();
+        }
+    }
+    return content;
 }
 
 static void print(KMime::Content *node, const QString prefix = {})
@@ -163,31 +221,6 @@ static KMime::Content *find(KMime::Content *node, const std::function<bool(KMime
 KMime::Content *ObjectTreeParser::find(const std::function<bool(KMime::Content *)> &select)
 {
     return ::find(mTopLevelContent, select);
-}
-
-/*
- * Collect message parts bottom up.
- * Filter to avoid evaluating a subtree.
- * Select parts to include it in the result set. Selecting a part in a branch will keep any parent parts from being selected.
- */
-static QVector<MessagePart::Ptr> collect(MessagePart::Ptr start, const std::function<bool(const MessagePartPtr &)> &evaluateSubtree, const std::function<bool(const MessagePartPtr &)> &select)
-{
-    MessagePartPtr ptr = start.dynamicCast<MessagePart>();
-    Q_ASSERT(ptr);
-    QVector<MessagePart::Ptr> list;
-    if (evaluateSubtree(ptr)) {
-        for (const auto &p: ptr->subParts()) {
-            list << ::collect(p, evaluateSubtree, select);
-        }
-    }
-
-    //Don't consider this part if we already selected a subpart
-    if (list.isEmpty()) {
-        if (select(ptr)) {
-            list << start;
-        }
-    }
-    return list;
 }
 
 QVector<MessagePartPtr> ObjectTreeParser::collectContentParts()
@@ -341,38 +374,6 @@ void ObjectTreeParser::parseObjectTree(KMime::Content *node)
 {
     mTopLevelContent = node;
     mParsedPart = parseObjectTreeInternal(node, showOnlyOneMimePart());
-
-    //Gather plaintext and html content
-    if (mParsedPart) {
-        //Find relevant plaintext parts and set plaintext
-        if (auto mp = toplevelTextNode(mParsedPart)) {
-            if (auto _mp = mp.dynamicCast<TextMessagePart>()) {
-                mPlainTextContent += _mp->mNode->decodedText();
-                mPlainTextContentCharset += NodeHelper::charset(_mp->mNode);
-            } else if (auto _mp = mp.dynamicCast<AlternativeMessagePart>()) {
-                if (_mp->mChildNodes.contains(Util::MultipartPlain)) {
-                    mPlainTextContent += _mp->mChildNodes[Util::MultipartPlain]->decodedText();
-                    mPlainTextContentCharset += NodeHelper::charset(_mp->mChildNodes[Util::MultipartPlain]);
-                }
-            }
-        }
-
-        //Find html parts and copy content
-        QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
-            [] (const MessagePartPtr &part) {
-                return true;
-            },
-            [] (const MessagePartPtr &part) {
-                if (dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
-                    return true;
-                }
-                return false;
-            });
-        for (const auto &part : contentParts) {
-            mHtmlContent += part->text();
-            mHtmlContentCharset = part->charset();
-        }
-    }
 }
 
 MessagePartPtr ObjectTreeParser::parsedPart() const
@@ -485,16 +486,6 @@ const QTextCodec *ObjectTreeParser::codecFor(KMime::Content *node) const
 {
     Q_ASSERT(node);
     return mNodeHelper->codec(node);
-}
-
-QByteArray ObjectTreeParser::plainTextContentCharset() const
-{
-    return mPlainTextContentCharset;
-}
-
-QByteArray ObjectTreeParser::htmlContentCharset() const
-{
-    return mHtmlContentCharset;
 }
 
 bool ObjectTreeParser::showOnlyOneMimePart() const

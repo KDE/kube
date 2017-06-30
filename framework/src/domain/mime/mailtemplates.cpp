@@ -842,6 +842,7 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
 
     MimeTreeParser::ObjectTreeParser otp;
     otp.parseObjectTree(origMsg.data());
+    otp.decryptParts();
     const auto plainTextContent = otp.plainTextContent();
     const auto htmlContent = otp.htmlContent();
 

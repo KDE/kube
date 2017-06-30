@@ -36,6 +36,7 @@ static QString normalize(const QString &s)
     auto text = s;
     text.replace(">", "");
     text.replace("\n", "");
+    text.replace("=", "");
     text.replace(" ", "");
     return text;
 }
@@ -87,9 +88,8 @@ private slots:
             result = r;
         });
         QTRY_VERIFY(result);
-        auto content = normalize(removeFirstLine(result->body()));
+        auto content = removeFirstLine(result->body());
         QVERIFY(!content.isEmpty());
-        QEXPECT_FAIL("", "Not implemented yet.", Continue);
         QVERIFY(content.contains("i noticed a new branch"));
     }
 

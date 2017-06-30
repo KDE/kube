@@ -250,24 +250,12 @@ public:
     * composer's text editor if this was edited or replied to.
     * This is usually the content of the first text/plain MIME part.
     */
-    QString plainTextContent() const;
+    QString plainTextContent();
 
     /**
     * Similar to plainTextContent(), but returns the HTML source of the first text/html MIME part.
-    *
-    * Not to be consfused with the HTML code that the message viewer widget displays, that HTML
-    * is written out by htmlWriter() and a totally different pair of shoes.
     */
-    QString htmlContent() const;
-
-    /**
-    * The original charset of MIME part the plain text was extracted from.
-    *
-    * If there were more than one text/plain MIME parts in the mail, the this is the charset
-    * of the last MIME part processed.
-    */
-    QByteArray plainTextContentCharset() const;
-    QByteArray htmlContentCharset() const;
+    QString htmlContent();
 
     bool showOnlyOneMimePart() const;
     void setShowOnlyOneMimePart(bool show);
@@ -283,7 +271,11 @@ public:
     QVector<MessagePartPtr> collectContentParts();
     QVector<MessagePartPtr> collectContentParts(MessagePart::Ptr start);
     QVector<MessagePartPtr> collectAttachmentParts();
+
+    /** Decrypt parts and verify signatures */
     void decryptParts();
+
+    /** Import any certificates found in the message */
     void importCertificates();
 
     /** Embedd content referenced by cid by inlining */
