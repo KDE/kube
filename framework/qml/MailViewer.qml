@@ -226,7 +226,6 @@ Rectangle {
 
             height: Kube.Units.gridUnit
             width: height
-            visible: root.cc || root.bcc
 
             color: Kube.Colors.backgroundColor
 
