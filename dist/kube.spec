@@ -1,6 +1,6 @@
 Name:           kube
 Version:        0.3
-Release:	    7%{?dist}
+Release:	    8%{?dist}
 Summary:        kube
 
 Group:          Applications/Desktop
@@ -35,7 +35,7 @@ Requires:       sink >= 0.3
 Requires:       google-noto-sans-fonts
 
 %description
-kube
+kube.kde.org
 
 %prep
 %setup -q
