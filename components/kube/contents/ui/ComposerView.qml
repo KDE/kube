@@ -47,6 +47,10 @@ Kube.View {
     function loadMessage(message, loadAsDraft) {
         if (message) {
             composerController.loadMessage(message, loadAsDraft)
+            //Forward focus for replies directly
+            if (!loadAsDraft) {
+                subject.forceActiveFocus()
+            }
         } else if (newMessage) {
             composerController.clear()
             subject.forceActiveFocus()
