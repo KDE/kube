@@ -396,9 +396,11 @@ void plainMessageText(const QString &plainTextContent, const QString &htmlConten
         auto page = new QWebEnginePage;
         setupPage(page);
         page->setHtml(htmlContent);
-        page->toPlainText([=] (const QString &plaintext) {
-            page->deleteLater();
-            callback(plaintext);
+        QObject::connect(page, &QWebEnginePage::loadFinished, [=] (bool ok) {
+            page->toPlainText([=] (const QString &plaintext) {
+                page->deleteLater();
+                callback(plaintext);
+            });
         });
         return;
     }
@@ -860,7 +862,7 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
                 makeValidHtml(htmlBodyResult, headElement);
             }
 
-            //Assemble the message */
+            //Assemble the message
             addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false);
             applyCharset(msg, origMsg);
             msg->assemble();
