@@ -1,6 +1,6 @@
 Name:           kube
-Version:        0.3
-Release:	    8%{?dist}
+Version:        0.3.0
+Release:	    0%{?dist}
 Summary:        kube
 
 Group:          Applications/Desktop
@@ -31,7 +31,7 @@ BuildRequires:  gpgme >= 1.8.0
 Requires:       qt5-qtquick1
 Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2
-Requires:       sink >= 0.3
+Requires:       sink >= 0.3.0
 Requires:       google-noto-sans-fonts
 
 %description
