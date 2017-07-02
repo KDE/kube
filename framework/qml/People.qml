@@ -30,12 +30,6 @@ Item {
 
     property var currentContact
 
-    onVisibleChanged: {
-        if (visible) {
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"});
-        }
-    }
-
     Item {
         id: peopleRoot
 

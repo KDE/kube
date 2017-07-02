@@ -201,6 +201,13 @@ Controls2.ApplicationWindow {
                 kubeViews.push(composerView, {message: mail, loadAsDraft: openAsDraft}, Controls2.StackView.Immediate)
             }
 
+            onCurrentItemChanged: {
+                //TODO with qt 5.8 use Controls2.StackView.onActivated
+                if (currentItem == peopleView) {
+                    Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
+                }
+            }
+
             //These items are not visible until pushed onto the stack, so we keep them in resources instead of items
             resources: [
                 //Not components so we maintain state
