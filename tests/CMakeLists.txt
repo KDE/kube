@@ -20,8 +20,6 @@ include(KDECompilerSettings)
 
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets WebEngine QuickTest)
 
-set (QT_MIN_VERSION "5.6.0")
-
 # build testrunner
 add_executable(kubetestrunner kubetestrunner.cpp)
 qt5_use_modules(kubetestrunner Gui Quick Widgets WebEngine QuickTest)

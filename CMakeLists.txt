@@ -5,6 +5,7 @@ cmake_policy(SET CMP0028 NEW)
 cmake_policy(SET CMP0063 NEW)
 
 project(kube VERSION 0.4)
+set (QT_MIN_VERSION "5.7.0")
 
 enable_testing()
 

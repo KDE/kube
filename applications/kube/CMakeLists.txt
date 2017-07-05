@@ -28,7 +28,6 @@ include(ECMAddAppIcon)
 
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets WebEngine)
 
-set (QT_MIN_VERSION "5.6.0")
 find_package(KF5 REQUIRED COMPONENTS Package)
 
 # install executable
