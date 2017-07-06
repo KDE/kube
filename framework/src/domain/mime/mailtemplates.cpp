@@ -381,7 +381,6 @@ void setupPage(QWebEnginePage *page)
         page->settings()->setAttribute(QWebEngineSettings::WebGLEnabled, false);
         page->settings()->setAttribute(QWebEngineSettings::AutoLoadIconsForPage, false);
         page->settings()->setAttribute(QWebEngineSettings::Accelerated2dCanvasEnabled, false);
-        page->settings()->setAttribute(QWebEngineSettings::WebGLEnabled, false);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         page->settings()->setAttribute(QWebEngineSettings::FocusOnNavigationEnabled, false);
