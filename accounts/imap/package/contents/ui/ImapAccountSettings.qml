@@ -70,12 +70,12 @@ Item {
             }
 
             Kube.Label {
-                text: "Name"
+                text: "Username"
                 Layout.alignment: Qt.AlignRight
             }
             Kube.TextField {
                 Layout.fillWidth: true
-                placeholderText: "Your name"
+                placeholderText: "The username as recognised by the imap server"
                 text: imapSettings.userName
                 onTextChanged: {
                     imapSettings.userName = text
