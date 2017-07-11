@@ -52,7 +52,7 @@ FocusScope {
 
     Shortcut {
         sequence: StandardKey.Delete
-        enabled: isTrash
+        enabled: !isTrash
         onActivated: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail":currentMail})
     }
 
