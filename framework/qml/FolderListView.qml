@@ -28,6 +28,7 @@ TreeView {
     id: treeView
     property variant accountId
     visible: true
+    flickableItem.boundsBehavior: Flickable.StopAtBounds
 
     TableViewColumn {
         title: "Name"

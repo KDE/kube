@@ -101,6 +101,7 @@ Item {
                 ScrollBar.vertical: ScrollBar { }
                 contentHeight: content.height
                 clip: true
+                boundsBehavior: Flickable.StopAtBounds
 
                 Item {
                     id: content

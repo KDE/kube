@@ -69,6 +69,7 @@ FocusScope {
         anchors.fill: parent
         clip: true
         focus: true
+        boundsBehavior: Flickable.StopAtBounds
 
         ScrollBar.vertical: ScrollBar{
             id: scrollbar
