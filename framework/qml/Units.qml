@@ -23,7 +23,8 @@ import QtQuick 2.7
 import org.kube.framework 1.0 as Kube
 
 Item {
-    property int gridUnit: fontMetrics.height
+    //Ensure the gridUnit is divisble by 4 without remainder, otherwise we'll end up with alignment issues
+    property int gridUnit: Math.ceil(fontMetrics.height / 4) * 4
     property int smallSpacing: gridUnit/4
     property int largeSpacing: gridUnit
 
