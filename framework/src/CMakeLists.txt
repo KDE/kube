@@ -47,6 +47,8 @@ qt5_use_modules(frameworkplugin Core Quick Qml WebEngineWidgets Test)
 target_link_libraries(frameworkplugin sink kube_otp KF5::Codecs KF5::Package KF5::Contacts KAsync)
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
+set(BUILD_TESTING ON)
+
 add_subdirectory(domain/mime/tests)
 add_subdirectory(domain/mime/mimetreeparser)
 

@@ -93,6 +93,19 @@ private slots:
         QVERIFY(content.contains("i noticed a new branch"));
     }
 
+    void testMultipartAlternative()
+    {
+        auto msg = readMail("alternative.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        auto content = removeFirstLine(result->body());
+        QVERIFY(!content.isEmpty());
+        QCOMPARE(unquote(content), QLatin1String("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n"));
+    }
+
 };
 
 QTEST_MAIN(MailTemplateTest)

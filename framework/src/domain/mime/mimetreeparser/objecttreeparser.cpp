@@ -6,6 +6,7 @@
     Copyright (C) 2002-2004 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
     Copyright (c) 2009 Andras Mantia <andras@kdab.net>
     Copyright (c) 2015 Sandro Knauß <sknauss@kde.org>
+    Copyright (c) 2017 Christian Mollekopf <mollekopf@kolabsystems.com>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -134,6 +135,9 @@ QString ObjectTreeParser::plainTextContent()
                 if (dynamic_cast<MimeTreeParser::TextMessagePart*>(part.data())) {
                     return true;
                 }
+                if (dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(part.data())) {
+                    return true;
+                }
                 return false;
             });
         for (const auto &part : plainParts) {
@@ -155,10 +159,17 @@ QString ObjectTreeParser::htmlContent()
                 if (dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
                     return true;
                 }
+                if (dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(part.data())) {
+                    return true;
+                }
                 return false;
             });
         for (const auto &part : contentParts) {
-            content += part->text();
+            if (auto p = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(part.data())) {
+                content += p->htmlContent();
+            } else {
+                content += part->text();
+            }
         }
     }
     return content;
