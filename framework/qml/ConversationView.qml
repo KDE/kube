@@ -17,7 +17,6 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
@@ -64,6 +63,8 @@ Rectangle {
         id: listView
 
         anchors.fill: parent
+
+        verticalLayoutDirection: ListView.BottomToTop
 
         function setCurrentIndex()
         {
@@ -116,33 +117,6 @@ Rectangle {
 
         //Optimize for view quality
         pixelAligned: true
-
-        Timer {
-            id: scrollToEndTimer
-            interval: 10
-            running: false
-            repeat: false
-            onTriggered: {
-                //Only do this once per conversation
-                root.scrollToEnd = false;
-                root.currentIndex = listView.count - 1
-                //positionViewAtEnd/Index don't work
-                listView.contentY = Math.max(listView.contentHeight - listView.height, 0)
-            }
-        }
-
-        onCountChanged: {
-            if (root.scrollToEnd) {
-                scrollToEndTimer.restart()
-            }
-        }
-
-        onContentHeightChanged: {
-            //Initially it will resize a lot, so we keep waiting
-            if (root.scrollToEnd) {
-                scrollToEndTimer.restart()
-            }
-        }
 
         onContentYChanged: {
             //We have to track our current mail manually

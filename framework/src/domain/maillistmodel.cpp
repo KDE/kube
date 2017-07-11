@@ -295,8 +295,8 @@ void MailListModel::setMail(const QVariant &variant)
     mFetchMails = true;
     mFetchedMails.clear();
     qDebug() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
-    //Latest mail at the bottom
-    sort(0, Qt::AscendingOrder);
+    //Latest mail on top
+    sort(0, Qt::DescendingOrder);
     runQuery(query);
 }
 
