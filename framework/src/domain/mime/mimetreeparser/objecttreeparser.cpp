@@ -184,7 +184,7 @@ static void print(KMime::Content *node, const QString prefix = {})
         mediaType = node->contentType()->mediaType();
         subType = node->contentType()->subType();
     }
-    qWarning() << prefix << "!" << mediaType << subType;
+    qWarning() << prefix << "!" << mediaType << subType << "isAttachment: " << KMime::isAttachment(node);
     for (const auto c: node->contents()) {
         print(c, prefix + QLatin1String(" "));
     }
@@ -192,7 +192,7 @@ static void print(KMime::Content *node, const QString prefix = {})
 
 static void print(const MessagePart &messagePart, const QByteArray pre = {})
 {
-    qWarning() << pre << "#" << messagePart.metaObject()->className();
+    qWarning() << pre << "#" << messagePart.metaObject()->className() << "isAttachment: " << messagePart.isAttachment();
     for (const auto &p: messagePart.subParts()) {
         print(*p, pre + " ");
     }
