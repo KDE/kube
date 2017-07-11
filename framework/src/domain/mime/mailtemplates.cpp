@@ -620,7 +620,7 @@ static Recipients getRecipients(const KMime::Message::Ptr &origMsg, const KMime:
     KMime::Types::Mailbox::List toList;
     KMime::Types::Mailbox::List ccList;
     //FIXME
-    const ReplyStrategy replyStrategy = ReplySmart;
+    const ReplyStrategy replyStrategy = ReplyAll;
     switch (replyStrategy) {
     case ReplySmart: {
         if (auto hdr = origMsg->headerByType("Mail-Followup-To")) {
