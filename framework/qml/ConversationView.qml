@@ -65,6 +65,7 @@ Rectangle {
 
         anchors.fill: parent
 
+        ScrollBar.vertical: ScrollBar {}
         verticalLayoutDirection: ListView.BottomToTop
 
         function setCurrentIndex()
