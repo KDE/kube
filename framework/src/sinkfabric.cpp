@@ -63,7 +63,7 @@ public:
                     //Only synchronize folders by default for now
                     scope.setType<ApplicationDomain::Folder>();
                 }
-                SinkLog() << "Synchronizing all. AccountId: " << accountId << " Type: " << type;
+                SinkLog() << "Synchronizing all. AccountId: " << accountId << " Type: " << scope.type();
                 Store::synchronize(scope).exec();
             }
         }
