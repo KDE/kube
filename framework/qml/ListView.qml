@@ -38,8 +38,12 @@ ListView {
 
         onWheel: {
             //Some trackpads (mine) emit 0 events in between that we can safely ignore.
-            if (wheel.angleDelta.y) {
-                listView.flick(0, wheel.angleDelta.y * 40)
+            if (wheel.pixelDelta.y) {
+                //120 is apparently the factor used in windows(https://chromium.googlesource.com/chromium/src/+/70763eb93a32555910a3b4269aeec51252ab9ec6/ui/events/event.cc)
+                listView.flick(0, wheel.pixelDelta.y * 120)
+            } else if (wheel.angleDelta.y) {
+                //Arbitrary but this seems to work for me...
+                listView.flick(0, wheel.angleDelta.y * 10)
             }
         }
     }
