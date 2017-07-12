@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
+ *  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsystems.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,7 +60,7 @@ Rectangle {
 
     color: Kube.Colors.backgroundColor
 
-    ListView {
+    Kube.ListView {
         id: listView
 
         anchors.fill: parent
@@ -109,11 +110,6 @@ Rectangle {
 
         //Setting the currentIndex results in further lags. So we don't do that either.
         // currentIndex: root.currentIndex
-
-        boundsBehavior: Flickable.StopAtBounds
-
-        //default is 1500, which is not usable with a mouse
-        flickDeceleration: 1500
 
         //Optimize for view quality
         pixelAligned: true
