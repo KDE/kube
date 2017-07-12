@@ -36,7 +36,7 @@ Controls.SplitView {
             }
         }
 
-        ListView {
+        Kube.ListView {
             id: listView
             anchors {
                 margins: Kube.Units.largeSpacing

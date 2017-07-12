@@ -107,7 +107,7 @@ Kube.View {
                 color: Kube.Colors.highlightedTextColor
             }
 
-            ListView {
+            Kube.ListView {
                 id: listView
 
                 anchors {

@@ -49,7 +49,7 @@ Rectangle {
                 onClicked: accountWizard.open()
             }
 
-            ListView {
+            Kube.ListView {
                 id: listView
 
                 anchors {

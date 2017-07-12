@@ -63,13 +63,12 @@ FocusScope {
         text: "Nothing here..."
     }
 
-    ListView {
+    Kube.ListView {
         id: listView
 
         anchors.fill: parent
         clip: true
         focus: true
-        boundsBehavior: Flickable.StopAtBounds
 
         ScrollBar.vertical: ScrollBar{
             id: scrollbar
