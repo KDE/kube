@@ -42,6 +42,7 @@ MouseArea {
     }
 
     function calculateNewPosition(flickableItem, wheel) {
+        //Nothing to scroll
         if (flickableItem.contentHeight < flickableItem.height) {
             return flickableItem.contentY;
         }
@@ -68,17 +69,15 @@ MouseArea {
             return flickableItem.contentY;
         }
 
-        var minYExtent = flickableItem.topMargin;
-        var maxYExtent = flickableItem.height - (flickableItem.contentHeight + flickableItem.bottomMargin + flickableItem.originY);
+        var minYExtent = flickableItem.originY + flickableItem.topMargin;
+        var maxYExtent = (flickableItem.contentHeight + flickableItem.bottomMargin + flickableItem.originY) - flickableItem.height;
 
         if (typeof(flickableItem.headerItem) !== "undefined" && flickableItem.headerItem) {
             minYExtent += flickableItem.headerItem.height
         }
 
-        return Math.min(-maxYExtent, Math.max(-minYExtent, flickableItem.contentY - y));
-
-        // root.scrolling = true
-        // cancelFlickStateTimer.restart();
+        //Avoid overscrolling
+        return Math.max(minYExtent, Math.min(maxYExtent, flickableItem.contentY - y));
     }
 
     onWheel: {
@@ -91,7 +90,11 @@ MouseArea {
         //     listView.flick(0, wheel.angleDelta.y * 10)
         // }
 
-        flickable.contentY = calculateNewPosition(listView, wheel);
+        var newPos = calculateNewPosition(listView, wheel);
+        // console.warn("Delta: ", wheel.angleDelta.y);
+        // console.warn("Old position: ", flickable.contentY);
+        // console.warn("New position: ", newPos);
+        flickable.contentY = newPos;
     }
 
 
