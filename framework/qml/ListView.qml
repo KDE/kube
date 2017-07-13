@@ -19,37 +19,14 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 2
+import org.kube.framework 1.0 as Kube
 
 ListView {
     id: root
-    property var focusProxy: root
 
-    /*
-     * The MouseArea + interactive: false + maximumFlickVelocity are required
-     * to fix scrolling for desktop systems where we don't want flicking behaviour.
-     *
-     * See also:
-     * ScrollView.qml in qtquickcontrols
-     * qquickwheelarea.cpp in qtquickcontrols
-     */
-    MouseArea {
+    Kube.ScrollHelper {
+        flickable: root
         anchors.fill: root
-        propagateComposedEvents: true
-
-        onWheel: {
-            //Some trackpads (mine) emit 0 events in between that we can safely ignore.
-            if (wheel.pixelDelta.y) {
-                //120 is apparently the factor used in windows(https://chromium.googlesource.com/chromium/src/+/70763eb93a32555910a3b4269aeec51252ab9ec6/ui/events/event.cc)
-                listView.flick(0, wheel.pixelDelta.y * 120)
-            } else if (wheel.angleDelta.y) {
-                //Arbitrary but this seems to work for me...
-                listView.flick(0, wheel.angleDelta.y * 10)
-            }
-        }
     }
-    interactive: false
-    maximumFlickVelocity: 100000
-
-    boundsBehavior: Flickable.StopAtBounds
 }
 
