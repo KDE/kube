@@ -40,7 +40,7 @@ MouseArea {
         } else {
             //Create a flickable
             flickableItem = flickableComponent.createObject(flickableParent);
-            contentItem.parent = flickableParent;
+            contentItem.parent = flickableItem.contentItem;
         }
         //TODO: find a way to make flicking work on laptops with touch screen
         flickableItem.interactive = isMobile;
@@ -50,8 +50,7 @@ MouseArea {
         flickableItem.ScrollBar.vertical.anchors.top = root.top
         flickableItem.ScrollBar.vertical.anchors.bottom = root.bottom
         //FIXME Results in a "Cannot anchor to an item that is not a parent or a sibling" warning, but we need it to scroll the textfield
-        flickableItem.TextArea.flickable = contentItem
-        contentItem.anchors.fill = flickableItem;
+        contentItem.anchors.fill = flickableItem.contentItem;
     }
 
     Item {
@@ -91,12 +90,25 @@ MouseArea {
         if (isMobile || flickableItem.contentHeight < flickableItem.height) {
             return;
         }
-        var sampleItem = flickableItem.itemAt ? flickableItem.itemAt(0, flickableItem.contentY) : null;
-        //TODO: config of how many lines the wheel scrolls
-        var wheelScrollLines = 3
-        var step = Math.min((sampleItem ? sampleItem.height : (Kube.Units.gridUnit + Kube.Units.smallSpacing * 2)) * wheelScrollLines, Kube.Units.gridUnit * 8);
-        var y = wheel.pixelDelta.y != 0 ? wheel.pixelDelta.y : (wheel.angleDelta.y > 0 ? step : -step)
         //Ignore 0 events (happens at least with Christians trackpad)
+        if (wheel.pixelDelta.y == 0 && wheel.angleDelta.y == 0) {
+            return;
+        }
+        //TODO somehow deal with the situation of getting 0 pixelDelta, but still getting an angleDelta every now and then.
+        // var useAngle = wheel.pixelDelta.y != 0
+        var useAngle = true
+        var delta = wheel.pixelDelta.y
+
+        var wheelScrollLines = 3
+        //Try to get the size of one item in case of a list
+        var sampleItem = flickableItem.itemAt ? flickableItem.itemAt(0, flickableItem.contentY) : null;
+        //Otherwise just use a hardcoded value
+        var oneLine = Kube.Units.gridUnit + Kube.Units.smallSpacing * 2;
+        var lineSize = sampleItem ? sampleItem.height : oneLine;
+
+        var step = Math.min(lineSize * wheelScrollLines, Kube.Units.gridUnit * 8);
+
+        var y = useAngle ? delta : (wheel.angleDelta.y > 0 ? step : -step)
         if (!y) {
             return;
         }
