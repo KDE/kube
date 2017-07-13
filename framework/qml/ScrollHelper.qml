@@ -94,15 +94,19 @@ MouseArea {
         // console.warn("Delta: ", wheel.angleDelta.y);
         // console.warn("Old position: ", flickable.contentY);
         // console.warn("New position: ", newPos);
+        // Show the scrollbars
+        flickable.flick(0, 0);
         flickable.contentY = newPos;
+        cancelFlickStateTimer.start()
     }
 
 
-    // Timer {
-    //     id: cancelFlickStateTimer
-    //     //How long the scrollbar will remain visible
-    //     interval: 500
-    //     onTriggered: root.scrolling = false
-    // }
+    Timer {
+        id: cancelFlickStateTimer
+        //How long the scrollbar will remain visible
+        interval: 500
+        // Hide the scrollbars
+        onTriggered: listView.cancelFlick();
+    }
 }
 
