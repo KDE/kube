@@ -35,10 +35,13 @@ MouseArea {
 
     property Flickable flickable
 
+    //Place the mouse area under the flickable
+    z: -1
     onFlickableChanged: {
         flickable.interactive = false
         flickable.maximumFlickVelocity = 100000
         flickable.boundsBehavior = Flickable.StopAtBounds
+        root.parent = flickable
     }
 
     function calculateNewPosition(flickableItem, wheel) {
