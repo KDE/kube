@@ -50,21 +50,23 @@ MouseArea {
         if (wheel.pixelDelta.y == 0 && wheel.angleDelta.y == 0) {
             return flickableItem.contentY;
         }
+        //pixelDelta seems to be the same as angleDelta/8
+        var pixelDelta = wheel.pixelDelta.y != 0 ? wheel.pixelDelta.y : wheel.angleDelta.y / 8
+
+        //We're only doing pixed based scrolling for the time being
         //TODO somehow deal with the situation of getting 0 pixelDelta, but still getting an angleDelta every now and then.
         // var useAngle = wheel.pixelDelta.y != 0
-        var useAngle = true
-        var delta = wheel.pixelDelta.y
+        // var wheelScrollLines = 3
+        // //Try to get the size of one item in case of a list
+        // var sampleItem = flickableItem.itemAt ? flickableItem.itemAt(0, flickableItem.contentY) : null;
+        // //Otherwise just use a hardcoded value
+        // var oneLine = Kube.Units.gridUnit + Kube.Units.smallSpacing * 2;
+        // var lineSize = sampleItem ? sampleItem.height : oneLine;
 
-        var wheelScrollLines = 3
-        //Try to get the size of one item in case of a list
-        var sampleItem = flickableItem.itemAt ? flickableItem.itemAt(0, flickableItem.contentY) : null;
-        //Otherwise just use a hardcoded value
-        var oneLine = Kube.Units.gridUnit + Kube.Units.smallSpacing * 2;
-        var lineSize = sampleItem ? sampleItem.height : oneLine;
+        // var step = Math.min(lineSize * wheelScrollLines, Kube.Units.gridUnit * 8);
+        // var y = useAngle ? delta : (wheel.angleDelta.y > 0 ? step : -step)
 
-        var step = Math.min(lineSize * wheelScrollLines, Kube.Units.gridUnit * 8);
-
-        var y = useAngle ? delta : (wheel.angleDelta.y > 0 ? step : -step)
+        var y = pixelDelta
         if (!y) {
             return flickableItem.contentY;
         }
