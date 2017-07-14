@@ -30,6 +30,7 @@ View 1.0 View.qml
 AutocompleteLineEdit 1.0 AutocompleteLineEdit.qml
 AttachmentDelegate 1.0 AttachmentDelegate.qml
 ListView 1.0 ListView.qml
+TreeView 1.0 TreeView.qml
 ScrollHelper 1.0 ScrollHelper.qml
 singleton Messages 1.0 Messages.qml
 singleton Colors 1.0 Colors.qml
