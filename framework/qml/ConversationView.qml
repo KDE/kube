@@ -141,7 +141,7 @@ Rectangle {
         //necessary due to the webengineview
         Kube.MouseProxy {
             anchors.fill: parent
-            target: listView
+            target: listView.mouseProxy
             forwardWheelEvents: true
         }
     }

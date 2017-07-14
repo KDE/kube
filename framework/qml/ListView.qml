@@ -23,8 +23,10 @@ import org.kube.framework 1.0 as Kube
 
 ListView {
     id: root
+    property Item mouseProxy: scrollHelper
 
     Kube.ScrollHelper {
+        id: scrollHelper
         flickable: root
         anchors.fill: root
     }
