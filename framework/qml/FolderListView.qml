@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2016 Michael Bohlender, <michael.bohlender@kdemail.net>
+  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsystems.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,11 +25,9 @@ import QtQml.Models 2.2
 
 import org.kube.framework 1.0 as Kube
 
-TreeView {
+Kube.TreeView {
     id: treeView
     property variant accountId
-    visible: true
-    flickableItem.boundsBehavior: Flickable.StopAtBounds
 
     TableViewColumn {
         title: "Name"
@@ -39,34 +38,6 @@ TreeView {
         id: folderListModel
         accountId: treeView.accountId
     }
-    selection: ItemSelectionModel {
-        model: treeView.model
-        //TODO once we don't loose focus to the next view
-        // onCurrentChanged: {
-        //     treeView.activated(selection.currentIndex)
-        // }
-    }
-
-    onActiveFocusChanged: {
-        //Set an initially focused item when the list view receives focus
-        if (activeFocus && !selection.hasSelection) {
-            treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
-        }
-    }
-
-    Keys.onDownPressed: {
-        if (!selection.hasSelection) {
-            treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
-        } else {
-            treeView.selection.setCurrentIndex(model.sibling(selection.currentIndex.row + 1, 0, selection.currentIndex), ItemSelectionModel.ClearAndSelect)
-        }
-    }
-    Keys.onUpPressed: {
-        treeView.selection.setCurrentIndex(model.sibling(selection.currentIndex.row - 1, 0, selection.currentIndex), ItemSelectionModel.ClearAndSelect)
-    }
-    Keys.onReturnPressed: {
-        treeView.activated(selection.currentIndex)
-    }
 
     onActivated: {
         //TODO do some event compression in case of double clicks
@@ -75,73 +46,11 @@ TreeView {
                                                                 "trash": model.data(index, Kube.FolderListModel.Trash)});
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": model.data(index, Kube.FolderListModel.DomainObject)});
     }
-    //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
-    onClicked: treeView.activated(index)
 
-    alternatingRowColors: false
-    headerVisible: false
 
-    style: TreeViewStyle {
-
-        rowDelegate: Rectangle {
-            color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
-
-            height: Kube.Units.gridUnit * 1.5
-            width: 20
-
-        }
-
-        frame: Rectangle {
-            color: Kube.Colors.textColor
-        }
-
-        branchDelegate: Item {
-
-            width: 16; height: 16
-
-            Kube.Label  {
-                anchors.centerIn: parent
-
-                color: Kube.Colors.viewBackgroundColor
-                text: styleData.isExpanded ? "-" : "+"
-            }
-
-            //radius: styleData.isExpanded ? 0 : 100
-        }
-
-        itemDelegate: Rectangle {
-
-            color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
-
-            DropArea {
-                anchors.fill: parent
-
-                Rectangle {
-                    anchors.fill: parent
-                    color: Kube.Colors.viewBackgroundColor
-
-                    opacity: 0.3
-
-                    visible: parent.containsDrag
-                }
-                onDropped: {
-                    Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder":model.domainObject})
-                    drop.accept(Qt.MoveAction)
-                    drop.source.visible = false
-                }
-            }
-
-            Kube.Label {
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                }
-                text: styleData.value
-                color: Kube.Colors.viewBackgroundColor
-            }
-        }
-
-        backgroundColor: Kube.Colors.textColor
-        highlightedTextColor: Kube.Colors.highlightedTextColor
+    onDropped: {
+        Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": model.domainObject})
+        drop.accept(Qt.MoveAction)
+        drop.source.visible = false
     }
 }
