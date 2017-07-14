@@ -90,10 +90,10 @@ MouseArea {
         //     listView.flick(0, wheel.angleDelta.y * 10)
         // }
 
-        var newPos = calculateNewPosition(listView, wheel);
         // console.warn("Delta: ", wheel.angleDelta.y);
         // console.warn("Old position: ", flickable.contentY);
         // console.warn("New position: ", newPos);
+        var newPos = calculateNewPosition(flickable, wheel);
         // Show the scrollbars
         flickable.flick(0, 0);
         flickable.contentY = newPos;
