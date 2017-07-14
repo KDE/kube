@@ -18,32 +18,25 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 1.3
+import QtQuick.Controls 2.2
 
 import org.kube.framework 1.0 as Kube
 
-ScrollView {
-    id: root
+Kube.ScrollHelper {
+    id: scrollHelper
     property alias text: edit.text
+    flickable: root
+    Flickable {
+        id: root
+        anchors.fill: parent
+        ScrollBar.vertical: ScrollBar {}
 
-    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-
-    function ensureVisible(r)
-    {
-        if (flickableItem.contentY >= r.y)
-            flickableItem.contentY = r.y;
-        else if (flickableItem.contentY + height <= r.y + r.height)
-            flickableItem.contentY = r.y + r.height - height + edit.padding;
-    }
-
-    Kube.TextArea {
-    //TODO drop all sizes and use the following once we have qt 5.9
-    // Controls2.TextArea.flickable: Kube.TextArea {
-        id: edit
-        width: root.viewport.width
-        height: Math.max(edit.contentHeight + edit.topPadding + edit.bottomPadding, root.height)
-        selectByMouse: true
-        onCursorRectangleChanged: root.ensureVisible(cursorRectangle)
-        wrapMode: TextEdit.Wrap
+        Kube.TextArea {
+            id: edit
+            anchors.fill: parent
+            selectByMouse: true
+            wrapMode: TextEdit.Wrap
+        }
+        TextArea.flickable: edit
     }
 }
