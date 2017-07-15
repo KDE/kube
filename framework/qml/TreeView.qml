@@ -19,108 +19,145 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.4
+import QtQuick.Controls 2 as Controls2
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 
 import org.kube.framework 1.0 as Kube
 
-TreeView {
+Flickable {
     id: root
 
+    default property alias __columns: treeView.__columns
+    property alias model: treeView.model
+    property alias currentIndex: treeView.currentIndex
+
     signal dropped(QtObject drop, QtObject model)
+    signal activated(var index)
 
-    flickableItem.boundsBehavior: Flickable.StopAtBounds
-
-    selection: ItemSelectionModel {
-        model: root.model
-        //TODO once we don't loose focus to the next view
-        // onCurrentChanged: {
-        //     root.activated(selection.currentIndex)
-        // }
+    Controls2.ScrollBar.vertical: Controls2.ScrollBar {}
+    clip: true
+    contentWidth: treeView.width
+    contentHeight: treeView.implicitHeight
+    Kube.ScrollHelper {
+        id: scrollHelper
+        flickable: root
     }
 
-    onActiveFocusChanged: {
-        //Set an initially focused item when the list view receives focus
-        if (activeFocus && !selection.hasSelection) {
-            root.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+    TreeView {
+        id: treeView
+
+        anchors {
+            left: parent.left
+            right: parent.right
         }
-    }
+        implicitHeight: __listView.contentItem.height
+        height: __listView.contentItem.height
 
-    Keys.onDownPressed: {
-        if (!selection.hasSelection) {
-            root.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
-        } else {
-            root.selection.setCurrentIndex(model.sibling(selection.currentIndex.row + 1, 0, selection.currentIndex), ItemSelectionModel.ClearAndSelect)
-        }
-    }
+        verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
 
-    Keys.onUpPressed: {
-        root.selection.setCurrentIndex(model.sibling(selection.currentIndex.row - 1, 0, selection.currentIndex), ItemSelectionModel.ClearAndSelect)
-    }
-
-    Keys.onReturnPressed: {
-        root.activated(selection.currentIndex)
-    }
-
-    //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
-    onClicked: root.activated(index)
-
-    alternatingRowColors: false
-    headerVisible: false
-
-    style: TreeViewStyle {
-
-        rowDelegate: Rectangle {
-            color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
-            height: Kube.Units.gridUnit * 1.5
-            width: 20
+        Kube.MouseProxy {
+            anchors.fill: parent
+            target: scrollHelper
+            forwardWheelEvents: true
         }
 
-        frame: Rectangle {
-            color: Kube.Colors.textColor
+        flickableItem.boundsBehavior: Flickable.StopAtBounds
+
+        selection: ItemSelectionModel {
+            model: treeView.model
+            //TODO once we don't loose focus to the next view
+            // onCurrentChanged: {
+            //     treeView.activated(selection.currentIndex)
+            // }
         }
 
-        branchDelegate: Item {
-            width: 16
-            height: 16
+        onActiveFocusChanged: {
+            //Set an initially focused item when the list view receives focus
+            if (activeFocus && !selection.hasSelection) {
+                treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+            }
+        }
 
-            Kube.Label  {
-                anchors.centerIn: parent
+        Keys.onDownPressed: {
+            if (!selection.hasSelection) {
+                treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+            } else {
+                treeView.selection.setCurrentIndex(model.sibling(selection.currentIndex.row + 1, 0, selection.currentIndex), ItemSelectionModel.ClearAndSelect)
+            }
+        }
 
-                color: Kube.Colors.viewBackgroundColor
-                text: styleData.isExpanded ? "-" : "+"
+        Keys.onUpPressed: {
+            treeView.selection.setCurrentIndex(model.sibling(selection.currentIndex.row - 1, 0, selection.currentIndex), ItemSelectionModel.ClearAndSelect)
+        }
+
+        Keys.onReturnPressed: {
+            treeView.activated(selection.currentIndex)
+        }
+
+        //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
+        onClicked: treeView.activated(index)
+
+        onActivated: root.activated(index)
+
+        alternatingRowColors: false
+        headerVisible: false
+
+        style: TreeViewStyle {
+
+            rowDelegate: Rectangle {
+                color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
+                height: Kube.Units.gridUnit * 1.5
+                width: 20
             }
 
-            //radius: styleData.isExpanded ? 0 : 100
-        }
+            frame: Rectangle {
+                color: Kube.Colors.textColor
+            }
 
-        itemDelegate: Rectangle {
-            color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
+            branchDelegate: Item {
+                width: 16
+                height: 16
 
-            DropArea {
-                anchors.fill: parent
+                Kube.Label  {
+                    anchors.centerIn: parent
 
-                Rectangle {
-                    anchors.fill: parent
                     color: Kube.Colors.viewBackgroundColor
-                    opacity: 0.3
-                    visible: parent.containsDrag
+                    text: styleData.isExpanded ? "-" : "+"
                 }
-                onDropped: root.dropped(drop, model)
+
+                //radius: styleData.isExpanded ? 0 : 100
             }
 
-            Kube.Label {
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
+            itemDelegate: Rectangle {
+                color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
+
+                DropArea {
+                    anchors.fill: parent
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Kube.Colors.viewBackgroundColor
+                        opacity: 0.3
+                        visible: parent.containsDrag
+                    }
+                    onDropped: root.dropped(drop, model)
                 }
-                text: styleData.value
-                color: Kube.Colors.viewBackgroundColor
+
+                Kube.Label {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: parent.left
+                    }
+                    text: styleData.value
+                    color: Kube.Colors.viewBackgroundColor
+                }
             }
+
+            backgroundColor: Kube.Colors.textColor
+            highlightedTextColor: Kube.Colors.highlightedTextColor
         }
-
-        backgroundColor: Kube.Colors.textColor
-        highlightedTextColor: Kube.Colors.highlightedTextColor
     }
 }

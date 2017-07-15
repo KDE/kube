@@ -18,25 +18,23 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
-import QtQuick.Layouts 1.1
-import QtQml.Models 2.2
+import QtQuick.Controls 2
+import QtQuick.Controls 1 as Controls1
 
 import org.kube.framework 1.0 as Kube
 
 Kube.TreeView {
-    id: treeView
+    id: root
     property variant accountId
 
-    TableViewColumn {
+    Controls1.TableViewColumn {
         title: "Name"
         role: "name"
     }
 
     model: Kube.FolderListModel {
         id: folderListModel
-        accountId: treeView.accountId
+        accountId: root.accountId
     }
 
     onActivated: {
