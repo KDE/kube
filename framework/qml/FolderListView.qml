@@ -20,64 +20,35 @@
 import QtQuick 2.4
 import QtQuick.Controls 2
 import QtQuick.Controls 1 as Controls1
-import QtQuick.Controls.Styles 1.4
-import QtQuick.Layouts 1.1
-import QtQml.Models 2.2
 
 import org.kube.framework 1.0 as Kube
 
-Flickable {
+Kube.TreeView {
     id: root
     property variant accountId
 
-    ScrollBar.vertical: ScrollBar {}
-    clip: true
-    contentWidth: root.width
-    contentHeight: contentItem.childrenRect.height
-    Kube.ScrollHelper {
-        id: scrollHelper
-        anchors.fill: root
-        flickable: root
+    Controls1.TableViewColumn {
+        title: "Name"
+        role: "name"
     }
 
-    Kube.TreeView {
-        id: treeView
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-        verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-        height: __listView.contentItem.height
+    model: Kube.FolderListModel {
+        id: folderListModel
+        accountId: root.accountId
+    }
 
-        Kube.MouseProxy {
-            anchors.fill: parent
-            target: scrollHelper
-            forwardWheelEvents: true
-        }
-
-        Controls1.TableViewColumn {
-            title: "Name"
-            role: "name"
-        }
-
-        model: Kube.FolderListModel {
-            id: folderListModel
-            accountId: root.accountId
-        }
-
-        onActivated: {
-            //TODO do some event compression in case of double clicks
-            model.fetchMore(currentIndex);
-            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
-                                                                    "trash": model.data(index, Kube.FolderListModel.Trash)});
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": model.data(index, Kube.FolderListModel.DomainObject)});
-        }
+    onActivated: {
+        //TODO do some event compression in case of double clicks
+        model.fetchMore(currentIndex);
+        Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
+                                                                "trash": model.data(index, Kube.FolderListModel.Trash)});
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": model.data(index, Kube.FolderListModel.DomainObject)});
+    }
 
 
-        onDropped: {
-            Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": model.domainObject})
-            drop.accept(Qt.MoveAction)
-            drop.source.visible = false
-        }
+    onDropped: {
+        Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": model.domainObject})
+        drop.accept(Qt.MoveAction)
+        drop.source.visible = false
     }
 }
