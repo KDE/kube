@@ -215,22 +215,13 @@ Item {
 
             color: Kube.Colors.viewBackgroundColor
 
-            Item {
-
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    leftMargin: Kube.Units.largeSpacing
-                }
-
-                height: parent.height
-
-
             Flickable {
                 id: personPageFlickable
 
-                anchors.fill: parent
+                anchors {
+                    fill: parent
+                    leftMargin: Kube.Units.largeSpacing
+                }
 
                 ScrollBar.vertical: ScrollBar { }
                 contentHeight: contentColumn.height
@@ -429,10 +420,9 @@ Item {
 //                         }
 //                     }
 
-                        Item {
-                            width: parent.width
-                            height: Kube.Units.largeSpacing
-                        }
+                    Item {
+                        width: parent.width
+                        height: Kube.Units.largeSpacing
                     }
                 }
             }
