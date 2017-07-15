@@ -111,7 +111,7 @@ MouseArea {
         //How long the scrollbar will remain visible
         interval: 500
         // Hide the scrollbars
-        onTriggered: listView.cancelFlick();
+        onTriggered: flickable.cancelFlick();
     }
 }
 
