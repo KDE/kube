@@ -19,7 +19,6 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 2.0
-import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
@@ -95,17 +94,25 @@ Item {
             color: Kube.Colors.viewBackgroundColor
 
             Flickable {
+                id: peopleFlickable
 
                 anchors.fill: parent
 
                 ScrollBar.vertical: ScrollBar { }
                 contentHeight: content.height
                 clip: true
-                boundsBehavior: Flickable.StopAtBounds
+                Kube.ScrollHelper {
+                    flickable: peopleFlickable
+                    anchors.fill: parent
+                }
 
                 Item {
                     id: content
 
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
                     height: childrenRect.height
 
                     Flow {
