@@ -220,14 +220,15 @@ Item {
                 anchors {
                     top: parent.top
                     left: parent.left
+                    right: parent.right
                     leftMargin: Kube.Units.largeSpacing
                 }
 
-                width: parent.width
                 height: parent.height
 
 
             Flickable {
+                id: personPageFlickable
 
                 anchors.fill: parent
 
@@ -236,10 +237,18 @@ Item {
 
                 clip: true
 
+                Kube.ScrollHelper {
+                    flickable: personPageFlickable
+                    anchors.fill: parent
+                }
+
                 ColumnLayout {
                     id: contentColumn
 
-                    width: personPageRoot.width
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
 
                     spacing: Kube.Units.largeSpacing
 
