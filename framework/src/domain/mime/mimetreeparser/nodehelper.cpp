@@ -27,7 +27,6 @@
 #include <KMime/Headers>
 
 #include <QTemporaryFile>
-#include <KLocalizedString>
 #include <kcharsets.h>
 
 #include <QUrl>

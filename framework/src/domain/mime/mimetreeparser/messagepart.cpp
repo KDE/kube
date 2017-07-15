@@ -43,8 +43,6 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme.h>
 
-#include <KLocalizedString>
-
 #include <QTextCodec>
 #include <sstream>
 
@@ -683,7 +681,7 @@ SignedMessagePart::SignedMessagePart(ObjectTreeParser *otp,
     mMetaData.isSigned = true;
     mMetaData.isGoodSignature = false;
     mMetaData.keyTrust = GpgME::Signature::Unknown;
-    mMetaData.status = i18n("Wrong Crypto Plug-In.");
+    mMetaData.status = tr("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
 }
 
@@ -708,7 +706,7 @@ bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signa
 
     mMetaData.isSigned = false;
     mMetaData.keyTrust = GpgME::Signature::Unknown;
-    mMetaData.status = i18n("Wrong Crypto Plug-In.");
+    mMetaData.status = tr("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
 
     const QByteArray mementoName = "verification";
@@ -772,21 +770,20 @@ bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signa
 
         if (!mCryptoProto) {
             if (cryptPlugDisplayName.isEmpty()) {
-                errorMsg = i18n("No appropriate crypto plug-in was found.");
+                errorMsg = tr("No appropriate crypto plug-in was found.");
             } else {
-                errorMsg = i18nc("%1 is either 'OpenPGP' or 'S/MIME'",
-                                 "No %1 plug-in was found.",
+                errorMsg = tr("%1 is either 'OpenPGP' or 'S/MIME'",
+                                 "No %1 plug-in was found.").arg(
                                  cryptPlugDisplayName);
             }
         } else {
-            errorMsg = i18n("Crypto plug-in \"%1\" cannot verify signatures.",
+            errorMsg = tr("Crypto plug-in \"%1\" cannot verify signatures.").arg(
                             cryptPlugLibName);
         }
-        mMetaData.errorText = i18n("The message is signed, but the "
+        mMetaData.errorText = tr("The message is signed, but the "
                                    "validity of the signature cannot be "
                                    "verified.<br />"
-                                   "Reason: %1",
-                                   errorMsg);
+                                   "Reason: %1").arg(errorMsg);
     }
     //TODO don't delete in async case
     if (m) {
@@ -1018,7 +1015,7 @@ EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
     mMetaData.isEncrypted = false;
     mMetaData.isDecryptable = false;
     mMetaData.keyTrust = GpgME::Signature::Unknown;
-    mMetaData.status = i18n("Wrong Crypto Plug-In.");
+    mMetaData.status = tr("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
 }
 
@@ -1079,14 +1076,14 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
     if (!mCryptoProto) {
         mError = UnknownError;
-        mMetaData.errorText = i18n("No appropriate crypto plug-in was found.");
+        mMetaData.errorText = tr("No appropriate crypto plug-in was found.");
         return false;
     }
 
     QGpgME::DecryptVerifyJob *job = mCryptoProto->decryptVerifyJob();
     if (!job) {
         mError = UnknownError;
-        mMetaData.errorText = i18n("Crypto plug-in \"%1\" cannot decrypt messages.", mCryptoProto->name());
+        mMetaData.errorText = tr("Crypto plug-in \"%1\" cannot decrypt messages.").arg(mCryptoProto->name());
         return false;
     }
 
@@ -1140,14 +1137,14 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
         if(noSecKey) {
             mError = NoKeyError;
-            mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data. ", mCryptoProto->name())
-                                  + i18n("No key found for recepients.");
+            mMetaData.errorText = tr("Crypto plug-in \"%1\" could not decrypt the data. ").arg(mCryptoProto->name())
+                                  + tr("No key found for recepients.");
         } else if (passphraseError) {
             mError = PassphraseError;
         } else {
             mError = UnknownError;
-            mMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data. ", mCryptoProto->name())
-                                  + i18n("Error: %1", mMetaData.errorText);
+            mMetaData.errorText = tr("Crypto plug-in \"%1\" could not decrypt the data. ").arg(mCryptoProto->name())
+                                  + tr("Error: %1").arg(mMetaData.errorText);
         }
         return false;
     }
