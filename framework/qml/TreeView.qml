@@ -36,7 +36,7 @@ TreeView {
         model: root.model
         //TODO once we don't loose focus to the next view
         // onCurrentChanged: {
-        //     treeView.activated(selection.currentIndex)
+        //     root.activated(selection.currentIndex)
         // }
     }
 
@@ -64,7 +64,7 @@ TreeView {
     }
 
     //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
-    onClicked: treeView.activated(index)
+    onClicked: root.activated(index)
 
     alternatingRowColors: false
     headerVisible: false
