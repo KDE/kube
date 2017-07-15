@@ -22,13 +22,13 @@ import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
 /*
-    * The MouseArea + interactive: false + maximumFlickVelocity are required
-    * to fix scrolling for desktop systems where we don't want flicking behaviour.
-    *
-    * See also:
-    * ScrollView.qml in qtquickcontrols
-    * qquickwheelarea.cpp in qtquickcontrols
-    */
+* The MouseArea + interactive: false + maximumFlickVelocity are required
+* to fix scrolling for desktop systems where we don't want flicking behaviour.
+*
+* See also:
+* ScrollView.qml in qtquickcontrols
+* qquickwheelarea.cpp in qtquickcontrols
+*/
 MouseArea {
     id: root
     propagateComposedEvents: true
@@ -56,19 +56,6 @@ MouseArea {
         //pixelDelta seems to be the same as angleDelta/8
         var pixelDelta = wheel.pixelDelta.y != 0 ? wheel.pixelDelta.y : wheel.angleDelta.y / 8
 
-        //We're only doing pixed based scrolling for the time being
-        //TODO somehow deal with the situation of getting 0 pixelDelta, but still getting an angleDelta every now and then.
-        // var useAngle = wheel.pixelDelta.y != 0
-        // var wheelScrollLines = 3
-        // //Try to get the size of one item in case of a list
-        // var sampleItem = flickableItem.itemAt ? flickableItem.itemAt(0, flickableItem.contentY) : null;
-        // //Otherwise just use a hardcoded value
-        // var oneLine = Kube.Units.gridUnit + Kube.Units.smallSpacing * 2;
-        // var lineSize = sampleItem ? sampleItem.height : oneLine;
-
-        // var step = Math.min(lineSize * wheelScrollLines, Kube.Units.gridUnit * 8);
-        // var y = useAngle ? delta : (wheel.angleDelta.y > 0 ? step : -step)
-
         var y = pixelDelta
         if (!y) {
             return flickableItem.contentY;
@@ -86,19 +73,11 @@ MouseArea {
     }
 
     onWheel: {
-        //Some trackpads (mine) emit 0 events in between that we can safely ignore.
-        // if (wheel.pixelDelta.y) {
-        //     //120 is apparently the factor used in windows(https://chromium.googlesource.com/chromium/src/+/70763eb93a32555910a3b4269aeec51252ab9ec6/ui/events/event.cc)
-        //     listView.flick(0, wheel.pixelDelta.y * 120)
-        // } else if (wheel.angleDelta.y) {
-        //     //Arbitrary but this seems to work for me...
-        //     listView.flick(0, wheel.angleDelta.y * 10)
-        // }
-
-        // console.warn("Delta: ", wheel.angleDelta.y);
+        var newPos = calculateNewPosition(flickable, wheel);
+        // console.warn("Delta: ", wheel.pixelDelta.y);
         // console.warn("Old position: ", flickable.contentY);
         // console.warn("New position: ", newPos);
-        var newPos = calculateNewPosition(flickable, wheel);
+
         // Show the scrollbars
         flickable.flick(0, 0);
         flickable.contentY = newPos;
