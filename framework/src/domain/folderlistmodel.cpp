@@ -151,6 +151,11 @@ bool FolderListModel::lessThan(const QModelIndex &left, const QModelIndex &right
 void FolderListModel::setFolderId(const QVariant &folderId)
 {
     const auto folder = folderId.toString().toUtf8();
+    if (folder.isEmpty()) {
+        setSourceModel(nullptr);
+        mModel.clear();
+        return;
+    }
 
     //Get all folders of an account
     auto query = Query();

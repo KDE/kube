@@ -85,7 +85,11 @@ void AccountsModel::runQuery(const Sink::Query &query)
 void AccountsModel::setAccountId(const QByteArray &accountId)
 {
     qWarning() << "Setting account id" << accountId;
-    //Get all folders of an account
+    if (accountId.isEmpty()) {
+        setSourceModel(nullptr);
+        mModel.clear();
+        return;
+    }
     Sink::Query query;
     query.filter(accountId);
     query.setFlags(Query::LiveQuery);
