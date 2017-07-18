@@ -118,21 +118,42 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     iconName: Kube.Icons.search_inverted
                     onClicked: search.open()
+
+
+                    Kube.ToolTip {
+                        text: "hjfhd"
+                        visible: parent.hovered
+                    }
                 }
 
                 Kube.IconButton {
                     iconName: Kube.Icons.edit_inverted
                     onClicked: kubeViews.openComposer(false)
+
+                    Kube.ToolTip {
+                        text: "composer"
+                        visible: parent.hovered
+                    }
                 }
 
                 Kube.IconButton {
                     iconName: Kube.Icons.mail_inverted
                     onClicked: kubeViews.setMailView()
+
+                    Kube.ToolTip {
+                        text: "mails"
+                        visible: parent.hovered
+                    }
                 }
 
                 Kube.IconButton {
                     iconName: Kube.Icons.user_inverted
                     onClicked: kubeViews.setPeopleView()
+
+                    Kube.ToolTip {
+                        text: "people"
+                        visible: parent.hovered
+                    }
                 }
             }
             Column {
@@ -146,16 +167,31 @@ Controls2.ApplicationWindow {
                 Kube.Outbox {
                     height: Kube.Units.gridUnit * 1.5
                     width: height
+
+                    Kube.ToolTip {
+                        text: "outbox"
+                        visible: parent.hovered
+                    }
                 }
 
                 Kube.IconButton {
                     iconName: Kube.Icons.error_inverted
                     onClicked: kubeViews.setLogView()
+
+                    Kube.ToolTip {
+                        text: "logview"
+                        visible: parent.hovered
+                    }
                 }
 
                 Kube.IconButton {
                     iconName: Kube.Icons.menu_inverted
                     onClicked: kubeViews.setAccountsView()
+
+                    Kube.ToolTip {
+                        text: "settings"
+                        visible: parent.hovered
+                    }
                 }
             }
         }

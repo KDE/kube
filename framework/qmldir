@@ -24,6 +24,7 @@ PositiveButton 1.0 PositiveButton.qml
 TextField 1.0 TextField.qml
 TextArea 1.0 TextArea.qml
 TextEditor 1.0 TextEditor.qml
+ToolTip 1.0 ToolTip.qml
 Label 1.0 Label.qml
 Heading 1.0 Heading.qml
 View 1.0 View.qml
