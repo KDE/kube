@@ -38,7 +38,7 @@ Flickable {
 
     Controls2.ScrollBar.vertical: Controls2.ScrollBar {}
     clip: true
-    contentWidth: treeView.width
+    contentWidth: root.width
     contentHeight: treeView.implicitHeight
     Kube.ScrollHelper {
         id: scrollHelper
@@ -150,8 +150,10 @@ Flickable {
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
+                        right: parent.right
                     }
                     text: styleData.value
+                    elide: Qt.ElideRight
                     color: Kube.Colors.viewBackgroundColor
                 }
             }
