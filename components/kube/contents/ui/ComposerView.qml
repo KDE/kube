@@ -305,7 +305,7 @@ Kube.View {
                     }
                 }
                 Kube.Button {
-                    text: "Attach file"
+                    text: qsTr("Attach file")
 
                     onClicked: {
                         fileDialogComponent.createObject(parent)
@@ -367,7 +367,7 @@ Kube.View {
                 }
 
                 Kube.Label {
-                    text: "Sending Email to:"
+                    text: qsTr("Sending Email to:")
                 }
 
                 AddresseeListEditor {
@@ -381,7 +381,7 @@ Kube.View {
                 }
 
                 Kube.Label {
-                    text: "Sending Copy to (CC):"
+                    text: qsTr("Sending Copy to (CC):")
                 }
                 AddresseeListEditor {
                     id: cc
@@ -394,7 +394,7 @@ Kube.View {
                 }
 
                 Kube.Label {
-                    text: "Sending Secret Copy to (Bcc):"
+                    text: qsTr("Sending Secret Copy to (Bcc):")
                 }
                 AddresseeListEditor {
                     id: bcc
@@ -428,7 +428,7 @@ Kube.View {
 
                     anchors.right: parent.right
 
-                    text: "Save as Draft"
+                    text: qsTr("Save as Draft")
                     //TODO enabled: saveAsDraftAction.enabled
                     onClicked: {
                         saveAsDraftAction.execute()
@@ -437,7 +437,7 @@ Kube.View {
                 Kube.Button {
                     anchors.left: parent.left
 
-                   text: "Discard"
+                   text: qsTr("Discard")
                     onClicked: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
                 }
             }
@@ -449,7 +449,7 @@ Kube.View {
                     bottomMargin: Kube.Units.smallSpacing
                     left: identityCombo.left
                 }
-                text: "You are sending this from:"
+                text: qsTr("You are sending this from:")
             }
 
             Kube.ComboBox {
@@ -480,7 +480,7 @@ Kube.View {
                 }
                 width: parent.width - Kube.Units.largeSpacing * 2
 
-                text: "Send"
+                text: qsTr("Send")
                 enabled: sendAction.enabled
                 onClicked: {
                     sendAction.execute()

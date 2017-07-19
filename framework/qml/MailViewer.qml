@@ -325,17 +325,17 @@ Rectangle {
             topMargin: Math.max(attachments.height, Kube.Units.largeSpacing)
         }
         visible: root.incomplete
-        text: "Incomplete body..."
+        text: qsTr("Incomplete body...")
         color: Kube.Colors.textColor
         enabled: false
         states: [
             State {
                 name: "inprogress"; when: model.status == Kube.MailListModel.InProgressStatus
-                PropertyChanges { target: incompleteBody; text: "Downloading message..." }
+                PropertyChanges { target: incompleteBody; text: qsTr("Downloading message...") }
             },
             State {
                 name: "error"; when: model.status == Kube.MailListModel.ErrorStatus
-                PropertyChanges { target: incompleteBody; text: "Failed to download message..." }
+                PropertyChanges { target: incompleteBody; text: qsTr("Failed to download message...") }
             }
         ]
     }

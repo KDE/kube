@@ -76,7 +76,7 @@ Controls.SplitView {
                     }
                     height: Kube.Units.gridUnit
                     width: parent.width - Kube.Units.largeSpacing * 2
-                    text: "Error"
+                    text: qsTr("Error")
                 }
 
                 Kube.Label {
@@ -136,7 +136,7 @@ Controls.SplitView {
                 anchors.fill: parent
                 columns: 2
                 Kube.Label {
-                    text: "Resource Id:"
+                    text: qsTr("Resource Id:")
                     visible: details.resourceId
                 }
                 Kube.Label {
@@ -144,13 +144,13 @@ Controls.SplitView {
                     visible: details.resourceId
                 }
                 Kube.Label {
-                    text: "Timestamp:"
+                    text: qsTr("Timestamp:")
                 }
                 Kube.Label {
                     text: Qt.formatDateTime(details.timestamp, " hh:mm:ss dd MMM yyyy")
                 }
                 Kube.Label {
-                    text: "Message:"
+                    text: qsTr("Message:")
                 }
                 Kube.Label {
                     text: details.message

@@ -57,7 +57,7 @@ Item {
             rowSpacing: Kube.Units.largeSpacing
 
             Kube.Label {
-                text: "Title of Account"
+                text: qsTr("Title of Account")
                 Layout.alignment: Qt.AlignRight
             }
             Kube.TextField {
@@ -70,7 +70,7 @@ Item {
             }
 
             Kube.Label {
-                text: "Name"
+                text: qsTr("Name")
                 Layout.alignment: Qt.AlignRight
             }
             Kube.TextField {
@@ -83,7 +83,7 @@ Item {
             }
 
             Kube.Label {
-                text: "Email address"
+                text: qsTr("Email address")
                 Layout.alignment: Qt.AlignRight
             }
             Kube.TextField {
@@ -99,7 +99,7 @@ Item {
             }
 
             Kube.Label {
-                text: "Password"
+                text: qsTr("Password")
                 Layout.alignment: Qt.AlignRight
             }
             RowLayout {
@@ -120,7 +120,7 @@ Item {
                 }
 
                 Controls.CheckBox {
-                    text: "Show Password"
+                    text: qsTr("Show Password")
                     onClicked: {
                         if(pwField.echoMode == TextInput.Password) {
                             pwField.echoMode = TextInput.Normal;
@@ -132,7 +132,7 @@ Item {
             }
 
             Kube.Label {
-                text: "IMAP server address"
+                text: qsTr("IMAP server address")
                 Layout.alignment: Qt.AlignRight
             }
             Kube.TextField {
@@ -156,7 +156,7 @@ Item {
             }
 
             Kube.Label {
-                text: "Smtp address"
+                text: qsTr("Smtp address")
                 Layout.alignment: Qt.AlignRight
             }
             Kube.TextField {

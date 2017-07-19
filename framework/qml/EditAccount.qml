@@ -121,7 +121,7 @@ Item {
 
                 Kube.Button {
                     anchors.right: parent.right
-                    text: "Save"
+                    text: qsTr("Save")
                     onClicked: {
                         loader.item.save()
                         //TODO Feedback that the settings have been saved (popup notification/animation?)

@@ -116,7 +116,7 @@ Item {
                     bottom: parent.bottom
                 }
 
-                text: "Discard"
+                text: qsTr("Discard")
                 onClicked: {
                     root.done()
                 }
@@ -128,7 +128,7 @@ Item {
                     bottom: parent.bottom
                 }
 
-                text: "Save"
+                text: qsTr("Save")
                 onClicked: {
                     loader.item.save()
 

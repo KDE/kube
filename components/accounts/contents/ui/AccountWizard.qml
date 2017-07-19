@@ -44,7 +44,7 @@ Kube.Popup {
         Item {
             Kube.Heading {
                 id: heading
-                text: "Select your new account type"
+                text: qsTr("Select your new account type")
                 color: Kube.Colors.highlightColor
             }
 

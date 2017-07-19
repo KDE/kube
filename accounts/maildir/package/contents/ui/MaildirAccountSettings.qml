@@ -57,7 +57,7 @@ Item {
             rowSpacing: Kube.Units.largeSpacing
 
             Kube.Label {
-                text: "Title of Account"
+                text: qsTr("Title of Account")
                 Layout.alignment: Qt.AlignRight
             }
             Kube.TextField {
@@ -70,7 +70,7 @@ Item {
             }
 
             Kube.Label {
-                text: "Path"
+                text: qsTr("Path")
                 Layout.alignment: Qt.AlignRight
             }
             RowLayout {

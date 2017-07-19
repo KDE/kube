@@ -44,7 +44,7 @@ Rectangle {
                     right: parent.right
                     margins: Kube.Units.largeSpacing
                 }
-                text: "New Account"
+                text: qsTr("New Account")
 
                 onClicked: accountWizard.open()
             }

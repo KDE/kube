@@ -35,7 +35,7 @@ Item {
         width: parent.width
         spacing: 5
         Text {
-            text: "An error occured: " + errorString
+            text: qsTr("An error occured: %1").arg(errorString)
         }
     }
 }

@@ -89,7 +89,7 @@ Item {
             }
 
             Kube.Label {
-                text: "+ Add recipient"
+                text: "+ " + qsTr("Add recipient")
                 color: Kube.Colors.highlightColor
                 font.underline: parent.containsMouse
             }
@@ -103,7 +103,7 @@ Item {
 
                 visible: false
 
-                placeholderText: "Add recepient"
+                placeholderText: "+ " + qsTr("Add recipient")
                 model: root.completer.model
                 onSearchTermChanged: root.completer.searchString = searchTerm
                 onAccepted: {

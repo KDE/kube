@@ -121,7 +121,7 @@ Controls2.ApplicationWindow {
 
 
                     Kube.ToolTip {
-                        text: "hjfhd"
+                        text: qsTr("search")
                         visible: parent.hovered
                     }
                 }
@@ -131,7 +131,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.openComposer(false)
 
                     Kube.ToolTip {
-                        text: "composer"
+                        text: qsTr("composer")
                         visible: parent.hovered
                     }
                 }
@@ -141,7 +141,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.setMailView()
 
                     Kube.ToolTip {
-                        text: "mails"
+                        text: qsTr("mails")
                         visible: parent.hovered
                     }
                 }
@@ -151,7 +151,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.setPeopleView()
 
                     Kube.ToolTip {
-                        text: "people"
+                        text: qsTr("people")
                         visible: parent.hovered
                     }
                 }
@@ -169,7 +169,7 @@ Controls2.ApplicationWindow {
                     width: height
 
                     Kube.ToolTip {
-                        text: "outbox"
+                        text: qsTr("outbox")
                         visible: parent.hovered
                     }
                 }
@@ -179,7 +179,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.setLogView()
 
                     Kube.ToolTip {
-                        text: "logview"
+                        text: qsTr("logview")
                         visible: parent.hovered
                     }
                 }
@@ -189,7 +189,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.setAccountsView()
 
                     Kube.ToolTip {
-                        text: "settings"
+                        text: qsTr("settings")
                         visible: parent.hovered
                     }
                 }
@@ -313,7 +313,7 @@ Controls2.ApplicationWindow {
             }
 
             Kube.Button {
-                text: "Go"
+                text: qsTr("Go")
 
                 onClicked: {
                     Kube.Fabric.postMessage(Kube.Messages.search, {"filterString": searchField.text})
