@@ -305,7 +305,7 @@ Controls2.ApplicationWindow {
                 id: searchField
                 focus: true
                 Layout.fillWidth: true
-                placeholderText: "Filter...     (only applies to the mail list for now)"
+                placeholderText: qsTr("Filter...     (only applies to the mail list for now)")
                 Keys.onReturnPressed: {
                     Kube.Fabric.postMessage(Kube.Messages.search, {"filterString": searchField.text})
                     search.close()
