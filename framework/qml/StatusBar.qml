@@ -50,7 +50,7 @@ Item {
                     State {
                         name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
                         PropertyChanges { target: root; visible: true }
-                        PropertyChanges { target: statusText; text: "Disconnected"; visible: true }
+                        PropertyChanges { target: statusText; text: qsTr("Disconnected"); visible: true }
                         PropertyChanges { target: descriptionText; visible: true }
                     },
                     State {

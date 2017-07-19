@@ -343,7 +343,7 @@ Item {
 
                             Row {
                                 spacing: Kube.Units.smallSpacing
-                                Kube.Label { text: "(main)" }
+                                Kube.Label { text: qsTr("(main)") }
                                 Kube.Label { text: modelData ; color: Kube.Colors.highlightColor }
                                 Item { width: Kube.Units.smallSpacing; height: 1 }
                             }
@@ -362,7 +362,7 @@ Item {
 
                             Row {
                                 spacing: Kube.Units.smallSpacing
-                                Kube.Label { text: "(main)" }
+                                Kube.Label { text: qsTr("(main)") }
                                 Kube.Label { text: modelData ; opacity: 0.6 }
                                 Item { width: Kube.Units.smallSpacing; height: 1 }
                             }

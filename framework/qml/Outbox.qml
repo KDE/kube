@@ -109,7 +109,7 @@ Kube.IconButton {
                         states: [
                             State {
                                 name: "inprogress"; when: model.status == Kube.OutboxModel.InProgressStatus
-                                PropertyChanges { target: subjectLabel; text: "Sending: " + model.subject }
+                                PropertyChanges { target: subjectLabel; text: qsTr("Sending: %1").arg(model.subject) }
                             },
                             State {
                                 name: "error"; when: model.status == Kube.OutboxModel.ErrorStatus

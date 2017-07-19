@@ -51,7 +51,7 @@ Item {
             leftMargin: Kube.Units.smallSpacing
         }
 
-        text: "sent by " + root.sender + " on  " + root.date
+        text: qsTr("sent by %1 on %2").arg(root.sender).arg(root.date)
         color: "grey"
     }
     ListView {

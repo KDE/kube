@@ -161,15 +161,15 @@ Rectangle {
                 states: [
                     State {
                         name: "trash"; when: root.trash
-                        PropertyChanges { target: subject; text: "Trash: " + root.subject }
+                        PropertyChanges { target: subject; text: qsTr("Trash: %1").arg(root.subject) }
                     },
                     State {
                         name: "draft"; when: root.draft
-                        PropertyChanges { target: subject; text: "Draft: " + root.subject }
+                        PropertyChanges { target: subject; text: qsTr("Draft: %1").arg(root.subject) }
                     },
                     State {
                         name: "sent"; when: root.sent
-                        PropertyChanges { target: subject; text: "Sent: " + root.subject }
+                        PropertyChanges { target: subject; text: qsTr("Sent: %1").arg(root.subject) }
                     }
                 ]
             }
