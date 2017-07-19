@@ -112,7 +112,7 @@ Item {
                 Layout.fillWidth: true
 
                 Kube.Button {
-                    text: "Remove Account"
+                    text: qsTr("Remove Account")
 
                     onClicked: {
                         loader.item.remove()

@@ -60,7 +60,7 @@ FocusScope {
         anchors.centerIn: parent
         visible: listView.count === 0
         //TODO depending on whether we synchronized already or not the label should change.
-        text: "Nothing here..."
+        text: qsTr("Nothing here...")
     }
 
     Kube.ListView {

@@ -70,7 +70,7 @@ Item {
 
                     Kube.Label {
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                        text: "To"
+                        text: text: qsTr("To")
                     }
 
                     AutocompleteLineEdit {
@@ -92,7 +92,7 @@ Item {
 
                     Kube.Label {
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                        text: "Cc"
+                        text: qsTr("Cc")
                         visible: cc.visible
                     }
 
@@ -117,7 +117,7 @@ Item {
 
                     Kube.Label {
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                        text: "Bcc"
+                        text: qsTr("Bcc")
                         visible: bcc.visible
                     }
 
@@ -141,7 +141,7 @@ Item {
                     }
 
                     Kube.Label {
-                        text: "From"
+                        text: qsTr("From")
                     }
 
                     RowLayout {
@@ -161,7 +161,7 @@ Item {
                         Kube.Button {
                             id: ccButton
 
-                            text: "Cc"
+                            text: qsTr("Cc")
                             onClicked: {
                                 cc.visible = true
                                 ccButton.visible = false
@@ -171,7 +171,7 @@ Item {
                         Kube.Button {
                             id: bccButton
 
-                            text: "Bcc"
+                            text: qsTr("Bcc")
 
                             onClicked: {
                                 bcc.visible = true
@@ -214,7 +214,7 @@ Item {
                     width: parent.width
 
                     Kube.Button {
-                        text: "Discard"
+                        text: qsTr("Discard")
 
                         onClicked: {
                             root.done()
@@ -229,7 +229,7 @@ Item {
                     Kube.Button {
                         id: saveDraftButton
 
-                        text: "Save as Draft"
+                        text: qsTr("Save as Draft")
                         //TODO enabled: saveAsDraftAction.enabled
                         onClicked: {
                             saveAsDraftAction.execute()
@@ -239,7 +239,7 @@ Item {
                     Kube.PositiveButton {
                         width: saveDraftButton.width
 
-                        text: "Send"
+                        text: qsTr("Send")
                         enabled: sendAction.enabled
                         onClicked: {
                             sendAction.execute()
