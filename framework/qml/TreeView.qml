@@ -54,6 +54,7 @@ Flickable {
         }
         implicitHeight: __listView.contentItem.height
         height: __listView.contentItem.height
+        focus: true
 
         verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
@@ -191,6 +192,7 @@ Flickable {
                     }
                     text: styleData.value
                     elide: Qt.ElideRight
+                    font.underline: treeView.activeFocus
                     color: Kube.Colors.viewBackgroundColor
                 }
             }
