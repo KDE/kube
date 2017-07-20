@@ -139,7 +139,7 @@ Flickable {
             rowDelegate: Rectangle {
                 color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
                 height: Kube.Units.gridUnit * 1.5
-                width: 20
+                width: parent.width
             }
 
             frame: Rectangle {
@@ -160,8 +160,7 @@ Flickable {
                 //radius: styleData.isExpanded ? 0 : 100
             }
 
-            itemDelegate: Rectangle {
-                color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
+            itemDelegate: Item {
 
                 DropArea {
                     anchors.fill: parent
