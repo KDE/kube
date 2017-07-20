@@ -78,6 +78,7 @@ FocusScope {
                         text: model.name
                         font.weight: Font.Bold
                         color: Kube.Colors.highlightedTextColor
+                        font.underline: accountLabel.activeFocus
                     }
                 }
 
