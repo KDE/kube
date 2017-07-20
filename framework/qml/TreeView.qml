@@ -74,28 +74,57 @@ Flickable {
             // }
         }
 
+        function selectFirst()
+        {
+            treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+        }
+
+        function selectNext()
+        {
+            var nextIndex = model.sibling(selection.currentIndex.row + 1, 0, selection.currentIndex)
+            if (nextIndex.valid) {
+                treeView.selection.setCurrentIndex(nextIndex, ItemSelectionModel.ClearAndSelect)
+            } else {
+                var childIndex = model.index(0, 0, selection.currentIndex)
+                if (childIndex.valid) {
+                    if (!treeView.isExpanded(selection.currentIndex)) {
+                        treeView.expand(selection.currentIndex)
+                    }
+                    treeView.selection.setCurrentIndex(childIndex, ItemSelectionModel.ClearAndSelect)
+                }
+            }
+        }
+
+        function selectPrevious()
+        {
+            var previousIndex = model.sibling(selection.currentIndex.row - 1, 0, selection.currentIndex)
+            if (previousIndex.valid) {
+                treeView.selection.setCurrentIndex(previousIndex, ItemSelectionModel.ClearAndSelect)
+            } else {
+                var parentIndex = model.parent(selection.currentIndex)
+                if (parentIndex.valid) {
+                    treeView.selection.setCurrentIndex(parentIndex, ItemSelectionModel.ClearAndSelect)
+                }
+            }
+        }
+
         onActiveFocusChanged: {
             //Set an initially focused item when the list view receives focus
             if (activeFocus && !selection.hasSelection) {
-                treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+                selectFirst()
             }
         }
 
         Keys.onDownPressed: {
             if (!selection.hasSelection) {
-                treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+                selectFirst()
             } else {
-                treeView.selection.setCurrentIndex(model.sibling(selection.currentIndex.row + 1, 0, selection.currentIndex), ItemSelectionModel.ClearAndSelect)
+                selectNext();
             }
         }
 
-        Keys.onUpPressed: {
-            treeView.selection.setCurrentIndex(model.sibling(selection.currentIndex.row - 1, 0, selection.currentIndex), ItemSelectionModel.ClearAndSelect)
-        }
-
-        Keys.onReturnPressed: {
-            treeView.activated(selection.currentIndex)
-        }
+        Keys.onUpPressed: selectPrevious()
+        Keys.onReturnPressed: treeView.activated(selection.currentIndex)
 
         //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
         onClicked: treeView.activated(index)
