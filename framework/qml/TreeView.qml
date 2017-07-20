@@ -25,180 +25,184 @@ import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 
 import org.kube.framework 1.0 as Kube
-
-Flickable {
+FocusScope {
     id: root
-
     default property alias __columns: treeView.__columns
     property alias model: treeView.model
     property alias currentIndex: treeView.currentIndex
-
     signal dropped(QtObject drop, QtObject model)
     signal activated(var index)
 
-    Controls2.ScrollBar.vertical: Controls2.ScrollBar {}
-    clip: true
-    contentWidth: root.width
-    contentHeight: treeView.implicitHeight
-    Kube.ScrollHelper {
-        id: scrollHelper
-        flickable: root
-    }
+    Flickable {
+        id: flickableItem
 
-    TreeView {
-        id: treeView
+        anchors.fill: parent
 
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-        implicitHeight: __listView.contentItem.height
-        height: __listView.contentItem.height
-        focus: true
-
-        verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-
-        Kube.MouseProxy {
-            anchors.fill: parent
-            target: scrollHelper
-            forwardWheelEvents: true
+        Controls2.ScrollBar.vertical: Controls2.ScrollBar {}
+        clip: true
+        contentWidth: root.width
+        contentHeight: treeView.implicitHeight
+        Kube.ScrollHelper {
+            id: scrollHelper
+            flickable: flickableItem
         }
 
-        flickableItem.boundsBehavior: Flickable.StopAtBounds
+        TreeView {
+            id: treeView
 
-        selection: ItemSelectionModel {
-            model: treeView.model
-            //TODO once we don't loose focus to the next view
-            // onCurrentChanged: {
-            //     treeView.activated(selection.currentIndex)
-            // }
-        }
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            implicitHeight: __listView.contentItem.height
+            height: __listView.contentItem.height
+            focus: true
 
-        function selectFirst()
-        {
-            treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
-        }
+            verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
 
-        function selectNext()
-        {
-            //If we have already expanded children go to them instead
-            var childIndex = model.index(0, 0, selection.currentIndex)
-            if (childIndex.valid && treeView.isExpanded(selection.currentIndex)) {
-                treeView.selection.setCurrentIndex(childIndex, ItemSelectionModel.ClearAndSelect)
-            } else {
-                //Otherwise just advance to the next index, if we can
-                var nextIndex = model.sibling(selection.currentIndex.row + 1, 0, selection.currentIndex)
-                if (nextIndex.valid) {
-                    treeView.selection.setCurrentIndex(nextIndex, ItemSelectionModel.ClearAndSelect)
+            Kube.MouseProxy {
+                anchors.fill: parent
+                target: scrollHelper
+                forwardWheelEvents: true
+            }
+
+            flickableItem.boundsBehavior: Flickable.StopAtBounds
+
+            selection: ItemSelectionModel {
+                model: treeView.model
+                //TODO once we don't loose focus to the next view
+                // onCurrentChanged: {
+                //     treeView.activated(selection.currentIndex)
+                // }
+                //TODO scroll view so the current index is always visible
+            }
+
+            function selectFirst()
+            {
+                treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+            }
+
+            function selectNext()
+            {
+                //If we have already expanded children go to them instead
+                var childIndex = model.index(0, 0, selection.currentIndex)
+                if (childIndex.valid && treeView.isExpanded(selection.currentIndex)) {
+                    treeView.selection.setCurrentIndex(childIndex, ItemSelectionModel.ClearAndSelect)
                 } else {
-                    //Try to go to the next of the parent instead TODO do this recursively
+                    //Otherwise just advance to the next index, if we can
+                    var nextIndex = model.sibling(selection.currentIndex.row + 1, 0, selection.currentIndex)
+                    if (nextIndex.valid) {
+                        treeView.selection.setCurrentIndex(nextIndex, ItemSelectionModel.ClearAndSelect)
+                    } else {
+                        //Try to go to the next of the parent instead TODO do this recursively
+                        var parentIndex = model.parent(selection.currentIndex)
+                        if (parentIndex.valid) {
+                            var parentNext = model.sibling(parentIndex.row + 1, 0, parentIndex)
+                            treeView.selection.setCurrentIndex(parentNext, ItemSelectionModel.ClearAndSelect)
+                        }
+                    }
+                }
+            }
+
+            function selectPrevious()
+            {
+                var previousIndex = model.sibling(selection.currentIndex.row - 1, 0, selection.currentIndex)
+                if (previousIndex.valid) {
+                    treeView.selection.setCurrentIndex(previousIndex, ItemSelectionModel.ClearAndSelect)
+                    //TODO if the previous index is expanded, go to the last visible child instead (recursively)
+                } else {
                     var parentIndex = model.parent(selection.currentIndex)
                     if (parentIndex.valid) {
-                        var parentNext = model.sibling(parentIndex.row + 1, 0, parentIndex)
-                        treeView.selection.setCurrentIndex(parentNext, ItemSelectionModel.ClearAndSelect)
+                        treeView.selection.setCurrentIndex(parentIndex, ItemSelectionModel.ClearAndSelect)
                     }
                 }
             }
-        }
 
-        function selectPrevious()
-        {
-            var previousIndex = model.sibling(selection.currentIndex.row - 1, 0, selection.currentIndex)
-            if (previousIndex.valid) {
-                treeView.selection.setCurrentIndex(previousIndex, ItemSelectionModel.ClearAndSelect)
-                //TODO if the previous index is expanded, go to the last visible child instead (recursively)
-            } else {
-                var parentIndex = model.parent(selection.currentIndex)
-                if (parentIndex.valid) {
-                    treeView.selection.setCurrentIndex(parentIndex, ItemSelectionModel.ClearAndSelect)
+            onActiveFocusChanged: {
+                //Set an initially focused item when the list view receives focus
+                if (activeFocus && !selection.hasSelection) {
+                    selectFirst()
                 }
             }
-        }
 
-        onActiveFocusChanged: {
-            //Set an initially focused item when the list view receives focus
-            if (activeFocus && !selection.hasSelection) {
-                selectFirst()
-            }
-        }
-
-        Keys.onDownPressed: {
-            if (!selection.hasSelection) {
-                selectFirst()
-            } else {
-                selectNext();
-            }
-        }
-
-        Keys.onUpPressed: selectPrevious()
-        Keys.onReturnPressed: treeView.activated(selection.currentIndex)
-        Keys.onRightPressed: treeView.expand(selection.currentIndex)
-        Keys.onLeftPressed: treeView.collapse(selection.currentIndex)
-
-        //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
-        onClicked: treeView.activated(index)
-
-        onActivated: root.activated(index)
-
-        alternatingRowColors: false
-        headerVisible: false
-
-        style: TreeViewStyle {
-
-            rowDelegate: Rectangle {
-                color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
-                height: Kube.Units.gridUnit * 1.5
-                width: parent.width
+            Keys.onDownPressed: {
+                if (!selection.hasSelection) {
+                    selectFirst()
+                } else {
+                    selectNext();
+                }
             }
 
-            frame: Rectangle {
-                color: Kube.Colors.textColor
-            }
+            Keys.onUpPressed: selectPrevious()
+            Keys.onReturnPressed: treeView.activated(selection.currentIndex)
+            Keys.onRightPressed: treeView.expand(selection.currentIndex)
+            Keys.onLeftPressed: treeView.collapse(selection.currentIndex)
 
-            branchDelegate: Item {
-                width: 16
-                height: 16
+            //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
+            onClicked: treeView.activated(index)
 
-                Kube.Label  {
-                    anchors.centerIn: parent
+            onActivated: root.activated(index)
 
-                    color: Kube.Colors.viewBackgroundColor
-                    text: styleData.isExpanded ? "-" : "+"
+            alternatingRowColors: false
+            headerVisible: false
+
+            //TODO instead of highlighting the current selection: underline the current selection, and highlight the last activated index, so it corresponds
+            //to what we have in the maillist view.
+            //* underline: activefocus
+            //* glow: hover
+            //* highlight: selected
+            style: TreeViewStyle {
+                rowDelegate: Rectangle {
+                    color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
+                    height: Kube.Units.gridUnit * 1.5
+                    width: parent.width
                 }
 
-                //radius: styleData.isExpanded ? 0 : 100
-            }
+                frame: Rectangle {
+                    color: Kube.Colors.textColor
+                }
 
-            itemDelegate: Item {
+                branchDelegate: Item {
+                    width: 16
+                    height: 16
+                    Kube.Label  {
+                        anchors.centerIn: parent
 
-                DropArea {
-                    anchors.fill: parent
-
-                    Rectangle {
-                        anchors.fill: parent
                         color: Kube.Colors.viewBackgroundColor
-                        opacity: 0.3
-                        visible: parent.containsDrag
+                        text: styleData.isExpanded ? "-" : "+"
                     }
-                    onDropped: root.dropped(drop, model)
+                    //radius: styleData.isExpanded ? 0 : 100
                 }
 
-                Kube.Label {
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        left: parent.left
-                        right: parent.right
+                itemDelegate: Item {
+                    DropArea {
+                        anchors.fill: parent
+                        Rectangle {
+                            anchors.fill: parent
+                            color: Kube.Colors.viewBackgroundColor
+                            opacity: 0.3
+                            visible: parent.containsDrag
+                        }
+                        onDropped: root.dropped(drop, model)
                     }
-                    text: styleData.value
-                    elide: Qt.ElideRight
-                    font.underline: treeView.activeFocus
-                    color: Kube.Colors.viewBackgroundColor
+
+                    Kube.Label {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: styleData.value
+                        elide: Qt.ElideRight
+                        font.underline: treeView.activeFocus && styleData.selected
+                        color: Kube.Colors.viewBackgroundColor
+                    }
                 }
+
+                backgroundColor: Kube.Colors.textColor
+                highlightedTextColor: Kube.Colors.highlightedTextColor
             }
-
-            backgroundColor: Kube.Colors.textColor
-            highlightedTextColor: Kube.Colors.highlightedTextColor
         }
     }
 }
