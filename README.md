@@ -12,3 +12,12 @@ GPLV2+
 
 ## Getting involved
 
+www.kube.kde.org
+
+## Extract translatable messages
+
+$ svn checkout svn://anonsvn.kde.org/home/kde/trunk/l10n-kf5/scripts
+$ mkdir po
+$ mkdir enpo
+$ export LUPDATE=lupdate-qt5
+$ PATH=/path/to/scripts:$PATH bash /path/to/scripts/extract-messages.sh
