@@ -139,7 +139,7 @@ FocusScope {
                     when: listView.currentIndex == index && !mouseArea.drag.active
 
                     PropertyChanges {target: background; color: Kube.Colors.highlightColor}
-                    PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
+                    PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor; font.underline: listView.activeFocus}
                     PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
                     PropertyChanges {target: date; visible: false}
