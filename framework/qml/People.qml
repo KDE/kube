@@ -24,7 +24,7 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 
-Item {
+FocusScope {
     id: root
 
     property var currentContact
@@ -56,6 +56,7 @@ Item {
             }
             Kube.TextField {
                 id: searchBar
+                focus: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width * 0.5
                 placeholderText: "Search..."
@@ -98,7 +99,6 @@ Item {
 
                 anchors.fill: parent
 
-                activeFocusOnTab: true
                 ScrollBar.vertical: ScrollBar { }
                 contentHeight: content.height
                 clip: true
