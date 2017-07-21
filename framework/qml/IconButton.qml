@@ -38,11 +38,11 @@ T.Button {
     background: Rectangle {
         color: Kube.Colors.focusedButtonColor
 
-        visible: root.hovered || root.activeFocus
+        visible: root.hovered || root.visualFocus
 
         Rectangle {
             anchors.fill: parent
-            visible: root.hovered || root.pressed || root.activeFocus
+            visible: root.hovered || root.pressed
             color: root.pressed ? Kube.Colors.textColor : Kube.Colors.viewBackgroundColor
             opacity: 0.2
         }

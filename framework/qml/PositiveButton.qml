@@ -38,7 +38,7 @@ T.Button {
         color: Colors.positiveColor
 
         border.width: 2
-        border.color: root.activeFocus && !root.pressed ? Colors.highlightColor : Colors.positiveColor
+        border.color: root.visualFocus && !root.pressed ? Colors.highlightColor : Colors.positiveColor
 
         Rectangle {
             anchors.fill: parent
