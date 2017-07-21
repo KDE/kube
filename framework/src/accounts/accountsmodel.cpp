@@ -103,3 +103,27 @@ QByteArray AccountsModel::accountId() const
 {
     return {};
 }
+
+void AccountsModel::setResourceId(const QByteArray &resourceId)
+{
+    qWarning() << "Setting resource id" << resourceId;
+    if (resourceId.isEmpty()) {
+        setSourceModel(nullptr);
+        mModel.clear();
+        return;
+    }
+
+    Sink::Store::fetchOne<SinkResource>(Sink::Query{}.filter(resourceId)).guard(this).then([this] (const Sink::ApplicationDomain::SinkResource &resource) {
+        Sink::Query query;
+        query.filter(resource.getAccount());
+        query.request<SinkAccount::Name>();
+        query.request<SinkAccount::Icon>();
+        query.request<SinkAccount::Status>();
+        runQuery(query);
+    }).exec();
+}
+
+QByteArray AccountsModel::resourceId() const
+{
+    return {};
+}

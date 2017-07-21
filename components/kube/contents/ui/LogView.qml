@@ -50,9 +50,7 @@ Controls.SplitView {
             }
 
             onCurrentItemChanged: {
-                if (details.resourceId) {
-                    details.resourceId = currentItem.currentData.resource
-                }
+                details.resourceId = currentItem.currentData.resource
                 details.message = currentItem.currentData.message
                 details.timestamp = currentItem.currentData.timestamp
             }
@@ -123,9 +121,25 @@ Controls.SplitView {
         id: details
         property date timestamp
         property string message
-        //TODO get account name from resource id
         property string resourceId: ""
+        property string accountId: ""
+        property string accountName: ""
         color: Kube.Colors.backgroundColor
+        Repeater {
+            model: Kube.AccountsModel {
+                id: accountsModel
+                resourceId: details.resourceId
+            }
+            Item {
+                property string account: model.accountId
+                property string accountName: model.name
+                onAccountChanged: {
+                    details.accountId = account
+                    details.accountName = name
+                }
+                visible: false
+            }
+        }
         Rectangle {
             anchors {
                 fill: parent
@@ -135,6 +149,22 @@ Controls.SplitView {
             GridLayout {
                 anchors.fill: parent
                 columns: 2
+                Kube.Label {
+                    text: qsTr("Account:")
+                    visible: details.accountName
+                }
+                Kube.Label {
+                    text: details.accountName
+                    visible: details.accountName
+                }
+                Kube.Label {
+                    text: qsTr("Account Id:")
+                    visible: details.accountId
+                }
+                Kube.Label {
+                    text: details.accountId
+                    visible: details.accountId
+                }
                 Kube.Label {
                     text: qsTr("Resource Id:")
                     visible: details.resourceId

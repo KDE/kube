@@ -33,6 +33,7 @@ class AccountsModel : public QIdentityProxyModel
     Q_OBJECT
 
     Q_PROPERTY (QByteArray accountId READ accountId WRITE setAccountId)
+    Q_PROPERTY (QByteArray resourceId READ resourceId WRITE setResourceId)
 public:
     enum Status {
         OfflineStatus,
@@ -60,6 +61,9 @@ public:
 
     void setAccountId(const QByteArray &id);
     QByteArray accountId() const;
+
+    void setResourceId(const QByteArray &id);
+    QByteArray resourceId() const;
 
 private:
     void runQuery(const Sink::Query &query);
