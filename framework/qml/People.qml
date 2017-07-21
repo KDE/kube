@@ -98,6 +98,7 @@ Item {
 
                 anchors.fill: parent
 
+                activeFocusOnTab: true
                 ScrollBar.vertical: ScrollBar { }
                 contentHeight: content.height
                 clip: true
@@ -133,65 +134,63 @@ Item {
                                 filter: searchBar.text
                             }
 
-                            delegate: Rectangle {
+                            //TODO using Kube.Button currently crashes, but shouldn't
+                            delegate: Button {
                                 id: delegateRoot
 
                                 height: Kube.Units.gridUnit * 3
                                 width: Kube.Units.gridUnit * 10
 
-                                border.width: 1
-                                border.color: "lightgrey"
+                                activeFocusOnTab: true
+                                Keys.onReturnPressed: delegateRoot.clicked()
 
-                                MouseArea {
+                                onClicked: {
+                                    root.currentContact = model.domainObject
+                                    stack.push(personPage)
+                                }
+
+                                contentItem: Item {
                                     anchors.fill: parent
+                                    Item {
+                                        id: avatarPlaceholder
 
-                                    onClicked: {
-                                        root.currentContact = model.domainObject
-                                        stack.push(personPage)
-                                    }
-                                }
-
-                                Rectangle {
-                                    id: avatarPlaceholder
-
-                                    height: parent.height
-                                    width: height
-                                    Kube.KubeImage {
-                                        anchors.fill: parent
-                                        visible: model.imageData != ""
-                                        imageData: model.imageData
-                                    }
-                                    Kube.Icon {
-                                        anchors.fill: parent
-                                        visible: model.imageData == ""
-                                        iconName: Kube.Icons.user
-                                    }
-                                    color: "lightgrey"
-                                }
-
-
-                                Column {
-
-                                    width: parent.width
-
-                                    anchors {
-                                        left: avatarPlaceholder.right
-                                        margins: Kube.Units.smallSpacing
-                                        verticalCenter: parent.verticalCenter
+                                        height: parent.height
+                                        width: height
+                                        Kube.KubeImage {
+                                            anchors.fill: parent
+                                            visible: model.imageData != ""
+                                            imageData: model.imageData
+                                        }
+                                        Kube.Icon {
+                                            anchors.fill: parent
+                                            visible: model.imageData == ""
+                                            iconName: Kube.Icons.user
+                                        }
                                     }
 
-                                    Kube.Label {
-                                        width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
+                                    Column {
 
-                                        text: model.firstName
-                                        elide: Text.ElideRight
-                                    }
+                                        width: parent.width
 
-                                    Kube.Label {
-                                        width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
+                                        anchors {
+                                            left: avatarPlaceholder.right
+                                            margins: Kube.Units.smallSpacing
+                                            verticalCenter: parent.verticalCenter
+                                        }
 
-                                        text: model.lastName
-                                        elide: Text.ElideRight
+                                        Kube.Label {
+                                            width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
+
+                                            text: model.firstName
+                                            elide: Text.ElideRight
+                                        }
+
+                                        Kube.Label {
+                                            width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
+
+                                            text: model.lastName
+                                            elide: Text.ElideRight
+                                        }
                                     }
                                 }
                             }
