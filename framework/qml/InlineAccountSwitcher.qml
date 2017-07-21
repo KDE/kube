@@ -31,6 +31,7 @@ FocusScope {
     }
 
     ColumnLayout {
+        id: layout
         anchors.fill: parent
 
         Repeater {
