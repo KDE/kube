@@ -94,103 +94,100 @@ FocusScope {
             id: peoplePageRoot
             color: Kube.Colors.viewBackgroundColor
 
-            Flickable {
-                id: peopleFlickable
-
-                anchors.fill: parent
-
-                ScrollBar.vertical: ScrollBar { }
-                contentHeight: content.height
-                clip: true
-                Kube.ScrollHelper {
-                    flickable: peopleFlickable
-                    anchors.fill: parent
+            Kube.GridView {
+                id: gridView
+                anchors {
+                    fill: parent
+                    margins: Kube.Units.largeSpacing
                 }
 
-                Item {
-                    id: content
+                activeFocusOnTab: true
 
-                    anchors {
-                        left: parent.left
-                        right: parent.right
+                model: Kube.PeopleModel {
+                    filter: searchBar.text
+                }
+
+                cellWidth: Kube.Units.gridUnit * 10
+                cellHeight: Kube.Units.gridUnit * 3
+
+                onActiveFocusChanged: {
+                    if (currentIndex < 0) {
+                        currentIndex = 0
                     }
-                    height: childrenRect.height
+                }
 
-                    Flow {
+                function selectObject(domainObject) {
+                    root.currentContact = domainObject
+                    stack.push(personPage)
+                }
 
-                        anchors {
-                            top: parent.top
-                            topMargin: Kube.Units.largeSpacing
-                            left: parent.left
-                            leftMargin: Kube.Units.largeSpacing
+                delegate: Item {
+                    id: delegateRoot
+
+                    height: gridView.cellHeight - Kube.Units.smallSpacing * 2
+                    width: gridView.cellWidth - Kube.Units.smallSpacing * 2
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            parent.GridView.view.currentIndex = index
+                            parent.GridView.view.selectObject(model.domainObject)
+                        }
+                    }
+                    Keys.onReturnPressed: {
+                        GridView.view.currentIndex = index
+                        GridView.view.selectObject(model.domainObject)
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+
+                        border.width: parent.GridView.view.currentIndex == index ? 2 : 1
+                        border.color: parent.GridView.view.currentIndex == index ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+
+                        Rectangle {
+                            id: avatarPlaceholder
+                            color: Kube.Colors.buttonColor
+                            anchors {
+                                top: parent.top
+                                left: parent.left
+                                bottom: parent.bottom
+                            }
+                            clip: true
+
+                            width: height
+                            Kube.KubeImage {
+                                anchors.fill: parent
+                                visible: model.imageData != ""
+                                imageData: model.imageData
+                            }
+                            Kube.Icon {
+                                anchors.fill: parent
+                                visible: model.imageData == ""
+                                iconName: Kube.Icons.user
+                            }
                         }
 
-                        spacing: Kube.Units.largeSpacing
-                        width: peoplePageRoot.width - Kube.Units.largeSpacing * 2
-
-                        Repeater {
-
-                            model: Kube.PeopleModel {
-                                filter: searchBar.text
+                        Column {
+                            width: parent.width
+                            anchors {
+                                left: avatarPlaceholder.right
+                                margins: Kube.Units.smallSpacing
+                                verticalCenter: parent.verticalCenter
                             }
 
-                            delegate: Kube.AbstractButton {
-                                id: delegateRoot
+                            Kube.Label {
+                                width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
 
-                                height: Kube.Units.gridUnit * 3
-                                width: Kube.Units.gridUnit * 10
+                                text: model.firstName
+                                elide: Text.ElideRight
+                            }
 
-                                activeFocusOnTab: true
+                            Kube.Label {
+                                width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
 
-                                onClicked: {
-                                    root.currentContact = model.domainObject
-                                    stack.push(personPage)
-                                }
-
-                                contentItem: Item {
-                                    anchors.fill: parent
-                                    Item {
-                                        id: avatarPlaceholder
-
-                                        height: parent.height
-                                        width: height
-                                        Kube.KubeImage {
-                                            anchors.fill: parent
-                                            visible: model.imageData != ""
-                                            imageData: model.imageData
-                                        }
-                                        Kube.Icon {
-                                            anchors.fill: parent
-                                            visible: model.imageData == ""
-                                            iconName: Kube.Icons.user
-                                        }
-                                    }
-
-                                    Column {
-
-                                        width: parent.width
-
-                                        anchors {
-                                            left: avatarPlaceholder.right
-                                            margins: Kube.Units.smallSpacing
-                                            verticalCenter: parent.verticalCenter
-                                        }
-
-                                        Kube.Label {
-                                            width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
-
-                                            text: model.firstName
-                                            elide: Text.ElideRight
-                                        }
-
-                                        Kube.Label {
-                                            width: delegateRoot.width - avatarPlaceholder.width - Kube.Units.smallSpacing * 2
-
-                                            text: model.lastName
-                                            elide: Text.ElideRight
-                                        }
-                                    }
-                                }
+                                text: model.lastName
+                                elide: Text.ElideRight
                             }
                         }
                     }
