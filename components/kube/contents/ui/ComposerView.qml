@@ -77,7 +77,6 @@ Kube.View {
         Layout.minimumWidth: Kube.Units.gridUnit * 5
 
         color: Kube.Colors.textColor
-        focus: true
 
         ColumnLayout {
 
@@ -109,6 +108,7 @@ Kube.View {
 
             Kube.ListView {
                 id: listView
+                activeFocusOnTab: true
 
                 anchors {
                     left: parent.left
