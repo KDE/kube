@@ -36,7 +36,7 @@ T.Button {
     Keys.onReturnPressed: root.clicked()
 
     background: Rectangle {
-        color: "#2980b9" //FIXME
+        color: Kube.Colors.focusedButtonColor
 
         visible: root.hovered || root.activeFocus
 
