@@ -32,12 +32,13 @@ T.Button {
 
     clip: true
     hoverEnabled: true
+    Keys.onReturnPressed: root.clicked()
 
     background: Rectangle {
         color: Colors.positiveColor
 
         border.width: 2
-        border.color: root.focus && !root.pressed ? Colors.highlightColor : Colors.positiveColor
+        border.color: root.activeFocus && !root.pressed ? Colors.highlightColor : Colors.positiveColor
 
         Rectangle {
             anchors.fill: parent
@@ -49,7 +50,7 @@ T.Button {
 
     contentItem: Label {
         text: root.text
-        font.underline: root.focus
+        font.underline: root.activeFocus
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
