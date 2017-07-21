@@ -37,7 +37,7 @@ T.Button {
     background: Rectangle {
         color: "#2980b9" //FIXME
 
-        visible: root.hovered == true
+        visible: root.hovered || root.activeFocus
 
         Rectangle {
             anchors.fill: parent
