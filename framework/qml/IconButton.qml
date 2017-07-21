@@ -33,6 +33,7 @@ T.Button {
 
     clip: true
     hoverEnabled: true
+    Keys.onReturnPressed: root.clicked()
 
     background: Rectangle {
         color: "#2980b9" //FIXME
