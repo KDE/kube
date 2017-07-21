@@ -15,6 +15,7 @@ People 1.0 People.qml
 NotificationPopup 1.0 NotificationPopup.qml
 Icon 1.0 Icon.qml
 IconButton 1.0 IconButton.qml
+AbstractButton 1.0 AbstractButton.qml
 Button 1.0 Button.qml
 Popup 1.0 Popup.qml
 ProgressBar 1.0 ProgressBar.qml

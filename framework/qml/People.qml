@@ -134,15 +134,13 @@ FocusScope {
                                 filter: searchBar.text
                             }
 
-                            //TODO using Kube.Button currently crashes, but shouldn't
-                            delegate: Button {
+                            delegate: Kube.AbstractButton {
                                 id: delegateRoot
 
                                 height: Kube.Units.gridUnit * 3
                                 width: Kube.Units.gridUnit * 10
 
                                 activeFocusOnTab: true
-                                Keys.onReturnPressed: delegateRoot.clicked()
 
                                 onClicked: {
                                     root.currentContact = model.domainObject
