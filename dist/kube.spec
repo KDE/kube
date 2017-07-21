@@ -17,7 +17,6 @@ BuildRequires:  kf5-kpackage-devel
 BuildRequires:  kf5-kcodecs-devel
 BuildRequires:  kf5-kmime-devel
 BuildRequires:  kf5-kcontacts-devel
-BuildRequires:  kf5-ki18n-devel
 BuildRequires:  lmdb-devel
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
