@@ -45,21 +45,23 @@ A component primarily is a QML UI.
 The QML UI is built on top of:
 
 * One or more models that are instantiated to provide the data.
-* Actions that are instantiated in QML.
+* The fabric to interconnect the components.
 
-## Component interaction
+## Component interaction / Fabric
 The application is made up of various nested components that often need to interact with each other.
 
+This interaction is wired up using the Fabric.
+
+The fabric is a pub/sub messagebus that is orthogonal to the visual hierarchy, that can be used to wire up varius parts of the UI
+where a regular property binding would become problematic.
+
+For more information see: https://cmollekopf.wordpress.com/2017/06/06/kubefabric/
+
 If we look at the example of the org.kube.mail component:
-1. The folderlist-component current-folder property is connected to maillist parentFolder property to display the mails of the currently selected folder.
-2. The "add-note" action might either switch to the org.kube.note application as currently displayed component, or it might just display a quick-note widget directly inline.
+1. The folderlist-component posts to the fabric that current folder has changed. The maillist reacts to that change and sets it's parentFolder property to display the mails of the currently selected folder.
+2. The "add-note" message might either switch to the org.kube.note application as currently displayed component, or it might just display a quick-note widget directly inline.
 
-The first usecase can be achieved by the parent component doing a property binding to connect the different components together as desired.
-
-The second usecase requires actions to interact with 'a' parent component, but without knowing with which one. Actions can thus be handled by ActionHandlers anywhere in the application.
-
-This makes it possible for i.e. a maillist to display a note-widget directly inline, or letting the parent component handle the action to show a full note editor.
-If nothing handles the action, the root component (the shell)can switch to the note application component.
+This makes it possible for i.e. a maillist to display a note-widget directly inline, or letting the parent component handle the action to show a full note editor. If nothing handles the action, the root component (the shell)can switch to the note application component.
 
 ## Third party users of components
 Since components are self contained and made available throuh the KPackage sytem, external applications can load fully functional Kube components.
@@ -78,52 +80,15 @@ By implementing everything according to that model we can later on achieve lazy-
 
 Models are self contained and have an API to set i.e. a query for what to load. Models can load data from anywhere. Typically models are implemented in C++ to interface with the rest of the system, but some models may also be implemented directly in QML.
 
-### Actions
-An action represents something that can be done, such as "mark as read", "delete", "move somewhere", but also "show this mail" or "give me a composer to write a mail".
-
-An action has:
-* an id (i.e. org.kube.actions.make-as-read)
-* an ready state (a property for the UI to know when the action can be triggered, that changes depending on the context)
-* an action context, which contains everything the action needs to execute.
-* an icon
-* a name
-
-The action context contains the dataset the action works upon plus any additional information that is required. A mark-as-read action for instance only requires the mail-set to work on, while a tag-with action requires any entity (mail, event, ...) and a tag (unless there is one action per tag...).
-The action can, through property-binding, reevaluate its ready state based on the currently set context that the UI continuously updates through property binding. Context objects can be shared by various actions.
-
-#### Pre-action handler
-A pre-action handler can be used to supply additional context information for the action to execute. This can be used to i.e. retrieve configuration information or resolve a user uid over ldap.
-
-An action can be executed if a set of available pre-action handlers plus the initially supplied information can complete the context so the target action-handler can be executed.
-
-#### Selecting action handlers out of candidates.
-It is possible that multiple action handlers are avialable for the same action, i.e. because different accounts supplied an action handler for the same action. In such a case it is necessary to select the right action handler based on the context.
-
-A simple criteria could be the currently selected account.
-
-#### Automatic action discovery
-While in many places explicit instantiation of actions is desirable, sometimes we may want to offer all available actions for a certain type. For this it should be possible to i.e. query for all actions that apply to a mail. That way it is possible to centrally add a new action that automatically become available everywhere. Note that this only works for actions that don't require an additional UI, since the components would have to embed that somewhere.
-
-#### Implementation
-Actions are objects that provide the API, and that QML can instantiate directly with it's id. The C++ implementation looks up the action handler via a broker.
-
-* Action: The interface to execute/launch the action. Forwards request and context to broker.
-* ActionHandler: A handler for a specific action. Registers itself with the broker.
-* PreActionHandler: A handler that runs before the action and supplies additional information.
-* ActionBroker: Forwards action requests to handlers. Selects and executes suitable pre-action handlers.
-* Context: The context containing everything the handler needs to execute the action.
-
 ### Controller
-Controllers are used to interact with the system. The controller is a QObject with a QObject-property every property that should be editable, and a QValidator for every property, so editors can easily be built using property binding while providing property-level validation and feedback.
+Controllers are used to interact with the system. The controller is a QObject with a QObject-property for every property that should be editable, and a QValidator for every property, so editors can easily be built using property binding while providing property-level validation and feedback.
 
-The domain object is exposed as an opaque QVariant that can i.e. be used in an action-context. This way details from the infrastructure layer don't leak to the UI layer
+The domain object is exposed as an opaque QVariant. This way details from the infrastructure layer don't leak to the UI layer
 
-Controllers may execute actions or directly interact with infrastructure where suitable.
-
-TODO: we need to find a solution for autocompletion for individual properties. This could be something like a plasma-components specific completer class that is supported by a text component (QCompleter only works for widgets).
+Controllers may interact with infrastructure directly or via the fabric.
 
 ### Notifications
-The system will provide notifications from various sources. 
+The system will provide notifications from various sources.
 
 Notifications could be:
 
@@ -132,7 +97,7 @@ Notifications could be:
 * A synchronization is in progress
 * ...
 
-Notifications can be displayed in various places of the application.
+Notifications can be displayed in various places of the application and are transported over the Fabric.
 
 ## Infrastructure
 The infrastructure layer interfaces with the rest of the system. It is the place where we can integrate with various native infrastructure parts.
@@ -149,7 +114,7 @@ Interactions with Sink involve:
 * Creating/Modifying/Removing entities
 
 ### Configuration
-Configuration as traditionally stored in config files in ~/.kde
+Configuration as traditionally stored in config files in ~/.config
 
 ### Notification
 Notifications for the system.
