@@ -118,7 +118,7 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     iconName: Kube.Icons.search_inverted
                     onClicked: search.open()
-
+                    activeFocusOnTab: true
 
                     Kube.ToolTip {
                         text: qsTr("search")
@@ -129,6 +129,7 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     iconName: Kube.Icons.edit_inverted
                     onClicked: kubeViews.openComposer(false)
+                    activeFocusOnTab: true
 
                     Kube.ToolTip {
                         text: qsTr("composer")
@@ -139,6 +140,7 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     iconName: Kube.Icons.mail_inverted
                     onClicked: kubeViews.setMailView()
+                    activeFocusOnTab: true
 
                     Kube.ToolTip {
                         text: qsTr("mails")
@@ -149,6 +151,7 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     iconName: Kube.Icons.user_inverted
                     onClicked: kubeViews.setPeopleView()
+                    activeFocusOnTab: true
 
                     Kube.ToolTip {
                         text: qsTr("people")
