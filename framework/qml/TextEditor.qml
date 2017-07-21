@@ -22,21 +22,23 @@ import QtQuick.Controls 2.2
 
 import org.kube.framework 1.0 as Kube
 
-Kube.ScrollHelper {
-    id: scrollHelper
+FocusScope {
     property alias text: edit.text
-    flickable: root
-    Flickable {
-        id: root
+    Kube.ScrollHelper {
         anchors.fill: parent
-        ScrollBar.vertical: ScrollBar {}
-
-        Kube.TextArea {
-            id: edit
+        flickable: flickableItem
+        Flickable {
+            id: flickableItem
             anchors.fill: parent
-            selectByMouse: true
-            wrapMode: TextEdit.Wrap
+            ScrollBar.vertical: ScrollBar {}
+
+            Kube.TextArea {
+                id: edit
+                anchors.fill: parent
+                selectByMouse: true
+                wrapMode: TextEdit.Wrap
+            }
+            TextArea.flickable: edit
         }
-        TextArea.flickable: edit
     }
 }

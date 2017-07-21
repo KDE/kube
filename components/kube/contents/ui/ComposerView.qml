@@ -241,6 +241,7 @@ Kube.View {
 
                             Kube.IconButton {
                                 id: deleteButton
+                                activeFocusOnTab: true
                                 iconName: Kube.Icons.moveToTrash
                                 visible: enabled
                                 enabled: !!model.mail
@@ -276,6 +277,7 @@ Kube.View {
             Kube.TextField {
                 id: subject
                 Layout.fillWidth: true
+                activeFocusOnTab: true
 
                 placeholderText: "Enter Subject..."
                 text: composerController.subject
@@ -329,6 +331,7 @@ Kube.View {
             Kube.TextEditor {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                activeFocusOnTab: true
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
                 text: composerController.body
                 onTextChanged: composerController.body = text;
