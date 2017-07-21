@@ -49,6 +49,6 @@ T.TextField {
     background: Rectangle {
         color: Kube.Colors.viewBackgroundColor
         border.width: 1
-        border.color: root.focus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+        border.color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
     }
 }
