@@ -245,6 +245,9 @@ Controls2.ApplicationWindow {
                 if (currentItem == peopleView) {
                     Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
                 }
+                if (currentItem) {
+                    currentItem.forceActiveFocus()
+                }
             }
 
             //These items are not visible until pushed onto the stack, so we keep them in resources instead of items
