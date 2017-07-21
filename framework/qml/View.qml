@@ -24,7 +24,7 @@ import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
-Item {
+FocusScope {
     id: container
 
     property int visibleViews: 2
