@@ -296,3 +296,46 @@ Various parts of the system are context sensitive. I.e. the currently selected a
 In future iterations that context can be expanded i.e. with projects that affect prioritization of various data items.
 
 The application context is globally available, although it may be altered locally.
+
+## Focus handling
+This section lines out how we deal with focus throughout the application.
+The aim is to have consistent behaviour across controls and other elements.
+
+The focus handling needs to take into account:
+
+* Mouse navigation
+* Keyboard navigation
+* Touch input
+
+The primary indicator for focus is the "activeFocus" property (or if available, "visualFocus"). The "focus" property is used for requesting focus and thus not what should be used for detecting focus.
+
+There are the following different focus states:
+* An element can be selected (if selectable). This includes i.e. a text editor that has focus, or a selectable element in a list view.
+* An element can be hovered. This is only available with mouse pointers and indicates that the element can be clicked.
+* An element can have keyboard focus. This is only available with keyboard navigation and indicates which element currently has keyboard focus.
+
+With touch input only the selected state is relevant.
+
+The following indicators are available to visualize selection:
+* Highlight: A blue overlay over the item.
+* Glow: A blue glow around the borders.
+* Underlined text
+
+It is important that a selected element can still show focus, otherwise the focus during keyboard navigation simply disappears if it moves to the selected element.
+
+The following controls need to deal with focus:
+* Buttons, IconButtons
+* ListView, TreeView, GridView
+* TextFields
+* Copyable elements
+
+We're indicating focus as follows:
+* Active focus is indicated with a glow. This is used for both hovering and keyboard focus.
+* A selected element is highlighted.
+* Keyboard focus is additionally to the glow indicated with underlined text.
+
+### FocusScope
+In order to be able to deal with focus on a local scope (which is important for reusable components), a FocusScope is required to establish a border for focus handling. Internally you can set the focus as required within the focus scope, and externally you can just give focus to the FocusScope, ignoring what's going to happen internally. The FocusScope will automatically forward focus (when it receives it), to whatever element requested focus internally.
+
+### Tab focus chain
+Set "activeFocusOnTab: true" on all elements that should be included in the tab focus chain.
