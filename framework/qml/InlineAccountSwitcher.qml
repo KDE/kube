@@ -89,6 +89,7 @@ FocusScope {
                         right: parent.right
                         bottom: parent.bottom
                     }
+                    focus: isCurrent
                     activeFocusOnTab: true
 
                     accountId: currentData.accountId

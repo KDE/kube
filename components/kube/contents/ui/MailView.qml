@@ -25,89 +25,91 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-SplitView {
-    Rectangle {
-        width: Kube.Units.gridUnit * 10
-        Layout.minimumWidth: Kube.Units.gridUnit * 5
+FocusScope {
+    SplitView {
+        anchors.fill: parent
+        Rectangle {
+            width: Kube.Units.gridUnit * 10
+            Layout.minimumWidth: Kube.Units.gridUnit * 5
 
-        color: Kube.Colors.textColor
-        focus: true
+            color: Kube.Colors.textColor
 
-        Kube.PositiveButton {
-            id: newMailButton
+            Kube.PositiveButton {
+                id: newMailButton
 
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-                margins: Kube.Units.largeSpacing
-            }
-
-            text: qsTr("New Email")
-
-            onClicked: {
-                Kube.Fabric.postMessage(Kube.Messages.compose, {})
-            }
-        }
-
-        Kube.InlineAccountSwitcher {
-            id: accountFolderview
-
-            activeFocusOnTab: true
-            anchors {
-                top: newMailButton.bottom
-                topMargin: Kube.Units.largeSpacing
-                bottom: statusBarContainer.top
-                left: newMailButton.left
-                right: parent.right
-            }
-        }
-
-        Item {
-            id: statusBarContainer
-            anchors {
-                topMargin: Kube.Units.smallSpacing
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-            }
-            height: childrenRect.height
-
-            Rectangle {
-                id: border
-                visible: statusBar.visible
                 anchors {
-                    right: parent.right
+                    top: parent.top
                     left: parent.left
-                    margins: Kube.Units.smallSpacing
+                    right: parent.right
+                    margins: Kube.Units.largeSpacing
                 }
-                height: 1
-                color: Kube.Colors.viewBackgroundColor
-                opacity: 0.3
+                focus: true
+                text: qsTr("New Email")
+                onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {})
             }
-            Kube.StatusBar {
-                id: statusBar
-                accountId: accountFolderview.currentAccount
-                height: Kube.Units.gridUnit * 2
+
+            Kube.InlineAccountSwitcher {
+                id: accountFolderview
+                activeFocusOnTab: true
                 anchors {
-                    top: border.bottom
-                    left: statusBarContainer.left
-                    right: statusBarContainer.right
+                    top: newMailButton.bottom
+                    topMargin: Kube.Units.largeSpacing
+                    bottom: statusBarContainer.top
+                    left: newMailButton.left
+                    right: parent.right
+                }
+            }
+
+            Item {
+                id: statusBarContainer
+                anchors {
+                    topMargin: Kube.Units.smallSpacing
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                }
+                height: childrenRect.height
+
+                Rectangle {
+                    id: border
+                    visible: statusBar.visible
+                    anchors {
+                        right: parent.right
+                        left: parent.left
+                        margins: Kube.Units.smallSpacing
+                    }
+                    height: 1
+                    color: Kube.Colors.viewBackgroundColor
+                    opacity: 0.3
+                }
+                Kube.StatusBar {
+                    id: statusBar
+                    accountId: accountFolderview.currentAccount
+                    height: Kube.Units.gridUnit * 2
+                    anchors {
+                        top: border.bottom
+                        left: statusBarContainer.left
+                        right: statusBarContainer.right
+                    }
                 }
             }
         }
-    }
 
-    Kube.MailListView  {
-        id: mailListView
-        width: Kube.Units.gridUnit * 20
-        height: parent.height
-        Layout.minimumWidth: Kube.Units.gridUnit * 10
-    }
+        Kube.MailListView  {
+            id: mailListView
+            width: Kube.Units.gridUnit * 20
+            height: parent.height
+            activeFocusOnTab: true
+            onActiveFocusChanged: console.warn("maillist active focus", activeFocus)
+            Layout.minimumWidth: Kube.Units.gridUnit * 10
+        }
 
-    Kube.ConversationView {
-        id: mailView
-        Layout.fillWidth: true
-        Layout.minimumWidth: Kube.Units.gridUnit * 5
+        Kube.ConversationView {
+            id: mailView
+            Layout.fillWidth: true
+            Layout.minimumWidth: Kube.Units.gridUnit * 5
+            activeFocusOnTab: true
+            onActiveFocusChanged: console.warn("conversation active focus", activeFocus)
+        }
     }
 }
