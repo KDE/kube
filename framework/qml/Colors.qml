@@ -21,16 +21,33 @@ pragma Singleton
 import QtQuick 2.7
 
 Item {
-    property string textColor: "#31363b"
-    property string disabledTextColor: "#7f8c8d"
-    property string backgroundColor: "#eff0f1"
-    property string viewBackgroundColor: "#fcfcfc"
-    property string highlightColor: "#3daee9"
-    property string highlightedTextColor: "#fcfcfc"
-    property string buttonColor: "#bdc3c7"
-    property string positiveColor: "#27ae60"
-    property string warningColor: "#f67400"
-    property string negativeColor: "#ed1515"
-    property string statusbarColor: "#232629"
+    //Colorscheme:
+    //See https://community.kde.org/KDE_Visual_Design_Group/HIG/Color
+    property string paperWhite: "#fcfcfc"
+    property string abyssBlue: "#2980b9"
+    property string charcoalGrey: "#31363b"
+    property string coastalFog: "#7f8c8d"
+    property string cardboardGrey: "#eff0f1"
+    property string plasmaBlue: "#3daee9"
+    property string alternateGrey: "#bdc3c7"
+    property string nobleFir: "#27ae60" //Green
+    property string bewareOrange: "#f67400"
+    property string dangerRed: "#ed1515"
+    property string darkCharcoalGrey: "#232629"
+
+    //Colorusage:
+    property string textColor: charcoalGrey
+    property string disabledTextColor: coastalFog
+    property string backgroundColor: cardboardGrey
+    property string viewBackgroundColor: paperWhite
+    property string highlightColor: plasmaBlue
+    property string highlightedTextColor: paperWhite
+    property string buttonColor: alternateGrey
+    property string positiveColor: nobleFir
+    property string warningColor: bewareOrange
+    property string negativeColor: dangerRed
+    property string statusbarColor: darkCharcoalGrey
+    property string focusedButtonColor: abyssBlue
+
 }
 
