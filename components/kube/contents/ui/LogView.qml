@@ -122,24 +122,17 @@ Controls.SplitView {
         property date timestamp
         property string message
         property string resourceId: ""
-        property string accountId: ""
-        property string accountName: ""
+        property string accountId: retriever.currentData.accountId
+        property string accountName: retriever.currentData.name
         color: Kube.Colors.backgroundColor
-        Repeater {
+
+        Kube.ModelIndexRetriever {
+            id: retriever
             model: Kube.AccountsModel {
-                id: accountsModel
                 resourceId: details.resourceId
             }
-            Item {
-                property string account: model.accountId
-                property string accountName: model.name
-                onAccountChanged: {
-                    details.accountId = account
-                    details.accountName = name
-                }
-                visible: false
-            }
         }
+
         Rectangle {
             anchors {
                 fill: parent

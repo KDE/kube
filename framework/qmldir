@@ -33,6 +33,7 @@ ListView 1.0 ListView.qml
 TreeView 1.0 TreeView.qml
 GridView 1.0 GridView.qml
 ScrollHelper 1.0 ScrollHelper.qml
+ModelIndexRetriever 1.0 ModelIndexRetriever.qml
 singleton Messages 1.0 Messages.qml
 singleton Colors 1.0 Colors.qml
 singleton Icons 1.0 Icons.qml
