@@ -34,9 +34,11 @@ FocusScope {
 
             Kube.TextArea {
                 id: edit
+                focus: true
                 anchors.fill: parent
                 selectByMouse: true
                 wrapMode: TextEdit.Wrap
+                Keys.onEscapePressed: nextItemInFocusChain().focus = true
             }
             TextArea.flickable: edit
         }
