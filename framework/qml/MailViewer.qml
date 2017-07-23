@@ -450,7 +450,7 @@ Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             color: styleData.textColor
                             elide: styleData.elideMode
-                            text: styleData.value
+                            text: styleData.value ? styleData.value : ""
                         }
                         MouseArea {
                             anchors.fill: parent

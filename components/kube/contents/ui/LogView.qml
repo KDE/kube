@@ -122,8 +122,8 @@ Controls.SplitView {
         property date timestamp
         property string message
         property string resourceId: ""
-        property string accountId: retriever.currentData.accountId
-        property string accountName: retriever.currentData.name
+        property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
+        property string accountName: retriever.currentData ? retriever.currentData.name : ""
         color: Kube.Colors.backgroundColor
 
         Kube.ModelIndexRetriever {
