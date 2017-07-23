@@ -24,7 +24,7 @@ Item {
     property string accountId: ""
     property string currentFolderName: ""
     property string currentFolderId: ""
-    property string errorText: "Error"
+    property string errorText: ""
     visible: false
 
     onCurrentFolderIdChanged: root.currentFolderName = ""
@@ -51,7 +51,7 @@ Item {
                         name: "disconnected"; when: model.status == Kube.AccountsModel.OfflineStatus
                         PropertyChanges { target: root; visible: true }
                         PropertyChanges { target: statusText; text: qsTr("Disconnected"); visible: true }
-                        PropertyChanges { target: descriptionText; visible: true }
+                        PropertyChanges { target: descriptionText; visible: root.errorText != "" }
                     },
                     State {
                         name: "busy"; when: model.status == Kube.AccountsModel.BusyStatus
