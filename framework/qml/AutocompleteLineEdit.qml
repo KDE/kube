@@ -30,6 +30,8 @@ Kube.TextField {
     property string searchTerm
     property variant model
 
+    signal aborted()
+
     selectByMouse: true
 
     onTextChanged: {
@@ -38,9 +40,17 @@ Kube.TextField {
             startCompleting()
         } else {
             searchTerm = ""
-            abort()
+            popup.close()
         }
     }
+
+    onEditingFinished: {
+        console.warn("on editing finished")
+        accept()
+    }
+
+    validator: RegExpValidator { regExp: /.+/ }
+
     Keys.onDownPressed: {
         listView.incrementCurrentIndex()
     }
@@ -58,7 +68,11 @@ Kube.TextField {
         }
     }
     Keys.onReturnPressed: {
-        accept()
+        if (acceptableInput) {
+            accept()
+        } else {
+            abort()
+        }
     }
     Keys.onEscapePressed: {
         abort()
@@ -76,11 +90,12 @@ Kube.TextField {
             root.text = listView.currentItem.text;
         }
         popup.close()
-        root.accepted();
+        root.accepted()
     }
 
     function abort() {
         popup.close()
+        root.aborted()
     }
 
     Controls2.Popup {

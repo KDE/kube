@@ -24,7 +24,7 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-Item {
+FocusScope {
     id: root
     property variant completer
     property alias model: listView.model
@@ -78,14 +78,16 @@ Item {
             }
         }
 
-        Item {
+        FocusScope {
             height: Kube.Units.gridUnit * Kube.Units.smallSpacing * 2
             width: parent.width
+            focus: true
 
             Kube.TextButton {
                 id: button
                 text: "+ " + qsTr("Add recipient")
                 color: Kube.Colors.highlightColor
+                focus: true
                 onClicked: {
                     lineEdit.visible = true
                     lineEdit.forceActiveFocus()
@@ -107,6 +109,12 @@ Item {
                     root.added(text);
                     clear()
                     visible = false
+                    button.forceActiveFocus()
+                }
+                onAborted: {
+                    clear()
+                    visible = false
+                    button.forceActiveFocus()
                 }
             }
         }
