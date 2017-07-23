@@ -78,20 +78,18 @@ Item {
             }
         }
 
-        MouseArea {
+        Item {
             height: Kube.Units.gridUnit * Kube.Units.smallSpacing * 2
             width: parent.width
-            hoverEnabled: true
 
-            onClicked: {
-                lineEdit.visible = true
-                lineEdit.forceActiveFocus()
-            }
-
-            Kube.Label {
+            Kube.TextButton {
+                id: button
                 text: "+ " + qsTr("Add recipient")
                 color: Kube.Colors.highlightColor
-                font.underline: parent.containsMouse
+                onClicked: {
+                    lineEdit.visible = true
+                    lineEdit.forceActiveFocus()
+                }
             }
 
             Kube.AutocompleteLineEdit {
@@ -100,7 +98,6 @@ Item {
                     left: parent.left
                     right: parent.right
                 }
-
                 visible: false
 
                 placeholderText: "+ " + qsTr("Add recipient")
@@ -108,7 +105,6 @@ Item {
                 onSearchTermChanged: root.completer.searchString = searchTerm
                 onAccepted: {
                     root.added(text);
-                    console.warn("Accepted input: ", text)
                     clear()
                     visible = false
                 }
