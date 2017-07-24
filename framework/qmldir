@@ -31,6 +31,7 @@ View 1.0 View.qml
 AutocompleteLineEdit 1.0 AutocompleteLineEdit.qml
 AttachmentDelegate 1.0 AttachmentDelegate.qml
 ListView 1.0 ListView.qml
+ListDelegate 1.0 ListDelegate.qml
 TreeView 1.0 TreeView.qml
 GridView 1.0 GridView.qml
 ScrollHelper 1.0 ScrollHelper.qml

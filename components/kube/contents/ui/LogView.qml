@@ -54,16 +54,7 @@ Controls.SplitView {
                 details.message = currentItem.currentData.message
                 details.timestamp = currentItem.currentData.timestamp
             }
-
-            delegate: Rectangle {
-                property variant currentData: model
-                height: Kube.Units.gridUnit * 3
-                width: listView.width
-
-                border.color: Kube.Colors.buttonColor
-                border.width: 1
-                color: listView.currentIndex == index ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
-
+            delegate: Kube.ListDelegate {
                 Kube.Label {
                     id: description
                     anchors {
@@ -105,14 +96,6 @@ Controls.SplitView {
                     font.italic: true
                     color: Kube.Colors.disabledTextColor
                     font.pointSize: 9
-                }
-
-                MouseArea {
-                    id: mouseArea
-                    anchors.fill: parent
-                    onClicked: {
-                        listView.currentIndex = index
-                    }
                 }
             }
         }
