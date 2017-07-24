@@ -130,6 +130,8 @@ Controls2.ApplicationWindow {
                     iconName: Kube.Icons.edit_inverted
                     onClicked: kubeViews.openComposer(false)
                     activeFocusOnTab: true
+                    checkable: true
+                    autoExclusive: true
 
                     Kube.ToolTip {
                         text: qsTr("composer")
@@ -141,6 +143,9 @@ Controls2.ApplicationWindow {
                     iconName: Kube.Icons.mail_inverted
                     onClicked: kubeViews.setMailView()
                     activeFocusOnTab: true
+                    checkable: true
+                    checked: true
+                    autoExclusive: true
 
                     Kube.ToolTip {
                         text: qsTr("mails")
@@ -152,6 +157,8 @@ Controls2.ApplicationWindow {
                     iconName: Kube.Icons.user_inverted
                     onClicked: kubeViews.setPeopleView()
                     activeFocusOnTab: true
+                    checkable: true
+                    autoExclusive: true
 
                     Kube.ToolTip {
                         text: qsTr("people")
