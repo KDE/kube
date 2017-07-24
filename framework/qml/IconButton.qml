@@ -26,8 +26,8 @@ T.Button {
 
     property alias iconName: icon.iconName
 
-    width: Kube.Units.gridUnit + padding * 2
-    height: Kube.Units.gridUnit + padding * 2
+    width: Kube.Units.gridUnit + leftPadding + rightPadding
+    height: Kube.Units.gridUnit + topPadding + bottomPadding
 
     padding: Kube.Units.smallSpacing
 
@@ -35,15 +35,26 @@ T.Button {
     hoverEnabled: true
     Keys.onReturnPressed: root.clicked()
 
-    background: Rectangle {
-        color: Kube.Colors.focusedButtonColor
-
-        visible: root.hovered || root.visualFocus
+    background: Item {
+        Rectangle {
+            anchors.fill: parent
+            visible: root.checked
+            color: Kube.Colors.highlightColor
+        }
+        Rectangle {
+            anchors.fill: parent
+            visible: root.hovered || root.visualFocus
+            color: "transparent"
+            border {
+                width: 2
+                color: Kube.Colors.focusedButtonColor
+            }
+        }
 
         Rectangle {
             anchors.fill: parent
-            visible: root.hovered || root.pressed
-            color: root.pressed ? Kube.Colors.textColor : Kube.Colors.viewBackgroundColor
+            visible: root.pressed
+            color: Kube.Colors.textColor
             opacity: 0.2
         }
     }
