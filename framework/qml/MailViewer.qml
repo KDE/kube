@@ -347,7 +347,7 @@ Rectangle {
         height: Kube.Units.gridUnit * 2
         width: parent.width
 
-        Kube.Label {
+        Kube.TextButton {
             anchors{
                 verticalCenter: parent.verticalCenter
                 left: parent.left
@@ -356,15 +356,11 @@ Rectangle {
 
             text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
             opacity: 0.5
-            MouseArea {
-                anchors.fill: parent
-                enabled: parent.enabled
-                onClicked: {
-                    if (model.trash) {
-                        Kube.Fabric.postMessage(Kube.Messages.remove, {"mail": model.mail})
-                    } else {
-                        Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
-                    }
+            onClicked: {
+                if (model.trash) {
+                    Kube.Fabric.postMessage(Kube.Messages.remove, {"mail": model.mail})
+                } else {
+                    Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                 }
             }
         }
