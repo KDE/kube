@@ -17,49 +17,20 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Layouts 1.1
-import QtQuick.Templates 2.0 as T
-import org.kube.framework 1.0 as Kube
+import org.kube.framework 1.0
 
-T.Button {
+AbstractButton {
     id: root
 
     property alias iconName: icon.iconName
 
-    width: Kube.Units.gridUnit + leftPadding + rightPadding
-    height: Kube.Units.gridUnit + topPadding + bottomPadding
+    width: Units.gridUnit + leftPadding + rightPadding
+    height: Units.gridUnit + topPadding + bottomPadding
 
-    padding: Kube.Units.smallSpacing
+    padding: Units.smallSpacing
+    color: "transparent"
 
-    clip: true
-    hoverEnabled: true
-    Keys.onReturnPressed: root.clicked()
-
-    background: Item {
-        Rectangle {
-            anchors.fill: parent
-            visible: root.checked
-            color: Kube.Colors.highlightColor
-        }
-        Rectangle {
-            anchors.fill: parent
-            visible: root.hovered || root.visualFocus
-            color: "transparent"
-            border {
-                width: 2
-                color: Kube.Colors.focusedButtonColor
-            }
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            visible: root.pressed
-            color: Kube.Colors.textColor
-            opacity: 0.2
-        }
-    }
-
-    contentItem: Kube.Icon {
+    contentItem: Icon {
         id: icon
     }
 }
