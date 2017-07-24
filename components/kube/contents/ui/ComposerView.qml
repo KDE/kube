@@ -202,13 +202,13 @@ Kube.View {
 
 
                             Kube.Label{
-                                    id: subject
-                                    width: content.width - Kube.Units.largeSpacing * 2
-                                    text: model.subject
-                                    color: Kube.Colors.highlightedTextColor
-                                    maximumLineCount: 2
-                                    wrapMode: Text.WrapAnywhere
-                                    elide: Text.ElideRight
+                                id: subject
+                                width: content.width - Kube.Units.largeSpacing * 2
+                                text: model.subject
+                                color: Kube.Colors.highlightedTextColor
+                                maximumLineCount: 2
+                                wrapMode: Text.WrapAnywhere
+                                elide: Text.ElideRight
                             }
 
                             Kube.Label {
