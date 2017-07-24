@@ -25,27 +25,49 @@ T.Button {
     id: root
 
     width: Math.max(Units.gridUnit, contentItem.implicitWidth + leftPadding + rightPadding)
-    height: contentItem.implicitHeight + Units.smallSpacing * 2
+    height: contentItem.implicitHeight + topPadding + bottomPadding
 
     padding: Units.largeSpacing
-    topPadding: Units.smallSpacing * 2
-    bottomPadding: Units.smallSpacing *2
+    topPadding: Units.smallSpacing
+    bottomPadding: Units.smallSpacing
 
     clip: true
     hoverEnabled: true
     Keys.onReturnPressed: root.clicked()
 
-    background: Rectangle {
-        color: Colors.buttonColor
+    property color color: Colors.buttonColor
+    property color textColor: Colors.textColor
 
-        border.width: 2
-        border.color:  root.activeFocus && !root.pressed ? Colors.highlightColor : Colors.buttonColor
+    background: Rectangle {
+        color: root.color
 
         Rectangle {
             anchors.fill: parent
-            visible: root.hovered || root.pressed
-            color: root.pressed ? Colors.textColor : Colors.viewBackgroundColor
+            visible: root.checked
+            color: Colors.highlightColor
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            visible: root.hovered || root.visualFocus
+            color: "transparent"
+            border.width: 2
+            border.color: Colors.focusedButtonColor
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            visible: root.pressed
+            color: Colors.textColor
             opacity: 0.2
         }
+    }
+
+    contentItem: Label {
+        text: root.text
+        elide: Text.ElideRight
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        color: root.textColor
     }
 }
