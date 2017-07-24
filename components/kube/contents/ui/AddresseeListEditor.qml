@@ -86,7 +86,7 @@ FocusScope {
             Kube.TextButton {
                 id: button
                 text: "+ " + qsTr("Add recipient")
-                color: Kube.Colors.highlightColor
+                textColor: Kube.Colors.highlightColor
                 focus: true
                 onClicked: {
                     lineEdit.visible = true
