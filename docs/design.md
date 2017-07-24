@@ -282,8 +282,8 @@ There are the following different focus states:
 With touch input only the selected state is relevant.
 
 The following indicators are available to visualize selection:
-* Highlight: A blue overlay over the item.
-* Glow: A blue glow around the borders.
+* Highlight: A overlay over the item in the highlight color.
+* Border: A border around the item in highlight color.
 * Underlined text
 
 It is important that a selected element can still show focus, otherwise the focus during keyboard navigation simply disappears if it moves to the selected element.
@@ -295,9 +295,9 @@ The following controls need to deal with focus:
 * Copyable elements
 
 We're indicating focus as follows:
-* Active focus is indicated with a glow. This is used for both hovering and keyboard focus.
+* Active focus is indicated with a border. This is used for both hovering and keyboard focus.
 * A selected element is highlighted.
-* Keyboard focus is additionally to the glow indicated with underlined text.
+* Keyboard focus is additionally to the border indicated with underlined text.
 
 ### FocusScope
 In order to be able to deal with focus on a local scope (which is important for reusable components), a FocusScope is required to establish a border for focus handling. Internally you can set the focus as required within the focus scope, and externally you can just give focus to the FocusScope, ignoring what's going to happen internally. The FocusScope will automatically forward focus (when it receives it), to whatever element requested focus internally.
