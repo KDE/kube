@@ -26,6 +26,7 @@ T.ItemDelegate {
     property variant currentData: model
     property alias color: background.color
     property alias border: background.border
+    property color textColor: ListView.isCurrentItem ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
 
     height: Kube.Units.gridUnit * 3
     width: root.ListView.view.width

@@ -102,210 +102,154 @@ FocusScope {
             parentFolder: root.parentFolder
         }
 
-        delegate: Item {
-            id: origin
+        delegate: Kube.ListDelegate {
+            id: delegateRoot
+            //Required for D&D
+            property var mail: model.mail
 
-            property variant currentData: model
+            onClicked: ListView.view.currentIndex = index
 
-            width: delegateRoot.width
-            height: delegateRoot.height
+            width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
+            height: Kube.Units.gridUnit * 5
+
+            color: Kube.Colors.viewBackgroundColor
+            border.color: Kube.Colors.backgroundColor
+            border.width: 1
+
+            states: [
+            State {
+                name: "dnd"
+                when: mouseArea.drag.active
+
+                PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
+                PropertyChanges {target: delegateRoot; x: x; y: y}
+                PropertyChanges {target: delegateRoot; parent: root}
+                PropertyChanges {target: delegateRoot; opacity: 0.7}
+            }
+            ]
+
+            Drag.active: mouseArea.drag.active
+            Drag.hotSpot.x: mouseArea.mouseX
+            Drag.hotSpot.y: mouseArea.mouseY
+            Drag.source: delegateRoot
+
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                drag.target: parent
+                onReleased: parent.Drag.drop()
+            }
 
             Item {
-                id: delegateRoot
+                id: content
 
-                property variant mail : model.domainObject
-
-                width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
-                height: Kube.Units.gridUnit * 5
-
-                states: [
-                State {
-                    name: "dnd"
-                    when: mouseArea.drag.active
-
-                    PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
-                    PropertyChanges {target: delegateRoot; x: x; y:y}
-                    PropertyChanges {target: delegateRoot; parent: root}
-
-                    PropertyChanges {target: delegateRoot; opacity: 0.7}
-                    PropertyChanges {target: background; color: Kube.Colors.highlightColor}
-                    PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
-                },
-                State {
-                    name: "selected"
-                    when: listView.currentIndex == index && !mouseArea.drag.active
-
-                    PropertyChanges {target: background; color: Kube.Colors.highlightColor}
-                    PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor; font.underline: listView.activeFocus}
-                    PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; visible: false}
-                    PropertyChanges {target: buttons; visible: true}
-                },
-                State {
-                    name: "hovered"
-                    when: ( mouseArea.containsMouse || buttons.containsMouse ) && !mouseArea.drag.active
-
-                    PropertyChanges {target: background; color: Kube.Colors.highlightColor; opacity: 0.6}
-                    PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: sender; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: date; visible: false}
-                    PropertyChanges {target: threadCounter; color: Kube.Colors.highlightedTextColor}
-                    PropertyChanges {target: buttons; visible: true}
+                anchors {
+                    fill: parent
+                    margins: Kube.Units.smallSpacing
                 }
-                ]
+                property color unreadColor: (model.unread && !delegateRoot.ListView.isCurrentItem) ? Kube.Colors.highlightColor : delegateRoot.textColor
 
-                Drag.active: mouseArea.drag.active
-                Drag.hotSpot.x: mouseArea.mouseX
-                Drag.hotSpot.y: mouseArea.mouseY
-                Drag.source: delegateRoot
-
-                MouseArea {
-                    id: mouseArea
-
-                    anchors.fill: parent
-
-                    hoverEnabled: true
-                    drag.target: parent
-
-                    onClicked: {
-                        listView.currentIndex = index
-                    }
-                    onReleased: parent.Drag.drop()
-                }
-
-                Rectangle {
-                    id: background
-
-                    anchors.fill: parent
-
-                    color: Kube.Colors.viewBackgroundColor
-
-                    border.color: Kube.Colors.backgroundColor
-                    border.width: 1
-                }
-
-                Item {
-                    id: content
-
+                Column {
                     anchors {
-                        top: parent.top
-                        bottom: parent.bottom
+                        verticalCenter: parent.verticalCenter
                         left: parent.left
-                        right: parent.right
-                        margins: Kube.Units.smallSpacing
+                        leftMargin: Kube.Units.largeSpacing
                     }
 
-                    Column {
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-                            left: parent.left
-                            leftMargin: Kube.Units.largeSpacing
-                        }
-
-                        Kube.Label{
-                            id: subject
-
-                            width: content.width - Kube.Units.gridUnit * 3
-
-                            text: model.subject
-                            color: model.unread ? Kube.Colors.highlightColor : Kube.Colors.textColor
-                            maximumLineCount: 2
-                            wrapMode: Text.WordWrap
-                            elide: Text.ElideRight
-                        }
-
-                        Kube.Label {
-                            id: sender
-
-                            text: model.senderName
-                            font.italic: true
-                            width: delegateRoot.width - Kube.Units.gridUnit * 3
-                            elide: Text.ElideRight
-                        }
+                    Kube.Label{
+                        id: subject
+                        width: content.width - Kube.Units.gridUnit * 3
+                        text: model.subject
+                        color: content.unreadColor
+                        maximumLineCount: 2
+                        wrapMode: Text.WordWrap
+                        elide: Text.ElideRight
                     }
 
                     Kube.Label {
-                        id: date
-
-                        anchors {
-                            right: parent.right
-                            bottom: parent.bottom
-                        }
-                        text: Qt.formatDateTime(model.date, "dd MMM yyyy")
+                        id: sender
+                        text: model.senderName
+                        color: delegateRoot.textColor
                         font.italic: true
-                        color: Kube.Colors.disabledTextColor
-                        font.pointSize: Kube.Units.tinyFontSize
-                    }
-
-                    Kube.Label {
-                        id: threadCounter
-
-                        anchors {
-                            right: parent.right
-                        }
-                        text: model.threadSize
-                        color: model.unread ?  Kube.Colors.highlightColor  : Kube.Colors.disabledTextColor
-                        visible: model.threadSize > 1
+                        width: delegateRoot.width - Kube.Units.gridUnit * 3
+                        elide: Text.ElideRight
                     }
                 }
 
-                Row {
-                    id: buttons
-
-                    property bool containsMouse: importantButton.hovered || deleteButton.hovered || unreadButton.hovered || readButton.hovered
-
+                Kube.Label {
+                    id: date
                     anchors {
                         right: parent.right
                         bottom: parent.bottom
-                        margins: Kube.Units.smallSpacing
                     }
+                    visible: !delegateRoot.hovered
+                    text: Qt.formatDateTime(model.date, "dd MMM yyyy")
+                    font.italic: true
+                    color: Kube.Colors.disabledTextColor
+                    font.pointSize: Kube.Units.tinyFontSize
+                }
 
-                    visible: false
-                    spacing: Kube.Units.smallSpacing
-                    opacity: 0.7
+                Kube.Label {
+                    id: threadCounter
+                    anchors.right: parent.right
+                    text: model.threadSize
+                    color: content.unreadColor
+                    visible: model.threadSize > 1
+                }
+            }
 
-                    Kube.IconButton {
-                        id: readButton
-                        iconName: Kube.Icons.markAsRead
-                        visible: enabled
-                        enabled: model.unread
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
-                    }
-                    Kube.IconButton {
-                        id: unreadButton
-                        iconName: Kube.Icons.markAsUnread
-                        visible: enabled
-                        enabled: !model.unread
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
-                    }
+            Row {
+                id: buttons
 
-                    Kube.IconButton {
-                        id: importantButton
-                        iconName: Kube.Icons.markImportant
-                        visible: enabled
-                        enabled: !!model.mail
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.toggleImportant, {"mail": model.mail, "important": model.important})
-                    }
+                anchors {
+                    right: parent.right
+                    bottom: parent.bottom
+                    margins: Kube.Units.smallSpacing
+                }
 
-                    Kube.IconButton {
-                        id: deleteButton
-                        iconName: Kube.Icons.moveToTrash
-                        visible: enabled
-                        enabled: !!model.mail
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
-                    }
+                visible: delegateRoot.hovered
 
-                    Kube.IconButton {
-                        id: restoreButton
-                        iconName: Kube.Icons.undo
-                        visible: enabled
-                        enabled: !!model.trash
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
-                    }
+                spacing: Kube.Units.smallSpacing
+                opacity: 0.7
+
+                Kube.IconButton {
+                    id: readButton
+                    iconName: Kube.Icons.markAsRead
+                    //FIXME workaround for invisble icon
+                    color: Kube.Colors.highlightColor
+                    visible: model.unread
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
+                }
+                Kube.IconButton {
+                    id: unreadButton
+                    iconName: Kube.Icons.markAsUnread
+                    //FIXME workaround for invisble icon
+                    color: Kube.Colors.highlightColor
+                    visible: !model.unread
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
+                }
+
+                Kube.IconButton {
+                    id: importantButton
+                    iconName: Kube.Icons.markImportant
+                    //FIXME workaround for invisble icon
+                    color: Kube.Colors.highlightColor
+                    visible: !!model.mail
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.toggleImportant, {"mail": model.mail, "important": model.important})
+                }
+
+                Kube.IconButton {
+                    id: deleteButton
+                    iconName: Kube.Icons.moveToTrash
+                    visible: !!model.mail
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
+                }
+
+                Kube.IconButton {
+                    id: restoreButton
+                    iconName: Kube.Icons.undo
+                    visible: !!model.trash
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
                 }
             }
         }
