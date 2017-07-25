@@ -100,7 +100,6 @@ FocusScope {
             width: Kube.Units.gridUnit * 20
             height: parent.height
             activeFocusOnTab: true
-            onActiveFocusChanged: console.warn("maillist active focus", activeFocus)
             Layout.minimumWidth: Kube.Units.gridUnit * 10
         }
 
@@ -109,7 +108,6 @@ FocusScope {
             Layout.fillWidth: true
             Layout.minimumWidth: Kube.Units.gridUnit * 5
             activeFocusOnTab: true
-            onActiveFocusChanged: console.warn("conversation active focus", activeFocus)
         }
     }
 }
