@@ -97,7 +97,7 @@ Controls.SplitView {
                     text: Qt.formatDateTime(model.timestamp, " hh:mm:ss dd MMM yyyy")
                     font.italic: true
                     color: Kube.Colors.disabledTextColor
-                    font.pointSize: 9
+                    font.pointSize: Kube.Units.smallFontSize
                 }
             }
         }

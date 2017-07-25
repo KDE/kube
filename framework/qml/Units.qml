@@ -29,6 +29,8 @@ Item {
     property int largeSpacing: gridUnit
 
     property int defaultFontSize: fontMetrics.font.pointSize
+    property int smallFontSize: fontMetrics.font.pointSize * 0.9
+    property int tinyFontSize: fontMetrics.font.pointSize * 0.8
 
     property variant fontMetrics: TextMetrics {
         text: "M"

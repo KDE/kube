@@ -55,7 +55,7 @@ Kube.IconButton {
         width: Kube.Units.smallSpacing
         text: outboxModel.count
         color: Kube.Colors.disabledTextColor
-        font.pointSize: 9
+        font.pointSize: Kube.Units.smallFontSize
     }
 
     onClicked: dialog.open()

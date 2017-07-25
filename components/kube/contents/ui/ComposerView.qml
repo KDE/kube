@@ -175,7 +175,7 @@ Kube.View {
                             text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                             font.italic: true
                             color: Kube.Colors.disabledTextColor
-                            font.pointSize: 9
+                            font.pointSize: Kube.Units.smallFontSize
                             visible: !delegateRoot.hovered
                         }
                     }
