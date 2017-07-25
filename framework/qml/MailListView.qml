@@ -216,16 +216,16 @@ FocusScope {
                 Kube.IconButton {
                     id: readButton
                     iconName: Kube.Icons.markAsRead
-                    //FIXME workaround for invisble icon
-                    color: Kube.Colors.highlightColor
+                    //FIXME workaround for invisble icon, remove color again
+                    color: Kube.Colors.textColor
                     visible: model.unread
                     onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
                 }
                 Kube.IconButton {
                     id: unreadButton
                     iconName: Kube.Icons.markAsUnread
-                    //FIXME workaround for invisble icon
-                    color: Kube.Colors.highlightColor
+                    //FIXME workaround for invisble icon, remove color again
+                    color: Kube.Colors.textColor
                     visible: !model.unread
                     onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
                 }
@@ -233,8 +233,8 @@ FocusScope {
                 Kube.IconButton {
                     id: importantButton
                     iconName: Kube.Icons.markImportant
-                    //FIXME workaround for invisble icon
-                    color: Kube.Colors.highlightColor
+                    //FIXME workaround for invisble icon, remove color again
+                    color: Kube.Colors.textColor
                     visible: !!model.mail
                     onClicked: Kube.Fabric.postMessage(Kube.Messages.toggleImportant, {"mail": model.mail, "important": model.important})
                 }
@@ -242,6 +242,8 @@ FocusScope {
                 Kube.IconButton {
                     id: deleteButton
                     iconName: Kube.Icons.moveToTrash
+                    //FIXME workaround for invisble icon, remove color again
+                    color: Kube.Colors.textColor
                     visible: !!model.mail
                     onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                 }
@@ -249,6 +251,8 @@ FocusScope {
                 Kube.IconButton {
                     id: restoreButton
                     iconName: Kube.Icons.undo
+                    //FIXME workaround for invisble icon, remove color again
+                    color: Kube.Colors.textColor
                     visible: !!model.trash
                     onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
                 }
