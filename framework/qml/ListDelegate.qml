@@ -26,11 +26,12 @@ T.ItemDelegate {
     property variant currentData: model
     property alias color: background.color
     property alias border: background.border
-    property color textColor: ListView.isCurrentItem ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
+    property color textColor: highlighted ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
 
     height: Kube.Units.gridUnit * 3
     width: root.ListView.view.width
     hoverEnabled: true
+    highlighted: ListView.isCurrentItem
 
     background: Rectangle {
         id: background
@@ -39,7 +40,7 @@ T.ItemDelegate {
         color: Kube.Colors.viewBackgroundColor
         Rectangle {
             anchors.fill: parent
-            visible: root.ListView.isCurrentItem
+            visible: root.highlighted
             color: Kube.Colors.highlightColor
         }
         Rectangle {

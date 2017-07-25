@@ -147,7 +147,7 @@ FocusScope {
                     fill: parent
                     margins: Kube.Units.smallSpacing
                 }
-                property color unreadColor: (model.unread && !delegateRoot.ListView.isCurrentItem) ? Kube.Colors.highlightColor : delegateRoot.textColor
+                property color unreadColor: (model.unread && !delegateRoot.highlighted) ? Kube.Colors.highlightColor : delegateRoot.textColor
 
                 Column {
                     anchors {
