@@ -125,6 +125,7 @@ FocusScope {
                 PropertyChanges {target: delegateRoot; x: x; y: y}
                 PropertyChanges {target: delegateRoot; parent: root}
                 PropertyChanges {target: delegateRoot; opacity: 0.7}
+                PropertyChanges {target: delegateRoot; highlighted: true}
             }
             ]
 
@@ -207,7 +208,7 @@ FocusScope {
                     margins: Kube.Units.smallSpacing
                 }
 
-                visible: delegateRoot.hovered
+                visible: delegateRoot.hovered && !mouseArea.drag.active
 
                 spacing: Kube.Units.smallSpacing
                 opacity: 0.7
