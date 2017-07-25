@@ -78,7 +78,7 @@ Item {
             }
             Kube.TextField {
                 Layout.fillWidth: true
-                placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+                placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
                 text: gmailSettings.accountName
                 onTextChanged: {
                     gmailSettings.accountName = text
@@ -91,7 +91,7 @@ Item {
             }
             Kube.TextField {
                 Layout.fillWidth: true
-                placeholderText: "Your name"
+                placeholderText: qsTr("Your name")
                 text: gmailSettings.userName
                 onTextChanged: {
                     gmailSettings.userName = text
@@ -109,7 +109,7 @@ Item {
                 onTextChanged: {
                     gmailSettings.emailAddress = text
                 }
-                placeholderText: "Your email address"
+                placeholderText: qsTr("Your email address")
             }
 
             Kube.Label {
@@ -123,7 +123,7 @@ Item {
                     id: pwField
                     Layout.fillWidth: true
 
-                    placeholderText: "Password of your email account"
+                    placeholderText: qsTr("Password of your email account")
                     text: gmailSettings.imapPassword
                     onTextChanged: {
                         gmailSettings.imapPassword = text

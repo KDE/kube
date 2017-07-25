@@ -233,7 +233,7 @@ Kube.View {
                 Layout.fillWidth: true
                 activeFocusOnTab: true
 
-                placeholderText: "Enter Subject..."
+                placeholderText: qsTr("Enter Subject...")
                 text: composerController.subject
                 onTextChanged: composerController.subject = text;
                 onActiveFocusChanged: closeFirstSplitIfNecessary()

@@ -62,7 +62,7 @@ Item {
             }
             Kube.TextField {
                 Layout.fillWidth: true
-                placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+                placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
                 text: maildirSettings.accountName
                 onTextChanged: {
                     maildirSettings.accountName = text

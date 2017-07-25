@@ -62,7 +62,7 @@ Item {
             }
             Kube.TextField {
                 Layout.fillWidth: true
-                placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+                placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
                 text: kolabnowSettings.accountName
                 onTextChanged: {
                     kolabnowSettings.accountName = text
@@ -75,7 +75,7 @@ Item {
             }
             Kube.TextField {
                 Layout.fillWidth: true
-                placeholderText: "Your name"
+                placeholderText: qsTr("Your name")
                 text: kolabnowSettings.userName
                 onTextChanged: {
                     kolabnowSettings.userName = text
@@ -93,7 +93,7 @@ Item {
                 onTextChanged: {
                     kolabnowSettings.emailAddress = text
                 }
-                placeholderText: "Your email address"
+                placeholderText: qsTr("Your email address")
             }
 
             Kube.Label {
@@ -107,7 +107,7 @@ Item {
                     id: pwField
                     Layout.fillWidth: true
 
-                    placeholderText: "Password of your email account"
+                    placeholderText: qsTr("Password of your email account")
                     text: kolabnowSettings.imapPassword
                     onTextChanged: {
                         kolabnowSettings.imapPassword = text

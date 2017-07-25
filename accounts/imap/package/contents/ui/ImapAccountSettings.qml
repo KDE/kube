@@ -62,7 +62,7 @@ Item {
             }
             Kube.TextField {
                 Layout.fillWidth: true
-                placeholderText: "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+                placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
                 text: imapSettings.accountName
                 onTextChanged: {
                     imapSettings.accountName = text
@@ -75,7 +75,7 @@ Item {
             }
             Kube.TextField {
                 Layout.fillWidth: true
-                placeholderText: "Your name"
+                placeholderText: qsTr("Your name")
                 text: imapSettings.userName
                 onTextChanged: {
                     imapSettings.userName = text
@@ -95,7 +95,7 @@ Item {
                     imapSettings.imapUsername = text
                     imapSettings.smtpUsername = text
                 }
-                placeholderText: "Your email address"
+                placeholderText: qsTr("Your email address")
             }
 
             Kube.Label {
@@ -109,7 +109,7 @@ Item {
                     id: pwField
                     Layout.fillWidth: true
 
-                    placeholderText: "Password of your email account"
+                    placeholderText: qsTr("Password of your email account")
                     text: imapSettings.imapPassword
                     onTextChanged: {
                         imapSettings.imapPassword = text
