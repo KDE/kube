@@ -139,6 +139,7 @@ FocusScope {
                 anchors.fill: parent
                 drag.target: parent
                 onReleased: parent.Drag.drop()
+                onClicked: delegateRoot.clicked()
             }
 
             Item {
