@@ -19,23 +19,34 @@
 
 import QtQuick 2.7
 import org.kube.framework 1.0 as Kube
+import QtQuick.Templates 2.0 as T
 
-Rectangle {
+T.ItemDelegate {
     id: root
     property variant currentData: model
-    property var listView: root.parent
-    default property alias contentItem: root.children
+    property alias color: background.color
+    property alias border: background.border
 
     height: Kube.Units.gridUnit * 3
-    width: listView.width
+    width: root.ListView.view.width
+    hoverEnabled: true
 
-    border.color: Kube.Colors.buttonColor
-    border.width: 1
-    color: listView.currentIndex == root.index ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
-
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        onClicked: listView.currentIndex = root.index
+    background: Rectangle {
+        id: background
+        border.color: Kube.Colors.buttonColor
+        border.width: 1
+        color: Kube.Colors.viewBackgroundColor
+        Rectangle {
+            anchors.fill: parent
+            visible: root.ListView.isCurrentItem
+            color: Kube.Colors.highlightColor
+        }
+        Rectangle {
+            anchors.fill: parent
+            visible: root.hovered || root.activeFocus
+            border.color: Kube.Colors.focusedButtonColor
+            border.width: 2
+            color: "transparent"
+        }
     }
 }

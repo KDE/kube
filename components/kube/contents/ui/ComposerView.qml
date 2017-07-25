@@ -143,110 +143,64 @@ Kube.View {
                     showDrafts: true
                 }
 
-                delegate: Item {
-                    property variant currentData: model
+                delegate: Kube.ListDelegate {
+                    id: delegateRoot
 
-                    width: delegateRoot.width
-                    height: delegateRoot.height
+                    color: Kube.Colors.textColor
+                    border.width: 0
+                    onClicked: listView.currentIndex = index
 
                     Item {
-                        id: delegateRoot
+                        id: content
 
-                        property variant mail : model.domainObject
-
-                        width: listView.width
-                        height: Kube.Units.gridUnit * 3
-
-                        states: [
-                        State {
-                            name: "selected"
-                            when: listView.currentIndex == index
-
-                            PropertyChanges {target: background; color: Kube.Colors.highlightColor}
-                            PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
-                        },
-                        State {
-                            name: "hovered"
-                            when: ( mouseArea.containsMouse || buttons.containsMouse )
-
-                            PropertyChanges {target: background; color: Kube.Colors.highlightColor; opacity: 0.6}
-                            PropertyChanges {target: subject; color: Kube.Colors.highlightedTextColor}
-                            PropertyChanges {target: date; visible: false}
-                            PropertyChanges {target: buttons; visible: true}
-                        }
-                        ]
-
-                        MouseArea {
-                            id: mouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: listView.currentIndex = index
+                        anchors {
+                            fill: parent
+                            margins: Kube.Units.smallSpacing
                         }
 
-                        Rectangle {
-                            id: background
-                            anchors.fill: parent
-                            color: Kube.Colors.textColor
+                        Kube.Label{
+                            width: content.width - Kube.Units.largeSpacing * 2
+                            text: model.subject
+                            color: Kube.Colors.highlightedTextColor
+                            maximumLineCount: 2
+                            wrapMode: Text.WrapAnywhere
+                            elide: Text.ElideRight
                         }
 
-                        Item {
-                            id: content
-
-                            anchors {
-                                top: parent.top
-                                bottom: parent.bottom
-                                left: parent.left
-                                right: parent.right
-                                margins: Kube.Units.smallSpacing
-                            }
-
-
-                            Kube.Label{
-                                id: subject
-                                width: content.width - Kube.Units.largeSpacing * 2
-                                text: model.subject
-                                color: Kube.Colors.highlightedTextColor
-                                maximumLineCount: 2
-                                wrapMode: Text.WrapAnywhere
-                                elide: Text.ElideRight
-                            }
-
-                            Kube.Label {
-                                id: date
-
-                                anchors {
-                                    right: parent.right
-                                    bottom: parent.bottom
-                                }
-                                text: Qt.formatDateTime(model.date, "dd MMM yyyy")
-                                font.italic: true
-                                color: Kube.Colors.disabledTextColor
-                                font.pointSize: 9
-                            }
-                        }
-                        Row {
-                            id: buttons
-
-                            property bool containsMouse: deleteButton.hovered
-
+                        Kube.Label {
                             anchors {
                                 right: parent.right
                                 bottom: parent.bottom
-                                margins: Kube.Units.smallSpacing
                             }
+                            text: Qt.formatDateTime(model.date, "dd MMM yyyy")
+                            font.italic: true
+                            color: Kube.Colors.disabledTextColor
+                            font.pointSize: 9
+                            visible: !delegateRoot.hovered
+                        }
+                    }
+                    Row {
+                        id: buttons
 
-                            visible: false
-                            spacing: Kube.Units.smallSpacing
-                            opacity: 0.7
+                        property bool containsMouse: deleteButton.hovered
 
-                            Kube.IconButton {
-                                id: deleteButton
-                                activeFocusOnTab: true
-                                iconName: Kube.Icons.moveToTrash
-                                visible: enabled
-                                enabled: !!model.mail
-                                onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
-                            }
+                        anchors {
+                            right: parent.right
+                            bottom: parent.bottom
+                            margins: Kube.Units.smallSpacing
+                        }
+
+                        visible: delegateRoot.hovered
+                        spacing: Kube.Units.smallSpacing
+                        opacity: 0.7
+
+                        Kube.IconButton {
+                            id: deleteButton
+                            activeFocusOnTab: true
+                            iconName: Kube.Icons.moveToTrash
+                            visible: enabled
+                            enabled: !!model.mail
+                            onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                         }
                     }
                 }

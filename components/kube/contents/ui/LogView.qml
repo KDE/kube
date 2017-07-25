@@ -55,6 +55,8 @@ Controls.SplitView {
                 details.timestamp = currentItem.currentData.timestamp
             }
             delegate: Kube.ListDelegate {
+                border.color: Kube.Colors.buttonColor
+                border.width: 1
                 Kube.Label {
                     id: description
                     anchors {
