@@ -57,7 +57,6 @@ Controls.SplitView {
             delegate: Kube.ListDelegate {
                 border.color: Kube.Colors.buttonColor
                 border.width: 1
-                onClicked: ListView.view.currentIndex = index
                 Kube.Label {
                     id: description
                     anchors {

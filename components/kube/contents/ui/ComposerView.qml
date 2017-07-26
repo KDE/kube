@@ -148,7 +148,6 @@ Kube.View {
 
                     color: Kube.Colors.textColor
                     border.width: 0
-                    onClicked: ListView.view.currentIndex = index
 
                     Item {
                         id: content

@@ -107,8 +107,6 @@ FocusScope {
             //Required for D&D
             property var mail: model.mail
 
-            onClicked: ListView.view.currentIndex = index
-
             width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
             height: Kube.Units.gridUnit * 5
 

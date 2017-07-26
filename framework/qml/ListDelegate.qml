@@ -33,6 +33,11 @@ T.ItemDelegate {
     hoverEnabled: true
     highlighted: ListView.isCurrentItem
 
+    onClicked: {
+        ListView.view.currentIndex = index
+        ListView.view.forceActiveFocus()
+    }
+
     background: Kube.DelegateBackground {
         id: background
         border.color: Kube.Colors.buttonColor
