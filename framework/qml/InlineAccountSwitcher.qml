@@ -55,32 +55,22 @@ FocusScope {
                 height: Kube.Units.gridUnit
                 Layout.fillHeight: isCurrent
 
-                Rectangle {
+                Kube.TextButton {
                     id: accountLabel
-
+                    anchors.top: parent.top
+                    anchors.left: parent.left
                     height: Kube.Units.gridUnit
                     width: parent.width
 
-                    color: Kube.Colors.textColor
+                    textColor: Kube.Colors.highlightedTextColor
                     activeFocusOnTab: !isCurrent
-                    Keys.onReturnPressed: {
-                        root.currentAccount = model.accountId
-                    }
+                    onClicked: root.currentAccount = model.accountId
+                    text: model.name
+                    font.weight: Font.Bold
+                    font.family: Kube.Font.fontFamily
+                    horizontalAlignment: Text.AlignHLeft
+                    padding: 0
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            root.currentAccount = model.accountId
-                        }
-                    }
-
-                    Kube.Label{
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: model.name
-                        font.weight: Font.Bold
-                        color: Kube.Colors.highlightedTextColor
-                        font.underline: accountLabel.activeFocus
-                    }
                 }
 
                 Kube.FolderListView {

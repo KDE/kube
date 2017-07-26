@@ -24,6 +24,11 @@ import org.kube.framework 1.0
 T.Button {
     id: root
 
+    property color color: Colors.buttonColor
+    property color textColor: Colors.textColor
+    property alias horizontalAlignment: label.horizontalAlignment
+    property alias verticalAlignment: label.verticalAlignment
+
     width: Math.max(Units.gridUnit, contentItem.implicitWidth + leftPadding + rightPadding)
     height: contentItem.implicitHeight + topPadding + bottomPadding
 
@@ -35,8 +40,7 @@ T.Button {
     hoverEnabled: true
     Keys.onReturnPressed: root.clicked()
 
-    property color color: Colors.buttonColor
-    property color textColor: Colors.textColor
+    font.family: Kube.Font.fontFamily
 
     background: Rectangle {
         color: root.color
@@ -64,10 +68,12 @@ T.Button {
     }
 
     contentItem: Label {
+        id: label
         text: root.text
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         color: root.textColor
+        font: root.font
     }
 }
