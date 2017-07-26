@@ -92,10 +92,7 @@ Rectangle {
             Kube.EditAccount {
                 id: edit
                 anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
+                    fill: parent
                     bottomMargin: Kube.Units.largeSpacing
                 }
 
