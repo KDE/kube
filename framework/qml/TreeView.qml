@@ -33,6 +33,7 @@ FocusScope {
     /*
      * Because active focus is useless in list/treeviews we use the concept of an activeIndex.
      * The current selection represents the focused index. The activeIndex represents the selected index.
+     * FIXME: This is what QItemSelectionModel selection vs current selection are for. Try to use that instead.
      */
     property var activeIndex: null
     signal dropped(var drop, var model)
