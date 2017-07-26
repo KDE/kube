@@ -160,26 +160,32 @@ FocusScope {
             headerVisible: false
 
             style: TreeViewStyle {
-                rowDelegate: Rectangle {
+                rowDelegate: Controls2.Control {
+                    id: delegateRoot
                     //FIXME Uses internal API to get to the model index
                     property bool isActive: root.activeIndex === treeView.__model.mapRowToModelIndex(styleData.row)
-
                     height: Kube.Units.gridUnit * 1.5
                     //FIXME This is the only way I could find to get the correct width. parent.width is way to wide
                     width: parent.parent.parent ? parent.parent.parent.width : 0
-                    color: Kube.Colors.textColor
+                    focus: false
+                    hoverEnabled: true
+                    Rectangle {
+                        anchors.fill: parent
 
-                    Rectangle {
-                        anchors.fill: parent
-                        color: Kube.Colors.highlightColor
-                        visible: isActive
-                    }
-                    Rectangle {
-                        anchors.fill: parent
-                        border.width: 2
-                        border.color: Kube.Colors.focusedButtonColor
-                        color: "transparent"
-                        visible: styleData.selected
+                        color: Kube.Colors.textColor
+
+                        Rectangle {
+                            anchors.fill: parent
+                            color: Kube.Colors.highlightColor
+                            visible: isActive
+                        }
+                        Rectangle {
+                            anchors.fill: parent
+                            border.width: 2
+                            border.color: Kube.Colors.focusedButtonColor
+                            color: "transparent"
+                            visible: styleData.selected || delegateRoot.hovered
+                        }
                     }
                 }
 
