@@ -21,4 +21,6 @@ import org.kube.framework 1.0
 AbstractButton {
     color: Colors.positiveColor
     textColor: Colors.highlightedTextColor
+    highlightColor: Colors.viewBackgroundColor
+    highlightOpacity: 0.2
 }

@@ -26,6 +26,8 @@ T.Button {
 
     property color color: Colors.buttonColor
     property color textColor: Colors.textColor
+    property alias highlightColor: background.highlightColor
+    property alias highlightOpacity: background.highlightOpacity
     property alias horizontalAlignment: label.horizontalAlignment
     property alias verticalAlignment: label.verticalAlignment
 
@@ -41,6 +43,7 @@ T.Button {
     Keys.onReturnPressed: root.clicked()
 
     background: DelegateBackground {
+        id: background
         selected: root.checked
         focused: root.hovered || root.visualFocus
         color: root.color

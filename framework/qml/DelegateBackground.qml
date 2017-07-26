@@ -25,6 +25,7 @@ Rectangle {
     property bool focused: false
     property bool selected: false
     property color highlightColor: Kube.Colors.highlightColor
+    property alias highlightOpacity: highlight.opacity
     property color borderColor: Kube.Colors.focusedButtonColor
 
     Rectangle {
@@ -33,6 +34,7 @@ Rectangle {
         color: root.highlightColor
     }
     Rectangle {
+        id: highlight
         anchors.fill: parent
         visible: root.focused && !root.selected
         color: root.highlightColor
