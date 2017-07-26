@@ -183,16 +183,15 @@ FocusScope {
                     color: Kube.Colors.textColor
                 }
 
-                branchDelegate: Item {
+                branchDelegate: Kube.Label {
                     width: 16
-                    height: 16
-                    Kube.Label  {
-                        anchors.centerIn: parent
+                    height: width
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: Kube.Units.smallSpacing
 
-                        color: Kube.Colors.viewBackgroundColor
-                        text: styleData.isExpanded ? "-" : "+"
-                    }
-                    //radius: styleData.isExpanded ? 0 : 100
+                    color: Kube.Colors.viewBackgroundColor
+                    text: styleData.isExpanded ? "-" : "+"
                 }
 
                 itemDelegate: Item {
