@@ -64,41 +64,21 @@ Rectangle {
 
                 model: Kube.AccountsModel {}
 
-                delegate: T.ItemDelegate {
+                delegate: Kube.ListDelegate {
                     id: delegateRoot
 
-                    height: Kube.Units.gridUnit * 3
-                    width: listView.width
+                    onClicked: edit.accountId = model.accountId
 
-                    onClicked: {
-                        edit.accountId = model.accountId
-                    }
-
-                    contentItem: Item {
-                        Kube.Label {
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                left: parent.left
-                                leftMargin: Kube.Units.largeSpacing
-                            }
-                            width: parent.width - Kube.Units.largeSpacing * 2
-
-                            text: model.name
-                            color: edit.accountId == model.accountId ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
+                    Kube.Label {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: Kube.Units.largeSpacing
                         }
-                    }
+                        width: parent.width - Kube.Units.largeSpacing * 2
 
-                    background: Rectangle {
-                        border.color: Kube.Colors.buttonColor
-                        border.width: 1
-                        color: Kube.Colors.viewBackgroundColor
-
-                        Rectangle {
-                            width: parent.width
-                            height: parent.height
-                            visible: edit.accountId == model.accountId
-                            color: Kube.Colors.highlightColor
-                        }
+                        text: model.name
+                        color: delegateRoot.textColor
                     }
                 }
             }
