@@ -130,6 +130,7 @@ Controls2.ApplicationWindow {
                 }
 
                 Kube.IconButton {
+                    id: composerButton
                     iconName: Kube.Icons.edit_inverted
                     onClicked: kubeViews.openComposer(false)
                     activeFocusOnTab: true
@@ -244,9 +245,11 @@ Controls2.ApplicationWindow {
             }
 
             function openComposer(newMessage) {
+                composerButton.checked = true
                 kubeViews.push(composerView, {newMessage: newMessage}, Controls2.StackView.Immediate)
             }
             function openComposerWithMail(mail, openAsDraft) {
+                composerButton.checked = true
                 kubeViews.push(composerView, {message: mail, loadAsDraft: openAsDraft}, Controls2.StackView.Immediate)
             }
 
