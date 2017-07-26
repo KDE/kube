@@ -40,7 +40,7 @@ Item {
 
         Kube.Heading {
             id: heading
-            text: loader.item.heading
+            text: loader.item ? loader.item.heading : ""
             color: Kube.Colors.highlightColor
         }
 
@@ -53,7 +53,7 @@ Item {
             }
 
             width: parent.width
-            text: loader.item.subheadline
+            text: loader.item ? loader.item.subheadline : ""
             color: Kube.Colors.disabledTextColor
             wrapMode: Text.Wrap
         }
