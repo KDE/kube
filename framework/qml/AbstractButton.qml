@@ -40,22 +40,10 @@ T.Button {
     hoverEnabled: true
     Keys.onReturnPressed: root.clicked()
 
-    background: Rectangle {
+    background: DelegateBackground {
+        selected: root.checked
+        focused: root.hovered || root.visualFocus
         color: root.color
-
-        Rectangle {
-            anchors.fill: parent
-            visible: root.checked
-            color: Colors.highlightColor
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            visible: root.hovered || root.visualFocus
-            color: "transparent"
-            border.width: 2
-            border.color: Colors.focusedButtonColor
-        }
 
         Rectangle {
             anchors.fill: parent
