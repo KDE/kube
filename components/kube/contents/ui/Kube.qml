@@ -32,6 +32,9 @@ Controls2.ApplicationWindow {
     width: Screen.desktopAvailableWidth * 0.8
     visible: true
 
+    //Application default font
+    font.family: Kube.Font.fontFamily
+
     Kube.Listener {
         filter: Kube.Messages.notification
         onMessageReceived: {

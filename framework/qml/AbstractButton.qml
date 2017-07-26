@@ -40,8 +40,6 @@ T.Button {
     hoverEnabled: true
     Keys.onReturnPressed: root.clicked()
 
-    font.family: Font.fontFamily
-
     background: Rectangle {
         color: root.color
 
@@ -74,6 +72,5 @@ T.Button {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         color: root.textColor
-        font: root.font
     }
 }
