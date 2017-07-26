@@ -162,7 +162,7 @@ FocusScope {
 
                     height: Kube.Units.gridUnit * 1.5
                     //FIXME This is the only way I could find to get the correct width. parent.width is way to wide
-                    width: parent.parent.parent.width
+                    width: parent.parent.parent ? parent.parent.parent.width : 0
                     color: Kube.Colors.textColor
 
                     Rectangle {
