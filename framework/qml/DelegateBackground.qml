@@ -24,21 +24,24 @@ Rectangle {
     id: root
     property bool focused: false
     property bool selected: false
+    property color highlightColor: Kube.Colors.highlightColor
+    property color borderColor: Kube.Colors.focusedButtonColor
+
     Rectangle {
         anchors.fill: parent
         visible: root.selected
-        color: Kube.Colors.highlightColor
+        color: root.highlightColor
     }
     Rectangle {
         anchors.fill: parent
         visible: root.focused && !root.selected
-        color: Kube.Colors.highlightColor
+        color: root.highlightColor
         opacity: 0.4
     }
     Rectangle {
         anchors.fill: parent
         visible: root.focused && root.selected
-        border.color: Kube.Colors.focusedButtonColor
+        border.color: root.borderColor
         border.width: 2
         color: "transparent"
     }
