@@ -40,7 +40,7 @@ T.Button {
     hoverEnabled: true
     Keys.onReturnPressed: root.clicked()
 
-    font.family: Kube.Font.fontFamily
+    font.family: Font.fontFamily
 
     background: Rectangle {
         color: root.color
