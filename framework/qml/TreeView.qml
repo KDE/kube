@@ -214,7 +214,6 @@ FocusScope {
                         }
                         text: styleData.value
                         elide: Qt.ElideRight
-                        font.underline: treeView.activeFocus && styleData.selected
                         color: Kube.Colors.viewBackgroundColor
                     }
                 }
