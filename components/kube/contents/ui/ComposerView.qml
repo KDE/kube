@@ -181,8 +181,6 @@ Kube.View {
                     Row {
                         id: buttons
 
-                        property bool containsMouse: deleteButton.hovered
-
                         anchors {
                             right: parent.right
                             bottom: parent.bottom
