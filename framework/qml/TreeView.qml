@@ -132,6 +132,9 @@ FocusScope {
                 if (activeFocus && !selection.hasSelection) {
                     selectFirst()
                 }
+                if (!activeFocus) {
+                    selection.clear()
+                }
             }
 
             Keys.onDownPressed: {
