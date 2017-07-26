@@ -30,8 +30,16 @@ FocusScope {
     default property alias __columns: treeView.__columns
     property alias model: treeView.model
     property alias currentIndex: treeView.currentIndex
-    signal dropped(QtObject drop, QtObject model)
+    /*
+     * Because active focus is useless in list/treeviews we use the concept of an activeIndex.
+     * The current selection represents the focused index. The activeIndex represents the selected index.
+     */
+    property var activeIndex: null
+    signal dropped(var drop, var model)
     signal activated(var index)
+    onActivated: {
+        activeIndex = index
+    }
 
     Flickable {
         id: flickableItem
@@ -147,16 +155,27 @@ FocusScope {
             alternatingRowColors: false
             headerVisible: false
 
-            //TODO instead of highlighting the current selection: underline the current selection, and highlight the last activated index, so it corresponds
-            //to what we have in the maillist view.
-            //* underline: activefocus
-            //* glow: hover
-            //* highlight: selected
             style: TreeViewStyle {
                 rowDelegate: Rectangle {
-                    color: styleData.selected ? Kube.Colors.highlightColor : Kube.Colors.textColor
+                    //FIXME Uses internal API to get to the model index
+                    property bool isActive: root.activeIndex === treeView.__model.mapRowToModelIndex(styleData.row)
+
                     height: Kube.Units.gridUnit * 1.5
                     width: parent.width
+                    color: Kube.Colors.textColor
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Kube.Colors.highlightColor
+                        visible: isActive
+                    }
+                    Rectangle {
+                        anchors.fill: parent
+                        border.width: 2
+                        border.color: Kube.Colors.focusedButtonColor
+                        color: "transparent"
+                        visible: styleData.selected
+                    }
                 }
 
                 frame: Rectangle {
