@@ -39,7 +39,7 @@ Kube.TreeView {
 
     onActivated: {
         //TODO do some event compression in case of double clicks
-        model.fetchMore(currentIndex);
+        model.fetchMore(index);
         Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
                                                                 "trash": model.data(index, Kube.FolderListModel.Trash)});
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": model.data(index, Kube.FolderListModel.DomainObject)});
