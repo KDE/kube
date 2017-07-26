@@ -30,6 +30,7 @@ Heading 1.0 Heading.qml
 View 1.0 View.qml
 AutocompleteLineEdit 1.0 AutocompleteLineEdit.qml
 AttachmentDelegate 1.0 AttachmentDelegate.qml
+DelegateBackground 1.0 DelegateBackground.qml
 ListView 1.0 ListView.qml
 ListDelegate 1.0 ListDelegate.qml
 TreeView 1.0 TreeView.qml

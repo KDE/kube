@@ -19,26 +19,27 @@
 
 import QtQuick 2.7
 import org.kube.framework 1.0 as Kube
-import QtQuick.Templates 2.0 as T
 
-T.ItemDelegate {
+Rectangle {
     id: root
-    property variant currentData: model
-    property alias color: background.color
-    property alias border: background.border
-    property color textColor: highlighted ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
-
-    height: Kube.Units.gridUnit * 3
-    width: root.ListView.view.width
-    hoverEnabled: true
-    highlighted: ListView.isCurrentItem
-
-    background: Kube.DelegateBackground {
-        id: background
-        border.color: Kube.Colors.buttonColor
-        border.width: 1
-        color: Kube.Colors.viewBackgroundColor
-        focused: root.hovered || root.activeFocus
-        selected: root.highlighted
+    property bool focused: false
+    property bool selected: false
+    Rectangle {
+        anchors.fill: parent
+        visible: root.selected
+        color: Kube.Colors.highlightColor
+    }
+    Rectangle {
+        anchors.fill: parent
+        visible: root.focused && !root.selected
+        color: Kube.Colors.highlightColor
+        opacity: 0.4
+    }
+    Rectangle {
+        anchors.fill: parent
+        visible: root.focused && root.selected
+        border.color: Kube.Colors.focusedButtonColor
+        border.width: 2
+        color: "transparent"
     }
 }

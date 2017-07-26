@@ -169,23 +169,11 @@ FocusScope {
                     width: parent.parent.parent ? parent.parent.parent.width : 0
                     focus: false
                     hoverEnabled: true
-                    Rectangle {
+                    Kube.DelegateBackground {
                         anchors.fill: parent
-
                         color: Kube.Colors.textColor
-
-                        Rectangle {
-                            anchors.fill: parent
-                            color: Kube.Colors.highlightColor
-                            visible: isActive
-                        }
-                        Rectangle {
-                            anchors.fill: parent
-                            border.width: 2
-                            border.color: Kube.Colors.focusedButtonColor
-                            color: "transparent"
-                            visible: styleData.selected || delegateRoot.hovered
-                        }
+                        focused: styleData.selected || delegateRoot.hovered
+                        selected: isActive
                     }
                 }
 
