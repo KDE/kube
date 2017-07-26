@@ -56,11 +56,13 @@ FocusScope {
                 Layout.fillHeight: isCurrent
 
                 Kube.TextButton {
-                    id: accountLabel
-                    anchors.top: parent.top
-                    anchors.left: parent.left
+                    id: accountButton
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        right: parent.right
+                    }
                     height: Kube.Units.gridUnit
-                    width: parent.width
 
                     textColor: Kube.Colors.highlightedTextColor
                     activeFocusOnTab: !isCurrent
@@ -70,12 +72,11 @@ FocusScope {
                     font.family: Kube.Font.fontFamily
                     horizontalAlignment: Text.AlignHLeft
                     padding: 0
-
                 }
 
                 Kube.FolderListView {
                     anchors {
-                        top: accountLabel.bottom
+                        top: accountButton.bottom
                         left: parent.left
                         right: parent.right
                         bottom: parent.bottom
