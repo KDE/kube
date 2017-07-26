@@ -19,22 +19,22 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Templates 2.0 as T
-import org.kube.framework 1.0
+import org.kube.framework 1.0 as Kube
 
 T.ComboBox {
     id: root
 
-    implicitWidth: Units.gridUnit * 10
-    implicitHeight: Units.gridUnit + Units.smallSpacing * 2
+    implicitWidth: Kube.Units.gridUnit * 10
+    implicitHeight: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2
 
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
-    spacing: Units.largeSpacing
-    padding: Units.smallSpacing
+    spacing: Kube.Units.largeSpacing
+    padding: Kube.Units.smallSpacing
 
-    contentItem: Label {
-        leftPadding: Units.smallSpacing
-        rightPadding: Units.largeSpacing
+    contentItem: Kube.Label {
+        leftPadding: Kube.Units.smallSpacing
+        rightPadding: Kube.Units.largeSpacing
 
         text: root.displayText
         horizontalAlignment: Text.AlignLeft
@@ -42,23 +42,23 @@ T.ComboBox {
         elide: Text.ElideRight
     }
 
-    indicator: Icon {
+    indicator: Kube.Icon {
         x: root.mirrored ? root.leftPadding : root.width - width - root.rightPadding
         y: root.topPadding + (root.availableHeight - height) / 2
-        iconName: Icons.goDown
+        iconName: Kube.Icons.goDown
     }
 
     background: Rectangle {
         border.width: 1
-        border.color: root.activeFocus ? Colors.highlightColor : Colors.buttonColor
-        color: Colors.viewBackgroundColor
+        border.color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+        color: Kube.Colors.viewBackgroundColor
     }
 
     popup: T.Popup {
         width: root.width
-        implicitHeight: Math.min(Units.gridUnit * 5, contentItem.implicitHeight)
+        implicitHeight: Math.min(Kube.Units.gridUnit * 5, contentItem.implicitHeight)
 
-        contentItem: ListView {
+        contentItem: Kube.ListView {
             clip: true
             implicitHeight: contentHeight
             model: root.popup.visible ? root.delegateModel : null
@@ -68,26 +68,20 @@ T.ComboBox {
         }
 
         background: Rectangle {
-            color: Colors.backgroundColor
-            border.color: Colors.buttonColor
+            color: Kube.Colors.backgroundColor
+            border.color: Kube.Colors.buttonColor
             border.width: 1
         }
     }
 
-    delegate: T.ItemDelegate {
+    delegate: Kube.ListDelegate {
         width: root.popup.width
-        height: Units.gridUnit * 1.5
+        height: Kube.Units.gridUnit * 1.5
 
-        contentItem: Label {
-            padding: Units.smallSpacing
+        contentItem: Kube.Label {
+            padding: Kube.Units.smallSpacing
             text: root.textRole ? (Array.isArray(root.model) ? modelData[root.textRole] : model[root.textRole]) : modelData
-            color:  root.highlightedIndex === index ? Colors.highlightedTextColor : Colors.textColor
-        }
-
-        background: Rectangle {
-            color: root.highlightedIndex === index ? Colors.highlightColor : Colors.viewBackgroundColor
-            border.width: 1
-            border.color: Colors.buttonColor
+            color:  root.highlightedIndex === index ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
         }
     }
 }
