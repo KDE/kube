@@ -62,8 +62,8 @@ FocusScope {
                 left: parent.left
                 right: parent.right
             }
-            implicitHeight: __listView.contentItem.height
-            height: __listView.contentItem.height
+            implicitHeight: __listView.contentItem.height + 2
+            height: implicitHeight
             focus: true
 
             verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
@@ -161,7 +161,8 @@ FocusScope {
                     property bool isActive: root.activeIndex === treeView.__model.mapRowToModelIndex(styleData.row)
 
                     height: Kube.Units.gridUnit * 1.5
-                    width: parent.width
+                    //FIXME This is the only way I could find to get the correct width. parent.width is way to wide
+                    width: parent.parent.parent.width
                     color: Kube.Colors.textColor
 
                     Rectangle {
