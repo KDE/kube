@@ -400,6 +400,7 @@ Rectangle {
         Flickable {
             id: flickable
             anchors.fill: parent
+            ScrollBar.vertical: ScrollBar {}
             contentHeight: content.height
             contentWidth: parent.width
             Column {
@@ -445,10 +446,11 @@ Rectangle {
                     itemDelegate: Item {
                         property variant currentData: styleData.value
                         Text {
-                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.fill: parent
                             color: styleData.textColor
-                            elide: styleData.elideMode
+                            elide: Text.ElideRight
                             text: styleData.value ? styleData.value : ""
+                            textFormat: Text.PlainText
                         }
                         MouseArea {
                             anchors.fill: parent
