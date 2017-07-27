@@ -18,7 +18,6 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 import org.kube.accounts.kolabnow 1.0 as KolabnowAccount
@@ -100,32 +99,30 @@ Item {
                 text: qsTr("Password")
                 Layout.alignment: Qt.AlignRight
             }
-            RowLayout {
+
+            Kube.TextField {
+                id: pwField
                 Layout.fillWidth: true
 
-                Kube.TextField {
-                    id: pwField
-                    Layout.fillWidth: true
-
-                    placeholderText: qsTr("Password of your email account")
-                    text: kolabnowSettings.imapPassword
-                    onTextChanged: {
-                        kolabnowSettings.imapPassword = text
-                        kolabnowSettings.smtpPassword = text
-                    }
-
-                    echoMode: TextInput.Password
+                placeholderText: qsTr("Password of your email account")
+                text: kolabnowSettings.imapPassword
+                onTextChanged: {
+                    kolabnowSettings.imapPassword = text
+                    kolabnowSettings.smtpPassword = text
                 }
 
-                Controls.CheckBox {
+                echoMode: pwCheck.checked ? TextInput.Normal : TextInput.Password
+            }
+
+            Kube.Label {
+                text: ""
+            }
+            RowLayout {
+                Kube.CheckBox {
+                    id: pwCheck
+                }
+                Kube.Label {
                     text: qsTr("Show Password")
-                    onClicked: {
-                        if(pwField.echoMode == TextInput.Password) {
-                            pwField.echoMode = TextInput.Normal;
-                        } else {
-                            pwField.echoMode = TextInput.Password;
-                        }
-                    }
                 }
             }
         }
