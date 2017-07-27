@@ -87,18 +87,18 @@ FocusScope {
                 //TODO scroll view so the current index is always visible
             }
 
-            function selectFirst()
-            {
-                treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
-            }
 
             onActiveFocusChanged: {
                 //Set an initially focused item when the list view receives focus
-                if (activeFocus && !selection.hasSelection) {
-                    selectFirst()
-                }
-                if (!activeFocus) {
-                    selection.clear()
+                if (activeFocus) {
+                    //If there is a selected index, reset to selected index.
+                    if (root.activeIndex) {
+                        treeView.selection.setCurrentIndex(root.activeIndex, ItemSelectionModel.Current)
+                    } else {
+                        treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+                    }
+                } else {
+                    selection.clearCurrentIndex()
                 }
             }
 
