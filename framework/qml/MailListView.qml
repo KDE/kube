@@ -154,6 +154,7 @@ FocusScope {
 
                     anchors.verticalCenter: parent.verticalCenter
                     visible: (checked || delegateRoot.hovered) && !mouseArea.drag.active
+                    opacity: 0.9
                 }
 
                 Column {
