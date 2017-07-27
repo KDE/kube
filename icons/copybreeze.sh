@@ -31,7 +31,8 @@ wantedIcons = [
     "go-previous.svg",
     "mail-message.svg",
     "list-add.svg",
-    "list-remove.svg"
+    "list-remove.svg",
+    "checkbox.svg"
 ]
 
 def ensure_dir(file_path):
