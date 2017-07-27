@@ -284,11 +284,13 @@ Controls2.ApplicationWindow {
             Component {
                 id: composerView
                 ComposerView {
+                    anchors.fill: parent
                 }
             }
             Component {
                 id: accountsView
                 AccountsView {
+                    anchors.fill: parent
                 }
             }
         }
