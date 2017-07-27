@@ -230,6 +230,7 @@ Rectangle {
 
             Kube.IconButton {
                 anchors.fill: parent
+                activeFocusOnTab: false
 
                 iconName: header.state === "details" ? Kube.Icons.goUp : Kube.Icons.goDown
 
@@ -352,6 +353,7 @@ Rectangle {
                 left: parent.left
                 leftMargin: Kube.Units.largeSpacing
             }
+            activeFocusOnTab: false
 
             text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
             opacity: 0.5
@@ -371,6 +373,7 @@ Rectangle {
                 right: parent.right
                 rightMargin: Kube.Units.largeSpacing
             }
+            activeFocusOnTab: false
 
             iconName: model.draft ? Kube.Icons.edit : Kube.Icons.replyToSender
             onClicked: {
