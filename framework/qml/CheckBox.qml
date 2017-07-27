@@ -31,18 +31,15 @@ T.CheckBox {
         height: Kube.Units.gridUnit
 
         color: Kube.Colors.viewBackgroundColor
-
         border.width: 1
         border.color: Kube.Colors.buttonColor
 
         Kube.Icon {
             anchors.centerIn: parent
-
-            visible: root.checked
-
             height: Kube.Units.gridUnit
             width: Kube.Units.gridUnit
 
+            visible: root.checked
             iconName: Kube.Icons.checkbox
         }
     }
