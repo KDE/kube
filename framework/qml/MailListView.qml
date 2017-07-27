@@ -151,19 +151,20 @@ FocusScope {
                 }
                 property color unreadColor: (model.unread && !delegateRoot.highlighted) ? Kube.Colors.highlightColor : delegateRoot.textColor
 
-                Kube.CheckBox {
-                    id: checkBox
-
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: (checked || delegateRoot.hovered) && !mouseArea.drag.active
-                    opacity: 0.9
-                }
+//TODO batch editing
+//                 Kube.CheckBox {
+//                     id: checkBox
+//
+//                     anchors.verticalCenter: parent.verticalCenter
+//                     visible: (checked || delegateRoot.hovered) && !mouseArea.drag.active
+//                     opacity: 0.9
+//                 }
 
                 Column {
                     anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
-                        leftMargin: checkBox.width + Kube.Units.smallSpacing
+                        leftMargin:  Kube.Units.largeSpacing // + checkBox.width
                     }
 
                     Kube.Label{
