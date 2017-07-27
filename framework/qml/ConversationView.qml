@@ -55,6 +55,7 @@ FocusScope {
         Kube.ListView {
             id: listView
             focus: true
+            currentIndex: -1
 
             anchors {
                 top: parent.top
