@@ -90,11 +90,13 @@ FocusScope {
         //END keyboard nav
 
         onCurrentItemChanged: {
-            root.currentMail = currentItem.currentData.mail;
-            root.isDraft = currentItem.currentData.draft;
-            root.isTrash = currentItem.currentData.trash;
-            root.isImportant = currentItem.currentData.important;
-            root.isUnread = currentItem.currentData.unread;
+            if (currentItem) {
+                root.currentMail = currentItem.currentData.mail;
+                root.isDraft = currentItem.currentData.draft;
+                root.isTrash = currentItem.currentData.trash;
+                root.isImportant = currentItem.currentData.important;
+                root.isUnread = currentItem.currentData.unread;
+            }
         }
 
         model: Kube.MailListModel {
