@@ -22,8 +22,6 @@ import QtQuick.Controls 1.3 as Controls
 import org.kube.framework 1.0 as Kube
 import org.kube.components.accounts 1.0 as KubeAccounts
 
-import QtQuick.Templates 2.0 as T
-
 Rectangle {
     color: Kube.Colors.backgroundColor
 
