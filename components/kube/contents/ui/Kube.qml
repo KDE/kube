@@ -109,6 +109,8 @@ Controls2.ApplicationWindow {
                 opacity: 0.3
             }
 
+            Controls2.ButtonGroup { id: viewButtonGroup }
+
             Column {
                 anchors {
                     top: parent.top
@@ -135,7 +137,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.openComposer(false)
                     activeFocusOnTab: true
                     checkable: true
-                    autoExclusive: true
+                    Controls2.ButtonGroup.group: viewButtonGroup
 
                     Kube.ToolTip {
                         text: qsTr("composer")
@@ -149,7 +151,7 @@ Controls2.ApplicationWindow {
                     activeFocusOnTab: true
                     checkable: true
                     checked: true
-                    autoExclusive: true
+                    Controls2.ButtonGroup.group: viewButtonGroup
 
                     Kube.ToolTip {
                         text: qsTr("mails")
@@ -162,7 +164,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.setPeopleView()
                     activeFocusOnTab: true
                     checkable: true
-                    autoExclusive: true
+                    Controls2.ButtonGroup.group: viewButtonGroup
 
                     Kube.ToolTip {
                         text: qsTr("people")
@@ -191,6 +193,9 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     iconName: Kube.Icons.error_inverted
                     onClicked: kubeViews.setLogView()
+                    activeFocusOnTab: true
+                    checkable: true
+                    Controls2.ButtonGroup.group: viewButtonGroup
 
                     Kube.ToolTip {
                         text: qsTr("logview")
@@ -201,6 +206,9 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     iconName: Kube.Icons.menu_inverted
                     onClicked: kubeViews.setAccountsView()
+                    activeFocusOnTab: true
+                    checkable: true
+                    Controls2.ButtonGroup.group: viewButtonGroup
 
                     Kube.ToolTip {
                         text: qsTr("settings")
