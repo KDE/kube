@@ -163,6 +163,7 @@ Controls.SplitView {
                 Kube.Label {
                     text: details.message
                     wrapMode: Text.Wrap
+                    Layout.fillWidth: true
                 }
                 Item {
                     Layout.columnSpan: 2
