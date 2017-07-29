@@ -34,6 +34,7 @@
 #include "settings/settings.h"
 #include "fabric.h"
 #include "kubeimage.h"
+#include "clipboardproxy.h"
 
 #include <QtQml>
 
@@ -65,4 +66,5 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterSingletonType<Kube::Fabric::Fabric>(uri, 1, 0, "Fabric", fabric_singletontype_provider);
 
     qmlRegisterType<KubeImage>(uri, 1, 0, "KubeImage");
+    qmlRegisterType<ClipboardProxy>(uri, 1, 0, "Clipboard");
 }

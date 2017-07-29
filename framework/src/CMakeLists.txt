@@ -40,6 +40,7 @@ set(SRCS
     fabric.cpp
     sinkfabric.cpp
     kubeimage.cpp
+    clipboardproxy.cpp
 )
 
 add_library(frameworkplugin SHARED ${SRCS})

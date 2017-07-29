@@ -131,7 +131,7 @@ Controls.SplitView {
                     text: qsTr("Account:")
                     visible: details.accountName
                 }
-                Kube.Label {
+                Kube.SelectableLabel {
                     text: details.accountName
                     visible: details.accountName
                 }
@@ -139,7 +139,7 @@ Controls.SplitView {
                     text: qsTr("Account Id:")
                     visible: details.accountId
                 }
-                Kube.Label {
+                Kube.SelectableLabel {
                     text: details.accountId
                     visible: details.accountId
                 }
@@ -147,20 +147,20 @@ Controls.SplitView {
                     text: qsTr("Resource Id:")
                     visible: details.resourceId
                 }
-                Kube.Label {
+                Kube.SelectableLabel {
                     text: details.resourceId
                     visible: details.resourceId
                 }
                 Kube.Label {
                     text: qsTr("Timestamp:")
                 }
-                Kube.Label {
+                Kube.SelectableLabel {
                     text: Qt.formatDateTime(details.timestamp, " hh:mm:ss dd MMM yyyy")
                 }
                 Kube.Label {
                     text: qsTr("Message:")
                 }
-                Kube.Label {
+                Kube.SelectableLabel {
                     text: details.message
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
