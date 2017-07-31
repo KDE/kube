@@ -125,13 +125,17 @@ Controls.SplitView {
             }
             color: Kube.Colors.viewBackgroundColor
             GridLayout {
-                anchors.fill: parent
+                id: gridLayout
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                }
                 columns: 2
                 Kube.Label {
                     text: qsTr("Account:")
                     visible: details.accountName
                 }
-                Kube.SelectableLabel {
+                Kube.Label {
                     text: details.accountName
                     visible: details.accountName
                 }
@@ -139,7 +143,7 @@ Controls.SplitView {
                     text: qsTr("Account Id:")
                     visible: details.accountId
                 }
-                Kube.SelectableLabel {
+                Kube.Label {
                     text: details.accountId
                     visible: details.accountId
                 }
@@ -147,20 +151,20 @@ Controls.SplitView {
                     text: qsTr("Resource Id:")
                     visible: details.resourceId
                 }
-                Kube.SelectableLabel {
+                Kube.Label {
                     text: details.resourceId
                     visible: details.resourceId
                 }
                 Kube.Label {
                     text: qsTr("Timestamp:")
                 }
-                Kube.SelectableLabel {
+                Kube.Label {
                     text: Qt.formatDateTime(details.timestamp, " hh:mm:ss dd MMM yyyy")
                 }
                 Kube.Label {
                     text: qsTr("Message:")
                 }
-                Kube.SelectableLabel {
+                Kube.Label {
                     text: details.message
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
@@ -170,6 +174,10 @@ Controls.SplitView {
                     Layout.fillHeight: true
                 }
                 //TODO offer a possible explanation for known errors and a path to resolution.
+            }
+
+            Kube.SelectableItem {
+                layout: gridLayout
             }
         }
     }

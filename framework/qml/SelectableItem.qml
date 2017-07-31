@@ -22,66 +22,93 @@ import QtQuick.Controls 2.2
 import org.kube.framework 1.0 as Kube
 import QtQuick.Layouts 1.3
 
-// QtObject {
-Item {
+QtObject {
     id: root
-    property string text
-    Rectangle {
-        anchors.fill: parent
-        color: "transparent"
-        border.color: Kube.Colors.highlightColor
-        border.width: 1
-        visible: mouseArea.containsMouse || menu.visible
+    property string text: null
+    property var layout: null
+    property var visualParent: layout.parent
+    onVisualParentChanged: {
+        component.createObject(visualParent)
     }
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.RightButton
-        z: 1
-        onClicked: {
-            menu.x = mouseX
-            menu.y = mouseY
-            menu.open()
-            mouse.accepted = true
-        }
-    }
-    Menu {
-        id: menu
 
-        height: layout.height
-        width: layout.width
-        background: Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-        }
-        RowLayout {
-            id: layout
-            width: button.width
-            height: button.height
-            Kube.TextButton {
-                id: button
-                text: "Copy"
-                onClicked: {
-                    if (root.text) {
-                        clipboard.text = root.text
+    property var comp: Component {
+        id: component
+        Item {
+            anchors.fill: layout
+
+            /**
+             * This assumes a layout filled with labels.
+             * We iterate over all elements, extract the text, insert a linebreak after every line and a space otherwise.
+             */
+            function gatherText() {
+                var gatheredText = "";
+                var length = layout.visibleChildren.length
+                for (var i = 0; i < length; i++) {
+                    var item = layout.visibleChildren[i]
+
+                    if (item && item.text) {
+                        gatheredText += item.text;
                     }
-                    menu.close()
+                    if (layout.columns && (((i + 1) % layout.columns) == 0)) {
+                        gatheredText += "\n";
+                    } else if (i != length - 1){
+                        gatheredText += " ";
+                    }
+                }
+                // console.warn("Gathered text: ", gatheredText)
+                return gatheredText
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                color: "transparent"
+                border.color: Kube.Colors.highlightColor
+                border.width: 1
+                visible: mouseArea.containsMouse || menu.visible
+            }
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                acceptedButtons: Qt.RightButton
+                z: 1
+                onClicked: {
+                    menu.x = mouseX
+                    menu.y = mouseY
+                    menu.open()
+                    mouse.accepted = true
+                }
+            }
+            Menu {
+                id: menu
+
+                height: menuLayout.height
+                width: menuLayout.width
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: Kube.Colors.backgroundColor
+                }
+                RowLayout {
+                    id: menuLayout
+                    width: button.width
+                    height: button.height
+                    Kube.TextButton {
+                        id: button
+                        text: "Copy"
+                        onClicked: {
+                            if (root.text) {
+                                clipboard.text = root.text
+                            } else {
+                                clipboard.text = gatherText()
+                            }
+                            menu.close()
+                        }
+                    }
+                }
+                Kube.Clipboard {
+                    id: clipboard
                 }
             }
         }
-    }
-    // Kube.IconButton {
-    //     anchors {
-    //         left: parent.right
-    //         verticalCenter: parent.verticalCenter
-    //     }
-    //     iconName: Kube.Icons.copy
-    //     visible: mouseArea.containsMouse || hovered
-    //     color: Kube.Colors.backgroundColor
-    //     onClicked: clipboard.text = root.text
-    // }
-    Kube.Clipboard {
-        id: clipboard
     }
 }
