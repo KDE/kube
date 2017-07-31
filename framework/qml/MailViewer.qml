@@ -148,7 +148,7 @@ Rectangle {
                 }
             }
 
-            Kube.Label {
+            Kube.SelectableLabel {
                 id: subject
 
                 width: to.width

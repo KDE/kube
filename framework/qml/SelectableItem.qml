@@ -24,86 +24,51 @@ import QtQuick.Layouts 1.3
 
 QtObject {
     id: root
-    property string text: null
+    property string text: ""
     property var layout: null
-    property var visualParent: layout.parent
+    property var visualParent: layout ? layout.parent : null
     onVisualParentChanged: {
         component.createObject(visualParent)
     }
 
+    /**
+     * This assumes a layout filled with labels.
+     * We iterate over all elements, extract the text, insert a linebreak after every line and a space otherwise.
+     */
+    function gatherText() {
+        var gatheredText = "";
+        var length = layout.visibleChildren.length
+        for (var i = 0; i < length; i++) {
+            var item = layout.visibleChildren[i]
+
+            if (item && item.text) {
+                gatheredText += item.text;
+            }
+            if (layout.columns && (((i + 1) % layout.columns) == 0)) {
+                gatheredText += "\n";
+            } else if (i != length - 1){
+                gatheredText += " ";
+            }
+        }
+        // console.warn("Gathered text: ", gatheredText)
+        return gatheredText
+    }
+
     property var comp: Component {
         id: component
-        Item {
+        ContextMenuOverlay {
+            id: menu
             anchors.fill: layout
-
-            /**
-             * This assumes a layout filled with labels.
-             * We iterate over all elements, extract the text, insert a linebreak after every line and a space otherwise.
-             */
-            function gatherText() {
-                var gatheredText = "";
-                var length = layout.visibleChildren.length
-                for (var i = 0; i < length; i++) {
-                    var item = layout.visibleChildren[i]
-
-                    if (item && item.text) {
-                        gatheredText += item.text;
-                    }
-                    if (layout.columns && (((i + 1) % layout.columns) == 0)) {
-                        gatheredText += "\n";
-                    } else if (i != length - 1){
-                        gatheredText += " ";
-                    }
-                }
-                // console.warn("Gathered text: ", gatheredText)
-                return gatheredText
-            }
-
-            Rectangle {
-                anchors.fill: parent
-                color: "transparent"
-                border.color: Kube.Colors.highlightColor
-                border.width: 1
-                visible: mouseArea.containsMouse || menu.visible
-            }
-            MouseArea {
-                id: mouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                acceptedButtons: Qt.RightButton
-                z: 1
+            Kube.TextButton {
+                id: button
+                text: qsTr("Copy")
                 onClicked: {
-                    menu.x = mouseX
-                    menu.y = mouseY
-                    menu.open()
-                    mouse.accepted = true
-                }
-            }
-            Menu {
-                id: menu
-
-                height: menuLayout.height
-                width: menuLayout.width
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: Kube.Colors.backgroundColor
-                }
-                RowLayout {
-                    id: menuLayout
-                    width: button.width
-                    height: button.height
-                    Kube.TextButton {
-                        id: button
-                        text: "Copy"
-                        onClicked: {
-                            if (root.text) {
-                                clipboard.text = root.text
-                            } else {
-                                clipboard.text = gatherText()
-                            }
-                            menu.close()
-                        }
+                    if (root.text) {
+                        clipboard.text = root.text
+                    } else {
+                        clipboard.text = gatherText()
                     }
+                    menu.close()
                 }
                 Kube.Clipboard {
                     id: clipboard

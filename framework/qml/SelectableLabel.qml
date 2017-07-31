@@ -23,23 +23,19 @@ import org.kube.framework 1.0 as Kube
 
 Kube.Label {
     id: root
-    MouseArea {
-        id: mouseArea
+    Kube.ContextMenuOverlay {
+        id: menu
         anchors.fill: parent
-        hoverEnabled: true
-        z: 1
-    }
-    Kube.IconButton {
-        anchors {
-            left: parent.right
-            verticalCenter: parent.verticalCenter
-        }
-        iconName: Kube.Icons.copy
-        visible: mouseArea.containsMouse || hovered
-        color: Kube.Colors.backgroundColor
-        onClicked: clipboard.text = root.text
-        Kube.Clipboard {
-            id: clipboard
+        Kube.TextButton {
+            id: button
+            text: qsTr("Copy")
+            onClicked: {
+                clipboard.text = root.text
+                menu.close()
+            }
+            Kube.Clipboard {
+                id: clipboard
+            }
         }
     }
 }
