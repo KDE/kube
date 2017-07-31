@@ -55,6 +55,8 @@ Item {
     property string goDown_inverted: "go-down-inverted"
     property string goUp: "go-up"
     property string checkbox: "checkbox"
+    property string password_show: "password-show-on"
+    property string password_hide: "password-show-off"
 
     property string addNew: "list-add"
     property string remove: "kube-list-remove-inverted"

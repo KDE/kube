@@ -23,6 +23,7 @@ CheckBox 1.0 CheckBox.qml
 PositiveButton 1.0 PositiveButton.qml
 TextButton 1.0 TextButton.qml
 TextField 1.0 TextField.qml
+PasswordField 1.0 PasswordField.qml
 TextArea 1.0 TextArea.qml
 TextEditor 1.0 TextEditor.qml
 ToolTip 1.0 ToolTip.qml

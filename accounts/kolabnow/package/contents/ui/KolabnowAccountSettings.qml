@@ -100,7 +100,7 @@ Item {
                 Layout.alignment: Qt.AlignRight
             }
 
-            Kube.TextField {
+            Kube.PasswordField {
                 id: pwField
                 Layout.fillWidth: true
 
@@ -109,20 +109,6 @@ Item {
                 onTextChanged: {
                     kolabnowSettings.imapPassword = text
                     kolabnowSettings.smtpPassword = text
-                }
-
-                echoMode: pwCheck.checked ? TextInput.Normal : TextInput.Password
-            }
-
-            Kube.Label {
-                text: ""
-            }
-            RowLayout {
-                Kube.CheckBox {
-                    id: pwCheck
-                }
-                Kube.Label {
-                    text: qsTr("Show Password")
                 }
             }
         }

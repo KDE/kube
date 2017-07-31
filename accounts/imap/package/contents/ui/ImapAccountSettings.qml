@@ -102,32 +102,16 @@ Item {
                 text: qsTr("Password")
                 Layout.alignment: Qt.AlignRight
             }
-            RowLayout {
+
+            Kube.PasswordField {
+                id: pwField
                 Layout.fillWidth: true
 
-                Kube.TextField {
-                    id: pwField
-                    Layout.fillWidth: true
-
-                    placeholderText: qsTr("Password of your email account")
-                    text: imapSettings.imapPassword
-                    onTextChanged: {
-                        imapSettings.imapPassword = text
-                        imapSettings.smtpPassword = text
-                    }
-
-                    echoMode: TextInput.Password
-                }
-
-                Controls.CheckBox {
-                    text: qsTr("Show Password")
-                    onClicked: {
-                        if(pwField.echoMode == TextInput.Password) {
-                            pwField.echoMode = TextInput.Normal;
-                        } else {
-                            pwField.echoMode = TextInput.Password;
-                        }
-                    }
+                placeholderText: qsTr("Password of your email account")
+                text: imapSettings.imapPassword
+                onTextChanged: {
+                    imapSettings.imapPassword = text
+                    imapSettings.smtpPassword = text
                 }
             }
 
