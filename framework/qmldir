@@ -29,6 +29,7 @@ TextEditor 1.0 TextEditor.qml
 ToolTip 1.0 ToolTip.qml
 Label 1.0 Label.qml
 SelectableLabel 1.0 SelectableLabel.qml
+SelectableItem 1.0 SelectableItem.qml
 Heading 1.0 Heading.qml
 View 1.0 View.qml
 AutocompleteLineEdit 1.0 AutocompleteLineEdit.qml
