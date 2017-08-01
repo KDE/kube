@@ -401,6 +401,13 @@ static KMime::Content *createAttachmentPart(const QByteArray &content, const QSt
     return part;
 }
 
+static KMime::Content *createBodyPart(const QByteArray &body) {
+    auto mainMessage = new KMime::Content;
+    mainMessage->setBody(body);
+    mainMessage->contentType(true)->setMimeType("text/plain");
+    return mainMessage;
+}
+
 KMime::Message::Ptr ComposerController::assembleMessage()
 {
     auto mail = mExistingMessage;
@@ -448,10 +455,7 @@ KMime::Message::Ptr ComposerController::assembleMessage()
             const auto content = item->data(ContentRole).toByteArray();
             mail->addContent(createAttachmentPart(content, filename, isInline, mimeType, name));
         }
-        auto mainMessage = new KMime::Content;
-        mainMessage->setBody(getBody().toUtf8());
-        mainMessage->contentType(true)->setMimeType("text/plain");
-        mail->addContent(mainMessage);
+        mail->addContent(createBodyPart(getBody().toUtf8()));
     } else {
         //FIXME same implementation as above for attachments
         mail->setBody(getBody().toUtf8());
