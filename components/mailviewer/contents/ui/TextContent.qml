@@ -51,6 +51,7 @@ Item {
             wrapMode: TextEdit.Wrap
             textFormat: Text.RichText
 
+            font.family: Kube.Font.fontFamily
             color: embedded ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
             onLinkActivated: Qt.openUrlExternally(link)
             //TODO This might no longer be necessary starting with Qt 5.8
