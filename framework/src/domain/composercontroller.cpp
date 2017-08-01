@@ -383,6 +383,24 @@ void ComposerController::recordForAutocompletion(const QByteArray &addrSpec, con
     }
 }
 
+static KMime::Content *createAttachmentPart(const QByteArray &content, const QString &filename, bool isInline, const QByteArray &mimeType, const QString &name)
+{
+
+    KMime::Content *part = new KMime::Content;
+    part->contentDisposition(true)->setFilename(filename);
+    if (isInline) {
+        part->contentDisposition(true)->setDisposition(KMime::Headers::CDinline);
+    } else {
+        part->contentDisposition(true)->setDisposition(KMime::Headers::CDattachment);
+    }
+    part->contentType(true)->setMimeType(mimeType);
+    part->contentType(true)->setName(name, "utf-8");
+    //Just always encode attachments base64 so it's safe for binary data
+    part->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEbase64);
+    part->setBody(content);
+    return part;
+}
+
 KMime::Message::Ptr ComposerController::assembleMessage()
 {
     auto mail = mExistingMessage;
@@ -428,27 +446,12 @@ KMime::Message::Ptr ComposerController::assembleMessage()
             const auto mimeType = item->data(MimeTypeRole).toByteArray();
             const auto isInline = item->data(InlineRole).toBool();
             const auto content = item->data(ContentRole).toByteArray();
-
-            KMime::Content *part = new KMime::Content;
-            part->contentDisposition(true)->setFilename(filename);
-            if (isInline) {
-                part->contentDisposition(true)->setDisposition(KMime::Headers::CDinline);
-            } else {
-                part->contentDisposition(true)->setDisposition(KMime::Headers::CDattachment);
-            }
-            part->contentType(true)->setMimeType(mimeType);
-            part->contentType(true)->setName(name, "utf-8");
-            //Just always encode attachments base64 so it's safe for binary data
-            part->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEbase64);
-            part->setBody(content);
-
-            mail->addContent(part);
-
-            auto mainMessage = new KMime::Content;
-            mainMessage->setBody(getBody().toUtf8());
-            mainMessage->contentType(true)->setMimeType("text/plain");
-            mail->addContent(mainMessage);
+            mail->addContent(createAttachmentPart(content, filename, isInline, mimeType, name));
         }
+        auto mainMessage = new KMime::Content;
+        mainMessage->setBody(getBody().toUtf8());
+        mainMessage->contentType(true)->setMimeType("text/plain");
+        mail->addContent(mainMessage);
     } else {
         //FIXME same implementation as above for attachments
         mail->setBody(getBody().toUtf8());
