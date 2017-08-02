@@ -126,6 +126,28 @@ private slots:
         QVERIFY(result->date(false)->dateTime().isValid());
     }
 
+    void testCreatePlainMailWithAttachments()
+    {
+        QStringList to = {{"to@example.org"}};
+        QStringList cc = {{"cc@example.org"}};;
+        QStringList bcc = {{"bcc@example.org"}};;
+        KMime::Types::Mailbox from;
+        from.fromUnicodeString("from@example.org");
+        QString subject = "subject";
+        QString body = "body";
+        QList<Attachment> attachments = {{"name", "filename", "mimetype", true, "inlineAttachment"}, {"name", "filename", "mimetype", false, "nonInlineAttachment"}};
+
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments);
+
+        QVERIFY(result);
+        auto content = removeFirstLine(result->body());
+        QCOMPARE(result->subject()->asUnicodeString(), subject);
+        QVERIFY(result->contentType()->isMimeType("multipart/mixed"));
+        QVERIFY(result->date(false)->dateTime().isValid());
+        const auto contents = result->contents();
+        //1 Plain + 2 Attachments
+        QCOMPARE(contents.size(), 3);
+    }
 };
 
 QTEST_MAIN(MailTemplateTest)
