@@ -29,6 +29,7 @@
 #include <QWebEngineSettings>
 #include <QWebEngineScript>
 #include <QSysInfo>
+#include <QHostInfo>
 #include <QTextCodec>
 #include <QTextDocument>
 
@@ -954,7 +955,12 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
 
     mail->subject(true)->fromUnicodeString(subject, "utf-8");
     if (!mail->messageID()) {
-        mail->messageID(true)->generate("org.kde.kube");
+        auto fqdn = QUrl::toAce(QHostInfo::localHostName());
+        if (fqdn.isEmpty()) {
+            qWarning() << "Unable to generate a Message-ID, falling back to 'localhost.localdomain'.";
+            fqdn = "local.domain";
+        }
+        mail->messageID(true)->generate(fqdn);
     }
     if (!mail->date(true)->dateTime().isValid()) {
         mail->date(true)->setDateTime(QDateTime::currentDateTimeUtc());
