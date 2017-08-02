@@ -972,6 +972,7 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     } else {
         //FIXME same implementation as above for attachments
         mail->setBody(body.toUtf8());
+        mail->contentType(true)->setMimeType("text/plain");
     }
 
     mail->assemble();

@@ -124,6 +124,7 @@ private slots:
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QCOMPARE(result->body(), body.toUtf8());
         QVERIFY(result->date(false)->dateTime().isValid());
+        QVERIFY(result->contentType()->isMimeType("text/plain"));
     }
 
     void testCreatePlainMailWithAttachments()
