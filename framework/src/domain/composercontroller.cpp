@@ -408,31 +408,38 @@ static KMime::Content *createBodyPart(const QByteArray &body) {
     return mainMessage;
 }
 
-KMime::Message::Ptr ComposerController::assembleMessage()
+struct Attachment {
+    QString name;
+    QString filename;
+    QByteArray mimeType;
+    bool isInline;
+    QByteArray data;
+};
+
+static KMime::Message::Ptr createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, const QList<Attachment> &attachments)
 {
-    auto mail = mExistingMessage;
+    auto mail = existingMessage;
     if (!mail) {
         mail = KMime::Message::Ptr::create();
     }
     mail->to(true)->clear();
-    applyAddresses(mToModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+    applyAddresses(to, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->to(true)->addAddress(addrSpec, displayName);
-        recordForAutocompletion(addrSpec, displayName);
     });
+
     mail->cc(true)->clear();
-    applyAddresses(mCcModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+    applyAddresses(cc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->cc(true)->addAddress(addrSpec, displayName);
-        recordForAutocompletion(addrSpec, displayName);
     });
+
     mail->bcc(true)->clear();
-    applyAddresses(mBccModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+    applyAddresses(bcc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->bcc(true)->addAddress(addrSpec, displayName);
-        recordForAutocompletion(addrSpec, displayName);
     });
 
-    mail->from(true)->addAddress(getIdentity());
+    mail->from(true)->addAddress(from);
 
-    mail->subject(true)->fromUnicodeString(getSubject(), "utf-8");
+    mail->subject(true)->fromUnicodeString(subject, "utf-8");
     if (!mail->messageID()) {
         mail->messageID(true)->generate("org.kde.kube");
     }
@@ -440,29 +447,51 @@ KMime::Message::Ptr ComposerController::assembleMessage()
         mail->date(true)->setDateTime(QDateTime::currentDateTimeUtc());
     }
 
-    auto root = mAttachmentModel->invisibleRootItem();
-    if (root->hasChildren()) {
+    if (!attachments.isEmpty()) {
         mail->contentType(true)->setMimeType("multipart/mixed");
         mail->contentType()->setBoundary(KMime::multiPartBoundary());
         mail->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
         mail->setPreamble("This is a multi-part message in MIME format.\n");
-        for (int row = 0; row < root->rowCount(); row++) {
-            auto item = root->child(row, 0);
-            const auto name = item->data(NameRole).toString();
-            const auto filename = item->data(FilenameRole).toString();
-            const auto mimeType = item->data(MimeTypeRole).toByteArray();
-            const auto isInline = item->data(InlineRole).toBool();
-            const auto content = item->data(ContentRole).toByteArray();
-            mail->addContent(createAttachmentPart(content, filename, isInline, mimeType, name));
+        for (const auto &attachment : attachments) {
+            mail->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
         }
-        mail->addContent(createBodyPart(getBody().toUtf8()));
+        mail->addContent(createBodyPart(body.toUtf8()));
     } else {
         //FIXME same implementation as above for attachments
-        mail->setBody(getBody().toUtf8());
+        mail->setBody(body.toUtf8());
     }
 
     mail->assemble();
     return mail;
+}
+
+KMime::Message::Ptr ComposerController::assembleMessage()
+{
+    applyAddresses(mToModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        recordForAutocompletion(addrSpec, displayName);
+    });
+    applyAddresses(mCcModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        recordForAutocompletion(addrSpec, displayName);
+    });
+    applyAddresses(mBccModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        recordForAutocompletion(addrSpec, displayName);
+    });
+
+    QList<Attachment> attachments;
+    auto root = mAttachmentModel->invisibleRootItem();
+    if (root->hasChildren()) {
+        for (int row = 0; row < root->rowCount(); row++) {
+            auto item = root->child(row, 0);
+            attachments << Attachment{
+                item->data(NameRole).toString(),
+                item->data(FilenameRole).toString(),
+                item->data(MimeTypeRole).toByteArray(),
+                item->data(InlineRole).toBool(),
+                item->data(ContentRole).toByteArray()
+            };
+        }
+    }
+    return createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), attachments);
 }
 
 void ComposerController::updateSendAction()
