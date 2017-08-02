@@ -23,8 +23,17 @@
 #include <KMime/Message>
 #include <functional>
 
+struct Attachment {
+    QString name;
+    QString filename;
+    QByteArray mimeType;
+    bool isInline;
+    QByteArray data;
+};
+
 namespace MailTemplates
 {
     void reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback);
     QString plaintextContent(const KMime::Message::Ptr &origMsg);
+    KMime::Message::Ptr createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, const QList<Attachment> &attachments);
 };

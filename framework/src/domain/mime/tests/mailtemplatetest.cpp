@@ -58,7 +58,7 @@ private slots:
         QtWebEngine::initialize();
     }
 
-    void testPlain()
+    void testPlainReply()
     {
         auto msg = readMail("plaintext.mbox");
         KMime::Message::Ptr result;
@@ -69,7 +69,7 @@ private slots:
         QCOMPARE(normalize(removeFirstLine(result->body())), normalize(msg->body()));
     }
 
-    void testHtml()
+    void testHtmlReply()
     {
         auto msg = readMail("html.mbox");
         KMime::Message::Ptr result;
@@ -80,7 +80,7 @@ private slots:
         QCOMPARE(unquote(removeFirstLine(result->body())), QLatin1String("HTML text"));
     }
 
-    void testMultipartSigned()
+    void testMultipartSignedReply()
     {
         auto msg = readMail("openpgp-signed-mailinglist.mbox");
         KMime::Message::Ptr result;
@@ -93,7 +93,7 @@ private slots:
         QVERIFY(content.contains("i noticed a new branch"));
     }
 
-    void testMultipartAlternative()
+    void testMultipartAlternativeReply()
     {
         auto msg = readMail("alternative.mbox");
         KMime::Message::Ptr result;
@@ -104,6 +104,26 @@ private slots:
         auto content = removeFirstLine(result->body());
         QVERIFY(!content.isEmpty());
         QCOMPARE(unquote(content), QLatin1String("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n"));
+    }
+
+    void testCreatePlainMail()
+    {
+        QStringList to = {{"to@example.org"}};
+        QStringList cc = {{"cc@example.org"}};;
+        QStringList bcc = {{"bcc@example.org"}};;
+        KMime::Types::Mailbox from;
+        from.fromUnicodeString("from@example.org");
+        QString subject = "subject";
+        QString body = "body";
+        QList<Attachment> attachments;
+
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments);
+
+        QVERIFY(result);
+        auto content = removeFirstLine(result->body());
+        QCOMPARE(result->subject()->asUnicodeString(), subject);
+        QCOMPARE(result->body(), body.toUtf8());
+        QVERIFY(result->date(false)->dateTime().isValid());
     }
 
 };

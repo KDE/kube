@@ -34,6 +34,7 @@
 
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
+#include <KCodecs/KEmailAddress>
 
 #include <mimetreeparser/objecttreeparser.h>
 
@@ -884,4 +885,95 @@ QString MailTemplates::plaintextContent(const KMime::Message::Ptr &msg)
         return doc.toPlainText();
     }
     return plain;
+}
+
+static KMime::Content *createAttachmentPart(const QByteArray &content, const QString &filename, bool isInline, const QByteArray &mimeType, const QString &name)
+{
+
+    KMime::Content *part = new KMime::Content;
+    part->contentDisposition(true)->setFilename(filename);
+    if (isInline) {
+        part->contentDisposition(true)->setDisposition(KMime::Headers::CDinline);
+    } else {
+        part->contentDisposition(true)->setDisposition(KMime::Headers::CDattachment);
+    }
+    part->contentType(true)->setMimeType(mimeType);
+    part->contentType(true)->setName(name, "utf-8");
+    //Just always encode attachments base64 so it's safe for binary data
+    part->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEbase64);
+    part->setBody(content);
+    return part;
+}
+
+static KMime::Content *createBodyPart(const QByteArray &body) {
+    auto mainMessage = new KMime::Content;
+    mainMessage->setBody(body);
+    mainMessage->contentType(true)->setMimeType("text/plain");
+    // return MailCrypto::sign(mainMessage, {});
+    return mainMessage;
+}
+
+static void applyAddresses(const QStringList &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
+{
+    for (const auto &to : list) {
+        QByteArray displayName;
+        QByteArray addrSpec;
+        QByteArray comment;
+        KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
+        callback(addrSpec, displayName);
+    }
+}
+
+// static void applyAddresses(const QString &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
+// {
+//     applyAddresses(KEmailAddress::splitAddressList(list), callback);
+// }
+
+KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, const QList<Attachment> &attachments)
+{
+    auto mail = existingMessage;
+    if (!mail) {
+        mail = KMime::Message::Ptr::create();
+    }
+    mail->to(true)->clear();
+    applyAddresses(to, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        mail->to(true)->addAddress(addrSpec, displayName);
+    });
+
+    mail->cc(true)->clear();
+    applyAddresses(cc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        mail->cc(true)->addAddress(addrSpec, displayName);
+    });
+
+    mail->bcc(true)->clear();
+    applyAddresses(bcc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+        mail->bcc(true)->addAddress(addrSpec, displayName);
+    });
+
+    mail->from(true)->addAddress(from);
+
+    mail->subject(true)->fromUnicodeString(subject, "utf-8");
+    if (!mail->messageID()) {
+        mail->messageID(true)->generate("org.kde.kube");
+    }
+    if (!mail->date(true)->dateTime().isValid()) {
+        mail->date(true)->setDateTime(QDateTime::currentDateTimeUtc());
+    }
+
+    if (!attachments.isEmpty()) {
+        mail->contentType(true)->setMimeType("multipart/mixed");
+        mail->contentType()->setBoundary(KMime::multiPartBoundary());
+        mail->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
+        mail->setPreamble("This is a multi-part message in MIME format.\n");
+        for (const auto &attachment : attachments) {
+            mail->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
+        }
+        mail->addContent(createBodyPart(body.toUtf8()));
+    } else {
+        //FIXME same implementation as above for attachments
+        mail->setBody(body.toUtf8());
+    }
+
+    mail->assemble();
+    return mail;
 }
