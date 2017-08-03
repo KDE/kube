@@ -57,7 +57,7 @@ Item {
             anchors.fill: parent
             color: Kube.Colors.backgroundColor
         }
-        RowLayout {
+        ColumnLayout {
             id: menuLayout
             width: childrenRect.width
             height: childrenRect.height
