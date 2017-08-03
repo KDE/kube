@@ -120,7 +120,6 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments);
 
         QVERIFY(result);
-        auto content = removeFirstLine(result->body());
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QCOMPARE(result->body(), body.toUtf8());
         QVERIFY(result->date(false)->dateTime().isValid());
@@ -141,7 +140,6 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments);
 
         QVERIFY(result);
-        auto content = removeFirstLine(result->body());
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->contentType()->isMimeType("multipart/mixed"));
         QVERIFY(result->date(false)->dateTime().isValid());
