@@ -36,6 +36,12 @@ Controls.SplitView {
             }
         }
 
+        Kube.Label {
+            anchors.centerIn: parent
+            visible: listView.count == 0
+            text: qsTr("Nothing here...")
+        }
+
         Kube.ListView {
             id: listView
             anchors {
@@ -102,14 +108,13 @@ Controls.SplitView {
             }
         }
     }
-    Rectangle {
+    Item {
         id: details
         property date timestamp
-        property string message
+        property string message: ""
         property string resourceId: ""
         property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
         property string accountName: retriever.currentData ? retriever.currentData.name : ""
-        color: Kube.Colors.backgroundColor
 
         Kube.ModelIndexRetriever {
             id: retriever
@@ -123,6 +128,7 @@ Controls.SplitView {
                 fill: parent
                 margins: Kube.Units.largeSpacing
             }
+            visible: details.message != ""
             color: Kube.Colors.viewBackgroundColor
             GridLayout {
                 id: gridLayout
