@@ -39,6 +39,8 @@
 
 #include <mimetreeparser/objecttreeparser.h>
 
+#include "mailcrypto.h"
+
 namespace KMime {
     namespace Types {
 static bool operator==(const KMime::Types::AddrSpec &left, const KMime::Types::AddrSpec &right)
@@ -910,7 +912,6 @@ static KMime::Content *createBodyPart(const QByteArray &body) {
     auto mainMessage = new KMime::Content;
     mainMessage->setBody(body);
     mainMessage->contentType(true)->setMimeType("text/plain");
-    // return MailCrypto::sign(mainMessage, {});
     return mainMessage;
 }
 
@@ -930,12 +931,13 @@ static void applyAddresses(const QStringList &list, std::function<void(const QBy
 //     applyAddresses(KEmailAddress::splitAddressList(list), callback);
 // }
 
-KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, const QList<Attachment> &attachments)
+KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys)
 {
     auto mail = existingMessage;
     if (!mail) {
         mail = KMime::Message::Ptr::create();
     }
+
     mail->to(true)->clear();
     applyAddresses(to, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         mail->to(true)->addAddress(addrSpec, displayName);
@@ -966,6 +968,7 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
         mail->date(true)->setDateTime(QDateTime::currentDateTimeUtc());
     }
 
+    KMime::Content *bodyPart;
     if (!attachments.isEmpty()) {
         mail->contentType(true)->setMimeType("multipart/mixed");
         mail->contentType()->setBoundary(KMime::multiPartBoundary());
@@ -974,13 +977,32 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
         for (const auto &attachment : attachments) {
             mail->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
         }
-        mail->addContent(createBodyPart(body.toUtf8()));
+        bodyPart = createBodyPart(body.toUtf8());
     } else {
         //FIXME same implementation as above for attachments
-        mail->setBody(body.toUtf8());
-        mail->contentType(true)->setMimeType("text/plain");
+        bodyPart = createBodyPart(body.toUtf8());
     }
-
     mail->assemble();
-    return mail;
+
+    KMime::Content *signedResult = nullptr;
+    if (!signingKeys.empty()) {
+        signedResult = MailCrypto::sign(bodyPart, signingKeys);
+        if (!signedResult) {
+            qWarning() << "Signing failed";
+            return {};
+        }
+    } else {
+        if (!mail->contentType(false)) {
+            mail->contentType(true)->setMimeType("text/plain");
+        }
+    }
+    mail->assemble();
+
+    const QByteArray allData = mail->head() + (signedResult ? signedResult->encodedContent() : bodyPart->encodedContent());
+    delete bodyPart;
+    KMime::Message::Ptr resultMessage(new KMime::Message);
+    resultMessage->setContent(allData);
+    resultMessage->parse(); // Not strictly necessary.
+
+    return resultMessage;
 }

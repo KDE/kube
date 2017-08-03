@@ -8,8 +8,13 @@ include_directories(
 include(ECMAddTests)
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Test WebEngine)
 
-ecm_add_test(mailtemplatetest.cpp
-    TEST_NAME "mailtemplatetest"
-    NAME_PREFIX ""
-    LINK_LIBRARIES Qt5::Core Qt5::Test Qt5::WebEngine frameworkplugin
+include( ${CMAKE_SOURCE_DIR}/cmake/modules/add_gpg_crypto_test.cmake )
+
+add_executable(mailtemplatetest mailtemplatetest.cpp)
+add_gpg_crypto_test(mailtemplatetest mailtemplatetest)
+target_link_libraries(mailtemplatetest
+    Qt5::Core
+    Qt5::Test
+    Qt5::WebEngine
+    frameworkplugin
 )

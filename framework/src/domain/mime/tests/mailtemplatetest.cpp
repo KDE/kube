@@ -6,7 +6,52 @@
 #include <QDir>
 #include <QtWebEngine>
 
+#include <QGpgME/KeyListJob>
+#include <QGpgME/Protocol>
+#include <gpgme++/key.h>
+#include <gpgme++/keylistresult.h>
+
 #include "mailtemplates.h"
+#include "mailcrypto.h"
+
+static std::vector< GpgME::Key, std::allocator< GpgME::Key > > getKeys(bool smime = false)
+{
+    QGpgME::KeyListJob *job = nullptr;
+
+    if (smime) {
+        const QGpgME::Protocol *const backend = QGpgME::smime();
+        Q_ASSERT(backend);
+        job = backend->keyListJob(false);
+    } else {
+        const QGpgME::Protocol *const backend = QGpgME::openpgp();
+        Q_ASSERT(backend);
+        job = backend->keyListJob(false);
+    }
+    Q_ASSERT(job);
+
+    std::vector< GpgME::Key > keys;
+    GpgME::KeyListResult res = job->exec(QStringList(), true, keys);
+
+    if (!smime) {
+        Q_ASSERT(keys.size() == 3);
+    }
+
+    Q_ASSERT(!res.error());
+
+    /*
+    qDebug() << "got private keys:" << keys.size();
+
+    for (std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i) {
+        qDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
+        qDebug() << "key numuserIds:" << i->numUserIDs();
+        for (uint k = 0; k < i->numUserIDs(); ++k) {
+            qDebug() << "userIDs:" << i->userID(k).email();
+        }
+    }
+    */
+
+    return keys;
+}
 
 static QByteArray readMailFromFile(const QString &mailFile)
 {
@@ -146,6 +191,29 @@ private slots:
         const auto contents = result->contents();
         //1 Plain + 2 Attachments
         QCOMPARE(contents.size(), 3);
+    }
+
+    void testCreatePlainMailSigned()
+    {
+        QStringList to = {{"to@example.org"}};
+        QStringList cc = {{"cc@example.org"}};;
+        QStringList bcc = {{"bcc@example.org"}};;
+        KMime::Types::Mailbox from;
+        from.fromUnicodeString("from@example.org");
+        QString subject = "subject";
+        QString body = "body";
+        QList<Attachment> attachments;
+
+        std::vector<GpgME::Key> keys = getKeys();
+
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments, keys);
+
+        QVERIFY(result);
+        qWarning() << "---------------------------------";
+        qWarning().noquote() << result->encodedContent();
+        qWarning() << "---------------------------------";
+        QCOMPARE(result->subject()->asUnicodeString(), subject);
+        QVERIFY(result->contentType()->isMimeType("multipart/signed"));
     }
 };
 
