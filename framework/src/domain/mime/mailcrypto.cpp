@@ -27,6 +27,13 @@
 #include <QDebug>
 
 /*
+ * FIXME:
+ *
+ * This code is WIP.
+ * It currently only implements OpenPGPMIMEFormat for signing.
+ * All the commented code are intentional leftovers that we can clean-up
+ * once all necessary signing mechanisms have been implemented.
+ *
  * Creating an ecrypted mail:
  * * get keys (email -> fingreprint -> key)
  * * Use Kleo::OpenPGPMIMEFormat,
