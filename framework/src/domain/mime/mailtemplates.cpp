@@ -970,15 +970,18 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
 
     KMime::Content *bodyPart;
     if (!attachments.isEmpty()) {
-        mail->contentType(true)->setMimeType("multipart/mixed");
-        mail->contentType()->setBoundary(KMime::multiPartBoundary());
-        mail->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
-        mail->setPreamble("This is a multi-part message in MIME format.\n");
+        bodyPart = new KMime::Content;
+        bodyPart->contentType(true)->setMimeType("multipart/mixed");
+        bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
+        bodyPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
+        bodyPart->setPreamble("This is a multi-part message in MIME format.\n");
+        bodyPart->addContent(createBodyPart(body.toUtf8()));
         for (const auto &attachment : attachments) {
-            mail->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
+            bodyPart->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
         }
+    } else {
+        bodyPart = createBodyPart(body.toUtf8());
     }
-    bodyPart = createBodyPart(body.toUtf8());
     mail->assemble();
 
     KMime::Content *signedResult = nullptr;

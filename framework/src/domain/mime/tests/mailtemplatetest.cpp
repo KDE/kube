@@ -213,6 +213,7 @@ private slots:
         qWarning().noquote() << result->encodedContent();
         qWarning() << "---------------------------------";
         QCOMPARE(result->subject()->asUnicodeString(), subject);
+        QVERIFY(result->date(false)->dateTime().isValid());
         QVERIFY(result->contentType()->isMimeType("multipart/signed"));
 
         const auto contents = result->contents();
@@ -243,7 +244,22 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments, keys);
 
         QVERIFY(result);
+        QCOMPARE(result->subject()->asUnicodeString(), subject);
+        QVERIFY(result->date(false)->dateTime().isValid());
         QVERIFY(result->contentType()->isMimeType("multipart/signed"));
+
+        const auto contents = result->contents();
+        QCOMPARE(contents.size(), 2);
+        {
+            auto c = contents.at(0);
+            QVERIFY(c->contentType()->isMimeType("multipart/mixed"));
+            //1 text + 2 attachments
+            QCOMPARE(c->contents().size(), 3);
+        }
+        {
+            auto c = contents.at(1);
+            QVERIFY(c->contentType()->isMimeType("application/pgp-signature"));
+        }
     }
 };
 
