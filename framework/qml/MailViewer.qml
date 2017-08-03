@@ -129,7 +129,7 @@ Rectangle {
                 spacing: Kube.Units.smallSpacing
                 clip: true
 
-                Kube.Label {
+                Kube.SelectableLabel {
                     id: senderName
 
                     text: root.senderName
@@ -137,7 +137,7 @@ Rectangle {
                     opacity: 0.75
                 }
 
-                Kube.Label {
+                Kube.SelectableLabel {
                     width: parent.width - senderName.width - date_label.width - Kube.Units.largeSpacing
 
 
@@ -173,7 +173,7 @@ Rectangle {
                 ]
             }
 
-            Kube.Label {
+            Kube.SelectableLabel {
                 id: recipients
 
                 width: parent.width - goDown.width - Kube.Units.smallSpacing
@@ -183,7 +183,7 @@ Rectangle {
                 opacity: 0.75
             }
 
-            Kube.Label {
+            Kube.SelectableLabel {
                 id: to
 
                 width: parent.width - goDown.width - Kube.Units.smallSpacing
@@ -193,7 +193,7 @@ Rectangle {
                 opacity: 0.75
             }
 
-            Kube.Label {
+            Kube.SelectableLabel {
                 id: cc
 
                 width: parent.width - goDown.width - Kube.Units.smallSpacing
@@ -203,7 +203,7 @@ Rectangle {
                 opacity: 0.75
             }
 
-            Kube.Label {
+            Kube.SelectableLabel {
                 id: bcc
 
                 width: parent.width - goDown.width - Kube.Units.smallSpacing
