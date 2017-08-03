@@ -23,6 +23,7 @@ import org.kube.framework 1.0 as Kube
 
 Kube.Label {
     id: root
+    default property alias children: menu.children
     Kube.ContextMenuOverlay {
         id: menu
         anchors.fill: parent
