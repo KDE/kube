@@ -1,6 +1,6 @@
 add_subdirectory(gnupg_home)
 add_definitions( -DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../../testdata" )
-include(${CMAKE_CURRENT_SOURCE_DIR}/kdepim_add_gpg_crypto_test.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/modules/add_gpg_crypto_test.cmake)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..

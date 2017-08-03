@@ -7,7 +7,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 add_definitions( -DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../../testdata" )
 
 include(ECMAddTests)
-include(${CMAKE_CURRENT_SOURCE_DIR}/kdepim_add_gpg_crypto_test.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/modules/add_gpg_crypto_test.cmake)
 
 # convenience macro to add qtest unit tests
 macro(add_mimetreeparser_unittest _source)

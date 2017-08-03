@@ -33,7 +33,7 @@ macro (ADD_GPG_CRYPTO_TEST _target _testname)
         -D_filename=${_executable}.shell -D_library_path_variable=${_library_path_variable}
         -D_ld_library_path="${_ld_library_path}" -D_executable=$<TARGET_FILE:${_target}>
         -D_gnupghome="${GNUPGHOME}"
-        -P ${CMAKE_SOURCE_DIR}/${MIMETREEPARSERRELPATH}/tests/kdepim_generate_crypto_test_wrapper.cmake
+        -P ${CMAKE_SOURCE_DIR}/cmake/modules/generate_crypto_test_wrapper.cmake
       )
 
       set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${_executable}.shell" )
@@ -51,7 +51,7 @@ macro (ADD_GPG_CRYPTO_TEST _target _testname)
          -D_filename="${_executable}.bat"
          -D_ld_library_path="${_ld_library_path}" -D_executable="${_executable}"
          -D_gnupghome="${GNUPGHOME}"
-         -P ${CMAKE_SOURCE_DIR}/${MIMETREEPARSERRELPATH}/tests/kdepim_generate_crypto_test_wrapper.cmake
+         -P ${CMAKE_SOURCE_DIR}/cmake/modules/generate_crypto_test_wrapper.cmake
          )
 
       add_test(NAME ${_testname} COMMAND ${_executable}.bat)
