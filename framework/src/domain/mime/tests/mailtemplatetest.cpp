@@ -209,9 +209,9 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments, keys);
 
         QVERIFY(result);
-        qWarning() << "---------------------------------";
-        qWarning().noquote() << result->encodedContent();
-        qWarning() << "---------------------------------";
+        // qWarning() << "---------------------------------";
+        // qWarning().noquote() << result->encodedContent();
+        // qWarning() << "---------------------------------";
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->date(false)->dateTime().isValid());
         QVERIFY(result->contentType()->isMimeType("multipart/signed"));
