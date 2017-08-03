@@ -1,5 +1,8 @@
 /*
-    Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsys.com>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+    Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>
+    Copyright (c) 2017 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
