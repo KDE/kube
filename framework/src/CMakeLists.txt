@@ -35,6 +35,7 @@ set(SRCS
     domain/mime/attachmentmodel.cpp
     domain/mime/partmodel.cpp
     domain/mime/mailtemplates.cpp
+    domain/mime/mailcrypto.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
     fabric.cpp
@@ -56,6 +57,7 @@ target_link_libraries(frameworkplugin
     KF5::Contacts
     KF5::Package
     KAsync
+    QGpgme
 )
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 

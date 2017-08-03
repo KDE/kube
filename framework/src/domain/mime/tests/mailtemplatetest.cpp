@@ -214,6 +214,36 @@ private slots:
         qWarning() << "---------------------------------";
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->contentType()->isMimeType("multipart/signed"));
+
+        const auto contents = result->contents();
+        QCOMPARE(contents.size(), 2);
+        {
+            auto c = contents.at(0);
+            QVERIFY(c->contentType()->isMimeType("text/plain"));
+        }
+        {
+            auto c = contents.at(1);
+            QVERIFY(c->contentType()->isMimeType("application/pgp-signature"));
+        }
+    }
+
+    void testCreatePlainMailWithAttachmentsSigned()
+    {
+        QStringList to = {{"to@example.org"}};
+        QStringList cc = {{"cc@example.org"}};;
+        QStringList bcc = {{"bcc@example.org"}};;
+        KMime::Types::Mailbox from;
+        from.fromUnicodeString("from@example.org");
+        QString subject = "subject";
+        QString body = "body";
+        QList<Attachment> attachments = {{"name", "filename", "mimetype", true, "inlineAttachment"}, {"name", "filename", "mimetype", false, "nonInlineAttachment"}};
+
+        std::vector<GpgME::Key> keys = getKeys();
+
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments, keys);
+
+        QVERIFY(result);
+        QVERIFY(result->contentType()->isMimeType("multipart/signed"));
     }
 };
 

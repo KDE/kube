@@ -977,11 +977,8 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
         for (const auto &attachment : attachments) {
             mail->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
         }
-        bodyPart = createBodyPart(body.toUtf8());
-    } else {
-        //FIXME same implementation as above for attachments
-        bodyPart = createBodyPart(body.toUtf8());
     }
+    bodyPart = createBodyPart(body.toUtf8());
     mail->assemble();
 
     KMime::Content *signedResult = nullptr;
