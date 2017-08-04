@@ -32,6 +32,7 @@ Item {
     Component.onCompleted: {
         for (var i = 0; i < root.children.length; i++) {
             var child = root.children[i]
+            child.Layout.fillWidth = true
             child.clicked.connect(close)
         }
     }
