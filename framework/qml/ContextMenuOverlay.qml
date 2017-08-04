@@ -23,9 +23,17 @@ import org.kube.framework 1.0 as Kube
 import QtQuick.Layouts 1.3
 
 Item {
+    id: root
     default property alias children: menuLayout.children
     function close() {
         menu.close()
+    }
+
+    Component.onCompleted: {
+        for (var i = 0; i < root.children.length; i++) {
+            var child = root.children[i]
+            child.clicked.connect(close)
+        }
     }
 
     Rectangle {

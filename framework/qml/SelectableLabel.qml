@@ -30,10 +30,7 @@ Kube.Label {
         Kube.TextButton {
             id: button
             text: qsTr("Copy")
-            onClicked: {
-                clipboard.text = root.text
-                menu.close()
-            }
+            onClicked: clipboard.text = root.text
             Kube.Clipboard {
                 id: clipboard
             }
