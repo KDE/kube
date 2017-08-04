@@ -38,10 +38,10 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: "transparent"
-        border.color: Kube.Colors.highlightColor
-        border.width: 1
-        visible: mouseArea.containsMouse || menu.visible
+        color: Kube.Colors.highlightColor
+        visible: menu.visible
+        opacity: 0.3
+        radius: Kube.Units.smallSpacing
     }
     MouseArea {
         id: mouseArea
