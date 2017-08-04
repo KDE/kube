@@ -140,11 +140,15 @@ Rectangle {
                 Kube.SelectableLabel {
                     width: parent.width - senderName.width - date_label.width - Kube.Units.largeSpacing
 
-
                     text: root.sender
                     elide: Text.ElideRight
                     opacity: 0.75
                     clip: true
+
+                    Kube.TextButton {
+                        text: qsTr("Send mail to")
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {"recipients": [root.sender]})
+                    }
                 }
             }
 

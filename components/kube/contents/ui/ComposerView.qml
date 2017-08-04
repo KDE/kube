@@ -31,6 +31,7 @@ Kube.View {
     property bool newMessage: false
     property bool loadAsDraft: false
     property variant message: {}
+    property variant recipients: []
 
     //FIXME mean hack to unfuck hiding
     property variant _composerController: Kube.ComposerController {
@@ -53,6 +54,9 @@ Kube.View {
             }
         } else if (newMessage) {
             composerController.clear()
+            for (var i = 0; i < root.recipients.length; ++i) {
+                composerController.addTo(root.recipients[i])
+            }
             subject.forceActiveFocus()
         }
     }

@@ -58,7 +58,7 @@ Controls2.ApplicationWindow {
 
     Kube.Listener {
         filter: Kube.Messages.compose
-        onMessageReceived: kubeViews.openComposer(true)
+        onMessageReceived: kubeViews.openComposer(true, message.recipients)
     }
 
     //BEGIN Shortcuts
@@ -134,7 +134,7 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     id: composerButton
                     iconName: Kube.Icons.edit_inverted
-                    onClicked: kubeViews.openComposer(false)
+                    onClicked: kubeViews.openComposer(false, [])
                     activeFocusOnTab: true
                     checkable: true
                     Controls2.ButtonGroup.group: viewButtonGroup
@@ -252,9 +252,9 @@ Controls2.ApplicationWindow {
                 }
             }
 
-            function openComposer(newMessage) {
+            function openComposer(newMessage, recipients) {
                 composerButton.checked = true
-                kubeViews.push(composerView, {newMessage: newMessage}, Controls2.StackView.Immediate)
+                kubeViews.push(composerView, {newMessage: newMessage, recipients: recipients}, Controls2.StackView.Immediate)
             }
             function openComposerWithMail(mail, openAsDraft) {
                 composerButton.checked = true
