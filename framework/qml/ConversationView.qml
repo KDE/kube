@@ -80,9 +80,7 @@ FocusScope {
             //Position view so the last email begins on top of the view
             onContentHeightChanged: {
                 //FIXME This doesn't work quite correctly when we have headers and footers in the listview and the mail loads to slowly and only one item to show.
-                listView.positionViewAtIndex(0, ListView.End)
-                //A futile attempt to fix the problem above
-                listView.returnToBounds()
+                listView.positionViewAtIndex(currentIndex, ListView.End)
             }
 
             Keys.onDownPressed: {
