@@ -63,6 +63,10 @@ Controls2.ApplicationWindow {
 
     //BEGIN Shortcuts
     Shortcut {
+        sequence: StandardKey.Quit
+        onActivated: Qt.quit()
+    }
+    Shortcut {
         id: syncShortcut
         property variant folder: null
         sequence: StandardKey.Refresh
