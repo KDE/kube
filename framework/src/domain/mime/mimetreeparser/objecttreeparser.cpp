@@ -132,6 +132,9 @@ QString ObjectTreeParser::plainTextContent()
                 return true;
             },
             [] (const MessagePartPtr &part) {
+                if (part->isAttachment()) {
+                    return false;
+                }
                 if (dynamic_cast<MimeTreeParser::TextMessagePart*>(part.data())) {
                     return true;
                 }

@@ -151,6 +151,19 @@ private slots:
         QCOMPARE(unquote(content), QLatin1String("If you can see this text it means that your email client couldn't display our newsletter properly.\nPlease visit this link to view the newsletter on our website: http://www.gog.com/newsletter/\n"));
     }
 
+    void testAttachmentReply()
+    {
+        auto msg = readMail("plaintextattachment.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        auto content = removeFirstLine(result->body());
+        QVERIFY(!content.isEmpty());
+        QCOMPARE(unquote(content), QLatin1String("sdlkjsdjf"));
+    }
+
     void testCreatePlainMail()
     {
         QStringList to = {{"to@example.org"}};
