@@ -62,6 +62,15 @@ public:
         }
 
     }
+
+    QVector<QByteArray> getAllAddresses()
+    {
+        QVector<QByteArray> list;
+        for (int i = 0; i < model()->rowCount(); i++) {
+            list << model()->data(model()->index(i, 0), IdentitiesModel::Address).toString().toUtf8();
+        }
+        return list;
+    }
 private:
     ComposerController &mController;
 };
@@ -365,10 +374,19 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
             if (loadAsDraft) {
                 setMessage(mail);
             } else {
+                //Find all personal email addresses to exclude from reply
+                KMime::Types::AddrSpecList me;
+                auto list = static_cast<IdentitySelector*>(mIdentitySelector.data())->getAllAddresses();
+                for (const auto &a : list) {
+                    KMime::Types::Mailbox mb;
+                    mb.setAddress(a);
+                    me << mb.addrSpec();
+                }
+
                 MailTemplates::reply(mail, [this] (const KMime::Message::Ptr &reply) {
                     //We assume reply
                     setMessage(reply);
-                });
+                }, me);
             }
         } else {
             qWarning() << "Retrieved empty message";

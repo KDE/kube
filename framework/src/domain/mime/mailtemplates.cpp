@@ -795,16 +795,12 @@ static Recipients getRecipients(const KMime::Message::Ptr &origMsg, const KMime:
     return {toList, ccList};
 }
 
-void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback)
+void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback, const KMime::Types::AddrSpecList &me)
 {
     //FIXME
     const bool alwaysPlain = true;
     KMime::Message::Ptr msg(new KMime::Message);
-    //FIXME
-    //Personal email addresses, required to detect the case where we reply to a message we have sent ourselves
-    KMime::Types::AddrSpecList me;
 
-    // const uint originalIdentity = identityUoid(origMsg);
     initHeader(msg);
 
     msg->contentType()->setCharset("utf-8");
