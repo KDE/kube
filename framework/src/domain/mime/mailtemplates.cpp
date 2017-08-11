@@ -36,7 +36,6 @@
 
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
-#include <KCodecs/KEmailAddress>
 
 #include <mimetreeparser/objecttreeparser.h>
 
@@ -851,12 +850,12 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     const auto htmlContent = otp.htmlContent();
 
     plainMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body) {
-        //Quoted body */
+        //Quoted body
         QString plainQuote = quotedPlainText(body, origMsg->from()->displayString());
         if (plainQuote.endsWith(QLatin1Char('\n'))) {
             plainQuote.chop(1);
         }
-        //The plain body is complete */
+        //The plain body is complete
         auto plainBodyResult = plainBody + plainQuote;
         htmlMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body, const QString &headElement) {
             //The html body is complete
@@ -916,21 +915,16 @@ static KMime::Content *createBodyPart(const QByteArray &body) {
     return mainMessage;
 }
 
-static void applyAddresses(const QStringList &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
+static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list)
 {
-    for (const auto &to : list) {
-        QByteArray displayName;
-        QByteArray addrSpec;
-        QByteArray comment;
-        KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
-        callback(addrSpec, displayName);
+    KMime::Types::Mailbox::List mailboxes;
+    for (const auto &s : list) {
+        KMime::Types::Mailbox mb;
+        mb.fromUnicodeString(s);
+        mailboxes << mb;
     }
+    return mailboxes;
 }
-
-// static void applyAddresses(const QString &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
-// {
-//     applyAddresses(KEmailAddress::splitAddressList(list), callback);
-// }
 
 KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys)
 {
@@ -940,20 +934,19 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     }
 
     mail->to(true)->clear();
-    applyAddresses(to, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        mail->to(true)->addAddress(addrSpec, displayName);
-    });
-
+    for (const auto &mb : stringListToMailboxes(to)) {
+        mail->to()->addAddress(mb);
+    }
     mail->cc(true)->clear();
-    applyAddresses(cc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        mail->cc(true)->addAddress(addrSpec, displayName);
-    });
-
+    for (const auto &mb : stringListToMailboxes(cc)) {
+        mail->cc()->addAddress(mb);
+    }
     mail->bcc(true)->clear();
-    applyAddresses(bcc, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        mail->bcc(true)->addAddress(addrSpec, displayName);
-    });
+    for (const auto &mb : stringListToMailboxes(bcc)) {
+        mail->bcc()->addAddress(mb);
+    }
 
+    mail->from(true)->clear();
     mail->from(true)->addAddress(from);
 
     mail->subject(true)->fromUnicodeString(subject, "utf-8");

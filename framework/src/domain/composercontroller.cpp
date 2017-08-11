@@ -22,7 +22,6 @@
 #include "composercontroller.h"
 #include <settings/settings.h>
 #include <KMime/Message>
-#include <KCodecs/KEmailAddress>
 #include <QVariant>
 #include <QSortFilterProxyModel>
 #include <QList>
@@ -250,24 +249,25 @@ Selector *ComposerController::identitySelector() const
     return mIdentitySelector.data();
 }
 
-static void applyAddresses(const QStringList &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
+static void applyAddresses(const KMime::Types::Mailbox::List &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
 {
     for (const auto &to : list) {
-        QByteArray displayName;
-        QByteArray addrSpec;
-        QByteArray comment;
-        KEmailAddress::splitAddress(to.toUtf8(), displayName, addrSpec, comment);
-        callback(addrSpec, displayName);
+        callback(to.address(), to.name().toUtf8());
     }
 }
 
-static void applyAddresses(const QString &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
+static void applyAddresses(const QStringList &list, std::function<void(const QByteArray &, const QByteArray &)> callback)
 {
-    applyAddresses(KEmailAddress::splitAddressList(list), callback);
+    KMime::Types::Mailbox::List mailboxes;
+    for (const auto &s : list) {
+        KMime::Types::Mailbox mb;
+        mb.fromUnicodeString(s);
+        mailboxes << mb;
+    }
+    applyAddresses(mailboxes, callback);
 }
 
-
-static QStringList getStringListFromAddresses(const QString &s)
+static QStringList getStringListFromAddresses(const KMime::Types::Mailbox::List &s)
 {
     QStringList list;
     applyAddresses(s, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
@@ -332,9 +332,9 @@ void ComposerController::addAttachmentPart(KMime::Content *partToAttach)
 
 void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 {
-    mToModel->setStringList(getStringListFromAddresses(msg->to(true)->asUnicodeString()));
-    mCcModel->setStringList(getStringListFromAddresses(msg->cc(true)->asUnicodeString()));
-    mBccModel->setStringList(getStringListFromAddresses(msg->bcc(true)->asUnicodeString()));
+    mToModel->setStringList(getStringListFromAddresses(msg->to(true)->mailboxes()));
+    mCcModel->setStringList(getStringListFromAddresses(msg->cc(true)->mailboxes()));
+    mBccModel->setStringList(getStringListFromAddresses(msg->bcc(true)->mailboxes()));
 
     setSubject(msg->subject(true)->asUnicodeString());
     setBody(MailTemplates::plaintextContent(msg));

@@ -112,6 +112,7 @@ private slots:
         });
         QTRY_VERIFY(result);
         QCOMPARE(normalize(removeFirstLine(result->body())), normalize(msg->body()));
+        QCOMPARE(result->to()->addresses(), {{"konqi@example.org"}});
     }
 
     void testHtmlReply()
@@ -167,7 +168,7 @@ private slots:
     void testCreatePlainMail()
     {
         QStringList to = {{"to@example.org"}};
-        QStringList cc = {{"cc@example.org"}};;
+        QStringList cc = {{"cc@example.org"}};
         QStringList bcc = {{"bcc@example.org"}};;
         KMime::Types::Mailbox from;
         from.fromUnicodeString("from@example.org");
