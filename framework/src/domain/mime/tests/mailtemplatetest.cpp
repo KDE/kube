@@ -165,6 +165,22 @@ private slots:
         QCOMPARE(unquote(content), QLatin1String("sdlkjsdjf"));
     }
 
+    void testMultiRecipientReply()
+    {
+        auto msg = readMail("multirecipients.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        auto content = removeFirstLine(result->body());
+        QVERIFY(!content.isEmpty());
+        QCOMPARE(unquote(content), QLatin1String("test"));
+        QCOMPARE(result->to()->addresses(), {{"konqi@example.org"}});
+        auto l = QVector<QByteArray>{{"release-team@kde.org"}, {"kde-devel@kde.org"}};
+        QCOMPARE(result->cc()->addresses(), l);
+    }
+
     void testCreatePlainMail()
     {
         QStringList to = {{"to@example.org"}};
