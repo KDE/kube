@@ -70,9 +70,12 @@ Item {
             Kube.Label {
                 id: descriptionText
                 anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
                 visible: false
                 color: Kube.Colors.disabledTextColor
                 text: root.errorText
+                elide: Text.ElideRight
+                maximumLineCount: 1
             }
             Kube.ProgressBar {
                 id: progressBar
