@@ -14,8 +14,6 @@ include(ECMGenerateHeaders)
 include(ECMPackageConfigHelpers)
 include(KDEInstallDirs)
 
-find_package(Qt5 COMPONENTS REQUIRED Core Qml)
-
 set(CMAKE_AUTOMOC ON)
 
 enable_testing()
