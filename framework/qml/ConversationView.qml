@@ -36,7 +36,6 @@ FocusScope {
         filter: Kube.Messages.mailSelection
         onMessageReceived: {
             root.mail = message.mail
-            listView.forceLayout()
         }
     }
 
@@ -52,10 +51,9 @@ FocusScope {
         anchors.fill: parent
         color: Kube.Colors.backgroundColor
 
-        Kube.ListView {
+        Kube.ConversationListView {
             id: listView
             focus: true
-            currentIndex: -1
 
             anchors {
                 top: parent.top
@@ -65,69 +63,33 @@ FocusScope {
             //Shrink the listview if the content doesn't fill the full height, so the email appears on top instead of on the bottom.
             height: Math.min(contentHeight, parent.height)
 
-            verticalLayoutDirection: ListView.BottomToTop
-
-            onActiveFocusChanged: {
-                if (activeFocus) {
-                    if (currentIndex < 0) {
-                        currentIndex = 0
-                    }
-                } else {
-                    currentIndex = -1
-                }
-            }
-
-            //Position view so the last email begins on top of the view
-            onContentHeightChanged: {
-                //FIXME This doesn't work quite correctly when we have headers and footers in the listview and the mail loads to slowly and only one item to show.
-                listView.positionViewAtIndex(currentIndex, ListView.End)
-            }
-
-            Keys.onDownPressed: {
-                decrementCurrentIndex()
-                positionViewAtIndex(listView.currentIndex, ListView.End)
-            }
-
-            Keys.onUpPressed: {
-                incrementCurrentIndex()
-                positionViewAtIndex(listView.currentIndex, ListView.End)
-            }
-
-            onCurrentIndexChanged: {
-                markAsReadTimer.restart();
-            }
-
             model: Kube.MailListModel {
                 mail: root.mail
-            }
-
-            header: Item {
-                height: Kube.Units.gridUnit * 0.5
-                width: parent.width
-            }
-
-            footer: Item {
-                height: Kube.Units.gridUnit
-                width: parent.width
             }
 
             delegate: FocusScope {
                 id: delegateRoot
 
                 property var currentData: model
+                property bool isCurrentItem: false
+                property int index: -1
 
                 focus: false
                 activeFocusOnTab: false
 
                 height: sheet.height + Kube.Units.gridUnit
-                width: parent.width
+                width: listView.width
                 visible: !((root.hideTrash && model.trash) || (root.hideNonTrash && !model.trash))
 
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: delegateRoot.ListView.view.currentIndex = index
-                    onClicked: delegateRoot.ListView.view.currentIndex = index
+                    onEntered: listView.currentIndex = delegateRoot.index
+                    onClicked: {
+                        listView.currentIndex = delegateRoot.index
+                        listView.forceActiveFocus(Qt.MouseFocusReason)
+                    }
+                    z: 1.0
                 }
 
                 MailViewer {
@@ -147,19 +109,15 @@ FocusScope {
                     draft: model.draft
                     sent: model.sent
                     incomplete: model.incomplete
-                    current: delegateRoot.ListView.isCurrentItem
+                    current: delegateRoot.isCurrentItem
                 }
             }
 
-
-            //Optimize for view quality
-            pixelAligned: true
-
-
-            //The cacheBuffer needs to be large enough to fit the whole thread.
-            //Otherwise the contentHeight will constantly increase and decrease,
-            //which will break lot's of things.
-            cacheBuffer: 100000
+            onCurrentItemChanged: {
+                if (currentItem) {
+                    markAsReadTimer.restart()
+                }
+            }
 
             Timer {
                 id: markAsReadTimer
@@ -171,14 +129,6 @@ FocusScope {
                         Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": listView.currentItem.currentData.mail})
                     }
                 }
-            }
-
-            //Intercept all scroll events,
-            //necessary due to the webengineview
-            Kube.MouseProxy {
-                anchors.fill: parent
-                target: listView.mouseProxy
-                forwardWheelEvents: true
             }
         }
     }

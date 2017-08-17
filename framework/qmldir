@@ -1,6 +1,7 @@
 module org.kube.framework
 
 ConversationView 1.0 ConversationView.qml
+ConversationListView 1.0 ConversationListView.qml
 FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml
 InlineAccountSwitcher 1.0 InlineAccountSwitcher.qml
