@@ -84,7 +84,7 @@ void NodeHelper::setNodeProcessed(KMime::Content *node, bool recurse)
         return;
     }
     mProcessedNodes.append(node);
-    qCDebug(MIMETREEPARSER_LOG) << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
+    // qCDebug(MIMETREEPARSER_LOG) << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
     //<< " decodedContent" << node->decodedContent();
     if (recurse) {
         const auto contents = node->contents();
@@ -101,7 +101,7 @@ void NodeHelper::setNodeUnprocessed(KMime::Content *node, bool recurse)
     }
     mProcessedNodes.removeAll(node);
 
-    qCDebug(MIMETREEPARSER_LOG) << "Node UNprocessed: " << node;
+    // qCDebug(MIMETREEPARSER_LOG) << "Node UNprocessed: " << node;
     if (recurse) {
         const auto contents = node->contents();
         for (KMime::Content *c : contents) {
