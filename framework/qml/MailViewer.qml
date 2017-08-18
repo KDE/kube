@@ -46,7 +46,7 @@ Rectangle {
 
     Shortcut {
         sequence: "V"
-        onActivated: debugPopup.open()
+        onActivated: debugPopupComponent.createObject(root).open()
         enabled: root.current
     }
 
@@ -390,106 +390,109 @@ Rectangle {
         }
     }
 
-    Kube.Popup {
-        id: debugPopup
-        modal: true
-        parent: ApplicationWindow.overlay
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-        x: (parent.width - width)/2
-        y: Kube.Units.largeSpacing
-        width: parent.width / 2
-        height: parent.height - Kube.Units.largeSpacing * 2
-        clip: true
+    Component {
+        id: debugPopupComponent
+        Kube.Popup {
+            id: debugPopup
+            modal: true
+            parent: ApplicationWindow.overlay
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+            x: (parent.width - width)/2
+            y: Kube.Units.largeSpacing
+            width: parent.width / 2
+            height: parent.height - Kube.Units.largeSpacing * 2
+            clip: true
 
-        Flickable {
-            id: flickable
-            anchors.fill: parent
-            ScrollBar.vertical: ScrollBar {}
-            contentHeight: content.height
-            contentWidth: parent.width
-            Column {
-                id: content
-                width: flickable.width
-                height: childrenRect.height
+            Flickable {
+                id: flickable
+                anchors.fill: parent
+                ScrollBar.vertical: ScrollBar {}
+                contentHeight: content.height
+                contentWidth: parent.width
+                Column {
+                    id: content
+                    width: flickable.width
+                    height: childrenRect.height
 
-                TextEdit {
-                    id: rawContent
-                    width: parent.width
-                    readOnly: true
-                    selectByMouse: true
-                    textFormat: TextEdit.PlainText
-                    wrapMode: TextEdit.Wrap
-                    height: implicitHeight
-                    text: messageParser.rawContent
-                }
-                Rectangle {
-                    color: "black"
-                    height: 2
-                }
-                Controls1.TreeView {
-                    id: mailStructure
-                    width: parent.width
-                    height: implicitHeight
-                    Controls1.TableViewColumn {
-                        role: "type"
-                        title: "Type"
+                    TextEdit {
+                        id: rawContent
+                        width: parent.width
+                        readOnly: true
+                        selectByMouse: true
+                        textFormat: TextEdit.PlainText
+                        wrapMode: TextEdit.Wrap
+                        height: implicitHeight
+                        text: messageParser.rawContent
                     }
-                    Controls1.TableViewColumn {
-                        role: "embeded"
-                        title: "Embeded"
+                    Rectangle {
+                        color: "black"
+                        height: 2
                     }
-                    Controls1.TableViewColumn {
-                        role: "securityLevel"
-                        title: "SecurityLevel"
-                    }
-                    Controls1.TableViewColumn {
-                        role: "content"
-                        title: "Content"
-                    }
-                    model: messageParser.parts
-                    itemDelegate: Item {
-                        property variant currentData: styleData.value
-                        Text {
-                            anchors.fill: parent
-                            color: styleData.textColor
-                            elide: Text.ElideRight
-                            text: styleData.value ? styleData.value : ""
-                            textFormat: Text.PlainText
+                    Controls1.TreeView {
+                        id: mailStructure
+                        width: parent.width
+                        height: implicitHeight
+                        Controls1.TableViewColumn {
+                            role: "type"
+                            title: "Type"
                         }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                textEdit.text = styleData.value
+                        Controls1.TableViewColumn {
+                            role: "embeded"
+                            title: "Embeded"
+                        }
+                        Controls1.TableViewColumn {
+                            role: "securityLevel"
+                            title: "SecurityLevel"
+                        }
+                        Controls1.TableViewColumn {
+                            role: "content"
+                            title: "Content"
+                        }
+                        model: messageParser.parts
+                        itemDelegate: Item {
+                            property variant currentData: styleData.value
+                            Text {
+                                anchors.fill: parent
+                                color: styleData.textColor
+                                elide: Text.ElideRight
+                                text: styleData.value ? styleData.value : ""
+                                textFormat: Text.PlainText
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    textEdit.text = styleData.value
+                                }
                             }
                         }
                     }
-                }
-                Controls1.TreeView {
-                    id: attachmentsTree
-                    width: parent.width
-                    height: implicitHeight
-                    Controls1.TableViewColumn {
-                        role: "type"
-                        title: "Type"
+                    Controls1.TreeView {
+                        id: attachmentsTree
+                        width: parent.width
+                        height: implicitHeight
+                        Controls1.TableViewColumn {
+                            role: "type"
+                            title: "Type"
+                        }
+                        Controls1.TableViewColumn {
+                            role: "name"
+                            title: "Name"
+                        }
+                        Controls1.TableViewColumn {
+                            role: "size"
+                            title: "Size"
+                        }
+                        model: messageParser.attachments
                     }
-                    Controls1.TableViewColumn {
-                        role: "name"
-                        title: "Name"
+                    TextEdit {
+                        id: textEdit
+                        width: parent.width
+                        readOnly: true
+                        selectByMouse: true
+                        textFormat: TextEdit.PlainText
+                        wrapMode: TextEdit.Wrap
+                        height: implicitHeight
                     }
-                    Controls1.TableViewColumn {
-                        role: "size"
-                        title: "Size"
-                    }
-                    model: messageParser.attachments
-                }
-                TextEdit {
-                    id: textEdit
-                    width: parent.width
-                    readOnly: true
-                    selectByMouse: true
-                    textFormat: TextEdit.PlainText
-                    wrapMode: TextEdit.Wrap
-                    height: implicitHeight
                 }
             }
         }
