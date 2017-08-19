@@ -74,8 +74,13 @@ FocusScope {
                 property bool isCurrentItem: false
                 property int index: -1
 
-                focus: false
+                focus: true
                 activeFocusOnTab: false
+                onActiveFocusChanged: {
+                    if (activeFocus) {
+                        listView.currentIndex = delegateRoot.index
+                    }
+                }
 
                 height: sheet.height + Kube.Units.gridUnit
                 width: listView.width
@@ -83,12 +88,9 @@ FocusScope {
 
                 MouseArea {
                     anchors.fill: parent
+                    acceptedButtons: Qt.NoButton
                     hoverEnabled: true
-                    onEntered: listView.currentIndex = delegateRoot.index
-                    onClicked: {
-                        listView.currentIndex = delegateRoot.index
-                        listView.forceActiveFocus(Qt.MouseFocusReason)
-                    }
+                    onEntered: delegateRoot.forceActiveFocus(Qt.MouseFocusReason)
                 }
 
                 MailViewer {

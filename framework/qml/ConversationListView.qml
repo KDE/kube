@@ -24,11 +24,11 @@ import org.kube.framework 1.0 as Kube
 
 import QtQml 2.2 as QtQml
 
-Flickable {
+FocusScope {
     id: root
-    focus: true
     property alias model: repeater.model
     property alias delegate: repeater.delegate
+    property alias contentHeight: flickable.contentHeight
     property int currentIndex: -1
 
     property var currentItem: null
@@ -56,83 +56,87 @@ Flickable {
         setCurrentItem()
     }
 
-    //Optimize for view quality
-    pixelAligned: true
+    Flickable {
+        id: flickable
+        anchors.fill: parent
 
-    contentWidth: width
-    contentHeight: col.height
+        //Optimize for view quality
+        pixelAligned: true
 
-    function scrollToIndex(index) {
-        var item = repeater.itemAt(index)
-        var pos = item.y
-        var scrollToEndPos = (root.contentHeight - root.height)
-        //Avoid scrolling past the end
-        if (pos < scrollToEndPos) {
-            root.contentY = pos
-        } else {
-            root.contentY = scrollToEndPos
+        contentWidth: width
+        contentHeight: col.height
+
+        function scrollToIndex(index) {
+            var item = repeater.itemAt(index)
+            var pos = item.y
+            var scrollToEndPos = (flickable.contentHeight - flickable.height)
+            //Avoid scrolling past the end
+            if (pos < scrollToEndPos) {
+                flickable.contentY = pos
+            } else {
+                flickable.contentY = scrollToEndPos
+            }
         }
-    }
 
-    onContentHeightChanged: {
-        if (repeater.count) {
-            //Scroll to the last item
-            currentIndex = repeater.count - 1
-            scrollToIndex(repeater.count - 1)
+        onContentHeightChanged: {
+            if (repeater.count) {
+                //Scroll to the last item
+                currentIndex = repeater.count - 1
+                scrollToIndex(repeater.count - 1)
+            }
         }
-    }
 
-    property real span : contentY + height
-    Column {
-        id: col
-        width: parent.width
-        spacing: 2
-        Repeater {
-            id: repeater
-            onCountChanged: {
-                for (var i = 0; i < count; i++) {
-                    itemAt(i).index = i
+        Column {
+            id: col
+            width: parent.width
+            spacing: 2
+            Repeater {
+                id: repeater
+                onCountChanged: {
+                    for (var i = 0; i < count; i++) {
+                        itemAt(i).index = i
+                    }
                 }
             }
         }
-    }
 
-    function incrementCurrentIndex() {
-        if (currentIndex < repeater.count - 1) {
-            currentIndex = currentIndex + 1
+        function incrementCurrentIndex() {
+            if (currentIndex < repeater.count - 1) {
+                currentIndex = currentIndex + 1
+            }
         }
-    }
 
-    function decrementCurrentIndex() {
-        if (currentIndex > 0) {
-            currentIndex = currentIndex - 1
+        function decrementCurrentIndex() {
+            if (currentIndex > 0) {
+                currentIndex = currentIndex - 1
+            }
         }
+
+        Keys.onDownPressed: {
+            incrementCurrentIndex()
+            scrollToIndex(currentIndex)
+        }
+
+        Keys.onUpPressed: {
+            decrementCurrentIndex()
+            scrollToIndex(currentIndex)
+        }
+
+        Kube.ScrollHelper {
+            id: scrollHelper
+            flickable: flickable
+            anchors.fill: parent
+        }
+
+        //Intercept all scroll events,
+        //necessary due to the webengineview
+        Kube.MouseProxy {
+            anchors.fill: parent
+            target: scrollHelper
+            forwardWheelEvents: true
+        }
+
+        ScrollBar.vertical: ScrollBar {}
+
     }
-
-    Keys.onDownPressed: {
-        incrementCurrentIndex()
-        scrollToIndex(currentIndex)
-    }
-
-    Keys.onUpPressed: {
-        decrementCurrentIndex()
-        scrollToIndex(currentIndex)
-    }
-
-    Kube.ScrollHelper {
-        id: scrollHelper
-        flickable: root
-        anchors.fill: parent
-    }
-
-    //Intercept all scroll events,
-    //necessary due to the webengineview
-    Kube.MouseProxy {
-        anchors.fill: parent
-        target: scrollHelper
-        forwardWheelEvents: true
-    }
-
-    ScrollBar.vertical: ScrollBar {}
-
 }
