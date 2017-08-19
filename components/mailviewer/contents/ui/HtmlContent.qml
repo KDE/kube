@@ -38,9 +38,9 @@ Item {
             root.contentHeight = contentsSize.height;
         }
         onLoadingChanged: {
-            if (loadRequest.status === WebEngineView.LoadFailedStatus) {
-                console.warn("Failed to load html content.");
-                console.warn("Error is ", loadRequest.errorString);
+            if (loadRequest.status == WebEngineLoadRequest.LoadFailedStatus) {
+                console.warn("Failed to load html content.")
+                console.warn("Error is ", loadRequest.errorString)
             }
         }
         //TODO The webview should not steal focus (depends on webengine 1.4)
