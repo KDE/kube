@@ -89,7 +89,6 @@ FocusScope {
                         listView.currentIndex = delegateRoot.index
                         listView.forceActiveFocus(Qt.MouseFocusReason)
                     }
-                    z: 1.0
                 }
 
                 MailViewer {
