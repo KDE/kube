@@ -141,6 +141,7 @@ Controls2.ApplicationWindow {
                 }
 
                 Kube.IconButton {
+                    id: mailButton
                     iconName: Kube.Icons.mail_inverted
                     onClicked: kubeViews.setMailView()
                     activeFocusOnTab: true
@@ -151,6 +152,7 @@ Controls2.ApplicationWindow {
                 }
 
                 Kube.IconButton {
+                    id: peopleButton
                     iconName: Kube.Icons.user_inverted
                     onClicked: kubeViews.setPeopleView()
                     activeFocusOnTab: true
@@ -178,6 +180,7 @@ Controls2.ApplicationWindow {
                 }
 
                 Kube.IconButton {
+                    id: logButton
                     iconName: Kube.Icons.error_inverted
                     onClicked: kubeViews.setLogView()
                     activeFocusOnTab: true
@@ -187,6 +190,7 @@ Controls2.ApplicationWindow {
                 }
 
                 Kube.IconButton {
+                    id: accountsButton
                     iconName: Kube.Icons.menu_inverted
                     onClicked: kubeViews.setAccountsView()
                     activeFocusOnTab: true
@@ -213,19 +217,23 @@ Controls2.ApplicationWindow {
 
             //TODO replacing here while a composer is open is destructive
             function setPeopleView() {
+                peopleButton.checked = true
                 if (currentItem != peopleView) {
                     kubeViews.replace(null, peopleView, Controls2.StackView.Immediate)
                 }
             }
             function setMailView() {
+                mailButton.checked = true
                 if (currentItem != mailView) {
                     kubeViews.replace(null, mailView, Controls2.StackView.Immediate)
                 }
             }
             function setAccountsView() {
+                accountsButton.checked = true
                 kubeViews.push(accountsView, {}, Controls2.StackView.Immediate)
             }
             function setLogView() {
+                logButton.checked = true
                 if (currentItem != logView) {
                     kubeViews.replace(null, logView, Controls2.StackView.Immediate)
                 }
