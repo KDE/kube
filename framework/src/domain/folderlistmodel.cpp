@@ -31,12 +31,6 @@ FolderListModel::FolderListModel(QObject *parent) : QSortFilterProxyModel()
     setDynamicSortFilter(true);
     sort(0, Qt::AscendingOrder);
 
-    Query query;
-    query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
-    query.request<Folder::Name>().request<Folder::Icon>().request<Folder::Parent>().request<Folder::SpecialPurpose>();
-    query.requestTree<Folder::Parent>();
-    query.setId("foldertree");
-    runQuery(query);
 }
 
 FolderListModel::~FolderListModel()
