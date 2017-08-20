@@ -27,10 +27,10 @@ Item {
     property bool embedded: true
     property string type
 
-    height: textColumn.height
+    height: textEdit.height
 
-    Column {
-        id: textColumn
+    TextEdit {
+        id: textEdit
 
         anchors {
             top: parent.top
@@ -38,28 +38,23 @@ Item {
             right: parent.right
         }
 
-        spacing: 5
+        selectionColor: Kube.Colors.highlightColor
 
-        TextEdit {
-            width: parent.width
-            selectionColor: Kube.Colors.highlightColor
+        readOnly: true
+        selectByMouse: true
 
-            readOnly: true
-            selectByMouse: true
+        text: content
+        wrapMode: TextEdit.Wrap
+        textFormat: Text.RichText
 
-            text: content
-            wrapMode: TextEdit.Wrap
-            textFormat: Text.RichText
+        font.family: Kube.Font.fontFamily
+        color: embedded ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
+        onLinkActivated: Qt.openUrlExternally(link)
 
-            font.family: Kube.Font.fontFamily
-            color: embedded ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
-            onLinkActivated: Qt.openUrlExternally(link)
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
-                cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
-            }
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
+            cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
         }
     }
 }
