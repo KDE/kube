@@ -20,16 +20,14 @@
 
 #pragma once
 
-#include <QObject>
-#include <QSortFilterProxyModel>
+#include <krecursivefilterproxymodel.h>
 #include <QSharedPointer>
-#include <QStringList>
 
 namespace Sink {
     class Query;
 }
 
-class FolderListModel : public QSortFilterProxyModel
+class FolderListModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 
@@ -69,6 +67,7 @@ public:
     QVariant folderId() const;
 protected:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
+    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
 
 private:
     void runQuery(const Sink::Query &query);

@@ -26,11 +26,20 @@
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
 
-FolderListModel::FolderListModel(QObject *parent) : QSortFilterProxyModel()
+FolderListModel::FolderListModel(QObject *parent) : KRecursiveFilterProxyModel()
 {
     setDynamicSortFilter(true);
     sort(0, Qt::AscendingOrder);
 
+    //Automatically fetch all folders, otherwise the recursive filtering does not work.
+    QObject::connect(this, &QSortFilterProxyModel::sourceModelChanged, [this] () {
+        QObject::connect(sourceModel(), &QAbstractItemModel::rowsInserted, sourceModel(), [this] (QModelIndex parent, int first, int last) {
+            for (int row = first; row <= last; row++) {
+                auto idx = sourceModel()->index(row, 0, parent);
+                sourceModel()->fetchMore(idx);
+            }
+        });
+    });
 }
 
 FolderListModel::~FolderListModel()
@@ -99,7 +108,6 @@ void FolderListModel::setAccountId(const QVariant &accountId)
     auto query = Query();
     query.resourceFilter<SinkResource::Account>(account);
     query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
-    query.filter<Folder::Enabled>(true);
     query.request<Folder::Name>()
          .request<Folder::Icon>()
          .request<Folder::Parent>()
@@ -142,6 +150,14 @@ bool FolderListModel::lessThan(const QModelIndex &left, const QModelIndex &right
         return leftFolder->getName() < rightFolder->getName();
     }
     return leftPriority < rightPriority;
+}
+
+bool FolderListModel::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    auto index = sourceModel()->index(sourceRow, 0, sourceParent);
+    const auto folder = index.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
+    const auto enabled = folder->getEnabled();
+    return enabled;
 }
 
 void FolderListModel::setFolderId(const QVariant &folderId)
