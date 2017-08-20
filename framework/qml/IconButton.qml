@@ -23,6 +23,7 @@ AbstractButton {
     id: root
 
     property alias iconName: icon.iconName
+    property alias tooltip: toolTipItem.text
 
     width: Units.gridUnit + leftPadding + rightPadding
     height: Units.gridUnit + topPadding + bottomPadding
@@ -32,6 +33,11 @@ AbstractButton {
 
     contentItem: Icon {
         id: icon
+    }
+
+    ToolTip {
+        id: toolTipItem
+        visible: parent.hovered && text != ""
     }
 }
 

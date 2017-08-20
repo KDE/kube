@@ -127,11 +127,7 @@ Controls2.ApplicationWindow {
                     iconName: Kube.Icons.search_inverted
                     onClicked: search.open()
                     activeFocusOnTab: true
-
-                    Kube.ToolTip {
-                        text: qsTr("search")
-                        visible: parent.hovered
-                    }
+                    tooltip: qsTr("search")
                 }
 
                 Kube.IconButton {
@@ -141,11 +137,7 @@ Controls2.ApplicationWindow {
                     activeFocusOnTab: true
                     checkable: true
                     Controls2.ButtonGroup.group: viewButtonGroup
-
-                    Kube.ToolTip {
-                        text: qsTr("composer")
-                        visible: parent.hovered
-                    }
+                    tooltip: qsTr("composer")
                 }
 
                 Kube.IconButton {
@@ -155,11 +147,7 @@ Controls2.ApplicationWindow {
                     checkable: true
                     checked: true
                     Controls2.ButtonGroup.group: viewButtonGroup
-
-                    Kube.ToolTip {
-                        text: qsTr("mails")
-                        visible: parent.hovered
-                    }
+                    tooltip: qsTr("mails")
                 }
 
                 Kube.IconButton {
@@ -168,11 +156,7 @@ Controls2.ApplicationWindow {
                     activeFocusOnTab: true
                     checkable: true
                     Controls2.ButtonGroup.group: viewButtonGroup
-
-                    Kube.ToolTip {
-                        text: qsTr("people")
-                        visible: parent.hovered
-                    }
+                    tooltip: qsTr("people")
                 }
             }
             Column {
@@ -199,11 +183,7 @@ Controls2.ApplicationWindow {
                     activeFocusOnTab: true
                     checkable: true
                     Controls2.ButtonGroup.group: viewButtonGroup
-
-                    Kube.ToolTip {
-                        text: qsTr("logview")
-                        visible: parent.hovered
-                    }
+                    tooltip: qsTr("logview")
                 }
 
                 Kube.IconButton {
@@ -212,11 +192,7 @@ Controls2.ApplicationWindow {
                     activeFocusOnTab: true
                     checkable: true
                     Controls2.ButtonGroup.group: viewButtonGroup
-
-                    Kube.ToolTip {
-                        text: qsTr("settings")
-                        visible: parent.hovered
-                    }
+                    tooltip: qsTr("settings")
                 }
             }
         }
