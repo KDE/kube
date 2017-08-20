@@ -33,12 +33,14 @@ FolderListModel::FolderListModel(QObject *parent) : KRecursiveFilterProxyModel()
 
     //Automatically fetch all folders, otherwise the recursive filtering does not work.
     QObject::connect(this, &QSortFilterProxyModel::sourceModelChanged, [this] () {
-        QObject::connect(sourceModel(), &QAbstractItemModel::rowsInserted, sourceModel(), [this] (QModelIndex parent, int first, int last) {
-            for (int row = first; row <= last; row++) {
-                auto idx = sourceModel()->index(row, 0, parent);
-                sourceModel()->fetchMore(idx);
-            }
-        });
+        if (sourceModel()) {
+            QObject::connect(sourceModel(), &QAbstractItemModel::rowsInserted, sourceModel(), [this] (QModelIndex parent, int first, int last) {
+                for (int row = first; row <= last; row++) {
+                    auto idx = sourceModel()->index(row, 0, parent);
+                    sourceModel()->fetchMore(idx);
+                }
+            });
+        }
     });
 }
 
