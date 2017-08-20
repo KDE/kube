@@ -105,9 +105,11 @@ void FolderListModel::setAccountId(const QVariant &accountId)
     auto query = Query();
     query.resourceFilter<SinkResource::Account>(account);
     query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
+    query.filter<Folder::Enabled>(true);
     query.request<Folder::Name>()
          .request<Folder::Icon>()
          .request<Folder::Parent>()
+         .request<Folder::Enabled>()
          .request<Folder::SpecialPurpose>();
     query.requestTree<Folder::Parent>();
     query.setId("foldertree" + account);
