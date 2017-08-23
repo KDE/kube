@@ -26,7 +26,7 @@ Kube.Popup {
 
     modal: true
     focus: true
-    closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutsideParent
+    closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutside
 
     clip: true
 
