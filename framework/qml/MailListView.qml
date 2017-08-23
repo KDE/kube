@@ -70,7 +70,7 @@ FocusScope {
         clip: true
         focus: true
 
-        ScrollBar.vertical: ScrollBar{
+        ScrollBar.vertical: Kube.ScrollBar{
             id: scrollbar
         }
 

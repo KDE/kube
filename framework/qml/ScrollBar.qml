@@ -1,6 +1,5 @@
 /*
- *  Copyright (C) 2017 Michael Bohlender, <michael.bohlender@kdemail.net>
- *  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
+ *  Copyright (C) 2017 Michael Bohlender, <bohlender@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,28 +17,27 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.2
-
+import QtQuick.Templates 2.0 as T
 import org.kube.framework 1.0 as Kube
 
-FocusScope {
-    property alias text: edit.text
-    Kube.ScrollHelper {
-        anchors.fill: parent
-        flickable: flickableItem
-        Flickable {
-            id: flickableItem
-            anchors.fill: parent
-            ScrollBar.vertical: Kube.ScrollBar {}
+T.ScrollBar {
+    id: control
 
-            Kube.TextArea {
-                id: edit
-                focus: true
-                anchors.fill: parent
-                selectByMouse: true
-                wrapMode: TextEdit.Wrap
-            }
-            TextArea.flickable: edit
-        }
+    implicitWidth: contentItem.implicitWidth
+    implicitHeight: contentItem.implicitHeight
+
+
+    contentItem: Rectangle {
+        implicitWidth: Kube.Units.gridUnit / 3
+        implicitHeight: Kube.Units.gridUnit / 3
+
+        color: Kube.Colors.disabledTextColor
+    }
+
+    background: Rectangle {
+        implicitWidth: Kube.Units.gridUnit / 3
+        implicitHeight: Kube.Units.gridUnit / 3
+
+        color: Kube.Colors.buttonColor
     }
 }

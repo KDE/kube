@@ -221,7 +221,7 @@ FocusScope {
                     leftMargin: Kube.Units.largeSpacing
                 }
 
-                Controls.ScrollBar.vertical: Controls.ScrollBar { }
+                Controls.ScrollBar.vertical: Kube.ScrollBar { }
                 contentHeight: contentColumn.height
 
                 clip: true

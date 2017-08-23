@@ -148,7 +148,7 @@ FocusScope {
             forwardWheelEvents: true
         }
 
-        ScrollBar.vertical: ScrollBar {}
+        ScrollBar.vertical: Kube.ScrollBar {}
 
     }
 }

@@ -406,7 +406,7 @@ Rectangle {
             Flickable {
                 id: flickable
                 anchors.fill: parent
-                ScrollBar.vertical: ScrollBar {}
+                ScrollBar.vertical: Kube.ScrollBar {}
                 contentHeight: content.height
                 contentWidth: parent.width
                 Column {

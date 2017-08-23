@@ -26,7 +26,7 @@ ListView {
     property Item mouseProxy: scrollHelper
 
     clip: true
-    ScrollBar.vertical: ScrollBar {}
+    ScrollBar.vertical: Kube.ScrollBar {}
 
     Kube.ScrollHelper {
         id: scrollHelper
