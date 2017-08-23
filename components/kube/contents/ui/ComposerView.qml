@@ -406,7 +406,7 @@ Kube.View {
                     Kube.Button {
                         anchors.left: parent.left
 
-                    text: qsTr("Discard")
+                        text: qsTr("Discard")
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
                     }
                 }
