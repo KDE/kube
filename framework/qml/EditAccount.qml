@@ -124,7 +124,8 @@ Item {
                     text: qsTr("Save")
                     onClicked: {
                         loader.item.save()
-                        //TODO Feedback that the settings have been saved (popup notification/animation?)
+                        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
+                        Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
                     }
                 }
             }
