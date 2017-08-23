@@ -18,7 +18,7 @@
 */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.0 as Controls
 import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
@@ -71,7 +71,7 @@ FocusScope {
             }
         }
 
-        StackView {
+        Controls.StackView {
             id: stack
 
             anchors {
@@ -217,7 +217,7 @@ FocusScope {
                     leftMargin: Kube.Units.largeSpacing
                 }
 
-                ScrollBar.vertical: ScrollBar { }
+                Controls.ScrollBar.vertical: Controls.ScrollBar { }
                 contentHeight: contentColumn.height
 
                 clip: true
