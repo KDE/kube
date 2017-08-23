@@ -957,6 +957,7 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     if (!mail->date(true)->dateTime().isValid()) {
         mail->date(true)->setDateTime(QDateTime::currentDateTimeUtc());
     }
+    mail->assemble();
 
     KMime::Content *bodyPart;
     if (!attachments.isEmpty()) {
@@ -972,7 +973,7 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     } else {
         bodyPart = createBodyPart(body.toUtf8());
     }
-    mail->assemble();
+    bodyPart->assemble();
 
     KMime::Content *signedResult = nullptr;
     if (!signingKeys.empty()) {
@@ -982,11 +983,11 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
             return {};
         }
     } else {
-        if (!mail->contentType(false)) {
-            mail->contentType(true)->setMimeType("text/plain");
+        if (!bodyPart->contentType(false)) {
+            bodyPart->contentType(true)->setMimeType("text/plain");
+            bodyPart->assemble();
         }
     }
-    mail->assemble();
 
     const QByteArray allData = mail->head() + (signedResult ? signedResult->encodedContent() : bodyPart->encodedContent());
     delete bodyPart;
