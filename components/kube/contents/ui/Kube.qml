@@ -215,31 +215,41 @@ Controls2.ApplicationWindow {
                 onMessageReceived: kubeViews.pop(Controls2.StackView.Immediate)
             }
 
-            //TODO replacing here while a composer is open is destructive
-            function setPeopleView() {
-                if (currentItem != peopleView) {
-                    kubeViews.replace(null, peopleView, Controls2.StackView.Immediate)
-                }
-            }
-            function setMailView() {
-                if (currentItem != mailView) {
-                    kubeViews.replace(null, mailView, Controls2.StackView.Immediate)
-                }
-            }
-            function setAccountsView() {
-                kubeViews.push(accountsView, {}, Controls2.StackView.Immediate)
-            }
-            function setLogView() {
-                if (currentItem != logView) {
-                    kubeViews.replace(null, logView, Controls2.StackView.Immediate)
+            ///Replace the current view (we can't go back to the old view, and we destroy the old view)
+            function replaceView(view) {
+                if (currentItem != view) {
+                    kubeViews.replace(null, view, {}, Controls2.StackView.Immediate)
                 }
             }
 
-            function openComposer(newMessage, recipients) {
-                kubeViews.push(composerView, {newMessage: newMessage, recipients: recipients}, Controls2.StackView.Immediate)
+            ///Push a new view on the stack (the old view remains, and we can go back once done)
+            function pushView(view, properties) {
+                kubeViews.push(view, properties, Controls2.StackView.Immediate)
             }
+
+            //TODO replacing here while a composer is open is destructive
+            function setPeopleView() {
+                replaceView(peopleView)
+            }
+
+            function setMailView() {
+                replaceView(mailView)
+            }
+
+            function setAccountsView() {
+                pushView(accountsView, {})
+            }
+
+            function setLogView() {
+                replaceView(logView)
+            }
+
+            function openComposer(newMessage, recipients) {
+                pushView(composerView, {newMessage: newMessage, recipients: recipients})
+            }
+
             function openComposerWithMail(mail, openAsDraft) {
-                kubeViews.push(composerView, {message: mail, loadAsDraft: openAsDraft}, Controls2.StackView.Immediate)
+                pushView(composerView, {message: mail, loadAsDraft: openAsDraft})
             }
 
             onCurrentItemChanged: {
