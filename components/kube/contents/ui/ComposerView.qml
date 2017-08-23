@@ -54,8 +54,10 @@ Kube.View {
             }
         } else if (newMessage) {
             composerController.clear()
-            for (var i = 0; i < root.recipients.length; ++i) {
-                composerController.addTo(root.recipients[i])
+            if (root.recipients) {
+                for (var i = 0; i < root.recipients.length; ++i) {
+                    composerController.addTo(root.recipients[i])
+                }
             }
             subject.forceActiveFocus()
         }
