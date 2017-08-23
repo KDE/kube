@@ -69,6 +69,7 @@ public:
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
 
     QtWebEngine::initialize();
     QIcon::setThemeName("kube");
