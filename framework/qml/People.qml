@@ -262,7 +262,7 @@ FocusScope {
                                 visible: contactController.imageData == ""
                                 iconName: Kube.Icons.user
                             }
-                            color: "lightgrey"
+                            color: Kube.Colors.buttonColor
                         }
 
                         Kube.Heading {
@@ -303,7 +303,7 @@ FocusScope {
                             width: Kube.Units.gridUnit * 10
 
                             border.width: 1
-                            border.color: "lightgrey"
+                            border.color: Kube.Colors.buttonColor
 
                             Rectangle {
                                 id: av
@@ -311,7 +311,7 @@ FocusScope {
                                 height: parent.height
                                 width: height
 
-                                color: "lightgrey"
+                                color: Kube.Colors.buttonColor
                             }
 
                             Kube.Label {
