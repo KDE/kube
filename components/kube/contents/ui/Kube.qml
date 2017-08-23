@@ -217,34 +217,28 @@ Controls2.ApplicationWindow {
 
             //TODO replacing here while a composer is open is destructive
             function setPeopleView() {
-                peopleButton.checked = true
                 if (currentItem != peopleView) {
                     kubeViews.replace(null, peopleView, Controls2.StackView.Immediate)
                 }
             }
             function setMailView() {
-                mailButton.checked = true
                 if (currentItem != mailView) {
                     kubeViews.replace(null, mailView, Controls2.StackView.Immediate)
                 }
             }
             function setAccountsView() {
-                accountsButton.checked = true
                 kubeViews.push(accountsView, {}, Controls2.StackView.Immediate)
             }
             function setLogView() {
-                logButton.checked = true
                 if (currentItem != logView) {
                     kubeViews.replace(null, logView, Controls2.StackView.Immediate)
                 }
             }
 
             function openComposer(newMessage, recipients) {
-                composerButton.checked = true
                 kubeViews.push(composerView, {newMessage: newMessage, recipients: recipients}, Controls2.StackView.Immediate)
             }
             function openComposerWithMail(mail, openAsDraft) {
-                composerButton.checked = true
                 kubeViews.push(composerView, {message: mail, loadAsDraft: openAsDraft}, Controls2.StackView.Immediate)
             }
 
@@ -264,15 +258,18 @@ Controls2.ApplicationWindow {
                 MailView {
                     id: mailView
                     anchors.fill: parent
+                    Controls2.StackView.onActivated: mailButton.checked = true
                 },
                 PeopleView {
                     id: peopleView
                     anchors.fill: parent
+                    Controls2.StackView.onActivated: peopleButton.checked = true
                 },
                 //Not a component because otherwise we can't log stuff
                 LogView {
                     id: logView
                     anchors.fill: parent
+                    Controls2.StackView.onActivated: logButton.checked = true
                 }
             ]
             //A component so it's always destroyed when we're done
@@ -280,12 +277,14 @@ Controls2.ApplicationWindow {
                 id: composerView
                 ComposerView {
                     anchors.fill: parent
+                    Controls2.StackView.onActivated: composerButton.checked = true
                 }
             }
             Component {
                 id: accountsView
                 AccountsView {
                     anchors.fill: parent
+                    Controls2.StackView.onActivated: accountsButton.checked = true
                 }
             }
         }
