@@ -23,11 +23,11 @@ private slots:
     {
         auto accountId = "accountid";
         auto imapServer = QString("imapserver");
-        auto imapUsername = QString("username");
-        auto imapPassword = QString("password");
+        auto imapUsername = QString("imapName");
+        auto imapPassword = QString("imapPw");
         auto smtpServer = QString("smtpserver");
-        auto smtpUsername = QString("username");
-        auto smtpPassword = QString("password");
+        auto smtpUsername = QString("smtpName");
+        auto smtpPassword = QString("smtpPw");
         auto username = QString("username");
         auto emailAddress = QString("emailAddress");
 
@@ -64,8 +64,41 @@ private slots:
             QCOMPARE(readSettings.property("smtpServer").toString(), smtpServer);
             QCOMPARE(readSettings.property("smtpUsername").toString(), smtpUsername);
             QCOMPARE(readSettings.property("smtpPassword").toString(), smtpPassword);
-            QCOMPARE(readSettings.property("userName").toString(), smtpUsername);
+            QCOMPARE(readSettings.property("userName").toString(), username);
             QCOMPARE(readSettings.property("emailAddress").toString(), emailAddress);
+        }
+
+        //Modify all settings
+        {
+            settings.setProperty("imapServer", imapServer + "mod");
+            settings.setProperty("imapUsername", imapUsername + "mod");
+            settings.setProperty("imapPassword", imapPassword + "mod");
+            settings.setProperty("smtpServer", smtpServer + "mod");
+            settings.setProperty("smtpUsername", smtpUsername + "mod");
+            settings.setProperty("smtpPassword", smtpPassword + "mod");
+            settings.setProperty("userName", username + "mod");
+            settings.setProperty("emailAddress", emailAddress + "mod");
+            settings.save();
+        }
+
+        //Read back settings again
+        {
+            ImapSettings readSettings;
+            QSignalSpy spy(&readSettings, &ImapSettings::imapResourceChanged);
+            QSignalSpy spy1(&readSettings, &ImapSettings::smtpResourceChanged);
+            readSettings.setAccountIdentifier(accountId);
+            //Once for clear and once for the new setting
+            QTRY_COMPARE(spy.count(), 2);
+            QTRY_COMPARE(spy1.count(), 2);
+            QVERIFY(!readSettings.accountIdentifier().isEmpty());
+            QCOMPARE(readSettings.property("imapServer").toString(), imapServer + "mod");
+            QCOMPARE(readSettings.property("imapUsername").toString(), imapUsername + "mod");
+            QCOMPARE(readSettings.property("imapPassword").toString(), imapPassword + "mod");
+            QCOMPARE(readSettings.property("smtpServer").toString(), smtpServer + "mod");
+            QCOMPARE(readSettings.property("smtpUsername").toString(), smtpUsername + "mod");
+            QCOMPARE(readSettings.property("smtpPassword").toString(), smtpPassword + "mod");
+            QCOMPARE(readSettings.property("userName").toString(), username + "mod");
+            QCOMPARE(readSettings.property("emailAddress").toString(), emailAddress + "mod");
         }
 
         {

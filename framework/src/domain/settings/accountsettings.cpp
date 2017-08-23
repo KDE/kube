@@ -323,7 +323,7 @@ void AccountSettings::saveMailtransportResource()
 void AccountSettings::saveIdentity()
 {
     if (!mIdentityIdentifier.isEmpty()) {
-        Identity identity(mMailtransportIdentifier);
+        Identity identity(mIdentityIdentifier);
         identity.setName(mUsername);
         identity.setAddress(mEmailAddress);
         Store::modify(identity)
