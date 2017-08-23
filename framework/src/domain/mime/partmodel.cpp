@@ -116,15 +116,19 @@ QModelIndex PartModel::index(int row, int column, const QModelIndex &parent) con
 
 static QString addCss(const QString &s)
 {
+    //Get the default font from QApplication
+    static const auto fontFamily = QFont{}.family();
     //overflow:hidden ensures no scrollbars are ever shown.
-    const auto css = "<style>\n"
+    static const auto css = QString("<style>\n"
                "body {\n"
                "  overflow:hidden;\n"
-               "  font-family: \"Noto Sans\" ! important;\n"
+               "  font-family: \"%1\" ! important;\n"
                "  color: #31363b ! important;\n"
                "  background-color: #fcfcfc ! important\n"
                "}\n"
-               "</style>";
+               "</style>")
+        .arg(fontFamily);
+
     const auto header = QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
                   "<html><head><title></title>")
                   + css + QLatin1String("</head>\n<body>\n");
