@@ -243,10 +243,6 @@ Controls2.ApplicationWindow {
             }
 
             onCurrentItemChanged: {
-                //TODO with qt 5.8 use Controls2.StackView.onActivated
-                if (currentItem == peopleView) {
-                    Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
-                }
                 if (currentItem) {
                     currentItem.forceActiveFocus()
                 }

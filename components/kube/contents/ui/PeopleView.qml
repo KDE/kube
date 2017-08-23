@@ -19,9 +19,15 @@
 
 
 import QtQuick 2.7
+import QtQuick.Controls 2.1
 import org.kube.framework 1.0 as Kube
 
 Item {
+
+    StackView.onActivated: {
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
+    }
+
     Kube.People {
         id: people
         anchors {
