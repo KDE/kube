@@ -37,7 +37,7 @@ AbstractButton {
 
     ToolTip {
         id: toolTipItem
-        visible: parent.hovered && text != ""
+        visible: root.hovered && text != ""
     }
 }
 
