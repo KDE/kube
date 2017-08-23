@@ -70,10 +70,6 @@ FocusScope {
         clip: true
         focus: true
 
-        ScrollBar.vertical: Kube.ScrollBar{
-            id: scrollbar
-        }
-
         //BEGIN keyboard nav
         onActiveFocusChanged: {
             if (activeFocus && currentIndex < 0) {
@@ -109,7 +105,7 @@ FocusScope {
             //Required for D&D
             property var mail: model.mail
 
-            width: scrollbar.visible ? listView.width - scrollbar.width : listView.width
+            width: listView.width
             height: Kube.Units.gridUnit * 5
 
             color: Kube.Colors.viewBackgroundColor
