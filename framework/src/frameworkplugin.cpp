@@ -35,6 +35,7 @@
 #include "fabric.h"
 #include "kubeimage.h"
 #include "clipboardproxy.h"
+#include "webengineprofile.h"
 
 #include <QtQml>
 
@@ -43,6 +44,13 @@ static QObject *fabric_singletontype_provider(QQmlEngine *engine, QJSEngine *scr
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
     return new Kube::Fabric::Fabric;
+}
+
+static QObject *webengineprofile_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return new WebEngineProfile;
 }
 
 void FrameworkPlugin::registerTypes (const char *uri)
@@ -67,4 +75,5 @@ void FrameworkPlugin::registerTypes (const char *uri)
 
     qmlRegisterType<KubeImage>(uri, 1, 0, "KubeImage");
     qmlRegisterType<ClipboardProxy>(uri, 1, 0, "Clipboard");
+    qmlRegisterSingletonType<WebEngineProfile>(uri, 1, 0, "WebEngineProfile", webengineprofile_singletontype_provider);
 }

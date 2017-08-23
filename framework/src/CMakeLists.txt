@@ -1,5 +1,5 @@
 
-find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test)
+find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine)
 find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
 find_package(Sink CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
@@ -43,6 +43,7 @@ set(SRCS
     kubeimage.cpp
     clipboardproxy.cpp
     krecursivefilterproxymodel.cpp
+    webengineprofile.cpp
 )
 
 add_library(frameworkplugin SHARED ${SRCS})
@@ -54,6 +55,7 @@ target_link_libraries(frameworkplugin
     Qt5::Qml
     Qt5::WebEngineWidgets
     Qt5::Test
+    Qt5::WebEngine
     KF5::Codecs
     KF5::Contacts
     KF5::Package

@@ -1,3 +1,22 @@
+/*
+    Copyright (c) 2017 Christian Mollekopf <mollekopf@kolabsys.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
 #include <QApplication>
 #include <QQmlApplicationEngine>
 
@@ -6,7 +25,6 @@
 #include <QQuickImageProvider>
 #include <QIcon>
 #include <QtWebEngine>
-#include <QDesktopServices>
 
 #include <QDebug>
 
@@ -48,32 +66,11 @@ public:
     }
 };
 
-class WebUrlRequestInterceptor : public QWebEngineUrlRequestInterceptor
-{
-    Q_OBJECT
-public:
-    WebUrlRequestInterceptor(QObject *p = Q_NULLPTR) : QWebEngineUrlRequestInterceptor{p}
-    {}
-
-    void interceptRequest(QWebEngineUrlRequestInfo &info)
-    {
-        qDebug() << info.requestMethod() << info.requestUrl() << info.resourceType() << info.navigationType();
-        const bool isNavigationRequest = info.resourceType() == QWebEngineUrlRequestInfo::ResourceTypeMainFrame;
-        if (isNavigationRequest) {
-            QDesktopServices::openUrl(info.requestUrl());
-            info.block(true);
-        }
-        //TODO handle mailto to open a composer
-    }
-};
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
     QtWebEngine::initialize();
-    WebUrlRequestInterceptor *wuri = new WebUrlRequestInterceptor();
-    QQuickWebEngineProfile::defaultProfile()->setRequestInterceptor(wuri);
     QIcon::setThemeName("kube");
 
     auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.kube");
@@ -84,4 +81,3 @@ int main(int argc, char *argv[])
     return app.exec();
 }
 
-#include "main.moc"

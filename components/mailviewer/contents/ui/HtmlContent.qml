@@ -21,6 +21,8 @@ import QtQuick.Controls 1.3
 //TODO import QtWebEngine 1.4
 import QtWebEngine 1.3
 
+import org.kube.framework 1.0 as Kube
+
 Item {
     id: root
     property string content
@@ -66,6 +68,7 @@ Item {
             autoLoadIconsForPage: false
             accelerated2dCanvasEnabled: false
         }
+        profile: Kube.WebEngineProfile
         //TODO Disable the context menu (depends on webengine 1.4)
         // onContextMenuRequested: function(request) {
         //     request.accepted = true
