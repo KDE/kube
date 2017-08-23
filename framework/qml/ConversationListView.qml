@@ -31,6 +31,10 @@ FocusScope {
     property alias contentHeight: flickable.contentHeight
     property int currentIndex: -1
 
+    //We want to avoid interfering with scrolling as soon as the user starts to scroll. This is important if i.e. an html mail loads slowly.
+    //However, we have to maintain position as the initial items expand, so we have to react to contentHeight changes. scrollToEnd ensures both.
+    property bool scrollToEnd: true
+
     property var currentItem: null
 
     function setCurrentItem() {
@@ -68,21 +72,27 @@ FocusScope {
 
         function scrollToIndex(index) {
             var item = repeater.itemAt(index)
-            var pos = item.y
-            var scrollToEndPos = (flickable.contentHeight - flickable.height)
-            //Avoid scrolling past the end
-            if (pos < scrollToEndPos) {
-                flickable.contentY = pos
-            } else {
-                flickable.contentY = scrollToEndPos
+            if (item) {
+                var pos = item.y
+                var scrollToEndPos = (flickable.contentHeight - flickable.height)
+                //Avoid scrolling past the end
+                if (pos < scrollToEndPos) {
+                    flickable.contentY = pos
+                } else {
+                    flickable.contentY = scrollToEndPos
+                }
             }
         }
 
+        onMovementStarted: {
+            root.scrollToEnd = false
+        }
+
         onContentHeightChanged: {
-            if (repeater.count) {
+            if (repeater.count && root.scrollToEnd) {
                 //Scroll to the last item
-                currentIndex = repeater.count - 1
-                scrollToIndex(repeater.count - 1)
+                root.currentIndex = repeater.count - 1
+                flickable.scrollToIndex(root.currentIndex)
             }
         }
 
@@ -96,6 +106,8 @@ FocusScope {
                     for (var i = 0; i < count; i++) {
                         itemAt(i).index = i
                     }
+                    root.scrollToEnd = true
+                    flickable.scrollToIndex(root.currentIndex)
                 }
             }
         }
