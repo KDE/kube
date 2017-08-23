@@ -63,6 +63,10 @@ void AccountFactory::loadPackage()
     auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.accounts." + mAccountType);
     if (!package.isValid()) {
         qWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
+        mUiPath.clear();
+        mName.clear();
+        mIcon.clear();
+        emit accountLoaded();
         return;
     }
     Q_ASSERT(package.isValid());
