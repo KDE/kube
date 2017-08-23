@@ -127,13 +127,6 @@ FocusScope {
                     height: gridView.cellHeight - Kube.Units.smallSpacing * 2
                     width: gridView.cellWidth - Kube.Units.smallSpacing * 2
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            parent.GridView.view.currentIndex = index
-                            parent.GridView.view.selectObject(model.domainObject)
-                        }
-                    }
                     Keys.onReturnPressed: {
                         GridView.view.currentIndex = index
                         GridView.view.selectObject(model.domainObject)
@@ -142,8 +135,8 @@ FocusScope {
                     Rectangle {
                         anchors.fill: parent
 
-                        border.width: parent.GridView.view.currentIndex == index ? 2 : 1
-                        border.color: parent.GridView.view.currentIndex == index ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+                        border.width: 1
+                        border.color: Kube.Colors.buttonColor
 
                         Rectangle {
                             id: avatarPlaceholder
@@ -189,6 +182,17 @@ FocusScope {
                                 text: model.lastName
                                 elide: Text.ElideRight
                             }
+                        }
+                    }
+                    Kube.AbstractButton {
+
+                        anchors.fill: parent
+
+                        color: "#00000000"
+
+                        onClicked: {
+                            parent.GridView.view.currentIndex = index
+                            parent.GridView.view.selectObject(model.domainObject)
                         }
                     }
                 }
