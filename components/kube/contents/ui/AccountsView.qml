@@ -62,10 +62,14 @@ Rectangle {
 
                 model: Kube.AccountsModel {}
 
+                onCurrentItemChanged: {
+                    if (currentItem) {
+                        edit.accountId = currentItem.currentData.accountId
+                    }
+                }
+
                 delegate: Kube.ListDelegate {
                     id: delegateRoot
-
-                    onClicked: edit.accountId = model.accountId
 
                     Kube.Label {
                         anchors {
