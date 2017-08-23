@@ -156,7 +156,7 @@ void AccountSettings::saveAccount()
             .onError([](const KAsync::Error &error) {
                 qWarning() << "Error while creating account: " << error.errorMessage;;
             })
-            .exec();
+            .exec().waitForFinished();
     } else {
         qDebug() << "Saving account " << mAccountIdentifier << mMailtransportIdentifier;
         Q_ASSERT(!mAccountIdentifier.isEmpty());
@@ -169,7 +169,7 @@ void AccountSettings::saveAccount()
             .onError([](const KAsync::Error &error) {
                 qWarning() << "Error while creating account: " << error.errorMessage;;
             })
-            .exec();
+            .exec().waitForFinished();
     }
 }
 
@@ -182,7 +182,7 @@ void AccountSettings::loadAccount()
             mIcon = account.getIcon();
             mName = account.getName();
             emit changed();
-        }).exec();
+        }).exec().waitForFinished();
 }
 
 void AccountSettings::loadImapResource()
@@ -196,7 +196,7 @@ void AccountSettings::loadImapResource()
             emit imapResourceChanged();
         }).onError([](const KAsync::Error &error) {
             qWarning() << "Failed to find the imap resource: " << error.errorMessage;
-        }).exec();
+        }).exec().waitForFinished();
 }
 
 void AccountSettings::loadMaildirResource()
@@ -211,7 +211,7 @@ void AccountSettings::loadMaildirResource()
             }
         }).onError([](const KAsync::Error &error) {
             SinkWarning() << "Failed to find the maildir resource: " << error.errorMessage;
-        }).exec();
+        }).exec().waitForFinished();
 }
 
 void AccountSettings::loadMailtransportResource()
@@ -225,7 +225,7 @@ void AccountSettings::loadMailtransportResource()
             emit smtpResourceChanged();
         }).onError([](const KAsync::Error &error) {
             SinkWarning() << "Failed to find the smtp resource: " << error.errorMessage;
-        }).exec();
+        }).exec().waitForFinished();
 }
 
 void AccountSettings::loadIdentity()
@@ -239,7 +239,7 @@ void AccountSettings::loadIdentity()
             emit identityChanged();
         }).onError([](const KAsync::Error &error) {
             SinkWarning() << "Failed to find the identity resource: " << error.errorMessage;
-        }).exec();
+        }).exec().waitForFinished();
 }
 
 void AccountSettings::loadCardDavResource()
@@ -253,7 +253,7 @@ void AccountSettings::loadCardDavResource()
             emit cardDavResourceChanged();
         }).onError([](const KAsync::Error &error) {
             qWarning() << "Failed to find the CardDAV resource: " << error.errorMessage;
-        }).exec();
+        }).exec().waitForFinished();
 }
 
 
@@ -269,7 +269,7 @@ static QByteArray saveResource(const QByteArray &accountIdentifier, const QByteA
             .onError([](const KAsync::Error &error) {
                 SinkWarning() << "Error while modifying resource: " << error.errorMessage;
             })
-            .exec();
+            .exec().waitForFinished();
     } else {
         auto resource = ResourceType::create(accountIdentifier);
         auto newIdentifier = resource.identifier();
@@ -280,7 +280,7 @@ static QByteArray saveResource(const QByteArray &accountIdentifier, const QByteA
             .onError([](const KAsync::Error &error) {
                 SinkWarning() << "Error while creating resource: " << error.errorMessage;
             })
-            .exec();
+            .exec().waitForFinished();
         return newIdentifier;
     }
     return identifier;
@@ -330,7 +330,7 @@ void AccountSettings::saveIdentity()
         .onError([](const KAsync::Error &error) {
             SinkWarning() << "Error while modifying identity: " << error.errorMessage;
         })
-        .exec();
+        .exec().waitForFinished();
     } else {
         auto identity = ApplicationDomainType::createEntity<Identity>();
         mIdentityIdentifier = identity.identifier();
@@ -341,7 +341,7 @@ void AccountSettings::saveIdentity()
         .onError([](const KAsync::Error &error) {
             SinkWarning() << "Error while creating identity: " << error.errorMessage;
         })
-        .exec();
+        .exec().waitForFinished();
     }
 }
 
@@ -355,7 +355,7 @@ void AccountSettings::removeResource(const QByteArray &identifier)
         .onError([](const KAsync::Error &error) {
             SinkWarning() << "Error while removing resource: " << error.errorMessage;
         })
-        .exec();
+        .exec().waitForFinished();
     }
 }
 
@@ -369,7 +369,7 @@ void AccountSettings::removeAccount()
         .onError([](const KAsync::Error &error) {
             SinkWarning() << "Error while removing account: " << error.errorMessage;
         })
-        .exec();
+        .exec().waitForFinished();
     }
 }
 
@@ -383,7 +383,7 @@ void AccountSettings::removeIdentity()
         .onError([](const KAsync::Error &error) {
             SinkWarning() << "Error while removing identity: " << error.errorMessage;
         })
-        .exec();
+        .exec().waitForFinished();
     }
 }
 
