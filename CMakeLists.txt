@@ -19,6 +19,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_D
 
 include(KDEInstallDirs)
 include(KDECompilerSettings)
+#Avoid building appstreamtest
+set(KDE_SKIP_TEST_SETTINGS true)
 include(KDECMakeSettings NO_POLICY_SCOPE)
 
 enable_testing()
