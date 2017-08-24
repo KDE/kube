@@ -1,7 +1,7 @@
 include_directories(../)
-add_executable(settingstest settingstest.cpp)
-add_test(settingstest settingstest)
-target_link_libraries(settingstest
+add_executable(maildirsettingstest settingstest.cpp)
+add_test(maildirsettingstest maildirsettingstest)
+target_link_libraries(maildirsettingstest
     sink
     maildiraccount_static
     Qt5::Core
