@@ -864,7 +864,8 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
 
             //Assemble the message
             addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false);
-            applyCharset(msg, origMsg);
+            //FIXME this does more harm than good right now.
+            // applyCharset(msg, origMsg);
             msg->assemble();
             //We're done
             callback(msg);
