@@ -61,10 +61,12 @@ void AccountSettings::setAccountIdentifier(const QByteArray &id)
     mCardDavServer = QString();
     mCardDavUsername = QString();
     mCardDavPassword = QString();
+    mPath = QString();
     emit changed();
     emit imapResourceChanged();
     emit smtpResourceChanged();
     emit cardDavResourceChanged();
+    emit pathChanged();
 
     load();
 
@@ -158,7 +160,7 @@ void AccountSettings::saveAccount()
             })
             .exec().waitForFinished();
     } else {
-        qDebug() << "Saving account " << mAccountIdentifier << mMailtransportIdentifier;
+        qDebug() << "Saving account " << mAccountIdentifier;
         Q_ASSERT(!mAccountIdentifier.isEmpty());
         SinkAccount account(mAccountIdentifier);
         account.setAccountType(mAccountType);
@@ -182,12 +184,14 @@ void AccountSettings::loadAccount()
             mIcon = account.getIcon();
             mName = account.getName();
             emit changed();
+        }).onError([](const KAsync::Error &error) {
+            qWarning() << "Failed to load the account: " << error.errorMessage;
         }).exec().waitForFinished();
 }
 
 void AccountSettings::loadImapResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).filter<SinkResource::ResourceType>("sink.imap"))
         .then([this](const SinkResource &resource) {
             mImapIdentifier = resource.identifier();
             mImapServer = resource.getProperty("server").toString();
@@ -195,28 +199,25 @@ void AccountSettings::loadImapResource()
             mImapPassword = resource.getProperty("password").toString();
             emit imapResourceChanged();
         }).onError([](const KAsync::Error &error) {
-            qWarning() << "Failed to find the imap resource: " << error.errorMessage;
+            qWarning() << "Failed to load the imap resource: " << error.errorMessage;
         }).exec().waitForFinished();
 }
 
 void AccountSettings::loadMaildirResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::storage))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).filter<SinkResource::ResourceType>("sink.maildir"))
         .then([this](const SinkResource &resource) {
             mMaildirIdentifier = resource.identifier();
-            auto path = resource.getProperty("path").toString();
-            if (mPath != path) {
-                mPath = path;
-                emit pathChanged();
-            }
+            mPath = resource.getProperty("path").toString();
+            emit pathChanged();
         }).onError([](const KAsync::Error &error) {
-            SinkWarning() << "Failed to find the maildir resource: " << error.errorMessage;
+            SinkWarning() << "Failed to load the maildir resource: " << error.errorMessage;
         }).exec().waitForFinished();
 }
 
 void AccountSettings::loadMailtransportResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).filter<SinkResource::ResourceType>("sink.mailtransport"))
         .then([this](const SinkResource &resource) {
             mMailtransportIdentifier = resource.identifier();
             mSmtpServer = resource.getProperty("server").toString();
@@ -224,7 +225,7 @@ void AccountSettings::loadMailtransportResource()
             mSmtpPassword = resource.getProperty("password").toString();
             emit smtpResourceChanged();
         }).onError([](const KAsync::Error &error) {
-            SinkWarning() << "Failed to find the smtp resource: " << error.errorMessage;
+            SinkWarning() << "Failed to load the smtp resource: " << error.errorMessage;
         }).exec().waitForFinished();
 }
 
@@ -238,13 +239,13 @@ void AccountSettings::loadIdentity()
             mEmailAddress = identity.getAddress();
             emit identityChanged();
         }).onError([](const KAsync::Error &error) {
-            SinkWarning() << "Failed to find the identity resource: " << error.errorMessage;
+            SinkWarning() << "Failed to load the identity: " << error.errorMessage;
         }).exec().waitForFinished();
 }
 
 void AccountSettings::loadCardDavResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Contact::storage))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).filter<SinkResource::ResourceType>("sink.dav"))
         .then([this](const SinkResource &resource) {
             mCardDavIdentifier = resource.identifier();
             mCardDavServer = resource.getProperty("server").toString();
@@ -252,7 +253,7 @@ void AccountSettings::loadCardDavResource()
             mCardDavPassword = resource.getProperty("password").toString();
             emit cardDavResourceChanged();
         }).onError([](const KAsync::Error &error) {
-            qWarning() << "Failed to find the CardDAV resource: " << error.errorMessage;
+            qWarning() << "Failed to load the CardDAV resource: " << error.errorMessage;
         }).exec().waitForFinished();
 }
 

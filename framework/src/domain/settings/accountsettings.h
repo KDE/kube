@@ -42,6 +42,10 @@ class AccountSettings : public QObject
     Q_PROPERTY(QString smtpUsername MEMBER mSmtpUsername NOTIFY smtpResourceChanged)
     Q_PROPERTY(QString smtpPassword MEMBER mSmtpPassword NOTIFY smtpResourceChanged)
 
+    Q_PROPERTY(QString carddavServer MEMBER mCardDavServer NOTIFY cardDavResourceChanged)
+    Q_PROPERTY(QString carddavUsername MEMBER mCardDavUsername NOTIFY cardDavResourceChanged)
+    Q_PROPERTY(QString carddavPassword MEMBER mCardDavPassword NOTIFY cardDavResourceChanged)
+
     Q_PROPERTY(QUrl path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(QValidator* pathValidator READ pathValidator CONSTANT)
 
