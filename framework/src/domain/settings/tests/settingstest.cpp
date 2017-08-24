@@ -7,7 +7,42 @@
 #include <sink/test.h>
 #include <sink/store.h>
 
-#include "imapsettings.h"
+#include <accountsettings.h>
+
+
+class TestSettings : public AccountSettings
+{
+    Q_OBJECT
+
+public:
+    TestSettings(QObject *parent = 0)
+        : AccountSettings{parent}
+    {}
+
+    Q_INVOKABLE virtual void load() Q_DECL_OVERRIDE
+    {
+        loadAccount();
+        loadImapResource();
+        loadMailtransportResource();
+        loadIdentity();
+    }
+
+    Q_INVOKABLE virtual void save() Q_DECL_OVERRIDE
+    {
+        saveAccount();
+        saveImapResource();
+        saveMailtransportResource();
+        saveIdentity();
+    }
+
+    Q_INVOKABLE virtual void remove() Q_DECL_OVERRIDE
+    {
+        removeResource(mMailtransportIdentifier);
+        removeResource(mImapIdentifier);
+        removeIdentity();
+        removeAccount();
+    }
+};
 
 class SettingsTest : public QObject
 {
@@ -31,7 +66,7 @@ private slots:
         auto username = QString("username");
         auto emailAddress = QString("emailAddress");
 
-        ImapSettings settings;
+        TestSettings settings;
         settings.setAccountIdentifier(accountId);
         settings.setProperty("imapServer", imapServer);
         settings.setProperty("imapUsername", imapUsername);
@@ -50,9 +85,9 @@ private slots:
 
         //Ensure we can read back all the information using the accountid
         {
-            ImapSettings readSettings;
-            QSignalSpy spy(&readSettings, &ImapSettings::imapResourceChanged);
-            QSignalSpy spy1(&readSettings, &ImapSettings::smtpResourceChanged);
+            TestSettings readSettings;
+            QSignalSpy spy(&readSettings, &TestSettings::imapResourceChanged);
+            QSignalSpy spy1(&readSettings, &TestSettings::smtpResourceChanged);
             readSettings.setAccountIdentifier(accountId);
             //Once for clear and once for the new setting
             QTRY_COMPARE(spy.count(), 2);
@@ -83,9 +118,9 @@ private slots:
 
         //Read back settings again
         {
-            ImapSettings readSettings;
-            QSignalSpy spy(&readSettings, &ImapSettings::imapResourceChanged);
-            QSignalSpy spy1(&readSettings, &ImapSettings::smtpResourceChanged);
+            TestSettings readSettings;
+            QSignalSpy spy(&readSettings, &TestSettings::imapResourceChanged);
+            QSignalSpy spy1(&readSettings, &TestSettings::smtpResourceChanged);
             readSettings.setAccountIdentifier(accountId);
             //Once for clear and once for the new setting
             QTRY_COMPARE(spy.count(), 2);
@@ -102,8 +137,8 @@ private slots:
         }
 
         {
-            ImapSettings settings;
-            QSignalSpy spy(&settings, &ImapSettings::imapResourceChanged);
+            TestSettings settings;
+            QSignalSpy spy(&settings, &TestSettings::imapResourceChanged);
             settings.setAccountIdentifier(accountId);
             QTRY_COMPARE(spy.count(), 2);
             settings.remove();

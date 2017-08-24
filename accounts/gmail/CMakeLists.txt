@@ -1,13 +1,5 @@
 project(kube-accounts-gmail)
 
-find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui)
-
-find_package(Sink CONFIG REQUIRED)
-find_package(KAsync CONFIG REQUIRED)
-find_package(KF5 REQUIRED COMPONENTS Package Mime)
-
-include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/)
-
 set(SRCS
     gmailsettings.cpp
     gmailaccountplugin.cpp

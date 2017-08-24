@@ -69,5 +69,6 @@ set(BUILD_TESTING ON)
 
 add_subdirectory(domain/mime/tests)
 add_subdirectory(domain/mime/mimetreeparser)
+add_subdirectory(domain/settings/tests)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
