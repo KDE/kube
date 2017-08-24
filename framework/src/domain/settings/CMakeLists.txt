@@ -1,5 +1,4 @@
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-cmake_policy(SET CMP0063 NEW)
 add_executable(sinkactiontest sinkactiontest.cpp)
 add_test(sinkactiontest sinkactiontest)
 target_link_libraries(sinkactiontest

@@ -1,24 +1,5 @@
 project(kube-accounts-maildir)
 
-cmake_minimum_required(VERSION 2.8.12)
-
-cmake_policy(SET CMP0063 NEW)
-
-include(CPack)
-include(FeatureSummary)
-find_package(PkgConfig)
-
-################# set KDE specific information #################
-
-find_package(ECM 0.0.8 REQUIRED NO_MODULE)
-
-# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
-
-include(KDEInstallDirs)
-include(KDECMakeSettings)
-include(KDECompilerSettings)
-
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Concurrent Quick Test Gui)
 
 find_package(Sink CONFIG REQUIRED)

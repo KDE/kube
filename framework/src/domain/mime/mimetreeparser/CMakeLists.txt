@@ -1,16 +1,13 @@
-add_definitions("-fvisibility=default")
+set(CMAKE_CXX_VISIBILITY_PRESET default)
 
 find_package(Qt5 COMPONENTS REQUIRED Core Gui)
 find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
 find_package(QGpgme CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
-find_package(ECM 1.0.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH
         ${ECM_MODULE_PATH}
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_MODULE_PATH})
-
-#add_definitions(-DTRANSLATION_DOMAIN=\"libmimetreeparser\")
 
 # target_include_directories does not handle empty include paths
 include_directories(${GPGME_INCLUDES})

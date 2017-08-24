@@ -9,6 +9,7 @@ find_package(KF5Package CONFIG REQUIRED)
 find_package(KF5Contacts CONFIG REQUIRED)
 
 add_definitions("-Wall -std=c++0x -g")
+set(CMAKE_CXX_VISIBILITY_PRESET default)
 
 include_directories(. domain/mime/mimetreeparser domain/ domain/mime)
 

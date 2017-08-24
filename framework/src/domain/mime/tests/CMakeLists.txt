@@ -5,7 +5,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/..
     )
 
-include(ECMAddTests)
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Test WebEngine)
 
 include( ${CMAKE_SOURCE_DIR}/cmake/modules/add_gpg_crypto_test.cmake )
