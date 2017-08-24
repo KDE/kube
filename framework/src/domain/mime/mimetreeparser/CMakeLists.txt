@@ -4,10 +4,6 @@ find_package(Qt5 COMPONENTS REQUIRED Core Gui)
 find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
 find_package(QGpgme CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH
-        ${ECM_MODULE_PATH}
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_MODULE_PATH})
 
 # target_include_directories does not handle empty include paths
 include_directories(${GPGME_INCLUDES})
