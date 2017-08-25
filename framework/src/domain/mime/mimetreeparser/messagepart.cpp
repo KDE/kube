@@ -52,10 +52,10 @@ using namespace MimeTreeParser;
 MessagePart::MessagePart(ObjectTreeParser *otp, const QString &text, KMime::Content *node)
     : mText(text)
     , mOtp(otp)
-    , mNode(node) //only null for messagepartlist
     , mParentPart(nullptr)
-    , mRoot(false)
+    , mNode(node) //only null for messagepartlist
     , mError(NoError)
+    , mRoot(false)
 {
 }
 
@@ -702,8 +702,6 @@ bool SignedMessagePart::isSigned() const
 
 bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signature, KMime::Content *textNode)
 {
-    NodeHelper *nodeHelper = mOtp->nodeHelper();
-
     mMetaData.isSigned = false;
     mMetaData.keyTrust = GpgME::Signature::Unknown;
     mMetaData.status = tr("Wrong Crypto Plug-In.");
@@ -905,7 +903,6 @@ void SignedMessagePart::startVerification()
 {
     if (mSignedData) {
         const QByteArray cleartext = KMime::LFtoCRLF(mSignedData->encodedContent());
-        const QTextCodec *aCodec(mOtp->codecFor(mSignedData));
 
         //The case for pkcs7
         if (mNode == mSignedData) {
@@ -1048,17 +1045,18 @@ void EncryptedMessagePart::startDecryption(const QByteArray &text, const QTextCo
 
     startDecryption(content);
 
-    auto code = aCodec ? aCodec : mOtp->codecFor(mNode);
     if (!mMetaData.inProgress && mMetaData.isDecryptable) {
+        const auto codec = aCodec ? aCodec : mOtp->codecFor(mNode);
+        const auto decoded = codec->toUnicode(mDecryptedData);
         if (hasSubParts()) {
             auto _mp = (subParts()[0]).dynamicCast<SignedMessagePart>();
             if (_mp) {
-                _mp->setText(aCodec->toUnicode(mDecryptedData));
+                _mp->setText(decoded);
             } else {
-                setText(aCodec->toUnicode(mDecryptedData));
+                setText(decoded);
             }
         } else {
-            setText(aCodec->toUnicode(mDecryptedData));
+            setText(decoded);
         }
     }
 }
@@ -1072,7 +1070,6 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     mMetaData.errorText.clear();
     mMetaData.auditLogError = GpgME::Error();
     mMetaData.auditLog.clear();
-    NodeHelper *nodeHelper = mOtp->nodeHelper();
 
     if (!mCryptoProto) {
         mError = UnknownError;
