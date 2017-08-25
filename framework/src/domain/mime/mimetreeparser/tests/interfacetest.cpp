@@ -337,6 +337,14 @@ private slots:
         auto subPart = subPartList[0].dynamicCast<MimeTreeParser::TextMessagePart>();
         QVERIFY(bool(subPart));
     }
+
+    void test8bitEncodedInPlaintext()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("8bitencoded.mbox"));
+        QVERIFY(otp.plainTextContent().contains(QString::fromUtf8("Why Pisa’s Tower")));
+        QVERIFY(otp.htmlContent().contains(QString::fromUtf8("Why Pisa’s Tower")));
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)

@@ -126,6 +126,17 @@ private slots:
         QCOMPARE(unquote(removeFirstLine(result->body())), QLatin1String("HTML text"));
     }
 
+    void testHtml8BitEncodedReply()
+    {
+        auto msg = readMail("8bitencoded.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        QVERIFY(MailTemplates::plaintextContent(result).contains(QString::fromUtf8("Why Pisa’s Tower")));
+    }
+
     void testMultipartSignedReply()
     {
         auto msg = readMail("openpgp-signed-mailinglist.mbox");
