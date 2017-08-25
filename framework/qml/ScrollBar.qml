@@ -26,6 +26,7 @@ T.ScrollBar {
     implicitWidth: contentItem.implicitWidth
     implicitHeight: contentItem.implicitHeight
 
+    visible: contentItem.height < background.height
 
     contentItem: Rectangle {
         implicitWidth: Kube.Units.gridUnit / 3
