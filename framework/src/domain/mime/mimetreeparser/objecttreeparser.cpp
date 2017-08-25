@@ -128,7 +128,7 @@ QString ObjectTreeParser::plainTextContent()
     QString content;
     if (mParsedPart) {
         auto plainParts = ::collect(mParsedPart,
-            [] (const MessagePartPtr &part) {
+            [] (const MessagePartPtr &) {
                 return true;
             },
             [] (const MessagePartPtr &part) {
@@ -155,7 +155,7 @@ QString ObjectTreeParser::htmlContent()
     QString content;
     if (mParsedPart) {
         QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
-            [] (const MessagePartPtr &part) {
+            [] (const MessagePartPtr &) {
                 return true;
             },
             [] (const MessagePartPtr &part) {
@@ -292,7 +292,7 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts(MessagePart::Ptr
 QVector<MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
 {
     QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
-        [] (const MessagePartPtr &part) {
+        [] (const MessagePartPtr &) {
             return true;
         },
         [] (const MessagePartPtr &part) {
@@ -304,7 +304,7 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
 void ObjectTreeParser::decryptParts()
 {
     ::collect(mParsedPart,
-        [] (const MessagePartPtr &part) { return true; },
+        [] (const MessagePartPtr &) { return true; },
         [] (const MessagePartPtr &part) {
             if (const auto enc = dynamic_cast<MimeTreeParser::EncryptedMessagePart*>(part.data())) {
                 enc->startDecryption();
@@ -312,7 +312,7 @@ void ObjectTreeParser::decryptParts()
             return false;
         });
     ::collect(mParsedPart,
-        [] (const MessagePartPtr &part) { return true; },
+        [] (const MessagePartPtr &) { return true; },
         [] (const MessagePartPtr &part) {
             if (const auto enc = dynamic_cast<MimeTreeParser::SignedMessagePart*>(part.data())) {
                 enc->startVerification();
@@ -324,7 +324,7 @@ void ObjectTreeParser::decryptParts()
 void ObjectTreeParser::importCertificates()
 {
     QVector<MessagePart::Ptr> contentParts = ::collect(mParsedPart,
-        [] (const MessagePartPtr &part) { return true; },
+        [] (const MessagePartPtr &) { return true; },
         [] (const MessagePartPtr &part) {
             if (const auto cert = dynamic_cast<MimeTreeParser::CertMessagePart*>(part.data())) {
                 cert->import();
