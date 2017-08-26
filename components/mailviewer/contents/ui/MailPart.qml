@@ -39,7 +39,7 @@ Item {
             left: parent.left
             leftMargin: Kube.Units.smallSpacing
         }
-        color: "lightgrey"
+        color: Kube.Colors.lightgrey
         height: partListView.height
         width: Kube.Units.smallSpacing
     }

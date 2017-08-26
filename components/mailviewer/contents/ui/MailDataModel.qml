@@ -29,6 +29,20 @@ DelegateModel {
         width: parent.width
         height: childrenRect.height
 
+        function getColor(securityLevel)
+        {
+            if (securityLevel == "good") {
+                return Kube.Colors.positiveColor
+            }
+            if (securityLevel == "bad") {
+                return Kube.Colors.negativeColor
+            }
+            if (securityLevel == "notsogood") {
+                return Kube.Colors.warningColor
+            }
+            return Kube.Colors.lightgrey
+        }
+
         Row {
             anchors {
                 top: parent.top
@@ -45,7 +59,7 @@ DelegateModel {
                     bottom: parent.bottom
                 }
                 width: Kube.Units.smallSpacing
-                color: Kube.Colors.positiveColor
+                color: getColor(model.securityLevel)
                 opacity: 0.5
             }
 

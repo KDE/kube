@@ -46,8 +46,8 @@ public:
         IsSignedRole,
         IsErrorRole,
         SecurityLevelRole,
-        EncryptionErrorType,
-        EncryptionErrorString,
+        ErrorType,
+        ErrorString,
         SenderRole,
         DateRole
     };

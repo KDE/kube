@@ -86,8 +86,8 @@ QHash<int, QByteArray> PartModel::roleNames() const
     roles[IsEncryptedRole] = "encrypted";
     roles[IsSignedRole] = "signed";
     roles[SecurityLevelRole] = "securityLevel";
-    roles[EncryptionErrorType] = "errorType";
-    roles[EncryptionErrorString] = "errorString";
+    roles[ErrorType] = "errorType";
+    roles[ErrorString] = "errorString";
     roles[IsErrorRole] = "error";
     roles[SenderRole] = "sender";
     roles[DateRole] = "date";
@@ -209,9 +209,32 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 return messagePart->encryptionState() != MimeTreeParser::KMMsgNotEncrypted;
             case IsSignedRole:
                 return messagePart->signatureState() != MimeTreeParser::KMMsgNotSigned;
-            case EncryptionErrorType:
+            case SecurityLevelRole: {
+                auto signature = messagePart->signatureState();
+                auto encryption = messagePart->encryptionState();
+                bool signatureIsOk = signature == MimeTreeParser::KMMsgPartiallySigned || 
+                                     signature == MimeTreeParser::KMMsgFullySigned;
+                bool encryptionIsOk = encryption == MimeTreeParser::KMMsgPartiallyEncrypted || 
+                                     encryption == MimeTreeParser::KMMsgFullyEncrypted;
+                bool isSigned = signature != MimeTreeParser::KMMsgNotSigned;
+                bool isEncrypted = encryption != MimeTreeParser::KMMsgNotEncrypted;
+                //Something is wonky
+                if ((isSigned && !signatureIsOk) || (isEncrypted && !encryptionIsOk)) {
+                    if (signature == MimeTreeParser::KMMsgSignatureProblematic || encryption == MimeTreeParser::KMMsgEncryptionProblematic) {
+                        return "bad";
+                    }
+                    return "notsogood";
+                }
+                //All good
+                if (signatureIsOk || encryptionIsOk) {
+                    return "good";
+                }
+                //No info
+                return "unknown";
+            }
+            case ErrorType:
                 return messagePart->error();
-            case EncryptionErrorString: {
+            case ErrorString: {
                 switch (messagePart->error()) {
                     case MimeTreeParser::MessagePart::NoKeyError:
                         return tr("No key available.");
