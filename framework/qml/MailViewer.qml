@@ -437,8 +437,8 @@ Rectangle {
                             title: "Type"
                         }
                         Controls1.TableViewColumn {
-                            role: "embeded"
-                            title: "Embeded"
+                            role: "embedded"
+                            title: "Embedded"
                         }
                         Controls1.TableViewColumn {
                             role: "securityLevel"

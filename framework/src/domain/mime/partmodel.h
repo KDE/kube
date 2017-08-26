@@ -39,9 +39,8 @@ public:
 public:
     enum Roles {
         TypeRole  = Qt::UserRole + 1,
-        ContentsRole,
         ContentRole,
-        IsEmbededRole,
+        IsEmbeddedRole,
         IsEncryptedRole,
         IsSignedRole,
         IsErrorRole,

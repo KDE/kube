@@ -77,7 +77,7 @@ DelegateModel {
                 case "plain":
                     partLoader.setSource("TextContent.qml",
                                         {"content": model.content,
-                                        "embedded": model.embeded,
+                                        "embedded": model.embedded,
                                         "type": model.type
                                         })
                     break

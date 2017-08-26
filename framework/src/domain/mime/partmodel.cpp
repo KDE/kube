@@ -82,7 +82,7 @@ QHash<int, QByteArray> PartModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[TypeRole] = "type";
     roles[ContentRole] = "content";
-    roles[IsEmbededRole] = "embeded";
+    roles[IsEmbeddedRole] = "embedded";
     roles[IsEncryptedRole] = "encrypted";
     roles[IsSignedRole] = "signed";
     roles[SecurityLevelRole] = "securityLevel";
@@ -191,7 +191,7 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 }
                 return "plain";
             }
-            case IsEmbededRole:
+            case IsEmbeddedRole:
                 return false;
             case IsErrorRole:
                 return messagePart->error();
@@ -290,7 +290,7 @@ int PartModel::rowCount(const QModelIndex &parent) const
     return d->mParts.count();
 }
 
-int PartModel::columnCount(const QModelIndex &parent) const
+int PartModel::columnCount(const QModelIndex &) const
 {
     return 1;
 }
