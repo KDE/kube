@@ -45,6 +45,8 @@ public:
         IsSignedRole,
         IsErrorRole,
         SecurityLevelRole,
+        SignatureDetails,
+        EncryptionDetails,
         ErrorType,
         ErrorString,
         SenderRole,
@@ -60,5 +62,38 @@ public:
 
 private:
     std::unique_ptr<PartModelPrivate> d;
+};
+
+class SignatureInfo : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QByteArray keyId MEMBER mKeyId CONSTANT)
+    Q_PROPERTY(bool keyMissing MEMBER mKeyMissing CONSTANT)
+    Q_PROPERTY(bool keyRevoked MEMBER mKeyRevoked CONSTANT)
+    Q_PROPERTY(bool keyExpired MEMBER mKeyExpired CONSTANT)
+    Q_PROPERTY(bool sigExpired MEMBER mSigExpired CONSTANT)
+    Q_PROPERTY(bool crlMissing MEMBER mCrlMissing CONSTANT)
+    Q_PROPERTY(bool crlTooOld MEMBER mCrlTooOld CONSTANT)
+
+    Q_PROPERTY(QString signer MEMBER mSigner CONSTANT)
+    Q_PROPERTY(QString signClass MEMBER mSignClass CONSTANT)
+    Q_PROPERTY(QStringList signerMailAddresses MEMBER mSignerMailAddresses CONSTANT)
+    Q_PROPERTY(bool signatureIsGood MEMBER mSignatureIsGood CONSTANT)
+    Q_PROPERTY(bool keyIsTrusted MEMBER mKeyIsTrusted CONSTANT)
+
+public:
+    bool mKeyRevoked = false;
+    bool mKeyExpired = false;
+    bool mSigExpired = false;
+    bool mKeyMissing = false;
+    bool mCrlMissing = false;
+    bool mCrlTooOld = false;
+    QByteArray mKeyId;
+
+    QString mSigner;
+    QString mSignClass;
+    QStringList mSignerMailAddresses;
+    bool mSignatureIsGood = false;
+    bool mKeyIsTrusted = false;
 };
 

@@ -43,6 +43,19 @@ DelegateModel {
             return Kube.Colors.lightgrey
         }
 
+        function getDetails(signatureDetails)
+        {
+            var details = qsTr("Signature") + ":\n"
+            details += qsTr("Key Id") + ": "  + model.signatureDetails.keyId + "\n"
+            if (model.signatureDetails.keyMissing) {
+                details += qsTr("Key details are not available.") + "\n"
+            }
+            if (model.signatureDetails.keyIsTrusted) {
+                details += qsTr("You are trusting this key.") + "\n"
+            }
+            return details
+        }
+
         Row {
             anchors {
                 top: parent.top
@@ -61,6 +74,21 @@ DelegateModel {
                 width: Kube.Units.smallSpacing
                 color: getColor(model.securityLevel)
                 opacity: 0.5
+                Kube.ToolTip {
+                    id: tooltip
+                    text: getDetails(model.signatureDetails)
+                    visible: mouseArea.containsMouse
+                }
+                Kube.SelectableItem {
+                    visualParent: border
+                    text: tooltip.text
+                }
+                MouseArea {
+                    id: mouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    acceptedButtons: Qt.NoButton
+                }
             }
 
             Loader {

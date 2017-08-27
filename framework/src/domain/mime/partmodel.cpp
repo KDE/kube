@@ -26,6 +26,9 @@
 #include <QMimeDatabase>
 #include <QTextDocument>
 
+#include <gpgme++/key.h>
+#include <gpgme.h>
+
 class PartModelPrivate
 {
 public:
@@ -90,6 +93,7 @@ QHash<int, QByteArray> PartModel::roleNames() const
     roles[ErrorString] = "errorString";
     roles[IsErrorRole] = "error";
     roles[SenderRole] = "sender";
+    roles[SignatureDetails] = "signatureDetails";
     roles[DateRole] = "date";
     return roles;
 }
@@ -231,6 +235,30 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 }
                 //No info
                 return "unknown";
+            }
+            case SignatureDetails: {
+                auto signatureInfo = new SignatureInfo;
+
+                const auto signatureParts = messagePart->signatures();
+                if (signatureParts.size() > 1) {
+                    qWarning() << "Can't deal with more than one signature";
+                }
+                for (const auto &p : signatureParts) {
+                    signatureInfo->mKeyId = p->partMetaData()->keyId;
+                    signatureInfo->mKeyMissing = p->partMetaData()->sigSummary & GpgME::Signature::KeyMissing;
+                    signatureInfo->mKeyExpired = p->partMetaData()->sigSummary & GpgME::Signature::KeyExpired;
+                    signatureInfo->mKeyRevoked = p->partMetaData()->sigSummary & GpgME::Signature::KeyRevoked;
+                    signatureInfo->mSigExpired = p->partMetaData()->sigSummary & GpgME::Signature::SigExpired;
+                    signatureInfo->mCrlMissing = p->partMetaData()->sigSummary & GpgME::Signature::CrlMissing;
+                    signatureInfo->mCrlTooOld = p->partMetaData()->sigSummary & GpgME::Signature::CrlTooOld;
+                    signatureInfo->mSigner = p->partMetaData()->signer;
+                    signatureInfo->mSignClass = p->partMetaData()->signClass;
+                    signatureInfo->mSignerMailAddresses = p->partMetaData()->signerMailAddresses;
+                    signatureInfo->mSignatureIsGood = p->partMetaData()->isGoodSignature;
+                    signatureInfo->mKeyIsTrusted = p->partMetaData()->keyTrust & GpgME::Signature::Full ||
+                                                   p->partMetaData()->keyTrust & GpgME::Signature::Ultimate;
+                }
+                return QVariant::fromValue(signatureInfo);
             }
             case ErrorType:
                 return messagePart->error();
