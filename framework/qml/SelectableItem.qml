@@ -58,7 +58,7 @@ QtObject {
         id: component
         ContextMenuOverlay {
             id: menu
-            anchors.fill: layout
+            anchors.fill: visualParent
             Kube.TextButton {
                 id: button
                 text: qsTr("Copy")
