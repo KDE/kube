@@ -47,7 +47,7 @@ Item {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
-        hoverEnabled: true
+        hoverEnabled: false
         acceptedButtons: Qt.RightButton
         z: 1
         onClicked: {
