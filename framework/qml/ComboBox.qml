@@ -83,5 +83,14 @@ T.ComboBox {
             text: root.textRole ? (Array.isArray(root.model) ? modelData[root.textRole] : model[root.textRole]) : modelData
             color:  root.highlightedIndex === index ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
         }
+
+        MouseArea {
+            anchors.fill: parent
+
+            onClicked: {
+                root.currentIndex = model.index
+                popup.close()
+            }
+        }
     }
 }
