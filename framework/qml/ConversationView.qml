@@ -106,6 +106,7 @@ FocusScope {
                     cc: model.cc
                     bcc: model.bcc
                     date: model.date
+                    unread: model.unread
                     trash: model.trash
                     draft: model.draft
                     sent: model.sent

@@ -41,6 +41,7 @@ Rectangle {
     property variant sent;
     property bool incomplete: false;
     property bool current: false;
+    property bool unread;
 
     implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + Kube.Units.largeSpacing
 
@@ -388,6 +389,12 @@ Rectangle {
                 }
             }
         }
+    }
+    Rectangle {
+        anchors.fill: parent
+        color: Kube.Colors.buttonColor
+        opacity: 0.4
+        visible: root.unread
     }
 
     Component {
