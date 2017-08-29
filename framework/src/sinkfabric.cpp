@@ -130,7 +130,7 @@ public:
             if (notification.type == Sink::Notification::Warning) {
                 message["type"] = Notification::Warning;
                 if (notification.code == Sink::ApplicationDomain::TransmissionError) {
-                    message["message"] = "Failed to send message.";
+                    message["message"] = QObject::tr("Failed to send message.");
                 } else {
                     return;
                 }
@@ -138,7 +138,7 @@ public:
                 if (notification.code == Sink::ApplicationDomain::ErrorStatus) {
                     //A resource entered error status
                     message["type"] = Notification::Warning;
-                    message["message"] = "A resource experienced an error.";
+                    message["message"] = QObject::tr("A resource experienced an error.");
                 } else {
                     return;
                 }
@@ -147,19 +147,19 @@ public:
                 message["resource"] = QString{notification.resource};
                 switch(notification.code) {
                     case Sink::ApplicationDomain::ConnectionError:
-                        message["message"] = "Failed to connect to server.";
+                        message["message"] = QObject::tr("Failed to connect to server.");
                         break;
                     case Sink::ApplicationDomain::NoServerError:
-                        message["message"] = "Host not found.";
+                        message["message"] = QObject::tr("Host not found.");
                         break;
                     case Sink::ApplicationDomain::LoginError:
-                        message["message"] = "Failed to login.";
+                        message["message"] = QObject::tr("Failed to login.");
                         break;
                     case Sink::ApplicationDomain::ConfigurationError:
-                        message["message"] = "Configuration error.";
+                        message["message"] = QObject::tr("Configuration error.");
                         break;
                     case Sink::ApplicationDomain::ConnectionLostError:
-                        message["message"] = "Connection lost.";
+                        message["message"] = QObject::tr("Connection lost.");
                         break;
                     default:
                         message["message"] = "An unknown error occurred: " + notification.message;
@@ -168,7 +168,7 @@ public:
             } else if (notification.type == Sink::Notification::Info) {
                 if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {
                     message["type"] = Notification::Info;
-                    message["message"] = "A message has been sent.";
+                    message["message"] = QObject::tr("A message has been sent.");
                 } else {
                     return;
                 }
