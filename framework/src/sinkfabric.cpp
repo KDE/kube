@@ -158,6 +158,9 @@ public:
                     case Sink::ApplicationDomain::ConfigurationError:
                         message["message"] = "Configuration error.";
                         break;
+                    case Sink::ApplicationDomain::ConnectionLostError:
+                        message["message"] = "Connection lost.";
+                        break;
                     default:
                         message["message"] = "An unknown error occurred: " + notification.message;
                 }
