@@ -21,7 +21,10 @@ import QtQuick.Templates 2.0 as T
 import org.kube.framework 1.0 as Kube
 
 T.ScrollBar {
-    id: control
+    id: root
+
+    property bool invertedColors: false
+
 
     implicitWidth: contentItem.implicitWidth
     implicitHeight: contentItem.implicitHeight
@@ -32,13 +35,13 @@ T.ScrollBar {
         implicitWidth: Kube.Units.gridUnit / 3
         implicitHeight: Kube.Units.gridUnit / 3
 
-        color: Kube.Colors.disabledTextColor
+        color: root.invertedColors ? Kube.Colors.buttonColor : Kube.Colors.disabledTextColor
     }
 
     background: Rectangle {
         implicitWidth: Kube.Units.gridUnit / 3
         implicitHeight: Kube.Units.gridUnit / 3
 
-        color: Kube.Colors.buttonColor
+        color: root.invertedColors ?  Kube.Colors.disabledTextColor : Kube.Colors.buttonColor
     }
 }

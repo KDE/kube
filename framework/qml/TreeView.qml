@@ -47,7 +47,7 @@ FocusScope {
 
         anchors.fill: parent
 
-        Controls2.ScrollBar.vertical: Kube.ScrollBar {}
+        Controls2.ScrollBar.vertical: Kube.ScrollBar { invertedColors: true }
         clip: true
         contentWidth: root.width
         contentHeight: treeView.implicitHeight
