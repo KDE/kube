@@ -242,27 +242,14 @@ Kube.View {
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
             }
 
-            Row {
+            Flow {
+                id: attachments
+
                 Layout.fillWidth: true
-                spacing: Kube.Units.largeSpacing
-                Flow {
-                    id: attachments
+                layoutDirection: Qt.RightToLeft
+                spacing: Kube.Units.smallSpacing
+                clip: true
 
-                    layoutDirection: Qt.RightToLeft
-                    spacing: Kube.Units.smallSpacing
-                    clip: true
-
-                    Repeater {
-                        model: composerController.attachmentModel
-                        delegate: Kube.AttachmentDelegate {
-                            name: model.filename
-                            icon: model.iconName
-                            clip: true
-                            actionIcon: Kube.Icons.remove
-                            onExecute: composerController.removeAttachment(model.url)
-                        }
-                    }
-                }
                 Kube.Button {
                     text: qsTr("Attach file")
 
@@ -281,6 +268,17 @@ Kube.View {
                                 composerController.addAttachment(fileDialog.fileUrl)
                             }
                         }
+                    }
+                }
+
+                Repeater {
+                    model: composerController.attachmentModel
+                    delegate: Kube.AttachmentDelegate {
+                        name: model.filename
+                        icon: model.iconName
+                        clip: true
+                        actionIcon: Kube.Icons.remove
+                        onExecute: composerController.removeAttachment(model.url)
                     }
                 }
             }
