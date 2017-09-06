@@ -54,10 +54,18 @@ MouseArea {
             return flickableItem.contentY;
         }
         //pixelDelta seems to be the same as angleDelta/8
-        var pixelDelta = wheel.pixelDelta.y != 0 ? wheel.pixelDelta.y : wheel.angleDelta.y / 8
+        var pixelDelta = 0
+        //The pixelDelta is a smaller number if both are provided, so pixelDelta can be 0 while angleDelta is still something. So we check the angleDelta
+        if (wheel.angleDelta.y) {
+            var wheelScrollLines = 3 //Default value of QApplication wheelScrollLines property
+            var pixelPerLine = 20 //Default value in Qt, originally comes from QTextEdit
+            var ticks = (wheel.angleDelta.y / 8) / 15.0 //Divide by 8 gives us pixels typically come in 15pixel steps.
+            pixelDelta =  ticks * pixelPerLine * wheelScrollLines
+        } else {
+            pixelDelta = wheel.pixelDelta.y
+        }
 
-        var y = pixelDelta
-        if (!y) {
+        if (!pixelDelta) {
             return flickableItem.contentY;
         }
 
@@ -69,7 +77,7 @@ MouseArea {
         }
 
         //Avoid overscrolling
-        return Math.max(minYExtent, Math.min(maxYExtent, flickableItem.contentY - y));
+        return Math.max(minYExtent, Math.min(maxYExtent, flickableItem.contentY - pixelDelta));
     }
 
     onWheel: {
