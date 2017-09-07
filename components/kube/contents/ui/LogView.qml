@@ -32,7 +32,7 @@ Controls.SplitView {
         Kube.Listener {
             filter: Kube.Messages.notification
             onMessageReceived: {
-                logModel.insert(0, {message: message.message, timestamp: new Date(), resource: message.resource});
+                logModel.insert(0, {message: message.message, details: message.details, timestamp: new Date(), resource: message.resource});
             }
         }
 
@@ -57,7 +57,7 @@ Controls.SplitView {
 
             onCurrentItemChanged: {
                 details.resourceId = currentItem.currentData.resource
-                details.message = currentItem.currentData.message
+                details.message = currentItem.currentData.message + "\n" + currentItem.currentData.details
                 details.timestamp = currentItem.currentData.timestamp
             }
             delegate: Kube.ListDelegate {

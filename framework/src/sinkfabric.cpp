@@ -145,6 +145,7 @@ public:
             } else if (notification.type == Sink::Notification::Error) {
                 message["type"] = Notification::Warning;
                 message["resource"] = QString{notification.resource};
+                message["details"] = notification.message;
                 switch(notification.code) {
                     case Sink::ApplicationDomain::ConnectionError:
                         message["message"] = QObject::tr("Failed to connect to server.");
@@ -162,7 +163,7 @@ public:
                         message["message"] = QObject::tr("Connection lost.");
                         break;
                     default:
-                        message["message"] = "An unknown error occurred: " + notification.message;
+                        message["message"] = QObject::tr("An unknown error occurred.");
                 }
                 Fabric::Fabric{}.postMessage("errorNotification", message);
             } else if (notification.type == Sink::Notification::Info) {
