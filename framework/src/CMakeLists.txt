@@ -45,6 +45,7 @@ set(SRCS
     clipboardproxy.cpp
     krecursivefilterproxymodel.cpp
     webengineprofile.cpp
+    startupcheck.cpp
 )
 
 add_library(frameworkplugin SHARED ${SRCS})

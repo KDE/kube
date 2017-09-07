@@ -79,6 +79,11 @@ Controls2.ApplicationWindow {
         }
     }
     //END Shortcuts
+    Kube.StartupCheck {
+        onNoAccount: {
+            kubeViews.setAccountsView()
+        }
+    }
 
     //BEGIN background
     Rectangle {
