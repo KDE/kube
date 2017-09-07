@@ -19,11 +19,14 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.3 as Controls
+import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 import org.kube.components.accounts 1.0 as KubeAccounts
 
 Rectangle {
+    id: root
     color: Kube.Colors.backgroundColor
+    property bool singleAccountMode: true
 
     Controls.SplitView {
         height: parent.height
@@ -33,6 +36,7 @@ Rectangle {
             id: accountList
             width: Kube.Units.gridUnit * 12
             Layout.fillHeight: true
+            visible: !root.singleAccountMode
 
             Kube.PositiveButton {
                 id: newAccountButton
@@ -98,6 +102,14 @@ Rectangle {
                     bottomMargin: Kube.Units.largeSpacing
                 }
 
+                singleAccountMode: root.singleAccountMode
+
+                Component.onCompleted: {
+                    //FIXME: this assumes we load accounts synchronously, which we do right now.
+                    if (accountId == "") {
+                        accountWizard.open()
+                    }
+                }
             }
         }
     }
@@ -105,6 +117,9 @@ Rectangle {
     //BEGIN AccountWizard
     KubeAccounts.AccountWizard {
         id: accountWizard
+
+        singleAccountMode: root.singleAccountMode
+        forceAccountType: "kolabnow"
 
         height: app.height * 0.85
         width: app.width * 0.85

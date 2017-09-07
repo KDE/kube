@@ -22,11 +22,15 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
 Kube.Popup {
-    id: popup
+    id: root
+
+
+    property bool singleAccountMode: false
+    property string forceAccountType: ""
 
     modal: true
     focus: true
-    closePolicy: Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutside
+    closePolicy: singleAccountMode ? Controls2.Popup.NoAutoClose : Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutside
 
     clip: true
 
@@ -35,7 +39,12 @@ Kube.Popup {
 
         anchors.fill: parent
 
-        initialItem: mainView
+        initialItem: root.singleAccountMode ? null : mainView
+        Component.onCompleted: {
+            if (root.singleAccountMode) {
+                stack.push(wizardPage.createObject(app, {accountType: root.forceAccountType}))
+            }
+        }
     }
 
     Component {
@@ -72,8 +81,9 @@ Kube.Popup {
     Component {
         id: wizardPage
         AccountWizardPage {
+            singleAccountMode: root.singleAccountMode
             onDone: {
-                popup.close()
+                root.close()
                 Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
             }
         }

@@ -25,6 +25,7 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property string accountId
+    property bool singleAccountMode: false
 
     Kube.AccountFactory {
         id: accountFactory
@@ -113,6 +114,7 @@ Item {
 
                 Kube.Button {
                     text: qsTr("Remove Account")
+                    visible: !root.singleAccountMode
 
                     onClicked: {
                         loader.item.remove()

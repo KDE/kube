@@ -29,6 +29,9 @@ Item {
     property string accountType
     signal done()
 
+    property bool isFirstView: root.Controls2.StackView.index == 0
+    property bool singleAccountMode: false
+
     Kube.AccountFactory {
         id: accountFactory
         accountType: root.accountType
@@ -38,6 +41,7 @@ Item {
         id: backButton
         iconName: Kube.Icons.goBack
         tooltip: "go back"
+        visible: !root.isFirstView
         onClicked: {
             stack.pop()
         }
@@ -115,6 +119,7 @@ Item {
                     left: parent.left
                     bottom: parent.bottom
                 }
+                visible: !root.singleAccountMode
 
                 text: qsTr("Discard")
                 onClicked: {
