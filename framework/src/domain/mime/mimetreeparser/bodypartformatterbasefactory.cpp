@@ -60,7 +60,6 @@ void BodyPartFormatterBaseFactoryPrivate::setup()
     if (!all) {
         all = new TypeRegistry();
         messageviewer_create_builtin_bodypart_formatters();
-        q->loadPlugins();
     }
 }
 
@@ -173,7 +172,3 @@ SubtypeRegistry::const_iterator BodyPartFormatterBaseFactory::createForIterator(
     return subtype_it;
 }
 
-void BodyPartFormatterBaseFactory::loadPlugins()
-{
-    qCDebug(MIMETREEPARSER_LOG) << "plugin loading is not enabled in libmimetreeparser";
-}

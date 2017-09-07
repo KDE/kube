@@ -68,7 +68,6 @@ public:
 
 protected:
     void insert(const char *type, const char *subtype, const Interface::BodyPartFormatter *formatter);
-    virtual void loadPlugins();
 private:
     static BodyPartFormatterBaseFactory *mSelf;
 
