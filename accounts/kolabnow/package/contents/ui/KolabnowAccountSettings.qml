@@ -25,8 +25,8 @@ import org.kube.accounts.kolabnow 1.0 as KolabnowAccount
 Item {
 
     property string accountId
-    property string heading: "Connect your KolabNOW account"
-    property string subheadline: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube."
+    property string heading: qsTr("Connect your KolabNOW account")
+    property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube.")
 
     KolabnowAccount.KolabnowSettings {
         id: kolabnowSettings
