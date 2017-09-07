@@ -113,6 +113,7 @@ private slots:
         QTRY_VERIFY(result);
         QCOMPARE(normalize(removeFirstLine(result->body())), normalize(msg->body()));
         QCOMPARE(result->to()->addresses(), {{"konqi@example.org"}});
+        QCOMPARE(result->subject()->asUnicodeString(), {"RE: A random subject with alternative contenttype"});
     }
 
     void testHtmlReply()

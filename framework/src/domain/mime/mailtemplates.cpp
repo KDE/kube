@@ -102,7 +102,8 @@ QString replacePrefixes(const QString &str, const QStringList &prefixRegExps, co
     if (rx.indexIn(tmp) == 0) {
         return tmp.replace(0, rx.matchedLength(), newPrefix + QLatin1String(" "));
     }
-    return str;
+    //No match, we just prefix the newPrefix
+    return newPrefix + " " + str;
 }
 
 const QStringList getForwardPrefixes()
