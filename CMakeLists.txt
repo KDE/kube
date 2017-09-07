@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(kube VERSION 0.4)
+project(kube VERSION 0.4.0)
 
 set (QT_MIN_VERSION "5.7.0")
 
