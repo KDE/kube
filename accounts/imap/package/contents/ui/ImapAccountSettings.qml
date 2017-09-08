@@ -61,7 +61,7 @@ Item {
                 text: qsTr("Title of Account")
                 Layout.alignment: Qt.AlignRight
             }
-            Kube.TextField {
+            Kube.RequiredTextField {
                 Layout.fillWidth: true
                 placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
                 text: imapSettings.accountName
@@ -74,7 +74,7 @@ Item {
                 text: qsTr("Name")
                 Layout.alignment: Qt.AlignRight
             }
-            Kube.TextField {
+            Kube.RequiredTextField {
                 Layout.fillWidth: true
                 placeholderText: qsTr("Your name")
                 text: imapSettings.userName
@@ -87,7 +87,7 @@ Item {
                 text: qsTr("Email address")
                 Layout.alignment: Qt.AlignRight
             }
-            Kube.TextField {
+            Kube.RequiredTextField {
                 Layout.fillWidth: true
 
                 text: imapSettings.emailAddress
@@ -120,7 +120,7 @@ Item {
                 text: qsTr("IMAP server address")
                 Layout.alignment: Qt.AlignRight
             }
-            Kube.TextField {
+            Kube.RequiredTextField {
                 id: imapServer
 
                 Layout.fillWidth: true
@@ -131,20 +131,13 @@ Item {
                     imapSettings.imapServer = text
                 }
                 validator: imapSettings.imapServerValidator
-
-                Rectangle {
-                    anchors.fill: parent
-                    opacity: 0.2
-                    color: "yellow"
-                    visible: imapServer.acceptableInput
-                }
             }
 
             Kube.Label {
                 text: qsTr("Smtp address")
                 Layout.alignment: Qt.AlignRight
             }
-            Kube.TextField {
+            Kube.RequiredTextField {
                 id: smtpServer
                 Layout.fillWidth: true
 
@@ -154,13 +147,6 @@ Item {
                     imapSettings.smtpServer = text
                 }
                 validator: imapSettings.smtpServerValidator
-
-                Rectangle {
-                    anchors.fill: parent
-                    opacity: 0.2
-                    color: "yellow"
-                    visible: smtpServer.acceptableInput
-                }
             }
         }
     }
