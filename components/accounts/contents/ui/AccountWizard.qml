@@ -25,24 +25,24 @@ Kube.Popup {
     id: root
 
 
-    property bool singleAccountMode: false
-    property string forceAccountType: ""
+    property bool requireSetup: false
+    property var availableAccountPlugins: []
 
     modal: true
     focus: true
-    closePolicy: singleAccountMode ? Controls2.Popup.NoAutoClose : Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutside
+    closePolicy: requireSetup ? Controls2.Popup.NoAutoClose : Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutside
 
     clip: true
 
     Controls2.StackView {
         id: stack
-
         anchors.fill: parent
-
-        initialItem: root.singleAccountMode ? null : mainView
         Component.onCompleted: {
-            if (root.singleAccountMode) {
-                stack.push(wizardPage.createObject(app, {accountType: root.forceAccountType}))
+            //If we only have one account type we skip the selection
+            if (root.availableAccountPlugins.length == 1) {
+                stack.push(wizardPage.createObject(app, {accountType: root.availableAccountPlugins[0]}))
+            } else {
+                stack.push(mainView.createObject(app))
             }
         }
     }
@@ -64,8 +64,7 @@ Kube.Popup {
                 spacing: Kube.Units.largeSpacing
 
                 Repeater {
-                    //TODO replace by model of available accounts
-                    model: ["kolabnow", "imap", "maildir", "gmail"]
+                    model: root.availableAccountPlugins
                     delegate: Kube.Button {
                         Layout.fillWidth: true
                         text: modelData
@@ -81,7 +80,7 @@ Kube.Popup {
     Component {
         id: wizardPage
         AccountWizardPage {
-            singleAccountMode: root.singleAccountMode
+            requireSetup: root.requireSetup
             onDone: {
                 root.close()
                 Kube.Fabric.postMessage(Kube.Messages.componentDone, {})

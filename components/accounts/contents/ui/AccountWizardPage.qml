@@ -30,7 +30,7 @@ Item {
     signal done()
 
     property bool isFirstView: root.Controls2.StackView.index == 0
-    property bool singleAccountMode: false
+    property bool requireSetup: false
 
     Kube.AccountFactory {
         id: accountFactory
@@ -119,7 +119,7 @@ Item {
                     left: parent.left
                     bottom: parent.bottom
                 }
-                visible: !root.singleAccountMode
+                visible: !root.requireSetup
 
                 text: qsTr("Discard")
                 onClicked: {

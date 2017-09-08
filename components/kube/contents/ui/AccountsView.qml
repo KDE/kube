@@ -26,7 +26,10 @@ import org.kube.components.accounts 1.0 as KubeAccounts
 Rectangle {
     id: root
     color: Kube.Colors.backgroundColor
-    property bool singleAccountMode: true
+    //Defines whether more than one account is supported.
+    property bool singleAccountMode: false
+    //Defines available account types.
+    property var availableAccountPlugins: ["kolabnow", "imap", "maildir", "gmail"]
 
     Controls.SplitView {
         height: parent.height
@@ -102,11 +105,15 @@ Rectangle {
                     bottomMargin: Kube.Units.largeSpacing
                 }
 
-                singleAccountMode: root.singleAccountMode
+                canRemove: !root.singleAccountMode
 
                 Component.onCompleted: {
+                    //We don't have any accounts setup if accountId is empty, so we trigger the accountWizard
                     //FIXME: this assumes we load accounts synchronously, which we do right now.
                     if (accountId == "") {
+                        //Require the setup to be completed since it's the first account
+                        accountWizard.requireSetup = true
+                        //Launch account wizard
                         accountWizard.open()
                     }
                 }
@@ -118,8 +125,7 @@ Rectangle {
     KubeAccounts.AccountWizard {
         id: accountWizard
 
-        singleAccountMode: root.singleAccountMode
-        forceAccountType: "kolabnow"
+        availableAccountPlugins: root.availableAccountPlugins
 
         height: app.height * 0.85
         width: app.width * 0.85
