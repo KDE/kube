@@ -125,9 +125,13 @@ Item {
                     anchors.right: parent.right
                     text: qsTr("Save")
                     onClicked: {
-                        loader.item.save()
-                        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
-                        Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                        if(loader.item.valid) {
+                            loader.item.save()
+                            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
+                            Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                        } else {
+                            console.warn("Invalid settings.");
+                        }
                     }
                 }
             }

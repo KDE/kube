@@ -28,6 +28,7 @@ Item {
     property string accountId
     property string heading: "Connect your GMail account"
     property string subheadline: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube."
+    property bool valid: true
 
     GmailAccount.GmailSettings {
         id: gmailSettings

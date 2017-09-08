@@ -27,6 +27,7 @@ Item {
     property string accountId
     property string heading: qsTr("Connect your KolabNOW account")
     property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube.")
+    property bool valid: accountField.acceptableInput && nameField.acceptableInput && emailField.acceptableInput && pwField.acceptableInput
 
     KolabnowAccount.KolabnowSettings {
         id: kolabnowSettings
@@ -60,19 +61,22 @@ Item {
                 Layout.alignment: Qt.AlignRight
             }
             Kube.TextField {
+                id: accountField
                 Layout.fillWidth: true
                 placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
                 text: kolabnowSettings.accountName
                 onTextChanged: {
                     kolabnowSettings.accountName = text
                 }
+                validator: RegExpValidator { regExp: /.*\S.*/ }
             }
 
             Kube.Label {
                 text: qsTr("Name")
                 Layout.alignment: Qt.AlignRight
             }
-            Kube.TextField {
+            Kube.RequiredTextField {
+                id: nameField
                 Layout.fillWidth: true
                 placeholderText: qsTr("Your name")
                 text: kolabnowSettings.userName
@@ -85,7 +89,8 @@ Item {
                 text: qsTr("Email address")
                 Layout.alignment: Qt.AlignRight
             }
-            Kube.TextField {
+            Kube.RequiredTextField {
+                id: emailField
                 Layout.fillWidth: true
 
                 text: kolabnowSettings.emailAddress

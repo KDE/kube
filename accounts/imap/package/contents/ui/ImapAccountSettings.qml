@@ -28,6 +28,7 @@ Item {
     property string accountId
     property string heading: "Connect your IMAP account"
     property string subheadline: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP address, which authentification and port to be used, please contact your email provider."
+    property bool valid: true
 
     ImapAccount.ImapSettings {
         id: imapSettings

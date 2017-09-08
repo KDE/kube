@@ -28,6 +28,7 @@ Item {
     property string accountId
     property string heading: "Add your Maildir archive"
     property string subheadline: "To let Kube access your maildir archive, add the path to your archive and give the account a title that will be displayed inside Kube."
+    property bool valid: true
 
     MaildirAccount.MaildirSettings {
         id: maildirSettings
