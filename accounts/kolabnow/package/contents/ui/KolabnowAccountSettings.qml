@@ -60,7 +60,7 @@ Item {
                 text: qsTr("Title of Account")
                 Layout.alignment: Qt.AlignRight
             }
-            Kube.TextField {
+            Kube.RequiredTextField {
                 id: accountField
                 Layout.fillWidth: true
                 placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
@@ -68,7 +68,6 @@ Item {
                 onTextChanged: {
                     kolabnowSettings.accountName = text
                 }
-                validator: RegExpValidator { regExp: /.*\S.*/ }
             }
 
             Kube.Label {
