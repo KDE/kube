@@ -23,6 +23,9 @@ import org.kube.framework 1.0 as Kube
 T.TextField {
     id: root
 
+    property alias backgroundColor: background.color
+    property alias backgroundOpacity: background.opacity
+
     implicitHeight: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2
     implicitWidth: Kube.Units.gridUnit * 5 + Kube.Units.smallSpacing * 2
 
@@ -48,6 +51,7 @@ T.TextField {
     }
 
     background: Rectangle {
+        id: background
         color: Kube.Colors.viewBackgroundColor
         border.width: 1
         border.color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
