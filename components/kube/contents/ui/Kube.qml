@@ -77,13 +77,27 @@ Controls2.ApplicationWindow {
         enabled: !!folder
         onActivated: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": folder})
     }
+    //END Shortcuts
+
+    //Interval sync
+    Timer {
+        id: intervalSync
+        property variant folder: null
+        //5min
+        interval: 300000
+        running: !!folder
+        repeat: true
+        onTriggered: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": folder})
+    }
+
     Kube.Listener {
         filter: Kube.Messages.folderSelection
         onMessageReceived: {
             syncShortcut.folder = message.folder
+            intervalSync.folder = message.folder
         }
     }
-    //END Shortcuts
+
     Kube.StartupCheck {
         onNoAccount: {
             kubeViews.setAccountsView()
