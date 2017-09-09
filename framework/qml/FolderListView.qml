@@ -42,7 +42,6 @@ Kube.TreeView {
         model.fetchMore(index);
         Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
                                                                 "trash": model.data(index, Kube.FolderListModel.Trash)});
-        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": model.data(index, Kube.FolderListModel.DomainObject)});
     }
 
 

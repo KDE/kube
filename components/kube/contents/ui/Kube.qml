@@ -34,6 +34,46 @@ Controls2.ApplicationWindow {
     //Application default font
     font.family: Kube.Font.fontFamily
 
+    //Application context
+    property variant currentFolder
+    onCurrentFolderChanged: {
+        if (!!currentFolder) {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": currentFolder})
+        }
+    }
+    property variant currentAccount
+    onCurrentAccountChanged: {
+        if (!!currentAccount) {
+            console.warn("Synching account", currentAccount)
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount});
+        }
+    }
+
+    //Interval sync
+    Timer {
+        id: intervalSync
+        //5min
+        interval: 300000
+        running: !!app.currentFolder
+        repeat: true
+        onTriggered: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder})
+    }
+
+    Kube.StartupCheck {
+        onNoAccount: kubeViews.setAccountsView()
+    }
+
+    //Listener
+    Kube.Listener {
+        filter: Kube.Messages.accountSelection
+        onMessageReceived: app.currentAccount = message.account
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.folderSelection
+        onMessageReceived: app.currentFolder = message.folder
+    }
+
     Kube.Listener {
         filter: Kube.Messages.notification
         onMessageReceived: {
@@ -78,31 +118,6 @@ Controls2.ApplicationWindow {
         onActivated: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": folder})
     }
     //END Shortcuts
-
-    //Interval sync
-    Timer {
-        id: intervalSync
-        property variant folder: null
-        //5min
-        interval: 300000
-        running: !!folder
-        repeat: true
-        onTriggered: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": folder})
-    }
-
-    Kube.Listener {
-        filter: Kube.Messages.folderSelection
-        onMessageReceived: {
-            syncShortcut.folder = message.folder
-            intervalSync.folder = message.folder
-        }
-    }
-
-    Kube.StartupCheck {
-        onNoAccount: {
-            kubeViews.setAccountsView()
-        }
-    }
 
     //BEGIN background
     Rectangle {

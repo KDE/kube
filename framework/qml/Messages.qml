@@ -24,6 +24,7 @@ Item {
     //Selections
     property string folderSelection: "currentFolder"
     property string mailSelection: "currentMail"
+    property string accountSelection: "currentAccount"
 
     //Actions
     property string moveToTrash: "moveToTrash"
