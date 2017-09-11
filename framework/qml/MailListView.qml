@@ -46,7 +46,8 @@ FocusScope {
     Kube.Listener {
         filter: Kube.Messages.search
         onMessageReceived: {
-            mailListModel.filter = message.filterString
+           filterField.visible = true
+           find.forceActiveFocus()
         }
     }
 
@@ -72,8 +73,8 @@ FocusScope {
             id: filterField
             Layout.fillWidth: true
             height: Kube.Units.gridUnit * 2
-
             color: Kube.Colors.buttonColor
+            visible: false
 
             RowLayout {
                 anchors {
@@ -92,9 +93,11 @@ FocusScope {
                 }
 
                 Kube.TextField {
+                    id: find
                     Layout.fillWidth: true
                     placeholderText: "Filter..."
                     onTextChanged: mailListModel.filter = text
+                    focus: true
                 }
             }
         }

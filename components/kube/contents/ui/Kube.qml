@@ -66,6 +66,11 @@ Controls2.ApplicationWindow {
         onActivated: Qt.quit()
     }
     Shortcut {
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.search, {})
+        sequence: StandardKey.Find
+
+    }
+    Shortcut {
         id: syncShortcut
         property variant folder: null
         sequence: StandardKey.Refresh
