@@ -68,10 +68,35 @@ FocusScope {
 
         spacing: 0
 
-        Kube.TextField {
+        Rectangle {
+            id: filterField
             Layout.fillWidth: true
-            placeholderText: "Filter..."
-            onTextChanged: mailListModel.filter = text
+            height: Kube.Units.gridUnit * 2
+
+            color: Kube.Colors.buttonColor
+
+            RowLayout {
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                }
+
+                width: parent.width - Kube.Units.smallSpacing
+                spacing: 0
+
+                Kube.IconButton {
+                    iconName: Kube.Icons.remove
+                    onClicked: {
+                        filterField.visible = false
+                        mailListModel.filter = ""
+                    }
+                }
+
+                Kube.TextField {
+                    Layout.fillWidth: true
+                    placeholderText: "Filter..."
+                    onTextChanged: mailListModel.filter = text
+                }
+            }
         }
 
         Kube.ListView {
