@@ -86,6 +86,7 @@ FocusScope {
 
                 Kube.IconButton {
                     iconName: Kube.Icons.remove
+                    activeFocusOnTab: visible
                     onClicked: {
                         filterField.visible = false
                         mailListModel.filter = ""
@@ -97,7 +98,8 @@ FocusScope {
                     Layout.fillWidth: true
                     placeholderText: "Filter..."
                     onTextChanged: mailListModel.filter = text
-                    focus: true
+                    activeFocusOnTab: visible
+                    focus: visible
                 }
             }
         }
