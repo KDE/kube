@@ -98,7 +98,7 @@ FocusScope {
                 Kube.TextField {
                     id: find
                     Layout.fillWidth: true
-                    placeholderText: "Filter..."
+                    placeholderText: qsTr("Filter...")
                     onTextChanged: mailListModel.filter = text
                     activeFocusOnTab: visible
                     focus: visible
