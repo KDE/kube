@@ -76,6 +76,11 @@ FocusScope {
             color: Kube.Colors.buttonColor
             visible: false
 
+            function clearSearch() {
+                filterField.visible = false
+                mailListModel.filter = ""
+            }
+
             RowLayout {
                 anchors {
                     verticalCenter: parent.verticalCenter
@@ -87,10 +92,7 @@ FocusScope {
                 Kube.IconButton {
                     iconName: Kube.Icons.remove
                     activeFocusOnTab: visible
-                    onClicked: {
-                        filterField.visible = false
-                        mailListModel.filter = ""
-                    }
+                    onClicked: filterField.clearSearch()
                 }
 
                 Kube.TextField {
@@ -100,6 +102,7 @@ FocusScope {
                     onTextChanged: mailListModel.filter = text
                     activeFocusOnTab: visible
                     focus: visible
+                    Keys.onEscapePressed: filterField.clearSearch()
                 }
             }
         }
