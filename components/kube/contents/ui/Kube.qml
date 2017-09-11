@@ -129,13 +129,6 @@ Controls2.ApplicationWindow {
                 spacing: Kube.Units.largeSpacing - Kube.Units.smallSpacing
 
                 Kube.IconButton {
-                    iconName: Kube.Icons.search_inverted
-                    onClicked: search.open()
-                    activeFocusOnTab: true
-                    tooltip: qsTr("search")
-                }
-
-                Kube.IconButton {
                     id: composerButton
                     iconName: Kube.Icons.edit_inverted
                     onClicked: kubeViews.openComposer(false, [])
@@ -312,41 +305,4 @@ Controls2.ApplicationWindow {
         }
     }
     //END Notification
-
-    //BEGIN Search
-    Kube.Popup {
-        id: search
-
-        width: app.width * 0.6
-        height: Kube.Units.gridUnit * 3
-
-        x: app.width * 0.2
-        y: app.height * 0.2
-
-        RowLayout {
-            anchors.centerIn: parent
-            width: parent.width
-
-            Kube.TextField {
-                id: searchField
-                focus: true
-                Layout.fillWidth: true
-                placeholderText: qsTr("Filter...     (only applies to the mail list for now)")
-                Keys.onReturnPressed: {
-                    Kube.Fabric.postMessage(Kube.Messages.search, {"filterString": searchField.text})
-                    search.close()
-                }
-            }
-
-            Kube.Button {
-                text: qsTr("Go")
-
-                onClicked: {
-                    Kube.Fabric.postMessage(Kube.Messages.search, {"filterString": searchField.text})
-                    search.close()
-                }
-            }
-        }
-    }
-    //END Search
 }
