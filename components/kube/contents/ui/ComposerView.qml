@@ -20,6 +20,7 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 1.3
+import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0 as Dialogs
 
@@ -44,6 +45,12 @@ Kube.View {
     property variant saveAsDraftAction: composerController.saveAsDraftAction
 
     Component.onCompleted: loadMessage(root.message, root.loadAsDraft)
+
+    Controls2.StackView.onActivated: {
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "mail", "specialPurpose": "drafts"})
+        //For autocompletion
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
+    }
 
     function loadMessage(message, loadAsDraft) {
         if (message) {

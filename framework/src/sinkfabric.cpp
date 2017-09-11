@@ -45,6 +45,24 @@ public:
                 auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(folder->identifier()));
                 scope.setType<ApplicationDomain::Mail>();
                 Store::synchronize(scope).exec();
+            } else if (message.contains("specialPurpose")) {
+                auto specialPurpose = message["specialPurpose"].value<QString>();
+                //Synchronize all drafts folders
+                if (specialPurpose == "drafts") {
+                    //TODO or rather just synchronize draft mails and have resource figure out what that means?
+                    Sink::Query folderQuery{};
+                    folderQuery.containsFilter<Sink::ApplicationDomain::Folder::SpecialPurpose>(Sink::ApplicationDomain::SpecialPurpose::Mail::drafts);
+                    folderQuery.request<Sink::ApplicationDomain::Folder::SpecialPurpose>();
+                    folderQuery.request<Sink::ApplicationDomain::Folder::Name>();
+                    Store::fetch<Sink::ApplicationDomain::Folder>(folderQuery)
+                        .then([] (const QList<Sink::ApplicationDomain::Folder::Ptr> &folders) {
+                            for (const auto f : folders) {
+                                auto scope = SyncScope().resourceFilter(f->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(f->identifier()));
+                                scope.setType<ApplicationDomain::Mail>();
+                                Store::synchronize(scope).exec();
+                            }
+                        }).exec();
+                }
             } else {
                 auto accountId = message["accountId"].value<QString>();
                 auto type = message["type"].value<QString>();
@@ -63,7 +81,7 @@ public:
                     //Only synchronize folders by default for now
                     scope.setType<ApplicationDomain::Folder>();
                 }
-                SinkLog() << "Synchronizing all. AccountId: " << accountId << " Type: " << scope.type();
+                SinkLog() << "Synchronizing... AccountId: " << accountId << " Type: " << scope.type();
                 Store::synchronize(scope).exec();
             }
         }
