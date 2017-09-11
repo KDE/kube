@@ -18,8 +18,7 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.3
-//TODO import QtWebEngine 1.4
-import QtWebEngine 1.3
+import QtWebEngine 1.4
 
 import org.kube.framework 1.0 as Kube
 
@@ -45,8 +44,6 @@ Item {
                 console.warn("Error is ", loadRequest.errorString)
             }
         }
-        //TODO The webview should not steal focus (depends on webengine 1.4)
-        //focusOnNavigationEnabled: false
         settings {
             webGLEnabled: false
             touchIconsEnabled: false
@@ -67,6 +64,8 @@ Item {
             autoLoadImages: true
             autoLoadIconsForPage: false
             accelerated2dCanvasEnabled: false
+            //The webview should not steal focus
+            focusOnNavigationEnabled: false
         }
         profile: Kube.WebEngineProfile
         //TODO Disable the context menu (depends on webengine 1.4)
