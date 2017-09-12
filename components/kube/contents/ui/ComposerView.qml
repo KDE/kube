@@ -170,7 +170,7 @@ Kube.View {
                         }
 
                         Kube.Label{
-                            width: content.width - Kube.Units.largeSpacing * 2
+                            width: content.width
                             text: model.subject
                             color: Kube.Colors.highlightedTextColor
                             maximumLineCount: 2
