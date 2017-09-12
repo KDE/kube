@@ -277,7 +277,6 @@ Kube.View {
 
                     text: checked ? "html" : "plain"
                     checkable: true
-
                 }
 
                 Row {
@@ -287,14 +286,23 @@ Kube.View {
                     Kube.IconButton {
                         iconName: Kube.Icons.bold
                         checkable: true
+                        checked: document.bold
+                        onClicked: document.bold = !document.bold
+                        focusPolicy: Qt.TabFocus
                     }
                     Kube.IconButton {
                         iconName: Kube.Icons.italic
                         checkable: true
+                        checked: document.italic
+                        onClicked: document.italic = !document.italic
+                        focusPolicy: Qt.TabFocus
                     }
                     Kube.IconButton {
                         iconName: Kube.Icons.underline
                         checkable: true
+                        checked: document.underline
+                        onClicked: document.underline = !document.underline
+                        focusPolicy: Qt.TabFocus
                     }
                 }
 
@@ -325,14 +333,31 @@ Kube.View {
                 }
             }
 
-            Kube.TextEditor {
+            Kube.DocumentHandler {
+                id: document
+                document: textEditor.textDocument
+                cursorPosition: textEditor.cursorPosition
+                selectionStart: textEditor.selectionStart
+                selectionEnd: textEditor.selectionEnd
+                //textColor: colorDialog.color
+            }
+
+            Kube.TextArea {
+                id: textEditor
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                activeFocusOnTab: true
-                onActiveFocusChanged: closeFirstSplitIfNecessary()
-                text: composerController.body
-                onTextChanged: composerController.body = text;
-                Keys.onEscapePressed: recipients.forceActiveFocus()
+
+                textFormat: Qt.RichText
+                wrapMode: TextArea.Wrap
+                focus: true
+                selectByMouse: true
+                persistentSelection: true
+
+//              onActiveFocusChanged: closeFirstSplitIfNecessary()
+//              Keys.onEscapePressed: recipients.forceActiveFocus()
+//              text: document.text //composerController.body
+//               onTextChanged: composerController.body = text;
             }
         }
     }
