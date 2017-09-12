@@ -27,6 +27,8 @@ import org.kube.framework 1.0 as Kube
 Controls2.ApplicationWindow {
     id: app
 
+    property int sidebarWidth: Kube.Units.gridUnit + Kube.Units.largeSpacing
+
     height: Screen.desktopAvailableHeight * 0.8
     width: Screen.desktopAvailableWidth * 0.8
     visible: true
@@ -140,7 +142,7 @@ Controls2.ApplicationWindow {
                 top: mainContent.top
                 bottom: mainContent.bottom
             }
-            width: Kube.Units.gridUnit + Kube.Units.largeSpacing
+            width: app.sidebarWidth
             color: Kube.Colors.textColor
 
             Rectangle {

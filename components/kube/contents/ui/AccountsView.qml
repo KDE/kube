@@ -19,7 +19,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.3 as Controls
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2.0
 import org.kube.framework 1.0 as Kube
 import org.kube.components.accounts 1.0 as KubeAccounts
 
@@ -125,13 +125,13 @@ Rectangle {
     KubeAccounts.AccountWizard {
         id: accountWizard
 
+        parent: ApplicationWindow.overlay
+        height: app.height
+        width: app.width - app.sidebarWidth
+        x: app.sidebarWidth
+        y: 0
+
         availableAccountPlugins: root.availableAccountPlugins
-
-        height: app.height * 0.85
-        width: app.width * 0.85
-
-        x: app.width * 0.075
-        y: app.height * 0.075
     }
     //END AccountWizard
 }
