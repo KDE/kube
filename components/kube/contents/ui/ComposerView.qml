@@ -257,6 +257,37 @@ Kube.View {
                 spacing: Kube.Units.smallSpacing
                 clip: true
 
+                Repeater {
+                    model: composerController.attachmentModel
+                    delegate: Kube.AttachmentDelegate {
+                        name: model.filename
+                        icon: model.iconName
+                        clip: true
+                        actionIcon: Kube.Icons.remove
+                        onExecute: composerController.removeAttachment(model.url)
+                    }
+                }
+            }
+
+            RowLayout {
+                Kube.Button {
+                    text: "b"
+                    checkable: true
+                }
+                Kube.Button {
+                    text: "i"
+                    checkable: true
+                }
+                Kube.Button {
+                    text: "u"
+                    checkable: true
+                }
+
+                Item {
+                    height: 1
+                    Layout.fillWidth: true
+                }
+
                 Kube.Button {
                     text: qsTr("Attach file")
 
@@ -275,17 +306,6 @@ Kube.View {
                                 composerController.addAttachment(fileDialog.fileUrl)
                             }
                         }
-                    }
-                }
-
-                Repeater {
-                    model: composerController.attachmentModel
-                    delegate: Kube.AttachmentDelegate {
-                        name: model.filename
-                        icon: model.iconName
-                        clip: true
-                        actionIcon: Kube.Icons.remove
-                        onExecute: composerController.removeAttachment(model.url)
                     }
                 }
             }
