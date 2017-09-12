@@ -275,7 +275,7 @@ Kube.View {
                 Kube.Button {
                     id: html
 
-                    text: checked ? "html" : "plain"
+                    text: checked ? qsTr("plain") : qsTr("html")
                     checkable: true
                 }
 
@@ -354,8 +354,8 @@ Kube.View {
                 selectByMouse: true
                 persistentSelection: true
 
-//              onActiveFocusChanged: closeFirstSplitIfNecessary()
-//              Keys.onEscapePressed: recipients.forceActiveFocus()
+                onActiveFocusChanged: closeFirstSplitIfNecessary()
+                Keys.onEscapePressed: recipients.forceActiveFocus()
 //              text: document.text //composerController.body
 //               onTextChanged: composerController.body = text;
             }
