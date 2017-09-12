@@ -63,5 +63,9 @@ Item {
     property string folder: "folder"
     property string save_inverted: "document-save-inverted"
 
+    property string bold: "format-text-bold-symbolic"
+    property string italic: "format-text-italic-symbolic"
+    property string underline: "format-text-underline-symbolic"
+
 }
 

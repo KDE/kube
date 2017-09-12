@@ -35,7 +35,10 @@ wantedIcons = [
     "checkbox.svg",
     "edit-copy.svg",
     "password-show-on.svg",
-    "password-show-off.svg"
+    "password-show-off.svg",
+    "format-text-bold-symbolic.svg",
+    "format-text-italic-symbolic.svg",
+    "format-text-underline-symbolic.svg"
 ]
 
 def ensure_dir(file_path):

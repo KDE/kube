@@ -270,16 +270,16 @@ Kube.View {
             }
 
             RowLayout {
-                Kube.Button {
-                    text: "b"
+                Kube.IconButton {
+                    iconName: Kube.Icons.bold
                     checkable: true
                 }
-                Kube.Button {
-                    text: "i"
+                Kube.IconButton {
+                    iconName: Kube.Icons.italic
                     checkable: true
                 }
-                Kube.Button {
-                    text: "u"
+                Kube.IconButton {
+                    iconName: Kube.Icons.underline
                     checkable: true
                 }
 
