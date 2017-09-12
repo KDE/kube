@@ -274,7 +274,8 @@ Kube.View {
 
                 Kube.Button {
                     id: html
-
+                    //FIXME get the html composer to do something useful
+                    visible: false
                     text: checked ? qsTr("plain") : qsTr("html")
                     checkable: true
                 }
@@ -356,8 +357,8 @@ Kube.View {
 
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
                 Keys.onEscapePressed: recipients.forceActiveFocus()
-//              text: document.text //composerController.body
-//               onTextChanged: composerController.body = text;
+                text: composerController.body
+                onTextChanged: composerController.body = text;
             }
         }
     }
