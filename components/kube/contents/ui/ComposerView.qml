@@ -275,7 +275,7 @@ Kube.View {
                 Kube.Button {
                     id: html
 
-                    text: "P/H"
+                    text: checked ? "html" : "plain"
                     checkable: true
 
                 }
