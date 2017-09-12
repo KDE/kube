@@ -86,7 +86,7 @@ Kube.View {
             bottom: parent.bottom
         }
 
-        width: Kube.Units.gridUnit * 15
+        width: Kube.Units.gridUnit * 10
         Layout.minimumWidth: Kube.Units.gridUnit * 5
 
         color: Kube.Colors.textColor
@@ -104,7 +104,6 @@ Kube.View {
                 anchors {
                     left: parent.left
                     right: parent.right
-                    margins: Kube.Units.largeSpacing
                 }
                 focus: true
                 text: qsTr("New Email")
@@ -236,7 +235,7 @@ Kube.View {
                 rightMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
             }
 
-            spacing: Kube.Units.smallSpacing * 2
+            spacing: Kube.Units.smallSpacing
 
             Kube.TextField {
                 id: subject
@@ -270,17 +269,32 @@ Kube.View {
             }
 
             RowLayout {
-                Kube.IconButton {
-                    iconName: Kube.Icons.bold
+
+                spacing: Kube.Units.largeSpacing
+
+                Kube.Button {
+                    id: html
+
+                    text: "P/H"
                     checkable: true
+
                 }
-                Kube.IconButton {
-                    iconName: Kube.Icons.italic
-                    checkable: true
-                }
-                Kube.IconButton {
-                    iconName: Kube.Icons.underline
-                    checkable: true
+
+                Row {
+                    visible: html.checked
+
+                    Kube.IconButton {
+                        iconName: Kube.Icons.bold
+                        checkable: true
+                    }
+                    Kube.IconButton {
+                        iconName: Kube.Icons.italic
+                        checkable: true
+                    }
+                    Kube.IconButton {
+                        iconName: Kube.Icons.underline
+                        checkable: true
+                    }
                 }
 
                 Item {
