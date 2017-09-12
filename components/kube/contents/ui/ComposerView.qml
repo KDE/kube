@@ -282,6 +282,7 @@ Kube.View {
 
                 Row {
                     visible: html.checked
+                    spacing: 1
 
                     Kube.IconButton {
                         iconName: Kube.Icons.bold
