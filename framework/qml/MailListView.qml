@@ -78,7 +78,7 @@ FocusScope {
 
             function clearSearch() {
                 filterField.visible = false
-                mailListModel.filter = ""
+                find.text = ""
             }
 
             RowLayout {
