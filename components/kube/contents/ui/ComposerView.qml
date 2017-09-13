@@ -287,24 +287,24 @@ Kube.View {
                     Kube.IconButton {
                         iconName: Kube.Icons.bold
                         checkable: true
-                        checked: document.bold
-                        onClicked: document.bold = !document.bold
+                        checked: textEditor.bold
+                        onClicked: textEditor.bold = !textEditor.bold
                         focusPolicy: Qt.TabFocus
                         focus: false
                     }
                     Kube.IconButton {
                         iconName: Kube.Icons.italic
                         checkable: true
-                        checked: document.italic
-                        onClicked: document.italic = !document.italic
+                        checked: textEditor.italic
+                        onClicked: textEditor.italic = !textEditor.italic
                         focusPolicy: Qt.TabFocus
                         focus: false
                     }
                     Kube.IconButton {
                         iconName: Kube.Icons.underline
                         checkable: true
-                        checked: document.underline
-                        onClicked: document.underline = !document.underline
+                        checked: textEditor.underline
+                        onClicked: textEditor.underline = !textEditor.underline
                         focusPolicy: Qt.TabFocus
                         focus: false
                     }
@@ -337,31 +337,24 @@ Kube.View {
                 }
             }
 
-            Kube.DocumentHandler {
-                id: document
-                document: textEditor.textDocument
-                cursorPosition: textEditor.cursorPosition
-                selectionStart: textEditor.selectionStart
-                selectionEnd: textEditor.selectionEnd
-                //textColor: colorDialog.color
-            }
-
-            Kube.TextArea {
+            Kube.TextEditor {
                 id: textEditor
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                textFormat: Qt.RichText
-                wrapMode: TextArea.Wrap
-                focus: true
-                selectByMouse: true
-                persistentSelection: true
+                htmlEnabled: html.checked
 
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
                 Keys.onEscapePressed: recipients.forceActiveFocus()
-                cursorPosition: document.cursorPosition
-                text: composerController.body
+                initialText: composerController.body
+                /**
+                 * We need to:
+                 * * initially load the text from the controller (for replies and whatnot)
+                 * * Then only read from documenthandler in either html or plain (depending on the format).
+                 * * Convert between html and plain when switching the format.
+                 * * Skip invisible chars
+                 * * Remove invisible chars from copied text somehow
+                 */
                 onTextChanged: composerController.body = text;
             }
         }

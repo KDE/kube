@@ -23,7 +23,32 @@ import QtQuick.Controls 2.2
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
-    property alias text: edit.text
+    id: root
+    property string text: ""
+
+    property bool htmlEnabled: false
+
+    property alias bold: document.bold
+    property alias italic: document.italic
+    property alias underline: document.underline
+
+    property string initialText
+    onInitialTextChanged: {
+        if (text == "") {
+            edit.text = initialText
+        }
+    }
+
+    Kube.DocumentHandler {
+        id: document
+        document: edit.textDocument
+        cursorPosition: edit.cursorPosition
+        selectionStart: edit.selectionStart
+        selectionEnd: edit.selectionEnd
+        //textColor: colorDialog.color
+        onTextChanged: root.text = text
+    }
+
     Kube.ScrollHelper {
         anchors.fill: parent
         flickable: flickableItem
@@ -37,7 +62,10 @@ FocusScope {
                 focus: true
                 anchors.fill: parent
                 selectByMouse: true
+                persistentSelection: true
                 wrapMode: TextEdit.Wrap
+                textFormat: Qt.RichText
+                cursorPosition: document.cursorPosition
             }
             TextArea.flickable: edit
         }

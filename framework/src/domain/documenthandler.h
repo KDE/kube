@@ -145,9 +145,6 @@ private:
     int m_cursorPosition;
     int m_selectionStart;
     int m_selectionEnd;
-
-    QFont m_font;
-    int m_fontSize;
 };
 
 #endif // DOCUMENTHANDLER_H
