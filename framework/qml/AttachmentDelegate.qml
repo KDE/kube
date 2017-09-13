@@ -28,7 +28,7 @@ Item {
     signal clicked;
     signal execute;
 
-    width: content.width + Kube.Units.smallSpacing
+    width: content.width + Kube.Units.smallSpacing * 1.5
     height: content.height + Kube.Units.smallSpacing
 
     Rectangle {
@@ -46,13 +46,23 @@ Item {
 
     Row {
         id: content
-        anchors.centerIn: parent
+        anchors {
+            left: parent.left
+            leftMargin: Kube.Units.smallSpacing
+            verticalCenter: parent.verticalCenter
+        }
         spacing: Kube.Units.smallSpacing
-        Kube.Icon {
-            anchors.verticalCenter: parent.verticalCenter
+
+        Rectangle {
+            color: Kube.Colors.backgroundColor
             height: Kube.Units.gridUnit
             width: Kube.Units.gridUnit
-            iconName: root.icon
+            Kube.Icon {
+                anchors.verticalCenter: parent.verticalCenter
+                height: Kube.Units.gridUnit
+                width: Kube.Units.gridUnit
+                iconName: root.icon
+            }
         }
         Label {
             anchors.verticalCenter: parent.verticalCenter
