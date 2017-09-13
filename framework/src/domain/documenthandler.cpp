@@ -79,8 +79,34 @@ void DocumentHandler::setDocument(QQuickTextDocument *document)
 {
     if (document != m_document) {
         m_document = document;
+        connect(m_document->textDocument(), &QTextDocument::contentsChanged, this, [this] () {
+            emit textChanged();
+        });
         emit documentChanged();
     }
+}
+
+static QString stripInvisibleChars(const QString &s)
+{
+    auto text = s;
+    text.replace("\u2063", "");
+    return text;
+}
+
+QString DocumentHandler::plainText() const
+{
+    if (m_document) {
+        return stripInvisibleChars(m_document->textDocument()->toPlainText());
+    }
+    return {};
+}
+
+QString DocumentHandler::htmlText() const
+{
+    if (m_document) {
+        return stripInvisibleChars(m_document->textDocument()->toHtml());
+    }
+    return {};
 }
 
 int DocumentHandler::cursorPosition() const

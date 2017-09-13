@@ -80,11 +80,17 @@ class DocumentHandler : public QObject
 
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
+    Q_PROPERTY(QString plainText READ plainText NOTIFY textChanged)
+    Q_PROPERTY(QString htmlText READ htmlText NOTIFY textChanged)
+
 public:
     explicit DocumentHandler(QObject *parent = nullptr);
 
     QQuickTextDocument *document() const;
     void setDocument(QQuickTextDocument *document);
+
+    QString plainText() const;
+    QString htmlText() const;
 
     int cursorPosition() const;
     void setCursorPosition(int position);

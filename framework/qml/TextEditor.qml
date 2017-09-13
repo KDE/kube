@@ -46,7 +46,7 @@ FocusScope {
         selectionStart: edit.selectionStart
         selectionEnd: edit.selectionEnd
         //textColor: colorDialog.color
-        onTextChanged: root.text = text
+        onTextChanged: root.htmlEnabled ? root.text = htmlText : root.text = plainText
     }
 
     Kube.ScrollHelper {
