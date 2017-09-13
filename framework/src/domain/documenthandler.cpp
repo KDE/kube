@@ -77,11 +77,10 @@ QQuickTextDocument *DocumentHandler::document() const
 
 void DocumentHandler::setDocument(QQuickTextDocument *document)
 {
-    if (document == m_document)
-        return;
-
-    m_document = document;
-    emit documentChanged();
+    if (document != m_document) {
+        m_document = document;
+        emit documentChanged();
+    }
 }
 
 int DocumentHandler::cursorPosition() const
@@ -91,12 +90,11 @@ int DocumentHandler::cursorPosition() const
 
 void DocumentHandler::setCursorPosition(int position)
 {
-    if (position == m_cursorPosition)
-        return;
-
-    m_cursorPosition = position;
-    reset();
-    emit cursorPositionChanged();
+    if (position != m_cursorPosition) {
+        m_cursorPosition = position;
+        reset();
+        emit cursorPositionChanged();
+    }
 }
 
 int DocumentHandler::selectionStart() const
@@ -106,11 +104,10 @@ int DocumentHandler::selectionStart() const
 
 void DocumentHandler::setSelectionStart(int position)
 {
-    if (position == m_selectionStart)
-        return;
-
-    m_selectionStart = position;
-    emit selectionStartChanged();
+    if (position != m_selectionStart) {
+        m_selectionStart = position;
+        emit selectionStartChanged();
+    }
 }
 
 int DocumentHandler::selectionEnd() const
@@ -120,20 +117,19 @@ int DocumentHandler::selectionEnd() const
 
 void DocumentHandler::setSelectionEnd(int position)
 {
-    if (position == m_selectionEnd)
-        return;
-
-    m_selectionEnd = position;
-    emit selectionEndChanged();
+    if (position != m_selectionEnd) {
+        m_selectionEnd = position;
+        emit selectionEndChanged();
+    }
 }
 
 QString DocumentHandler::fontFamily() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    auto cursor = textCursor();
+    if (cursor.isNull()) {
         return QString();
-    QTextCharFormat format = cursor.charFormat();
-    return format.font().family();
+    }
+    return cursor.charFormat().font().family();
 }
 
 void DocumentHandler::setFontFamily(const QString &family)
@@ -146,11 +142,11 @@ void DocumentHandler::setFontFamily(const QString &family)
 
 QColor DocumentHandler::textColor() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    auto cursor = textCursor();
+    if (cursor.isNull()) {
         return QColor(Qt::black);
-    QTextCharFormat format = cursor.charFormat();
-    return format.foreground().color();
+    }
+    return cursor.charFormat().foreground().color();
 }
 
 void DocumentHandler::setTextColor(const QColor &color)
@@ -163,10 +159,11 @@ void DocumentHandler::setTextColor(const QColor &color)
 
 Qt::Alignment DocumentHandler::alignment() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    auto cursor = textCursor();
+    if (cursor.isNull()) {
         return Qt::AlignLeft;
-    return textCursor().blockFormat().alignment();
+    }
+    return cursor.blockFormat().alignment();
 }
 
 void DocumentHandler::setAlignment(Qt::Alignment alignment)
@@ -180,10 +177,11 @@ void DocumentHandler::setAlignment(Qt::Alignment alignment)
 
 bool DocumentHandler::bold() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    auto cursor = textCursor();
+    if (cursor.isNull()) {
         return false;
-    return textCursor().charFormat().fontWeight() == QFont::Bold;
+    }
+    return cursor.charFormat().fontWeight() == QFont::Bold;
 }
 
 void DocumentHandler::setBold(bool bold)
@@ -196,10 +194,11 @@ void DocumentHandler::setBold(bool bold)
 
 bool DocumentHandler::italic() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    auto cursor = textCursor();
+    if (cursor.isNull()) {
         return false;
-    return textCursor().charFormat().fontItalic();
+    }
+    return cursor.charFormat().fontItalic();
 }
 
 void DocumentHandler::setItalic(bool italic)
@@ -212,10 +211,11 @@ void DocumentHandler::setItalic(bool italic)
 
 bool DocumentHandler::underline() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
+    auto cursor = textCursor();
+    if (cursor.isNull()) {
         return false;
-    return textCursor().charFormat().fontUnderline();
+    }
+    return cursor.charFormat().fontUnderline();
 }
 
 void DocumentHandler::setUnderline(bool underline)
@@ -269,32 +269,42 @@ void DocumentHandler::reset()
 
 QTextCursor DocumentHandler::textCursor() const
 {
-    QTextDocument *doc = textDocument();
-    if (!doc)
-        return QTextCursor();
-
-    QTextCursor cursor = QTextCursor(doc);
-    if (m_selectionStart != m_selectionEnd) {
-        cursor.setPosition(m_selectionStart);
-        cursor.setPosition(m_selectionEnd, QTextCursor::KeepAnchor);
-    } else {
-        cursor.setPosition(m_cursorPosition);
+    if (QTextDocument *doc = textDocument()) {
+        QTextCursor cursor = QTextCursor(doc);
+        if (m_selectionStart != m_selectionEnd) {
+            cursor.setPosition(m_selectionStart);
+            cursor.setPosition(m_selectionEnd, QTextCursor::KeepAnchor);
+        } else {
+            cursor.setPosition(m_cursorPosition);
+        }
+        return cursor;
     }
-    return cursor;
+    return QTextCursor();
 }
 
 QTextDocument *DocumentHandler::textDocument() const
 {
-    if (!m_document)
+    if (!m_document) {
         return nullptr;
-
+    }
     return m_document->textDocument();
 }
 
 void DocumentHandler::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
 {
     QTextCursor cursor = textCursor();
-    if (!cursor.hasSelection())
-        cursor.select(QTextCursor::WordUnderCursor);
+
     cursor.mergeCharFormat(format);
+
+    /*
+     * FIXME: This is a fantastic hack to change the text format on the TextArea's internal cursor.
+     * The TextArea internally listens for the contentChanged signal of the document and then simply
+     * copies the format with QTextCursor::charFormat. This does of course not work without any text in
+     * said format. The Qt Example solution to the problem was to select the current word, which is both not
+     * the behaviour that we want, nor does it work if you don't currently have a word under the cursor.
+     * We therefore have to insert an invisible character to transport the format, which we have to clear out in the end again.
+     */
+    if (!cursor.hasSelection()) {
+        cursor.insertText("\u2063");
+    }
 }
