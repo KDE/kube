@@ -274,10 +274,10 @@ Kube.View {
 
                 Kube.Button {
                     id: html
-                    //FIXME get the html composer to do something useful
-                    visible: false
                     text: checked ? qsTr("plain") : qsTr("html")
                     checkable: true
+                    focusPolicy: Qt.TabFocus
+                    focus: false
                 }
 
                 Row {
@@ -290,6 +290,7 @@ Kube.View {
                         checked: document.bold
                         onClicked: document.bold = !document.bold
                         focusPolicy: Qt.TabFocus
+                        focus: false
                     }
                     Kube.IconButton {
                         iconName: Kube.Icons.italic
@@ -297,6 +298,7 @@ Kube.View {
                         checked: document.italic
                         onClicked: document.italic = !document.italic
                         focusPolicy: Qt.TabFocus
+                        focus: false
                     }
                     Kube.IconButton {
                         iconName: Kube.Icons.underline
@@ -304,6 +306,7 @@ Kube.View {
                         checked: document.underline
                         onClicked: document.underline = !document.underline
                         focusPolicy: Qt.TabFocus
+                        focus: false
                     }
                 }
 
