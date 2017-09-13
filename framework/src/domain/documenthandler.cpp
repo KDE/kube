@@ -299,6 +299,8 @@ void DocumentHandler::contentsChange(int position, int charsRemoved, int charsAd
             QTextCursor cursor = textCursor();
             cursor.setPosition(position + charsAdded, QTextCursor::KeepAnchor);
             cursor.mergeCharFormat(*m_cachedTextFormat);
+            //This is somehow necessary, otherwise space can break in the editor.
+            cursor.setPosition(position + charsAdded, QTextCursor::MoveAnchor);
         }
         m_cachedTextFormat = {};
     }
