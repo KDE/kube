@@ -21,7 +21,7 @@ ProgressBar 1.0 ProgressBar.qml
 StatusBar 1.0 StatusBar.qml
 ComboBox 1.0 ComboBox.qml
 CheckBox 1.0 CheckBox.qml
-Switch 1.0 as Switch.qml
+Switch 1.0 Switch.qml
 PositiveButton 1.0 PositiveButton.qml
 TextButton 1.0 TextButton.qml
 TextField 1.0 TextField.qml
