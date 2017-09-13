@@ -272,10 +272,9 @@ Kube.View {
 
                 spacing: Kube.Units.largeSpacing
 
-                Kube.Button {
+                Kube.Switch {
                     id: html
                     text: checked ? qsTr("plain") : qsTr("html")
-                    checkable: true
                     focusPolicy: Qt.TabFocus
                     focus: false
                 }
@@ -347,14 +346,6 @@ Kube.View {
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
                 Keys.onEscapePressed: recipients.forceActiveFocus()
                 initialText: composerController.body
-                /**
-                 * We need to:
-                 * * initially load the text from the controller (for replies and whatnot)
-                 * * Then only read from documenthandler in either html or plain (depending on the format).
-                 * * Convert between html and plain when switching the format.
-                 * * Skip invisible chars
-                 * * Remove invisible chars from copied text somehow
-                 */
                 onTextChanged: composerController.body = text;
             }
         }
