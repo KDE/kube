@@ -42,11 +42,16 @@ FocusScope {
     Kube.DocumentHandler {
         id: document
         document: edit.textDocument
-        cursorPosition: edit.cursorPosition
         selectionStart: edit.selectionStart
         selectionEnd: edit.selectionEnd
         //textColor: colorDialog.color
         onTextChanged: root.htmlEnabled ? root.text = htmlText : root.text = plainText
+
+        cursorPosition: edit.cursorPosition
+        onCursorPositionChanged: {
+            //Only necessary to skip over invisible char
+            edit.cursorPosition = cursorPosition
+        }
     }
 
     Kube.ScrollHelper {
@@ -62,10 +67,8 @@ FocusScope {
                 focus: true
                 anchors.fill: parent
                 selectByMouse: true
-                persistentSelection: true
                 wrapMode: TextEdit.Wrap
                 textFormat: Qt.RichText
-                cursorPosition: document.cursorPosition
             }
             TextArea.flickable: edit
         }
