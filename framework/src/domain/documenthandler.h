@@ -140,8 +140,12 @@ Q_SIGNALS:
 
     void textChanged();
 
+private Q_SLOTS:
+    void contentsChange(int position, int charsRemoved, int charsAdded);
+
 private:
     void reset();
+    QTextCharFormat charFormat() const;
     QTextCursor textCursor() const;
     QTextDocument *textDocument() const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
@@ -151,6 +155,7 @@ private:
     int m_cursorPosition;
     int m_selectionStart;
     int m_selectionEnd;
+    QSharedPointer<QTextCharFormat> m_cachedTextFormat;
 };
 
 #endif // DOCUMENTHANDLER_H

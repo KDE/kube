@@ -48,10 +48,6 @@ FocusScope {
         onTextChanged: root.htmlEnabled ? root.text = htmlText : root.text = plainText
 
         cursorPosition: edit.cursorPosition
-        onCursorPositionChanged: {
-            //Only necessary to skip over invisible char
-            edit.cursorPosition = cursorPosition
-        }
     }
 
     Kube.ScrollHelper {

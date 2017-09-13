@@ -82,21 +82,15 @@ void DocumentHandler::setDocument(QQuickTextDocument *document)
         connect(m_document->textDocument(), &QTextDocument::contentsChanged, this, [this] () {
             emit textChanged();
         });
+        connect(m_document->textDocument(), &QTextDocument::contentsChange, this, &DocumentHandler::contentsChange);
         emit documentChanged();
     }
-}
-
-static QString stripInvisibleChars(const QString &s)
-{
-    auto text = s;
-    text.replace("\u2063", "");
-    return text;
 }
 
 QString DocumentHandler::plainText() const
 {
     if (m_document) {
-        return stripInvisibleChars(m_document->textDocument()->toPlainText());
+        return m_document->textDocument()->toPlainText();
     }
     return {};
 }
@@ -104,7 +98,7 @@ QString DocumentHandler::plainText() const
 QString DocumentHandler::htmlText() const
 {
     if (m_document) {
-        return stripInvisibleChars(m_document->textDocument()->toHtml());
+        return m_document->textDocument()->toHtml();
     }
     return {};
 }
@@ -117,25 +111,6 @@ int DocumentHandler::cursorPosition() const
 void DocumentHandler::setCursorPosition(int position)
 {
     if (position != m_cursorPosition) {
-        //Skip over invisible char
-        if (m_cursorPosition < position) {
-            auto cursor = textCursor();
-            if (!cursor.atEnd()) {
-                cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-                if (cursor.selectedText() == "\u2063") {
-                    position++;
-                }
-            }
-        }
-        if (m_cursorPosition > position) {
-            auto cursor = textCursor();
-            if (!cursor.atStart()) {
-                cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
-                if (cursor.selectedText() == "\u2063") {
-                    position--;
-                }
-            }
-        }
         m_cursorPosition = position;
         reset();
         emit cursorPositionChanged();
@@ -168,13 +143,21 @@ void DocumentHandler::setSelectionEnd(int position)
     }
 }
 
-QString DocumentHandler::fontFamily() const
+QTextCharFormat DocumentHandler::charFormat() const
 {
+    if (m_cachedTextFormat) {
+        return *m_cachedTextFormat;
+    }
     auto cursor = textCursor();
     if (cursor.isNull()) {
-        return QString();
+        return {};
     }
-    return cursor.charFormat().font().family();
+    return cursor.charFormat();
+}
+
+QString DocumentHandler::fontFamily() const
+{
+    return charFormat().font().family();
 }
 
 void DocumentHandler::setFontFamily(const QString &family)
@@ -187,11 +170,7 @@ void DocumentHandler::setFontFamily(const QString &family)
 
 QColor DocumentHandler::textColor() const
 {
-    auto cursor = textCursor();
-    if (cursor.isNull()) {
-        return QColor(Qt::black);
-    }
-    return cursor.charFormat().foreground().color();
+    return charFormat().foreground().color();
 }
 
 void DocumentHandler::setTextColor(const QColor &color)
@@ -222,11 +201,7 @@ void DocumentHandler::setAlignment(Qt::Alignment alignment)
 
 bool DocumentHandler::bold() const
 {
-    auto cursor = textCursor();
-    if (cursor.isNull()) {
-        return false;
-    }
-    return cursor.charFormat().fontWeight() == QFont::Bold;
+    return charFormat().fontWeight() == QFont::Bold;
 }
 
 void DocumentHandler::setBold(bool bold)
@@ -239,11 +214,7 @@ void DocumentHandler::setBold(bool bold)
 
 bool DocumentHandler::italic() const
 {
-    auto cursor = textCursor();
-    if (cursor.isNull()) {
-        return false;
-    }
-    return cursor.charFormat().fontItalic();
+    return charFormat().fontItalic();
 }
 
 void DocumentHandler::setItalic(bool italic)
@@ -256,11 +227,7 @@ void DocumentHandler::setItalic(bool italic)
 
 bool DocumentHandler::underline() const
 {
-    auto cursor = textCursor();
-    if (cursor.isNull()) {
-        return false;
-    }
-    return cursor.charFormat().fontUnderline();
+    return charFormat().fontUnderline();
 }
 
 void DocumentHandler::setUnderline(bool underline)
@@ -273,11 +240,7 @@ void DocumentHandler::setUnderline(bool underline)
 
 int DocumentHandler::fontSize() const
 {
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
-        return 0;
-    QTextCharFormat format = cursor.charFormat();
-    return format.font().pointSize();
+    return charFormat().font().pointSize();
 }
 
 void DocumentHandler::setFontSize(int size)
@@ -285,14 +248,7 @@ void DocumentHandler::setFontSize(int size)
     if (size <= 0)
         return;
 
-    QTextCursor cursor = textCursor();
-    if (cursor.isNull())
-        return;
-
-    if (!cursor.hasSelection())
-        cursor.select(QTextCursor::WordUnderCursor);
-
-    if (cursor.charFormat().property(QTextFormat::FontPointSize).toInt() == size)
+    if (charFormat().property(QTextFormat::FontPointSize).toInt() == size)
         return;
 
     QTextCharFormat format;
@@ -335,21 +291,31 @@ QTextDocument *DocumentHandler::textDocument() const
     return m_document->textDocument();
 }
 
+void DocumentHandler::contentsChange(int position, int charsRemoved, int charsAdded)
+{
+    if (m_cachedTextFormat) {
+        if (charsAdded) {
+            //Apply cached formatting
+            QTextCursor cursor = textCursor();
+            cursor.setPosition(position + charsAdded, QTextCursor::KeepAnchor);
+            cursor.mergeCharFormat(*m_cachedTextFormat);
+        }
+        m_cachedTextFormat = {};
+    }
+}
+
 void DocumentHandler::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
 {
     QTextCursor cursor = textCursor();
 
-    cursor.mergeCharFormat(format);
-
-    /*
-     * FIXME: This is a fantastic hack to change the text format on the TextArea's internal cursor.
-     * The TextArea internally listens for the contentChanged signal of the document and then simply
-     * copies the format with QTextCursor::charFormat. This does of course not work without any text in
-     * said format. The Qt Example solution to the problem was to select the current word, which is both not
-     * the behaviour that we want, nor does it work if you don't currently have a word under the cursor.
-     * We therefore have to insert an invisible character to transport the format, which we have to clear out in the end again.
-     */
-    if (!cursor.hasSelection()) {
-        cursor.insertText("\u2063");
+    if (cursor.hasSelection()) {
+        cursor.mergeCharFormat(format);
+    } else {
+        if (m_cachedTextFormat) {
+            m_cachedTextFormat->merge(format);
+        } else {
+            //If we have nothing to format right now we cache the result until the next char is inserted.
+            m_cachedTextFormat = QSharedPointer<QTextCharFormat>::create(format);
+        }
     }
 }
