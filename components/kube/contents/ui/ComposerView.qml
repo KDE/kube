@@ -360,6 +360,7 @@ Kube.View {
 
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
                 Keys.onEscapePressed: recipients.forceActiveFocus()
+                cursorPosition: document.cursorPosition
                 text: composerController.body
                 onTextChanged: composerController.body = text;
             }

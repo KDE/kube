@@ -91,6 +91,21 @@ int DocumentHandler::cursorPosition() const
 void DocumentHandler::setCursorPosition(int position)
 {
     if (position != m_cursorPosition) {
+        //Skip over invisible char
+        if (m_cursorPosition < position) {
+            auto cursor = textCursor();
+            cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+            if (cursor.selectedText() == "\u2063") {
+                position++;
+            }
+        }
+        if (m_cursorPosition > position) {
+            auto cursor = textCursor();
+            cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+            if (cursor.selectedText() == "\u2063") {
+                position--;
+            }
+        }
         m_cursorPosition = position;
         reset();
         emit cursorPositionChanged();
