@@ -25,6 +25,7 @@ Kube.TextField {
     validator: RegExpValidator { regExp: /.*\S.*/ }
 
     Rectangle {
+        id: validIndicator
         anchors {
             left: parent.left
             right: parent.right
@@ -32,6 +33,22 @@ Kube.TextField {
             margins: 1
         }
         height: 3
-        color: acceptableInput ? root.activefocus ? Kube.Colors.positiveColor : "transparent" : Kube.Colors.warningColor
+        color: acceptableInput ? Kube.Colors.positiveColor : Kube.Colors.warningColor
+
+        OpacityAnimator {
+            target: validIndicator
+            from: opacity
+            to: 0
+            duration: 1000
+            running: acceptableInput
+        }
+
+        OpacityAnimator {
+            target: validIndicator
+            from: opacity
+            to: 1
+            duration: 100
+            running: !acceptableInput
+        }
     }
 }
