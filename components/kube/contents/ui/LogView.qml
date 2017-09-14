@@ -129,21 +129,26 @@ Controls.SplitView {
                 margins: Kube.Units.largeSpacing
             }
             visible: details.message != ""
+            clip: true
             color: Kube.Colors.viewBackgroundColor
             GridLayout {
                 id: gridLayout
+                Layout.minimumWidth: 0
                 anchors {
                     top: parent.top
                     left: parent.left
                 }
+                width: parent.width
                 columns: 2
                 Kube.Label {
                     text: qsTr("Account:")
                     visible: details.accountName
                 }
                 Kube.Label {
+                    Layout.fillWidth: true
                     text: details.accountName
                     visible: details.accountName
+                    elide: Text.ElideRight
                 }
                 Kube.Label {
                     text: qsTr("Account Id:")
@@ -152,6 +157,8 @@ Controls.SplitView {
                 Kube.Label {
                     text: details.accountId
                     visible: details.accountId
+                    Layout.fillWidth: true
+                    elide: Text.ElideRight
                 }
                 Kube.Label {
                     text: qsTr("Resource Id:")
@@ -160,24 +167,30 @@ Controls.SplitView {
                 Kube.Label {
                     text: details.resourceId
                     visible: details.resourceId
+                    Layout.fillWidth: true
+                    elide: Text.ElideRight
                 }
                 Kube.Label {
                     text: qsTr("Timestamp:")
                 }
                 Kube.Label {
                     text: Qt.formatDateTime(details.timestamp, " hh:mm:ss dd MMM yyyy")
+                    Layout.fillWidth: true
+                    elide: Text.ElideRight
                 }
                 Kube.Label {
                     text: qsTr("Message:")
+                    Layout.alignment: Qt.AlignTop
                 }
                 Kube.Label {
                     text: details.message
-                    wrapMode: Text.Wrap
                     Layout.fillWidth: true
+                    wrapMode: Text.Wrap
                 }
                 Item {
                     Layout.columnSpan: 2
                     Layout.fillHeight: true
+                    Layout.fillWidth: true
                 }
                 //TODO offer a possible explanation for known errors and a path to resolution.
             }
