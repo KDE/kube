@@ -19,11 +19,10 @@
 import QtQuick 2.7
 import org.kube.framework 1.0 as Kube
 
-Kube.TextField {
+Kube.RequiredTextField {
     id: root
 
     property bool showPassword
-
     echoMode: showPassword ? TextInput.Normal : TextInput.Password
 
     Kube.IconButton {
@@ -31,11 +30,9 @@ Kube.TextField {
             right: parent.right
             verticalCenter: parent.verticalCenter
         }
-
         onClicked: {
             root.showPassword = !root.showPassword
         }
-
         iconName: root.showPassword ? Kube.Icons.password_hide : Kube.Icons.password_show
     }
 }

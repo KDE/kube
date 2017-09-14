@@ -23,6 +23,15 @@ import org.kube.framework 1.0 as Kube
 Kube.TextField {
     id: root
     validator: RegExpValidator { regExp: /.*\S.*/ }
-    backgroundColor: acceptableInput ? Kube.Colors.viewBackgroundColor : Kube.Colors.warningColor
-    backgroundOpacity: acceptableInput ? 1.0 : 0.2
+
+    Rectangle {
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 1
+        }
+        height: 3
+        color: acceptableInput ? root.activefocus ? Kube.Colors.positiveColor : "transparent" : Kube.Colors.warningColor
+    }
 }
