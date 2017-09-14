@@ -62,6 +62,6 @@ T.Button {
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        color: root.textColor
+        color: root.enabled ? root.textColor : Colors.disabledTextColor
     }
 }
