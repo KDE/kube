@@ -26,11 +26,13 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
-    SplitView {
+    RowLayout {
         anchors.fill: parent
+        spacing: 1
         Rectangle {
             width: Kube.Units.gridUnit * 10
-            Layout.minimumWidth: Kube.Units.gridUnit * 5
+            Layout.fillHeight: parent.height
+            visible: !app.small
 
             color: Kube.Colors.textColor
 
@@ -95,18 +97,26 @@ FocusScope {
             }
         }
 
-        Kube.MailListView  {
-            id: mailListView
-            width: Kube.Units.gridUnit * 20
-            height: parent.height
-            activeFocusOnTab: true
-            Layout.minimumWidth: Kube.Units.gridUnit * 10
+        Rectangle {
+            Layout.preferredWidth: app.small ? Kube.Units.gridUnit * 12 :  Kube.Units.gridUnit * 20
+            Layout.fillHeight: parent.height
+
+            color: "transparent"
+            border.width: 1
+            border.color: Kube.Colors.buttonColor
+
+            Kube.MailListView  {
+                id: mailListView
+                anchors.fill: parent
+                activeFocusOnTab: true
+                Layout.minimumWidth: Kube.Units.gridUnit * 10
+            }
         }
 
         Kube.ConversationView {
             id: mailView
             Layout.fillWidth: true
-            Layout.minimumWidth: Kube.Units.gridUnit * 5
+            Layout.fillHeight: parent.height
             activeFocusOnTab: true
         }
     }
