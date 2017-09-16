@@ -65,24 +65,30 @@ Item {
                 top:subHeadline.bottom
                 left: parent.left
                 right: parent.right
+                bottom: footer.top
                 topMargin: Kube.Units.largeSpacing * 2
             }
 
             Loader {
                 id: loader
-                anchors.fill: parent
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                //The initial size is somehow necessary so the loader is properly anchored
+                height: 10
                 source: accountFactory.uiPath
                 onLoaded: item.accountId = root.accountId
             }
-        }
-
-        Item {
-            id: spacer
-            Layout.fillHeight: true
-            anchors {
-                top:accountEdit.bottom
-                left: parent.left
-                right: parent.right
+            Item {
+                id: spacer
+                anchors {
+                    top: loader.bottom
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                }
             }
         }
 
@@ -90,12 +96,12 @@ Item {
         GridLayout {
             id: footer
             anchors {
-                top:spacer.bottom
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
                 topMargin: Kube.Units.largeSpacing * 2
             }
+            height: childrenRect.height
 
             columns: 2
             columnSpacing: Kube.Units.largeSpacing
