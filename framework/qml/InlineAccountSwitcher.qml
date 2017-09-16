@@ -63,7 +63,7 @@ FocusScope {
 
                     textColor: Kube.Colors.highlightedTextColor
                     activeFocusOnTab: !isCurrent
-                    enabled: !isCurrent
+                    hoverEnabled: !isCurrent
                     onClicked: root.currentAccount = model.accountId
                     text: model.name
                     font.weight: Font.Bold
