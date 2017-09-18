@@ -47,8 +47,8 @@ Controls2.ApplicationWindow {
     property variant currentAccount
     onCurrentAccountChanged: {
         if (!!currentAccount) {
-            console.warn("Synching account", currentAccount)
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount});
+            console.warn("Syncing account", currentAccount)
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})
         }
     }
 
@@ -115,10 +115,8 @@ Controls2.ApplicationWindow {
     }
     Shortcut {
         id: syncShortcut
-        property variant folder: null
         sequence: StandardKey.Refresh
-        enabled: !!folder
-        onActivated: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": folder})
+        onActivated: !!app.currentFolder ? Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder}) : Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount})
     }
     //END Shortcuts
 
