@@ -64,7 +64,6 @@ FocusScope {
                 anchors.fill: parent
                 selectByMouse: true
                 wrapMode: TextEdit.Wrap
-                textFormat: Qt.RichText
             }
             TextArea.flickable: edit
         }
