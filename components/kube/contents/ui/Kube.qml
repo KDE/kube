@@ -111,7 +111,12 @@ Controls2.ApplicationWindow {
     Shortcut {
         onActivated: Kube.Fabric.postMessage(Kube.Messages.search, {})
         sequence: StandardKey.Find
-
+    }
+    Shortcut {
+        onActivated: {
+            Kube.Fabric.postMessage(Kube.Messages.unlockKeyring, {accountId: app.currentAccount})
+        }
+        sequence: "Ctrl+l"
     }
     Shortcut {
         id: syncShortcut

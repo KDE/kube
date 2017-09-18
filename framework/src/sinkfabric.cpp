@@ -24,8 +24,10 @@
 #include <sink/log.h>
 #include <sink/notification.h>
 #include <sink/notifier.h>
+#include <sink/secretstore.h>
 
 #include "fabric.h"
+#include "keyring.h"
 
 using namespace Kube;
 using namespace Sink;
@@ -131,7 +133,10 @@ public:
                 Store::modify(*mail).exec();
             }
         }
-
+        if (id == "unlockKeyring") {
+            auto accountId = message["accountId"].value<QByteArray>();
+            Kube::Keyring{accountId}.unlock();
+        }
     }
 
 };
@@ -179,6 +184,9 @@ public:
                         break;
                     case Sink::ApplicationDomain::ConnectionLostError:
                         message["message"] = QObject::tr("Connection lost.");
+                        break;
+                    case Sink::ApplicationDomain::MissingCredentialsError:
+                        message["message"] = QObject::tr("No credentials available.");
                         break;
                     default:
                         message["message"] = QObject::tr("An unknown error occurred.");
