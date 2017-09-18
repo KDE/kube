@@ -27,9 +27,9 @@ Rectangle {
     id: root
     color: Kube.Colors.backgroundColor
     //Defines whether more than one account is supported.
-    property bool singleAccountMode: false
+    property bool singleAccountMode: true
     //Defines available account types.
-    property var availableAccountPlugins: ["kolabnow", "imap", "maildir", "gmail"]
+    property var availableAccountPlugins: ["kolabnow"]
 
     Controls.SplitView {
         height: parent.height
