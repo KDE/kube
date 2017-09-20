@@ -25,7 +25,7 @@ import org.kube.accounts.kolabnow 1.0 as KolabnowAccount
 Item {
 
     property string accountId
-    property string heading: qsTr("Connect your KolabNOW account")
+    property string heading: qsTr("Connect your Kolab Now account")
     property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube.")
     property bool valid: accountField.acceptableInput && nameField.acceptableInput && emailField.acceptableInput && pwField.acceptableInput
 
@@ -57,20 +57,6 @@ Item {
             rowSpacing: Kube.Units.largeSpacing
 
             Kube.Label {
-                text: qsTr("Title of Account")
-                Layout.alignment: Qt.AlignRight
-            }
-            Kube.RequiredTextField {
-                id: accountField
-                Layout.fillWidth: true
-                placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
-                text: kolabnowSettings.accountName
-                onTextChanged: {
-                    kolabnowSettings.accountName = text
-                }
-            }
-
-            Kube.Label {
                 text: qsTr("Name")
                 Layout.alignment: Qt.AlignRight
             }
@@ -95,6 +81,7 @@ Item {
                 text: kolabnowSettings.emailAddress
                 onTextChanged: {
                     kolabnowSettings.emailAddress = text
+                    kolabnowSettings.accountName = text
                 }
                 placeholderText: qsTr("Your email address")
             }
