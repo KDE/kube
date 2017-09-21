@@ -24,7 +24,7 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
 
-Item {
+FocusScope {
     id: root
     property string accountType
     signal done()
@@ -88,6 +88,7 @@ Item {
             Loader {
                 id: loader
                 anchors.fill: parent
+                focus: true
                 source: accountFactory.uiPath
             }
         }

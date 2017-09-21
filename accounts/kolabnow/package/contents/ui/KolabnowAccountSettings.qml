@@ -23,7 +23,6 @@ import org.kube.framework 1.0 as Kube
 import org.kube.accounts.kolabnow 1.0 as KolabnowAccount
 
 Item {
-
     property string accountId
     property string heading: qsTr("Connect your Kolab Now account")
     property string subheadline: qsTr("Please fill in your name and email address.")
@@ -57,6 +56,7 @@ Item {
         }
         Kube.RequiredTextField {
             id: nameField
+            focus: true
             Layout.fillWidth: true
             placeholderText: qsTr("Your name")
             text: kolabnowSettings.userName

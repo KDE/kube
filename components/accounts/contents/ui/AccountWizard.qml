@@ -44,12 +44,17 @@ Kube.Popup {
                 stack.push(mainView.createObject(app))
             }
         }
+        onCurrentItemChanged: {
+            if (!!currentItem) {
+                currentItem.forceActiveFocus()
+            }
+        }
     }
 
     Component {
         id: mainView
 
-        Item {
+        FocusScope {
             Kube.Heading {
                 id: heading
                 text: qsTr("Select your new account type")
@@ -67,9 +72,7 @@ Kube.Popup {
                     delegate: Kube.Button {
                         Layout.fillWidth: true
                         text: modelData
-                        onClicked: {
-                            stack.push(wizardPage.createObject(app, {accountType:modelData}))
-                        }
+                        onClicked: stack.push(wizardPage.createObject(app, {accountType:modelData}))
                     }
                 }
             }
@@ -79,6 +82,7 @@ Kube.Popup {
     Component {
         id: wizardPage
         AccountWizardPage {
+            focus: true
             requireSetup: root.requireSetup
             onDone: {
                 root.close()
