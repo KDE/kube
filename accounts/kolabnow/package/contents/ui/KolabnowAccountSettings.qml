@@ -26,7 +26,7 @@ Item {
 
     property string accountId
     property string heading: qsTr("Connect your Kolab Now account")
-    property string subheadline: qsTr("To let Kube access your account, fill in your name, username, password.")
+    property string subheadline: qsTr("Please fill in your name and email address.")
     property bool valid: nameField.acceptableInput && emailField.acceptableInput
 
     KolabnowAccount.KolabnowSettings {
@@ -43,48 +43,42 @@ Item {
         kolabnowSettings.remove()
     }
 
-    Item {
+    GridLayout {
         anchors {
             fill: parent
         }
+        columns: 2
+        columnSpacing: Kube.Units.largeSpacing
+        rowSpacing: Kube.Units.largeSpacing
 
-        GridLayout {
-            anchors {
-                fill: parent
+        Kube.Label {
+            text: qsTr("Name")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.RequiredTextField {
+            id: nameField
+            Layout.fillWidth: true
+            placeholderText: qsTr("Your name")
+            text: kolabnowSettings.userName
+            onTextChanged: {
+                kolabnowSettings.userName = text
             }
-            columns: 2
-            columnSpacing: Kube.Units.largeSpacing
-            rowSpacing: Kube.Units.largeSpacing
+        }
 
-            Kube.Label {
-                text: qsTr("Name")
-                Layout.alignment: Qt.AlignRight
-            }
-            Kube.RequiredTextField {
-                id: nameField
-                Layout.fillWidth: true
-                placeholderText: qsTr("Your name")
-                text: kolabnowSettings.userName
-                onTextChanged: {
-                    kolabnowSettings.userName = text
-                }
-            }
+        Kube.Label {
+            text: qsTr("Email address")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.RequiredTextField {
+            id: emailField
+            Layout.fillWidth: true
 
-            Kube.Label {
-                text: qsTr("Email address")
-                Layout.alignment: Qt.AlignRight
+            text: kolabnowSettings.emailAddress
+            onTextChanged: {
+                kolabnowSettings.emailAddress = text
+                kolabnowSettings.accountName = text
             }
-            Kube.RequiredTextField {
-                id: emailField
-                Layout.fillWidth: true
-
-                text: kolabnowSettings.emailAddress
-                onTextChanged: {
-                    kolabnowSettings.emailAddress = text
-                    kolabnowSettings.accountName = text
-                }
-                placeholderText: qsTr("Your email address")
-            }
+            placeholderText: qsTr("Your email address")
         }
     }
 }
