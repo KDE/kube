@@ -33,6 +33,7 @@ class AccountFactory : public QObject
     Q_PROPERTY(QString name MEMBER mName READ name NOTIFY accountLoaded);
     Q_PROPERTY(QString icon MEMBER mIcon NOTIFY accountLoaded);
     Q_PROPERTY(QString uiPath MEMBER mUiPath NOTIFY accountLoaded);
+    Q_PROPERTY(QString loginUi MEMBER mLoginUi NOTIFY accountLoaded);
 public:
     explicit AccountFactory(QObject *parent = Q_NULLPTR);
 
@@ -49,5 +50,6 @@ private:
     QString mName;
     QString mIcon;
     QString mUiPath;
+    QString mLoginUi;
     QByteArray mAccountType;
 };

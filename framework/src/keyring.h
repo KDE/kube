@@ -24,12 +24,22 @@ namespace Kube {
 class Keyring : public QObject {
     Q_OBJECT
 public:
-    Keyring(const QByteArray &accountId, QObject *parent = nullptr);
+    Keyring();
+    Q_INVOKABLE bool isUnlocked(const QByteArray &accountId);
+
+private:
+    Q_DISABLE_COPY(Keyring);
+};
+
+class AccountKeyring : public QObject {
+    Q_OBJECT
+public:
+    AccountKeyring(const QByteArray &accountId, QObject *parent = nullptr);
     void storePassword(const QByteArray &resourceId, const QString &password);
     void unlock();
 
 private:
-    Q_DISABLE_COPY(Keyring);
+    Q_DISABLE_COPY(AccountKeyring);
 
     QByteArray mAccountIdentifier;
 };

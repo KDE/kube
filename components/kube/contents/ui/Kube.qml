@@ -246,7 +246,6 @@ Controls2.ApplicationWindow {
                 bottom: mainContent.bottom
             }
             Layout.fillWidth: true
-            initialItem: mailView
 
             Kube.Listener {
                 filter: Kube.Messages.componentDone
@@ -282,6 +281,10 @@ Controls2.ApplicationWindow {
                 replaceView(logView)
             }
 
+            function setLoginView() {
+                pushView(loginView, {accountId: currentAccount})
+            }
+
             function openComposer(newMessage, recipients) {
                 pushView(composerView, {newMessage: newMessage, recipients: recipients})
             }
@@ -296,6 +299,17 @@ Controls2.ApplicationWindow {
                 }
             }
 
+            Component.onCompleted: {
+                if (!currentItem) {
+                    if (!Kube.Keyring.isUnlocked(app.currentAccount)) {
+                        setMailView();
+                        setLoginView()
+                    } else {
+                        setMailView();
+                    }
+                }
+            }
+
             //These items are not visible until pushed onto the stack, so we keep them in resources instead of items
             resources: [
                 //Not components so we maintain state
@@ -303,17 +317,20 @@ Controls2.ApplicationWindow {
                     id: mailView
                     anchors.fill: parent
                     Controls2.StackView.onActivated: mailButton.checked = true
+                    Controls2.StackView.onDeactivated: mailButton.checked = false
                 },
                 PeopleView {
                     id: peopleView
                     anchors.fill: parent
                     Controls2.StackView.onActivated: peopleButton.checked = true
+                    Controls2.StackView.onDeactivated: peopleButton.checked = false
                 },
                 //Not a component because otherwise we can't log stuff
                 LogView {
                     id: logView
                     anchors.fill: parent
                     Controls2.StackView.onActivated: logButton.checked = true
+                    Controls2.StackView.onDeactivated: logButton.checked = false
                 }
             ]
             //A component so it's always destroyed when we're done
@@ -322,6 +339,7 @@ Controls2.ApplicationWindow {
                 ComposerView {
                     anchors.fill: parent
                     Controls2.StackView.onActivated: composerButton.checked = true
+                    Controls2.StackView.onDeactivated: composerButton.checked = false
                 }
             }
             Component {
@@ -329,6 +347,13 @@ Controls2.ApplicationWindow {
                 AccountsView {
                     anchors.fill: parent
                     Controls2.StackView.onActivated: accountsButton.checked = true
+                    Controls2.StackView.onDeactivated: accountsButton.checked = false
+                }
+            }
+            Component {
+                id: loginView
+                LoginView {
+                    anchors.fill: parent
                 }
             }
         }

@@ -292,7 +292,7 @@ void AccountSettings::saveImapResource()
             {"server", mImapServer},
             {"username", mImapUsername}
         });
-    Kube::Keyring{mAccountIdentifier}.storePassword(mImapIdentifier, mImapPassword);
+    Kube::AccountKeyring{mAccountIdentifier}.storePassword(mImapIdentifier, mImapPassword);
 }
 
 void AccountSettings::saveCardDavResource()
@@ -301,7 +301,7 @@ void AccountSettings::saveCardDavResource()
             {"server", mCardDavServer},
             {"username", mCardDavUsername}
         });
-    Kube::Keyring{mAccountIdentifier}.storePassword(mCardDavIdentifier, mCardDavPassword);
+    Kube::AccountKeyring{mAccountIdentifier}.storePassword(mCardDavIdentifier, mCardDavPassword);
 }
 
 void AccountSettings::saveMaildirResource()
@@ -317,7 +317,7 @@ void AccountSettings::saveMailtransportResource()
             {"server", mSmtpServer},
             {"username", mSmtpUsername}
         });
-    Kube::Keyring{mAccountIdentifier}.storePassword(mMailtransportIdentifier, mSmtpPassword);
+    Kube::AccountKeyring{mAccountIdentifier}.storePassword(mMailtransportIdentifier, mSmtpPassword);
 }
 
 void AccountSettings::saveIdentity()

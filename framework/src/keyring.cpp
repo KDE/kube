@@ -23,20 +23,31 @@
 
 using namespace Kube;
 
-Keyring::Keyring(const QByteArray &accountId, QObject *parent)
+Keyring::Keyring()
+    : QObject()
+{
+
+}
+
+bool Keyring::isUnlocked(const QByteArray &accountId)
+{
+    return false;
+}
+
+AccountKeyring::AccountKeyring(const QByteArray &accountId, QObject *parent)
     : QObject(parent),
     mAccountIdentifier(accountId)
 {
 }
 
-void Keyring::storePassword(const QByteArray &resourceId, const QString &password)
+void AccountKeyring::storePassword(const QByteArray &resourceId, const QString &password)
 {
     QSettings settings{mAccountIdentifier + ".keyring", QSettings::IniFormat};
     settings.setValue(resourceId, password);
     Sink::SecretStore::instance().insert(resourceId, password);
 }
 
-void Keyring::unlock()
+void AccountKeyring::unlock()
 {
     QSettings settings{mAccountIdentifier + ".keyring", QSettings::IniFormat};
     for (const auto &resourceId : settings.allKeys()) {

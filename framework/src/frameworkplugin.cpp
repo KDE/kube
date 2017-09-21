@@ -38,6 +38,7 @@
 #include "clipboardproxy.h"
 #include "webengineprofile.h"
 #include "startupcheck.h"
+#include "keyring.h"
 
 #include <QtQml>
 
@@ -53,6 +54,13 @@ static QObject *webengineprofile_singletontype_provider(QQmlEngine *engine, QJSE
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
     return new WebEngineProfile;
+}
+
+static QObject *keyring_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return new Kube::Keyring;
 }
 
 void FrameworkPlugin::registerTypes (const char *uri)
@@ -80,4 +88,5 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<ClipboardProxy>(uri, 1, 0, "Clipboard");
     qmlRegisterType<StartupCheck>(uri, 1, 0, "StartupCheck");
     qmlRegisterSingletonType<WebEngineProfile>(uri, 1, 0, "WebEngineProfile", webengineprofile_singletontype_provider);
+    qmlRegisterSingletonType<Kube::Keyring>(uri, 1, 0, "Keyring", keyring_singletontype_provider);
 }

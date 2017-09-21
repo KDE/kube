@@ -26,8 +26,8 @@ Item {
 
     property string accountId
     property string heading: qsTr("Connect your Kolab Now account")
-    property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube.")
-    property bool valid: accountField.acceptableInput && nameField.acceptableInput && emailField.acceptableInput && pwField.acceptableInput
+    property string subheadline: qsTr("To let Kube access your account, fill in your name, username, password.")
+    property bool valid: nameField.acceptableInput && emailField.acceptableInput
 
     KolabnowAccount.KolabnowSettings {
         id: kolabnowSettings
@@ -84,23 +84,6 @@ Item {
                     kolabnowSettings.accountName = text
                 }
                 placeholderText: qsTr("Your email address")
-            }
-
-            Kube.Label {
-                text: qsTr("Password")
-                Layout.alignment: Qt.AlignRight
-            }
-
-            Kube.PasswordField {
-                id: pwField
-                Layout.fillWidth: true
-
-                placeholderText: qsTr("Password of your email account")
-                text: kolabnowSettings.imapPassword
-                onTextChanged: {
-                    kolabnowSettings.imapPassword = text
-                    kolabnowSettings.smtpPassword = text
-                }
             }
         }
     }
