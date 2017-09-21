@@ -38,7 +38,6 @@ Item {
     }
 
     Item {
-
         anchors {
             fill: parent
             margins: Kube.Units.largeSpacing * 2
@@ -84,6 +83,7 @@ Item {
                 //The initial size is somehow necessary so the loader is properly anchored
                 height: 10
                 source: accountFactory.loginUi
+                focus: true
                 onLoaded: item.accountId = root.accountId
             }
             Item {

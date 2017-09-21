@@ -23,13 +23,12 @@ import org.kube.framework 1.0 as Kube
 import org.kube.accounts.kolabnow 1.0 as KolabnowAccount
 
 Item {
-    property string accountId
+    property alias accountId: settings.accountIdentifier
     property string heading: qsTr("Login")
     property string subheadline: settings.accountName
 
     KolabnowAccount.KolabnowSettings {
         id: settings
-        accountIdentifier: accountId
         accountType: "kolabnow"
     }
 
@@ -53,8 +52,9 @@ Item {
         Kube.PasswordField {
             id: pwField
             Layout.fillWidth: true
+            focus: true
 
-            placeholderText: qsTr("Password of your email account")
+            placeholderText: qsTr("Password of your Kolab Now account")
             text: settings.imapPassword
             onTextChanged: settings.imapPassword = text
         }

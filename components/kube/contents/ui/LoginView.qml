@@ -23,11 +23,9 @@ import QtQuick.Controls 1.3 as Controls
 import QtQuick.Controls 2.0
 import org.kube.framework 1.0 as Kube
 
-Rectangle {
+FocusScope {
     id: root
     property alias accountId: login.accountId
-
-    color: Kube.Colors.backgroundColor
 
     Kube.LoginAccount {
         id: login
