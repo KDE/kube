@@ -21,12 +21,9 @@
 
 class StartupCheck : public QObject {
     Q_OBJECT
+    Q_PROPERTY(bool noAccount READ noAccount CONSTANT);
 public:
     StartupCheck(QObject *parent = nullptr);
 
-signals:
-    void noAccount();
-
-private Q_SLOTS:
-    void check();
+    bool noAccount() const;
 };

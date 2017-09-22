@@ -47,11 +47,7 @@ Controls2.ApplicationWindow {
     property variant currentAccount
     onCurrentAccountChanged: {
         if (!!currentAccount) {
-            if (kubeViews.currentItem && !Kube.Keyring.isUnlocked(currentAccount)) {
-                kubeViews.setLoginView()
-            } else {
-                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})
-            }
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})
         }
     }
 
@@ -66,7 +62,7 @@ Controls2.ApplicationWindow {
     }
 
     Kube.StartupCheck {
-        onNoAccount: kubeViews.setAccountsView()
+        id: startupCheck
     }
 
     //Listener
@@ -252,7 +248,12 @@ Controls2.ApplicationWindow {
 
             Kube.Listener {
                 filter: Kube.Messages.componentDone
-                onMessageReceived: kubeViews.pop(Controls2.StackView.Immediate)
+                onMessageReceived: {
+                    kubeViews.pop(Controls2.StackView.Immediate)
+                    if (!!app.currentAccount && !Kube.Keyring.isUnlocked(app.currentAccount)) {
+                        kubeViews.setLoginView()
+                    }
+                }
             }
 
             ///Replace the current view (we can't go back to the old view, and we destroy the old view)
@@ -305,10 +306,15 @@ Controls2.ApplicationWindow {
             }
 
             Component.onCompleted: {
+                //Setup the initial item stack
                 if (!currentItem) {
                     setMailView();
-                    if (!!app.currentAccount && !Kube.Keyring.isUnlocked(app.currentAccount)) {
-                        setLoginView()
+                    if (startupCheck.noAccount) {
+                        setAccountsView()
+                    } else {
+                        if (!!app.currentAccount && !Kube.Keyring.isUnlocked(app.currentAccount)) {
+                            setLoginView()
+                        }
                     }
                 }
             }

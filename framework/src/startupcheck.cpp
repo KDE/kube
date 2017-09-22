@@ -23,13 +23,10 @@
 StartupCheck::StartupCheck(QObject *parent)
     : QObject(parent)
 {
-    QMetaObject::invokeMethod(this, "check", Qt::QueuedConnection);
 }
 
-void StartupCheck::check()
+bool StartupCheck::noAccount() const
 {
     auto accounts = Sink::Store::read<Sink::ApplicationDomain::SinkAccount>({});
-    if (accounts.isEmpty()) {
-        emit noAccount();
-    }
+    return accounts.isEmpty();
 }
