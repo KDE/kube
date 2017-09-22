@@ -24,13 +24,23 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
 
-Item {
+FocusScope {
     id: root
     property string accountType
     signal done()
 
     property bool isFirstView: root.Controls2.StackView.index == 0
     property bool requireSetup: false
+
+    function save() {
+        if (loader.item.valid) {
+            loader.item.save()
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
+            root.done()
+        } else {
+            console.warn("Invalid settings.");
+        }
+    }
 
     Kube.AccountFactory {
         id: accountFactory
@@ -46,6 +56,8 @@ Item {
             stack.pop()
         }
     }
+
+    Keys.onReturnPressed: save()
 
     //Item to avoid anchors conflict with stack
     Item {
@@ -88,6 +100,7 @@ Item {
             Loader {
                 id: loader
                 anchors.fill: parent
+                focus: true
                 source: accountFactory.uiPath
             }
         }
@@ -134,15 +147,7 @@ Item {
                 }
 
                 text: qsTr("Save")
-                onClicked: {
-                    if (loader.item.valid) {
-                        loader.item.save()
-                        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
-                        root.done()
-                    } else {
-                        console.warn("Invalid settings.");
-                    }
-                }
+                onClicked: save()
             }
         }
     }

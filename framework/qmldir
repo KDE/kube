@@ -8,6 +8,7 @@ InlineAccountSwitcher 1.0 InlineAccountSwitcher.qml
 NewAccountDialog 1.0 NewAccountDialog.qml
 EditAccountDialog 1.0 EditAccountDialog.qml
 EditAccount 1.0 EditAccount.qml
+LoginAccount 1.0 LoginAccount.qml
 OverlayDialog 1.0 OverlayDialog.qml
 Outbox 1.0 Outbox.qml
 People 1.0 People.qml

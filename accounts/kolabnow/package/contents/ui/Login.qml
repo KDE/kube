@@ -23,23 +23,17 @@ import org.kube.framework 1.0 as Kube
 import org.kube.accounts.kolabnow 1.0 as KolabnowAccount
 
 Item {
-    property string accountId
-    property string heading: qsTr("Connect your Kolab Now account")
-    property string subheadline: qsTr("Please fill in your name and email address.")
-    property bool valid: nameField.acceptableInput && emailField.acceptableInput
+    property alias accountId: settings.accountIdentifier
+    property string heading: qsTr("Login")
+    property string subheadline: settings.accountName
 
     KolabnowAccount.KolabnowSettings {
-        id: kolabnowSettings
-        accountIdentifier: accountId
+        id: settings
         accountType: "kolabnow"
     }
 
-    function save(){
-        kolabnowSettings.save()
-    }
-
-    function remove(){
-        kolabnowSettings.remove()
+    function login(){
+        settings.save()
     }
 
     GridLayout {
@@ -51,34 +45,18 @@ Item {
         rowSpacing: Kube.Units.largeSpacing
 
         Kube.Label {
-            text: qsTr("Name")
+            text: qsTr("Password")
             Layout.alignment: Qt.AlignRight
         }
-        Kube.RequiredTextField {
-            id: nameField
+
+        Kube.PasswordField {
+            id: pwField
+            Layout.fillWidth: true
             focus: true
-            Layout.fillWidth: true
-            placeholderText: qsTr("Your name")
-            text: kolabnowSettings.userName
-            onTextChanged: {
-                kolabnowSettings.userName = text
-            }
-        }
 
-        Kube.Label {
-            text: qsTr("Email address")
-            Layout.alignment: Qt.AlignRight
-        }
-        Kube.RequiredTextField {
-            id: emailField
-            Layout.fillWidth: true
-
-            text: kolabnowSettings.emailAddress
-            onTextChanged: {
-                kolabnowSettings.emailAddress = text
-                kolabnowSettings.accountName = text
-            }
-            placeholderText: qsTr("Your email address")
+            placeholderText: qsTr("Password of your Kolab Now account")
+            text: settings.imapPassword
+            onTextChanged: settings.imapPassword = text
         }
     }
 }

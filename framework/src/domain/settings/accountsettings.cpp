@@ -24,6 +24,8 @@
 #include <QDir>
 #include <QUrl>
 
+#include "keyring.h"
+
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
 
@@ -196,7 +198,6 @@ void AccountSettings::loadImapResource()
             mImapIdentifier = resource.identifier();
             mImapServer = resource.getProperty("server").toString();
             mImapUsername = resource.getProperty("username").toString();
-            mImapPassword = resource.getProperty("password").toString();
             emit imapResourceChanged();
         }).onError([](const KAsync::Error &error) {
             qWarning() << "Failed to load the imap resource: " << error.errorMessage;
@@ -222,7 +223,6 @@ void AccountSettings::loadMailtransportResource()
             mMailtransportIdentifier = resource.identifier();
             mSmtpServer = resource.getProperty("server").toString();
             mSmtpUsername = resource.getProperty("username").toString();
-            mSmtpPassword = resource.getProperty("password").toString();
             emit smtpResourceChanged();
         }).onError([](const KAsync::Error &error) {
             SinkWarning() << "Failed to load the smtp resource: " << error.errorMessage;
@@ -250,7 +250,6 @@ void AccountSettings::loadCardDavResource()
             mCardDavIdentifier = resource.identifier();
             mCardDavServer = resource.getProperty("server").toString();
             mCardDavUsername = resource.getProperty("username").toString();
-            mCardDavPassword = resource.getProperty("password").toString();
             emit cardDavResourceChanged();
         }).onError([](const KAsync::Error &error) {
             qWarning() << "Failed to load the CardDAV resource: " << error.errorMessage;
@@ -291,18 +290,22 @@ void AccountSettings::saveImapResource()
 {
     mImapIdentifier = saveResource<ImapResource>(mAccountIdentifier, mImapIdentifier, {
             {"server", mImapServer},
-            {"username", mImapUsername},
-            {"password", mImapPassword},
+            {"username", mImapUsername}
         });
+    if (!mImapPassword.isEmpty()) {
+        Kube::AccountKeyring{mAccountIdentifier}.storePassword(mImapIdentifier, mImapPassword);
+    }
 }
 
 void AccountSettings::saveCardDavResource()
 {
     mCardDavIdentifier = saveResource<CardDavResource>(mAccountIdentifier, mCardDavIdentifier, {
             {"server", mCardDavServer},
-            {"username", mCardDavUsername},
-            {"password", mCardDavPassword},
+            {"username", mCardDavUsername}
         });
+    if (!mCardDavPassword.isEmpty()) {
+        Kube::AccountKeyring{mAccountIdentifier}.storePassword(mCardDavIdentifier, mCardDavPassword);
+    }
 }
 
 void AccountSettings::saveMaildirResource()
@@ -316,9 +319,11 @@ void AccountSettings::saveMailtransportResource()
 {
     mMailtransportIdentifier = saveResource<MailtransportResource>(mAccountIdentifier, mMailtransportIdentifier, {
             {"server", mSmtpServer},
-            {"username", mSmtpUsername},
-            {"password", mSmtpPassword},
+            {"username", mSmtpUsername}
         });
+    if (!mSmtpPassword.isEmpty()) {
+        Kube::AccountKeyring{mAccountIdentifier}.storePassword(mMailtransportIdentifier, mSmtpPassword);
+    }
 }
 
 void AccountSettings::saveIdentity()

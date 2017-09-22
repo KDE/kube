@@ -47,6 +47,7 @@ set(SRCS
     krecursivefilterproxymodel.cpp
     webengineprofile.cpp
     startupcheck.cpp
+    keyring.cpp
 )
 
 add_library(frameworkplugin SHARED ${SRCS})

@@ -18,12 +18,34 @@
 */
 
 #include <QObject>
+#include <QSet>
 
-class StartupCheck : public QObject {
+namespace Kube {
+
+class Keyring : public QObject {
     Q_OBJECT
-    Q_PROPERTY(bool noAccount READ noAccount CONSTANT);
 public:
-    StartupCheck(QObject *parent = nullptr);
+    Keyring();
+    static Keyring *instance();
+    Q_INVOKABLE bool isUnlocked(const QByteArray &accountId);
+    void unlock(const QByteArray &accountId);
 
-    bool noAccount() const;
+private:
+    Q_DISABLE_COPY(Keyring);
+    QSet<QByteArray> mUnlocked;
 };
+
+class AccountKeyring : public QObject {
+    Q_OBJECT
+public:
+    AccountKeyring(const QByteArray &accountId, QObject *parent = nullptr);
+    void storePassword(const QByteArray &resourceId, const QString &password);
+    void unlock();
+
+private:
+    Q_DISABLE_COPY(AccountKeyring);
+
+    QByteArray mAccountIdentifier;
+};
+
+}

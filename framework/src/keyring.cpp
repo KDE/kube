@@ -16,17 +16,51 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "startupcheck.h"
+#include "keyring.h"
 
-#include <sink/store.h>
+#include <sink/secretstore.h>
+#include <QSettings>
+#include <QtGlobal>
 
-StartupCheck::StartupCheck(QObject *parent)
-    : QObject(parent)
+using namespace Kube;
+
+Q_GLOBAL_STATIC(Keyring, sKeyring);
+
+Keyring::Keyring()
+    : QObject()
+{
+
+}
+
+Keyring *Keyring::instance()
+{
+    return sKeyring;
+}
+
+bool Keyring::isUnlocked(const QByteArray &accountId)
+{
+    return mUnlocked.contains(accountId);
+}
+
+void Keyring::unlock(const QByteArray &accountId)
+{
+    mUnlocked.insert(accountId);
+}
+
+AccountKeyring::AccountKeyring(const QByteArray &accountId, QObject *parent)
+    : QObject(parent),
+    mAccountIdentifier(accountId)
 {
 }
 
-bool StartupCheck::noAccount() const
+void AccountKeyring::storePassword(const QByteArray &resourceId, const QString &password)
 {
-    auto accounts = Sink::Store::read<Sink::ApplicationDomain::SinkAccount>({});
-    return accounts.isEmpty();
+    Sink::SecretStore::instance().insert(resourceId, password);
+    Keyring::instance()->unlock(mAccountIdentifier);
 }
+
+void AccountKeyring::unlock()
+{
+    //TODO load passwords from an on disk keyring
+}
+

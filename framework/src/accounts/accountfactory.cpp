@@ -64,6 +64,7 @@ void AccountFactory::loadPackage()
     if (!package.isValid()) {
         qWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
         mUiPath.clear();
+        mLoginUi.clear();
         mName.clear();
         mIcon.clear();
         emit accountLoaded();
@@ -71,6 +72,7 @@ void AccountFactory::loadPackage()
     }
     Q_ASSERT(package.isValid());
     mUiPath = package.filePath("mainscript");
+    mLoginUi = package.filePath("ui", "Login.qml");
     mName = package.metadata().name();
     mIcon = package.metadata().iconName();
     emit accountLoaded();
