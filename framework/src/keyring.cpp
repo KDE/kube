@@ -20,8 +20,11 @@
 
 #include <sink/secretstore.h>
 #include <QSettings>
+#include <QtGlobal>
 
 using namespace Kube;
+
+Q_GLOBAL_STATIC(Keyring, sKeyring);
 
 Keyring::Keyring()
     : QObject()
@@ -29,9 +32,19 @@ Keyring::Keyring()
 
 }
 
+Keyring *Keyring::instance()
+{
+    return sKeyring;
+}
+
 bool Keyring::isUnlocked(const QByteArray &accountId)
 {
-    return false;
+    return mUnlocked.contains(accountId);
+}
+
+void Keyring::unlock(const QByteArray &accountId)
+{
+    mUnlocked.insert(accountId);
 }
 
 AccountKeyring::AccountKeyring(const QByteArray &accountId, QObject *parent)
@@ -45,6 +58,7 @@ void AccountKeyring::storePassword(const QByteArray &resourceId, const QString &
     QSettings settings{mAccountIdentifier + ".keyring", QSettings::IniFormat};
     settings.setValue(resourceId, password);
     Sink::SecretStore::instance().insert(resourceId, password);
+    Keyring::instance()->unlock(mAccountIdentifier);
 }
 
 void AccountKeyring::unlock()

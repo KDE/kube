@@ -60,7 +60,9 @@ static QObject *keyring_singletontype_provider(QQmlEngine *engine, QJSEngine *sc
 {
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
-    return new Kube::Keyring;
+    auto instance = Kube::Keyring::instance();
+    QQmlEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+    return instance;
 }
 
 void FrameworkPlugin::registerTypes (const char *uri)

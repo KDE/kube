@@ -47,8 +47,11 @@ Controls2.ApplicationWindow {
     property variant currentAccount
     onCurrentAccountChanged: {
         if (!!currentAccount) {
-            console.warn("Syncing account", currentAccount)
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})
+            if (kubeViews.currentItem && !Kube.Keyring.isUnlocked(currentAccount)) {
+                kubeViews.setLoginView()
+            } else {
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})
+            }
         }
     }
 
@@ -282,7 +285,9 @@ Controls2.ApplicationWindow {
             }
 
             function setLoginView() {
-                pushView(loginView, {accountId: currentAccount})
+                if (currentItem != loginView) {
+                    pushView(loginView, {accountId: currentAccount})
+                }
             }
 
             function openComposer(newMessage, recipients) {
@@ -301,11 +306,9 @@ Controls2.ApplicationWindow {
 
             Component.onCompleted: {
                 if (!currentItem) {
-                    if (!Kube.Keyring.isUnlocked(app.currentAccount)) {
-                        setMailView();
+                    setMailView();
+                    if (!!app.currentAccount && !Kube.Keyring.isUnlocked(app.currentAccount)) {
                         setLoginView()
-                    } else {
-                        setMailView();
                     }
                 }
             }

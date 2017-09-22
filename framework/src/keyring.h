@@ -18,6 +18,7 @@
 */
 
 #include <QObject>
+#include <QSet>
 
 namespace Kube {
 
@@ -25,10 +26,13 @@ class Keyring : public QObject {
     Q_OBJECT
 public:
     Keyring();
+    static Keyring *instance();
     Q_INVOKABLE bool isUnlocked(const QByteArray &accountId);
+    void unlock(const QByteArray &accountId);
 
 private:
     Q_DISABLE_COPY(Keyring);
+    QSet<QByteArray> mUnlocked;
 };
 
 class AccountKeyring : public QObject {
