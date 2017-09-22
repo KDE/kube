@@ -55,17 +55,12 @@ AccountKeyring::AccountKeyring(const QByteArray &accountId, QObject *parent)
 
 void AccountKeyring::storePassword(const QByteArray &resourceId, const QString &password)
 {
-    QSettings settings{mAccountIdentifier + ".keyring", QSettings::IniFormat};
-    settings.setValue(resourceId, password);
     Sink::SecretStore::instance().insert(resourceId, password);
     Keyring::instance()->unlock(mAccountIdentifier);
 }
 
 void AccountKeyring::unlock()
 {
-    QSettings settings{mAccountIdentifier + ".keyring", QSettings::IniFormat};
-    for (const auto &resourceId : settings.allKeys()) {
-        Sink::SecretStore::instance().insert(resourceId.toLatin1(), settings.value(resourceId).toString());
-    }
+    //TODO load passwords from an on disk keyring
 }
 
