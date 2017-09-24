@@ -23,9 +23,8 @@ import QtQuick.Controls 2.0
 import org.kube.framework 1.0 as Kube
 import org.kube.components.accounts 1.0 as KubeAccounts
 
-Rectangle {
+FocusScope {
     id: root
-    color: Kube.Colors.backgroundColor
     //Defines whether more than one account is supported.
     property bool singleAccountMode: false
     //Defines available account types.
@@ -118,6 +117,12 @@ Rectangle {
                     }
                 }
             }
+        }
+    }
+
+    onActiveFocusChanged: {
+        if (activeFocus && accountWizard.visible) {
+            accountWizard.forceActiveFocus()
         }
     }
 
