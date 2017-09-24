@@ -76,6 +76,12 @@ FocusScope {
         onClicked: decrementCurrentIndex()
     }
 
+    Keys.onEscapePressed: {
+        if (currentIndex > 0) {
+            decrementCurrentIndex()
+        }
+    }
+
     RowLayout {
         id: content
         anchors.fill: parent
