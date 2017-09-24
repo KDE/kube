@@ -245,7 +245,11 @@ Kube.View {
                 placeholderText: qsTr("Enter Subject...")
                 text: composerController.subject
                 onTextChanged: composerController.subject = text;
-                onActiveFocusChanged: closeFirstSplitIfNecessary()
+                onActiveFocusChanged: {
+                    if (activeFocus) {
+                        closeFirstSplitIfNecessary()
+                    }
+                }
             }
 
             Flow {
