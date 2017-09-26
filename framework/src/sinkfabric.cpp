@@ -158,13 +158,7 @@ public:
                     return;
                 }
             } else if (notification.type == Sink::Notification::Status) {
-                if (notification.code == Sink::ApplicationDomain::ErrorStatus) {
-                    //A resource entered error status
-                    message["type"] = Notification::Warning;
-                    message["message"] = QObject::tr("A resource experienced an error.");
-                } else {
-                    return;
-                }
+                return;
             } else if (notification.type == Sink::Notification::Error) {
                 message["type"] = Notification::Warning;
                 message["resource"] = QString{notification.resource};
