@@ -56,7 +56,9 @@ Controls.SplitView {
             }
 
             onCurrentItemChanged: {
-                details.resourceId = currentItem.currentData.resource
+                if (!!currentItem.currentData.resource) {
+                    details.resourceId = currentItem.currentData.resource
+                }
                 details.message = currentItem.currentData.message + "\n" + currentItem.currentData.details
                 details.timestamp = currentItem.currentData.timestamp
             }

@@ -36,7 +36,10 @@ Item {
         anchors.fill: parent
         Component.onCompleted: loadHtml(content, "file:///")
         onContentsSizeChanged: {
-            root.contentHeight = contentsSize.height;
+            //Resizing pixel by pixel causes some mails to grow indefinitely
+            if (contentsSize.height >= root.contentHeight + 5) {
+                root.contentHeight = contentsSize.height
+            }
         }
         onLoadingChanged: {
             if (loadRequest.status == WebEngineLoadRequest.LoadFailedStatus) {

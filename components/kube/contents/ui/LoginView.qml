@@ -19,19 +19,34 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.3 as Controls
 import QtQuick.Controls 2.0
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
     property alias accountId: login.accountId
+    onActiveFocusChanged: {
+        if (activeFocus) {
+            popup.forceActiveFocus()
+        }
+    }
 
-    Kube.LoginAccount {
-        id: login
-        anchors {
-            fill: parent
-            bottomMargin: Kube.Units.largeSpacing
+    Kube.Popup {
+        id: popup
+        visible: true
+        parent: ApplicationWindow.overlay
+        height: app.height
+        width: app.width - app.sidebarWidth
+        x: app.sidebarWidth
+        y: 0
+        modal: true
+        closePolicy: Popup.NoAutoClose
+        Kube.LoginAccount {
+            id: login
+            anchors {
+                fill: parent
+                bottomMargin: Kube.Units.largeSpacing
+            }
         }
     }
 }
