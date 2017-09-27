@@ -54,11 +54,6 @@ Kube.Popup {
         id: mainView
 
         FocusScope {
-            onActiveFocusChanged: {
-                if (activeFocus) {
-                    layout.children[0].forceActiveFocus(Qt.TabFocusReason)
-                }
-            }
             Kube.Heading {
                 id: heading
                 text: qsTr("Select your new account type")
