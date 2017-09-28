@@ -169,9 +169,9 @@ Kube.View {
                             margins: Kube.Units.smallSpacing
                         }
 
-                        Kube.Label{
+                        Kube.Label {
                             width: content.width
-                            text: model.subject
+                            text: model.subject == "" ? "no subject" : model.subject
                             color: Kube.Colors.highlightedTextColor
                             maximumLineCount: 2
                             wrapMode: Text.WrapAnywhere
