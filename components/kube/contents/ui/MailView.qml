@@ -26,14 +26,11 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
-    RowLayout {
+    SplitView {
         anchors.fill: parent
-        spacing: 1
         Rectangle {
             width: Kube.Units.gridUnit * 10
             Layout.fillHeight: parent.height
-            visible: !app.small
-
             color: Kube.Colors.textColor
 
             Kube.PositiveButton {
@@ -98,7 +95,7 @@ FocusScope {
         }
 
         Rectangle {
-            Layout.preferredWidth: app.small ? Kube.Units.gridUnit * 12 :  Kube.Units.gridUnit * 20
+            width: Kube.Units.gridUnit * 18
             Layout.fillHeight: parent.height
 
             color: "transparent"

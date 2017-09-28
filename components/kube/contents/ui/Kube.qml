@@ -28,7 +28,6 @@ Controls2.ApplicationWindow {
     id: app
 
     property int sidebarWidth: Kube.Units.gridUnit + Kube.Units.largeSpacing
-    property bool small: app.width < Kube.Units.gridUnit * 50
 
     height: Screen.desktopAvailableHeight * 0.8
     width: Screen.desktopAvailableWidth * 0.8
