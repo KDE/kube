@@ -278,8 +278,6 @@ Kube.View {
 
                 Kube.Switch {
                     id: html
-                    //FIXME enable once the html editor works.
-                    visible: false
                     text: checked ? qsTr("plain") : qsTr("html")
                     focusPolicy: Qt.TabFocus
                     focus: false
