@@ -442,15 +442,14 @@ Kube.View {
             }
 
             RowLayout {
-                Kube.Switch {}
+                Kube.CheckBox {}
                 Kube.Label {
                     text: qsTr("encrypt")
                 }
             }
 
             RowLayout {
-                Kube.Switch {
-                }
+                Kube.CheckBox {}
                 Kube.Label {
                     text: qsTr("sign")
                 }
