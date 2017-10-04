@@ -16,17 +16,15 @@ T.Switch {
         Rectangle {
             width: parent.width
             height: parent.height
-            radius: 5
             color: root.checked ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+            radius: 2
         }
 
         Rectangle {
             height: parent.height
             width: height
-
             x: root.visualPosition * Kube.Units.gridUnit
-
-            radius: 5
+            radius: 2
             color: Kube.Colors.viewBackgroundColor
             border.width: 1
             border.color: Kube.Colors.buttonColor
