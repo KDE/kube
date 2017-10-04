@@ -442,6 +442,21 @@ Kube.View {
             }
 
             RowLayout {
+                Kube.Switch {}
+                Kube.Label {
+                    text: qsTr("encrypt")
+                }
+            }
+
+            RowLayout {
+                Kube.Switch {
+                }
+                Kube.Label {
+                    text: qsTr("sign")
+                }
+            }
+
+            RowLayout {
                 width: parent.width
                 height: Kube.Units.gridUnit
 
