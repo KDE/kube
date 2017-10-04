@@ -364,8 +364,10 @@ Kube.View {
             top: parent.top
             bottom: parent.bottom
         }
-        activeFocusOnTab: true
         width: Kube.Units.gridUnit * 15
+        activeFocusOnTab: true
+
+        //background
         Rectangle {
             anchors.fill: parent
             color: Kube.Colors.backgroundColor
@@ -375,120 +377,101 @@ Kube.View {
                 width: 1
                 color: Kube.Colors.buttonColor
             }
+        }
 
-            //Content
-            Item {
-                anchors.right: parent.right
-                width: parent.width
-                height: parent.height
+        //Content
+        ColumnLayout {
+            anchors {
+                fill: parent
+                margins: Kube.Units.largeSpacing
+            }
 
-                ColumnLayout {
-                    anchors {
-                        top: parent.top
-                        bottom: bottomButtons.top
-                        left: parent.left
-                        right: parent.right
-                        margins: Kube.Units.largeSpacing
-                    }
+            spacing: Kube.Units.largeSpacing
 
-                    Kube.Label {
-                        text: qsTr("Sending Email to:")
-                    }
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                    AddresseeListEditor {
-                        id: to
-                        Layout.preferredHeight: to.implicitHeight
-                        Layout.fillWidth: true
-                        focus: true
-                        activeFocusOnTab: true
-                        completer: composerController.recipientCompleter
-                        model: composerController.toModel
-                        onAdded: composerController.addTo(text)
-                        onRemoved: composerController.removeTo(text)
-                    }
-
-                    Kube.Label {
-                        text: qsTr("Sending Copy to (CC):")
-                    }
-                    AddresseeListEditor {
-                        id: cc
-                        Layout.preferredHeight: cc.implicitHeight
-                        Layout.fillWidth: true
-                        activeFocusOnTab: true
-                        completer: composerController.recipientCompleter
-                        model: composerController.ccModel
-                        onAdded: composerController.addCc(text)
-                        onRemoved: composerController.removeCc(text)
-                    }
-
-                    Kube.Label {
-                        text: qsTr("Sending Secret Copy to (Bcc):")
-                    }
-                    AddresseeListEditor {
-                        id: bcc
-                        Layout.preferredHeight: bcc.implicitHeight
-                        Layout.fillWidth: true
-                        activeFocusOnTab: true
-                        completer: composerController.recipientCompleter
-                        model: composerController.bccModel
-                        onAdded: composerController.addBcc(text)
-                        onRemoved: composerController.removeBcc(text)
-                    }
-
-                    Item {
-                        width: parent.width
-                        Layout.fillHeight: true
-                    }
+                Kube.Label {
+                    text: qsTr("Sending Email to:")
                 }
 
-
-                Item {
-                    id: bottomButtons
-                    anchors {
-                        bottom: fromLabel.top
-                        bottomMargin: Kube.Units.largeSpacing
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                    width: parent.width - Kube.Units.largeSpacing * 2
-                    height: Kube.Units.gridUnit
-
-                    Kube.Button {
-                        id: saveDraftButton
-
-                        anchors.right: parent.right
-
-                        text: qsTr("Save as Draft")
-                        //TODO enabled: saveAsDraftAction.enabled
-                        onClicked: {
-                            saveAsDraftAction.execute()
-                        }
-                    }
-                    Kube.Button {
-                        anchors.left: parent.left
-
-                        text: qsTr("Discard")
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
-                    }
+                AddresseeListEditor {
+                    id: to
+                    Layout.preferredHeight: to.implicitHeight
+                    Layout.fillWidth: true
+                    focus: true
+                    activeFocusOnTab: true
+                    completer: composerController.recipientCompleter
+                    model: composerController.toModel
+                    onAdded: composerController.addTo(text)
+                    onRemoved: composerController.removeTo(text)
                 }
 
                 Kube.Label {
-                    id: fromLabel
-                    anchors {
-                        bottom: identityCombo.top
-                        bottomMargin: Kube.Units.smallSpacing
-                        left: identityCombo.left
+                    text: qsTr("Sending Copy to (CC):")
+                }
+                AddresseeListEditor {
+                    id: cc
+                    Layout.preferredHeight: cc.implicitHeight
+                    Layout.fillWidth: true
+                    activeFocusOnTab: true
+                    completer: composerController.recipientCompleter
+                    model: composerController.ccModel
+                    onAdded: composerController.addCc(text)
+                    onRemoved: composerController.removeCc(text)
+                }
+
+                Kube.Label {
+                    text: qsTr("Sending Secret Copy to (Bcc):")
+                }
+                AddresseeListEditor {
+                    id: bcc
+                    Layout.preferredHeight: bcc.implicitHeight
+                    Layout.fillWidth: true
+                    activeFocusOnTab: true
+                    completer: composerController.recipientCompleter
+                    model: composerController.bccModel
+                    onAdded: composerController.addBcc(text)
+                    onRemoved: composerController.removeBcc(text)
+                }
+                Item {
+                    width: parent.width
+                    Layout.fillHeight: true
+                }
+            }
+
+            RowLayout {
+                width: parent.width
+                height: Kube.Units.gridUnit
+
+                Kube.Button {
+                    width: saveDraftButton.width
+                    text: qsTr("Discard")
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                }
+
+                Kube.Button {
+                    id: saveDraftButton
+
+                    text: qsTr("Save as Draft")
+                    //TODO enabled: saveAsDraftAction.enabled
+                    onClicked: {
+                        saveAsDraftAction.execute()
                     }
+                }
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+                Kube.Label {
+                    id: fromLabel
                     text: qsTr("You are sending this from:")
                 }
 
                 Kube.ComboBox {
                     id: identityCombo
 
-                    anchors {
-                        bottom: sendButton.top
-                        bottomMargin: Kube.Units.largeSpacing
-                        horizontalCenter: parent.horizontalCenter
-                    }
                     width: parent.width - Kube.Units.largeSpacing * 2
 
                     model: composerController.identitySelector.model
@@ -498,24 +481,19 @@ Kube.View {
                         composerController.identitySelector.currentIndex = currentIndex
                     }
                 }
+            }
 
-                Kube.PositiveButton {
-                    id: sendButton
+            Kube.PositiveButton {
+                id: sendButton
 
-                    anchors {
-                        bottom: parent.bottom
-                        bottomMargin: Kube.Units.largeSpacing
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                    width: parent.width - Kube.Units.largeSpacing * 2
+                width: parent.width
 
-                    text: qsTr("Send")
-                    enabled: sendAction.enabled
-                    onClicked: {
-                        sendAction.execute()
-                    }
+                text: qsTr("Send")
+                enabled: sendAction.enabled
+                onClicked: {
+                    sendAction.execute()
                 }
             }
         }
-    } //FocusScope
+    }//FocusScope
 }
