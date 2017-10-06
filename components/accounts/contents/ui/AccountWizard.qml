@@ -23,6 +23,7 @@ import org.kube.framework 1.0 as Kube
 
 Kube.Popup {
     id: root
+    objectName: "accountWizard"
 
     property bool requireSetup: false
     property var availableAccountPlugins: []

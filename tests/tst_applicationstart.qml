@@ -31,8 +31,11 @@ TestCase {
     name: "ApplicationStart"
 
     Kube.Kube {
+        id: kube
     }
 
-    function test_stuff() {
+    function test_startToWizard() {
+        var accountWizard = findChild(kube, "accountWizard");
+        verify(accountWizard.visible)
     }
 }
