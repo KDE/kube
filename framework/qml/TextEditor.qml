@@ -52,7 +52,7 @@ FocusScope {
         }
     }
 
-    Kube.DocumentHandler {
+    Kube.TextDocumentHandler {
         id: document
         document: edit.textDocument
         selectionStart: edit.selectionStart

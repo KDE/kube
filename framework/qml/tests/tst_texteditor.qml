@@ -40,6 +40,8 @@ TestCase {
 
     function test_2htmlConversion() {
         editor.htmlEnabled = true
+        verify(editor.text.indexOf("<html>") !== -1)
+        verify(editor.text.indexOf(editor.initialText) !== -1)
         editor.htmlEnabled = false
         compare(editor.text, editor.initialText)
     }
