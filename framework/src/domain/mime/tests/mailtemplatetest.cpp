@@ -225,13 +225,35 @@ private slots:
         QString body = "body";
         QList<Attachment> attachments;
 
-        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments);
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments);
 
         QVERIFY(result);
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QCOMPARE(result->body(), body.toUtf8());
         QVERIFY(result->date(false)->dateTime().isValid());
         QVERIFY(result->contentType()->isMimeType("text/plain"));
+    }
+
+    void testCreateHtmlMail()
+    {
+        QStringList to = {{"to@example.org"}};
+        QStringList cc = {{"cc@example.org"}};
+        QStringList bcc = {{"bcc@example.org"}};;
+        KMime::Types::Mailbox from;
+        from.fromUnicodeString("from@example.org");
+        QString subject = "subject";
+        QString body = "body";
+        QList<Attachment> attachments;
+
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, true, attachments);
+
+        QVERIFY(result);
+        QCOMPARE(result->subject()->asUnicodeString(), subject);
+        QVERIFY(result->date(false)->dateTime().isValid());
+        QVERIFY(result->contentType()->isMimeType("multipart/alternative"));
+        const auto contents = result->contents();
+        //1 Plain + 1 Html
+        QCOMPARE(contents.size(), 2);
     }
 
     void testCreatePlainMailWithAttachments()
@@ -245,7 +267,7 @@ private slots:
         QString body = "body";
         QList<Attachment> attachments = {{"name", "filename", "mimetype", true, "inlineAttachment"}, {"name", "filename", "mimetype", false, "nonInlineAttachment"}};
 
-        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments);
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments);
 
         QVERIFY(result);
         QCOMPARE(result->subject()->asUnicodeString(), subject);
@@ -269,7 +291,7 @@ private slots:
 
         std::vector<GpgME::Key> keys = getKeys();
 
-        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments, keys);
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, keys);
 
         QVERIFY(result);
         // qWarning() << "---------------------------------";
@@ -304,7 +326,7 @@ private slots:
 
         std::vector<GpgME::Key> keys = getKeys();
 
-        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, attachments, keys);
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, keys);
 
         QVERIFY(result);
         QCOMPARE(result->subject()->asUnicodeString(), subject);

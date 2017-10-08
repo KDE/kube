@@ -51,6 +51,7 @@ class ComposerController : public Kube::Controller
     //Interface properties
     KUBE_CONTROLLER_PROPERTY(QString, Subject, subject)
     KUBE_CONTROLLER_PROPERTY(QString, Body, body)
+    KUBE_CONTROLLER_PROPERTY(bool, HtmlBody, htmlBody)
 
     //Set by identitySelector
     KUBE_CONTROLLER_PROPERTY(KMime::Types::Mailbox, Identity, identity)

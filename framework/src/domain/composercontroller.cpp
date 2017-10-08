@@ -427,7 +427,7 @@ KMime::Message::Ptr ComposerController::assembleMessage()
             };
         }
     }
-    return MailTemplates::createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), attachments);
+    return MailTemplates::createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments);
 }
 
 void ComposerController::updateSendAction()

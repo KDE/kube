@@ -34,15 +34,17 @@ Kube.View {
     property variant message: {}
     property variant recipients: []
 
-    //FIXME mean hack to unfuck hiding
-    property variant _composerController: Kube.ComposerController {
-        id: composerController
-        onDone: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
-    }
-
     //actions
     property variant sendAction: composerController.sendAction
     property variant saveAsDraftAction: composerController.saveAsDraftAction
+
+    resources: [
+        Kube.ComposerController {
+            id: composerController
+            htmlBody: html.checked
+            onDone: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+        }
+    ]
 
     Component.onCompleted: loadMessage(root.message, root.loadAsDraft)
 
