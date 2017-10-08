@@ -27,6 +27,7 @@ Item {
     property string heading: qsTr("Connect your Kolab Now account")
     property string subheadline: qsTr("Please fill in your name and email address.")
     property bool valid: nameField.acceptableInput && emailField.acceptableInput
+    implicitHeight: grid.implicitHeight
 
     KolabnowAccount.KolabnowSettings {
         id: kolabnowSettings
@@ -43,9 +44,8 @@ Item {
     }
 
     GridLayout {
-        anchors {
-            fill: parent
-        }
+        id: grid
+        anchors.fill: parent
         columns: 2
         columnSpacing: Kube.Units.largeSpacing
         rowSpacing: Kube.Units.largeSpacing

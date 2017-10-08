@@ -59,36 +59,29 @@ Item {
             wrapMode: Text.Wrap
         }
 
-        Item {
-            id: accountEdit
+        Column {
             anchors {
-                top:subHeadline.bottom
+                top: subHeadline.bottom
                 left: parent.left
                 right: parent.right
                 bottom: footer.top
                 topMargin: Kube.Units.largeSpacing * 2
             }
-
+            spacing: Kube.Units.largeSpacing
             Loader {
                 id: loader
                 anchors {
-                    top: parent.top
                     left: parent.left
                     right: parent.right
                 }
-                //The initial size is somehow necessary so the loader is properly anchored
-                height: 10
+                height: item ? item.implicitHeight : 0
                 source: accountFactory.uiPath
                 onLoaded: item.accountId = root.accountId
             }
-            Item {
-                id: spacer
-                anchors {
-                    top: loader.bottom
-                    left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
-                }
+            Kube.Button {
+                anchors.right: parent.right
+                text: qsTr("Change Password")
+                onClicked: Kube.Fabric.postMessage(Kube.Messages.requestLogin, {})
             }
         }
 

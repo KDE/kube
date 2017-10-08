@@ -101,6 +101,11 @@ Controls2.ApplicationWindow {
         onMessageReceived: kubeViews.openComposer(true, message.recipients)
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.requestLogin
+        onMessageReceived: kubeViews.setLoginView()
+    }
+
     //BEGIN Shortcuts
     Shortcut {
         sequence: StandardKey.Quit

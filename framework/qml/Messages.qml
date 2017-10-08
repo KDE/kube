@@ -34,8 +34,8 @@ Item {
     property string toggleImportant: "toggleImportant"
     property string moveToFolder: "moveToFolder"
     property string moveToDrafts: "moveToDrafts"
-    property string credentials: "credentials"
     property string unlockKeyring: "unlockKeyring"
+    property string requestLogin: "requestLogin"
 
     property string notification: "notification"
     property string progressNotification: "progressNotification"
