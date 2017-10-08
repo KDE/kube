@@ -81,7 +81,10 @@ Item {
             Kube.Button {
                 anchors.right: parent.right
                 text: qsTr("Change Password")
-                onClicked: Kube.Fabric.postMessage(Kube.Messages.requestLogin, {})
+                onClicked: {
+                    Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                    Kube.Fabric.postMessage(Kube.Messages.requestLogin, {})
+                }
             }
         }
 
