@@ -69,6 +69,13 @@ static KMime::Types::Mailbox::List stripMyAddressesFromAddressList(const KMime::
     return addresses;
 }
 
+static QString toPlainText(const QString &s)
+{
+    QTextDocument doc;
+    doc.setHtml(s);
+    return doc.toPlainText();
+}
+
 void initHeader(const KMime::Message::Ptr &message)
 {
     message->removeHeader<KMime::Headers::To>();
@@ -881,9 +888,7 @@ QString MailTemplates::plaintextContent(const KMime::Message::Ptr &msg)
     const auto plain = otp.plainTextContent();
     if (plain.isEmpty()) {
         //Maybe not as good as the webengine version, but works at least for simple html content
-        QTextDocument doc;
-        doc.setHtml(otp.htmlContent());
-        return doc.toPlainText();
+        return toPlainText(otp.htmlContent());
     }
     return plain;
 }
@@ -906,16 +911,16 @@ static KMime::Content *createAttachmentPart(const QByteArray &content, const QSt
     return part;
 }
 
-static KMime::Content *createPlainBodyPart(const QByteArray &body) {
+static KMime::Content *createPlainBodyPart(const QString &body) {
     auto mainMessage = new KMime::Content;
-    mainMessage->setBody(body);
+    mainMessage->setBody(body.toUtf8());
     mainMessage->contentType(true)->setMimeType("text/plain");
     return mainMessage;
 }
 
-static KMime::Content *createHtmlBodyPart(const QByteArray &body) {
+static KMime::Content *createHtmlBodyPart(const QString &body) {
     auto mainMessage = new KMime::Content;
-    mainMessage->setBody(body);
+    mainMessage->setBody(body.toUtf8());
     mainMessage->contentType(true)->setMimeType("text/html");
     return mainMessage;
 }
@@ -926,10 +931,7 @@ static KMime::Content *createBodyPart(const QByteArray &body, bool htmlBody) {
         bodyPart->contentType(true)->setMimeType("multipart/alternative");
         bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
 
-        QTextDocument doc;
-        doc.setHtml(body);
-
-        bodyPart->addContent(createPlainBodyPart(doc.toPlainText().toUtf8()));
+        bodyPart->addContent(createPlainBodyPart(toPlainText(body)));
         bodyPart->addContent(createHtmlBodyPart(body));
         return bodyPart;
     } else {
