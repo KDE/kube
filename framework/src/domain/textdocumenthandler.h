@@ -86,6 +86,8 @@ public:
     int fontSize() const;
     void setFontSize(int size);
 
+    Q_INVOKABLE void resetFormat();
+
 Q_SIGNALS:
     void documentChanged();
     void cursorPositionChanged();

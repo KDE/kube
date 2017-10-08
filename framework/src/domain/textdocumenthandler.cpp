@@ -32,6 +32,17 @@ TextDocumentHandler::TextDocumentHandler(QObject *parent)
 {
 }
 
+void TextDocumentHandler::resetFormat()
+{
+    //Clear all formatting from the document.
+    auto cursor = textCursor();
+    cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
+    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    cursor.setCharFormat({});
+    mCachedTextFormat = {};
+    reset();
+}
+
 QQuickTextDocument *TextDocumentHandler::document() const
 {
     return mDocument;

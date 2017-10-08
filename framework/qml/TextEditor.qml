@@ -46,8 +46,8 @@ FocusScope {
             edit.text = t
         } else {
             var t = document.plainText
+            document.resetFormat()
             edit.textFormat = Qt.PlainText
-            edit.font.bold = false
             edit.text = t
         }
     }
