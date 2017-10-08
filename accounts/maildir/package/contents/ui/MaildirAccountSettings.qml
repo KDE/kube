@@ -26,9 +26,10 @@ import org.kube.accounts.maildir 1.0 as MaildirAccount
 
 Item {
     property string accountId
-    property string heading: "Add your Maildir archive"
-    property string subheadline: "To let Kube access your maildir archive, add the path to your archive and give the account a title that will be displayed inside Kube."
+    property string heading: qsTr("Add your Maildir archive")
+    property string subheadline: qsTr("To let Kube access your maildir archive, add the path to your archive and give the account a title that will be displayed inside Kube.")
     property bool valid: true
+    implicitHeight: grid.implicitHeight
 
     MaildirAccount.MaildirSettings {
         id: maildirSettings
@@ -44,66 +45,59 @@ Item {
         maildirSettings.remove()
     }
 
-    Item {
-        anchors {
-            fill: parent
+    GridLayout {
+        id: grid
+        anchors.fill: parent
+        columns: 2
+        columnSpacing: Kube.Units.largeSpacing
+        rowSpacing: Kube.Units.largeSpacing
+
+        Kube.Label {
+            text: qsTr("Title of Account")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.TextField {
+            Layout.fillWidth: true
+            placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
+            text: maildirSettings.accountName
+            onTextChanged: {
+                maildirSettings.accountName = text
+            }
         }
 
-        GridLayout {
-            anchors {
-                fill: parent
-            }
-            columns: 2
-            columnSpacing: Kube.Units.largeSpacing
-            rowSpacing: Kube.Units.largeSpacing
+        Kube.Label {
+            text: qsTr("Path")
+            Layout.alignment: Qt.AlignRight
+        }
+        RowLayout {
+            Layout.fillWidth: true
 
-            Kube.Label {
-                text: qsTr("Title of Account")
-                Layout.alignment: Qt.AlignRight
-            }
             Kube.TextField {
+                id: path
                 Layout.fillWidth: true
-                placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
-                text: maildirSettings.accountName
-                onTextChanged: {
-                    maildirSettings.accountName = text
-                }
+                enabled: false
+                text: maildirSettings.path
             }
 
-            Kube.Label {
-                text: qsTr("Path")
-                Layout.alignment: Qt.AlignRight
-            }
-            RowLayout {
-                Layout.fillWidth: true
+            Controls.Button {
+                iconName: Kube.Icons.folder
 
-                Kube.TextField {
-                    id: path
-                    Layout.fillWidth: true
-                    enabled: false
-                    text: maildirSettings.path
+                onClicked: {
+                    fileDialogComponent.createObject(parent)
                 }
 
-                Controls.Button {
-                    iconName: Kube.Icons.folder
+                Component {
+                    id: fileDialogComponent
+                    Dialogs.FileDialog {
+                        id: fileDialog
 
-                    onClicked: {
-                        fileDialogComponent.createObject(parent)
-                    }
+                        visible: true
+                        title: "Choose the maildir folder"
 
-                    Component {
-                        id: fileDialogComponent
-                        Dialogs.FileDialog {
-                            id: fileDialog
+                        selectFolder: true
 
-                            visible: true
-                            title: "Choose the maildir folder"
-
-                            selectFolder: true
-
-                            onAccepted: {
-                                maildirSettings.path = fileDialog.fileUrl
-                            }
+                        onAccepted: {
+                            maildirSettings.path = fileDialog.fileUrl
                         }
                     }
                 }

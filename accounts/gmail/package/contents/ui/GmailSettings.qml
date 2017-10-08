@@ -26,9 +26,10 @@ import org.kube.accounts.gmail 1.0 as GmailAccount
 Item {
 
     property string accountId
-    property string heading: "Connect your GMail account"
-    property string subheadline: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube."
+    property string heading: qsTr("Connect your GMail account")
+    property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube.")
     property bool valid: true
+    implicitHeight: grid.implicitHeight
 
     GmailAccount.GmailSettings {
         id: gmailSettings
@@ -44,90 +45,83 @@ Item {
         gmailSettings.remove()
     }
 
-    Item {
-        anchors {
-            fill: parent
-        }
+    GridLayout {
+        id: grid
+        anchors.fill: parent
+        columns: 2
+        columnSpacing: Kube.Units.largeSpacing
+        rowSpacing: Kube.Units.largeSpacing
 
-        GridLayout {
-            anchors {
-                fill: parent
-            }
-            columns: 2
-            columnSpacing: Kube.Units.largeSpacing
-            rowSpacing: Kube.Units.largeSpacing
-
-            Kube.Label {
-                text: "Please note that GMail requires you to configure your account to allow IMAP connections from Kube:
+        Kube.Label {
+            text: "Please note that GMail requires you to configure your account to allow IMAP connections from Kube:
 <ol type=''>
 <li> See <a href='https://support.google.com/mail/answer/7126229'>https://support.google.com/mail/answer/7126229</a> to configure your account to allow IMAP connections.
 <li> Visit <a href='https://myaccount.google.com/lesssecureapps'>https://myaccount.google.com/lesssecureapps</a> and enable the setting to allow Kube to connect to your account."
-                Layout.alignment: Qt.AlignCenter
-                Layout.columnSpan: 2
-                onLinkActivated: Qt.openUrlExternally(link)
-                textFormat: Text.StyledText
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
-                    cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
-                }
+            Layout.alignment: Qt.AlignCenter
+            Layout.columnSpan: 2
+            onLinkActivated: Qt.openUrlExternally(link)
+            textFormat: Text.StyledText
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
+                cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
             }
+        }
 
-            Kube.Label {
-                text: qsTr("Title of Account")
-                Layout.alignment: Qt.AlignRight
+        Kube.Label {
+            text: qsTr("Title of Account")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.TextField {
+            Layout.fillWidth: true
+            placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
+            text: gmailSettings.accountName
+            onTextChanged: {
+                gmailSettings.accountName = text
             }
-            Kube.TextField {
-                Layout.fillWidth: true
-                placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
-                text: gmailSettings.accountName
-                onTextChanged: {
-                    gmailSettings.accountName = text
-                }
-            }
+        }
 
-            Kube.Label {
-                text: qsTr("Name")
-                Layout.alignment: Qt.AlignRight
+        Kube.Label {
+            text: qsTr("Name")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.TextField {
+            Layout.fillWidth: true
+            placeholderText: qsTr("Your name")
+            text: gmailSettings.userName
+            onTextChanged: {
+                gmailSettings.userName = text
             }
-            Kube.TextField {
-                Layout.fillWidth: true
-                placeholderText: qsTr("Your name")
-                text: gmailSettings.userName
-                onTextChanged: {
-                    gmailSettings.userName = text
-                }
+        }
+
+        Kube.Label {
+            text: qsTr("Email address")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.TextField {
+            Layout.fillWidth: true
+
+            text: gmailSettings.emailAddress
+            onTextChanged: {
+                gmailSettings.emailAddress = text
             }
+            placeholderText: qsTr("Your email address")
+        }
 
-            Kube.Label {
-                text: qsTr("Email address")
-                Layout.alignment: Qt.AlignRight
-            }
-            Kube.TextField {
-                Layout.fillWidth: true
+        Kube.Label {
+            text: qsTr("Password")
+            Layout.alignment: Qt.AlignRight
+        }
 
-                text: gmailSettings.emailAddress
-                onTextChanged: {
-                    gmailSettings.emailAddress = text
-                }
-                placeholderText: qsTr("Your email address")
-            }
+        Kube.PasswordField {
+            id: pwField
+            Layout.fillWidth: true
 
-            Kube.Label {
-                text: qsTr("Password")
-                Layout.alignment: Qt.AlignRight
-            }
-
-            Kube.PasswordField {
-                id: pwField
-                Layout.fillWidth: true
-
-                placeholderText: qsTr("Password of your email account")
-                text: gmailSettings.imapPassword
-                onTextChanged: {
-                    gmailSettings.imapPassword = text
-                    gmailSettings.smtpPassword = text
-                }
+            placeholderText: qsTr("Password of your email account")
+            text: gmailSettings.imapPassword
+            onTextChanged: {
+                gmailSettings.imapPassword = text
+                gmailSettings.smtpPassword = text
             }
         }
     }
