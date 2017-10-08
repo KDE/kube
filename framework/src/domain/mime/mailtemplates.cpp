@@ -906,7 +906,7 @@ static KMime::Content *createAttachmentPart(const QByteArray &content, const QSt
     return part;
 }
 
-static KMime::Content *createBodyPart(const QByteArray &body) {
+static KMime::Content *createPlainBodyPart(const QByteArray &body) {
     auto mainMessage = new KMime::Content;
     mainMessage->setBody(body);
     mainMessage->contentType(true)->setMimeType("text/plain");
@@ -918,6 +918,24 @@ static KMime::Content *createHtmlBodyPart(const QByteArray &body) {
     mainMessage->setBody(body);
     mainMessage->contentType(true)->setMimeType("text/html");
     return mainMessage;
+}
+
+static KMime::Content *createBodyPart(const QByteArray &body, bool htmlBody) {
+    if (htmlBody) {
+        auto bodyPart = new KMime::Content;
+        bodyPart->contentType(true)->setMimeType("multipart/alternative");
+        bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
+
+        QTextDocument doc;
+        doc.setHtml(body);
+
+        bodyPart->addContent(createPlainBodyPart(doc.toPlainText().toUtf8()));
+        bodyPart->addContent(createHtmlBodyPart(body));
+        return bodyPart;
+    } else {
+        return createPlainBodyPart(body);
+    }
+    return nullptr;
 }
 
 static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list)
@@ -975,25 +993,12 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
         bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
         bodyPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
         bodyPart->setPreamble("This is a multi-part message in MIME format.\n");
-        //TODO deal with html
-        bodyPart->addContent(createBodyPart(body.toUtf8()));
+        bodyPart->addContent(createBodyPart(body.toUtf8(), htmlBody));
         for (const auto &attachment : attachments) {
             bodyPart->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
         }
     } else {
-        if (htmlBody) {
-            bodyPart = new KMime::Content;
-            bodyPart->contentType(true)->setMimeType("multipart/alternative");
-            bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
-
-            QTextDocument doc;
-            doc.setHtml(body);
-
-            bodyPart->addContent(createBodyPart(doc.toPlainText().toUtf8()));
-            bodyPart->addContent(createHtmlBodyPart(body.toUtf8()));
-        } else {
-            bodyPart = createBodyPart(body.toUtf8());
-        }
+        bodyPart = createBodyPart(body.toUtf8(), htmlBody);
     }
     bodyPart->assemble();
 
