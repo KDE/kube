@@ -863,12 +863,14 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
         auto plainBodyResult = plainBody + plainQuote;
         htmlMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body, const QString &headElement) {
             //The html body is complete
-            auto htmlBodyResult = htmlBody + quotedHtmlText(body);
-            if (alwaysPlain) {
-                htmlBodyResult.clear();
-            } else {
-                makeValidHtml(htmlBodyResult, headElement);
-            }
+            const auto htmlBodyResult = [&]() {
+                if (!alwaysPlain) {
+                    auto htmlBodyResult = htmlBody + quotedHtmlText(body);
+                    makeValidHtml(htmlBodyResult, headElement);
+                    return htmlBodyResult;
+                }
+                return QString{};
+            }();
 
             //Assemble the message
             addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false);
