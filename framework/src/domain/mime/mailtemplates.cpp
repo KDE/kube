@@ -404,15 +404,7 @@ void plainMessageText(const QString &plainTextContent, const QString &htmlConten
 {
     QString result = plainTextContent;
     if (plainTextContent.isEmpty()) {   //HTML-only mails
-        auto page = new QWebEnginePage;
-        setupPage(page);
-        page->setHtml(htmlContent);
-        QObject::connect(page, &QWebEnginePage::loadFinished, [=] (bool ok) {
-            page->toPlainText([=] (const QString &plaintext) {
-                page->deleteLater();
-                callback(plaintext);
-            });
-        });
+        callback(toPlainText(htmlContent));
         return;
     }
 
