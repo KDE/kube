@@ -34,9 +34,7 @@ FocusScope {
 
     property string initialText
     onInitialTextChanged: {
-        if (text == "") {
-            edit.text = initialText
-        }
+        edit.text = initialText
     }
 
     onHtmlEnabledChanged: {
