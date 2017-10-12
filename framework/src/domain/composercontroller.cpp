@@ -346,7 +346,10 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
     mBccModel->setStringList(getStringListFromAddresses(msg->bcc(true)->mailboxes()));
 
     setSubject(msg->subject(true)->asUnicodeString());
-    setBody(MailTemplates::plaintextContent(msg));
+    bool isHtml = false;
+    const auto body = MailTemplates::body(msg, isHtml);
+    setHtmlBody(isHtml);
+    setBody(body);
 
     //TODO use ObjecTreeParser to get encrypted attachments as well
     foreach (const auto &att, msg->attachments()) {

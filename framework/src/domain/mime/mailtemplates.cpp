@@ -887,6 +887,19 @@ QString MailTemplates::plaintextContent(const KMime::Message::Ptr &msg)
     return plain;
 }
 
+QString MailTemplates::body(const KMime::Message::Ptr &msg, bool &isHtml)
+{
+    MimeTreeParser::ObjectTreeParser otp;
+    otp.parseObjectTree(msg.data());
+    const auto html = otp.htmlContent();
+    if (html.isEmpty()) {
+        isHtml = false;
+        return otp.plainTextContent();
+    }
+    isHtml = true;
+    return html;
+}
+
 static KMime::Content *createAttachmentPart(const QByteArray &content, const QString &filename, bool isInline, const QByteArray &mimeType, const QString &name)
 {
 

@@ -283,6 +283,7 @@ Kube.View {
                     text: checked ? qsTr("plain") : qsTr("html")
                     focusPolicy: Qt.TabFocus
                     focus: false
+                    checked: composerController.htmlBody
                 }
 
                 Row {
