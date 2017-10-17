@@ -12,7 +12,7 @@ GPLV2+
 
 ## Getting involved
 
-www.kube.kde.org
+[kube.kde.org](https://kube.kde.org/)
 
 ## Extract translatable messages
 
