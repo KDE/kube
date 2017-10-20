@@ -30,6 +30,7 @@ BuildRequires:  gpgme >= 1.8.0
 Requires:       qt5-qtquick1
 Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2
+Requires:       qt5-qtsvg
 Requires:       sink >= 0.4.0
 Requires:       google-noto-sans-fonts
 
