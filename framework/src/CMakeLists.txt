@@ -31,7 +31,7 @@ set(SRCS
     domain/contactcontroller.cpp
     domain/controller.cpp
     domain/peoplemodel.cpp
-    domain/documenthandler.cpp
+    domain/textdocumenthandler.cpp
     domain/mime/htmlutils.cpp
     domain/mime/messageparser.cpp
     domain/mime/attachmentmodel.cpp

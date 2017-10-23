@@ -69,6 +69,13 @@ static KMime::Types::Mailbox::List stripMyAddressesFromAddressList(const KMime::
     return addresses;
 }
 
+static QString toPlainText(const QString &s)
+{
+    QTextDocument doc;
+    doc.setHtml(s);
+    return doc.toPlainText();
+}
+
 void initHeader(const KMime::Message::Ptr &message)
 {
     message->removeHeader<KMime::Headers::To>();
@@ -397,15 +404,7 @@ void plainMessageText(const QString &plainTextContent, const QString &htmlConten
 {
     QString result = plainTextContent;
     if (plainTextContent.isEmpty()) {   //HTML-only mails
-        auto page = new QWebEnginePage;
-        setupPage(page);
-        page->setHtml(htmlContent);
-        QObject::connect(page, &QWebEnginePage::loadFinished, [=] (bool ok) {
-            page->toPlainText([=] (const QString &plaintext) {
-                page->deleteLater();
-                callback(plaintext);
-            });
-        });
+        callback(toPlainText(htmlContent));
         return;
     }
 
@@ -856,12 +855,14 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
         auto plainBodyResult = plainBody + plainQuote;
         htmlMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body, const QString &headElement) {
             //The html body is complete
-            auto htmlBodyResult = htmlBody + quotedHtmlText(body);
-            if (alwaysPlain) {
-                htmlBodyResult.clear();
-            } else {
-                makeValidHtml(htmlBodyResult, headElement);
-            }
+            const auto htmlBodyResult = [&]() {
+                if (!alwaysPlain) {
+                    auto htmlBodyResult = htmlBody + quotedHtmlText(body);
+                    makeValidHtml(htmlBodyResult, headElement);
+                    return htmlBodyResult;
+                }
+                return QString{};
+            }();
 
             //Assemble the message
             addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false);
@@ -881,11 +882,22 @@ QString MailTemplates::plaintextContent(const KMime::Message::Ptr &msg)
     const auto plain = otp.plainTextContent();
     if (plain.isEmpty()) {
         //Maybe not as good as the webengine version, but works at least for simple html content
-        QTextDocument doc;
-        doc.setHtml(otp.htmlContent());
-        return doc.toPlainText();
+        return toPlainText(otp.htmlContent());
     }
     return plain;
+}
+
+QString MailTemplates::body(const KMime::Message::Ptr &msg, bool &isHtml)
+{
+    MimeTreeParser::ObjectTreeParser otp;
+    otp.parseObjectTree(msg.data());
+    const auto html = otp.htmlContent();
+    if (html.isEmpty()) {
+        isHtml = false;
+        return otp.plainTextContent();
+    }
+    isHtml = true;
+    return html;
 }
 
 static KMime::Content *createAttachmentPart(const QByteArray &content, const QString &filename, bool isInline, const QByteArray &mimeType, const QString &name)
@@ -906,11 +918,33 @@ static KMime::Content *createAttachmentPart(const QByteArray &content, const QSt
     return part;
 }
 
-static KMime::Content *createBodyPart(const QByteArray &body) {
+static KMime::Content *createPlainBodyPart(const QString &body) {
     auto mainMessage = new KMime::Content;
-    mainMessage->setBody(body);
+    mainMessage->setBody(body.toUtf8());
     mainMessage->contentType(true)->setMimeType("text/plain");
     return mainMessage;
+}
+
+static KMime::Content *createHtmlBodyPart(const QString &body) {
+    auto mainMessage = new KMime::Content;
+    mainMessage->setBody(body.toUtf8());
+    mainMessage->contentType(true)->setMimeType("text/html");
+    return mainMessage;
+}
+
+static KMime::Content *createBodyPart(const QByteArray &body, bool htmlBody) {
+    if (htmlBody) {
+        auto bodyPart = new KMime::Content;
+        bodyPart->contentType(true)->setMimeType("multipart/alternative");
+        bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
+
+        bodyPart->addContent(createPlainBodyPart(toPlainText(body)));
+        bodyPart->addContent(createHtmlBodyPart(body));
+        return bodyPart;
+    } else {
+        return createPlainBodyPart(body);
+    }
+    return nullptr;
 }
 
 static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list)
@@ -924,7 +958,7 @@ static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list
     return mailboxes;
 }
 
-KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys)
+KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, bool htmlBody, const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys)
 {
     auto mail = existingMessage;
     if (!mail) {
@@ -968,12 +1002,12 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
         bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
         bodyPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
         bodyPart->setPreamble("This is a multi-part message in MIME format.\n");
-        bodyPart->addContent(createBodyPart(body.toUtf8()));
+        bodyPart->addContent(createBodyPart(body.toUtf8(), htmlBody));
         for (const auto &attachment : attachments) {
             bodyPart->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
         }
     } else {
-        bodyPart = createBodyPart(body.toUtf8());
+        bodyPart = createBodyPart(body.toUtf8(), htmlBody);
     }
     bodyPart->assemble();
 

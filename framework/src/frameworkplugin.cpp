@@ -29,7 +29,7 @@
 #include "domain/mouseproxy.h"
 #include "domain/contactcontroller.h"
 #include "domain/peoplemodel.h"
-#include "domain/documenthandler.h"
+#include "domain/textdocumenthandler.h"
 #include "accounts/accountsmodel.h"
 #include "accounts/accountfactory.h"
 #include "settings/settings.h"
@@ -76,7 +76,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<MouseProxy>(uri, 1, 0, "MouseProxy");
     qmlRegisterType<ContactController>(uri, 1, 0,"ContactController");
     qmlRegisterType<PeopleModel>(uri, 1, 0,"PeopleModel");
-    qmlRegisterType<DocumentHandler>(uri, 1, 0, "DocumentHandler");
+    qmlRegisterType<TextDocumentHandler>(uri, 1, 0, "TextDocumentHandler");
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");

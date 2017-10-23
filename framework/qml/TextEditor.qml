@@ -18,7 +18,7 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2
 
 import org.kube.framework 1.0 as Kube
 
@@ -34,39 +34,82 @@ FocusScope {
 
     property string initialText
     onInitialTextChanged: {
-        if (text == "") {
-            edit.text = initialText
+        edit.text = initialText
+    }
+
+    onHtmlEnabledChanged: {
+        if (htmlEnabled) {
+            var t = document.htmlText
+            edit.textFormat = Qt.RichText
+            edit.text = t
+        } else {
+            var t = document.plainText
+            document.resetFormat()
+            edit.textFormat = Qt.PlainText
+            edit.text = t
         }
     }
 
-    Kube.DocumentHandler {
+    Kube.TextDocumentHandler {
         id: document
         document: edit.textDocument
         selectionStart: edit.selectionStart
         selectionEnd: edit.selectionEnd
-        //textColor: colorDialog.color
         onTextChanged: root.htmlEnabled ? root.text = htmlText : root.text = plainText
-
         cursorPosition: edit.cursorPosition
     }
 
-    Kube.ScrollHelper {
+
+    Rectangle {
         anchors.fill: parent
-        flickable: flickableItem
+        border.width: 1
+        border.color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+        color: Kube.Colors.viewBackgroundColor
+
         Flickable {
             id: flickableItem
             anchors.fill: parent
             ScrollBar.vertical: Kube.ScrollBar {}
+            clip: true
 
-            Kube.TextArea {
-                id: edit
-                focus: true
+            Kube.ScrollHelper {
                 anchors.fill: parent
-                selectByMouse: true
-                wrapMode: TextEdit.Wrap
-                textFormat: root.htmlEnabled ? Qt.RichText : Qt.PlainText
+                flickable: flickableItem
             }
-            TextArea.flickable: edit
+
+            contentWidth: edit.paintedWidth
+            contentHeight: edit.paintedHeight
+
+            function ensureVisible(r) {
+                if (contentX >= r.x) {
+                    contentX = r.x
+                } else if (contentX+width <= r.x+r.width) {
+                    contentX = r.x+r.width-width;
+                }
+                if (contentY >= r.y) {
+                    contentY = r.y;
+                } else if (contentY+height <= r.y+r.height) {
+                    contentY = r.y+r.height-height;
+                }
+            }
+
+
+            TextEdit {
+                id: edit
+
+                width: flickableItem.width
+                height: flickableItem.height
+
+                focus: true
+                selectByMouse: true
+                wrapMode: TextEdit.WordWrap
+                onCursorRectangleChanged: flickableItem.ensureVisible(cursorRectangle)
+
+                color: Kube.Colors.textColor
+                font.family: Kube.Font.fontFamily
+                selectionColor: Kube.Colors.highlightColor
+                padding: Kube.Units.smallSpacing
+            }
         }
     }
 }

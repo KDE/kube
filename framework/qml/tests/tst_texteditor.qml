@@ -1,5 +1,5 @@
 /*
- *   Copyright 2017 Christian Mollekopf <mollekopf@kolabsys.com>
+ *   Copyright 2017 Christian Mollekopf <mollekopf@kolabsystems.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -18,24 +18,31 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0
-import QtQuick.Window 2.1
 import QtTest 1.0
-import org.kube.components.kube 1.0 as Kube
+import org.kube.framework 1.0 as Kube
 
 
 TestCase {
     id: testCase
     width: 400
     height: 400
-    name: "ApplicationStart"
+    name: "TextEditor"
 
-    Kube.Kube {
-        id: kube
+    Kube.TextEditor {
+        id: editor
+        initialText: "Foobar"
+        htmlEnabled: false
     }
 
-    function test_startToWizard() {
-        var accountWizard = findChild(kube, "accountWizard");
-        verify(accountWizard.visible)
+    function test_1initialText() {
+        compare(editor.text, editor.initialText)
+    }
+
+    function test_2htmlConversion() {
+        editor.htmlEnabled = true
+        verify(editor.text.indexOf("<html>") !== -1)
+        verify(editor.text.indexOf(editor.initialText) !== -1)
+        editor.htmlEnabled = false
+        compare(editor.text, editor.initialText)
     }
 }

@@ -4,5 +4,6 @@
 *.diff
 *.patch
 *.swp
+*.qmlc
 build/
 site

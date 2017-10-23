@@ -26,9 +26,10 @@ import org.kube.accounts.imap 1.0 as ImapAccount
 Item {
 
     property string accountId
-    property string heading: "Connect your IMAP account"
-    property string subheadline: "To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP address, which authentification and port to be used, please contact your email provider."
+    property string heading: qsTr("Connect your IMAP account")
+    property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP address, which authentification and port to be used, please contact your email provider.")
     property bool valid: true
+    implicitHeight: grid.implicitHeight
 
     ImapAccount.ImapSettings {
         id: imapSettings
@@ -43,111 +44,103 @@ Item {
     function remove(){
         imapSettings.remove()
     }
+    GridLayout {
+        id: grid
+        anchors.fill: parent
+        columns: 2
+        columnSpacing: Kube.Units.largeSpacing
+        rowSpacing: Kube.Units.largeSpacing
 
-    Item {
-        anchors {
-            fill: parent
+        Kube.Label {
+            text: qsTr("Title of Account")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.RequiredTextField {
+            Layout.fillWidth: true
+            placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
+            text: imapSettings.accountName
+            onTextChanged: {
+                imapSettings.accountName = text
+            }
         }
 
-        GridLayout {
-            anchors {
-                fill: parent
+        Kube.Label {
+            text: qsTr("Name")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.RequiredTextField {
+            Layout.fillWidth: true
+            placeholderText: qsTr("Your name")
+            text: imapSettings.userName
+            onTextChanged: {
+                imapSettings.userName = text
             }
-            columns: 2
-            columnSpacing: Kube.Units.largeSpacing
-            rowSpacing: Kube.Units.largeSpacing
+        }
 
-            Kube.Label {
-                text: qsTr("Title of Account")
-                Layout.alignment: Qt.AlignRight
-            }
-            Kube.RequiredTextField {
-                Layout.fillWidth: true
-                placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
-                text: imapSettings.accountName
-                onTextChanged: {
-                    imapSettings.accountName = text
-                }
-            }
+        Kube.Label {
+            text: qsTr("Email address")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.RequiredTextField {
+            Layout.fillWidth: true
 
-            Kube.Label {
-                text: qsTr("Name")
-                Layout.alignment: Qt.AlignRight
+            text: imapSettings.emailAddress
+            onTextChanged: {
+                imapSettings.emailAddress = text
+                imapSettings.imapUsername = text
+                imapSettings.smtpUsername = text
             }
-            Kube.RequiredTextField {
-                Layout.fillWidth: true
-                placeholderText: qsTr("Your name")
-                text: imapSettings.userName
-                onTextChanged: {
-                    imapSettings.userName = text
-                }
+            placeholderText: qsTr("Your email address")
+        }
+
+        Kube.Label {
+            text: qsTr("Password")
+            Layout.alignment: Qt.AlignRight
+        }
+
+        Kube.PasswordField {
+            id: pwField
+            Layout.fillWidth: true
+
+            placeholderText: qsTr("Password of your email account")
+            text: imapSettings.imapPassword
+            onTextChanged: {
+                imapSettings.imapPassword = text
+                imapSettings.smtpPassword = text
             }
+        }
 
-            Kube.Label {
-                text: qsTr("Email address")
-                Layout.alignment: Qt.AlignRight
+        Kube.Label {
+            text: qsTr("IMAP server address")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.RequiredTextField {
+            id: imapServer
+
+            Layout.fillWidth: true
+
+            placeholderText: "imaps://mainserver.example.net:993"
+            text: imapSettings.imapServer
+            onTextChanged: {
+                imapSettings.imapServer = text
             }
-            Kube.RequiredTextField {
-                Layout.fillWidth: true
+            validator: imapSettings.imapServerValidator
+        }
 
-                text: imapSettings.emailAddress
-                onTextChanged: {
-                    imapSettings.emailAddress = text
-                    imapSettings.imapUsername = text
-                    imapSettings.smtpUsername = text
-                }
-                placeholderText: qsTr("Your email address")
+        Kube.Label {
+            text: qsTr("Smtp address")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.RequiredTextField {
+            id: smtpServer
+            Layout.fillWidth: true
+
+            placeholderText: "smtps://mainserver.example.net:993"
+            text: imapSettings.smtpServer
+            onTextChanged: {
+                imapSettings.smtpServer = text
             }
-
-            Kube.Label {
-                text: qsTr("Password")
-                Layout.alignment: Qt.AlignRight
-            }
-
-            Kube.PasswordField {
-                id: pwField
-                Layout.fillWidth: true
-
-                placeholderText: qsTr("Password of your email account")
-                text: imapSettings.imapPassword
-                onTextChanged: {
-                    imapSettings.imapPassword = text
-                    imapSettings.smtpPassword = text
-                }
-            }
-
-            Kube.Label {
-                text: qsTr("IMAP server address")
-                Layout.alignment: Qt.AlignRight
-            }
-            Kube.RequiredTextField {
-                id: imapServer
-
-                Layout.fillWidth: true
-
-                placeholderText: "imaps://mainserver.example.net:993"
-                text: imapSettings.imapServer
-                onTextChanged: {
-                    imapSettings.imapServer = text
-                }
-                validator: imapSettings.imapServerValidator
-            }
-
-            Kube.Label {
-                text: qsTr("Smtp address")
-                Layout.alignment: Qt.AlignRight
-            }
-            Kube.RequiredTextField {
-                id: smtpServer
-                Layout.fillWidth: true
-
-                placeholderText: "smtps://mainserver.example.net:993"
-                text: imapSettings.smtpServer
-                onTextChanged: {
-                    imapSettings.smtpServer = text
-                }
-                validator: imapSettings.smtpServerValidator
-            }
+            validator: imapSettings.smtpServerValidator
         }
     }
 }
