@@ -443,6 +443,8 @@ Kube.View {
             }
 
             RowLayout {
+                //FIXME: hide until it does something
+                visible: false
                 Kube.CheckBox {}
                 Kube.Label {
                     text: qsTr("encrypt")
@@ -450,6 +452,8 @@ Kube.View {
             }
 
             RowLayout {
+                //FIXME: hide until it does something
+                visible: false
                 Kube.CheckBox {}
                 Kube.Label {
                     text: qsTr("sign")
