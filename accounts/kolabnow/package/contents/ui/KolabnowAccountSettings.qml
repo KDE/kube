@@ -25,7 +25,7 @@ import org.kube.accounts.kolabnow 1.0 as KolabnowAccount
 Item {
     property string accountId
     property string heading: qsTr("Connect your Kolab Now account")
-    property string subheadline: qsTr("Please fill in your name and email address.")
+    property string subheadline: qsTr("Please fill in your name and email address. No account yet? <a href='https://kolabnow.com/kube-campaign/'>Sign up now!</a>")
     property bool valid: nameField.acceptableInput && emailField.acceptableInput
     implicitHeight: grid.implicitHeight
 
