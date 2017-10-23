@@ -24,9 +24,11 @@ Rectangle {
     id: root
     property bool focused: false
     property bool selected: false
+    property bool alert: false
     property color highlightColor: Kube.Colors.highlightColor
     property alias highlightOpacity: highlight.opacity
     property color borderColor: Kube.Colors.focusedButtonColor
+    property color alertColor: Kube.Colors.warningColor
 
     Rectangle {
         anchors.fill: parent
@@ -42,8 +44,8 @@ Rectangle {
     }
     Rectangle {
         anchors.fill: parent
-        visible: root.focused && root.selected
-        border.color: root.borderColor
+        visible: root.focused && root.selected || root.alert
+        border.color: root.alert ? root.alertColor : root.borderColor
         border.width: 2
         color: "transparent"
     }

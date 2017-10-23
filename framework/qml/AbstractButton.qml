@@ -30,6 +30,7 @@ T.Button {
     property alias highlightOpacity: background.highlightOpacity
     property alias horizontalAlignment: label.horizontalAlignment
     property alias verticalAlignment: label.verticalAlignment
+    property alias alert: background.alert
 
     width: Math.max(Units.gridUnit, contentItem.implicitWidth + leftPadding + rightPadding)
     height: contentItem.implicitHeight + topPadding + bottomPadding
