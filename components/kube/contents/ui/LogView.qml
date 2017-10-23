@@ -29,7 +29,9 @@ Controls.SplitView {
     property bool pendingError: false;
 
     Controls2.StackView.onActivated: {
-        pendingError = false;
+        root.pendingError = false;
+        //Always select the latest notification
+        listView.currentIndex = 0
     }
 
     Item {
