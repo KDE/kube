@@ -59,13 +59,7 @@ Item {
 <li> Visit <a href='https://myaccount.google.com/lesssecureapps'>https://myaccount.google.com/lesssecureapps</a> and enable the setting to allow Kube to connect to your account."
             Layout.alignment: Qt.AlignCenter
             Layout.columnSpan: 2
-            onLinkActivated: Qt.openUrlExternally(link)
             textFormat: Text.StyledText
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
-                cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
-            }
         }
 
         Kube.Label {

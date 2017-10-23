@@ -23,4 +23,11 @@ import org.kube.framework 1.0 as Kube
 T.Label {
     color: Kube.Colors.textColor
     font.family: Kube.Font.fontFamily
+    linkColor: Kube.Colors.highlightColor
+    onLinkActivated: Qt.openUrlExternally(link)
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
+        cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+    }
 }
