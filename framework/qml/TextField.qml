@@ -48,6 +48,11 @@ T.TextField {
         text: root.placeholderText
         color: Kube.Colors.disabledTextColor
         elide: Text.ElideRight
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
+            cursorShape: Qt.IBeamCursor
+        }
     }
 
     background: Rectangle {

@@ -59,7 +59,6 @@ FocusScope {
         cursorPosition: edit.cursorPosition
     }
 
-
     Rectangle {
         anchors.fill: parent
         border.width: 1
@@ -109,6 +108,11 @@ FocusScope {
                 font.family: Kube.Font.fontFamily
                 selectionColor: Kube.Colors.highlightColor
                 padding: Kube.Units.smallSpacing
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
+                    cursorShape: Qt.IBeamCursor
+                }
             }
         }
     }
