@@ -226,6 +226,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.setLogView()
                     activeFocusOnTab: true
                     checkable: true
+                    alert: logView.pendingError
                     Controls2.ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("logview")
                 }

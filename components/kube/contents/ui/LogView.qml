@@ -24,6 +24,14 @@ import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
 Controls.SplitView {
+    id: root
+
+    property bool pendingError: false;
+
+    Controls2.StackView.onActivated: {
+        pendingError = false;
+    }
+
     Item {
         id: accountList
         width: parent.width/2
@@ -32,6 +40,7 @@ Controls.SplitView {
         Kube.Listener {
             filter: Kube.Messages.notification
             onMessageReceived: {
+                root.pendingError = true
                 logModel.insert(0, {message: message.message, details: message.details, timestamp: new Date(), resource: message.resource});
             }
         }
