@@ -28,7 +28,7 @@ public:
     Keyring();
     static Keyring *instance();
     Q_INVOKABLE bool isUnlocked(const QByteArray &accountId);
-    void unlock(const QByteArray &accountId);
+    Q_INVOKABLE void unlock(const QByteArray &accountId);
 
 private:
     Q_DISABLE_COPY(Keyring);

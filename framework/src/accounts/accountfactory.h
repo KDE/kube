@@ -34,6 +34,7 @@ class AccountFactory : public QObject
     Q_PROPERTY(QString icon MEMBER mIcon NOTIFY accountLoaded);
     Q_PROPERTY(QString uiPath MEMBER mUiPath NOTIFY accountLoaded);
     Q_PROPERTY(QString loginUi MEMBER mLoginUi NOTIFY accountLoaded);
+    Q_PROPERTY(bool requiresKeyring MEMBER mRequiresKeyring NOTIFY accountLoaded);
 public:
     explicit AccountFactory(QObject *parent = Q_NULLPTR);
 
@@ -52,4 +53,5 @@ private:
     QString mUiPath;
     QString mLoginUi;
     QByteArray mAccountType;
+    bool mRequiresKeyring = true;
 };
