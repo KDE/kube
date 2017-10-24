@@ -6,3 +6,4 @@ X-Plasma-MainScript=ui/MaildirAccountSettings.qml
 X-KDE-ServiceTypes=KPackage/GenericQML
 Icon=folder
 Type=Service
+X-KDE-Kube-RequiresKeyring=False

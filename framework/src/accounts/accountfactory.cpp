@@ -67,6 +67,7 @@ void AccountFactory::loadPackage()
         mLoginUi.clear();
         mName.clear();
         mIcon.clear();
+        mRequiresKeyring = true;
         emit accountLoaded();
         return;
     }
@@ -75,5 +76,6 @@ void AccountFactory::loadPackage()
     mLoginUi = package.filePath("ui", "Login.qml");
     mName = package.metadata().name();
     mIcon = package.metadata().iconName();
+    mRequiresKeyring = package.metadata().value("X-KDE-Kube-RequiresKeyring", "True").toLower() == "true";
     emit accountLoaded();
 }

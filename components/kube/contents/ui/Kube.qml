@@ -50,6 +50,11 @@ Controls2.ApplicationWindow {
         }
     }
 
+    Kube.AccountFactory {
+        id: accountFactory
+        accountId: app.currentAccount
+    }
+
     //Interval sync
     Timer {
         id: intervalSync
@@ -226,6 +231,7 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.setLogView()
                     activeFocusOnTab: true
                     checkable: true
+                    alert: logView.pendingError
                     Controls2.ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("logview")
                 }
@@ -250,12 +256,39 @@ Controls2.ApplicationWindow {
             }
             Layout.fillWidth: true
 
+            function loginIfNecessary()
+            {
+                if (!!app.currentAccount && !Kube.Keyring.isUnlocked(app.currentAccount)) {
+                    if (accountFactory.requiresKeyring) {
+                        setLoginView()
+                    } else {
+                        Kube.Keyring.unlock(app.currentAccount)
+                    }
+                }
+            }
+
             Kube.Listener {
                 filter: Kube.Messages.componentDone
                 onMessageReceived: {
                     kubeViews.pop(Controls2.StackView.Immediate)
-                    if (!!app.currentAccount && !Kube.Keyring.isUnlocked(app.currentAccount)) {
-                        kubeViews.setLoginView()
+                    loginIfNecessary()
+                }
+            }
+
+            onCurrentItemChanged: {
+                if (currentItem) {
+                    currentItem.forceActiveFocus()
+                }
+            }
+
+            Component.onCompleted: {
+                //Setup the initial item stack
+                if (!currentItem) {
+                    setMailView()
+                    if (startupCheck.noAccount) {
+                        setAccountsView()
+                    } else {
+                        loginIfNecessary()
                     }
                 }
             }
@@ -303,25 +336,6 @@ Controls2.ApplicationWindow {
                 pushView(composerView, {message: mail, loadAsDraft: openAsDraft})
             }
 
-            onCurrentItemChanged: {
-                if (currentItem) {
-                    currentItem.forceActiveFocus()
-                }
-            }
-
-            Component.onCompleted: {
-                //Setup the initial item stack
-                if (!currentItem) {
-                    setMailView();
-                    if (startupCheck.noAccount) {
-                        setAccountsView()
-                    } else {
-                        if (!!app.currentAccount && !Kube.Keyring.isUnlocked(app.currentAccount)) {
-                            setLoginView()
-                        }
-                    }
-                }
-            }
 
             //These items are not visible until pushed onto the stack, so we keep them in resources instead of items
             resources: [
