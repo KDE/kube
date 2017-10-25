@@ -143,26 +143,25 @@ Controls.SplitView {
 
         Loader {
             id: detailsLoader
+            visible: message != ""
+            clip: true
             anchors {
                 fill: parent
                 margins: Kube.Units.largeSpacing
             }
             property date timestamp: details.timestamp
             property string message: details.message
-            property string resourceId: details.resourceid
+            property string resourceId: details.resourceId
             property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
             property string accountName: retriever.currentData ? retriever.currentData.name : ""
 
-            sourceComponent: detailsComponent
+            sourceComponent: details.subtype == Kube.Notifications.loginError ? loginErrorComponent : detailsComponent
         }
-
     }
 
     Component {
         id: detailsComponent
         Rectangle {
-            visible: message != ""
-            clip: true
             color: Kube.Colors.viewBackgroundColor
             GridLayout {
                 id: gridLayout
@@ -170,8 +169,8 @@ Controls.SplitView {
                 anchors {
                     top: parent.top
                     left: parent.left
+                    right: parent.right
                 }
-                width: parent.width
                 columns: 2
                 Kube.Label {
                     text: qsTr("Account:")
@@ -229,6 +228,44 @@ Controls.SplitView {
 
             Kube.SelectableItem {
                 layout: gridLayout
+            }
+        }
+    }
+
+    Component {
+        id: loginErrorComponent
+        Item {
+            Column {
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                spacing: Kube.Units.largeSpacing
+                Column {
+                    Kube.Heading {
+                        id: heading
+                        text: qsTr("Failed to login")
+                        color: Kube.Colors.warningColor
+                    }
+
+                    Kube.Label {
+                        id: subHeadline
+                        text: accountName + ": " + qsTr("Please check your credentials.")
+                        color: Kube.Colors.disabledTextColor
+                        wrapMode: Text.Wrap
+                    }
+                }
+                Kube.Button {
+                    anchors {
+                        right: parent.right
+                    }
+                    text: qsTr("Change Password")
+                    onClicked: {
+                        Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                        Kube.Fabric.postMessage(Kube.Messages.requestLogin, {})
+                    }
+                }
             }
         }
     }
