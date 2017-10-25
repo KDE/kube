@@ -270,7 +270,12 @@ Controls2.ApplicationWindow {
             Kube.Listener {
                 filter: Kube.Messages.componentDone
                 onMessageReceived: {
-                    kubeViews.pop(Controls2.StackView.Immediate)
+                    //Return to the mailview if we try to pop everything off
+                    if (kubeViews.depth == 1) {
+                        kubeViews.setMailView()
+                    } else {
+                        kubeViews.pop(Controls2.StackView.Immediate)
+                    }
                     kubeViews.loginIfNecessary()
                 }
             }
