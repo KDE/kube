@@ -79,6 +79,7 @@ Item {
                 onLoaded: item.accountId = root.accountId
             }
             Kube.Button {
+                visible: accountFactory.requiresKeyring
                 anchors.right: parent.right
                 text: qsTr("Change Password")
                 onClicked: {
