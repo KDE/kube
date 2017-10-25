@@ -46,7 +46,7 @@ Controls.SplitView {
                     root.pendingError = true
                 }
                 var error = {timestamp: new Date(), message: message.message, details: message.details, resource: message.resource}
-                logModel.insert(0, {type: message.type, errors: [error]})
+                logModel.insert(0, {type: message.type, subtype: message.subtype, errors: [error]})
             }
         }
 
@@ -71,12 +71,15 @@ Controls.SplitView {
             }
 
             onCurrentItemChanged: {
-                if (!!currentItem.currentData.resource) {
-                    details.resourceId = currentItem.currentData.errors.get(0).resource
+                var error = currentItem.currentData.errors.get(0)
+                if (!!error.resource) {
+                    details.resourceId = error.resource
                 }
-                details.message = currentItem.currentData.message + "\n" + currentItem.currentData.errors.get(0).details
-                details.timestamp = currentItem.currentData.errors.get(0).timestamp
+                details.message = error.message + "\n" + error.details
+                details.timestamp = error.timestamp
+                details.subtype = currentItem.currentData.subtype
             }
+
             delegate: Kube.ListDelegate {
                 border.color: Kube.Colors.buttonColor
                 border.width: 1
@@ -126,11 +129,10 @@ Controls.SplitView {
     }
     Item {
         id: details
+        property string subtype: ""
         property date timestamp
         property string message: ""
         property string resourceId: ""
-        property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
-        property string accountName: retriever.currentData ? retriever.currentData.name : ""
 
         Kube.ModelIndexRetriever {
             id: retriever
@@ -139,12 +141,27 @@ Controls.SplitView {
             }
         }
 
-        Rectangle {
+        Loader {
+            id: detailsLoader
             anchors {
                 fill: parent
                 margins: Kube.Units.largeSpacing
             }
-            visible: details.message != ""
+            property date timestamp: details.timestamp
+            property string message: details.message
+            property string resourceId: details.resourceid
+            property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
+            property string accountName: retriever.currentData ? retriever.currentData.name : ""
+
+            sourceComponent: detailsComponent
+        }
+
+    }
+
+    Component {
+        id: detailsComponent
+        Rectangle {
+            visible: message != ""
             clip: true
             color: Kube.Colors.viewBackgroundColor
             GridLayout {
@@ -158,31 +175,31 @@ Controls.SplitView {
                 columns: 2
                 Kube.Label {
                     text: qsTr("Account:")
-                    visible: details.accountName
+                    visible: accountName
                 }
                 Kube.Label {
                     Layout.fillWidth: true
-                    text: details.accountName
-                    visible: details.accountName
+                    text: accountName
+                    visible: accountName
                     elide: Text.ElideRight
                 }
                 Kube.Label {
                     text: qsTr("Account Id:")
-                    visible: details.accountId
+                    visible: accountId
                 }
                 Kube.Label {
-                    text: details.accountId
-                    visible: details.accountId
+                    text: accountId
+                    visible: accountId
                     Layout.fillWidth: true
                     elide: Text.ElideRight
                 }
                 Kube.Label {
                     text: qsTr("Resource Id:")
-                    visible: details.resourceId
+                    visible: resourceId
                 }
                 Kube.Label {
-                    text: details.resourceId
-                    visible: details.resourceId
+                    text: resourceId
+                    visible: resourceId
                     Layout.fillWidth: true
                     elide: Text.ElideRight
                 }
@@ -190,7 +207,7 @@ Controls.SplitView {
                     text: qsTr("Timestamp:")
                 }
                 Kube.Label {
-                    text: Qt.formatDateTime(details.timestamp, " hh:mm:ss dd MMM yyyy")
+                    text: Qt.formatDateTime(timestamp, " hh:mm:ss dd MMM yyyy")
                     Layout.fillWidth: true
                     elide: Text.ElideRight
                 }
@@ -199,7 +216,7 @@ Controls.SplitView {
                     Layout.alignment: Qt.AlignTop
                 }
                 Kube.Label {
-                    text: details.message
+                    text: message
                     Layout.fillWidth: true
                     wrapMode: Text.Wrap
                 }
@@ -208,7 +225,6 @@ Controls.SplitView {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
-                //TODO offer a possible explanation for known errors and a path to resolution.
             }
 
             Kube.SelectableItem {

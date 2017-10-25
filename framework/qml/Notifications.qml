@@ -24,5 +24,7 @@ Item {
     property string error: "error"
     property string info: "info"
     property string progress: "progress"
+
+    property string loginError: "loginError"
 }
 
