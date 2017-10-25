@@ -271,7 +271,7 @@ Controls2.ApplicationWindow {
                 filter: Kube.Messages.componentDone
                 onMessageReceived: {
                     kubeViews.pop(Controls2.StackView.Immediate)
-                    loginIfNecessary()
+                    kubeViews.loginIfNecessary()
                 }
             }
 
