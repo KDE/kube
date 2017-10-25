@@ -151,7 +151,7 @@ public:
             SinkLog() << "Received notification: " << notification;
             QVariantMap message;
             if (notification.type == Sink::Notification::Warning) {
-                message["type"] = Notification::Warning;
+                message["type"] = "warning";
                 if (notification.code == Sink::ApplicationDomain::TransmissionError) {
                     message["message"] = QObject::tr("Failed to send message.");
                 } else {
@@ -160,7 +160,7 @@ public:
             } else if (notification.type == Sink::Notification::Status) {
                 return;
             } else if (notification.type == Sink::Notification::Error) {
-                message["type"] = Notification::Warning;
+                message["type"] = "error";
                 message["resource"] = QString{notification.resource};
                 message["details"] = notification.message;
                 switch(notification.code) {
@@ -188,12 +188,13 @@ public:
                 Fabric::Fabric{}.postMessage("errorNotification", message);
             } else if (notification.type == Sink::Notification::Info) {
                 if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {
-                    message["type"] = Notification::Info;
+                    message["type"] = "info";
                     message["message"] = QObject::tr("A message has been sent.");
                 } else {
                     return;
                 }
             } else if (notification.type == Sink::Notification::Progress) {
+                message["type"] = "progress";
                 message["progress"] = notification.progress;
                 message["total"] = notification.total;
                 if (!notification.entities.isEmpty()) {
