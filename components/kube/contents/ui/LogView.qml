@@ -42,8 +42,11 @@ Controls.SplitView {
         Kube.Listener {
             filter: Kube.Messages.notification
             onMessageReceived: {
-                root.pendingError = true
-                logModel.insert(0, {message: message.message, details: message.details, timestamp: new Date(), resource: message.resource});
+                if (message.type == Kube.Notifications.error) {
+                    root.pendingError = true
+                }
+                var error = {timestamp: new Date(), message: message.message, details: message.details, resource: message.resource}
+                logModel.insert(0, {type: message.type, errors: [error]})
             }
         }
 
@@ -64,14 +67,15 @@ Controls.SplitView {
 
             model: ListModel {
                 id: logModel
+                objectName: "logModel"
             }
 
             onCurrentItemChanged: {
                 if (!!currentItem.currentData.resource) {
-                    details.resourceId = currentItem.currentData.resource
+                    details.resourceId = currentItem.currentData.errors.get(0).resource
                 }
-                details.message = currentItem.currentData.message + "\n" + currentItem.currentData.details
-                details.timestamp = currentItem.currentData.timestamp
+                details.message = currentItem.currentData.message + "\n" + currentItem.currentData.errors.get(0).details
+                details.timestamp = currentItem.currentData.errors.get(0).timestamp
             }
             delegate: Kube.ListDelegate {
                 border.color: Kube.Colors.buttonColor
@@ -86,7 +90,7 @@ Controls.SplitView {
                     }
                     height: Kube.Units.gridUnit
                     width: parent.width - Kube.Units.largeSpacing * 2
-                    text: qsTr("Error")
+                    text: model.type == Kube.Notifications.error ? qsTr("Error") : qsTr("Info")
                 }
 
                 Kube.Label {
@@ -102,8 +106,7 @@ Controls.SplitView {
                     maximumLineCount: 1
                     elide: Text.ElideRight
                     color: Kube.Colors.disabledTextColor
-
-                    text: model.message
+                    text: model.errors.get(0).message
                 }
 
                 Kube.Label {
@@ -113,7 +116,7 @@ Controls.SplitView {
                         right: parent.right
                         bottom: parent.bottom
                     }
-                    text: Qt.formatDateTime(model.timestamp, " hh:mm:ss dd MMM yyyy")
+                    text: Qt.formatDateTime(model.errors.get(0).timestamp, " hh:mm:ss dd MMM yyyy")
                     font.italic: true
                     color: Kube.Colors.disabledTextColor
                     font.pointSize: Kube.Units.smallFontSize

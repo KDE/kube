@@ -47,6 +47,7 @@ GridView 1.0 GridView.qml
 ScrollHelper 1.0 ScrollHelper.qml
 ModelIndexRetriever 1.0 ModelIndexRetriever.qml
 singleton Messages 1.0 Messages.qml
+singleton Notifications 1.0 Notifications.qml
 singleton Colors 1.0 Colors.qml
 singleton Icons 1.0 Icons.qml
 singleton Units 1.0 Units.qml
