@@ -172,6 +172,7 @@ public:
                         break;
                     case Sink::ApplicationDomain::LoginError:
                         message["message"] = QObject::tr("Failed to login.");
+                        message["subtype"] = "loginError";
                         break;
                     case Sink::ApplicationDomain::ConfigurationError:
                         message["message"] = QObject::tr("Configuration error.");
