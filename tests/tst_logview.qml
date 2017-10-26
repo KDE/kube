@@ -54,5 +54,13 @@ TestCase {
         compare(listModel.get(0).errors.count, 1)
         compare(listModel.get(0).errors.get(0).message, "foobar")
         compare(listModel.get(0).errors.get(0).resource, "resource")
+
+        Kube.Fabric.postMessage(Kube.Messages.notification, {"type": Kube.Notifications.error, "subtype": "merge", message: "merge1", resource: "resource1"})
+        compare(listModel.count, 3)
+        Kube.Fabric.postMessage(Kube.Messages.notification, {"type": Kube.Notifications.error, "subtype": "merge", message: "merge2", resource: "resource2"})
+        compare(listModel.count, 3)
+        compare(listModel.get(0).errors.count, 2)
+        compare(listModel.get(0).errors.get(0).message, "merge2")
+        compare(listModel.get(0).errors.get(0).resource, "resource2")
     }
 }
