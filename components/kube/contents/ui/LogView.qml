@@ -117,6 +117,7 @@ Controls.SplitView {
                     anchors {
                         right: parent.right
                         bottom: parent.bottom
+                        rightMargin: Kube.Units.smallSpacing
                     }
                     text: Qt.formatDateTime(model.errors.get(0).timestamp, " hh:mm:ss dd MMM yyyy")
                     font.italic: true
@@ -256,9 +257,6 @@ Controls.SplitView {
                     }
                 }
                 Kube.Button {
-                    anchors {
-                        right: parent.right
-                    }
                     text: qsTr("Change Password")
                     onClicked: {
                         Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
