@@ -46,6 +46,14 @@ Controls.SplitView {
                     root.pendingError = true
                 }
                 var error = {timestamp: new Date(), message: message.message, details: message.details, resource: message.resource}
+                if (logModel.count > 0) {
+                    var lastEntry = logModel.get(0)
+                    //Merge if we get an entry of the same subtype
+                    if (lastEntry.subtype && lastEntry.subtype == message.subtype) {
+                        logModel.set(0, {type: message.type, subtype: message.subtype, errors: [error].concat(lastEntry.errors)})
+                        return
+                    }
+                }
                 logModel.insert(0, {type: message.type, subtype: message.subtype, errors: [error]})
             }
         }
