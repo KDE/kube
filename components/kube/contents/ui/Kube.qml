@@ -52,7 +52,7 @@ Controls2.ApplicationWindow {
 
     Kube.AccountFactory {
         id: accountFactory
-        accountId: app.currentAccount
+        accountId: !!app.currentAccount ? app.currentAccount : ""
     }
 
     //Interval sync
