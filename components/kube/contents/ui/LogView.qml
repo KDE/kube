@@ -36,7 +36,7 @@ Controls.SplitView {
 
     Item {
         id: accountList
-        width: parent.width/2
+        width: parent.width/3
         Layout.fillHeight: true
 
         Kube.Listener {
@@ -59,7 +59,6 @@ Controls.SplitView {
         Kube.ListView {
             id: listView
             anchors {
-                margins: Kube.Units.largeSpacing
                 fill: parent
             }
 
