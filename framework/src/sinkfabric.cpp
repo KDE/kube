@@ -169,6 +169,7 @@ public:
                         break;
                     case Sink::ApplicationDomain::NoServerError:
                         message["message"] = QObject::tr("Host not found.");
+                        message["subtype"] = "hostNotFoundError";
                         break;
                     case Sink::ApplicationDomain::LoginError:
                         message["message"] = QObject::tr("Failed to login.");

@@ -26,5 +26,6 @@ Item {
     property string progress: "progress"
 
     property string loginError: "loginError"
+    property string hostNotFoundError: "hostNotFoundError"
 }
 

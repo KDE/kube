@@ -84,7 +84,9 @@ Controls.SplitView {
                 }
                 details.message = error.message + "\n" + error.details
                 details.timestamp = error.timestamp
-                details.subtype = currentItem.currentData.subtype
+                if (!!currentItem.currentData.subtype) {
+                    details.subtype = currentItem.currentData.subtype
+                }
             }
 
             delegate: Kube.ListDelegate {
@@ -163,7 +165,17 @@ Controls.SplitView {
             property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
             property string accountName: retriever.currentData ? retriever.currentData.name : ""
 
-            sourceComponent: details.subtype == Kube.Notifications.loginError ? loginErrorComponent : detailsComponent
+            function getComponent(subtype) {
+                if (subtype == Kube.Notifications.loginError) {
+                    return loginErrorComponent
+                }
+                if (subtype == Kube.Notifications.hostNotFoundError) {
+                    return hostNotFoundErrorComponent
+                }
+                return detailsComponent
+            }
+
+            sourceComponent: getComponent(details.subtype)
         }
     }
 
@@ -269,6 +281,41 @@ Controls.SplitView {
                     onClicked: {
                         Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
                         Kube.Fabric.postMessage(Kube.Messages.requestLogin, {})
+                    }
+                }
+            }
+        }
+    }
+
+    Component {
+        id: hostNotFoundErrorComponent
+        Item {
+            Column {
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                spacing: Kube.Units.largeSpacing
+                Column {
+                    Kube.Heading {
+                        id: heading
+                        text: qsTr("Host not found")
+                        color: Kube.Colors.warningColor
+                    }
+
+                    Kube.Label {
+                        id: subHeadline
+                        text: accountName + ": " + qsTr("Please check your network connection and settings.")
+                        color: Kube.Colors.disabledTextColor
+                        wrapMode: Text.Wrap
+                    }
+                }
+                Kube.Button {
+                    text: qsTr("Account settings")
+                    onClicked: {
+                        Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                        Kube.Fabric.postMessage(Kube.Messages.requestAccountsConfiguration, {})
                     }
                 }
             }
