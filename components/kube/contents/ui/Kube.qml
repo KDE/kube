@@ -111,6 +111,11 @@ Controls2.ApplicationWindow {
         onMessageReceived: kubeViews.setLoginView()
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.requestAccountsConfiguration
+        onMessageReceived: kubeViews.setAccountsView()
+    }
+
     //BEGIN Shortcuts
     Shortcut {
         sequence: StandardKey.Quit

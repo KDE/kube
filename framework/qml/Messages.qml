@@ -36,6 +36,7 @@ Item {
     property string moveToDrafts: "moveToDrafts"
     property string unlockKeyring: "unlockKeyring"
     property string requestLogin: "requestLogin"
+    property string requestAccountsConfiguration: "requestAccountsConfiguration"
 
     property string notification: "notification"
     property string progressNotification: "progressNotification"
