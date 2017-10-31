@@ -86,6 +86,8 @@ Controls.SplitView {
                 details.timestamp = error.timestamp
                 if (!!currentItem.currentData.subtype) {
                     details.subtype = currentItem.currentData.subtype
+                } else {
+                    details.subtype = ""
                 }
             }
 
