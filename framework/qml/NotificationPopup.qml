@@ -25,7 +25,7 @@ MouseArea {
 
     function notify(text) {
         popup.title = text
-        bg.color = Kube.Colors.textColor
+        bg.color = Kube.Colors.buttonColor
         show()
     }
 
@@ -53,10 +53,10 @@ MouseArea {
 
     Rectangle {
         id: bg
-
         anchors.fill: parent
-
-        opacity: 0.6
+        border.width: 1
+        border.color: Kube.Colors.textColor
+        opacity: 0.9
     }
 
     Kube.Label {
@@ -72,7 +72,6 @@ MouseArea {
 
         font.pixelSize: 16
 
-        color: Kube.Colors.highlightedTextColor
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
         wrapMode: Text.Wrap

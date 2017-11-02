@@ -402,8 +402,10 @@ Controls2.ApplicationWindow {
         id: notificationPopup
 
         anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
+            left: parent.left
+            leftMargin: app.sidebarWidth - 3 // so it does not align with the border
+            bottom: parent.bottom
+            bottomMargin: Kube.Units.gridUnit * 4
         }
     }
     //END Notification
