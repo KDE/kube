@@ -48,4 +48,8 @@ WORKDIR /home/developer/
 #DBus For KCacheGrind
 RUN sudo dbus-uuidgen --ensure
 
+ENV QT_PLUGIN_PATH /install/lib64/plugins/
+ENV LD_LIBRARY_PATH /install/lib64
+ENV PATH /install/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 ENTRYPOINT ["/bin/bash"]
