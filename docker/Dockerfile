@@ -51,5 +51,11 @@ RUN sudo dbus-uuidgen --ensure
 ENV QT_PLUGIN_PATH /install/lib64/plugins/
 ENV LD_LIBRARY_PATH /install/lib64
 ENV PATH /install/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV QML_IMPORT_PATH /install/lib64/qml
+ENV QML2_IMPORT_PATH /install/lib64/qml
+ENV XDG_CONFIG_DIRS /install/share/config
+ENV XDG_DATA_DIRS /install/share/:/usr/share
+RUN mkdir /tmp/runtime-developer
+ENV XDG_RUNTIME_DIR /tmp/runtime-developer
 
 ENTRYPOINT ["/bin/bash"]
