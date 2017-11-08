@@ -11,7 +11,7 @@ RUN dnf -y install sudo perl-libwww-perl perl-JSON perl-JSON-PP perl-XML-Parser 
 RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel readline-devel libcurl-devel
 
 #Test and debugging
-RUN dnf -y install gdb xterm perf valgrind
+RUN dnf -y install gdb xterm perf valgrind strace kcachegrind dbus-x11
 
 #kf5-mime
 RUN dnf -y install cyrus-sasl-devel
@@ -20,17 +20,11 @@ RUN dnf -y install cyrus-sasl-devel
 RUN dnf -y install qt5-qtquickcontrols qt5-qtquickcontrols2-devel qt5-qtwebengine-devel qt5-qtxmlpatterns-devel
 RUN dnf -y install kf5-kpackage-devel kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel qgpgme-devel
 
-# Support
-RUN dnf -y install icecream
-
-# Headless UI tests
-RUN dnf -y install xorg-x11-server-Xvfb
-
 # Imap tests
 RUN dnf -y install cyrus-imapd cyrus-sasl cyrus-sasl-plain gnupg2-smime
 
-#KCachegrind needs dbus =(
-RUN dnf -y install kcachegrind dbus-x11
+#Fonts
+RUN dnf -y install google-noto-serif-fonts google-noto-sans-fonts
 
 RUN useradd -d /home/developer -m developer
 
