@@ -26,6 +26,9 @@ RUN dnf -y install cyrus-imapd cyrus-sasl cyrus-sasl-plain gnupg2-smime
 #Fonts
 RUN dnf -y install google-noto-serif-fonts google-noto-sans-fonts
 
+#Required for the symbolizer for asan
+RUN dnf -y llvm
+
 RUN useradd -d /home/developer -m developer
 
 # setup developer account
