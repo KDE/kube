@@ -21,6 +21,11 @@ if [ ! -z \"\$_pid\" ]; then
     echo \"Waiting for gpg-agent to terminate (PID: $_pid)...\"
     while kill -0 \"\$_pid\"; do
         sleep 1
+        output=`ps -p \"\$_pid\" | grep \"gpg-agent\" | grep \"defunc\"`
+        if [ ! -z \"\$output\" ]; then
+            echo \"Process is defunc, moving on\"
+            break
+        fi
     done
 fi
 exit \$_result
