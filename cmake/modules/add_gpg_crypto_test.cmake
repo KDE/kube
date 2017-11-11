@@ -31,7 +31,7 @@ macro (ADD_GPG_CRYPTO_TEST _target _testname)
       add_custom_command(TARGET ${_target} POST_BUILD
         COMMAND ${CMAKE_COMMAND}
         -D_filename=${_executable}.shell -D_library_path_variable=${_library_path_variable}
-        -D_ld_library_path="${_ld_library_path}" -D_executable=$<TARGET_FILE:${_target}>
+        -D_ld_library_path="${_ld_library_path}" -D_executable=${_executable}
         -D_gnupghome="${GNUPGHOME}"
         -P ${CMAKE_SOURCE_DIR}/cmake/modules/generate_crypto_test_wrapper.cmake
       )
