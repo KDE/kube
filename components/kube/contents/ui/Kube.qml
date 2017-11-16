@@ -232,7 +232,7 @@ Controls2.ApplicationWindow {
 
                 Kube.IconButton {
                     id: logButton
-                    iconName: Kube.Icons.error_inverted
+                    iconName: Kube.Icons.info_inverted
                     onClicked: kubeViews.setLogView()
                     activeFocusOnTab: true
                     checkable: true
