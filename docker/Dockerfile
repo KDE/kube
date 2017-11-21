@@ -2,10 +2,7 @@ FROM fedora:27
 
 RUN dnf -y update
 
-RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar ninja-build clang
-
-#kdesrcbuild deps
-RUN dnf -y install sudo perl-libwww-perl perl-JSON perl-JSON-PP perl-XML-Parser perl-IPC-Cmd libcxx-devel
+RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar ninja-build clang procps-ng libcxx-devel
 
 #Sink deps
 RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel readline-devel libcurl-devel
