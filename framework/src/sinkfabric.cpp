@@ -166,6 +166,7 @@ public:
                 switch(notification.code) {
                     case Sink::ApplicationDomain::ConnectionError:
                         message["message"] = QObject::tr("Failed to connect to server.");
+                        message["subtype"] = "connectionError";
                         break;
                     case Sink::ApplicationDomain::NoServerError:
                         message["message"] = QObject::tr("Host not found.");

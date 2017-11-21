@@ -174,6 +174,9 @@ Controls.SplitView {
                 if (subtype == Kube.Notifications.hostNotFoundError) {
                     return hostNotFoundErrorComponent
                 }
+                if (subtype == Kube.Notifications.connectionError) {
+                    return hostNotFoundErrorComponent
+                }
                 return detailsComponent
             }
 
