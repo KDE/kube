@@ -52,21 +52,37 @@ FocusScope {
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
                 width: parent.width
                 color: Kube.Colors.buttonColor
-                Kube.Label {
+                Row {
                     anchors {
                         top: parent.top
+                        bottom: parent.bottom
                         left: parent.left
-                        right: button.left
+                        right: removeButton.left
                         margins: Kube.Units.smallSpacing
                     }
-                    text: display
-                    elide: Text.ElideRight
+                    spacing: Kube.Units.smallSpacing
+                    Kube.Label {
+                        id: label
+                        anchors {
+                            top: parent.top
+                        }
+                        text: model.addresseeName
+                        elide: Text.ElideRight
+                    }
+                    Kube.Icon {
+                        anchors {
+                            top: parent.top
+                        }
+                        height: Kube.Units.gridUnit
+                        width: height
+                        iconName: model.keyFound ? Kube.Icons.secure: Kube.Icons.insecure
+                    }
                 }
                 Kube.IconButton {
-                    id: button
+                    id: removeButton
                     anchors {
-                        verticalCenter: parent.verticalCenter
                         right: parent.right
+                        verticalCenter: parent.verticalCenter
                         margins: Kube.Units.smallSpacing
                     }
                     height: Kube.Units.gridUnit

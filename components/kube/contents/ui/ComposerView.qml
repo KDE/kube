@@ -42,6 +42,8 @@ Kube.View {
         Kube.ComposerController {
             id: composerController
             htmlBody: html.checked
+            sign: signCheckbox.checked
+            encrypt: encryptCheckbox.checked
             onDone: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
         }
     ]
@@ -443,18 +445,20 @@ Kube.View {
             }
 
             RowLayout {
-                //FIXME: hide until it does something
-                visible: false
-                Kube.CheckBox {}
+                Kube.CheckBox {
+                    id: encryptCheckbox
+                    checked: composerController.encrypt
+                }
                 Kube.Label {
                     text: qsTr("encrypt")
                 }
             }
 
             RowLayout {
-                //FIXME: hide until it does something
-                visible: false
-                Kube.CheckBox {}
+                Kube.CheckBox {
+                    id: signCheckbox
+                    checked: composerController.sign
+                }
                 Kube.Label {
                     text: qsTr("sign")
                 }

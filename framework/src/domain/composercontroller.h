@@ -44,6 +44,8 @@ namespace KMime {
 class Message;
 }
 
+class AddresseeModel;
+
 class ComposerController : public Kube::Controller
 {
     Q_OBJECT
@@ -52,6 +54,8 @@ class ComposerController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(QString, Subject, subject)
     KUBE_CONTROLLER_PROPERTY(QString, Body, body)
     KUBE_CONTROLLER_PROPERTY(bool, HtmlBody, htmlBody)
+    KUBE_CONTROLLER_PROPERTY(bool, Encrypt, encrypt)
+    KUBE_CONTROLLER_PROPERTY(bool, Sign, sign)
 
     //Set by identitySelector
     KUBE_CONTROLLER_PROPERTY(KMime::Types::Mailbox, Identity, identity)
@@ -74,6 +78,12 @@ class ComposerController : public Kube::Controller
     KUBE_CONTROLLER_ACTION(saveAsDraft)
 
 public:
+    enum AddresseeRoles {
+        KeyFoundRole = Qt::UserRole + 1,
+        KeyRole,
+        AddresseeNameRole
+    };
+
     explicit ComposerController();
 
     Completer *recipientCompleter() const;
@@ -121,8 +131,8 @@ private:
 
     QScopedPointer<Completer> mRecipientCompleter;
     QScopedPointer<Selector> mIdentitySelector;
-    QScopedPointer<QStringListModel> mToModel;
-    QScopedPointer<QStringListModel> mCcModel;
-    QScopedPointer<QStringListModel> mBccModel;
+    QSharedPointer<AddresseeModel> mToModel;
+    QSharedPointer<AddresseeModel> mCcModel;
+    QSharedPointer<AddresseeModel> mBccModel;
     QScopedPointer<QStandardItemModel> mAttachmentModel;
 };

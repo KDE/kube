@@ -87,6 +87,56 @@ public:
     }
 };
 
+class AddresseeModel : public QStandardItemModel
+{
+public:
+    AddresseeModel()
+        :QStandardItemModel()
+    {
+        setItemRoleNames({{ComposerController::AddresseeNameRole, "addresseeName"},
+                          {ComposerController::KeyFoundRole, "keyFound"},
+                          {ComposerController::KeyRole, "key"}});
+    }
+
+    void add(const QString &addressee)
+    {
+        auto item = new QStandardItem;
+        item->setData(addressee, ComposerController::AddresseeNameRole);
+        item->setData(false, ComposerController::KeyFoundRole);
+        appendRow(QList<QStandardItem*>() << item);
+    }
+
+    void remove(const QString &addressee)
+    {
+        auto root = invisibleRootItem();
+        for (int row = 0; row < root->rowCount(); row++) {
+            if (root->child(row, 0)->data(ComposerController::AddresseeNameRole).toString() == addressee) {
+                root->removeRow(row);
+                return;
+            }
+        }
+    }
+
+    void setStringList(const QStringList &list)
+    {
+        clear();
+        for (const auto &s : list) {
+            add(s);
+        }
+    }
+
+    QStringList stringList() const
+    {
+        QStringList list;
+        auto root = invisibleRootItem();
+        for (int row = 0; row < root->rowCount(); row++) {
+            list << root->child(row, 0)->data(ComposerController::AddresseeNameRole).toString();
+        }
+        return list;
+    }
+
+};
+
 
 ComposerController::ComposerController()
     : Kube::Controller(),
@@ -94,9 +144,9 @@ ComposerController::ComposerController()
     action_saveAsDraft{new Kube::ControllerAction{this, &ComposerController::saveAsDraft}},
     mRecipientCompleter{new RecipientCompleter},
     mIdentitySelector{new IdentitySelector{*this}},
-    mToModel{new QStringListModel},
-    mCcModel{new QStringListModel},
-    mBccModel{new QStringListModel},
+    mToModel{new AddresseeModel},
+    mCcModel{new AddresseeModel},
+    mBccModel{new AddresseeModel},
     mAttachmentModel{new QStandardItemModel}
 {
     mAttachmentModel->setItemRoleNames({{NameRole, "name"},
@@ -128,9 +178,9 @@ void ComposerController::clear()
     Controller::clear();
     //Reapply account and identity from selection
     mIdentitySelector->reapplyCurrentIndex();
-    mToModel->setStringList({});
-    mCcModel->setStringList({});
-    mBccModel->setStringList({});
+    mToModel->clear();
+    mCcModel->clear();
+    mBccModel->clear();
 }
 
 QAbstractItemModel *ComposerController::toModel() const
@@ -140,17 +190,13 @@ QAbstractItemModel *ComposerController::toModel() const
 
 void ComposerController::addTo(const QString &s)
 {
-    auto list = mToModel->stringList();
-    list.append(s);
-    mToModel->setStringList(list);
+    mToModel->add(s);
     updateSendAction();
 }
 
 void ComposerController::removeTo(const QString &s)
 {
-    auto list = mToModel->stringList();
-    list.removeAll(s);
-    mToModel->setStringList(list);
+    mToModel->remove(s);
     updateSendAction();
 }
 
@@ -161,17 +207,13 @@ QAbstractItemModel *ComposerController::ccModel() const
 
 void ComposerController::addCc(const QString &s)
 {
-    auto list = mCcModel->stringList();
-    list.append(s);
-    mCcModel->setStringList(list);
+    mCcModel->add(s);
     updateSendAction();
 }
 
 void ComposerController::removeCc(const QString &s)
 {
-    auto list = mCcModel->stringList();
-    list.removeAll(s);
-    mCcModel->setStringList(list);
+    mCcModel->remove(s);
     updateSendAction();
 }
 
@@ -182,17 +224,13 @@ QAbstractItemModel *ComposerController::bccModel() const
 
 void ComposerController::addBcc(const QString &s)
 {
-    auto list = mBccModel->stringList();
-    list.append(s);
-    mBccModel->setStringList(list);
+    mBccModel->add(s);
     updateSendAction();
 }
 
 void ComposerController::removeBcc(const QString &s)
 {
-    auto list = mBccModel->stringList();
-    list.removeAll(s);
-    mBccModel->setStringList(list);
+    mBccModel->remove(s);
     updateSendAction();
 }
 
@@ -239,7 +277,6 @@ void ComposerController::removeAttachment(const QUrl &url)
     if (root->hasChildren()) {
         for (int row = 0; row < root->rowCount(); row++) {
             auto item = root->child(row, 0);
-            const auto url = item->data(UrlRole).toUrl();
             if (url == item->data(UrlRole).toUrl()) {
                 root->removeRow(row);
                 return;
@@ -418,17 +455,15 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 
     QList<Attachment> attachments;
     auto root = mAttachmentModel->invisibleRootItem();
-    if (root->hasChildren()) {
-        for (int row = 0; row < root->rowCount(); row++) {
-            auto item = root->child(row, 0);
-            attachments << Attachment{
-                item->data(NameRole).toString(),
-                item->data(FilenameRole).toString(),
-                item->data(MimeTypeRole).toByteArray(),
-                item->data(InlineRole).toBool(),
-                item->data(ContentRole).toByteArray()
-            };
-        }
+    for (int row = 0; row < root->rowCount(); row++) {
+        auto item = root->child(row, 0);
+        attachments << Attachment{
+            item->data(NameRole).toString(),
+            item->data(FilenameRole).toString(),
+            item->data(MimeTypeRole).toByteArray(),
+            item->data(InlineRole).toBool(),
+            item->data(ContentRole).toByteArray()
+        };
     }
     return MailTemplates::createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments);
 }

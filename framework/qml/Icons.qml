@@ -58,6 +58,8 @@ Item {
     property string checkbox: "checkbox"
     property string password_show: "password-show-on"
     property string password_hide: "password-show-off"
+    property string secure: "document-encrypt"
+    property string insecure: "document-decrypt"
 
     property string addNew: "list-add"
     property string remove: "kube-list-remove-inverted"
