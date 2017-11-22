@@ -35,9 +35,9 @@ ENV HOME /home/developer
 WORKDIR /home/developer/
 
 #Setup cyrus imap
-# RUN sudo usermod -p `perl -e "print crypt("admin","Q4")"` cyrus
-# RUN sudo useradd -p `perl -e "print crypt("doe","Q4")"` doe
-# RUN sudo saslauthd -a pam && sudo /usr/libexec/cyrus-imapd/master -d && sleep 1 && sudo echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
+RUN sudo usermod -p `perl -e "print crypt("admin","Q4")"` cyrus
+RUN sudo useradd -p `perl -e "print crypt("doe","Q4")"` doe
+RUN sudo saslauthd -a pam && sudo /usr/libexec/cyrus-imapd/master -d && sleep 1 && sudo echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
 
 #DBus For KCacheGrind
 RUN dbus-uuidgen --ensure
@@ -51,6 +51,8 @@ ENV XDG_CONFIG_DIRS /install/share/config
 ENV XDG_DATA_DIRS /install/share/:/usr/share
 RUN mkdir /tmp/runtime-developer
 ENV XDG_RUNTIME_DIR /tmp/runtime-developer
+
+ADD bashrc /home/developer/.bashrc
 
 ADD keyconfig /home/developer/keyconfig
 ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
