@@ -26,6 +26,9 @@ RUN dnf -y install google-noto-serif-fonts google-noto-sans-fonts
 #Required for the symbolizer for asan
 RUN dnf -y install llvm
 
+RUN dnf -y install sudo
+RUN dnf -y install pinentry-gtk
+
 RUN useradd -d /home/developer -m developer
 
 # setup developer account
@@ -57,3 +60,4 @@ ADD bashrc /home/developer/.bashrc
 ADD keyconfig /home/developer/keyconfig
 ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
+RUN echo "pinentry-program /usr/bin/pinentry-gtk" > /home/developer/.gnupg/gpg-agent.conf
