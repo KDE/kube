@@ -28,6 +28,7 @@
 #include <QVariant>
 #include <sink/applicationdomaintype.h>
 #include <KMime/Message>
+#include <gpgme++/key.h>
 
 #include "completer.h"
 #include "selector.h"
@@ -111,6 +112,7 @@ public slots:
 private slots:
     void updateSendAction();
     void updateSaveAsDraftAction();
+    void findPersonalKey();
 
 private:
     enum AttachmentRoles {
@@ -135,4 +137,5 @@ private:
     QSharedPointer<AddresseeModel> mCcModel;
     QSharedPointer<AddresseeModel> mBccModel;
     QScopedPointer<QStandardItemModel> mAttachmentModel;
+    std::vector<GpgME::Key> mPersonalKeys;
 };

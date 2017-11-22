@@ -26,5 +26,10 @@
 
 namespace MailCrypto
 {
+    enum Protocol {
+        OPENPGP,
+        SMIME
+    };
     KMime::Content *sign(KMime::Content *content, const std::vector<GpgME::Key> &signers);
+    std::vector<GpgME::Key> findKeys(const QStringList &filter, bool findPrivate = false, Protocol  protocol = OPENPGP);
 };

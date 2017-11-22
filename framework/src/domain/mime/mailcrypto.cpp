@@ -22,8 +22,10 @@
 #include "mailcrypto.h"
 #include <QGpgME/Protocol>
 #include <QGpgME/SignJob>
+#include <QGpgME/KeyListJob>
 #include <gpgme++/global.h>
 #include <gpgme++/signingresult.h>
+#include <gpgme++/keylistresult.h>
 #include <QDebug>
 
 /*
@@ -450,5 +452,30 @@ KMime::Content *MailCrypto::sign(KMime::Content *content, const std::vector<GpgM
         return composeHeadersAndBody(content, signature, sign, signatureHashAlgo);
     }
     return nullptr;
+}
+
+std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, Protocol protocol)
+{
+    const QGpgME::Protocol *const backend = protocol == SMIME ? QGpgME::smime() : QGpgME::openpgp();
+    Q_ASSERT(backend);
+    QGpgME::KeyListJob *job = backend->keyListJob(false);
+    Q_ASSERT(job);
+
+    std::vector<GpgME::Key> keys;
+    GpgME::KeyListResult res = job->exec(filter, findPrivate, keys);
+
+    Q_ASSERT(!res.error());
+
+    qWarning() << "got keys:" << keys.size();
+
+    for (std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i) {
+        qWarning() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
+        qWarning() << "key numuserIds:" << i->numUserIDs();
+        for (uint k = 0; k < i->numUserIDs(); ++k) {
+            qWarning() << "userIDs:" << i->userID(k).email();
+        }
+    }
+
+    return keys;
 }
 

@@ -36,6 +36,7 @@
 #include "identitiesmodel.h"
 #include "recepientautocompletionmodel.h"
 #include "mime/mailtemplates.h"
+#include "mime/mailcrypto.h"
 
 class IdentitySelector : public Selector {
 public:
@@ -170,7 +171,15 @@ ComposerController::ComposerController()
     QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSendAction);
     QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSaveAsDraftAction);
     QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSaveAsDraftAction);
+    QObject::connect(this, &ComposerController::identityChanged, &ComposerController::findPersonalKey);
     updateSendAction();
+}
+
+void ComposerController::findPersonalKey()
+{
+    auto identity = getIdentity();
+    SinkLog() << "Looking for personal key for: " << identity.address();
+    mPersonalKeys = MailCrypto::findKeys(QStringList{} << identity.address(), true);
 }
 
 void ComposerController::clear()
@@ -465,7 +474,13 @@ KMime::Message::Ptr ComposerController::assembleMessage()
             item->data(ContentRole).toByteArray()
         };
     }
-    return MailTemplates::createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments);
+
+    std::vector<GpgME::Key> signingKeys;
+    if (getSign()) {
+        signingKeys = mPersonalKeys;
+    }
+
+    return MailTemplates::createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments, signingKeys);
 }
 
 void ComposerController::updateSendAction()
