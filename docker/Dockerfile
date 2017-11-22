@@ -40,7 +40,7 @@ WORKDIR /home/developer/
 # RUN sudo saslauthd -a pam && sudo /usr/libexec/cyrus-imapd/master -d && sleep 1 && sudo echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
 
 #DBus For KCacheGrind
-RUN sudo dbus-uuidgen --ensure
+RUN dbus-uuidgen --ensure
 
 ENV QT_PLUGIN_PATH /install/lib64/plugins/
 ENV LD_LIBRARY_PATH /install/lib64
@@ -51,3 +51,7 @@ ENV XDG_CONFIG_DIRS /install/share/config
 ENV XDG_DATA_DIRS /install/share/:/usr/share
 RUN mkdir /tmp/runtime-developer
 ENV XDG_RUNTIME_DIR /tmp/runtime-developer
+
+ADD keyconfig /home/developer/keyconfig
+ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
+RUN gpg2 --batch --generate-key /home/developer/keyconfig
