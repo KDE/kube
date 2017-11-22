@@ -494,6 +494,10 @@ void ComposerController::send()
     // verify<To, Subject>()
     // && verify<Subject>();
     auto message = assembleMessage();
+    if (!message) {
+        SinkWarning() << "Failed to assemble the message.";
+        return;
+    }
 
     auto accountId = getAccountId();
     //SinkLog() << "Sending a mail: " << *this;
