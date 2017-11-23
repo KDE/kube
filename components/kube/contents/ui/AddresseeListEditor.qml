@@ -87,7 +87,7 @@ FocusScope {
                     }
                     height: Kube.Units.gridUnit
                     width: height
-                    onClicked: root.removed(display);
+                    onClicked: root.removed(model.addresseeName)
                     padding: 0
                     iconName: Kube.Icons.remove
                 }
