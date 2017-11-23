@@ -408,11 +408,6 @@ KMime::Content *MailCrypto::processCrypto(KMime::Content *content, const std::ve
     const QGpgME::Protocol *const proto = protocol == MailCrypto::SMIME ? QGpgME::smime() : QGpgME::openpgp();
     Q_ASSERT(proto);
 
-    qDebug() << "creating signJob from:" << proto->name() << proto->displayName();
-    // for now just do the main recipients
-
-    content->assemble();
-
     auto signingMode = GpgME::Detached;
     bool armor = true;
     bool textMode = false;
