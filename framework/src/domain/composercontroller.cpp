@@ -38,6 +38,8 @@
 #include "mime/mailtemplates.h"
 #include "mime/mailcrypto.h"
 
+Q_DECLARE_METATYPE(GpgME::Key);
+
 class IdentitySelector : public Selector {
 public:
     IdentitySelector(ComposerController &controller) : Selector(new IdentitiesModel), mController(controller)
@@ -105,6 +107,18 @@ public:
         item->setData(addressee, ComposerController::AddresseeNameRole);
         item->setData(false, ComposerController::KeyFoundRole);
         appendRow(QList<QStandardItem*>() << item);
+        findKey(addressee, item);
+    }
+
+    void findKey(const QString &addressee, QStandardItem *item)
+    {
+        auto keys = MailCrypto::findKeys(QStringList{} << addressee, false, MailCrypto::OPENPGP);
+        if (item) {
+            if (!keys.empty()) {
+                item->setData(true, ComposerController::KeyFoundRole);
+                item->setData(QVariant::fromValue(keys.front()), ComposerController::KeyRole);
+            }
+        }
     }
 
     void remove(const QString &addressee)
@@ -116,6 +130,30 @@ public:
                 return;
             }
         }
+    }
+
+    bool foundAllKeys()
+    {
+        std::vector<GpgME::Key> keys;
+        auto root = invisibleRootItem();
+        for (int row = 0; row < root->rowCount(); row++) {
+            auto item = root->child(row, 0);
+            if (!item->data(ComposerController::KeyFoundRole).toBool()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    std::vector<GpgME::Key> getKeys()
+    {
+        std::vector<GpgME::Key> keys;
+        auto root = invisibleRootItem();
+        for (int row = 0; row < root->rowCount(); row++) {
+            auto item = root->child(row, 0);
+            keys.push_back(item->data(ComposerController::KeyRole).value<GpgME::Key>());
+        }
+        return keys;
     }
 
     void setStringList(const QStringList &list)
@@ -479,8 +517,21 @@ KMime::Message::Ptr ComposerController::assembleMessage()
     if (getSign()) {
         signingKeys = mPersonalKeys;
     }
+    std::vector<GpgME::Key> encryptionKeys;
+    if (getEncrypt()) {
+        if (!mToModel->foundAllKeys() || !mCcModel->foundAllKeys() || !mBccModel->foundAllKeys()) {
+            qWarning() << "Can't encrypt with missing keys";
+            return nullptr;
+        }
+        auto toKeys = mToModel->getKeys();
+        encryptionKeys.insert(std::end(encryptionKeys), std::begin(toKeys), std::end(toKeys));
+        auto ccKeys = mCcModel->getKeys();
+        encryptionKeys.insert(std::end(encryptionKeys), std::begin(ccKeys), std::end(ccKeys));
+        auto bccKeys = mBccModel->getKeys();
+        encryptionKeys.insert(std::end(encryptionKeys), std::begin(bccKeys), std::end(bccKeys));
+    }
 
-    return MailTemplates::createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments, signingKeys);
+    return MailTemplates::createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments, signingKeys, encryptionKeys);
 }
 
 void ComposerController::updateSendAction()
