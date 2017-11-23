@@ -56,6 +56,7 @@ RUN mkdir /tmp/runtime-developer
 ENV XDG_RUNTIME_DIR /tmp/runtime-developer
 
 ADD bashrc /home/developer/.bashrc
+ADD startimap.sh /home/developer/startimap.sh
 
 ADD keyconfig /home/developer/keyconfig
 ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
