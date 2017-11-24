@@ -218,6 +218,7 @@ void ComposerController::findPersonalKey()
     auto identity = getIdentity();
     SinkLog() << "Looking for personal key for: " << identity.address();
     mPersonalKeys = MailCrypto::findKeys(QStringList{} << identity.address(), true);
+    updateSendAction();
 }
 
 void ComposerController::clear()
@@ -537,6 +538,17 @@ KMime::Message::Ptr ComposerController::assembleMessage()
 void ComposerController::updateSendAction()
 {
     auto enabled = !mToModel->stringList().isEmpty() && !getSubject().isEmpty() && !getAccountId().isEmpty();
+    if (getEncrypt()) {
+        if (!mToModel->foundAllKeys() || !mCcModel->foundAllKeys() || !mBccModel->foundAllKeys()) {
+            SinkWarning() << "Don't have all keys";
+            enabled = false;
+        }
+    }
+    if (getSign()) {
+        if (mPersonalKeys.empty()) {
+            enabled = false;
+        }
+    }
     sendAction()->setEnabled(enabled);
 }
 
