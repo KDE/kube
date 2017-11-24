@@ -32,6 +32,8 @@
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
+#include <QCommandLineParser>
+#include <QJsonDocument>
 
 #include <QStandardPaths>
 #include <KPackage/PackageLoader>
@@ -40,6 +42,7 @@
 #include <QtWebEngine>
 
 #include <QDebug>
+#include "framework/src/keyring.h"
 
 //Print a demangled stacktrace
 void printStacktrace()
@@ -169,13 +172,38 @@ public:
 
 int main(int argc, char *argv[])
 {
-
     std::signal(SIGSEGV, crashHandler);
     std::signal(SIGABRT, crashHandler);
     std::set_terminate(terminateHandler);
 
     QApplication app(argc, argv);
+    app.setApplicationName("kube");
     app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription("A communication and collaboration client.");
+    parser.addHelpOption();
+    parser.addOption({{"k", "keyring"},
+        QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"),
+        "keyring dictionary"}
+    );
+    parser.process(app);
+
+    if (parser.isSet("keyring")) {
+        auto keyringDict = parser.value("keyring");
+        auto json = QJsonDocument::fromJson(keyringDict.toUtf8());
+        if (!json.isObject()) {
+            qWarning() << "Not a valid keyring dict " << keyringDict;
+            return -1;
+        }
+        auto object = json.object();
+        for (const auto accountId : object.keys()) {
+            auto dict = object.value(accountId).toObject();
+            for (const auto resourceId : dict.keys()) {
+                Kube::AccountKeyring{accountId.toUtf8()}.storePassword(resourceId.toUtf8(), dict.value(resourceId).toString().toUtf8());
+            }
+        }
+    }
 
     QtWebEngine::initialize();
     QIcon::setThemeName("kube");

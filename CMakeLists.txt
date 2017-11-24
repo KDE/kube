@@ -25,6 +25,7 @@ include(KDECMakeSettings NO_POLICY_SCOPE)
 
 enable_testing()
 
+include_directories(.)
 add_subdirectory(framework)
 add_subdirectory(components)
 add_subdirectory(icons)

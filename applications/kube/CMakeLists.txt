@@ -22,6 +22,7 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::WebEngine
     KF5::Package
     ${CMAKE_DL_LIBS}
+    kubeframework
 )
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

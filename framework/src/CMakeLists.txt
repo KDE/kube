@@ -14,7 +14,9 @@ set(CMAKE_CXX_VISIBILITY_PRESET default)
 include_directories(. domain/mime/mimetreeparser domain/ domain/mime)
 
 set(SRCS
-    frameworkplugin.cpp
+)
+
+add_library(kubeframework SHARED
     settings/settings.cpp
     domain/maillistmodel.cpp
     domain/folderlistmodel.cpp
@@ -48,10 +50,8 @@ set(SRCS
     webengineprofile.cpp
     startupcheck.cpp
     keyring.cpp
-)
-
-add_library(frameworkplugin SHARED ${SRCS})
-target_link_libraries(frameworkplugin
+    )
+target_link_libraries(kubeframework
     sink
     kube_otp
     Qt5::Core
@@ -65,6 +65,12 @@ target_link_libraries(frameworkplugin
     KF5::Package
     KAsync
     QGpgme
+)
+install(TARGETS kubeframework DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+add_library(frameworkplugin SHARED frameworkplugin.cpp)
+target_link_libraries(frameworkplugin
+    kubeframework
 )
 install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
