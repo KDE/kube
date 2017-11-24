@@ -61,4 +61,5 @@ ADD startimap.sh /home/developer/startimap.sh
 ADD keyconfig /home/developer/keyconfig
 ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
-RUN echo "pinentry-program /usr/bin/pinentry-gtk" > /home/developer/.gnupg/gpg-agent.conf
+ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
+ADD gpg.conf /home/developer/.gnupg/gpg.conf
