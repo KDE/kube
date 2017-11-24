@@ -112,11 +112,18 @@ public:
 
     void findKey(const QString &addressee, QStandardItem *item)
     {
+        SinkLog() << "Searching key for: " << addressee;
         auto keys = MailCrypto::findKeys(QStringList{} << addressee, false, MailCrypto::OPENPGP);
         if (item) {
             if (!keys.empty()) {
+                if (keys.size() > 1 ) {
+                    SinkWarning() << "Found more than one key, picking first one.";
+                }
+                SinkLog() << "Found key: " << keys.front().primaryFingerprint();
                 item->setData(true, ComposerController::KeyFoundRole);
                 item->setData(QVariant::fromValue(keys.front()), ComposerController::KeyRole);
+            } else {
+                SinkWarning() << "Failed to find key for recipient.";
             }
         }
     }
@@ -218,6 +225,15 @@ void ComposerController::findPersonalKey()
     auto identity = getIdentity();
     SinkLog() << "Looking for personal key for: " << identity.address();
     mPersonalKeys = MailCrypto::findKeys(QStringList{} << identity.address(), true);
+    if (mPersonalKeys.empty()) {
+        SinkWarning() << "Failed to find a personal key.";
+    }
+    if (mPersonalKeys.size() > 1) {
+        SinkWarning() << "Found multiple keys, using first one:";
+        SinkWarning() << "  " << mPersonalKeys.front().primaryFingerprint();
+    } else {
+        SinkLog() << "Found personal key: " << mPersonalKeys.front().primaryFingerprint();
+    }
     updateSendAction();
 }
 
