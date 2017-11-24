@@ -540,6 +540,8 @@ KMime::Message::Ptr ComposerController::assembleMessage()
             qWarning() << "Can't encrypt with missing keys";
             return nullptr;
         }
+        //Encrypt to self so we can read the sent message
+        encryptionKeys.insert(std::end(encryptionKeys), std::begin(mPersonalKeys), std::end(mPersonalKeys));
         auto toKeys = mToModel->getKeys();
         encryptionKeys.insert(std::end(encryptionKeys), std::begin(toKeys), std::end(toKeys));
         auto ccKeys = mCcModel->getKeys();
