@@ -43,6 +43,7 @@
 
 #include <QDebug>
 #include "framework/src/keyring.h"
+#include "kube_version.h"
 
 //Print a demangled stacktrace
 void printStacktrace()
@@ -178,11 +179,13 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     app.setApplicationName("kube");
+    app.setApplicationVersion(kube_VERSION_STRING);
     app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A communication and collaboration client.");
     parser.addHelpOption();
+    parser.addVersionOption();
     parser.addOption({{"k", "keyring"},
         QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"),
         "keyring dictionary"}
