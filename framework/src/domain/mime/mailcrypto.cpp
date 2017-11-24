@@ -25,10 +25,12 @@
 #include <QGpgME/EncryptJob>
 #include <QGpgME/SignEncryptJob>
 #include <QGpgME/KeyListJob>
+#include <QGpgME/ImportFromKeyserverJob>
 #include <gpgme++/global.h>
 #include <gpgme++/signingresult.h>
 #include <gpgme++/encryptionresult.h>
 #include <gpgme++/keylistresult.h>
+#include <gpgme++/importresult.h>
 #include <QDebug>
 
 /*
@@ -460,11 +462,20 @@ KMime::Content *MailCrypto::sign(KMime::Content *content, const std::vector<GpgM
     return processCrypto(content, signers, {}, OPENPGP);
 }
 
-std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, Protocol protocol)
+
+void MailCrypto::importKeys(const std::vector<GpgME::Key> &keys)
+{
+    const QGpgME::Protocol *const backend = QGpgME::openpgp();
+    Q_ASSERT(backend);
+    auto *job = backend->importFromKeyserverJob();
+    job->exec(keys);
+}
+
+std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, bool remote, Protocol protocol)
 {
     const QGpgME::Protocol *const backend = protocol == SMIME ? QGpgME::smime() : QGpgME::openpgp();
     Q_ASSERT(backend);
-    QGpgME::KeyListJob *job = backend->keyListJob(false);
+    QGpgME::KeyListJob *job = backend->keyListJob(remote);
     Q_ASSERT(job);
 
     std::vector<GpgME::Key> keys;

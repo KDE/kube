@@ -113,7 +113,13 @@ public:
     void findKey(const QString &addressee, QStandardItem *item)
     {
         SinkLog() << "Searching key for: " << addressee;
-        auto keys = MailCrypto::findKeys(QStringList{} << addressee, false, MailCrypto::OPENPGP);
+        auto keys = MailCrypto::findKeys(QStringList{} << addressee, false, false, MailCrypto::OPENPGP);
+        if (keys.empty()) {
+            //Search for key on remote server if it's missing and import
+            //TODO: this is blocking and thus blocks the UI
+            keys = MailCrypto::findKeys(QStringList{} << addressee, false, true, MailCrypto::OPENPGP);
+            MailCrypto::importKeys(keys);
+        }
         if (item) {
             if (!keys.empty()) {
                 if (keys.size() > 1 ) {
