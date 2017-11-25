@@ -30,6 +30,9 @@
 #include <QUrlQuery>
 #include <QFileInfo>
 #include <QFile>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <sink/store.h>
 #include <sink/log.h>
 
@@ -128,14 +131,22 @@ public:
         mb.fromUnicodeString(addressee);
 
         SinkLog() << "Searching key for: " << mb.address();
-        auto keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
-        if (keys.empty()) {
-            //Search for key on remote server if it's missing and import
-            //TODO: this is blocking and thus blocks the UI
-            keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, true, MailCrypto::OPENPGP);
-            MailCrypto::importKeys(keys);
-        }
-        if (item) {
+
+        auto future = QtConcurrent::run([mb] {
+            auto keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
+            if (keys.empty()) {
+                //Search for key on remote server if it's missing and import
+                //TODO: this is blocking and thus blocks the UI
+                keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, true, MailCrypto::OPENPGP);
+                MailCrypto::importKeys(keys);
+            }
+            return keys;
+        });
+        auto watcher = new QFutureWatcher<std::vector<GpgME::Key>>;
+        //FIXME holding on to the item pointer like this is not safe
+        QObject::connect(watcher, &QFutureWatcher<std::vector<GpgME::Key>>::finished, watcher, [this, watcher, item]() {
+            auto keys = watcher->future().result();
+            delete watcher;
             if (!keys.empty()) {
                 if (keys.size() > 1 ) {
                     SinkWarning() << "Found more than one key, picking first one.";
@@ -146,7 +157,8 @@ public:
             } else {
                 SinkWarning() << "Failed to find key for recipient.";
             }
-        }
+        });
+        watcher->setFuture(future);
     }
 
     void remove(const QString &addressee)
