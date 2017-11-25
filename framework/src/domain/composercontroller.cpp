@@ -101,6 +101,19 @@ static void traverse(const QStandardItemModel *model, const std::function<void(Q
     }
 }
 
+template<typename T>
+void asyncRun(std::function<T()> run, std::function<void(T)> continuation)
+{
+    auto future = QtConcurrent::run(run);
+    auto watcher = new QFutureWatcher<T>;
+    //FIXME holding on to the item pointer like this is not safe
+    QObject::connect(watcher, &QFutureWatcher<T>::finished, watcher, [watcher, continuation]() {
+        continuation(watcher->future().result());
+        delete watcher;
+    });
+    watcher->setFuture(future);
+}
+
 class AddresseeModel : public QStandardItemModel
 {
 public:
@@ -131,34 +144,29 @@ public:
         mb.fromUnicodeString(addressee);
 
         SinkLog() << "Searching key for: " << mb.address();
-
-        auto future = QtConcurrent::run([mb] {
-            auto keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
-            if (keys.empty()) {
-                //Search for key on remote server if it's missing and import
-                //TODO: this is blocking and thus blocks the UI
-                keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, true, MailCrypto::OPENPGP);
-                MailCrypto::importKeys(keys);
-            }
-            return keys;
-        });
-        auto watcher = new QFutureWatcher<std::vector<GpgME::Key>>;
-        //FIXME holding on to the item pointer like this is not safe
-        QObject::connect(watcher, &QFutureWatcher<std::vector<GpgME::Key>>::finished, watcher, [this, watcher, item]() {
-            auto keys = watcher->future().result();
-            delete watcher;
-            if (!keys.empty()) {
-                if (keys.size() > 1 ) {
-                    SinkWarning() << "Found more than one key, picking first one.";
+        asyncRun<std::vector<GpgME::Key>>([mb] {
+                auto keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
+                if (keys.empty()) {
+                    //Search for key on remote server if it's missing and import
+                    //TODO: this is blocking and thus blocks the UI
+                    keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, true, MailCrypto::OPENPGP);
+                    MailCrypto::importKeys(keys);
                 }
-                SinkLog() << "Found key: " << keys.front().primaryFingerprint();
-                item->setData(true, ComposerController::KeyFoundRole);
-                item->setData(QVariant::fromValue(keys.front()), ComposerController::KeyRole);
-            } else {
-                SinkWarning() << "Failed to find key for recipient.";
-            }
-        });
-        watcher->setFuture(future);
+                return keys;
+            },
+            //FIXME holding on to the item pointer like this is not safe
+            [this, item](const std::vector<GpgME::Key> &keys) {
+                if (!keys.empty()) {
+                    if (keys.size() > 1 ) {
+                        SinkWarning() << "Found more than one key, picking first one.";
+                    }
+                    SinkLog() << "Found key: " << keys.front().primaryFingerprint();
+                    item->setData(true, ComposerController::KeyFoundRole);
+                    item->setData(QVariant::fromValue(keys.front()), ComposerController::KeyRole);
+                } else {
+                    SinkWarning() << "Failed to find key for recipient.";
+                }
+            });
     }
 
     void remove(const QString &addressee)
