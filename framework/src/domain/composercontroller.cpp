@@ -90,6 +90,14 @@ public:
     }
 };
 
+static void traverse(const QStandardItemModel *model, const std::function<void(QStandardItem *item)> &f)
+{
+    auto root = model->invisibleRootItem();
+    for (int row = 0; row < root->rowCount(); row++) {
+        f(root->child(row, 0));
+    }
+}
+
 class AddresseeModel : public QStandardItemModel
 {
 public:
@@ -98,6 +106,7 @@ public:
     {
         setItemRoleNames({{ComposerController::AddresseeNameRole, "addresseeName"},
                           {ComposerController::KeyFoundRole, "keyFound"},
+                          {ComposerController::KeyMissingRole, "keyMissing"},
                           {ComposerController::KeyRole, "key"}});
     }
 
@@ -106,18 +115,24 @@ public:
         auto item = new QStandardItem;
         item->setData(addressee, ComposerController::AddresseeNameRole);
         item->setData(false, ComposerController::KeyFoundRole);
+        item->setData(mCryptoEnabled, ComposerController::KeyMissingRole);
         appendRow(QList<QStandardItem*>() << item);
-        findKey(addressee, item);
+        if (mCryptoEnabled) {
+            findKey(addressee, item);
+        }
     }
 
     void findKey(const QString &addressee, QStandardItem *item)
     {
-        SinkLog() << "Searching key for: " << addressee;
-        auto keys = MailCrypto::findKeys(QStringList{} << addressee, false, false, MailCrypto::OPENPGP);
+        KMime::Types::Mailbox mb;
+        mb.fromUnicodeString(addressee);
+
+        SinkLog() << "Searching key for: " << mb.address();
+        auto keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
         if (keys.empty()) {
             //Search for key on remote server if it's missing and import
             //TODO: this is blocking and thus blocks the UI
-            keys = MailCrypto::findKeys(QStringList{} << addressee, false, true, MailCrypto::OPENPGP);
+            keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, true, MailCrypto::OPENPGP);
             MailCrypto::importKeys(keys);
         }
         if (item) {
@@ -161,11 +176,9 @@ public:
     std::vector<GpgME::Key> getKeys()
     {
         std::vector<GpgME::Key> keys;
-        auto root = invisibleRootItem();
-        for (int row = 0; row < root->rowCount(); row++) {
-            auto item = root->child(row, 0);
+        traverse(this, [&] (QStandardItem *item) {
             keys.push_back(item->data(ComposerController::KeyRole).value<GpgME::Key>());
-        }
+        });
         return keys;
     }
 
@@ -180,13 +193,24 @@ public:
     QStringList stringList() const
     {
         QStringList list;
-        auto root = invisibleRootItem();
-        for (int row = 0; row < root->rowCount(); row++) {
-            list << root->child(row, 0)->data(ComposerController::AddresseeNameRole).toString();
-        }
+        traverse(this, [&] (QStandardItem *item) {
+            list << item->data(ComposerController::AddresseeNameRole).toString();
+        });
         return list;
     }
 
+    void setCryptoEnabled(bool enabled)
+    {
+        mCryptoEnabled = enabled;
+        traverse(this, [&] (QStandardItem *item) {
+            item->setData(mCryptoEnabled, ComposerController::KeyMissingRole);
+            if (mCryptoEnabled) {
+                findKey(item->data(ComposerController::AddresseeNameRole).toString(), item);
+            }
+        });
+    }
+
+    bool mCryptoEnabled = false;
 };
 
 
@@ -224,6 +248,10 @@ ComposerController::ComposerController()
     QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSaveAsDraftAction);
     QObject::connect(this, &ComposerController::identityChanged, &ComposerController::findPersonalKey);
     updateSendAction();
+
+    QObject::connect(this, &ComposerController::encryptChanged, [&] () { mToModel->setCryptoEnabled(getEncrypt()); });
+    QObject::connect(this, &ComposerController::encryptChanged, [&] () { mCcModel->setCryptoEnabled(getEncrypt()); });
+    QObject::connect(this, &ComposerController::encryptChanged, [&] () { mBccModel->setCryptoEnabled(getEncrypt()); });
 }
 
 void ComposerController::findPersonalKey()

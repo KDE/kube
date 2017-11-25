@@ -81,6 +81,7 @@ class ComposerController : public Kube::Controller
 public:
     enum AddresseeRoles {
         KeyFoundRole = Qt::UserRole + 1,
+        KeyMissingRole,
         KeyRole,
         AddresseeNameRole
     };

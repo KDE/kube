@@ -75,6 +75,7 @@ FocusScope {
                         }
                         height: Kube.Units.gridUnit
                         width: height
+                        visible: model.keyFound || model.keyMissing
                         iconName: model.keyFound ? Kube.Icons.secure: Kube.Icons.insecure
                     }
                 }
