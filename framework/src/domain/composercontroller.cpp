@@ -159,12 +159,12 @@ public:
             [this, addressee](const std::vector<GpgME::Key> &keys) {
                 if (!keys.empty()) {
                     if (keys.size() > 1 ) {
-                        SinkWarning() << "Found more than one key, picking first one.";
+                        SinkWarning() << "Found more than one key, encrypting to all of them.";
                     }
                     SinkLog() << "Found key: " << keys.front().primaryFingerprint();
                     for (auto item : findItems(addressee)) {
                         item->setData(true, ComposerController::KeyFoundRole);
-                        item->setData(QVariant::fromValue(keys.front()), ComposerController::KeyRole);
+                        item->setData(QVariant::fromValue(keys), ComposerController::KeyRole);
                     }
                 } else {
                     SinkWarning() << "Failed to find key for recipient.";
@@ -200,7 +200,8 @@ public:
     {
         std::vector<GpgME::Key> keys;
         traverse(this, [&] (QStandardItem *item) {
-            keys.push_back(item->data(ComposerController::KeyRole).value<GpgME::Key>());
+            auto l = item->data(ComposerController::KeyRole).value<std::vector<GpgME::Key>>();
+            keys.insert(std::end(keys), std::begin(l), std::end(l));
         });
         return keys;
     }
