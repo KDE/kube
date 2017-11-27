@@ -102,13 +102,15 @@ static void traverse(const QStandardItemModel *model, const std::function<void(Q
 }
 
 template<typename T>
-void asyncRun(std::function<T()> run, std::function<void(T)> continuation)
+void asyncRun(QObject *object, std::function<T()> run, std::function<void(T)> continuation)
 {
+    auto guard = QPointer<QObject>{object};
     auto future = QtConcurrent::run(run);
     auto watcher = new QFutureWatcher<T>;
-    //FIXME holding on to the item pointer like this is not safe
-    QObject::connect(watcher, &QFutureWatcher<T>::finished, watcher, [watcher, continuation]() {
-        continuation(watcher->future().result());
+    QObject::connect(watcher, &QFutureWatcher<T>::finished, watcher, [watcher, continuation, guard]() {
+        if (guard) {
+            continuation(watcher->future().result());
+        }
         delete watcher;
     });
     watcher->setFuture(future);
@@ -129,7 +131,8 @@ public:
     void add(const QString &addressee)
     {
         auto item = new QStandardItem;
-        item->setData(addressee, ComposerController::AddresseeNameRole);
+        item->setText(addressee);
+        item->setData(QVariant::fromValue(addressee), ComposerController::AddresseeNameRole);
         item->setData(false, ComposerController::KeyFoundRole);
         item->setData(mCryptoEnabled, ComposerController::KeyMissingRole);
         appendRow(QList<QStandardItem*>() << item);
@@ -144,7 +147,7 @@ public:
         mb.fromUnicodeString(addressee);
 
         SinkLog() << "Searching key for: " << mb.address();
-        asyncRun<std::vector<GpgME::Key>>([mb] {
+        asyncRun<std::vector<GpgME::Key>>(this, [mb] {
                 auto keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
                 if (keys.empty()) {
                     //Search for key on remote server if it's missing and import
@@ -154,15 +157,16 @@ public:
                 }
                 return keys;
             },
-            //FIXME holding on to the item pointer like this is not safe
-            [this, item](const std::vector<GpgME::Key> &keys) {
+            [this, addressee](const std::vector<GpgME::Key> &keys) {
                 if (!keys.empty()) {
                     if (keys.size() > 1 ) {
                         SinkWarning() << "Found more than one key, picking first one.";
                     }
                     SinkLog() << "Found key: " << keys.front().primaryFingerprint();
-                    item->setData(true, ComposerController::KeyFoundRole);
-                    item->setData(QVariant::fromValue(keys.front()), ComposerController::KeyRole);
+                    for (auto item : findItems(addressee)) {
+                        item->setData(true, ComposerController::KeyFoundRole);
+                        item->setData(QVariant::fromValue(keys.front()), ComposerController::KeyRole);
+                    }
                 } else {
                     SinkWarning() << "Failed to find key for recipient.";
                 }
@@ -173,7 +177,7 @@ public:
     {
         auto root = invisibleRootItem();
         for (int row = 0; row < root->rowCount(); row++) {
-            if (root->child(row, 0)->data(ComposerController::AddresseeNameRole).toString() == addressee) {
+            if (root->child(row, 0)->text() == addressee) {
                 root->removeRow(row);
                 return;
             }
@@ -214,7 +218,7 @@ public:
     {
         QStringList list;
         traverse(this, [&] (QStandardItem *item) {
-            list << item->data(ComposerController::AddresseeNameRole).toString();
+            list << item->text();
         });
         return list;
     }
@@ -225,7 +229,7 @@ public:
         traverse(this, [&] (QStandardItem *item) {
             item->setData(mCryptoEnabled, ComposerController::KeyMissingRole);
             if (mCryptoEnabled) {
-                findKey(item->data(ComposerController::AddresseeNameRole).toString(), item);
+                findKey(item->text(), item);
             }
         });
     }
