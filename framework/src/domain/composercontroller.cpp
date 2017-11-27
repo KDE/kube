@@ -137,11 +137,11 @@ public:
         item->setData(mCryptoEnabled, ComposerController::KeyMissingRole);
         appendRow(QList<QStandardItem*>() << item);
         if (mCryptoEnabled) {
-            findKey(addressee, item);
+            findKey(addressee);
         }
     }
 
-    void findKey(const QString &addressee, QStandardItem *item)
+    void findKey(const QString &addressee)
     {
         KMime::Types::Mailbox mb;
         mb.fromUnicodeString(addressee);
@@ -229,7 +229,7 @@ public:
         traverse(this, [&] (QStandardItem *item) {
             item->setData(mCryptoEnabled, ComposerController::KeyMissingRole);
             if (mCryptoEnabled) {
-                findKey(item->text(), item);
+                findKey(item->text());
             }
         });
     }
@@ -669,7 +669,7 @@ void ComposerController::send()
             SinkWarning() << "Failed to find a mailtransport resource";
             return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
         })
-        .then([&] (const KAsync::Error &error) {
+        .then([&] (const KAsync::Error &) {
             SinkLog() << "Message was sent: ";
             emit done();
         });
