@@ -281,18 +281,23 @@ ComposerController::ComposerController()
 void ComposerController::findPersonalKey()
 {
     auto identity = getIdentity();
-    SinkLog() << "Looking for personal key for: " << identity.address();
-    mPersonalKeys = MailCrypto::findKeys(QStringList{} << identity.address(), true);
-    if (mPersonalKeys.empty()) {
-        SinkWarning() << "Failed to find a personal key.";
-    }
-    if (mPersonalKeys.size() > 1) {
-        SinkWarning() << "Found multiple keys, using first one:";
-        SinkWarning() << "  " << mPersonalKeys.front().primaryFingerprint();
-    } else {
-        SinkLog() << "Found personal key: " << mPersonalKeys.front().primaryFingerprint();
-    }
-    updateSendAction();
+    asyncRun<std::vector<GpgME::Key>>(this, [=] {
+            SinkLog() << "Looking for personal key for: " << identity.address();
+            return MailCrypto::findKeys(QStringList{} << identity.address(), true);
+        },
+        [this](const std::vector<GpgME::Key> &keys) {
+            mPersonalKeys = keys;
+            if (mPersonalKeys.empty()) {
+                SinkWarning() << "Failed to find a personal key.";
+            }
+            if (mPersonalKeys.size() > 1) {
+                SinkWarning() << "Found multiple keys, using first one:";
+                SinkWarning() << "  " << mPersonalKeys.front().primaryFingerprint();
+            } else {
+                SinkLog() << "Found personal key: " << mPersonalKeys.front().primaryFingerprint();
+            }
+            updateSendAction();
+        });
 }
 
 void ComposerController::clear()
