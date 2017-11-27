@@ -150,8 +150,7 @@ public:
         asyncRun<std::vector<GpgME::Key>>(this, [mb] {
                 auto keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
                 if (keys.empty()) {
-                    //Search for key on remote server if it's missing and import
-                    //TODO: this is blocking and thus blocks the UI
+                    SinkLog() << "Looking for remote key: " << mb.address();
                     keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, true, MailCrypto::OPENPGP);
                     MailCrypto::importKeys(keys);
                 }
@@ -281,8 +280,8 @@ ComposerController::ComposerController()
 void ComposerController::findPersonalKey()
 {
     auto identity = getIdentity();
+    SinkLog() << "Looking for personal key for: " << identity.address();
     asyncRun<std::vector<GpgME::Key>>(this, [=] {
-            SinkLog() << "Looking for personal key for: " << identity.address();
             return MailCrypto::findKeys(QStringList{} << identity.address(), true);
         },
         [this](const std::vector<GpgME::Key> &keys) {
