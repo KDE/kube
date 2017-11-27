@@ -148,13 +148,7 @@ public:
 
         SinkLog() << "Searching key for: " << mb.address();
         asyncRun<std::vector<GpgME::Key>>(this, [mb] {
-                auto keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
-                if (keys.empty()) {
-                    SinkLog() << "Looking for remote key: " << mb.address();
-                    keys = MailCrypto::findKeys(QStringList{} << mb.address(), false, true, MailCrypto::OPENPGP);
-                    MailCrypto::importKeys(keys);
-                }
-                return keys;
+                return MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
             },
             [this, addressee](const std::vector<GpgME::Key> &keys) {
                 if (!keys.empty()) {
