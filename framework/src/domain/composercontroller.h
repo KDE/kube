@@ -57,6 +57,7 @@ class ComposerController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(bool, HtmlBody, htmlBody)
     KUBE_CONTROLLER_PROPERTY(bool, Encrypt, encrypt)
     KUBE_CONTROLLER_PROPERTY(bool, Sign, sign)
+    KUBE_CONTROLLER_PROPERTY(bool, EncryptionAvailable, encryptionAvailable)
 
     //Set by identitySelector
     KUBE_CONTROLLER_PROPERTY(KMime::Types::Mailbox, Identity, identity)

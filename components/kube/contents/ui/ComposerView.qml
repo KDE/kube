@@ -445,6 +445,7 @@ Kube.View {
             }
 
             RowLayout {
+                enabled: composerController.encryptionAvailable
                 Kube.CheckBox {
                     id: encryptCheckbox
                     checked: composerController.encrypt
@@ -455,6 +456,7 @@ Kube.View {
             }
 
             RowLayout {
+                enabled: composerController.encryptionAvailable
                 Kube.CheckBox {
                     id: signCheckbox
                     checked: composerController.sign
@@ -462,6 +464,12 @@ Kube.View {
                 Kube.Label {
                     text: qsTr("sign")
                 }
+            }
+            Kube.Label {
+                visible: !composerController.encryptionAvailable
+                Layout.maximumWidth: parent.width
+                text: qsTr("Encryption is not available because your personal key has not been found.")
+                wrapMode: Text.Wrap
             }
 
             RowLayout {

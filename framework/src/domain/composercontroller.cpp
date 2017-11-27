@@ -297,6 +297,7 @@ void ComposerController::findPersonalKey()
                 SinkLog() << "Found personal key: " << mPersonalKeys.front().primaryFingerprint();
             }
             updateSendAction();
+            setEncryptionAvailable(!mPersonalKeys.empty());
         });
 }
 
