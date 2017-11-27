@@ -32,6 +32,8 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/importresult.h>
 #include <QDebug>
+#include <QMutex>
+#include <QMutexLocker>
 
 /*
  * FIXME:
@@ -471,12 +473,16 @@ void MailCrypto::importKeys(const std::vector<GpgME::Key> &keys)
     job->exec(keys);
 }
 
+QMutex sMutex;
+
 std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, bool remote, Protocol protocol)
 {
+    QMutexLocker locker{&sMutex};
     const QGpgME::Protocol *const backend = protocol == SMIME ? QGpgME::smime() : QGpgME::openpgp();
     Q_ASSERT(backend);
     QGpgME::KeyListJob *job = backend->keyListJob(remote);
     Q_ASSERT(job);
+    locker.unlock();
 
     std::vector<GpgME::Key> keys;
     GpgME::KeyListResult res = job->exec(filter, findPrivate, keys);
