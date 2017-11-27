@@ -21,7 +21,7 @@ import QtQuick.Templates 2.0 as T
 import org.kube.framework 1.0 as Kube
 
 T.Label {
-    color: Kube.Colors.textColor
+    color: enabled ? Kube.Colors.textColor : Kube.Colors.disabledTextColor
     font.family: Kube.Font.fontFamily
     linkColor: Kube.Colors.highlightColor
     onLinkActivated: Qt.openUrlExternally(link)
