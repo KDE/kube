@@ -390,8 +390,8 @@ Kube.View {
             }
 
             spacing: Kube.Units.largeSpacing
-
             ColumnLayout {
+                Layout.maximumWidth: parent.width
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -465,6 +465,7 @@ Kube.View {
             }
 
             RowLayout {
+                Layout.maximumWidth: parent.width
                 width: parent.width
                 height: Kube.Units.gridUnit
 
@@ -486,6 +487,7 @@ Kube.View {
             }
 
             ColumnLayout {
+                Layout.maximumWidth: parent.width
                 Layout.fillWidth: true
                 Kube.Label {
                     id: fromLabel
