@@ -28,6 +28,7 @@ RUN dnf -y install llvm
 
 RUN dnf -y install sudo
 RUN dnf -y install pinentry-gtk
+RUN dnf -y install gammaray
 
 RUN useradd -d /home/developer -m developer
 
