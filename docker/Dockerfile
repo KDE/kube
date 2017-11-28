@@ -32,19 +32,22 @@ RUN dnf -y install gammaray
 
 RUN useradd -d /home/developer -m developer
 
+#Setup cyrus imap
+RUN echo 'altnamespace: 0' >> /etc/imapd.conf
+RUN echo 'unixhierarchysep: 0' >> /etc/imapd.conf
+RUN usermod -p `perl -e "print crypt("admin","Q4")"` cyrus
+RUN useradd -p `perl -e "print crypt("doe","Q4")"` doe
+RUN /usr/bin/sscg --package cyrus-imapd --cert-file /etc/pki/cyrus-imapd/cyrus-imapd.pem --cert-key-file /etc/pki/cyrus-imapd/cyrus-imapd-key.pem --ca-file /etc/pki/cyrus-imapd/cyrus-imapd-ca.pem
+RUN saslauthd -a pam && /usr/libexec/cyrus-imapd/master -d && sleep 1 && echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
+
+#DBus For KCacheGrind
+RUN dbus-uuidgen --ensure
+
 # setup developer account
 RUN echo 'developer ALL=NOPASSWD: ALL' >> /etc/sudoers
 USER developer
 ENV HOME /home/developer
 WORKDIR /home/developer/
-
-#Setup cyrus imap
-RUN sudo usermod -p `perl -e "print crypt("admin","Q4")"` cyrus
-RUN sudo useradd -p `perl -e "print crypt("doe","Q4")"` doe
-RUN sudo saslauthd -a pam && sudo /usr/libexec/cyrus-imapd/master -d && sleep 1 && sudo echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
-
-#DBus For KCacheGrind
-RUN sudo dbus-uuidgen --ensure
 
 ENV QT_PLUGIN_PATH /install/lib64/plugins/
 ENV LD_LIBRARY_PATH /install/lib64
