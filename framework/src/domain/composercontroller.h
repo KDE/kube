@@ -41,6 +41,8 @@ inline bool operator !=(const KMime::Types::Mailbox &l, const KMime::Types::Mail
 
 Q_DECLARE_METATYPE(KMime::Types::Mailbox);
 
+Q_DECLARE_METATYPE(GpgME::Key);
+
 namespace KMime {
 class Message;
 }
@@ -57,7 +59,6 @@ class ComposerController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(bool, HtmlBody, htmlBody)
     KUBE_CONTROLLER_PROPERTY(bool, Encrypt, encrypt)
     KUBE_CONTROLLER_PROPERTY(bool, Sign, sign)
-    KUBE_CONTROLLER_PROPERTY(bool, EncryptionAvailable, encryptionAvailable)
 
     //Set by identitySelector
     KUBE_CONTROLLER_PROPERTY(KMime::Types::Mailbox, Identity, identity)
@@ -67,26 +68,21 @@ class ComposerController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(KMime::Message::Ptr, ExistingMessage, existingMessage)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail, ExistingMail, existingMail)
 
+    KUBE_CONTROLLER_PROPERTY(/*std::vector<GpgME::Key>*/QVariant, PersonalKeys, personalKeys)
+    KUBE_CONTROLLER_PROPERTY(bool, FoundPersonalKeys, foundPersonalKeys)
+
+    KUBE_CONTROLLER_LISTCONTROLLER(to)
+    KUBE_CONTROLLER_LISTCONTROLLER(cc)
+    KUBE_CONTROLLER_LISTCONTROLLER(bcc)
+    KUBE_CONTROLLER_LISTCONTROLLER(attachments)
+
     Q_PROPERTY (Completer* recipientCompleter READ recipientCompleter CONSTANT)
     Q_PROPERTY (Selector* identitySelector READ identitySelector CONSTANT)
-    //Q_PROPERTY (QValidator* subjectValidator READ subjectValidator CONSTANT)
-
-    Q_PROPERTY (QAbstractItemModel* toModel READ toModel CONSTANT)
-    Q_PROPERTY (QAbstractItemModel* ccModel READ ccModel CONSTANT)
-    Q_PROPERTY (QAbstractItemModel* bccModel READ bccModel CONSTANT)
-    Q_PROPERTY (QAbstractItemModel* attachmentModel READ attachmentModel CONSTANT)
 
     KUBE_CONTROLLER_ACTION(send)
     KUBE_CONTROLLER_ACTION(saveAsDraft)
 
 public:
-    enum AddresseeRoles {
-        KeyFoundRole = Qt::UserRole + 1,
-        KeyMissingRole,
-        KeyRole,
-        AddresseeNameRole
-    };
-
     explicit ComposerController();
 
     Completer *recipientCompleter() const;
@@ -94,50 +90,19 @@ public:
 
     Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
 
-    QAbstractItemModel *toModel() const;
-    QAbstractItemModel *ccModel() const;
-    QAbstractItemModel *bccModel() const;
-    QAbstractItemModel *attachmentModel() const;
-
-    Q_INVOKABLE void addTo(const QString &);
-    Q_INVOKABLE void removeTo(const QString &);
-    Q_INVOKABLE void addCc(const QString &);
-    Q_INVOKABLE void removeCc(const QString &);
-    Q_INVOKABLE void addBcc(const QString &);
-    Q_INVOKABLE void removeBcc(const QString &);
-    Q_INVOKABLE void addAttachment(const QUrl &);
-    Q_INVOKABLE void removeAttachment(const QUrl &);
-
 public slots:
     virtual void clear() Q_DECL_OVERRIDE;
 
 private slots:
-    void updateSendAction();
-    void updateSaveAsDraftAction();
     void findPersonalKey();
 
 private:
-    enum AttachmentRoles {
-        NameRole = Qt::UserRole + 1,
-        FilenameRole,
-        ContentRole,
-        MimeTypeRole,
-        DescriptionRole,
-        InlineRole,
-        IconNameRole,
-        UrlRole
-    };
-
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
     void addAttachmentPart(KMime::Content *partToAttach);
     KMime::Message::Ptr assembleMessage();
+    std::vector<GpgME::Key> getRecipientKeys();
 
     QScopedPointer<Completer> mRecipientCompleter;
     QScopedPointer<Selector> mIdentitySelector;
-    QSharedPointer<AddresseeModel> mToModel;
-    QSharedPointer<AddresseeModel> mCcModel;
-    QSharedPointer<AddresseeModel> mBccModel;
-    QScopedPointer<QStandardItemModel> mAttachmentModel;
-    std::vector<GpgME::Key> mPersonalKeys;
 };

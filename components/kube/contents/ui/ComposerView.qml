@@ -34,10 +34,6 @@ Kube.View {
     property variant message: {}
     property variant recipients: []
 
-    //actions
-    property variant sendAction: composerController.sendAction
-    property variant saveAsDraftAction: composerController.saveAsDraftAction
-
     resources: [
         Kube.ComposerController {
             id: composerController
@@ -45,6 +41,11 @@ Kube.View {
             sign: signCheckbox.checked
             encrypt: encryptCheckbox.checked
             onDone: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+
+            property bool foundAllKeys: to.foundAllKeys && cc.foundAllKeys && bcc.foundAllKeys
+
+            sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys)
+            saveAsDraftAction.enabled: composerController.accountId
         }
     ]
 
@@ -67,7 +68,7 @@ Kube.View {
             composerController.clear()
             if (root.recipients) {
                 for (var i = 0; i < root.recipients.length; ++i) {
-                    composerController.addTo(root.recipients[i])
+                    composerController.to.add({name: root.recipients[i]})
                 }
             }
             subject.forceActiveFocus()
@@ -265,13 +266,13 @@ Kube.View {
                 clip: true
 
                 Repeater {
-                    model: composerController.attachmentModel
+                    model: composerController.attachments.model
                     delegate: Kube.AttachmentDelegate {
                         name: model.filename
-                        icon: model.iconName
+                        icon: model.iconname
                         clip: true
                         actionIcon: Kube.Icons.remove
-                        onExecute: composerController.removeAttachment(model.url)
+                        onExecute: composerController.attachments.remove(model.id)
                     }
                 }
             }
@@ -338,7 +339,7 @@ Kube.View {
                             title: "Choose a file to attach"
                             selectFolder: false
                             onAccepted: {
-                                composerController.addAttachment(fileDialog.fileUrl)
+                                composerController.attachments.add({url: fileDialog.fileUrl})
                             }
                         }
                     }
@@ -400,15 +401,13 @@ Kube.View {
                 }
 
                 AddresseeListEditor {
-                    id: to
-                    Layout.preferredHeight: to.implicitHeight
+                    Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
                     focus: true
                     activeFocusOnTab: true
+                    encrypt: composerController.encrypt
+                    controller: composerController.to
                     completer: composerController.recipientCompleter
-                    model: composerController.toModel
-                    onAdded: composerController.addTo(text)
-                    onRemoved: composerController.removeTo(text)
                 }
 
                 Kube.Label {
@@ -419,10 +418,9 @@ Kube.View {
                     Layout.preferredHeight: cc.implicitHeight
                     Layout.fillWidth: true
                     activeFocusOnTab: true
+                    encrypt: composerController.encrypt
+                    controller: composerController.cc
                     completer: composerController.recipientCompleter
-                    model: composerController.ccModel
-                    onAdded: composerController.addCc(text)
-                    onRemoved: composerController.removeCc(text)
                 }
 
                 Kube.Label {
@@ -433,10 +431,9 @@ Kube.View {
                     Layout.preferredHeight: bcc.implicitHeight
                     Layout.fillWidth: true
                     activeFocusOnTab: true
+                    encrypt: composerController.encrypt
+                    controller: composerController.bcc
                     completer: composerController.recipientCompleter
-                    model: composerController.bccModel
-                    onAdded: composerController.addBcc(text)
-                    onRemoved: composerController.removeBcc(text)
                 }
                 Item {
                     width: parent.width
@@ -445,7 +442,7 @@ Kube.View {
             }
 
             RowLayout {
-                enabled: composerController.encryptionAvailable
+                enabled: composerController.foundPersonalKeys
                 Kube.CheckBox {
                     id: encryptCheckbox
                     checked: composerController.encrypt
@@ -456,7 +453,7 @@ Kube.View {
             }
 
             RowLayout {
-                enabled: composerController.encryptionAvailable
+                enabled: composerController.foundPersonalKeys
                 Kube.CheckBox {
                     id: signCheckbox
                     checked: composerController.sign
@@ -466,7 +463,7 @@ Kube.View {
                 }
             }
             Kube.Label {
-                visible: !composerController.encryptionAvailable
+                visible: !composerController.foundPersonalKeys
                 Layout.maximumWidth: parent.width
                 text: qsTr("Encryption is not available because your personal key has not been found.")
                 wrapMode: Text.Wrap
@@ -487,9 +484,9 @@ Kube.View {
                     id: saveDraftButton
 
                     text: qsTr("Save as Draft")
-                    //TODO enabled: saveAsDraftAction.enabled
+                    enabled: composerController.saveAsDraftAction.enabled
                     onClicked: {
-                        saveAsDraftAction.execute()
+                        composerController.saveAsDraftAction.execute()
                     }
                 }
             }
@@ -522,9 +519,9 @@ Kube.View {
                 width: parent.width
 
                 text: qsTr("Send")
-                enabled: sendAction.enabled
+                enabled: composerController.sendAction.enabled
                 onClicked: {
-                    sendAction.execute()
+                    composerController.sendAction.execute()
                 }
             }
         }

@@ -26,11 +26,9 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
+    property variant controller
     property variant completer
-    property alias model: listView.model
-
-    signal added(string text)
-    signal removed(string text)
+    property bool encrypt: false
 
     implicitHeight: listView.height + lineEdit.height
     height: implicitHeight
@@ -48,6 +46,7 @@ FocusScope {
             }
             height: contentHeight
             spacing: Kube.Units.smallSpacing
+            model: controller.model
             delegate: Rectangle {
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
                 width: parent.width
@@ -66,7 +65,7 @@ FocusScope {
                         anchors {
                             top: parent.top
                         }
-                        text: model.addresseeName
+                        text: model.name
                         elide: Text.ElideRight
                     }
                     Kube.Icon {
@@ -75,7 +74,7 @@ FocusScope {
                         }
                         height: Kube.Units.gridUnit
                         width: height
-                        visible: model.keyFound || model.keyMissing
+                        visible: root.encrypt
                         iconName: model.keyFound ? Kube.Icons.secure: Kube.Icons.insecure
                     }
                 }
@@ -88,7 +87,7 @@ FocusScope {
                     }
                     height: Kube.Units.gridUnit
                     width: height
-                    onClicked: root.removed(model.addresseeName)
+                    onClicked: root.controller.remove(model.id)
                     padding: 0
                     iconName: Kube.Icons.remove
                 }
@@ -123,7 +122,7 @@ FocusScope {
                 model: root.completer.model
                 onSearchTermChanged: root.completer.searchString = searchTerm
                 onAccepted: {
-                    root.added(text);
+                    root.controller.add({name: text});
                     clear()
                     visible = false
                     button.forceActiveFocus()

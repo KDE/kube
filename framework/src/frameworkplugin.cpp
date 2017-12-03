@@ -39,6 +39,7 @@
 #include "webengineprofile.h"
 #include "startupcheck.h"
 #include "keyring.h"
+#include "controller.h"
 
 #include <QtQml>
 
@@ -70,6 +71,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<FolderListModel>(uri, 1, 0, "FolderListModel");
     qmlRegisterType<MailListModel>(uri, 1, 0, "MailListModel");
     qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");
+    qmlRegisterType<Kube::ControllerAction>(uri, 1, 0, "ControllerAction");
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");
     qmlRegisterType<Retriever>(uri, 1, 0, "Retriever");
     qmlRegisterType<OutboxModel>(uri, 1, 0, "OutboxModel");
