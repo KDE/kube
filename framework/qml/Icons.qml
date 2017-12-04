@@ -23,6 +23,7 @@ import QtQuick 2.7
 
 Item {
     property string error: "error"
+    property string info_inverted: "kdocumentinfo-inverted"
     property string error_inverted: "error-inverted"
     property string busy: "view-refresh"
     property string busy_inverted: "view-refresh-inverted"
@@ -57,6 +58,8 @@ Item {
     property string checkbox: "checkbox"
     property string password_show: "password-show-on"
     property string password_hide: "password-show-off"
+    property string secure: "document-encrypt"
+    property string insecure: "document-decrypt"
 
     property string addNew: "list-add"
     property string remove: "kube-list-remove-inverted"

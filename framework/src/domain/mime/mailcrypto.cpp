@@ -22,9 +22,18 @@
 #include "mailcrypto.h"
 #include <QGpgME/Protocol>
 #include <QGpgME/SignJob>
+#include <QGpgME/EncryptJob>
+#include <QGpgME/SignEncryptJob>
+#include <QGpgME/KeyListJob>
+#include <QGpgME/ImportFromKeyserverJob>
 #include <gpgme++/global.h>
 #include <gpgme++/signingresult.h>
+#include <gpgme++/encryptionresult.h>
+#include <gpgme++/keylistresult.h>
+#include <gpgme++/importresult.h>
 #include <QDebug>
+#include <QMutex>
+#include <QMutexLocker>
 
 /*
  * FIXME:
@@ -333,44 +342,12 @@ KMime::Content *composeHeadersAndBody(KMime::Content *orig, QByteArray encodedBo
     //     }
     // }
 
-//Hardcoded OpenPGPGMIMEFormat for now
-KMime::Content *MailCrypto::sign(KMime::Content *content, const std::vector<GpgME::Key> &signers)
+// replace simple LFs by CRLFs for all MIME supporting CryptPlugs
+// according to RfC 2633, 3.1.1 Canonicalization
+static QByteArray canonicalizeContent(KMime::Content *content)
 {
-
-    // if setContent hasn't been called, we assume that a subjob was added
-    // and we want to use that
-    // if (!d->content) {
-    //     Q_ASSERT(d->subjobContents.size() == 1);
-    //     d->content = d->subjobContents.first();
-    // }
-
-    //d->resultContent = new KMime::Content;
-
-    // const QGpgME::Protocol *proto = nullptr;
-    // if (d->format & Kleo::AnyOpenPGP) {
-        // proto = QGpgME::openpgp();
-    // } else if (d->format & Kleo::AnySMIME) {
-    //     proto = QGpgME::smime();
-    // }
-
-    const QGpgME::Protocol *proto = QGpgME::openpgp();
-    Q_ASSERT(proto);
-
-    qDebug() << "creating signJob from:" << proto->name() << proto->displayName();
-    // std::unique_ptr<QGpgME::SignJob> job(proto->signJob(!d->binaryHint(d->format), d->format == Kleo::InlineOpenPGPFormat));
-    bool armor = true;
-    bool textMode = false;
-    std::unique_ptr<QGpgME::SignJob> job(proto->signJob(armor, textMode));
-    // for now just do the main recipients
-    QByteArray signature;
-
-    content->assemble();
-
-    // replace simple LFs by CRLFs for all MIME supporting CryptPlugs
-    // according to RfC 2633, 3.1.1 Canonicalization
-    QByteArray contentData;
     // if (d->format & Kleo::InlineOpenPGPFormat) {
-    //     content = d->content->body();
+    //     return d->content->body();
     // } else if (!(d->format & Kleo::SMIMEOpaqueFormat)) {
 
         // replace "From " and "--" at the beginning of lines
@@ -423,32 +400,105 @@ KMime::Content *MailCrypto::sign(KMime::Content *content, const std::vector<GpgM
             }
         }
 
-        contentData = KMime::LFtoCRLF(content->encodedContent());
+        return KMime::LFtoCRLF(content->encodedContent());
     // } else {                    // SMimeOpaque doesn't need LFtoCRLF, else it gets munged
-    //     contentData = content->encodedContent();
+    //     return content->encodedContent();
     // }
 
+}
+
+KMime::Content *MailCrypto::processCrypto(KMime::Content *content, const std::vector<GpgME::Key> &signingKeys, const std::vector<GpgME::Key> &encryptionKeys, MailCrypto::Protocol protocol)
+{
+    const QGpgME::Protocol *const proto = protocol == MailCrypto::SMIME ? QGpgME::smime() : QGpgME::openpgp();
+    Q_ASSERT(proto);
+
     auto signingMode = GpgME::Detached;
+    bool armor = true;
+    bool textMode = false;
+    const bool sign = !signingKeys.empty();
+    const bool encrypt = !encryptionKeys.empty();
 
-    // FIXME: Make this async
-    GpgME::SigningResult res = job->exec(signers,
-                                         contentData,
-                                         signingMode,
-                                         signature);
-
-    // exec'ed jobs don't delete themselves
-    job->deleteLater();
-
-    if (res.error().code()) {
-        qWarning() << "signing failed:" << res.error().asString();
-        //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
-        // setError(res.error().code());
-        // setErrorText(QString::fromLocal8Bit(res.error().asString()));
+    QByteArray resultContent;
+    QByteArray hashAlgo;
+    //Trust provided keys and don't check them for validity
+    bool alwaysTrust = true;
+    if (sign && encrypt) {
+        std::unique_ptr<QGpgME::SignEncryptJob> job(proto->signEncryptJob(armor, textMode));
+        const auto res = job->exec(signingKeys, encryptionKeys, canonicalizeContent(content), alwaysTrust, resultContent);
+        if (res.first.error().code()) {
+            qWarning() << "Signing failed:" << res.first.error().asString();
+            return nullptr;
+        } else {
+            hashAlgo = res.first.createdSignature(0).hashAlgorithmAsString();
+        }
+        if (res.second.error().code()) {
+            qWarning() << "Encryption failed:" << res.second.error().asString();
+            return nullptr;
+        }
+    } else if (sign) {
+        std::unique_ptr<QGpgME::SignJob> job(proto->signJob(armor, textMode));
+        auto result = job->exec(signingKeys, canonicalizeContent(content), signingMode, resultContent);
+        if (result.error().code()) {
+            qWarning() << "Signing failed:" << result.error().asString();
+            return nullptr;
+        }
+        hashAlgo = result.createdSignature(0).hashAlgorithmAsString();
+    } else if (encrypt) {
+        std::unique_ptr<QGpgME::EncryptJob> job(proto->encryptJob(armor, textMode));
+        const auto result = job->exec(encryptionKeys, canonicalizeContent(content), alwaysTrust, resultContent);
+        if (result.error().code()) {
+            qWarning() << "Encryption failed:" << result.error().asString();
+            return nullptr;
+        }
+        hashAlgo = "pgp-sha1";
     } else {
-        QByteArray signatureHashAlgo =  res.createdSignature(0).hashAlgorithmAsString();
-        bool sign = true;
-        return composeHeadersAndBody(content, signature, sign, signatureHashAlgo);
+        qWarning() << "Not signing or encrypting";
+        return nullptr;
     }
-    return nullptr;
+
+    return composeHeadersAndBody(content, resultContent, sign, hashAlgo);
+}
+
+KMime::Content *MailCrypto::sign(KMime::Content *content, const std::vector<GpgME::Key> &signers)
+{
+    return processCrypto(content, signers, {}, OPENPGP);
+}
+
+
+void MailCrypto::importKeys(const std::vector<GpgME::Key> &keys)
+{
+    const QGpgME::Protocol *const backend = QGpgME::openpgp();
+    Q_ASSERT(backend);
+    auto *job = backend->importFromKeyserverJob();
+    job->exec(keys);
+}
+
+QMutex sMutex;
+
+std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, bool remote, Protocol protocol)
+{
+    QMutexLocker locker{&sMutex};
+    const QGpgME::Protocol *const backend = protocol == SMIME ? QGpgME::smime() : QGpgME::openpgp();
+    Q_ASSERT(backend);
+    QGpgME::KeyListJob *job = backend->keyListJob(remote);
+    Q_ASSERT(job);
+    locker.unlock();
+
+    std::vector<GpgME::Key> keys;
+    GpgME::KeyListResult res = job->exec(filter, findPrivate, keys);
+
+    Q_ASSERT(!res.error());
+
+    qWarning() << "got keys:" << keys.size();
+
+    for (std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i) {
+        qWarning() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
+        qWarning() << "key numuserIds:" << i->numUserIDs();
+        for (uint k = 0; k < i->numUserIDs(); ++k) {
+            qWarning() << "userIDs:" << i->userID(k).email();
+        }
+    }
+
+    return keys;
 }
 

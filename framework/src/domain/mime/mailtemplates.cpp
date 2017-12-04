@@ -958,7 +958,7 @@ static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list
     return mailboxes;
 }
 
-KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, bool htmlBody, const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys)
+KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, bool htmlBody, const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys, const std::vector<GpgME::Key> &encryptionKeys)
 {
     auto mail = existingMessage;
     if (!mail) {
@@ -995,41 +995,42 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     }
     mail->assemble();
 
-    KMime::Content *bodyPart;
-    if (!attachments.isEmpty()) {
-        bodyPart = new KMime::Content;
-        bodyPart->contentType(true)->setMimeType("multipart/mixed");
-        bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
-        bodyPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
-        bodyPart->setPreamble("This is a multi-part message in MIME format.\n");
-        bodyPart->addContent(createBodyPart(body.toUtf8(), htmlBody));
-        for (const auto &attachment : attachments) {
-            bodyPart->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
+    std::unique_ptr<KMime::Content> bodyPart{[&] {
+        if (!attachments.isEmpty()) {
+            auto bodyPart = new KMime::Content;
+            bodyPart->contentType(true)->setMimeType("multipart/mixed");
+            bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
+            bodyPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
+            bodyPart->setPreamble("This is a multi-part message in MIME format.\n");
+            bodyPart->addContent(createBodyPart(body.toUtf8(), htmlBody));
+            for (const auto &attachment : attachments) {
+                bodyPart->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
+            }
+            return bodyPart;
+        } else {
+            return createBodyPart(body.toUtf8(), htmlBody);
         }
-    } else {
-        bodyPart = createBodyPart(body.toUtf8(), htmlBody);
-    }
+    }()};
     bodyPart->assemble();
 
-    KMime::Content *signedResult = nullptr;
-    if (!signingKeys.empty()) {
-        signedResult = MailCrypto::sign(bodyPart, signingKeys);
-        if (!signedResult) {
+    QByteArray bodyData;
+    if (!signingKeys.empty() || !encryptionKeys.empty()) {
+        auto result = MailCrypto::processCrypto(bodyPart.get(), signingKeys, encryptionKeys, MailCrypto::OPENPGP);
+        if (!result) {
             qWarning() << "Signing failed";
             return {};
         }
+        bodyData = result->encodedContent();
     } else {
         if (!bodyPart->contentType(false)) {
             bodyPart->contentType(true)->setMimeType("text/plain");
             bodyPart->assemble();
         }
+        bodyData = bodyPart->encodedContent();
     }
 
-    const QByteArray allData = mail->head() + (signedResult ? signedResult->encodedContent() : bodyPart->encodedContent());
-    delete bodyPart;
     KMime::Message::Ptr resultMessage(new KMime::Message);
-    resultMessage->setContent(allData);
+    resultMessage->setContent(mail->head() + bodyData);
     resultMessage->parse(); // Not strictly necessary.
-
     return resultMessage;
 }

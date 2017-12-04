@@ -22,9 +22,16 @@ include(KDECompilerSettings)
 #Avoid building appstreamtest
 set(KDE_SKIP_TEST_SETTINGS true)
 include(KDECMakeSettings NO_POLICY_SCOPE)
+include(ECMSetupVersion)
+
+ecm_setup_version(PROJECT
+                  SOVERSION kube_VERSION_MAJOR
+                  VERSION_HEADER kube_version.h
+                  )
 
 enable_testing()
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(framework)
 add_subdirectory(components)
 add_subdirectory(icons)

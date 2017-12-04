@@ -42,12 +42,35 @@
     public: Kube::ControllerAction* NAME##Action() const { Q_ASSERT(action_##NAME); return action_##NAME.data(); } \
     private slots: void NAME(); \
 
+#define KUBE_CONTROLLER_LISTCONTROLLER(NAME) \
+    Q_PROPERTY (Kube::ListPropertyController* NAME READ NAME##Controller CONSTANT) \
+    private: QScopedPointer<Kube::ListPropertyController> controller_##NAME; \
+    public: Kube::ListPropertyController* NAME##Controller() const { Q_ASSERT(controller_##NAME); return controller_##NAME.data(); } \
+
+
+class QAbstractItemModel;
+class QStandardItemModel;
 
 namespace Kube {
 
-class ControllerAction : public QObject {
+class ControllerState : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool enabled MEMBER mEnabled NOTIFY enabledChanged)
+public:
+    ControllerState();
+    ~ControllerState() = default;
+
+    void setEnabled(bool enabled) { setProperty("enabled", enabled); }
+
+signals:
+    void enabledChanged();
+
+private:
+    bool mEnabled = false;
+};
+
+class ControllerAction : public ControllerState {
+    Q_OBJECT
 public:
     ControllerAction();
     template <typename Func>
@@ -60,14 +83,9 @@ public:
     ~ControllerAction() = default;
 
     Q_INVOKABLE void execute();
-    void setEnabled(bool enabled) { setProperty("enabled", enabled); }
 
 signals:
-    void enabledChanged();
     void triggered();
-
-private:
-    bool mEnabled = true;
 };
 
 class Controller : public QObject {
@@ -86,5 +104,43 @@ signals:
 protected:
     void run(const KAsync::Job<void> &job);
 };
+
+class ListPropertyController : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QAbstractItemModel* model READ model CONSTANT)
+
+public:
+    ListPropertyController(const QStringList &roles);
+    Q_INVOKABLE virtual void add(const QVariantMap &value);
+    Q_INVOKABLE virtual void remove(const QByteArray &id);
+    Q_INVOKABLE void clear();
+
+    QAbstractItemModel *model();
+
+    void setValue(const QByteArray &id, const QString &key, const QVariant &);
+    void setValues(const QByteArray &id, const QVariantMap &values);
+    void traverse(const std::function<void(const QVariantMap &)> &f);
+
+    template<typename T>
+    QList<T> getList(const QString &property)
+    {
+        QList<T> list;
+        traverse([&] (const QVariantMap &map) {
+            list << map[property].value<T>();
+        });
+        return list;
+    }
+
+Q_SIGNALS:
+    void added(QByteArray, QVariantMap);
+
+protected:
+    QScopedPointer<QStandardItemModel> mModel;
+
+private:
+    QHash<QString, int> mRoles;
+};
+
 
 }

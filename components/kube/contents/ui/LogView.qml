@@ -86,6 +86,8 @@ Controls.SplitView {
                 details.timestamp = error.timestamp
                 if (!!currentItem.currentData.subtype) {
                     details.subtype = currentItem.currentData.subtype
+                } else {
+                    details.subtype = ""
                 }
             }
 
@@ -170,6 +172,9 @@ Controls.SplitView {
                     return loginErrorComponent
                 }
                 if (subtype == Kube.Notifications.hostNotFoundError) {
+                    return hostNotFoundErrorComponent
+                }
+                if (subtype == Kube.Notifications.connectionError) {
                     return hostNotFoundErrorComponent
                 }
                 return detailsComponent

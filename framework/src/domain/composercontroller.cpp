@@ -30,12 +30,22 @@
 #include <QUrlQuery>
 #include <QFileInfo>
 #include <QFile>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <sink/store.h>
 #include <sink/log.h>
 
 #include "identitiesmodel.h"
 #include "recepientautocompletionmodel.h"
 #include "mime/mailtemplates.h"
+#include "mime/mailcrypto.h"
+
+std::vector<GpgME::Key> &operator+=(std::vector<GpgME::Key> &list, const std::vector<GpgME::Key> &add)
+{
+    list.insert(std::end(list), std::begin(add), std::end(add));
+    return list;
+}
 
 class IdentitySelector : public Selector {
 public:
@@ -87,40 +97,148 @@ public:
     }
 };
 
+template<typename T>
+void asyncRun(QObject *object, std::function<T()> run, std::function<void(T)> continuation)
+{
+    auto guard = QPointer<QObject>{object};
+    auto future = QtConcurrent::run(run);
+    auto watcher = new QFutureWatcher<T>;
+    QObject::connect(watcher, &QFutureWatcher<T>::finished, watcher, [watcher, continuation, guard]() {
+        if (guard) {
+            continuation(watcher->future().result());
+        }
+        delete watcher;
+    });
+    watcher->setFuture(future);
+}
+
+class AddresseeController : public Kube::ListPropertyController
+{
+public:
+
+    QSet<QByteArray> mMissingKeys;
+    AddresseeController()
+        : Kube::ListPropertyController{{"name", "keyFound", "key"}}
+    {
+        QObject::connect(this, &Kube::ListPropertyController::added, this, [this] (const QByteArray &id, const QVariantMap &map) {
+            findKey(id, map.value("name").toString());
+        });
+    }
+
+    void findKey(const QByteArray &id, const QString &addressee)
+    {
+        mMissingKeys << id;
+        KMime::Types::Mailbox mb;
+        mb.fromUnicodeString(addressee);
+
+        SinkLog() << "Searching key for: " << mb.address();
+        asyncRun<std::vector<GpgME::Key>>(this, [mb] {
+                return MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
+            },
+            [this, addressee, id](const std::vector<GpgME::Key> &keys) {
+                if (!keys.empty()) {
+                    if (keys.size() > 1 ) {
+                        SinkWarning() << "Found more than one key, encrypting to all of them.";
+                    }
+                    SinkLog() << "Found key: " << keys.front().primaryFingerprint();
+                    setValue(id, "keyFound", true);
+                    setValue(id, "key", QVariant::fromValue(keys));
+                    mMissingKeys.remove(id);
+                    setProperty("foundAllKeys", mMissingKeys.isEmpty());
+                } else {
+                    SinkWarning() << "Failed to find key for recipient.";
+                }
+            });
+    }
+
+    void set(const QStringList &list)
+    {
+        for (const auto &email: list) {
+            add({{"name", email}});
+        }
+    }
+};
+
+class AttachmentController : public Kube::ListPropertyController
+{
+public:
+
+    AttachmentController()
+        : Kube::ListPropertyController{{"name", "filename", "content", "mimetype", "description", "iconname", "url", "inline"}}
+    {
+        QObject::connect(this, &Kube::ListPropertyController::added, this, [this] (const QByteArray &id, const QVariantMap &map) {
+            auto url = map.value("url").toUrl();
+            setAttachmentProperties(id, url);
+        });
+    }
+
+    void setAttachmentProperties(const QByteArray &id, const QUrl &url)
+    {
+        QMimeDatabase db;
+        auto mimeType = db.mimeTypeForUrl(url);
+        if (mimeType.name() == QLatin1String("inode/directory")) {
+            qWarning() << "Can't deal with directories yet.";
+        } else {
+            if (!url.isLocalFile()) {
+                qWarning() << "Cannot attach remote file: " << url;
+                return;
+            }
+
+            QFileInfo fileInfo(url.toLocalFile());
+            if (!fileInfo.exists()) {
+                qWarning() << "The file doesn't exist: " << url;
+            }
+
+            QFile file{fileInfo.filePath()};
+            file.open(QIODevice::ReadOnly);
+            const auto data = file.readAll();
+            QVariantMap map;
+            map.insert("filename", fileInfo.fileName());
+            map.insert("mimetype", mimeType.name().toLatin1());
+            map.insert("filename", fileInfo.fileName().toLatin1());
+            map.insert("inline", false);
+            map.insert("iconname", mimeType.iconName());
+            map.insert("url", url);
+            map.insert("content", data);
+            setValues(id, map);
+        }
+    }
+};
 
 ComposerController::ComposerController()
     : Kube::Controller(),
+    controller_to{new AddresseeController},
+    controller_cc{new AddresseeController},
+    controller_bcc{new AddresseeController},
+    controller_attachments{new AttachmentController},
     action_send{new Kube::ControllerAction{this, &ComposerController::send}},
     action_saveAsDraft{new Kube::ControllerAction{this, &ComposerController::saveAsDraft}},
     mRecipientCompleter{new RecipientCompleter},
-    mIdentitySelector{new IdentitySelector{*this}},
-    mToModel{new QStringListModel},
-    mCcModel{new QStringListModel},
-    mBccModel{new QStringListModel},
-    mAttachmentModel{new QStandardItemModel}
+    mIdentitySelector{new IdentitySelector{*this}}
 {
-    mAttachmentModel->setItemRoleNames({{NameRole, "name"},
-                                        {FilenameRole, "filename"},
-                                        {ContentRole, "content"},
-                                        {MimeTypeRole, "mimetype"},
-                                        {DescriptionRole, "description"},
-                                        {IconNameRole, "iconName"},
-                                        {UrlRole, "url"},
-                                        {InlineRole, "inline"}});
-    updateSaveAsDraftAction();
-    // mSendAction->monitorProperty<To>();
-    // mSendAction->monitorProperty<Send>([] (const QString &) -> bool{
-    //     //validate
-    // });
-    // registerAction<ControllerAction>(&ComposerController::send);
-    // actionDepends<ControllerAction, To, Subject>();
-    // TODO do in constructor
+    QObject::connect(this, &ComposerController::identityChanged, &ComposerController::findPersonalKey);
+}
 
-    QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSendAction);
-    QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSendAction);
-    QObject::connect(this, &ComposerController::subjectChanged, &ComposerController::updateSaveAsDraftAction);
-    QObject::connect(this, &ComposerController::accountIdChanged, &ComposerController::updateSaveAsDraftAction);
-    updateSendAction();
+void ComposerController::findPersonalKey()
+{
+    auto identity = getIdentity();
+    SinkLog() << "Looking for personal key for: " << identity.address();
+    asyncRun<std::vector<GpgME::Key>>(this, [=] {
+            return MailCrypto::findKeys(QStringList{} << identity.address(), true);
+        },
+        [this](const std::vector<GpgME::Key> &keys) {
+            if (keys.empty()) {
+                SinkWarning() << "Failed to find a personal key.";
+            }
+            if (keys.size() > 1) {
+                SinkWarning() << "Found multiple keys, using first one:";
+                SinkWarning() << "  " << keys.front().primaryFingerprint();
+            } else {
+                SinkLog() << "Found personal key: " << keys.front().primaryFingerprint();
+            }
+            setPersonalKeys(QVariant::fromValue(keys));
+            setFoundPersonalKeys(!keys.empty());
+        });
 }
 
 void ComposerController::clear()
@@ -128,124 +246,10 @@ void ComposerController::clear()
     Controller::clear();
     //Reapply account and identity from selection
     mIdentitySelector->reapplyCurrentIndex();
-    mToModel->setStringList({});
-    mCcModel->setStringList({});
-    mBccModel->setStringList({});
-}
-
-QAbstractItemModel *ComposerController::toModel() const
-{
-    return mToModel.data();
-}
-
-void ComposerController::addTo(const QString &s)
-{
-    auto list = mToModel->stringList();
-    list.append(s);
-    mToModel->setStringList(list);
-    updateSendAction();
-}
-
-void ComposerController::removeTo(const QString &s)
-{
-    auto list = mToModel->stringList();
-    list.removeAll(s);
-    mToModel->setStringList(list);
-    updateSendAction();
-}
-
-QAbstractItemModel *ComposerController::ccModel() const
-{
-    return mCcModel.data();
-}
-
-void ComposerController::addCc(const QString &s)
-{
-    auto list = mCcModel->stringList();
-    list.append(s);
-    mCcModel->setStringList(list);
-    updateSendAction();
-}
-
-void ComposerController::removeCc(const QString &s)
-{
-    auto list = mCcModel->stringList();
-    list.removeAll(s);
-    mCcModel->setStringList(list);
-    updateSendAction();
-}
-
-QAbstractItemModel *ComposerController::bccModel() const
-{
-    return mBccModel.data();
-}
-
-void ComposerController::addBcc(const QString &s)
-{
-    auto list = mBccModel->stringList();
-    list.append(s);
-    mBccModel->setStringList(list);
-    updateSendAction();
-}
-
-void ComposerController::removeBcc(const QString &s)
-{
-    auto list = mBccModel->stringList();
-    list.removeAll(s);
-    mBccModel->setStringList(list);
-    updateSendAction();
-}
-
-QAbstractItemModel *ComposerController::attachmentModel() const
-{
-    return mAttachmentModel.data();
-}
-
-void ComposerController::addAttachment(const QUrl &url)
-{
-    QMimeDatabase db;
-    auto mimeType = db.mimeTypeForUrl(url);
-    if (mimeType.name() == QLatin1String("inode/directory")) {
-        qWarning() << "Can't deal with directories yet.";
-    } else {
-        if (!url.isLocalFile()) {
-            qWarning() << "Cannot attach remote file: " << url;
-            return;
-        }
-
-        QFileInfo fileInfo(url.toLocalFile());
-        if (!fileInfo.exists()) {
-            qWarning() << "The file doesn't exist: " << url;
-        }
-
-        QFile file{fileInfo.filePath()};
-        file.open(QIODevice::ReadOnly);
-        const auto data = file.readAll();
-        auto item = new QStandardItem;
-        item->setData(fileInfo.fileName(), NameRole);
-        item->setData(mimeType.name().toLatin1(), MimeTypeRole);
-        item->setData(fileInfo.fileName(), FilenameRole);
-        item->setData(false, InlineRole);
-        item->setData(mimeType.iconName(), IconNameRole);
-        item->setData(url, UrlRole);
-        item->setData(data, ContentRole);
-        mAttachmentModel->appendRow(item);
-    }
-}
-
-void ComposerController::removeAttachment(const QUrl &url)
-{
-    auto root = mAttachmentModel->invisibleRootItem();
-    if (root->hasChildren()) {
-        for (int row = 0; row < root->rowCount(); row++) {
-            auto item = root->child(row, 0);
-            const auto url = item->data(UrlRole).toUrl();
-            if (url == item->data(UrlRole).toUrl()) {
-                root->removeRow(row);
-                return;
-            }
-        }
-    }
+    //FIXME implement in Controller::clear instead
+    toController()->clear();
+    ccController()->clear();
+    bccController()->clear();
 }
 
 Completer *ComposerController::recipientCompleter() const
@@ -291,24 +295,23 @@ static QStringList getStringListFromAddresses(const KMime::Types::Mailbox::List 
 
 void ComposerController::addAttachmentPart(KMime::Content *partToAttach)
 {
-    auto item = new QStandardItem;
-
+    QVariantMap map;
     if (partToAttach->contentType()->mimeType() == "multipart/digest" ||
             partToAttach->contentType()->mimeType() == "message/rfc822") {
         // if it is a digest or a full message, use the encodedContent() of the attachment,
         // which already has the proper headers
-        item->setData(partToAttach->encodedContent(), ContentRole);
+        map.insert("content", partToAttach->encodedContent());
     } else {
-        item->setData(partToAttach->decodedContent(), ContentRole);
+        map.insert("content", partToAttach->decodedContent());
     }
-    item->setData(partToAttach->contentType()->mimeType(), MimeTypeRole);
+    map.insert("mimetype", partToAttach->contentType()->mimeType());
 
     QMimeDatabase db;
     auto mimeType = db.mimeTypeForName(partToAttach->contentType()->mimeType());
-    item->setData(mimeType.iconName(), IconNameRole);
+    map.insert("iconname", mimeType.iconName());
 
     if (partToAttach->contentDescription(false)) {
-        item->setData(partToAttach->contentDescription()->asUnicodeString(), DescriptionRole);
+        map.insert("description", partToAttach->contentDescription()->asUnicodeString());
     }
     QString name;
     QString filename;
@@ -319,7 +322,7 @@ void ComposerController::addAttachmentPart(KMime::Content *partToAttach)
     }
     if (partToAttach->contentDisposition(false)) {
         filename = partToAttach->contentDisposition()->filename();
-        item->setData(partToAttach->contentDisposition()->disposition() == KMime::Headers::CDinline, InlineRole);
+        map.insert("inline", partToAttach->contentDisposition()->disposition() == KMime::Headers::CDinline);
     }
 
     if (name.isEmpty() && !filename.isEmpty()) {
@@ -330,20 +333,19 @@ void ComposerController::addAttachmentPart(KMime::Content *partToAttach)
     }
 
     if (!filename.isEmpty()) {
-        item->setData(filename, FilenameRole);
+        map.insert("filename", filename);
     }
     if (!name.isEmpty()) {
-        item->setData(name, NameRole);
+        map.insert("name", name);
     }
-
-    mAttachmentModel->appendRow(item);
+    attachmentsController()->add(map);
 }
 
 void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 {
-    mToModel->setStringList(getStringListFromAddresses(msg->to(true)->mailboxes()));
-    mCcModel->setStringList(getStringListFromAddresses(msg->cc(true)->mailboxes()));
-    mBccModel->setStringList(getStringListFromAddresses(msg->bcc(true)->mailboxes()));
+    static_cast<AddresseeController*>(toController())->set(getStringListFromAddresses(msg->to(true)->mailboxes()));
+    static_cast<AddresseeController*>(ccController())->set(getStringListFromAddresses(msg->cc(true)->mailboxes()));
+    static_cast<AddresseeController*>(bccController())->set(getStringListFromAddresses(msg->bcc(true)->mailboxes()));
 
     setSubject(msg->subject(true)->asUnicodeString());
     bool isHtml = false;
@@ -404,46 +406,71 @@ void ComposerController::recordForAutocompletion(const QByteArray &addrSpec, con
     }
 }
 
+std::vector<GpgME::Key> ComposerController::getRecipientKeys()
+{
+    std::vector<GpgME::Key> keys;
+    {
+        const auto list = toController()->getList<std::vector<GpgME::Key>>("key");
+        for (const auto &l: list) {
+            keys.insert(std::end(keys), std::begin(l), std::end(l));
+        }
+    }
+    {
+        const auto list = ccController()->getList<std::vector<GpgME::Key>>("key");
+        for (const auto &l: list) {
+            keys.insert(std::end(keys), std::begin(l), std::end(l));
+        }
+    }
+    {
+        const auto list = bccController()->getList<std::vector<GpgME::Key>>("key");
+        for (const auto &l: list) {
+            keys.insert(std::end(keys), std::begin(l), std::end(l));
+        }
+    }
+    return keys;
+}
+
 KMime::Message::Ptr ComposerController::assembleMessage()
 {
-    applyAddresses(mToModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        recordForAutocompletion(addrSpec, displayName);
-    });
-    applyAddresses(mCcModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        recordForAutocompletion(addrSpec, displayName);
-    });
-    applyAddresses(mBccModel->stringList(), [&](const QByteArray &addrSpec, const QByteArray &displayName) {
+    auto toAddresses = toController()->getList<QString>("name");
+    auto ccAddresses = toController()->getList<QString>("name");
+    auto bccAddresses = toController()->getList<QString>("name");
+    applyAddresses(toAddresses + ccAddresses + bccAddresses, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         recordForAutocompletion(addrSpec, displayName);
     });
 
     QList<Attachment> attachments;
-    auto root = mAttachmentModel->invisibleRootItem();
-    if (root->hasChildren()) {
-        for (int row = 0; row < root->rowCount(); row++) {
-            auto item = root->child(row, 0);
-            attachments << Attachment{
-                item->data(NameRole).toString(),
-                item->data(FilenameRole).toString(),
-                item->data(MimeTypeRole).toByteArray(),
-                item->data(InlineRole).toBool(),
-                item->data(ContentRole).toByteArray()
-            };
-        }
-    }
-    return MailTemplates::createMessage(mExistingMessage, mToModel->stringList(), mCcModel->stringList(), mBccModel->stringList(), getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments);
-}
+    attachmentsController()->traverse([&](const QVariantMap &value) {
+        attachments << Attachment{
+            value["name"].toString(),
+            value["filename"].toString(),
+            value["mimetype"].toByteArray(),
+            value["inline"].toBool(),
+            value["content"].toByteArray()
+        };
+    });
 
-void ComposerController::updateSendAction()
-{
-    auto enabled = !mToModel->stringList().isEmpty() && !getSubject().isEmpty() && !getAccountId().isEmpty();
-    sendAction()->setEnabled(enabled);
+    std::vector<GpgME::Key> signingKeys;
+    if (getSign()) {
+        signingKeys = getPersonalKeys().value<std::vector<GpgME::Key>>();
+    }
+    std::vector<GpgME::Key> encryptionKeys;
+    if (getEncrypt()) {
+        //Encrypt to self so we can read the sent message
+        encryptionKeys += getPersonalKeys().value<std::vector<GpgME::Key>>();
+        encryptionKeys += getRecipientKeys();
+    }
+
+    return MailTemplates::createMessage(mExistingMessage, toAddresses, ccAddresses, bccAddresses, getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments, signingKeys, encryptionKeys);
 }
 
 void ComposerController::send()
 {
-    // verify<To, Subject>()
-    // && verify<Subject>();
     auto message = assembleMessage();
+    if (!message) {
+        SinkWarning() << "Failed to assemble the message.";
+        return;
+    }
 
     auto accountId = getAccountId();
     //SinkLog() << "Sending a mail: " << *this;
@@ -470,17 +497,11 @@ void ComposerController::send()
             SinkWarning() << "Failed to find a mailtransport resource";
             return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
         })
-        .then([&] (const KAsync::Error &error) {
+        .then([&] (const KAsync::Error &) {
             SinkLog() << "Message was sent: ";
             emit done();
         });
     run(job);
-}
-
-void ComposerController::updateSaveAsDraftAction()
-{
-    bool enabled = !getAccountId().isEmpty();
-    sendAction()->setEnabled(enabled);
 }
 
 void ComposerController::saveAsDraft()
@@ -490,9 +511,8 @@ void ComposerController::saveAsDraft()
     auto existingMail = getExistingMail();
 
     auto message = assembleMessage();
-    //FIXME this is something for the validation
     if (!message) {
-        SinkWarning() << "Failed to get the mail: ";
+        SinkWarning() << "Failed to assemble the message.";
         return;
     }
 
@@ -527,3 +547,4 @@ void ComposerController::saveAsDraft()
     });
     run(job);
 }
+

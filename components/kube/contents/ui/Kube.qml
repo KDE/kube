@@ -232,7 +232,7 @@ Controls2.ApplicationWindow {
 
                 Kube.IconButton {
                     id: logButton
-                    iconName: Kube.Icons.error_inverted
+                    iconName: Kube.Icons.info_inverted
                     onClicked: kubeViews.setLogView()
                     activeFocusOnTab: true
                     checkable: true
@@ -402,8 +402,10 @@ Controls2.ApplicationWindow {
         id: notificationPopup
 
         anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
+            left: parent.left
+            leftMargin: app.sidebarWidth - 3 // so it does not align with the border
+            bottom: parent.bottom
+            bottomMargin: Kube.Units.gridUnit * 4
         }
     }
     //END Notification

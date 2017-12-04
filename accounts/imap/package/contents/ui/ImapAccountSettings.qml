@@ -94,23 +94,6 @@ Item {
         }
 
         Kube.Label {
-            text: qsTr("Password")
-            Layout.alignment: Qt.AlignRight
-        }
-
-        Kube.PasswordField {
-            id: pwField
-            Layout.fillWidth: true
-
-            placeholderText: qsTr("Password of your email account")
-            text: imapSettings.imapPassword
-            onTextChanged: {
-                imapSettings.imapPassword = text
-                imapSettings.smtpPassword = text
-            }
-        }
-
-        Kube.Label {
             text: qsTr("IMAP server address")
             Layout.alignment: Qt.AlignRight
         }

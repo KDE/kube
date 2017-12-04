@@ -14,6 +14,7 @@
         "--socket=wayland",
         "--device=dri",
         "--filesystem=host",
+        "--filesystem=/tmp",
         "--share=network",
         "--env=SASL_PATH=/usr/lib/sasl2/"
     ],

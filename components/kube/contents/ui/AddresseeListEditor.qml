@@ -26,11 +26,9 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
+    property variant controller
     property variant completer
-    property alias model: listView.model
-
-    signal added(string text)
-    signal removed(string text)
+    property bool encrypt: false
 
     implicitHeight: listView.height + lineEdit.height
     height: implicitHeight
@@ -48,30 +46,48 @@ FocusScope {
             }
             height: contentHeight
             spacing: Kube.Units.smallSpacing
+            model: controller.model
             delegate: Rectangle {
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
                 width: parent.width
                 color: Kube.Colors.buttonColor
-                Kube.Label {
+                Row {
                     anchors {
                         top: parent.top
+                        bottom: parent.bottom
                         left: parent.left
-                        right: button.left
+                        right: removeButton.left
                         margins: Kube.Units.smallSpacing
                     }
-                    text: display
-                    elide: Text.ElideRight
+                    spacing: Kube.Units.smallSpacing
+                    Kube.Label {
+                        id: label
+                        anchors {
+                            top: parent.top
+                        }
+                        text: model.name
+                        elide: Text.ElideRight
+                    }
+                    Kube.Icon {
+                        anchors {
+                            top: parent.top
+                        }
+                        height: Kube.Units.gridUnit
+                        width: height
+                        visible: root.encrypt
+                        iconName: model.keyFound ? Kube.Icons.secure: Kube.Icons.insecure
+                    }
                 }
                 Kube.IconButton {
-                    id: button
+                    id: removeButton
                     anchors {
-                        verticalCenter: parent.verticalCenter
                         right: parent.right
+                        verticalCenter: parent.verticalCenter
                         margins: Kube.Units.smallSpacing
                     }
                     height: Kube.Units.gridUnit
                     width: height
-                    onClicked: root.removed(display);
+                    onClicked: root.controller.remove(model.id)
                     padding: 0
                     iconName: Kube.Icons.remove
                 }
@@ -106,7 +122,7 @@ FocusScope {
                 model: root.completer.model
                 onSearchTermChanged: root.completer.searchString = searchTerm
                 onAccepted: {
-                    root.added(text);
+                    root.controller.add({name: text});
                     clear()
                     visible = false
                     button.forceActiveFocus()

@@ -2,5 +2,7 @@
 
 int main(int argc, char **argv)
 {
-    return quick_test_main(argc, argv, "example", 0);
+    QTEST_ADD_GPU_BLACKLIST_SUPPORT
+    QTEST_SET_MAIN_SOURCE_PATH
+    return quick_test_main(argc, argv, "kubetest", 0);
 }
