@@ -229,12 +229,8 @@ void ComposerController::findPersonalKey()
         [this](const std::vector<GpgME::Key> &keys) {
             if (keys.empty()) {
                 SinkWarning() << "Failed to find a personal key.";
-            }
-            if (keys.size() > 1) {
-                SinkWarning() << "Found multiple keys, using first one:";
-                SinkWarning() << "  " << keys.front().primaryFingerprint();
-            } else {
-                SinkLog() << "Found personal key: " << keys.front().primaryFingerprint();
+            } else if (keys.size() > 1) {
+                SinkWarning() << "Found multiple keys, using all of them.";
             }
             setPersonalKeys(QVariant::fromValue(keys));
             setFoundPersonalKeys(!keys.empty());
