@@ -819,81 +819,79 @@ QString prettifyDN(const char *uid)
 void SignedMessagePart::sigStatusToMetaData()
 {
     GpgME::Key key;
-    if (mMetaData.isSigned) {
-        GpgME::Signature signature = mSignatures.front();
-        mMetaData.status_code = signatureToStatus(signature);
-        mMetaData.isGoodSignature = mMetaData.status_code & GPGME_SIG_STAT_GOOD;
-        // save extended signature status flags
-        mMetaData.sigSummary = signature.summary();
+    GpgME::Signature signature = mSignatures.front();
+    mMetaData.status_code = signatureToStatus(signature);
+    mMetaData.isGoodSignature = mMetaData.status_code & GPGME_SIG_STAT_GOOD;
+    // save extended signature status flags
+    mMetaData.sigSummary = signature.summary();
 
-        if (mMetaData.isGoodSignature && !key.keyID()) {
-            // Search for the key by its fingerprint so that we can check for
-            // trust etc.
-            QGpgME::KeyListJob *job = mCryptoProto->keyListJob(false);    // local, no sigs
-            if (!job) {
-                qCDebug(MIMETREEPARSER_LOG) << "The Crypto backend does not support listing keys. ";
-            } else {
-                std::vector<GpgME::Key> found_keys;
-                // As we are local it is ok to make this synchronous
-                GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(signature.fingerprint())), false, found_keys);
-                if (res.error()) {
-                    qCDebug(MIMETREEPARSER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
-                }
-                if (found_keys.size() > 1) {
-                    // Should not Happen
-                    qCDebug(MIMETREEPARSER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
-                }
-                if (found_keys.size() != 1) {
-                    // Should not Happen at this point
-                    qCDebug(MIMETREEPARSER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
-                } else {
-                    key = found_keys[0];
-                }
-                delete job;
-            }
-        }
-
-        if (key.keyID()) {
-            mMetaData.keyId = key.keyID();
-        }
-        if (mMetaData.keyId.isEmpty()) {
-            mMetaData.keyId = signature.fingerprint();
-        }
-        mMetaData.keyTrust = signature.validity();
-        if (key.numUserIDs() > 0 && key.userID(0).id()) {
-            mMetaData.signer = prettifyDN(key.userID(0).id());
-        }
-        for (uint iMail = 0; iMail < key.numUserIDs(); ++iMail) {
-            // The following if /should/ always result in TRUE but we
-            // won't trust implicitely the plugin that gave us these data.
-            if (key.userID(iMail).email()) {
-                QString email = QString::fromUtf8(key.userID(iMail).email());
-                // ### work around gpgme 0.3.QString text() const Q_DECL_OVERRIDE;x / cryptplug bug where the
-                // ### email addresses are specified as angle-addr, not addr-spec:
-                if (email.startsWith(QLatin1Char('<')) && email.endsWith(QLatin1Char('>'))) {
-                    email = email.mid(1, email.length() - 2);
-                }
-                if (!email.isEmpty()) {
-                    mMetaData.signerMailAddresses.append(email);
-                }
-            }
-        }
-
-        if (signature.creationTime()) {
-            mMetaData.creationTime.setTime_t(signature.creationTime());
+    if (mMetaData.isGoodSignature && !key.keyID()) {
+        // Search for the key by its fingerprint so that we can check for
+        // trust etc.
+        QGpgME::KeyListJob *job = mCryptoProto->keyListJob(false);    // local, no sigs
+        if (!job) {
+            qCDebug(MIMETREEPARSER_LOG) << "The Crypto backend does not support listing keys. ";
         } else {
-            mMetaData.creationTime = QDateTime();
-        }
-        if (mMetaData.signer.isEmpty()) {
-            if (key.numUserIDs() > 0 && key.userID(0).name()) {
-                mMetaData.signer = prettifyDN(key.userID(0).name());
+            std::vector<GpgME::Key> found_keys;
+            // As we are local it is ok to make this synchronous
+            GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(signature.fingerprint())), false, found_keys);
+            if (res.error()) {
+                qCDebug(MIMETREEPARSER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
             }
-            if (!mMetaData.signerMailAddresses.empty()) {
-                if (mMetaData.signer.isEmpty()) {
-                    mMetaData.signer = mMetaData.signerMailAddresses.front();
-                } else {
-                    mMetaData.signer += QLatin1String(" <") + mMetaData.signerMailAddresses.front() + QLatin1Char('>');
-                }
+            if (found_keys.size() > 1) {
+                // Should not happen
+                qCDebug(MIMETREEPARSER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
+            }
+            if (found_keys.empty()) {
+                // Should not happen at this point
+                qCWarning(MIMETREEPARSER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
+            } else {
+                key = found_keys[0];
+            }
+            delete job;
+        }
+    }
+
+    if (key.keyID()) {
+        mMetaData.keyId = key.keyID();
+    }
+    if (mMetaData.keyId.isEmpty()) {
+        mMetaData.keyId = signature.fingerprint();
+    }
+    mMetaData.keyTrust = signature.validity();
+    if (key.numUserIDs() > 0 && key.userID(0).id()) {
+        mMetaData.signer = prettifyDN(key.userID(0).id());
+    }
+    for (uint iMail = 0; iMail < key.numUserIDs(); ++iMail) {
+        // The following if /should/ always result in TRUE but we
+        // won't trust implicitely the plugin that gave us these data.
+        if (key.userID(iMail).email()) {
+            QString email = QString::fromUtf8(key.userID(iMail).email());
+            // ### work around gpgme 0.3.QString text() const Q_DECL_OVERRIDE;x / cryptplug bug where the
+            // ### email addresses are specified as angle-addr, not addr-spec:
+            if (email.startsWith(QLatin1Char('<')) && email.endsWith(QLatin1Char('>'))) {
+                email = email.mid(1, email.length() - 2);
+            }
+            if (!email.isEmpty()) {
+                mMetaData.signerMailAddresses.append(email);
+            }
+        }
+    }
+
+    if (signature.creationTime()) {
+        mMetaData.creationTime.setTime_t(signature.creationTime());
+    } else {
+        mMetaData.creationTime = QDateTime();
+    }
+    if (mMetaData.signer.isEmpty()) {
+        if (key.numUserIDs() > 0 && key.userID(0).name()) {
+            mMetaData.signer = prettifyDN(key.userID(0).name());
+        }
+        if (!mMetaData.signerMailAddresses.empty()) {
+            if (mMetaData.signer.isEmpty()) {
+                mMetaData.signer = mMetaData.signerMailAddresses.front();
+            } else {
+                mMetaData.signer += QLatin1String(" <") + mMetaData.signerMailAddresses.front() + QLatin1Char('>');
             }
         }
     }
