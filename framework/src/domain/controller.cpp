@@ -46,7 +46,9 @@ void ControllerAction::execute()
 void Controller::clear()
 {
     auto meta = metaObject();
-    for (auto i = meta->propertyOffset(); i < meta->propertyCount(); i++) {
+    //FIXME meta->propertyOffset() changes as soon as we add a property from QML. We know that QObject has an offset of 1.
+    auto offset = 1;
+    for (auto i = offset; i < meta->propertyCount(); i++) {
         auto property = meta->property(i);
         setProperty(property.name(), QVariant());
     }
