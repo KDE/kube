@@ -857,17 +857,14 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     mMetaData.status = tr("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
 
-    CryptoBodyPartMemento *m = verifySignature(text, signature);
-    m->exec();
-
-    if (m && !mMetaData.inProgress) {
+    if (auto *m = verifySignature(text, signature)) {
+        m->exec();
         if (!signature.isEmpty()) {
             mVerifiedText = text;
         }
         setVerificationResult(m, textNode);
-    }
-
-    if (!m && !mMetaData.inProgress) {
+        delete m;
+    } else {
         QString errorMsg;
         QString cryptPlugLibName;
         QString cryptPlugDisplayName;
@@ -893,7 +890,6 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
                                    "verified.<br />"
                                    "Reason: %1").arg(errorMsg);
     }
-    delete m;
 
     if (!mMetaData.isSigned) {
         mMetaData.creationTime = QDateTime();
@@ -1004,7 +1000,7 @@ void EncryptedMessagePart::startDecryption(const QByteArray &text, const QTextCo
 
     startDecryption(content);
 
-    if (!mMetaData.inProgress && mMetaData.isDecryptable) {
+    if (mMetaData.isDecryptable) {
         const auto codec = aCodec ? aCodec : mOtp->codecFor(mNode);
         const auto decoded = codec->toUnicode(mDecryptedData);
         if (hasSubParts()) {
@@ -1025,7 +1021,6 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     mError = NoError;
     auto passphraseError = false;
     auto noSecKey = false;
-    mMetaData.inProgress = false;
     mMetaData.errorText.clear();
     mMetaData.auditLogError = GpgME::Error();
     mMetaData.auditLog.clear();
@@ -1122,9 +1117,6 @@ void EncryptedMessagePart::startDecryption(KMime::Content *data)
 
     bool bOkDecrypt = okDecryptMIME(*data);
 
-    if (mMetaData.inProgress) {
-        return;
-    }
     mMetaData.isDecryptable = bOkDecrypt;
 
     if (!mMetaData.isDecryptable) {
