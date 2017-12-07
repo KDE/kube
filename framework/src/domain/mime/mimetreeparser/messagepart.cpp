@@ -700,95 +700,18 @@ bool SignedMessagePart::isSigned() const
     return mMetaData.isSigned;
 }
 
-bool SignedMessagePart::okVerify(const QByteArray &data, const QByteArray &signature, KMime::Content *textNode)
+CryptoBodyPartMemento *SignedMessagePart::verifySignature(const QByteArray &data, const QByteArray &signature)
 {
-    mMetaData.isSigned = false;
-    mMetaData.keyTrust = GpgME::Signature::Unknown;
-    mMetaData.status = tr("Wrong Crypto Plug-In.");
-    mMetaData.status_code = GPGME_SIG_STAT_NONE;
-
-    const QByteArray mementoName = "verification";
-
-    //TODO for the async case remember the memento
-    CryptoBodyPartMemento *m = nullptr;
-    Q_ASSERT(!m || mCryptoProto); //No CryptoPlugin and having a bodyPartMemento -> there is something completely wrong
-
-    if (!m && mCryptoProto) {
-        if (!signature.isEmpty()) {
-            QGpgME::VerifyDetachedJob *job = mCryptoProto->verifyDetachedJob();
-            if (job) {
-                m = new VerifyDetachedBodyPartMemento(job, mCryptoProto->keyListJob(), signature, data);
-            }
-        } else {
-            QGpgME::VerifyOpaqueJob *job = mCryptoProto->verifyOpaqueJob();
-            if (job) {
-                m = new VerifyOpaqueBodyPartMemento(job, mCryptoProto->keyListJob(), data);
-            }
+    if (!signature.isEmpty()) {
+        if (QGpgME::VerifyDetachedJob *job = mCryptoProto->verifyDetachedJob()) {
+            return new VerifyDetachedBodyPartMemento(job, mCryptoProto->keyListJob(), signature, data);
         }
-        if (m) {
-            // if (mOtp->allowAsync()) {
-            //     QObject::connect(m, &CryptoBodyPartMemento::update,
-            //                      nodeHelper, &NodeHelper::update);
-            //     // QObject::connect(m, SIGNAL(update(MimeTreeParser::UpdateMode)),
-            //     //                  _source->sourceObject(), SLOT(update(MimeTreeParser::UpdateMode)));
-
-            //     if (m->start()) {
-            //         mMetaData.inProgress = true;
-            //         mOtp->mHasPendingAsyncJobs = true;
-            //     }
-            //     //FIXME delete memento once done
-            // } else {
-                m->exec();
-            // }
+    } else {
+        if (QGpgME::VerifyOpaqueJob *job = mCryptoProto->verifyOpaqueJob()) {
+            return new VerifyOpaqueBodyPartMemento(job, mCryptoProto->keyListJob(), data);
         }
-    //only relevant in async case
-    // } else if (m->isRunning()) {
-    //     mMetaData.inProgress = true;
-    //     mOtp->mHasPendingAsyncJobs = true;
-    // } else {
-    //     mMetaData.inProgress = false;
-    //     mOtp->mHasPendingAsyncJobs = false;
     }
-
-    if (m && !mMetaData.inProgress) {
-        if (!signature.isEmpty()) {
-            mVerifiedText = data;
-        }
-        setVerificationResult(m, textNode);
-    }
-
-    if (!m && !mMetaData.inProgress) {
-        QString errorMsg;
-        QString cryptPlugLibName;
-        QString cryptPlugDisplayName;
-        if (mCryptoProto) {
-            cryptPlugLibName = mCryptoProto->name();
-            cryptPlugDisplayName = mCryptoProto->displayName();
-        }
-
-        if (!mCryptoProto) {
-            if (cryptPlugDisplayName.isEmpty()) {
-                errorMsg = tr("No appropriate crypto plug-in was found.");
-            } else {
-                errorMsg = tr("%1 is either 'OpenPGP' or 'S/MIME'",
-                                 "No %1 plug-in was found.").arg(
-                                 cryptPlugDisplayName);
-            }
-        } else {
-            errorMsg = tr("Crypto plug-in \"%1\" cannot verify signatures.").arg(
-                            cryptPlugLibName);
-        }
-        mMetaData.errorText = tr("The message is signed, but the "
-                                   "validity of the signature cannot be "
-                                   "verified.<br />"
-                                   "Reason: %1").arg(errorMsg);
-    }
-    //TODO don't delete in async case
-    if (m) {
-        delete m;
-    }
-
-    return mMetaData.isSigned;
+    return nullptr;
 }
 
 static int signatureToStatus(const GpgME::Signature &sig)
@@ -929,7 +852,48 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
         parseInternal(textNode, false);
     }
 
-    okVerify(text, signature, textNode);
+    mMetaData.isSigned = false;
+    mMetaData.keyTrust = GpgME::Signature::Unknown;
+    mMetaData.status = tr("Wrong Crypto Plug-In.");
+    mMetaData.status_code = GPGME_SIG_STAT_NONE;
+
+    CryptoBodyPartMemento *m = verifySignature(text, signature);
+    m->exec();
+
+    if (m && !mMetaData.inProgress) {
+        if (!signature.isEmpty()) {
+            mVerifiedText = text;
+        }
+        setVerificationResult(m, textNode);
+    }
+
+    if (!m && !mMetaData.inProgress) {
+        QString errorMsg;
+        QString cryptPlugLibName;
+        QString cryptPlugDisplayName;
+        if (mCryptoProto) {
+            cryptPlugLibName = mCryptoProto->name();
+            cryptPlugDisplayName = mCryptoProto->displayName();
+        }
+
+        if (!mCryptoProto) {
+            if (cryptPlugDisplayName.isEmpty()) {
+                errorMsg = tr("No appropriate crypto plug-in was found.");
+            } else {
+                errorMsg = tr("%1 is either 'OpenPGP' or 'S/MIME'",
+                                 "No %1 plug-in was found.").arg(
+                                 cryptPlugDisplayName);
+            }
+        } else {
+            errorMsg = tr("Crypto plug-in \"%1\" cannot verify signatures.").arg(
+                            cryptPlugLibName);
+        }
+        mMetaData.errorText = tr("The message is signed, but the "
+                                   "validity of the signature cannot be "
+                                   "verified.<br />"
+                                   "Reason: %1").arg(errorMsg);
+    }
+    delete m;
 
     if (!mMetaData.isSigned) {
         mMetaData.creationTime = QDateTime();
