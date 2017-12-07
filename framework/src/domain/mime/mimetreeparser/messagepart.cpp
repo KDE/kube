@@ -1105,7 +1105,6 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
 void EncryptedMessagePart::startDecryption(KMime::Content *data)
 {
-
     if (!data) {
         data = mEncryptedNode;
         if (!data) {
@@ -1115,9 +1114,7 @@ void EncryptedMessagePart::startDecryption(KMime::Content *data)
 
     mMetaData.isEncrypted = true;
 
-    bool bOkDecrypt = okDecryptMIME(*data);
-
-    mMetaData.isDecryptable = bOkDecrypt;
+    mMetaData.isDecryptable = okDecryptMIME(*data);
 
     if (!mMetaData.isDecryptable) {
         setText(QString::fromUtf8(mDecryptedData.constData()));
