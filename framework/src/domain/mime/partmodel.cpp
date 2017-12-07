@@ -242,21 +242,22 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             case SecurityLevelRole: {
                 auto signature = messagePart->signatureState();
                 auto encryption = messagePart->encryptionState();
-                bool signatureIsOk = signature == MimeTreeParser::KMMsgPartiallySigned || 
-                                     signature == MimeTreeParser::KMMsgFullySigned;
-                bool encryptionIsOk = encryption == MimeTreeParser::KMMsgPartiallyEncrypted || 
-                                     encryption == MimeTreeParser::KMMsgFullyEncrypted;
-                bool isSigned = signature != MimeTreeParser::KMMsgNotSigned;
-                bool isEncrypted = encryption != MimeTreeParser::KMMsgNotEncrypted;
-                //Something is wonky
-                if ((isSigned && !signatureIsOk) || (isEncrypted && !encryptionIsOk)) {
-                    if (signature == MimeTreeParser::KMMsgSignatureProblematic || encryption == MimeTreeParser::KMMsgEncryptionProblematic) {
+                bool messageIsSigned = signature == MimeTreeParser::KMMsgPartiallySigned ||
+                                       signature == MimeTreeParser::KMMsgFullySigned;
+                bool messageIsEncrypted = encryption == MimeTreeParser::KMMsgPartiallyEncrypted ||
+                                          encryption == MimeTreeParser::KMMsgFullyEncrypted;
+
+                if (messageIsSigned) {
+                    auto sigInfo = std::unique_ptr<SignatureInfo>{signatureInfo(messagePart)};
+                    if (!sigInfo->signatureIsGood || sigInfo->keyRevoked) {
                         return "bad";
                     }
-                    return "notsogood";
+                    if (sigInfo->keyMissing || sigInfo->keyExpired) {
+                        return "notsogood";
+                    }
                 }
                 //All good
-                if (signatureIsOk || encryptionIsOk) {
+                if (messageIsSigned || messageIsEncrypted) {
                     return "good";
                 }
                 //No info

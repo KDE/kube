@@ -43,15 +43,38 @@ DelegateModel {
             return Kube.Colors.lightgrey
         }
 
-        function getDetails(signatureDetails)
+        function getDetails(signed, encrypted, signatureDetails)
         {
-            var details = qsTr("Signature") + ":\n"
-            details += qsTr("Key Id") + ": "  + model.signatureDetails.keyId + "\n"
-            if (model.signatureDetails.keyMissing) {
-                details += qsTr("Key details are not available.") + "\n"
+            var details = "";
+            if (signed && encrypted) {
+                details += qsTr("This message is signed and encrypted.") + "\n";
+            } else if (encrypted) {
+                details += qsTr("This message is encrypted.") + "\n";
+            } else if (signed) {
+                details += qsTr("This message is signed.") + "\n";
             }
-            if (model.signatureDetails.keyIsTrusted) {
-                details += qsTr("You are trusting this key.") + "\n"
+
+            if (signed) {
+                if (details.noSignaturesFound) {
+                    details += qsTr("Failed to validate the signature.") + "\n"
+                } else if (!signatureDetails.signatureIsGood) {
+                    details += qsTr("The signature is invalid.") + "\n"
+                } else if (signatureDetails.keyMissing) {
+                    details += qsTr("This message has been signed using key %1.").arg(signatureDetails.keyId) + "\n";
+                    details += qsTr("The key details are not available.") + "\n";
+                    return details;
+                } else {
+                    details += qsTr("This message has been signed using key %1 by %2.").arg(signatureDetails.keyId).arg(signatureDetails.signer) + "\n";
+                    if (signatureDetails.keyRevoked) {
+                        details += qsTr("The key was revoked.") + "\n"
+                    }
+                    if (signatureDetails.keyExpired) {
+                        details += qsTr("The key has expired.") + "\n"
+                    }
+                    if (signatureDetails.keyIsTrusted) {
+                        details += qsTr("You are trusting this key.") + "\n"
+                    }
+                }
             }
             return details
         }
@@ -76,7 +99,7 @@ DelegateModel {
                 opacity: 0.5
                 Kube.ToolTip {
                     id: tooltip
-                    text: getDetails(model.signatureDetails)
+                    text: getDetails(model.signed, model.encrypted, model.signatureDetails);
                     visible: mouseArea.containsMouse
                 }
                 Kube.SelectableItem {
