@@ -955,22 +955,19 @@ void SignedMessagePart::setVerificationResult(const CryptoBodyPartMemento *m, KM
 
     if (mMetaData.isSigned) {
         sigStatusToMetaData();
-        if (mNode) {
-            if (!textNode) {
-                mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
+        if (mNode && !textNode) {
+            mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
+            if (!mVerifiedText.isEmpty()) {
+                auto tempNode = new KMime::Content();
+                tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
+                tempNode->parse();
+                bindLifetime(tempNode);
 
-                if (!mVerifiedText.isEmpty()) {
-                    auto tempNode = new KMime::Content();
-                    tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
-                    tempNode->parse();
-                    bindLifetime(tempNode);
-
-                    if (!tempNode->head().isEmpty()) {
-                        tempNode->contentDescription()->from7BitString("signed data");
-                    }
-
-                    parseInternal(tempNode, false);
+                if (!tempNode->head().isEmpty()) {
+                    tempNode->contentDescription()->from7BitString("signed data");
                 }
+
+                parseInternal(tempNode, false);
             }
         }
     }
