@@ -26,6 +26,7 @@ T.Button {
 
     property color color: Colors.buttonColor
     property color textColor: Colors.textColor
+    property alias backgroundOpacity: background.opacity
     property alias highlightColor: background.highlightColor
     property alias highlightOpacity: background.highlightOpacity
     property alias horizontalAlignment: label.horizontalAlignment
