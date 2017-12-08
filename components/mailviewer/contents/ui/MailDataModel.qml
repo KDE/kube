@@ -43,81 +43,86 @@ DelegateModel {
             return Kube.Colors.lightgrey
         }
 
-        function getDetails(signed, encrypted, signatureDetails)
+        function getDetails(signatureDetails)
         {
             var details = "";
-            if (encrypted) {
-                details += qsTr("This message is encrypted.") + "\n";
-            }
-
-            if (signed) {
-                if (details.noSignaturesFound) {
-                    details += qsTr("This message has been signed but we failed to validate the signature.") + "\n"
-                } else if (!signatureDetails.signatureIsGood) {
-                    details += qsTr("This message is signed but the signature is invalid.") + "\n"
-                } else if (signatureDetails.keyMissing) {
-                    details += qsTr("This message has been signed using the key %1.").arg(signatureDetails.keyId) + "\n";
-                    details += qsTr("The key details are not available.") + "\n";
-                    return details;
-                } else {
-                    details += qsTr("This message has been signed using the key %1 by %2.").arg(signatureDetails.keyId).arg(signatureDetails.signer) + "\n";
-                    if (signatureDetails.keyRevoked) {
-                        details += qsTr("The key was revoked.") + "\n"
-                    }
-                    if (signatureDetails.keyExpired) {
-                        details += qsTr("The key has expired.") + "\n"
-                    }
-                    if (signatureDetails.keyIsTrusted) {
-                        details += qsTr("You are trusting this key.") + "\n"
-                    }
+            if (signatureDetails.noSignaturesFound) {
+                details += qsTr("This message has been signed but we failed to validate the signature.") + "\n"
+            } else if (!signatureDetails.signatureIsGood) {
+                details += qsTr("This message is signed but the signature is invalid.") + "\n"
+            } else if (signatureDetails.keyMissing) {
+                details += qsTr("This message has been signed using the key %1.").arg(signatureDetails.keyId) + "\n";
+                details += qsTr("The key details are not available.") + "\n";
+                return details;
+            } else {
+                details += qsTr("This message has been signed using the key %1 by %2.").arg(signatureDetails.keyId).arg(signatureDetails.signer) + "\n";
+                if (signatureDetails.keyRevoked) {
+                    details += qsTr("The key was revoked.") + "\n"
+                }
+                if (signatureDetails.keyExpired) {
+                    details += qsTr("The key has expired.") + "\n"
+                }
+                if (signatureDetails.keyIsTrusted) {
+                    details += qsTr("You are trusting this key.") + "\n"
                 }
             }
             return details
         }
 
-        Row {
+        Column {
+            id: buttons
+            anchors.right: parent.left
+            anchors.top: parent.top
+            anchors.rightMargin: Kube.Units.smallSpacing
+            spacing: Kube.Units.smallSpacing
+            Kube.IconButton {
+                id: encryptedButton
+                width: Kube.Units.gridUnit
+                height: width
+                iconName: Kube.Icons.secure
+                color: getColor(model.securityLevel)
+                backgroundOpacity: 0.5
+                visible: model.encrypted
+                tooltip: qsTr("This message is encrypted.");
+                //FIXME make text copyable
+                // Kube.SelectableItem {
+                //     visualParent: encryptedButton
+                //     text: parent.tooltip
+                // }
+            }
+            Kube.IconButton {
+                id: signedButton
+                width: Kube.Units.gridUnit
+                height: width
+                iconName: Kube.Icons.signed
+                color: getColor(model.securityLevel)
+                backgroundOpacity: 0.5
+                visible: model.signed
+                tooltip: getDetails(model.signatureDetails)
+            }
+        }
+        Rectangle {
+            id: border
+            visible: encryptedButton.hovered || signedButton.hovered
+            anchors.topMargin: Kube.Units.smallSpacing
+            anchors.top: buttons.bottom
+            anchors.bottom: partLoader.bottom
+            anchors.right: parent.left
+            anchors.rightMargin: Kube.Units.smallSpacing
+            width: Kube.Units.smallSpacing
+            color: getColor(model.securityLevel)
+            opacity: 0.5
+        }
+
+        Loader {
+            id: partLoader
             anchors {
                 top: parent.top
                 left: parent.left
                 right: parent.right
             }
-            height: partLoader.height
-            spacing: Kube.Units.smallSpacing
-            Rectangle {
-                id: border
-                visible: model.encrypted || model.signed
-                anchors {
-                    top: parent.top
-                    bottom: parent.bottom
-                }
-                width: Kube.Units.smallSpacing
-                color: getColor(model.securityLevel)
-                opacity: 0.5
-                Kube.ToolTip {
-                    id: tooltip
-                    text: getDetails(model.signed, model.encrypted, model.signatureDetails);
-                    visible: mouseArea.containsMouse
-                }
-                Kube.SelectableItem {
-                    visualParent: border
-                    text: tooltip.text
-                }
-                MouseArea {
-                    id: mouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    acceptedButtons: Qt.NoButton
-                }
-            }
-
-            Loader {
-                id: partLoader
-                anchors {
-                    top: parent.top
-                }
-                height: item? item.contentHeight : 0
-                width: parent.width
-            }
+            height: item ? item.contentHeight : 0
+            width: parent.width
         }
         Component.onCompleted: {
             switch (model.type) {
