@@ -22,10 +22,8 @@
 
 #include <QObject>
 #include <QString>
-#include <QStringList>
-#include <QStringListModel>
-#include <QStandardItemModel>
 #include <QVariant>
+#include <QStandardItemModel>
 #include <sink/applicationdomaintype.h>
 #include <KMime/Message>
 #include <gpgme++/key.h>

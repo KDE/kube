@@ -18,15 +18,12 @@
 */
 #include "messageparser.h"
 
+#include <mimetreeparser/objecttreeparser.h>
+
 #include "partmodel.h"
 #include "attachmentmodel.h"
 #include "modeltest.h"
-#include <mimetreeparser/objecttreeparser.h>
-
-#include <QDebug>
-#include <QtConcurrent/QtConcurrentRun>
-#include <QFuture>
-#include <QFutureWatcher>
+#include "async.h"
 
 class MessagePartPrivate
 {
@@ -54,19 +51,16 @@ QVariant MessageParser::message() const
 void MessageParser::setMessage(const QVariant &message)
 {
     mRawContent = message.toString();
-    auto future = QtConcurrent::run([message] {
-        auto parser = std::make_shared<MimeTreeParser::ObjectTreeParser>();
-        parser->parseObjectTree(message.toByteArray());
-        parser->decryptParts();
-        return parser;
-    });
-    auto watcher = new QFutureWatcher<std::shared_ptr<MimeTreeParser::ObjectTreeParser>>;
-    QObject::connect(watcher, &QFutureWatcher<std::shared_ptr<MimeTreeParser::ObjectTreeParser>>::finished, watcher, [this, watcher]() {
-        d->mParser = watcher->future().result();
-        delete watcher;
-        emit htmlChanged();
-    });
-    watcher->setFuture(future);
+    asyncRun<std::shared_ptr<MimeTreeParser::ObjectTreeParser>>(this, [=] {
+            auto parser = std::make_shared<MimeTreeParser::ObjectTreeParser>();
+            parser->parseObjectTree(message.toByteArray());
+            parser->decryptParts();
+            return parser;
+        },
+        [this](const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser) {
+            d->mParser = parser;
+            emit htmlChanged();
+        });
 }
 
 QString MessageParser::rawContent() const

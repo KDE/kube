@@ -17,22 +17,16 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-
-
 #include "composercontroller.h"
 #include <settings/settings.h>
 #include <KMime/Message>
 #include <QVariant>
-#include <QSortFilterProxyModel>
 #include <QList>
 #include <QDebug>
 #include <QMimeDatabase>
 #include <QUrlQuery>
 #include <QFileInfo>
 #include <QFile>
-#include <QtConcurrent/QtConcurrentRun>
-#include <QFuture>
-#include <QFutureWatcher>
 #include <sink/store.h>
 #include <sink/log.h>
 
@@ -40,6 +34,7 @@
 #include "recepientautocompletionmodel.h"
 #include "mime/mailtemplates.h"
 #include "mime/mailcrypto.h"
+#include "async.h"
 
 std::vector<GpgME::Key> &operator+=(std::vector<GpgME::Key> &list, const std::vector<GpgME::Key> &add)
 {
@@ -96,21 +91,6 @@ public:
         Completer::setSearchString(s);
     }
 };
-
-template<typename T>
-void asyncRun(QObject *object, std::function<T()> run, std::function<void(T)> continuation)
-{
-    auto guard = QPointer<QObject>{object};
-    auto future = QtConcurrent::run(run);
-    auto watcher = new QFutureWatcher<T>;
-    QObject::connect(watcher, &QFutureWatcher<T>::finished, watcher, [watcher, continuation, guard]() {
-        if (guard) {
-            continuation(watcher->future().result());
-        }
-        delete watcher;
-    });
-    watcher->setFuture(future);
-}
 
 class AddresseeController : public Kube::ListPropertyController
 {
