@@ -866,24 +866,11 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
         delete m;
     } else {
         QString errorMsg;
-        QString cryptPlugLibName;
-        QString cryptPlugDisplayName;
-        if (mCryptoProto) {
-            cryptPlugLibName = mCryptoProto->name();
-            cryptPlugDisplayName = mCryptoProto->displayName();
-        }
-
         if (!mCryptoProto) {
-            if (cryptPlugDisplayName.isEmpty()) {
-                errorMsg = tr("No appropriate crypto plug-in was found.");
-            } else {
-                errorMsg = tr("%1 is either 'OpenPGP' or 'S/MIME'",
-                                 "No %1 plug-in was found.").arg(
-                                 cryptPlugDisplayName);
-            }
+            errorMsg = tr("No appropriate crypto plug-in was found.");
         } else {
             errorMsg = tr("Crypto plug-in \"%1\" cannot verify signatures.").arg(
-                            cryptPlugLibName);
+                            mCryptoProto->name());
         }
         mMetaData.errorText = tr("The message is signed, but the "
                                    "validity of the signature cannot be "
