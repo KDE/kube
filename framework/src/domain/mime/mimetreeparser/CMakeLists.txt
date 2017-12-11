@@ -34,14 +34,8 @@ set(libmimetreeparser_SRCS
     nodehelper.cpp
     messagepart.cpp
     partnodebodypart.cpp
-    #Mementos
-    cryptobodypartmemento.cpp
-    decryptverifybodypartmemento.cpp
-    verifydetachedbodypartmemento.cpp
-    verifyopaquebodypartmemento.cpp
     #Stuff
     mimetreeparser_debug.cpp
-    qgpgmejobexecutor.cpp
     util.cpp
     )
 

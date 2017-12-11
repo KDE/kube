@@ -67,16 +67,16 @@ MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(Interface::BodyPart &
         protocolContentType = signatureContentType;
     }
 
-    const QGpgME::Protocol *protocol = nullptr;
+    GpgME::Protocol protocol = GpgME::UnknownProtocol;
     if (protocolContentType == QLatin1String("application/pkcs7-signature") ||
             protocolContentType == QLatin1String("application/x-pkcs7-signature")) {
-        protocol = QGpgME::smime();
+        protocol = GpgME::CMS;
     } else if (protocolContentType == QLatin1String("application/pgp-signature") ||
                protocolContentType == QLatin1String("application/x-pgp-signature")) {
-        protocol = QGpgME::openpgp();
+        protocol = GpgME::OpenPGP;
     }
 
-    if (!protocol) {
+    if (protocol == GpgME::UnknownProtocol) {
         return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), signedData, false));
     }
 
@@ -88,9 +88,6 @@ MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(Interface::BodyPart &
     SignedMessagePart::Ptr mp(new SignedMessagePart(part.objectTreeParser(),
                               aCodec->toUnicode(cleartext), protocol,
                               part.nodeHelper()->fromAsString(node), signature, signedData));
-    if (!protocol) {
-        mp->partMetaData()->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
-    }
 
     return mp;
 }
