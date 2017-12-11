@@ -39,7 +39,7 @@ FocusScope {
 
     onHtmlEnabledChanged: {
         if (htmlEnabled) {
-            var t = document.htmlText
+            var t = document.plainText
             edit.textFormat = Qt.RichText
             edit.text = t
         } else {
@@ -101,7 +101,8 @@ FocusScope {
 
                 focus: true
                 selectByMouse: true
-                wrapMode: TextEdit.WordWrap
+                wrapMode: TextEdit.Wrap
+                textFormat: Qt.PlainText
                 onCursorRectangleChanged: flickableItem.ensureVisible(cursorRectangle)
 
                 color: Kube.Colors.textColor
