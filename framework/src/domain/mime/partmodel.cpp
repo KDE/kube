@@ -201,14 +201,8 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 auto complexHtml = [&] {
                     if (messagePart->isHtml()) {
                         const auto text = messagePart->htmlContent();
-                        if (text.contains("<!DOCTYPE html PUBLIC")) {
-                            return true;
-                        }
                         //Media queries are too advanced
                         if (text.contains("@media")) {
-                            return true;
-                        }
-                        if (text.contains("<style")) {
                             return true;
                         }
                         return false;
