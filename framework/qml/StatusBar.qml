@@ -42,6 +42,8 @@ Item {
 
         Column {
             anchors.fill: root
+            anchors.leftMargin: Kube.Units.smallSpacing
+            anchors.rightMargin: Kube.Units.smallSpacing
             Kube.Label {
                 id: statusText
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -84,7 +86,7 @@ Item {
                     topMargin: Kube.Units.smallSpacing
                 }
                 height: 2
-                width: parent.width - Kube.Units.smallSpacing * 2
+                width: parent.width
 
                 indeterminate: true
                 visible: false
