@@ -71,7 +71,7 @@ DelegateModel {
 
         Column {
             id: buttons
-            anchors.right: parent.left
+            anchors.left: parent.left
             anchors.top: parent.top
             anchors.rightMargin: Kube.Units.smallSpacing
             spacing: Kube.Units.smallSpacing
@@ -107,8 +107,7 @@ DelegateModel {
             anchors.topMargin: Kube.Units.smallSpacing
             anchors.top: buttons.bottom
             anchors.bottom: partLoader.bottom
-            anchors.right: parent.left
-            anchors.rightMargin: Kube.Units.smallSpacing
+            anchors.right: buttons.right
             width: Kube.Units.smallSpacing
             color: getColor(model.securityLevel)
             opacity: 0.5
@@ -118,7 +117,8 @@ DelegateModel {
             id: partLoader
             anchors {
                 top: parent.top
-                left: parent.left
+                left: buttons.right
+                leftMargin: Kube.Units.smallSpacing
                 right: parent.right
             }
             height: item ? item.contentHeight : 0

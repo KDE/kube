@@ -28,10 +28,6 @@ Item {
     property variant date
     height: childrenRect.height
 
-    MailDataModel {
-        id: visualModel
-    }
-
     Rectangle {
         id: border
         anchors {
@@ -40,13 +36,14 @@ Item {
             leftMargin: Kube.Units.smallSpacing
         }
         color: Kube.Colors.lightgrey
-        height: partListView.height
+        height: partListView.height + sender.height
         width: Kube.Units.smallSpacing
     }
 
     Text {
         id: sender
         anchors {
+            top: parent.top
             left: border.right
             leftMargin: Kube.Units.smallSpacing
         }
@@ -56,12 +53,14 @@ Item {
     }
     ListView {
         id: partListView
-        model: visualModel
         anchors {
             top: sender.bottom
             left: border.right
             margins: Kube.Units.smallSpacing
             leftMargin: Kube.Units.smallSpacing
+        }
+        model: MailDataModel {
+            id: visualModel
         }
         spacing: 7
         height: contentHeight
