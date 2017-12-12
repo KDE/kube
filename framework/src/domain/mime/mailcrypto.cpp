@@ -24,7 +24,6 @@
 #include <QGpgME/SignJob>
 #include <QGpgME/EncryptJob>
 #include <QGpgME/SignEncryptJob>
-#include <QGpgME/KeyListJob>
 #include <QGpgME/ImportFromKeyserverJob>
 #include <gpgme++/global.h>
 #include <gpgme++/signingresult.h>
@@ -32,8 +31,6 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/importresult.h>
 #include <QDebug>
-#include <QMutex>
-#include <QMutexLocker>
 
 /*
  * FIXME:
@@ -473,22 +470,41 @@ void MailCrypto::importKeys(const std::vector<GpgME::Key> &keys)
     job->exec(keys);
 }
 
-QMutex sMutex;
+static GpgME::KeyListResult listKeys(GpgME::Protocol protocol, const QStringList &patterns, bool secretOnly, int keyListMode, std::vector<GpgME::Key> &keys)
+{
+    QByteArrayList list;
+    std::transform(patterns.constBegin(), patterns.constEnd(), std::back_inserter(list), [] (const QString &s) { return s.toUtf8(); });
+    std::vector<char const *> pattern;
+    std::transform(list.constBegin(), list.constEnd(), std::back_inserter(pattern), [] (const QByteArray &s) { return s.constData(); });
+    pattern.push_back(0);
+
+    GpgME::initializeLibrary();
+    auto ctx = QSharedPointer<GpgME::Context>{GpgME::Context::createForProtocol(protocol)};
+    ctx->setKeyListMode(keyListMode);
+    if (const GpgME::Error err = ctx->startKeyListing(pattern.data(), secretOnly)) {
+        return GpgME::KeyListResult(0, err);
+    }
+
+    GpgME::Error err;
+    do {
+        keys.push_back( ctx->nextKey(err));
+    } while ( !err );
+
+    keys.pop_back();
+
+    const GpgME::KeyListResult result = ctx->endKeyListing();
+    ctx->cancelPendingOperation();
+    return result;
+}
 
 std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, bool remote, Protocol protocol)
 {
-    QMutexLocker locker{&sMutex};
-    const QGpgME::Protocol *const backend = protocol == SMIME ? QGpgME::smime() : QGpgME::openpgp();
-    Q_ASSERT(backend);
-    QGpgME::KeyListJob *job = backend->keyListJob(remote);
-    Q_ASSERT(job);
-    locker.unlock();
-
     std::vector<GpgME::Key> keys;
-    GpgME::KeyListResult res = job->exec(filter, findPrivate, keys);
-
-    Q_ASSERT(!res.error());
-
+    GpgME::KeyListResult res = listKeys(protocol == SMIME ? GpgME::CMS : GpgME::OpenPGP, filter, findPrivate, remote ? GpgME::Extern : GpgME::Local, keys);
+    if (res.error()) {
+        qWarning() << "Failed to lookup keys: " << res.error().asString();
+        return keys;
+    }
     qWarning() << "got keys:" << keys.size();
 
     for (std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i) {
