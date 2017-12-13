@@ -201,6 +201,13 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 auto complexHtml = [&] {
                     if (messagePart->isHtml()) {
                         const auto text = messagePart->htmlContent();
+                        if (text.contains("<!DOCTYPE html PUBLIC")) {
+                            //We can probably deal with this if it adheres to the strict dtd
+                            //(that's what our composer produces as well)
+                            if (!text.contains("http://www.w3.org/TR/REC-html40/strict.dtd")) {
+                                return true;
+                            }
+                        }
                         //Media queries are too advanced
                         if (text.contains("@media")) {
                             return true;
