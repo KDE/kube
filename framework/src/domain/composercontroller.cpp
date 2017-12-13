@@ -409,8 +409,8 @@ std::vector<GpgME::Key> ComposerController::getRecipientKeys()
 KMime::Message::Ptr ComposerController::assembleMessage()
 {
     auto toAddresses = toController()->getList<QString>("name");
-    auto ccAddresses = toController()->getList<QString>("name");
-    auto bccAddresses = toController()->getList<QString>("name");
+    auto ccAddresses = ccController()->getList<QString>("name");
+    auto bccAddresses = bccController()->getList<QString>("name");
     applyAddresses(toAddresses + ccAddresses + bccAddresses, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
         recordForAutocompletion(addrSpec, displayName);
     });
