@@ -71,10 +71,9 @@ Item {
             focusOnNavigationEnabled: false
         }
         profile: Kube.WebEngineProfile
-        //TODO Disable the context menu (depends on webengine 1.4)
-        // onContextMenuRequested: function(request) {
-        //     request.accepted = true
-        // }
+        onContextMenuRequested: function(request) {
+            request.accepted = true
+        }
     }
     onContentChanged: {
         htmlView.loadHtml(content, "file:///");
