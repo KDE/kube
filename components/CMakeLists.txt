@@ -1,14 +1,12 @@
 project(kube-components)
 
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets)
-find_package(KF5 REQUIRED COMPONENTS Package)
 
-macro(install_component name)
+macro(install_qml_component name)
     install(DIRECTORY ${name}/contents/ui/ DESTINATION ${QML_INSTALL_DIR}/org/kube/components/${name})
     install(FILES ${name}/qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/components/${name})
-    kpackage_install_package(${name} org.kube.components.${name} "genericqml")
-endmacro(install_component)
+endmacro(install_qml_component)
 
-install_component(kube)
-install_component(accounts)
-install_component(mailviewer)
+install_qml_component(kube)
+install_qml_component(accounts)
+install_qml_component(mailviewer)

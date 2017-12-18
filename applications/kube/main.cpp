@@ -34,9 +34,9 @@
 #include <QQmlApplicationEngine>
 #include <QCommandLineParser>
 #include <QJsonDocument>
+#include <QFileInfo>
 
 #include <QStandardPaths>
-#include <KPackage/PackageLoader>
 #include <QQuickImageProvider>
 #include <QIcon>
 #include <QtWebEngine>
@@ -187,8 +187,7 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addOption({{"k", "keyring"},
-        QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"),
-        "keyring dictionary"}
+        QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"), "keyring dictionary"}
     );
     parser.process(app);
 
@@ -211,11 +210,24 @@ int main(int argc, char *argv[])
     QtWebEngine::initialize();
     QIcon::setThemeName("kube");
 
-    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.kube");
-    Q_ASSERT(package.isValid());
     QQmlApplicationEngine engine;
     engine.addImageProvider(QLatin1String("kube"), new KubeImageProvider);
-    engine.load(QUrl::fromLocalFile(package.filePath("mainscript")));
+    const auto file = "/org/kube/components/kube/main.qml";
+    const auto mainFile = [&] {
+        for (const auto &path : engine.importPathList()) {
+            QString f = path + file;
+            if (QFileInfo::exists(f)) {
+                return f;
+            }
+        }
+        return QString{};
+    }();
+    if (mainFile.isEmpty()) {
+        qWarning() << "Failed to find " << file;
+        qWarning() << "Searched: " << engine.importPathList();
+        return -1;
+    }
+    engine.load(QUrl::fromLocalFile(mainFile));
     return app.exec();
 }
 
