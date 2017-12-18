@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Kube Accounts
-X-KDE-PluginInfo-Name=org.kube.components.accounts
-Exec=kpackagelauncherqml -a org.kube.components.accounts
-X-Plasma-MainScript=ui/main.qml
-X-KDE-ServiceTypes=KPackage/GenericQML
-Icon=kmail2
-Type=Service

@@ -50,6 +50,7 @@ Controls2.ApplicationWindow {
         }
     }
 
+    //accountId -> requiresKeyring
     Kube.AccountFactory {
         id: accountFactory
         accountId: !!app.currentAccount ? app.currentAccount : ""

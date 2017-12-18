@@ -42,6 +42,7 @@ FocusScope {
         }
     }
 
+    //accountType -> uiPath
     Kube.AccountFactory {
         id: accountFactory
         accountType: root.accountType
