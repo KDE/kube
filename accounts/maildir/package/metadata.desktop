@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Kube Maildir Accounts Plugin
-X-KDE-PluginInfo-Name=org.kube.accounts.maildir
-Exec=kpackagelauncherqml -a org.kube.accounts.maildir
-X-Plasma-MainScript=ui/MaildirAccountSettings.qml
-X-KDE-ServiceTypes=KPackage/GenericQML
-Icon=folder
-Type=Service
-X-KDE-Kube-RequiresKeyring=False
