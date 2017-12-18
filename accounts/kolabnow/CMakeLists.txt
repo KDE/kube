@@ -14,7 +14,5 @@ target_link_libraries(kolabnowaccountplugin
     Qt5::Qml
 )
 
-kpackage_install_package(package org.kube.accounts.kolabnow "genericqml")
-
 install(TARGETS kolabnowaccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/kolabnow)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/kolabnow)
+install_qml_account(kolabnow)

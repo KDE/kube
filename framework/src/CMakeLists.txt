@@ -5,7 +5,6 @@ find_package(Sink CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
 find_package(QGpgme CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
-find_package(KF5Package CONFIG REQUIRED)
 find_package(KF5Contacts CONFIG REQUIRED)
 
 add_definitions("-Wall -std=c++0x -g")
@@ -62,7 +61,6 @@ target_link_libraries(kubeframework
     Qt5::WebEngine
     KF5::Codecs
     KF5::Contacts
-    KF5::Package
     KAsync
     QGpgme
 )

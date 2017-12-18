@@ -30,8 +30,6 @@ class AccountFactory : public QObject
     Q_OBJECT
     Q_PROPERTY(QString accountId MEMBER mAccountId WRITE setAccountId);
     Q_PROPERTY(QString accountType MEMBER mAccountType WRITE setAccountType);
-    Q_PROPERTY(QString name MEMBER mName READ name NOTIFY accountLoaded);
-    Q_PROPERTY(QString icon MEMBER mIcon NOTIFY accountLoaded);
     Q_PROPERTY(QString uiPath MEMBER mUiPath NOTIFY accountLoaded);
     Q_PROPERTY(QString loginUi MEMBER mLoginUi NOTIFY accountLoaded);
     Q_PROPERTY(bool requiresKeyring MEMBER mRequiresKeyring NOTIFY accountLoaded);
@@ -40,7 +38,6 @@ public:
 
     void setAccountId(const QString &);
     void setAccountType(const QString &);
-    QString name() const;
 
 signals:
     void accountLoaded();
@@ -48,8 +45,6 @@ signals:
 private:
     void loadPackage();
     QString mAccountId;
-    QString mName;
-    QString mIcon;
     QString mUiPath;
     QString mLoginUi;
     QByteArray mAccountType;

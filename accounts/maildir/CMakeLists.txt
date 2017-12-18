@@ -14,7 +14,5 @@ target_link_libraries(maildiraccountplugin
     Qt5::Qml
 )
 
-kpackage_install_package(package org.kube.accounts.maildir "genericqml")
-
 install(TARGETS maildiraccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/maildir)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/maildir)
+install_qml_account(maildir)
