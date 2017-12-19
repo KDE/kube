@@ -36,8 +36,6 @@
 #include <QJsonDocument>
 #include <QFileInfo>
 
-#include <QStandardPaths>
-#include <QQuickImageProvider>
 #include <QIcon>
 #include <QtWebEngine>
 
@@ -133,44 +131,6 @@ void terminateHandler()
     std::abort();
 }
 
-class KubeImageProvider : public QQuickImageProvider
-{
-public:
-    KubeImageProvider()
-        : QQuickImageProvider(QQuickImageProvider::Pixmap)
-    {
-    }
-
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) Q_DECL_OVERRIDE
-    {
-        //The platform theme plugin can overwrite our setting again once it gets loaded,
-        //so we check on every icon load request...
-        if (QIcon::themeName() != "kube") {
-            QIcon::setThemeName("kube");
-        }
-        const auto icon = QIcon::fromTheme(id);
-        auto expectedSize = requestedSize;
-        //Get the largest size that is still smaller or equal than requested
-        //Except if we only have larger sizes, then just pick the closest one
-        bool first = true;
-        for (const auto s : icon.availableSizes()) {
-            if (first && s.width() > requestedSize.width()) {
-                expectedSize = s;
-                break;
-            }
-            first = false;
-            if (s.width() <= requestedSize.width()) {
-                expectedSize = s;
-            }
-        }
-        const auto pixmap = icon.pixmap(expectedSize);
-        if (size) {
-            *size = pixmap.size();
-        }
-        return pixmap;
-    }
-};
-
 int main(int argc, char *argv[])
 {
     std::signal(SIGSEGV, crashHandler);
@@ -211,7 +171,6 @@ int main(int argc, char *argv[])
     QIcon::setThemeName("kube");
 
     QQmlApplicationEngine engine;
-    engine.addImageProvider(QLatin1String("kube"), new KubeImageProvider);
     const auto file = "/org/kube/components/kube/main.qml";
     const auto mainFile = [&] {
         for (const auto &path : engine.importPathList()) {

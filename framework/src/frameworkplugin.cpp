@@ -42,6 +42,47 @@
 #include "controller.h"
 
 #include <QtQml>
+#include <QQuickImageProvider>
+#include <QIcon>
+
+class KubeImageProvider : public QQuickImageProvider
+{
+public:
+    KubeImageProvider()
+        : QQuickImageProvider(QQuickImageProvider::Pixmap)
+    {
+    }
+
+    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) Q_DECL_OVERRIDE
+    {
+        //The platform theme plugin can overwrite our setting again once it gets loaded,
+        //so we check on every icon load request...
+        if (QIcon::themeName() != "kube") {
+            QIcon::setThemeName("kube");
+        }
+        const auto icon = QIcon::fromTheme(id);
+        auto expectedSize = requestedSize;
+        //Get the largest size that is still smaller or equal than requested
+        //Except if we only have larger sizes, then just pick the closest one
+        bool first = true;
+        for (const auto s : icon.availableSizes()) {
+            if (first && s.width() > requestedSize.width()) {
+                expectedSize = s;
+                break;
+            }
+            first = false;
+            if (s.width() <= requestedSize.width()) {
+                expectedSize = s;
+            }
+        }
+        const auto pixmap = icon.pixmap(expectedSize);
+        if (size) {
+            *size = pixmap.size();
+        }
+        return pixmap;
+    }
+};
+
 
 static QObject *fabric_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -64,6 +105,12 @@ static QObject *keyring_singletontype_provider(QQmlEngine *engine, QJSEngine *sc
     auto instance = Kube::Keyring::instance();
     QQmlEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
     return instance;
+}
+
+void FrameworkPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
+{
+    Q_UNUSED(uri);
+    engine->addImageProvider(QLatin1String("kube"), new KubeImageProvider);
 }
 
 void FrameworkPlugin::registerTypes (const char *uri)
