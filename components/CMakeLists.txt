@@ -8,5 +8,6 @@ macro(install_qml_component name)
 endmacro(install_qml_component)
 
 install_qml_component(kube)
+add_subdirectory(kube/tests)
 install_qml_component(accounts)
 install_qml_component(mailviewer)
