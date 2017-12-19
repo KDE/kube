@@ -17,14 +17,23 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2.0
+import QtQuick.Window 2.0
 
-Controls2.ApplicationWindow {
+import org.kube.framework 1.0 as Kube
+
+ApplicationWindow {
     id: app
-    height: 900
-    width: 1500
+    height: Screen.desktopAvailableHeight * 0.8
+    width: Screen.desktopAvailableWidth * 0.8
 
     AccountWizard {
         visible: true
+        parent: ApplicationWindow.overlay
+        height: app.height
+        width: app.width
+        x: 0
+        y: 0
+        availableAccountPlugins: ["maildir", "imap", "kolabnow", "gmail"]
     }
 }
