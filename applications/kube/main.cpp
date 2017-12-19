@@ -36,11 +36,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QFileInfo>
-
-#include <QIcon>
 #include <QFont>
-
 #include <QDebug>
+
 #include "framework/src/keyring.h"
 #include "kube_version.h"
 
@@ -169,8 +167,6 @@ int main(int argc, char *argv[])
             }
         }
     }
-
-    QIcon::setThemeName("kube");
 
     QQmlApplicationEngine engine;
     const auto file = "/org/kube/components/kube/main.qml";
