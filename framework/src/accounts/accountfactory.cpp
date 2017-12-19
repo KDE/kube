@@ -21,6 +21,8 @@
 #include <QDebug>
 #include <QtQml>
 #include <QFileInfo>
+#include <QJsonDocument>
+#include <QFile>
 
 #include <sink/store.h>
 
@@ -60,16 +62,22 @@ void AccountFactory::loadPackage()
         }
         return QString{};
     }();
+    mUiPath.clear();
+    mLoginUi.clear();
+    mRequiresKeyring = false;
     if (pluginPath.isEmpty()) {
         qWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
-        mUiPath.clear();
-        mLoginUi.clear();
-        mRequiresKeyring = true;
     } else {
         mUiPath = pluginPath + "/AccountSettings.qml";
         mLoginUi = pluginPath + "/Login.qml";
-        //FIXME
-        mRequiresKeyring = true;
+        if (QFileInfo::exists(pluginPath + "/metadata.json")) {
+            QFile file{pluginPath + "/metadata.json"};
+            file.open(QIODevice::ReadOnly);
+            auto json = QJsonDocument::fromJson(file.readAll());
+            mRequiresKeyring = json.object().value("RequiresKeyring").toBool(true);
+        } else {
+            mRequiresKeyring = true;
+        }
     }
     emit accountLoaded();
 }

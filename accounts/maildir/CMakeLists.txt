@@ -15,4 +15,5 @@ target_link_libraries(maildiraccountplugin
 )
 
 install(TARGETS maildiraccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/maildir)
+install(FILES metadata.json DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/maildir)
 install_qml_account(maildir)

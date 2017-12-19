@@ -12,9 +12,6 @@ set(CMAKE_CXX_VISIBILITY_PRESET default)
 
 include_directories(. domain/mime/mimetreeparser domain/ domain/mime)
 
-set(SRCS
-)
-
 add_library(kubeframework SHARED
     settings/settings.cpp
     domain/maillistmodel.cpp
