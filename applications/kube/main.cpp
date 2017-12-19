@@ -34,10 +34,11 @@
 #include <QQmlApplicationEngine>
 #include <QCommandLineParser>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QFileInfo>
 
 #include <QIcon>
-#include <QtWebEngine>
+#include <QFont>
 
 #include <QDebug>
 #include "framework/src/keyring.h"
@@ -137,6 +138,8 @@ int main(int argc, char *argv[])
     std::signal(SIGABRT, crashHandler);
     std::set_terminate(terminateHandler);
 
+    //Instead of QtWebEngine::initialize();
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
     QApplication app(argc, argv);
     app.setApplicationName("kube");
     app.setApplicationVersion(kube_VERSION_STRING);
@@ -167,7 +170,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    QtWebEngine::initialize();
     QIcon::setThemeName("kube");
 
     QQmlApplicationEngine engine;

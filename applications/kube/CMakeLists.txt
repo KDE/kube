@@ -2,8 +2,7 @@ project(kube)
 
 include(ECMAddAppIcon)
 
-find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets WebEngine)
-find_package(KF5 REQUIRED COMPONENTS Package)
+find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Quick)
 
 # install executable
 set(SRCS main.cpp)
@@ -16,11 +15,7 @@ endif()
 
 add_executable(${PROJECT_NAME} ${SRCS})
 target_link_libraries(${PROJECT_NAME}
-    Qt5::Gui
     Qt5::Quick
-    Qt5::Widgets
-    Qt5::WebEngine
-    KF5::Package
     ${CMAKE_DL_LIBS}
     kubeframework
 )
