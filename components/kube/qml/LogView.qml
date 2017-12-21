@@ -285,7 +285,7 @@ Controls.SplitView {
                     text: qsTr("Change Password")
                     onClicked: {
                         Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
-                        Kube.Fabric.postMessage(Kube.Messages.requestLogin, {})
+                        Kube.Fabric.postMessage(Kube.Messages.requestLogin, {accountId: accountId})
                     }
                 }
             }

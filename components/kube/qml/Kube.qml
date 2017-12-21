@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2017 Michael Bohlender, <michael.bohlender@kdemail.net>
+ *  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -50,12 +51,6 @@ Controls2.ApplicationWindow {
         }
     }
 
-    //accountId -> requiresKeyring
-    Kube.AccountFactory {
-        id: accountFactory
-        accountId: !!app.currentAccount ? app.currentAccount : ""
-    }
-
     //Interval sync
     Timer {
         id: intervalSync
@@ -70,10 +65,13 @@ Controls2.ApplicationWindow {
         id: startupCheck
     }
 
+    Accounts {
+    }
+
     //Listener
     Kube.Listener {
         filter: Kube.Messages.accountSelection
-        onMessageReceived: app.currentAccount = message.account
+        onMessageReceived: app.currentAccount = message.accountId
     }
 
     Kube.Listener {
@@ -109,7 +107,7 @@ Controls2.ApplicationWindow {
 
     Kube.Listener {
         filter: Kube.Messages.requestLogin
-        onMessageReceived: kubeViews.setLoginView()
+        onMessageReceived: kubeViews.setLoginView(message.accountId)
     }
 
     Kube.Listener {
@@ -125,12 +123,6 @@ Controls2.ApplicationWindow {
     Shortcut {
         onActivated: Kube.Fabric.postMessage(Kube.Messages.search, {})
         sequence: StandardKey.Find
-    }
-    Shortcut {
-        onActivated: {
-            Kube.Fabric.postMessage(Kube.Messages.unlockKeyring, {accountId: app.currentAccount})
-        }
-        sequence: "Ctrl+l"
     }
     Shortcut {
         id: syncShortcut
@@ -262,17 +254,6 @@ Controls2.ApplicationWindow {
             }
             Layout.fillWidth: true
 
-            function loginIfNecessary()
-            {
-                if (!!app.currentAccount && !Kube.Keyring.isUnlocked(app.currentAccount)) {
-                    if (accountFactory.requiresKeyring) {
-                        setLoginView()
-                    } else {
-                        Kube.Keyring.unlock(app.currentAccount)
-                    }
-                }
-            }
-
             Kube.Listener {
                 filter: Kube.Messages.componentDone
                 onMessageReceived: {
@@ -282,7 +263,6 @@ Controls2.ApplicationWindow {
                     } else {
                         kubeViews.pop(Controls2.StackView.Immediate)
                     }
-                    kubeViews.loginIfNecessary()
                 }
             }
 
@@ -298,8 +278,6 @@ Controls2.ApplicationWindow {
                     setMailView()
                     if (startupCheck.noAccount) {
                         setAccountsView()
-                    } else {
-                        loginIfNecessary()
                     }
                 }
             }
@@ -333,9 +311,9 @@ Controls2.ApplicationWindow {
                 replaceView(logView)
             }
 
-            function setLoginView() {
+            function setLoginView(account) {
                 if (currentItem != loginView) {
-                    pushView(loginView, {accountId: currentAccount})
+                    pushView(loginView, {accountId: account})
                 }
             }
 
