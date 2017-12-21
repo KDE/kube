@@ -87,6 +87,7 @@ FocusScope {
 
                         text: model.name
                         color: delegateRoot.textColor
+                        elide: Text.ElideRight
                     }
                 }
             }
