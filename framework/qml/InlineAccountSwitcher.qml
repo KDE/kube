@@ -58,6 +58,7 @@ FocusScope {
                         top: parent.top
                         left: parent.left
                         right: parent.right
+                        rightMargin: Kube.Units.smallSpacing
                     }
                     height: Kube.Units.gridUnit
 
