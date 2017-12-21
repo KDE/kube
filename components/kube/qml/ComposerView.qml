@@ -106,6 +106,7 @@ Kube.View {
             spacing: Kube.Units.largeSpacing
 
             Kube.PositiveButton {
+                objectName: "newMailButton"
                 anchors {
                     left: parent.left
                     right: parent.right

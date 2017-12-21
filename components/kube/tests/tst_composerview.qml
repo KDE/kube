@@ -26,12 +26,20 @@ TestCase {
     width: 400
     height: 400
     name: "ComposerView"
+    when: windowShown
 
     ComposerView {
         id: composer
+        focus: true
     }
 
     function test_start() {
         verify(composer)
+    }
+
+    function test_verifyInitialFocus() {
+        var newMailButton = findChild(composer, "newMailButton");
+        verify(newMailButton)
+        verify(newMailButton.activeFocus)
     }
 }
