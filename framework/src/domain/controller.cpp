@@ -96,9 +96,18 @@ ListPropertyController::ListPropertyController(const QStringList &roles)
         roleNames.insert(mRoles[r], r.toLatin1());
     }
     mModel->setItemRoleNames(roleNames);
+    clear();
 }
 
-void ListPropertyController::add(const QVariantMap &value)
+void ListPropertyController::setDefaultEntries(const QVariantList &list)
+{
+    mDefaultEntries = list;
+    for (const auto &e : mDefaultEntries) {
+        add(e.toMap(), true);
+    }
+}
+
+void ListPropertyController::add(const QVariantMap &value, bool isDefaultEntry)
 {
     auto item = new QStandardItem;
     auto id = QUuid::createUuid().toByteArray();
@@ -106,7 +115,8 @@ void ListPropertyController::add(const QVariantMap &value)
     for (const auto &k : value.keys()) {
         item->setData(value.value(k), mRoles[k]);
     }
-    mModel->appendRow(QList<QStandardItem*>() << item);
+    //Insert before defaultentries
+    mModel->insertRow(0, QList<QStandardItem*>() << item);
     emit added(id, value);
 }
 
@@ -125,6 +135,9 @@ void ListPropertyController::remove(const QByteArray &id)
 void ListPropertyController::clear()
 {
     mModel->clear();
+    for (const auto &e : mDefaultEntries) {
+        add(e.toMap());
+    }
 }
 
 QAbstractItemModel *ListPropertyController::model()

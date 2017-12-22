@@ -46,6 +46,9 @@ Kube.View {
 
             sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys)
             saveAsDraftAction.enabled: composerController.accountId
+            Component.onCompleted: {
+                to.defaultEntries = [{name: "corp@foo.com", immutable: true}]
+            }
         }
     ]
 

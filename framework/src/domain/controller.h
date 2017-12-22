@@ -109,10 +109,11 @@ class ListPropertyController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel* model READ model CONSTANT)
+    Q_PROPERTY(QVariantList defaultEntries WRITE setDefaultEntries)
 
 public:
     ListPropertyController(const QStringList &roles);
-    Q_INVOKABLE virtual void add(const QVariantMap &value);
+    Q_INVOKABLE virtual void add(const QVariantMap &value, bool isDefaultEntry = false);
     Q_INVOKABLE virtual void remove(const QByteArray &id);
     Q_INVOKABLE void clear();
 
@@ -132,6 +133,8 @@ public:
         return list;
     }
 
+    void setDefaultEntries(const QVariantList &);
+
 Q_SIGNALS:
     void added(QByteArray, QVariantMap);
 
@@ -140,6 +143,7 @@ protected:
 
 private:
     QHash<QString, int> mRoles;
+    QVariantList mDefaultEntries;
 };
 
 

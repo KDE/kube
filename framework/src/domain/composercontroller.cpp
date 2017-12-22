@@ -98,7 +98,7 @@ public:
 
     QSet<QByteArray> mMissingKeys;
     AddresseeController()
-        : Kube::ListPropertyController{{"name", "keyFound", "key"}}
+        : Kube::ListPropertyController{{"name", "keyFound", "key", "immutable"}}
     {
         QObject::connect(this, &Kube::ListPropertyController::added, this, [this] (const QByteArray &id, const QVariantMap &map) {
             findKey(id, map.value("name").toString());

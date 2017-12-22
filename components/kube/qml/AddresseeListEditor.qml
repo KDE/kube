@@ -90,6 +90,7 @@ FocusScope {
                     onClicked: root.controller.remove(model.id)
                     padding: 0
                     iconName: Kube.Icons.remove
+                    visible: !model.immutable
                 }
             }
         }
