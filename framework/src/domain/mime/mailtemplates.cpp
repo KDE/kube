@@ -76,18 +76,6 @@ static QString toPlainText(const QString &s)
     return doc.toPlainText();
 }
 
-void initHeader(const KMime::Message::Ptr &message)
-{
-    message->removeHeader<KMime::Headers::To>();
-    message->removeHeader<KMime::Headers::Subject>();
-    message->date()->setDateTime(QDateTime::currentDateTime());
-
-    const QStringList extraInfo = QStringList() << QSysInfo::prettyProductName();
-    message->userAgent()->fromUnicodeString(QString("%1/%2(%3)").arg(QString::fromLocal8Bit("Kube")).arg("0.1").arg(extraInfo.join(",")), "utf-8");
-    // This will allow to change Content-Type:
-    message->contentType()->setMimeType("text/plain");
-}
-
 QString replacePrefixes(const QString &str, const QStringList &prefixRegExps, const QString &newPrefix)
 {
     // construct a big regexp that
@@ -801,8 +789,10 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     const bool alwaysPlain = true;
     KMime::Message::Ptr msg(new KMime::Message);
 
-    initHeader(msg);
 
+    msg->removeHeader<KMime::Headers::To>();
+    msg->removeHeader<KMime::Headers::Subject>();
+    msg->contentType(true)->setMimeType("text/plain");
     msg->contentType()->setCharset("utf-8");
 
     const auto recipients = getRecipients(origMsg, me);
@@ -963,7 +953,14 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     auto mail = existingMessage;
     if (!mail) {
         mail = KMime::Message::Ptr::create();
+    } else {
+        //Content type is part of the body part we're creating
+        mail->removeHeader<KMime::Headers::ContentType>();
+        mail->removeHeader<KMime::Headers::ContentTransferEncoding>();
     }
+
+    mail->date()->setDateTime(QDateTime::currentDateTime());
+    mail->userAgent()->fromUnicodeString(QString("%1/%2(%3)").arg(QString::fromLocal8Bit("Kube")).arg("0.1").arg(QSysInfo::prettyProductName()), "utf-8");
 
     mail->to(true)->clear();
     for (const auto &mb : stringListToMailboxes(to)) {
