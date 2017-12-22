@@ -25,6 +25,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0 as Dialogs
 
 import org.kube.framework 1.0 as Kube
+import org.kube.extensions 1.0 as Extensions
 
 Kube.View {
     id: root
@@ -35,6 +36,9 @@ Kube.View {
     property variant recipients: []
 
     resources: [
+        Extensions.Recipients {
+            id: recipientExtension
+        },
         Kube.ComposerController {
             id: composerController
             htmlBody: html.checked
@@ -47,7 +51,7 @@ Kube.View {
             sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys)
             saveAsDraftAction.enabled: composerController.accountId
             Component.onCompleted: {
-                to.defaultEntries = [{name: "corp@foo.com", immutable: true}]
+                to.defaultEntries = recipientExtension.toRecipients
             }
         }
     ]

@@ -9,5 +9,6 @@ install(FILES qmldir DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
 add_subdirectory(src)
 add_subdirectory(qml/tests)
+add_subdirectory(extensions)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
