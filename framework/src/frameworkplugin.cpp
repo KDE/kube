@@ -40,6 +40,7 @@
 #include "startupcheck.h"
 #include "keyring.h"
 #include "controller.h"
+#include "file.h"
 
 #include <QtQml>
 #include <QQuickImageProvider>
@@ -129,6 +130,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
+    qmlRegisterType<Kube::File>(uri, 1, 0, "File");
 
     qmlRegisterType<Kube::Settings>(uri, 1, 0, "Settings");
 

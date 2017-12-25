@@ -17,8 +17,16 @@
  */
 
 import QtQuick 2.7
+import org.kube.framework 1.0 as Kube
 
 Item {
-    property string signature: "--\nThis is my signature"
+    resources: [
+        Kube.File {
+            id: file
+            path: "signature"
+            defaultContent: "--\nThis is my signature"
+        }
+    ]
+    property string signature: file.data
 }
 
