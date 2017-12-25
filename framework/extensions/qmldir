@@ -1,3 +1,4 @@
 module org.kube.extensions
 
 Recipients 1.0 Recipients.qml
+Signature 1.0 Signature.qml

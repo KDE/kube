@@ -39,6 +39,9 @@ Kube.View {
         Extensions.Recipients {
             id: recipientExtension
         },
+        Extensions.Signature {
+            id: signatureExtension
+        },
         Kube.ComposerController {
             id: composerController
             htmlBody: html.checked
@@ -365,6 +368,12 @@ Kube.View {
                 Keys.onEscapePressed: recipients.forceActiveFocus()
                 initialText: composerController.body
                 onTextChanged: composerController.body = text;
+            }
+            TextEdit {
+                id: signatureEditor
+                enabled: false
+                Layout.fillWidth: true
+                text: signatureExtension.signature
             }
         }
     }
