@@ -78,7 +78,6 @@ Kube.View {
     function closeFirstSplitIfNecessary() {
         //Move the view forward
         if (root.currentIndex == 0) {
-            listView.currentIndex = -1
             root.incrementCurrentIndex()
         }
     }
@@ -114,6 +113,7 @@ Kube.View {
                 focus: true
                 text: qsTr("New Email")
                 onClicked: {
+                    listView.currentIndex = -1
                     composerController.clear()
                     subject.forceActiveFocus()
                 }
@@ -135,6 +135,8 @@ Kube.View {
 
                 Layout.fillHeight: true
                 clip: true
+                currentIndex: -1
+                highlightFollowsCurrentItem: false
 
                 //BEGIN keyboard nav
                 onActiveFocusChanged: {
