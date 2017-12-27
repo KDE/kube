@@ -71,6 +71,7 @@ install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 
 set(BUILD_TESTING ON)
 
+add_subdirectory(tests)
 add_subdirectory(domain/mime/tests)
 add_subdirectory(domain/mime/mimetreeparser)
 add_subdirectory(domain/settings/tests)
