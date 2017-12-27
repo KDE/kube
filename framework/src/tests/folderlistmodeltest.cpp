@@ -1,6 +1,9 @@
 #include <QTest>
 #include <QDebug>
 #include <QStandardItemModel>
+#include <sink/test.h>
+#include <sink/store.h>
+#include <sink/resourcecontrol.h>
 #include "krecursivefilterproxymodel.h"
 #include "folderlistmodel.h"
 
@@ -50,6 +53,7 @@ private slots:
 
     void initTestCase()
     {
+        Sink::Test::initTest();
     }
 
     void testRecursiveFilterModel()
@@ -63,6 +67,34 @@ private slots:
         QVERIFY(contains(model, {}, "acceptroot"));
         QVERIFY(contains(model, {}, "accept1"));
         QVERIFY(contains(model, {}, "accept11"));
+    }
+
+    void testFolderListModel()
+    {
+        Sink::ApplicationDomain::DummyResource::create("account1");
+
+        using namespace Sink::ApplicationDomain;
+        auto account = ApplicationDomainType::createEntity<SinkAccount>();
+        Sink::Store::create(account).exec().waitForFinished();
+
+        auto resource = Sink::ApplicationDomain::DummyResource::create(account.identifier());
+        Sink::Store::create(resource).exec().waitForFinished();
+
+        auto folder = ApplicationDomainType::createEntity<Folder>(resource.identifier());
+        Sink::Store::create(folder).exec().waitForFinished();
+
+        Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
+
+        FolderListModel model;
+        model.setAccountId(account.identifier());
+        QTRY_COMPARE(model.rowCount({}), 1);
+        {
+            auto subfolder = ApplicationDomainType::createEntity<Folder>(resource.identifier());
+            subfolder.setParent(folder);
+            Sink::Store::create(subfolder).exec().waitForFinished();
+            Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
+        }
+        QTRY_COMPARE(model.rowCount(model.index(0, 0, {})), 1);
     }
 };
 
