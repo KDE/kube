@@ -204,6 +204,22 @@ Controls2.ApplicationWindow {
                     Controls2.ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("people")
                 }
+                Repeater {
+                    model: ListModel {
+                        ListElement { name: "Alice"; tooltip: "Alice"; icon: "document-decrypt"; source: "/install/lib64/qml/org/kube/viewextensions/test/View.qml" }
+                    }
+                    Kube.IconButton {
+                        iconName: model.icon
+                        onClicked: {
+                            var component = Qt.createComponent(model.source)
+                            kubeViews.pushView(component, {})
+                        }
+                        activeFocusOnTab: true
+                        checkable: true
+                        Controls2.ButtonGroup.group: viewButtonGroup
+                        tooltip: model.tooltip
+                    }
+                }
             }
             Column {
                 anchors {

@@ -38,6 +38,7 @@
 #include <QFileInfo>
 #include <QFont>
 #include <QDebug>
+#include <QDir>
 
 #include "framework/src/keyring.h"
 #include "kube_version.h"
@@ -185,6 +186,12 @@ int main(int argc, char *argv[])
         return -1;
     }
     engine.load(QUrl::fromLocalFile(mainFile));
+    for (const auto &path : engine.importPathList()) {
+        QDir dir{path + "/org/kube/viewextensions"};
+        for (const auto &pluginName : dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+            qWarning() << "Plugin path: " << dir.path() + pluginName + "/View.qml";
+        }
+    }
     return app.exec();
 }
 
