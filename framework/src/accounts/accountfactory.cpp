@@ -19,25 +19,16 @@
 #include "accountfactory.h"
 
 #include <QDebug>
+#include <QtQml>
+#include <QFileInfo>
+#include <QJsonDocument>
+#include <QFile>
 
-#include <KPackage/PackageLoader>
-#include <KPackage/Package>
-#include <KPluginMetaData>
-
-#include "settings/settings.h"
 #include <sink/store.h>
 
 AccountFactory::AccountFactory(QObject *parent)
     : QObject(parent)
 {
-}
-
-QString AccountFactory::name() const
-{
-    if (mName.isEmpty()) {
-        return tr("Account");
-    }
-    return mName;
 }
 
 void AccountFactory::setAccountId(const QString &accountId)
@@ -60,22 +51,33 @@ void AccountFactory::setAccountType(const QString &type)
 
 void AccountFactory::loadPackage()
 {
-    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.accounts." + mAccountType);
-    if (!package.isValid()) {
+    auto engine = QtQml::qmlEngine(this);
+    Q_ASSERT(engine);
+    const QString pluginPath = [&] {
+        for (const auto &p : engine->importPathList()) {
+            const auto path = p + QString::fromLatin1("/org/kube/accounts/") + mAccountType;
+            if (QFileInfo::exists(path)) {
+                return path;
+            }
+        }
+        return QString{};
+    }();
+    mUiPath.clear();
+    mLoginUi.clear();
+    mRequiresKeyring = false;
+    if (pluginPath.isEmpty()) {
         qWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
-        mUiPath.clear();
-        mLoginUi.clear();
-        mName.clear();
-        mIcon.clear();
-        mRequiresKeyring = true;
-        emit accountLoaded();
-        return;
+    } else {
+        mUiPath = pluginPath + "/AccountSettings.qml";
+        mLoginUi = pluginPath + "/Login.qml";
+        if (QFileInfo::exists(pluginPath + "/metadata.json")) {
+            QFile file{pluginPath + "/metadata.json"};
+            file.open(QIODevice::ReadOnly);
+            auto json = QJsonDocument::fromJson(file.readAll());
+            mRequiresKeyring = json.object().value("RequiresKeyring").toBool(true);
+        } else {
+            mRequiresKeyring = true;
+        }
     }
-    Q_ASSERT(package.isValid());
-    mUiPath = package.filePath("mainscript");
-    mLoginUi = package.filePath("ui", "Login.qml");
-    mName = package.metadata().name();
-    mIcon = package.metadata().iconName();
-    mRequiresKeyring = package.metadata().value("X-KDE-Kube-RequiresKeyring", "True").toLower() == "true";
     emit accountLoaded();
 }

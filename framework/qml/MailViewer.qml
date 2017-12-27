@@ -307,7 +307,6 @@ Rectangle {
         }
         height: mailViewer.height + 20
 
-        clip: true
 
         MV.MailViewer {
             id: mailViewer

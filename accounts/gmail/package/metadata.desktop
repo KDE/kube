@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Kube GMail Accounts Plugin
-X-KDE-PluginInfo-Name=org.kube.accounts.gmail
-Exec=kpackagelauncherqml -a org.kube.accounts.gmail
-X-Plasma-MainScript=ui/GmailSettings.qml
-X-KDE-ServiceTypes=KPackage/GenericQML
-Icon=folder
-Type=Service

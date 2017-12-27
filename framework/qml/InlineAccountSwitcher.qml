@@ -24,7 +24,7 @@ FocusScope {
     id: root
     property string currentAccount
     onCurrentAccountChanged: {
-        Kube.Fabric.postMessage(Kube.Messages.accountSelection, {"account": currentAccount});
+        Kube.Fabric.postMessage(Kube.Messages.accountSelection, {accountId: currentAccount});
     }
 
     ColumnLayout {
@@ -58,6 +58,7 @@ FocusScope {
                         top: parent.top
                         left: parent.left
                         right: parent.right
+                        rightMargin: Kube.Units.smallSpacing
                     }
                     height: Kube.Units.gridUnit
 

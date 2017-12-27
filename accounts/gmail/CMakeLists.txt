@@ -14,7 +14,5 @@ target_link_libraries(gmailaccountplugin
     Qt5::Qml
 )
 
-kpackage_install_package(package org.kube.accounts.gmail "genericqml")
-
 install(TARGETS gmailaccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/gmail)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/gmail)
+install_qml_account(gmail)

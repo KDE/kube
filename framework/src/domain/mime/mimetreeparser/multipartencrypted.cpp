@@ -26,8 +26,6 @@
 
 #include <KMime/Content>
 
-#include <QGpgME/Protocol>
-
 #include "mimetreeparser_debug.h"
 
 using namespace MimeTreeParser;
@@ -51,19 +49,19 @@ MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(Interface::BodyPar
         return MessagePart::Ptr();
     }
 
-    const QGpgME::Protocol *useThisCryptProto = nullptr;
+    GpgME::Protocol useThisCryptProto = GpgME::UnknownProtocol;
 
     /*
     ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
     */
     KMime::Content *data = findTypeInDirectChilds(node, "application/octet-stream");
     if (data) {
-        useThisCryptProto = QGpgME::openpgp();
+        useThisCryptProto = GpgME::OpenPGP;
     }
     if (!data) {
         data = findTypeInDirectChilds(node, "application/pkcs7-mime");
         if (data) {
-            useThisCryptProto = QGpgME::smime();
+            useThisCryptProto = GpgME::CMS;
         }
     }
     /*

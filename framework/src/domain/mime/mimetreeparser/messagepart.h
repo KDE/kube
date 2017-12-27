@@ -41,11 +41,6 @@ namespace GpgME
 class ImportResult;
 }
 
-namespace QGpgME
-{
-class Protocol;
-}
-
 namespace KMime
 {
 class Content;
@@ -270,14 +265,14 @@ class CertMessagePart : public MessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<CertMessagePart> Ptr;
-    CertMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, const QGpgME::Protocol *cryptoProto);
+    CertMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, const GpgME::Protocol cryptoProto);
     virtual ~CertMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
     void import();
 
 private:
-    const QGpgME::Protocol *mCryptoProto;
+    const GpgME::Protocol mCryptoProto;
     friend class DefaultRendererPrivate;
 };
 
@@ -306,7 +301,7 @@ public:
     typedef QSharedPointer<EncryptedMessagePart> Ptr;
     EncryptedMessagePart(ObjectTreeParser *otp,
                          const QString &text,
-                         const QGpgME::Protocol *cryptoProto,
+                         const GpgME::Protocol protocol,
                          const QString &fromAddress,
                          KMime::Content *node, KMime::Content *encryptedNode = nullptr);
 
@@ -335,7 +330,7 @@ private:
     bool okDecryptMIME(KMime::Content &data);
 
 protected:
-    const QGpgME::Protocol *mCryptoProto;
+    const GpgME::Protocol mProtocol;
     QString mFromAddress;
     QByteArray mVerifiedText;
     std::vector<GpgME::DecryptionResult::Recipient> mDecryptRecipients;
@@ -353,7 +348,7 @@ public:
     typedef QSharedPointer<SignedMessagePart> Ptr;
     SignedMessagePart(ObjectTreeParser *otp,
                       const QString &text,
-                      const QGpgME::Protocol *cryptoProto,
+                      const GpgME::Protocol protocol,
                       const QString &fromAddress,
                       KMime::Content *node, KMime::Content *signedData);
 
@@ -373,18 +368,10 @@ public:
     QString htmlContent() const Q_DECL_OVERRIDE;
 
 private:
-    /** Handles the verification of data
-     * If signature is empty it is handled as inline signature otherwise as detached signature mode.
-     * Returns true if the verfication was successfull and the block is signed.
-     * If used in async mode, check if mMetaData.inProgress is true, it inicates a running verification process.
-     */
-    bool okVerify(const QByteArray &data, const QByteArray &signature, KMime::Content *textNode);
-
     void sigStatusToMetaData();
-
-    void setVerificationResult(const CryptoBodyPartMemento *m, KMime::Content *textNode);
+    void setVerificationResult(const GpgME::VerificationResult &result, KMime::Content *textNode, const QByteArray &plainText);
 protected:
-    const QGpgME::Protocol *mCryptoProto;
+    GpgME::Protocol mProtocol;
     QString mFromAddress;
     QByteArray mVerifiedText;
     KMime::Content *mSignedData;

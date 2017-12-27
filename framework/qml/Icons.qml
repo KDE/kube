@@ -60,6 +60,7 @@ Item {
     property string password_hide: "password-show-off"
     property string secure: "document-encrypt"
     property string insecure: "document-decrypt"
+    property string signed: "document-sign"
 
     property string addNew: "list-add"
     property string remove: "kube-list-remove-inverted"

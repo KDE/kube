@@ -24,8 +24,6 @@
 #include "objecttreeparser.h"
 #include "messagepart.h"
 
-#include <QGpgME/Protocol>
-
 #include <KMime/Content>
 
 #include "mimetreeparser_debug.h"
@@ -61,7 +59,7 @@ MessagePart::Ptr ApplicationPGPEncryptedBodyPartFormatter::process(Interface::Bo
     }
 
     EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(part.objectTreeParser(),
-                                 data->decodedText(), QGpgME::openpgp(),
+                                 data->decodedText(), GpgME::OpenPGP,
                                  part.nodeHelper()->fromAsString(data), node, data));
     mp->setIsEncrypted(true);
     return mp;

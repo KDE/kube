@@ -52,15 +52,11 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
         return MessagePart::Ptr();
     }
 
-    const auto smimeCrypto = QGpgME::smime();
-    if (!smimeCrypto) {
-        return MessagePart::Ptr();
-    }
 
     const QString smimeType = node->contentType()->parameter(QStringLiteral("smime-type")).toLower();
 
     if (smimeType == QLatin1String("certs-only")) {
-        return CertMessagePart::Ptr(new CertMessagePart(part.objectTreeParser(), node, smimeCrypto));
+        return CertMessagePart::Ptr(new CertMessagePart(part.objectTreeParser(), node, GpgME::CMS));
     }
 
     bool isSigned      = (smimeType == QLatin1String("signed-data"));
@@ -83,7 +79,7 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
         }
 
         auto _mp = EncryptedMessagePart::Ptr(new EncryptedMessagePart(part.objectTreeParser(),
-                                             node->decodedText(), smimeCrypto,
+                                             node->decodedText(), GpgME::CMS,
                                              part.nodeHelper()->fromAsString(node), node));
         mp = _mp;
         _mp->setIsEncrypted(true);
@@ -129,11 +125,8 @@ MessagePart::Ptr ApplicationPkcs7MimeBodyPartFormatter::process(Interface::BodyP
         const QTextCodec *aCodec(part.objectTreeParser()->codecFor(signTestNode));
         const QByteArray signaturetext = signTestNode->decodedContent();
         auto mp = SignedMessagePart::Ptr(new SignedMessagePart(part.objectTreeParser(),
-                                          aCodec->toUnicode(signaturetext), smimeCrypto,
+                                          aCodec->toUnicode(signaturetext), GpgME::CMS,
                                           part.nodeHelper()->fromAsString(node), signTestNode, signTestNode));
-        if (!smimeCrypto) {
-            mp->partMetaData()->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
-        }
     }
     return mp;
 }

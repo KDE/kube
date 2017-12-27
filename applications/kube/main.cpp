@@ -34,14 +34,11 @@
 #include <QQmlApplicationEngine>
 #include <QCommandLineParser>
 #include <QJsonDocument>
-
-#include <QStandardPaths>
-#include <KPackage/PackageLoader>
-#include <QQuickImageProvider>
-#include <QIcon>
-#include <QtWebEngine>
-
+#include <QJsonObject>
+#include <QFileInfo>
+#include <QFont>
 #include <QDebug>
+
 #include "framework/src/keyring.h"
 #include "kube_version.h"
 
@@ -133,50 +130,14 @@ void terminateHandler()
     std::abort();
 }
 
-class KubeImageProvider : public QQuickImageProvider
-{
-public:
-    KubeImageProvider()
-        : QQuickImageProvider(QQuickImageProvider::Pixmap)
-    {
-    }
-
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) Q_DECL_OVERRIDE
-    {
-        //The platform theme plugin can overwrite our setting again once it gets loaded,
-        //so we check on every icon load request...
-        if (QIcon::themeName() != "kube") {
-            QIcon::setThemeName("kube");
-        }
-        const auto icon = QIcon::fromTheme(id);
-        auto expectedSize = requestedSize;
-        //Get the largest size that is still smaller or equal than requested
-        //Except if we only have larger sizes, then just pick the closest one
-        bool first = true;
-        for (const auto s : icon.availableSizes()) {
-            if (first && s.width() > requestedSize.width()) {
-                expectedSize = s;
-                break;
-            }
-            first = false;
-            if (s.width() <= requestedSize.width()) {
-                expectedSize = s;
-            }
-        }
-        const auto pixmap = icon.pixmap(expectedSize);
-        if (size) {
-            *size = pixmap.size();
-        }
-        return pixmap;
-    }
-};
-
 int main(int argc, char *argv[])
 {
     std::signal(SIGSEGV, crashHandler);
     std::signal(SIGABRT, crashHandler);
     std::set_terminate(terminateHandler);
 
+    //Instead of QtWebEngine::initialize();
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
     QApplication app(argc, argv);
     app.setApplicationName("kube");
     app.setApplicationVersion(kube_VERSION_STRING);
@@ -187,8 +148,7 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addOption({{"k", "keyring"},
-        QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"),
-        "keyring dictionary"}
+        QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"), "keyring dictionary"}
     );
     parser.process(app);
 
@@ -208,14 +168,23 @@ int main(int argc, char *argv[])
         }
     }
 
-    QtWebEngine::initialize();
-    QIcon::setThemeName("kube");
-
-    auto package = KPackage::PackageLoader::self()->loadPackage("KPackage/GenericQML", "org.kube.components.kube");
-    Q_ASSERT(package.isValid());
     QQmlApplicationEngine engine;
-    engine.addImageProvider(QLatin1String("kube"), new KubeImageProvider);
-    engine.load(QUrl::fromLocalFile(package.filePath("mainscript")));
+    const auto file = "/org/kube/components/kube/main.qml";
+    const auto mainFile = [&] {
+        for (const auto &path : engine.importPathList()) {
+            QString f = path + file;
+            if (QFileInfo::exists(f)) {
+                return f;
+            }
+        }
+        return QString{};
+    }();
+    if (mainFile.isEmpty()) {
+        qWarning() << "Failed to find " << file;
+        qWarning() << "Searched: " << engine.importPathList();
+        return -1;
+    }
+    engine.load(QUrl::fromLocalFile(mainFile));
     return app.exec();
 }
 

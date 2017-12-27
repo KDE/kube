@@ -4,9 +4,6 @@ find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Qml)
 
 find_package(Sink CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
-find_package(KF5 REQUIRED COMPONENTS Package Mime)
-
-include_directories(SYSTEM ${KDE_INSTALL_FULL_INCLUDEDIR}/KF5/)
 
 set(SRCS
     imapsettings.cpp
@@ -22,7 +19,5 @@ target_link_libraries(imapaccountplugin
     Qt5::Qml
 )
 
-kpackage_install_package(package org.kube.accounts.imap "genericqml")
-
 install(TARGETS imapaccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/imap)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/imap)
+install_qml_account(imap)

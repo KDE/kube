@@ -139,6 +139,32 @@ static QString addCss(const QString &s)
     return header + s + QStringLiteral("</body></html>");
 }
 
+
+SignatureInfo *signatureInfo(MimeTreeParser::MessagePart *messagePart)
+{
+    auto signatureInfo = new SignatureInfo;
+    const auto signatureParts = messagePart->signatures();
+    if (signatureParts.size() > 1) {
+        qWarning() << "Can't deal with more than one signature";
+    }
+    for (const auto &p : signatureParts) {
+        signatureInfo->keyId = p->partMetaData()->keyId;
+        signatureInfo->keyMissing = p->partMetaData()->sigSummary & GpgME::Signature::KeyMissing;
+        signatureInfo->keyExpired = p->partMetaData()->sigSummary & GpgME::Signature::KeyExpired;
+        signatureInfo->keyRevoked = p->partMetaData()->sigSummary & GpgME::Signature::KeyRevoked;
+        signatureInfo->sigExpired = p->partMetaData()->sigSummary & GpgME::Signature::SigExpired;
+        signatureInfo->crlMissing = p->partMetaData()->sigSummary & GpgME::Signature::CrlMissing;
+        signatureInfo->crlTooOld = p->partMetaData()->sigSummary & GpgME::Signature::CrlTooOld;
+        signatureInfo->signer = p->partMetaData()->signer;
+        signatureInfo->signClass = p->partMetaData()->signClass;
+        signatureInfo->signerMailAddresses = p->partMetaData()->signerMailAddresses;
+        signatureInfo->signatureIsGood = p->partMetaData()->isGoodSignature;
+        signatureInfo->keyIsTrusted = p->partMetaData()->keyTrust & GpgME::Signature::Full ||
+                                        p->partMetaData()->keyTrust & GpgME::Signature::Ultimate;
+    }
+    return signatureInfo;
+}
+
 QVariant PartModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -176,13 +202,14 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                     if (messagePart->isHtml()) {
                         const auto text = messagePart->htmlContent();
                         if (text.contains("<!DOCTYPE html PUBLIC")) {
-                            return true;
+                            //We can probably deal with this if it adheres to the strict dtd
+                            //(that's what our composer produces as well)
+                            if (!text.contains("http://www.w3.org/TR/REC-html40/strict.dtd")) {
+                                return true;
+                            }
                         }
                         //Media queries are too advanced
                         if (text.contains("@media")) {
-                            return true;
-                        }
-                        if (text.contains("<style")) {
                             return true;
                         }
                         return false;
@@ -216,50 +243,29 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             case SecurityLevelRole: {
                 auto signature = messagePart->signatureState();
                 auto encryption = messagePart->encryptionState();
-                bool signatureIsOk = signature == MimeTreeParser::KMMsgPartiallySigned || 
-                                     signature == MimeTreeParser::KMMsgFullySigned;
-                bool encryptionIsOk = encryption == MimeTreeParser::KMMsgPartiallyEncrypted || 
-                                     encryption == MimeTreeParser::KMMsgFullyEncrypted;
-                bool isSigned = signature != MimeTreeParser::KMMsgNotSigned;
-                bool isEncrypted = encryption != MimeTreeParser::KMMsgNotEncrypted;
-                //Something is wonky
-                if ((isSigned && !signatureIsOk) || (isEncrypted && !encryptionIsOk)) {
-                    if (signature == MimeTreeParser::KMMsgSignatureProblematic || encryption == MimeTreeParser::KMMsgEncryptionProblematic) {
+                bool messageIsSigned = signature == MimeTreeParser::KMMsgPartiallySigned ||
+                                       signature == MimeTreeParser::KMMsgFullySigned;
+                bool messageIsEncrypted = encryption == MimeTreeParser::KMMsgPartiallyEncrypted ||
+                                          encryption == MimeTreeParser::KMMsgFullyEncrypted;
+
+                if (messageIsSigned) {
+                    auto sigInfo = std::unique_ptr<SignatureInfo>{signatureInfo(messagePart)};
+                    if (!sigInfo->signatureIsGood || sigInfo->keyRevoked) {
                         return "bad";
                     }
-                    return "notsogood";
+                    if (sigInfo->keyMissing || sigInfo->keyExpired) {
+                        return "notsogood";
+                    }
                 }
                 //All good
-                if (signatureIsOk || encryptionIsOk) {
+                if (messageIsSigned || messageIsEncrypted) {
                     return "good";
                 }
                 //No info
                 return "unknown";
             }
-            case SignatureDetails: {
-                auto signatureInfo = new SignatureInfo;
-
-                const auto signatureParts = messagePart->signatures();
-                if (signatureParts.size() > 1) {
-                    qWarning() << "Can't deal with more than one signature";
-                }
-                for (const auto &p : signatureParts) {
-                    signatureInfo->mKeyId = p->partMetaData()->keyId;
-                    signatureInfo->mKeyMissing = p->partMetaData()->sigSummary & GpgME::Signature::KeyMissing;
-                    signatureInfo->mKeyExpired = p->partMetaData()->sigSummary & GpgME::Signature::KeyExpired;
-                    signatureInfo->mKeyRevoked = p->partMetaData()->sigSummary & GpgME::Signature::KeyRevoked;
-                    signatureInfo->mSigExpired = p->partMetaData()->sigSummary & GpgME::Signature::SigExpired;
-                    signatureInfo->mCrlMissing = p->partMetaData()->sigSummary & GpgME::Signature::CrlMissing;
-                    signatureInfo->mCrlTooOld = p->partMetaData()->sigSummary & GpgME::Signature::CrlTooOld;
-                    signatureInfo->mSigner = p->partMetaData()->signer;
-                    signatureInfo->mSignClass = p->partMetaData()->signClass;
-                    signatureInfo->mSignerMailAddresses = p->partMetaData()->signerMailAddresses;
-                    signatureInfo->mSignatureIsGood = p->partMetaData()->isGoodSignature;
-                    signatureInfo->mKeyIsTrusted = p->partMetaData()->keyTrust & GpgME::Signature::Full ||
-                                                   p->partMetaData()->keyTrust & GpgME::Signature::Ultimate;
-                }
-                return QVariant::fromValue(signatureInfo);
-            }
+            case SignatureDetails:
+                return QVariant::fromValue(signatureInfo(messagePart));
             case ErrorType:
                 return messagePart->error();
             case ErrorString: {
