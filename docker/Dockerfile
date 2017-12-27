@@ -64,6 +64,7 @@ ADD startimap.sh /home/developer/startimap.sh
 
 ADD keyconfig /home/developer/keyconfig
 ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
+ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
 ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
 ADD gpg.conf /home/developer/.gnupg/gpg.conf
