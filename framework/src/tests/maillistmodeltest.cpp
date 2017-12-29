@@ -49,16 +49,30 @@ private slots:
 
         Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
 
-        MailListModel model;
-        model.setParentFolder(QVariant::fromValue(Folder::Ptr::create(folder1)));
-        QTRY_COMPARE(model.rowCount({}), 1);
-
         {
-            auto idx = model.index(0, 0, {});
-            auto mail = idx.data(MailListModel::DomainObject).value<Mail::Ptr>();
-            QVERIFY(mail);
-            QVERIFY(!mail->getSubject().isEmpty());
-            QVERIFY(mail->getFullPayloadAvailable());
+            MailListModel model;
+            model.setParentFolder(QVariant::fromValue(Folder::Ptr::create(folder1)));
+            QTRY_COMPARE(model.rowCount({}), 1);
+
+            {
+                auto idx = model.index(0, 0, {});
+                auto mail = idx.data(MailListModel::DomainObject).value<Mail::Ptr>();
+                QVERIFY(mail);
+                QVERIFY(!mail->getSubject().isEmpty());
+            }
+        }
+        {
+            MailListModel model;
+            model.setMail(QVariant::fromValue(Mail::Ptr::create(mail1)));
+            QTRY_COMPARE(model.rowCount({}), 1);
+
+            {
+                auto idx = model.index(0, 0, {});
+                auto mail = idx.data(MailListModel::DomainObject).value<Mail::Ptr>();
+                QVERIFY(mail);
+                QVERIFY(!mail->getSubject().isEmpty());
+                QVERIFY(mail->getFullPayloadAvailable());
+            }
         }
     }
 };
