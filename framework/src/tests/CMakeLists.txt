@@ -13,3 +13,12 @@ target_link_libraries(folderlistmodeltest
     Qt5::Gui
     kubeframework
 )
+
+add_executable(maillistmodeltest maillistmodeltest.cpp)
+add_test(maillistmodeltest maillistmodeltest)
+target_link_libraries(maillistmodeltest
+    Qt5::Core
+    Qt5::Test
+    Qt5::Gui
+    kubeframework
+)
