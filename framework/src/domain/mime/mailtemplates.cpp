@@ -979,7 +979,7 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     mail->from(true)->addAddress(from);
 
     mail->subject(true)->fromUnicodeString(subject, "utf-8");
-    if (!mail->messageID()) {
+    if (!mail->messageID(false)) {
         auto fqdn = QUrl::toAce(QHostInfo::localHostName());
         if (fqdn.isEmpty()) {
             qWarning() << "Unable to generate a Message-ID, falling back to 'localhost.localdomain'.";
