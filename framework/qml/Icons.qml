@@ -46,6 +46,7 @@ Item {
     property string copy: "edit-copy"
 
     property string menu_inverted: "application-menu-inverted"
+    property string group: "group"
     property string user: "im-user"
     property string user_inverted: "im-user-inverted"
     property string search_inverted: "edit-find-inverted"
