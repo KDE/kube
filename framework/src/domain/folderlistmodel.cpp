@@ -157,7 +157,9 @@ bool FolderListModel::lessThan(const QModelIndex &left, const QModelIndex &right
 bool FolderListModel::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);
+    Q_ASSERT(index.isValid());
     const auto folder = index.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
+    Q_ASSERT(folder);
     const auto enabled = folder->getEnabled();
     return enabled;
 }
