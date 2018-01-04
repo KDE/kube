@@ -16,11 +16,19 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+import QtQuick 2.0
 import org.kube.framework 1.0
 
 AbstractButton {
-    color: Colors.positiveColor
+    color: enabled ? Colors.positiveColor : Colors.backgroundColor
     textColor: Colors.highlightedTextColor
     highlightColor: Colors.viewBackgroundColor
     highlightOpacity: 0.2
+
+    Rectangle {
+      anchors.fill: parent
+      color: "transparent"
+      border.width: 1
+      border.color: Kube.Colors.buttonColor
+    }
 }
