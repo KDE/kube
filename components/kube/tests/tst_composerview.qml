@@ -42,4 +42,15 @@ TestCase {
         verify(newMailButton)
         verify(newMailButton.activeFocus)
     }
+
+    function test_sendMessage() {
+        var mail = null
+        var loadAsDraft = true
+        composer.loadMessage(mail, loadAsDraft)
+        var sendMailButton = findChild(composer, "sendButton")
+        verify(sendMailButton)
+        verify(sendMailButton.enabled)
+        sendMailButton.clicked()
+        //TODO verify the mail is sent
+    }
 }

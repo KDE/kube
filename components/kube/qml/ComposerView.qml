@@ -517,6 +517,7 @@ Kube.View {
             }
 
             Kube.PositiveButton {
+                objectName: "sendButton"
                 id: sendButton
 
                 width: parent.width
