@@ -26,7 +26,7 @@
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
 
-FolderListModel::FolderListModel(QObject *parent) : KRecursiveFilterProxyModel()
+FolderListModel::FolderListModel(QObject *parent) : KRecursiveFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
     sort(0, Qt::AscendingOrder);

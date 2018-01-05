@@ -23,7 +23,7 @@
 #include <sink/standardqueries.h>
 
 MailListModel::MailListModel(QObject *parent)
-    : QSortFilterProxyModel()
+    : QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
