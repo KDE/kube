@@ -40,6 +40,7 @@
 #include "startupcheck.h"
 #include "keyring.h"
 #include "controller.h"
+#include "domainobjectcontroller.h"
 
 #include <QtQml>
 #include <QQuickImageProvider>
@@ -133,6 +134,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<Kube::Settings>(uri, 1, 0, "Settings");
 
     qmlRegisterType<Kube::Fabric::Listener>(uri, 1, 0, "Listener");
+    qmlRegisterType<Kube::DomainObjectController>(uri, 1, 0, "DomainObjectController");
     qmlRegisterSingletonType<Kube::Fabric::Fabric>(uri, 1, 0, "Fabric", fabric_singletontype_provider);
 
     qmlRegisterType<KubeImage>(uri, 1, 0, "KubeImage");

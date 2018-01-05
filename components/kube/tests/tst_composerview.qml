@@ -20,6 +20,7 @@
 import QtQuick 2.7
 import QtTest 1.0
 import "../qml"
+import org.kube.framework 1.0 as Kube
 
 TestCase {
     id: testCase
@@ -33,24 +34,50 @@ TestCase {
         focus: true
     }
 
-    function test_start() {
+    function test_1start() {
         verify(composer)
     }
 
-    function test_verifyInitialFocus() {
+    function test_2verifyInitialFocus() {
         var newMailButton = findChild(composer, "newMailButton");
         verify(newMailButton)
         verify(newMailButton.activeFocus)
     }
 
-    function test_sendMessage() {
-        var mail = null
+    Component {
+        id: controllerComponent
+        Kube.DomainObjectController {}
+    }
+
+    Component {
+        id: outboxComponent
+        Kube.OutboxModel {}
+    }
+
+    function test_3sendMessage() {
+        var domainObjectController = controllerComponent.createObject(null, {blocking: true})
+        var mail = {
+            type: "mail",
+            subject: "subject",
+            body: "body",
+            to: ["to@example.org"],
+            cc: ["cc@example.org"],
+            bcc: ["bcc@example.org"],
+            draft: true
+        }
+        domainObjectController.create(mail)
+
+        tryVerify(function(){ return domainObjectController.currentObject })
+        var createdMail = domainObjectController.currentObject
+        verify(createdMail)
+
         var loadAsDraft = true
-        composer.loadMessage(mail, loadAsDraft)
+        composer.loadMessage(createdMail, loadAsDraft)
         var sendMailButton = findChild(composer, "sendButton")
         verify(sendMailButton)
-        verify(sendMailButton.enabled)
+        tryVerify(function(){ return sendMailButton.enabled })
         sendMailButton.clicked()
-        //TODO verify the mail is sent
+        var outbox = outboxComponent.createObject(null, {})
+        tryCompare(outbox, "count", 1)
     }
 }

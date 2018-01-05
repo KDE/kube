@@ -46,6 +46,7 @@ add_library(kubeframework SHARED
     webengineprofile.cpp
     startupcheck.cpp
     keyring.cpp
+    domainobjectcontroller.cpp
     )
 target_link_libraries(kubeframework
     sink
