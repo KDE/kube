@@ -21,6 +21,7 @@ import QtQuick 2.7
 import QtTest 1.0
 import "../qml"
 import org.kube.framework 1.0 as Kube
+import org.kube.test 1.0
 
 TestCase {
     id: testCase
@@ -29,16 +30,20 @@ TestCase {
     name: "ComposerView"
     when: windowShown
 
-    ComposerView {
-        id: composer
-        focus: true
+    Component {
+        id:composerComponent
+        ComposerView {
+            focus: true
+        }
     }
 
     function test_1start() {
+        var composer = createTemporaryObject(composerComponent, testCase, {})
         verify(composer)
     }
 
     function test_2verifyInitialFocus() {
+        var composer = createTemporaryObject(composerComponent, testCase, {})
         var newMailButton = findChild(composer, "newMailButton");
         verify(newMailButton)
         verify(newMailButton.activeFocus)
@@ -55,6 +60,29 @@ TestCase {
     }
 
     function test_3sendMessage() {
+        var initialState = {
+            accounts: [{
+                    id: "account1",
+                }],
+            identities: [{
+                    account: "account1",
+                    name: "Test Identity",
+                    address: "identity@example.org"
+                }],
+            resources: [{
+                    id: "resource1",
+                    account: "account1",
+                    type: "dummy"
+                },
+                {
+                    id: "resource2",
+                    account: "account1",
+                    type: "mailtransport"
+                }]
+        }
+        TestStore.setup(initialState)
+        var composer = createTemporaryObject(composerComponent, testCase, {})
+
         var domainObjectController = controllerComponent.createObject(null, {blocking: true})
         var mail = {
             type: "mail",

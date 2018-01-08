@@ -16,26 +16,16 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include <QtQuickTest/quicktest.h>
-#include <QQmlEngine>
-#include <sink/test.h>
-#include "teststore.h"
+#pragma once
 
-static QObject *teststore(QQmlEngine *engine, QJSEngine *scriptEngine)
-{
-    Q_UNUSED(engine)
-    Q_UNUSED(scriptEngine)
-    return new Kube::TestStore;
-}
+#include <QObject>
 
-int main(int argc, char **argv)
-{
-    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
-    Sink::Test::initTest();
+namespace Kube {
 
-    qmlRegisterSingletonType<Kube::TestStore>("org.kube.test", 1, 0, "TestStore", teststore);
+class TestStore : public QObject {
+    Q_OBJECT
+public:
+    Q_INVOKABLE void setup(const QVariantMap &);
+};
 
-    QTEST_ADD_GPU_BLACKLIST_SUPPORT
-    QTEST_SET_MAIN_SOURCE_PATH
-    return quick_test_main(argc, argv, "kubetest", 0);
 }
