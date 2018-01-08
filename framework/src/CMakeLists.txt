@@ -47,6 +47,7 @@ add_library(kubeframework SHARED
     startupcheck.cpp
     keyring.cpp
     domainobjectcontroller.cpp
+    extensionmodel.cpp
     )
 target_link_libraries(kubeframework
     sink

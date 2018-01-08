@@ -204,6 +204,20 @@ Controls2.ApplicationWindow {
                     Controls2.ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("people")
                 }
+                Repeater {
+                    model: Kube.ExtensionModel {}
+                    Kube.IconButton {
+                        iconName: model.icon
+                        onClicked: {
+                            var component = Qt.createComponent(model.source)
+                            kubeViews.pushView(component, {})
+                        }
+                        activeFocusOnTab: true
+                        checkable: true
+                        Controls2.ButtonGroup.group: viewButtonGroup
+                        tooltip: model.tooltip
+                    }
+                }
             }
             Column {
                 anchors {

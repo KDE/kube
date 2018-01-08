@@ -41,6 +41,7 @@
 #include "keyring.h"
 #include "controller.h"
 #include "domainobjectcontroller.h"
+#include "extensionmodel.h"
 
 #include <QtQml>
 #include <QQuickImageProvider>
@@ -130,6 +131,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
+    qmlRegisterType<Kube::ExtensionModel>(uri, 1, 0, "ExtensionModel");
 
     qmlRegisterType<Kube::Settings>(uri, 1, 0, "Settings");
 
