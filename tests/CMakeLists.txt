@@ -7,4 +7,5 @@ target_link_libraries(kubetestrunner
     Qt5::QuickTest
     Qt5::Quick
     sink
+    kubeframework
 )

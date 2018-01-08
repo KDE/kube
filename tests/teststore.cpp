@@ -19,9 +19,14 @@
 #include "teststore.h"
 
 #include <sink/store.h>
+#include <sink/resourcecontrol.h>
+#include <sink/secretstore.h>
+#include <kmime/kmime_message.h>
 
 #include <QDebug>
 #include <QVariant>
+
+#include "framework/src/domain/mime/mailtemplates.h"
 
 using namespace Kube;
 
@@ -33,20 +38,62 @@ static void iterateOverObjects(const QVariantList &list, std::function<void(cons
     }
 }
 
+static QStringList toStringList(const QVariantList &list)
+{
+    QStringList s;
+    for (const auto &e : list) {
+        s << e.toString();
+    }
+    return s;
+}
+
+static void createMail(const QVariantMap &object)
+{
+    using namespace Sink::ApplicationDomain;
+
+    auto toAddresses = toStringList(object["to"].toList());
+    auto ccAddresses = toStringList(object["cc"].toList());
+    auto bccAddresses = toStringList(object["bcc"].toList());
+
+    KMime::Types::Mailbox mb;
+    mb.fromUnicodeString("identity@example.org");
+    auto msg = MailTemplates::createMessage({},
+            toAddresses,
+            ccAddresses,
+            bccAddresses,
+            mb,
+            object["subject"].toString(),
+            object["body"].toString(),
+            {},
+            {},
+            {},
+            {});
+
+    auto mail = ApplicationDomainType::createEntity<Mail>(object["resource"].toByteArray());
+    mail.setMimeMessage(msg->encodedContent(true));
+    Sink::Store::create<Mail>(mail).exec().waitForFinished();
+}
+
 void TestStore::setup(const QVariantMap &map)
 {
-    iterateOverObjects(map.value("resources").toList(), [] (const QVariantMap &object) {
+    QByteArrayList resources;
+    iterateOverObjects(map.value("resources").toList(), [&] (const QVariantMap &object) {
+        resources << object["id"].toByteArray();
         auto resource = [&] {
+            using namespace Sink::ApplicationDomain;
+            auto resource = ApplicationDomainType::createEntity<SinkResource>("", object["id"].toByteArray());
             if (object["type"] == "dummy") {
-                return Sink::ApplicationDomain::DummyResource::create(object["account"].toByteArray());
+                resource.setResourceType("sink.dummy");
+            } else if (object["type"] == "mailtransport") {
+                resource.setResourceType("sink.mailtransport");
+            } else {
+                Q_ASSERT(false);
             }
-            if (object["type"] == "mailtransport") {
-                return Sink::ApplicationDomain::MailtransportResource::create(object["account"].toByteArray());
-            }
-            Q_ASSERT(false);
-            return Sink::ApplicationDomain::SinkResource{};
+            return resource;
         }();
+        resource.setAccount(object["account"].toByteArray());
         Sink::Store::create(resource).exec().waitForFinished();
+        Sink::SecretStore::instance().insert(resource.identifier(), "secret");
     });
 
     iterateOverObjects(map.value("identities").toList(), [] (const QVariantMap &object) {
@@ -56,4 +103,27 @@ void TestStore::setup(const QVariantMap &map)
         identity.setName(object["name"].toString());
         Sink::Store::create(identity).exec().waitForFinished();
     });
+
+    iterateOverObjects(map.value("mails").toList(), createMail);
+
+    Sink::ResourceControl::flushMessageQueue(resources).exec().waitForFinished();
+}
+
+QVariant TestStore::load(const QByteArray &type, const QVariantMap &filter)
+{
+    using namespace Sink::ApplicationDomain;
+    if (type == "mail") {
+        Sink::Query query;
+        if (filter.contains("resource")) {
+            query.resourceFilter(filter.value("resource").toByteArray());
+        }
+        auto list = Sink::Store::read<Mail>(query);
+        if (!list.isEmpty()) {
+            return QVariant::fromValue(Mail::Ptr::create(list.first()));
+        }
+        return {};
+    }
+
+    Q_ASSERT(false);
+    return {};
 }

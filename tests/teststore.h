@@ -19,6 +19,7 @@
 #pragma once
 
 #include <QObject>
+#include <QVariant>
 
 namespace Kube {
 
@@ -26,6 +27,7 @@ class TestStore : public QObject {
     Q_OBJECT
 public:
     Q_INVOKABLE void setup(const QVariantMap &);
+    Q_INVOKABLE QVariant load(const QByteArray &type, const QVariantMap &);
 };
 
 }

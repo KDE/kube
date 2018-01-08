@@ -49,16 +49,6 @@ TestCase {
         verify(newMailButton.activeFocus)
     }
 
-    Component {
-        id: controllerComponent
-        Kube.DomainObjectController {}
-    }
-
-    Component {
-        id: outboxComponent
-        Kube.OutboxModel {}
-    }
-
     function test_3sendMessage() {
         var initialState = {
             accounts: [{
@@ -78,26 +68,21 @@ TestCase {
                     id: "resource2",
                     account: "account1",
                     type: "mailtransport"
+                }],
+                mails:[{
+                    resource: "resource1",
+                    subject: "subject",
+                    body: "body",
+                    to: ["to@example.org"],
+                    cc: ["cc@example.org"],
+                    bcc: ["bcc@example.org"],
+                    draft: true
                 }]
         }
         TestStore.setup(initialState)
         var composer = createTemporaryObject(composerComponent, testCase, {})
 
-        var domainObjectController = controllerComponent.createObject(null, {blocking: true})
-        var mail = {
-            type: "mail",
-            subject: "subject",
-            body: "body",
-            to: ["to@example.org"],
-            cc: ["cc@example.org"],
-            bcc: ["bcc@example.org"],
-            draft: true
-        }
-        domainObjectController.create(mail)
-
-        tryVerify(function(){ return domainObjectController.currentObject })
-        var createdMail = domainObjectController.currentObject
-        verify(createdMail)
+        var createdMail = TestStore.load("mail", {resource: "resource1"})
 
         var loadAsDraft = true
         composer.loadMessage(createdMail, loadAsDraft)
@@ -105,7 +90,9 @@ TestCase {
         verify(sendMailButton)
         tryVerify(function(){ return sendMailButton.enabled })
         sendMailButton.clicked()
-        var outbox = outboxComponent.createObject(null, {})
-        tryCompare(outbox, "count", 1)
+
+        tryVerify(function(){ return TestStore.load("mail", {resource: "resource2"}) })
+        //TODO ensure draft is deleted
+        //TODO ensure draft is deleted
     }
 }
