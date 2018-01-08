@@ -92,7 +92,6 @@ TestCase {
         sendMailButton.clicked()
 
         tryVerify(function(){ return TestStore.load("mail", {resource: "resource2"}) })
-        //TODO ensure draft is deleted
-        //TODO ensure draft is deleted
+        tryVerify(function(){ return !TestStore.load("mail", {resource: "resource1"}) })
     }
 }

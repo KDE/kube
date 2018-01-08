@@ -342,9 +342,12 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
 
-    Query query(*message.value<Mail::Ptr>());
+    auto msg = message.value<Mail::Ptr>();
+    Q_ASSERT(msg);
+    Query query(*msg);
     query.request<Mail::MimeMessage>();
     Store::fetchOne<Mail>(query).then([this, loadAsDraft](const Mail &mail) {
+        mRemoveDraft = loadAsDraft;
         setExistingMail(mail);
 
         const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
@@ -468,6 +471,11 @@ void ComposerController::send()
                     .then<void>([=] {
                         //Trigger a sync, but don't wait for it.
                         Store::synchronize(Sink::SyncScope{}.resourceFilter(resourceId)).exec();
+                        if (mRemoveDraft) {
+                            SinkLog() << "Removing draft message.";
+                            //Remove draft
+                            Store::remove(getExistingMail()).exec();
+                        }
                     });
             }
             SinkWarning() << "Failed to find a mailtransport resource";
