@@ -29,6 +29,6 @@ AbstractButton {
       anchors.fill: parent
       color: "transparent"
       border.width: 1
-      border.color: Kube.Colors.buttonColor
+      border.color: Colors.buttonColor
     }
 }
