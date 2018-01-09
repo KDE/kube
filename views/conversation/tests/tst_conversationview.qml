@@ -27,7 +27,7 @@ TestCase {
     height: 400
     name: "MailView"
 
-    MailView {
+    View {
         id: mailView
     }
 

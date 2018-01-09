@@ -27,7 +27,7 @@ TestCase {
     height: 400
     name: "AccountsView"
 
-    AccountsView {
+    View {
         id: accountsView
     }
 

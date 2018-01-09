@@ -1,0 +1,11 @@
+macro(install_view name)
+    install(DIRECTORY ${name}/qml/ DESTINATION ${QML_INSTALL_DIR}/org/kube/views/${name})
+    install(FILES ${name}/metadata.json DESTINATION ${QML_INSTALL_DIR}/org/kube/views/${name})
+    add_test(NAME viewtest-${name} COMMAND kubetestrunner WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${name}/tests)
+endmacro()
+
+install_view(composer)
+install_view(conversation)
+install_view(people)
+install_view(log)
+install_view(accounts)

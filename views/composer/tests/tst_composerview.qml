@@ -32,7 +32,7 @@ TestCase {
 
     Component {
         id:composerComponent
-        ComposerView {
+        View {
             focus: true
         }
     }

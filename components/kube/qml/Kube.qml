@@ -86,35 +86,6 @@ Controls2.ApplicationWindow {
         }
     }
 
-    Kube.Listener {
-        filter: Kube.Messages.reply
-        onMessageReceived: {
-            kubeViews.openComposerWithMail(message.mail, false)
-        }
-    }
-
-    Kube.Listener {
-        filter: Kube.Messages.edit
-        onMessageReceived: {
-            kubeViews.openComposerWithMail(message.mail, true)
-        }
-    }
-
-    Kube.Listener {
-        filter: Kube.Messages.compose
-        onMessageReceived: kubeViews.openComposer(true, message.recipients)
-    }
-
-    Kube.Listener {
-        filter: Kube.Messages.requestLogin
-        onMessageReceived: kubeViews.setLoginView(message.accountId)
-    }
-
-    Kube.Listener {
-        filter: Kube.Messages.requestAccountsConfiguration
-        onMessageReceived: kubeViews.setAccountsView()
-    }
-
     //BEGIN Shortcuts
     Shortcut {
         sequence: StandardKey.Quit
@@ -174,48 +145,20 @@ Controls2.ApplicationWindow {
 
                 spacing: Kube.Units.largeSpacing - Kube.Units.smallSpacing
 
-                Kube.IconButton {
-                    id: composerButton
-                    iconName: Kube.Icons.edit_inverted
-                    onClicked: kubeViews.openComposer(false, [])
-                    activeFocusOnTab: true
-                    checkable: true
-                    Controls2.ButtonGroup.group: viewButtonGroup
-                    tooltip: qsTr("composer")
-                }
-
-                Kube.IconButton {
-                    id: mailButton
-                    iconName: Kube.Icons.mail_inverted
-                    onClicked: kubeViews.setMailView()
-                    activeFocusOnTab: true
-                    checkable: true
-                    checked: true
-                    Controls2.ButtonGroup.group: viewButtonGroup
-                    tooltip: qsTr("mails")
-                }
-
-                Kube.IconButton {
-                    id: peopleButton
-                    iconName: Kube.Icons.user_inverted
-                    onClicked: kubeViews.setPeopleView()
-                    activeFocusOnTab: true
-                    checkable: true
-                    Controls2.ButtonGroup.group: viewButtonGroup
-                    tooltip: qsTr("people")
-                }
                 Repeater {
-                    model: Kube.ExtensionModel {}
+                    model: Kube.ExtensionModel {
+                        id: extensionModel
+                        sortOrder: ["composer", "conversation", "people"]
+                    }
                     Kube.IconButton {
+                        id: button
                         iconName: model.icon
-                        onClicked: {
-                            var component = Qt.createComponent(model.source)
-                            kubeViews.pushView(component, {})
-                        }
+                        onClicked: kubeViews.showView(model.name)
                         activeFocusOnTab: true
                         checkable: true
                         Controls2.ButtonGroup.group: viewButtonGroup
                         tooltip: model.tooltip
+                        checked: kubeViews.currentViewName == model.name
                     }
                 }
             }
@@ -240,10 +183,11 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     id: logButton
                     iconName: Kube.Icons.info_inverted
-                    onClicked: kubeViews.setLogView()
+                    onClicked: kubeViews.showView("log")
                     activeFocusOnTab: true
                     checkable: true
-                    alert: logView.pendingError
+                    alert: kubeViews.getView("log").pendingError
+                    checked: kubeViews.currentViewName == "log"
                     Controls2.ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("logview")
                 }
@@ -251,141 +195,95 @@ Controls2.ApplicationWindow {
                 Kube.IconButton {
                     id: accountsButton
                     iconName: Kube.Icons.menu_inverted
-                    onClicked: kubeViews.setAccountsView()
+                    onClicked: kubeViews.showView("accounts")
                     activeFocusOnTab: true
                     checkable: true
+                    checked: kubeViews.currentViewName == "accounts"
                     Controls2.ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("settings")
                 }
             }
         }
-        Controls2.StackView {
+        ViewManager {
             id: kubeViews
-
             anchors {
                 top: mainContent.top
                 bottom: mainContent.bottom
             }
             Layout.fillWidth: true
 
+            extensionModel: extensionModel
+
+            Component.onCompleted: {
+                dontFocus = true
+                showView("conversation")
+                if (startupCheck.noAccount) {
+                    showView("accounts")
+                }
+                dontFocus = false
+            }
+
+            Kube.Listener {
+                filter: Kube.Messages.reply
+                onMessageReceived: kubeViews.replaceView("composer", {message: message.mail, loadAsDraft: false})
+            }
+
+            Kube.Listener {
+                filter: Kube.Messages.edit
+                onMessageReceived: kubeViews.replaceView("composer", {message: message.mail, loadAsDraft: true})
+            }
+
+            Kube.Listener {
+                filter: Kube.Messages.compose
+                onMessageReceived: kubeViews.replaceView("composer", {newMessage: true, recipients: message.recipients})
+            }
+
+            Kube.Listener {
+                filter: Kube.Messages.requestAccountsConfiguration
+                onMessageReceived: kubeViews.showView("accounts")
+            }
+
             Kube.Listener {
                 filter: Kube.Messages.componentDone
                 onMessageReceived: {
-                    //Return to the mailview if we try to pop everything off
-                    if (kubeViews.depth == 1) {
-                        kubeViews.setMailView()
-                    } else {
-                        kubeViews.pop(Controls2.StackView.Immediate)
-                    }
+                    kubeViews.closeView()
                 }
             }
 
-            onCurrentItemChanged: {
-                if (currentItem) {
-                    currentItem.forceActiveFocus()
+            Kube.Listener {
+                filter: Kube.Messages.requestLogin
+                onMessageReceived: {
+                    loginView.createObject(kubeViews, {accountId: message.accountId})
                 }
             }
 
-            Component.onCompleted: {
-                //Setup the initial item stack
-                if (!currentItem) {
-                    setMailView()
-                    if (startupCheck.noAccount) {
-                        setAccountsView()
-                    }
-                }
-            }
-
-            ///Replace the current view (we can't go back to the old view, and we destroy the old view)
-            function replaceView(view) {
-                if (currentItem != view) {
-                    kubeViews.replace(null, view, {}, Controls2.StackView.Immediate)
-                }
-            }
-
-            ///Push a new view on the stack (the old view remains, and we can go back once done)
-            function pushView(view, properties) {
-                kubeViews.push(view, properties, Controls2.StackView.Immediate)
-            }
-
-            //TODO replacing here while a composer is open is destructive
-            function setPeopleView() {
-                replaceView(peopleView)
-            }
-
-            function setMailView() {
-                replaceView(mailView)
-            }
-
-            function setAccountsView() {
-                pushView(accountsView, {})
-            }
-
-            function setLogView() {
-                replaceView(logView)
-            }
-
-            function setLoginView(account) {
-                if (currentItem != loginView) {
-                    pushView(loginView, {accountId: account})
-                }
-            }
-
-            function openComposer(newMessage, recipients) {
-                pushView(composerView, {newMessage: newMessage, recipients: recipients})
-            }
-
-            function openComposerWithMail(mail, openAsDraft) {
-                pushView(composerView, {message: mail, loadAsDraft: openAsDraft})
-            }
-
-
-            //These items are not visible until pushed onto the stack, so we keep them in resources instead of items
-            resources: [
-                //Not components so we maintain state
-                MailView {
-                    id: mailView
-                    anchors.fill: parent
-                    Controls2.StackView.onActivated: mailButton.checked = true
-                    Controls2.StackView.onDeactivated: mailButton.checked = false
-                },
-                PeopleView {
-                    id: peopleView
-                    anchors.fill: parent
-                    Controls2.StackView.onActivated: peopleButton.checked = true
-                    Controls2.StackView.onDeactivated: peopleButton.checked = false
-                },
-                //Not a component because otherwise we can't log stuff
-                LogView {
-                    id: logView
-                    anchors.fill: parent
-                    Controls2.StackView.onActivated: logButton.checked = true
-                    Controls2.StackView.onDeactivated: logButton.checked = false
-                }
-            ]
-            //A component so it's always destroyed when we're done
-            Component {
-                id: composerView
-                ComposerView {
-                    anchors.fill: parent
-                    Controls2.StackView.onActivated: composerButton.checked = true
-                    Controls2.StackView.onDeactivated: composerButton.checked = false
-                }
-            }
-            Component {
-                id: accountsView
-                AccountsView {
-                    anchors.fill: parent
-                    Controls2.StackView.onActivated: accountsButton.checked = true
-                    Controls2.StackView.onDeactivated: accountsButton.checked = false
-                }
-            }
             Component {
                 id: loginView
-                LoginView {
-                    anchors.fill: parent
+                Kube.Popup {
+                    id: popup
+                    property alias accountId: login.accountId
+                    visible: true
+                    parent: Controls2.ApplicationWindow.overlay
+                    height: app.height
+                    width: app.width - app.sidebarWidth
+                    x: app.sidebarWidth
+                    y: 0
+                    modal: true
+                    closePolicy: Controls2.Popup.NoAutoClose
+                    Kube.LoginAccount {
+                        id: login
+                        anchors {
+                            fill: parent
+                            bottomMargin: Kube.Units.largeSpacing
+                        }
+                        onDone: {
+                            popup.close()
+                            kubeViews.currentItem.forceActiveFocus()
+                        }
+                    }
                 }
             }
+
         }
     }
     //END Main content

@@ -27,7 +27,7 @@ TestCase {
     height: 400
     name: "PeopleView"
 
-    PeopleView {
+    View {
         id: peopleView
     }
 

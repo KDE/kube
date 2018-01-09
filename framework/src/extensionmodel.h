@@ -27,6 +27,8 @@ namespace Kube {
 class ExtensionModel : public QSortFilterProxyModel
 {
     Q_OBJECT
+
+    Q_PROPERTY(QVariantList sortOrder WRITE setSortOrder READ sortOrder CONSTANT)
 public:
 
     ExtensionModel(QObject *parent = Q_NULLPTR);
@@ -39,14 +41,22 @@ public:
     enum Roles {
         Name  = Qt::UserRole + 1,
         Tooltip,
-        Icon,
-        Source
+        Icon
     };
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
+    void setSortOrder(const QVariantList &order);
+    QVariantList sortOrder() const;
+
+    Q_INVOKABLE QString findSource(const QString &extensionName, const QString &sourceName);
+
 private slots:
     void load();
+
+private:
+    QStringList mSortOrder;
+    QHash<QString, QString> mPaths;
 };
 
 }
