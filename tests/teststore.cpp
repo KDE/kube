@@ -47,6 +47,15 @@ static QStringList toStringList(const QVariantList &list)
     return s;
 }
 
+static QByteArrayList toByteArrayList(const QVariantList &list)
+{
+    QByteArrayList s;
+    for (const auto &e : list) {
+        s << e.toByteArray();
+    }
+    return s;
+}
+
 static void createMail(const QVariantMap &object, const QByteArray &folder = {})
 {
     using namespace Sink::ApplicationDomain;
@@ -82,6 +91,7 @@ static void createFolder(const QVariantMap &object)
     using namespace Sink::ApplicationDomain;
     auto folder = ApplicationDomainType::createEntity<Folder>(object["resource"].toByteArray());
     folder.setName(object["name"].toString());
+    folder.setSpecialPurpose(toByteArrayList(object["specialpurpose"].toList()));
     Sink::Store::create(folder).exec().waitForFinished();
 
     iterateOverObjects(object.value("mails").toList(), [=](const QVariantMap &object) {
