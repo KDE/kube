@@ -71,11 +71,25 @@ static void createMail(const QVariantMap &object)
 
     auto mail = ApplicationDomainType::createEntity<Mail>(object["resource"].toByteArray());
     mail.setMimeMessage(msg->encodedContent(true));
-    Sink::Store::create<Mail>(mail).exec().waitForFinished();
+    Sink::Store::create(mail).exec().waitForFinished();
+}
+
+static void createFolder(const QVariantMap &object)
+{
+    using namespace Sink::ApplicationDomain;
+    auto folder = ApplicationDomainType::createEntity<Folder>(object["resource"].toByteArray());
+    folder.setName(object["name"].toString());
+    Sink::Store::create(folder).exec().waitForFinished();
 }
 
 void TestStore::setup(const QVariantMap &map)
 {
+    using namespace Sink::ApplicationDomain;
+    iterateOverObjects(map.value("accounts").toList(), [&] (const QVariantMap &object) {
+        auto account = ApplicationDomainType::createEntity<SinkAccount>("", object["id"].toByteArray());
+        account.setName(object["name"].toString());
+        Sink::Store::create(account).exec().waitForFinished();
+    });
     QByteArrayList resources;
     iterateOverObjects(map.value("resources").toList(), [&] (const QVariantMap &object) {
         resources << object["id"].toByteArray();
@@ -104,6 +118,7 @@ void TestStore::setup(const QVariantMap &map)
         Sink::Store::create(identity).exec().waitForFinished();
     });
 
+    iterateOverObjects(map.value("folders").toList(), createFolder);
     iterateOverObjects(map.value("mails").toList(), createMail);
 
     Sink::ResourceControl::flushMessageQueue(resources).exec().waitForFinished();

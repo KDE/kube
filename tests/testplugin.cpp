@@ -16,15 +16,35 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include <QtQuickTest/quicktest.h>
+
+#include <QtQml>
 #include <QQmlEngine>
+#include <QQmlExtensionPlugin>
 #include <sink/test.h>
 
-int main(int argc, char **argv)
-{
-    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+#include "teststore.h"
 
-    QTEST_ADD_GPU_BLACKLIST_SUPPORT
-    QTEST_SET_MAIN_SOURCE_PATH
-    return quick_test_main(argc, argv, "kubetest", 0);
-}
+class TestPlugin : public QQmlExtensionPlugin
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+
+public:
+    void initializeEngine(QQmlEngine *engine, const char *uri) Q_DECL_OVERRIDE
+    {
+        Q_UNUSED(engine);
+        Q_UNUSED(uri);
+        Sink::Test::initTest();
+    }
+
+    void registerTypes (const char *uri) Q_DECL_OVERRIDE
+    {
+        qmlRegisterSingletonType<Kube::TestStore>(uri, 1, 0, "TestStore", [] (QQmlEngine *, QJSEngine *) -> QObject* {
+            return new Kube::TestStore;
+        });
+    }
+};
+
+
+
+#include "testplugin.moc"
