@@ -28,7 +28,7 @@ class ExtensionModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QVariantList sortOrder WRITE setSortOrder READ sortOrder CONSTANT)
+    Q_PROPERTY(QVariantList sortOrder WRITE setSortOrder READ sortOrder)
 public:
 
     ExtensionModel(QObject *parent = Q_NULLPTR);
