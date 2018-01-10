@@ -53,18 +53,17 @@ ApplicationWindow {
             folders: [{
                     id: "folder1",
                     resource: "resource1",
-                    name: "Folder 1"
+                    name: "Folder 1",
+                    mails: [{
+                            resource: "resource1",
+                            subject: "subject",
+                            body: "body",
+                            to: ["to@example.org"],
+                            cc: ["cc@example.org"],
+                            bcc: ["bcc@example.org"],
+                            draft: true
+                        }]
                 }],
-            mails: [{
-                    resource: "resource1",
-                    folder: "folder1",
-                    subject: "subject",
-                    body: "body",
-                    to: ["to@example.org"],
-                    cc: ["cc@example.org"],
-                    bcc: ["bcc@example.org"],
-                    draft: true
-                }]
         }
         TestStore.setup(initialState)
     }

@@ -47,7 +47,7 @@ static QStringList toStringList(const QVariantList &list)
     return s;
 }
 
-static void createMail(const QVariantMap &object)
+static void createMail(const QVariantMap &object, const QByteArray &folder = {})
 {
     using namespace Sink::ApplicationDomain;
 
@@ -71,6 +71,9 @@ static void createMail(const QVariantMap &object)
 
     auto mail = ApplicationDomainType::createEntity<Mail>(object["resource"].toByteArray());
     mail.setMimeMessage(msg->encodedContent(true));
+    if (!folder.isEmpty()) {
+        mail.setFolder(folder);
+    }
     Sink::Store::create(mail).exec().waitForFinished();
 }
 
@@ -80,6 +83,10 @@ static void createFolder(const QVariantMap &object)
     auto folder = ApplicationDomainType::createEntity<Folder>(object["resource"].toByteArray());
     folder.setName(object["name"].toString());
     Sink::Store::create(folder).exec().waitForFinished();
+
+    iterateOverObjects(object.value("mails").toList(), [=](const QVariantMap &object) {
+        createMail(object, folder.identifier());
+    });
 }
 
 void TestStore::setup(const QVariantMap &map)
@@ -119,7 +126,9 @@ void TestStore::setup(const QVariantMap &map)
     });
 
     iterateOverObjects(map.value("folders").toList(), createFolder);
-    iterateOverObjects(map.value("mails").toList(), createMail);
+    iterateOverObjects(map.value("mails").toList(), [] (const QVariantMap &map) {
+        createMail(map);
+    });
 
     Sink::ResourceControl::flushMessageQueue(resources).exec().waitForFinished();
 }
