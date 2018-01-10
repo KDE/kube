@@ -10,6 +10,8 @@ cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0053 NEW)
 cmake_policy(SET CMP0063 NEW)
 
+option(EXPERIMENTAL_VIEWS "Install experimental views" OFF)
+
 include(CPack)
 include(FeatureSummary)
 find_package(PkgConfig REQUIRED)

@@ -4,6 +4,7 @@ ConversationView 1.0 ConversationView.qml
 ConversationListView 1.0 ConversationListView.qml
 FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml
+MailViewer 1.0 MailViewer.qml
 InlineAccountSwitcher 1.0 InlineAccountSwitcher.qml
 NewAccountDialog 1.0 NewAccountDialog.qml
 EditAccount 1.0 EditAccount.qml

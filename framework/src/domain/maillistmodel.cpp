@@ -339,3 +339,43 @@ bool MailListModel::showDrafts() const
 {
     return false;
 }
+
+void MailListModel::setShowInbox(bool)
+{
+    using namespace Sink::ApplicationDomain;
+
+    Sink::Query folderQuery{};
+    folderQuery.containsFilter<Sink::ApplicationDomain::Folder::SpecialPurpose>(Sink::ApplicationDomain::SpecialPurpose::Mail::inbox);
+    folderQuery.request<Sink::ApplicationDomain::Folder::SpecialPurpose>();
+    folderQuery.request<Sink::ApplicationDomain::Folder::Name>();
+
+    Sink::Query query;
+    query.setFlags(Sink::Query::LiveQuery);
+    query.filter<Sink::ApplicationDomain::Mail::Folder>(folderQuery);
+    query.sort<Mail::Date>();
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::Draft>();
+    query.request<Mail::Folder>();
+    query.request<Mail::Sent>();
+    query.request<Mail::Trash>();
+    query.request<Mail::MimeMessage>();
+    query.request<Mail::FullPayloadAvailable>();
+    mFetchMails = true;
+    mFetchedMails.clear();
+    qDebug() << "Running mail query for drafts: ";
+    //Latest mail at the top
+    sort(0, Qt::DescendingOrder);
+    runQuery(query);
+}
+
+bool MailListModel::showInbox() const
+{
+    return false;
+}
