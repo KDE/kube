@@ -74,6 +74,7 @@ FocusScope {
                 }
 
                 Kube.FolderListView {
+                    objectName: "folderListView"
                     anchors {
                         top: accountButton.bottom
                         left: parent.left

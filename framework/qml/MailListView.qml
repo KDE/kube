@@ -109,6 +109,7 @@ FocusScope {
 
         Kube.ListView {
             id: listView
+            objectName: "listView"
 
             Layout.fillWidth: true
             Layout.fillHeight: true

@@ -53,6 +53,7 @@ FocusScope {
 
         Kube.ConversationListView {
             id: listView
+            objectName: "listView"
             focus: true
 
             anchors {

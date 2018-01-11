@@ -168,6 +168,17 @@ QVariant TestStore::load(const QByteArray &type, const QVariantMap &filter)
         }
         return {};
     }
+    if (type == "folder") {
+        Sink::Query query;
+        if (filter.contains("resource")) {
+            query.resourceFilter(filter.value("resource").toByteArray());
+        }
+        auto list = Sink::Store::read<Folder>(query);
+        if (!list.isEmpty()) {
+            return QVariant::fromValue(Folder::Ptr::create(list.first()));
+        }
+        return {};
+    }
 
     Q_ASSERT(false);
     return {};
