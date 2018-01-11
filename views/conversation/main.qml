@@ -56,13 +56,39 @@ ApplicationWindow {
                     name: "Folder 1",
                     mails: [{
                             resource: "resource1",
-                            subject: "subject",
+                            messageId: "<msg1@test.com>",
+                            date: "2017-07-24T15:46:29",
+                            subject: "subject1",
                             body: "body",
                             to: ["to@example.org"],
                             cc: ["cc@example.org"],
                             bcc: ["bcc@example.org"],
-                            draft: true
-                        }]
+                        },
+                        {
+                            resource: "resource1",
+                            inReplyTo: "<msg1@test.com>",
+                            date: "2017-07-24T16:46:29",
+                            subject: "subject2",
+                            body: "body2",
+                            to: ["to@example.org"],
+                        },
+                        {
+                            resource: "resource1",
+                            inReplyTo: "<msg1@test.com>",
+                            date: "2017-07-24T17:46:29",
+                            subject: "subject3",
+                            body: "body3\n\n\n\nfoo\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe End",
+                            to: ["to@example.org"],
+                        },
+                        {
+                            resource: "resource1",
+                            inReplyTo: "<msg1@test.com>",
+                            date: "2017-07-24T18:46:29",
+                            subject: "subject4",
+                            body: "body4",
+                            to: ["to@example.org"],
+                        },
+                    ]
                 }],
         }
         TestStore.setup(initialState)

@@ -77,6 +77,17 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
             {},
             {},
             {});
+    if (object.contains("messageId")) {
+        msg->messageID(true)->from7BitString(object["messageId"].toByteArray());
+    }
+    if (object.contains("inReplyTo")) {
+        msg->inReplyTo(true)->from7BitString(object["inReplyTo"].toByteArray());
+    }
+    if (object.contains("date")) {
+        msg->date(true)->setDateTime(QDateTime::fromString(object["date"].toString(), Qt::ISODate));
+    }
+
+    msg->assemble();
 
     auto mail = ApplicationDomainType::createEntity<Mail>(object["resource"].toByteArray());
     mail.setMimeMessage(msg->encodedContent(true));
