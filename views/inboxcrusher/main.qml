@@ -57,23 +57,30 @@ ApplicationWindow {
                     specialpurpose: ["inbox"],
                     mails: [{
                             resource: "resource1",
+                            messageId: "<msg1@test.com>",
+                            date: "2017-07-24T15:46:29",
                             subject: "subject1",
                             body: "body",
                             to: ["to@example.org"],
                             cc: ["cc@example.org"],
                             bcc: ["bcc@example.org"],
-                            draft: true
                         },
                         {
                             resource: "resource1",
+                            inReplyTo: "<msg1@test.com>",
+                            date: "2017-07-24T16:46:29",
                             subject: "subject2",
-                            body: "body",
+                            body: "body2",
                             to: ["to@example.org"],
-                            cc: ["cc@example.org"],
-                            bcc: ["bcc@example.org"],
-                            draft: true
-                        }
-                    ],
+                        },
+                        {
+                            resource: "resource1",
+                            date: "2017-07-24T18:46:29",
+                            subject: "subject4",
+                            body: "body4",
+                            to: ["to@example.org"],
+                        },
+                    ]
                 }],
         }
         TestStore.setup(initialState)
