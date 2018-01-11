@@ -26,12 +26,10 @@ FocusScope {
     property variant currentMail: null
 
     Keys.onRightPressed: {
-        modelIndexRetriever.currentIndex = modelIndexRetriever.currentIndex + 1
+        modelIndexRetriever.increaseCurrentIndex()
     }
     Keys.onLeftPressed: {
-        if (modelIndexRetriever.currentIndex > 0) {
-            modelIndexRetriever.currentIndex = modelIndexRetriever.currentIndex - 1
-        }
+        modelIndexRetriever.decreaseCurrentIndex()
     }
     Kube.ModelIndexRetriever {
         id: modelIndexRetriever
@@ -95,6 +93,18 @@ FocusScope {
             Kube.Button {
                 text: qsTr("Flag!")
                 onClicked: {
+                }
+            }
+            Kube.Button {
+                text: qsTr("Previous")
+                onClicked: {
+                    modelIndexRetriever.decreaseCurrentIndex()
+                }
+            }
+            Kube.Button {
+                text: qsTr("Next")
+                onClicked: {
+                    modelIndexRetriever.increaseCurrentIndex()
                 }
             }
         }
