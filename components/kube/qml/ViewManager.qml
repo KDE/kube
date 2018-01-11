@@ -58,6 +58,10 @@ StackView {
         if (root.depth > 0) {
             root.pop(StackView.Immediate)
         }
+        //Avoid trying to push the same item again, if its on top after pop
+        if (currentItem && currentItem.objectName == name) {
+            return
+        }
         var view = getView(name, replace)
         var item = push(view, properties, StackView.Immediate)
         item.parent = root
