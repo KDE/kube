@@ -30,5 +30,6 @@ AbstractButton {
       color: "transparent"
       border.width: 1
       border.color: Colors.buttonColor
+      visible: !enabled
     }
 }
