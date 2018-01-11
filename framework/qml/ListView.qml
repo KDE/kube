@@ -24,9 +24,10 @@ import org.kube.framework 1.0 as Kube
 ListView {
     id: root
     property Item mouseProxy: scrollHelper
+    property int availableWidth: scrollBar.visible ? width - scrollBar.width: width
 
     clip: true
-    ScrollBar.vertical: Kube.ScrollBar {}
+    ScrollBar.vertical: Kube.ScrollBar { id: scrollBar }
 
     Kube.ScrollHelper {
         id: scrollHelper

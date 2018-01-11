@@ -152,7 +152,7 @@ FocusScope {
                 //Required for D&D
                 property var mail: model.mail
 
-                width: listView.width - Kube.Units.smallSpacing
+                width: listView.availableWidth
                 height: Kube.Units.gridUnit * 5
 
                 color: Kube.Colors.viewBackgroundColor
