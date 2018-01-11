@@ -172,3 +172,16 @@ QVariant TestStore::load(const QByteArray &type, const QVariantMap &filter)
     Q_ASSERT(false);
     return {};
 }
+
+QVariantMap TestStore::read(const QVariant &object)
+{
+    using namespace Sink::ApplicationDomain;
+    QVariantMap map;
+    if (auto mail = object.value<Mail::Ptr>()) {
+        map.insert("subject", mail->getSubject());
+        map.insert("draft", mail->getDraft());
+        return map;
+    }
+    Q_ASSERT(false);
+    return {};
+}

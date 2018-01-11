@@ -93,5 +93,9 @@ TestCase {
 
         tryVerify(function(){ return TestStore.load("mail", {resource: "resource2"}) })
         tryVerify(function(){ return !TestStore.load("mail", {resource: "resource1"}) })
+
+        var outgoingMail = TestStore.read(TestStore.load("mail", {resource: "resource2"}))
+        compare(outgoingMail.subject, "subject")
+        compare(outgoingMail.draft, false)
     }
 }
