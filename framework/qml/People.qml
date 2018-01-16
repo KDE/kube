@@ -44,6 +44,16 @@ FocusScope {
             height: searchBar.height + Kube.Units.smallSpacing
             width: parent.width
 
+            Kube.PositiveButton {
+                anchors {
+                  verticalCenter: parent.verticalCenter
+                  left: parent.left
+                  leftMargin: Kube.Units.smallSpacing
+                }
+                text: "New Contact"
+                visible: stack.depth == 1
+            }
+
             Kube.IconButton {
                 anchors {
                     top: parent.top
@@ -60,14 +70,6 @@ FocusScope {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width * 0.5
                 placeholderText: "Search..."
-            }
-            Kube.IconButton {
-                anchors {
-                    top: parent.top
-                    right: parent.right
-                    rightMargin: Kube.Units.smallSpacing
-                }
-                iconName: Kube.Icons.addNew
             }
         }
 
@@ -336,17 +338,15 @@ FocusScope {
                         width: personPageRoot.width - Kube.Units.largeSpacing
 
                         Repeater {
-
                             model: contactController.emails
 
-                            Row {
+                            delegate: Row {
                                 spacing: Kube.Units.smallSpacing
                                 Kube.Label { text: qsTr("(main)") }
                                 Kube.Label { text: modelData ; color: Kube.Colors.highlightColor }
                                 Item { width: Kube.Units.smallSpacing; height: 1 }
                             }
                         }
-
                     }
 
                     Flow {
