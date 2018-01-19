@@ -12,6 +12,7 @@ LoginAccount 1.0 LoginAccount.qml
 OverlayDialog 1.0 OverlayDialog.qml
 Outbox 1.0 Outbox.qml
 People 1.0 People.qml
+PersonPage 1.0 PersonPage.qml
 NotificationPopup 1.0 NotificationPopup.qml
 Icon 1.0 Icon.qml
 IconButton 1.0 IconButton.qml
