@@ -132,9 +132,9 @@ FocusScope {
         id: accountWizard
 
         parent: ApplicationWindow.overlay
-        height: app.height
-        width: app.width - app.sidebarWidth
-        x: app.sidebarWidth
+        height: root.height
+        width: root.width
+        x: root.mapToGlobal(root.x, root.y).x
         y: 0
 
         availableAccountPlugins: root.availableAccountPlugins

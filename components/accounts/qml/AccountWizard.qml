@@ -39,9 +39,9 @@ Kube.Popup {
         Component.onCompleted: {
             //If we only have one account type we skip the selection
             if (root.availableAccountPlugins.length == 1) {
-                stack.push(wizardPage.createObject(app, {accountType: root.availableAccountPlugins[0]}))
+                stack.push(wizardPage.createObject(stack, {accountType: root.availableAccountPlugins[0]}))
             } else {
-                stack.push(mainView.createObject(app))
+                stack.push(mainView.createObject(stack))
             }
         }
         onCurrentItemChanged: {
@@ -72,7 +72,7 @@ Kube.Popup {
                     delegate: Kube.Button {
                         Layout.fillWidth: true
                         text: modelData
-                        onClicked: stack.push(wizardPage.createObject(app, {accountType:modelData}))
+                        onClicked: stack.push(wizardPage.createObject(stack, {accountType:modelData}))
                     }
                 }
             }
