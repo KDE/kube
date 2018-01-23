@@ -76,7 +76,12 @@ Item {
                 }
                 height: item ? item.implicitHeight : 0
                 source: accountFactory.uiPath
-                onLoaded: item.accountId = root.accountId
+                Binding {
+                    target: loader.item
+                    property: "accountId"
+                    value: root.accountId
+                    when: loader.status == Loader.Ready
+                }
             }
             Kube.Button {
                 visible: accountFactory.requiresKeyring
@@ -84,7 +89,7 @@ Item {
                 text: qsTr("Change Password")
                 onClicked: {
                     Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
-                    Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": loader.item.accountIdentifier})
+                    Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": loader.item.accountId})
                 }
             }
         }
@@ -130,7 +135,7 @@ Item {
                     onClicked: {
                         if(loader.item.valid) {
                             loader.item.save()
-                            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
+                            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountId});
                             Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
                         } else {
                             console.warn("Invalid settings.");
