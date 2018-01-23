@@ -50,7 +50,9 @@ FocusScope {
                 }
                 text: qsTr("New Account")
 
-                onClicked: accountWizard.open()
+                onClicked: {
+                    accountWizardComponent.createObject(root, {}).open()
+                }
             }
 
             Kube.ListView {
@@ -112,32 +114,27 @@ FocusScope {
                     //FIXME: this assumes we load accounts synchronously, which we do right now.
                     if (accountId == "") {
                         //Require the setup to be completed since it's the first account
-                        accountWizard.requireSetup = true
-                        //Launch account wizard
-                        accountWizard.open()
+                        accountWizardComponent.createObject(root, {requireSetup: true}).open()
                     }
                 }
             }
         }
     }
 
-    onActiveFocusChanged: {
-        if (activeFocus && accountWizard.visible) {
-            accountWizard.forceActiveFocus()
-        }
-    }
-
     //BEGIN AccountWizard
-    KubeAccounts.AccountWizard {
-        id: accountWizard
+    Component {
+        id: accountWizardComponent
+        KubeAccounts.AccountWizard {
+            id: accountWizard
 
-        parent: ApplicationWindow.overlay
-        height: root.height
-        width: root.width
-        x: root.mapToGlobal(root.x, root.y).x
-        y: 0
+            parent: ApplicationWindow.overlay
+            height: root.height
+            width: root.width
+            x: root.mapToGlobal(root.x, root.y).x
+            y: 0
 
-        availableAccountPlugins: root.availableAccountPlugins
+            availableAccountPlugins: root.availableAccountPlugins
+        }
     }
     //END AccountWizard
 }

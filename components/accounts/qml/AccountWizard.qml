@@ -85,7 +85,7 @@ Kube.Popup {
             focus: true
             requireSetup: root.requireSetup
             onDone: {
-                root.close()
+                root.destroy()
                 Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
             }
         }
