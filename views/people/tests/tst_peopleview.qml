@@ -19,6 +19,7 @@
 
 import QtQuick 2.7
 import QtTest 1.0
+import org.kube.test 1.0
 import "../qml"
 
 TestCase {

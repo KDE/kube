@@ -22,6 +22,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Window 2.1
 import QtTest 1.0
 import org.kube.framework 1.0 as Kube
+import org.kube.test 1.0
 import "../qml"
 
 TestCase {
