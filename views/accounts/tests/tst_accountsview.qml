@@ -19,6 +19,7 @@
 
 import QtQuick 2.7
 import QtTest 1.0
+import org.kube.test 1.0
 import "../qml"
 
 TestCase {
@@ -26,12 +27,16 @@ TestCase {
     width: 400
     height: 400
     name: "AccountsView"
+    when: windowShown
 
-    View {
-        id: accountsView
+    Component {
+        id: accountsComponent
+        View {
+        }
     }
 
     function test_start() {
+        var accountsView = createTemporaryObject(accountsComponent, testCase, {})
         verify(accountsView)
     }
 }
