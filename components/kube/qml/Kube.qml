@@ -277,8 +277,8 @@ Controls2.ApplicationWindow {
                             bottomMargin: Kube.Units.largeSpacing
                         }
                         onDone: {
-                            popup.close()
                             kubeViews.currentItem.forceActiveFocus()
+                            popup.destroy()
                         }
                     }
                 }
