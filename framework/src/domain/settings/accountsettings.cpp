@@ -56,13 +56,10 @@ void AccountSettings::setAccountIdentifier(const QByteArray &id)
     mName = QString();
     mImapServer = QString();
     mImapUsername = QString();
-    mImapPassword = QString();
     mSmtpServer = QString();
     mSmtpUsername = QString();
-    mSmtpPassword = QString();
     mCardDavServer = QString();
     mCardDavUsername = QString();
-    mCardDavPassword = QString();
     mPath = QString();
     emit changed();
     emit imapResourceChanged();
@@ -292,9 +289,6 @@ void AccountSettings::saveImapResource()
             {"server", mImapServer},
             {"username", mImapUsername}
         });
-    if (!mImapPassword.isEmpty()) {
-        Kube::AccountKeyring{mAccountIdentifier}.storePassword(mImapIdentifier, mImapPassword);
-    }
 }
 
 void AccountSettings::saveCardDavResource()
@@ -303,9 +297,6 @@ void AccountSettings::saveCardDavResource()
             {"server", mCardDavServer},
             {"username", mCardDavUsername}
         });
-    if (!mCardDavPassword.isEmpty()) {
-        Kube::AccountKeyring{mAccountIdentifier}.storePassword(mCardDavIdentifier, mCardDavPassword);
-    }
 }
 
 void AccountSettings::saveMaildirResource()
@@ -321,9 +312,19 @@ void AccountSettings::saveMailtransportResource()
             {"server", mSmtpServer},
             {"username", mSmtpUsername}
         });
-    if (!mSmtpPassword.isEmpty()) {
-        Kube::AccountKeyring{mAccountIdentifier}.storePassword(mMailtransportIdentifier, mSmtpPassword);
-    }
+}
+
+void AccountSettings::login(const QVariantMap &secrets)
+{
+    auto accountSecret = secrets.value("accountSecret").toString();
+    Store::fetchAll<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier))
+        .then([=](const QList<SinkResource::Ptr> &resources) {
+            for (const auto &resource : resources) {
+                Kube::AccountKeyring{mAccountIdentifier}.storePassword(resource->identifier(), accountSecret);
+            }
+        }).onError([](const KAsync::Error &error) {
+            qWarning() << "Failed to load any account resources resource: " << error;
+        }).exec();
 }
 
 void AccountSettings::saveIdentity()

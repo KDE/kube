@@ -33,7 +33,7 @@ Item {
     }
 
     function login(){
-        settings.save()
+        settings.login({accountSecret: pwField.text})
     }
 
     GridLayout {
@@ -55,8 +55,6 @@ Item {
             focus: true
 
             placeholderText: qsTr("Password of your Kolab Now account")
-            text: settings.imapPassword
-            onTextChanged: settings.imapPassword = text
         }
     }
 }

@@ -38,7 +38,6 @@ void GmailSettings::save()
 
     mSmtpServer = "smtps://smtp.gmail.com:465";
     mSmtpUsername = mEmailAddress;
-    mSmtpPassword = mImapPassword;
 
     saveAccount();
     saveImapResource();
