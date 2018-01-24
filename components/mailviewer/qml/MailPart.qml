@@ -46,10 +46,12 @@ Item {
             top: parent.top
             left: border.right
             leftMargin: Kube.Units.smallSpacing
+            right: parent.right
         }
 
         text: qsTr("sent by %1 on %2").arg(root.sender).arg(root.date)
         color: "grey"
+        clip: true
     }
     ListView {
         id: partListView
