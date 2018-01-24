@@ -63,19 +63,6 @@ Item {
         }
 
         Kube.Label {
-            text: qsTr("Title of Account")
-            Layout.alignment: Qt.AlignRight
-        }
-        Kube.TextField {
-            Layout.fillWidth: true
-            placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
-            text: gmailSettings.accountName
-            onTextChanged: {
-                gmailSettings.accountName = text
-            }
-        }
-
-        Kube.Label {
             text: qsTr("Name")
             Layout.alignment: Qt.AlignRight
         }
@@ -98,6 +85,7 @@ Item {
             text: gmailSettings.emailAddress
             onTextChanged: {
                 gmailSettings.emailAddress = text
+                gmailSettings.accountName = text
             }
             placeholderText: qsTr("Your email address")
         }
