@@ -29,7 +29,7 @@ Item {
 
     function login() {
         loader.item.login()
-        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountId});
         root.done()
     }
 

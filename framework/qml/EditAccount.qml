@@ -89,7 +89,7 @@ Item {
                 text: qsTr("Change Password")
                 onClicked: {
                     Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
-                    Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": loader.item.accountId})
+                    Kube.Fabric.postMessage(Kube.Messages.requestLogin, {accountId: loader.item.accountId})
                 }
             }
         }
