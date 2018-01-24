@@ -24,7 +24,6 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property string accountId
-    property bool canRemove: true
 
     signal done()
 
