@@ -157,27 +157,42 @@ void TestStore::setup(const QVariantMap &map)
 QVariant TestStore::load(const QByteArray &type, const QVariantMap &filter)
 {
     using namespace Sink::ApplicationDomain;
+    const auto list = loadList(type, filter);
+    if (!list.isEmpty()) {
+        return list.first();
+    }
+    return {};
+}
+
+template <typename T>
+QVariantList toVariantList(const QList<T> &list)
+{
+    QVariantList result;
+    std::transform(list.constBegin(), list.constEnd(), std::back_inserter(result), [] (const T &m) {
+        return QVariant::fromValue(T::Ptr::create(m));
+    });
+    Q_ASSERT(list.size() == result.size());
+    return result;
+}
+
+QVariantList TestStore::loadList(const QByteArray &type, const QVariantMap &filter)
+{
+    using namespace Sink::ApplicationDomain;
+    Sink::Query query;
+    if (filter.contains("resource")) {
+        query.resourceFilter(filter.value("resource").toByteArray());
+    }
     if (type == "mail") {
-        Sink::Query query;
-        if (filter.contains("resource")) {
-            query.resourceFilter(filter.value("resource").toByteArray());
-        }
-        auto list = Sink::Store::read<Mail>(query);
-        if (!list.isEmpty()) {
-            return QVariant::fromValue(Mail::Ptr::create(list.first()));
-        }
-        return {};
+        return toVariantList(Sink::Store::read<Mail>(query));
     }
     if (type == "folder") {
-        Sink::Query query;
-        if (filter.contains("resource")) {
-            query.resourceFilter(filter.value("resource").toByteArray());
-        }
-        auto list = Sink::Store::read<Folder>(query);
-        if (!list.isEmpty()) {
-            return QVariant::fromValue(Folder::Ptr::create(list.first()));
-        }
-        return {};
+        return toVariantList(Sink::Store::read<Folder>(query));
+    }
+    if (type == "resource") {
+        return toVariantList(Sink::Store::read<SinkResource>(query));
+    }
+    if (type == "account") {
+        return toVariantList(Sink::Store::read<SinkAccount>(query));
     }
 
     Q_ASSERT(false);

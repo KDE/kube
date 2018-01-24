@@ -29,14 +29,50 @@ TestCase {
     name: "AccountsView"
     when: windowShown
 
+    function visitChildren(item) {
+        console.warn(item)
+        for (var i = 0; i < item.children.length; i++) {
+            visitChildren(item.children[i])
+        }
+    }
+
     Component {
         id: accountsComponent
         View {
         }
     }
 
-    function test_start() {
+    function test_1start() {
         var accountsView = createTemporaryObject(accountsComponent, testCase, {})
         verify(accountsView)
+    }
+
+    function test_2createAccount() {
+        var accountsView = createTemporaryObject(accountsComponent, testCase, {})
+        verify(accountsView)
+
+        var accountWizard = findChild(accountsView, "accountWizard");
+        verify(accountWizard)
+
+        var typeButton = findChild(accountWizard.contentItem, "accountTypeButton" + "kolabnow")
+        verify(typeButton)
+        typeButton.clicked()
+
+        var name = findChild(accountWizard.contentItem, "nameTextField")
+        verify(name)
+        name.text = "Name"
+
+        var email = findChild(accountWizard.contentItem, "emailTextField")
+        verify(email)
+        email.text = "email@test.com"
+
+        var save = findChild(accountWizard.contentItem, "saveButton")
+        verify(save)
+        save.clicked()
+
+        var accounts = TestStore.loadList("account", {})
+        compare(accounts.length, 1)
+        var resources = TestStore.loadList("resource", {})
+        compare(resources.length, 3)
     }
 }

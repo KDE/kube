@@ -70,6 +70,7 @@ Kube.Popup {
                 Repeater {
                     model: root.availableAccountPlugins
                     delegate: Kube.Button {
+                        objectName: "accountTypeButton" + modelData
                         Layout.fillWidth: true
                         text: modelData
                         onClicked: stack.push(wizardPage.createObject(stack, {accountType:modelData}))
