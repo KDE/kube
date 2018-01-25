@@ -107,6 +107,9 @@ void ListPropertyController::add(const QVariantMap &value)
         item->setData(value.value(k), mRoles[k]);
     }
     mModel->appendRow(QList<QStandardItem*>() << item);
+    if (mModel->rowCount() <= 1) {
+        emit emptyChanged();
+    }
     emit added(id, value);
 }
 
@@ -117,9 +120,17 @@ void ListPropertyController::remove(const QByteArray &id)
     for (int row = 0; row < root->rowCount(); row++) {
         if (root->child(row, 0)->data(idRole).toByteArray() == id) {
             root->removeRow(row);
-            return;
+            break;
         }
     }
+    if (mModel->rowCount() <= 0) {
+        emit emptyChanged();
+    }
+}
+
+bool ListPropertyController::empty() const
+{
+    return mModel->rowCount() == 0;
 }
 
 void ListPropertyController::clear()

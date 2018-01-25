@@ -44,7 +44,7 @@ Kube.View {
 
             property bool foundAllKeys: to.foundAllKeys && cc.foundAllKeys && bcc.foundAllKeys
 
-            sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys)
+            sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys) && !composerController.to.empty
             saveAsDraftAction.enabled: composerController.accountId
         }
     ]
