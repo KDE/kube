@@ -158,7 +158,10 @@ Kube.IconButton {
                 visible: listView.count != 0
 
                 text: qsTr("Send now")
-                onClicked: Kube.Fabric.postMessage(Kube.Messages.sendOutbox, {})
+                onClicked: {
+                    Kube.Fabric.postMessage(Kube.Messages.sendOutbox, {})
+                    dialog.close()
+                }
             }
 
             Kube.Label {
