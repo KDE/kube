@@ -235,12 +235,10 @@ class AlternativeMessagePart : public MessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<AlternativeMessagePart> Ptr;
-    AlternativeMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, Util::HtmlMode preferredMode);
+    AlternativeMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node);
     virtual ~AlternativeMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
-
-    Util::HtmlMode preferredMode() const;
 
     bool isHtml() const Q_DECL_OVERRIDE;
 
@@ -249,8 +247,6 @@ public:
 
     QList<Util::HtmlMode> availableModes();
 private:
-    Util::HtmlMode mPreferredMode;
-
     QMap<Util::HtmlMode, KMime::Content *> mChildNodes;
     QMap<Util::HtmlMode, MimeMessagePart::Ptr> mChildParts;
 

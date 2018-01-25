@@ -558,9 +558,8 @@ QString MimeMessagePart::htmlContent() const
 
 //-----AlternativeMessagePart----------------------
 
-AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Content *node, Util::HtmlMode preferredMode)
+AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Content *node)
     : MessagePart(otp, QString(), node)
-    , mPreferredMode(preferredMode)
 {
     KMime::Content *dataIcal = findTypeInDirectChilds(mNode, "text/calendar");
     KMime::Content *dataHtml = findTypeInDirectChilds(mNode, "text/html");
@@ -610,11 +609,6 @@ AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Con
 AlternativeMessagePart::~AlternativeMessagePart()
 {
 
-}
-
-Util::HtmlMode AlternativeMessagePart::preferredMode() const
-{
-    return mPreferredMode;
 }
 
 QList<Util::HtmlMode> AlternativeMessagePart::availableModes()
