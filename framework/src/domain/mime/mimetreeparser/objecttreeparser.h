@@ -287,9 +287,9 @@ private:
     * top-level content.
     */
     MessagePartPtr parseObjectTreeInternal(KMime::Content *node, bool mOnlyOneMimePart);
-    MessagePartPtr processType(KMime::Content *node, const QByteArray &mediaType, const QByteArray &subType, bool onlyOneMimePart);
+    MessagePartPtr processType(KMime::Content *node, const QByteArray &mediaType, const QByteArray &subType);
 
-    MessagePartPtr defaultHandling(KMime::Content *node, bool onlyOneMimePart);
+    MessagePartPtr defaultHandling(KMime::Content *node);
 
 private:
 

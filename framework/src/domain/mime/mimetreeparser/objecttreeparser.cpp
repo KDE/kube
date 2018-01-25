@@ -395,7 +395,7 @@ MessagePartPtr ObjectTreeParser::parsedPart() const
     return mParsedPart;
 }
 
-MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, const QByteArray &mediaType, const QByteArray &subType, bool onlyOneMimePart)
+MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, const QByteArray &mediaType, const QByteArray &subType)
 {
     static MimeTreeParser::BodyPartFormatterBaseFactory factory;
     const auto sub = factory.subtypeRegistry(mediaType.constData());
@@ -455,18 +455,18 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
         }
 
         //Try the specific type handler
-        if (auto mp = processType(node, mediaType, subType, onlyOneMimePart)) {
+        if (auto mp = processType(node, mediaType, subType)) {
             if (mp) {
                 parsedPart->appendSubPart(mp);
             }
         //Fallback to the generic handler
-        } else if (auto mp = processType(node, mediaType, "*", onlyOneMimePart)) {
+        } else if (auto mp = processType(node, mediaType, "*")) {
             if (mp) {
                 parsedPart->appendSubPart(mp);
             }
         //Fallback to the default handler
         } else {
-            if (auto mp = defaultHandling(node, onlyOneMimePart)) {
+            if (auto mp = defaultHandling(node)) {
                 parsedPart->appendSubPart(mp);
             }
         }
@@ -480,14 +480,14 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
     return parsedPart;
 }
 
-MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node, bool onlyOneMimePart)
+MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node)
 {
     if (node->contentType()->mimeType() == QByteArrayLiteral("application/octet-stream") &&
             (node->contentType()->name().endsWith(QLatin1String("p7m")) ||
              node->contentType()->name().endsWith(QLatin1String("p7s")) ||
              node->contentType()->name().endsWith(QLatin1String("p7c"))
             )) {
-        if (auto mp = processType(node, "application", "pkcs7-mime", onlyOneMimePart)) {
+        if (auto mp = processType(node, "application", "pkcs7-mime")) {
             return mp;
         }
     }
