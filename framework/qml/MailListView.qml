@@ -33,7 +33,10 @@ FocusScope {
     property bool isUnread : false
     property variant currentMail: null
 
-    onCurrentMailChanged: Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail":currentMail})
+    onCurrentMailChanged: {
+        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentMail})
+        Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
+    }
 
     Kube.Listener {
         filter: Kube.Messages.folderSelection
