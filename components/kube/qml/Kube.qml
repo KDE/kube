@@ -253,7 +253,8 @@ Controls2.ApplicationWindow {
             Kube.Listener {
                 filter: Kube.Messages.requestLogin
                 onMessageReceived: {
-                    loginView.createObject(kubeViews, {accountId: message.accountId})
+                    var view = loginView.createObject(kubeViews, {accountId: message.accountId})
+                    view.forceActiveFocus()
                 }
             }
 
