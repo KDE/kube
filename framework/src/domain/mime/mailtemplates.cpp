@@ -188,9 +188,9 @@ QByteArray getRefStr(const KMime::Message::Ptr &msg)
     return retRefStr;
 }
 
-KMime::Content *createPlainPartContent(const KMime::Message::Ptr &msg, const QString &plainBody)
+KMime::Content *createPlainPartContent(const QString &plainBody, KMime::Content *parent = nullptr)
 {
-    KMime::Content *textPart = new KMime::Content(msg.data());
+    KMime::Content *textPart = new KMime::Content(parent);
     textPart->contentType()->setMimeType("text/plain");
     //FIXME This is supposed to select a charset out of the available charsets that contains all necessary characters to render the text
     // QTextCodec *charset = selectCharset(m_charsets, plainBody);
@@ -201,17 +201,16 @@ KMime::Content *createPlainPartContent(const KMime::Message::Ptr &msg, const QSt
     return textPart;
 }
 
-KMime::Content *createMultipartAlternativeContent(const KMime::Message::Ptr &msg, const QString &plainBody, const QString &htmlBody)
+KMime::Content *createMultipartAlternativeContent(const QString &plainBody, const QString &htmlBody, KMime::Message *parent = nullptr)
 {
-    KMime::Content *multipartAlternative = new KMime::Content(msg.data());
+    KMime::Content *multipartAlternative = new KMime::Content(parent);
     multipartAlternative->contentType()->setMimeType("multipart/alternative");
-    const QByteArray boundary = KMime::multiPartBoundary();
-    multipartAlternative->contentType()->setBoundary(boundary);
+    multipartAlternative->contentType()->setBoundary(KMime::multiPartBoundary());
 
-    KMime::Content *textPart = createPlainPartContent(msg, plainBody);
+    KMime::Content *textPart = createPlainPartContent(plainBody, multipartAlternative);
     multipartAlternative->addContent(textPart);
 
-    KMime::Content *htmlPart = new KMime::Content(msg.data());
+    KMime::Content *htmlPart = new KMime::Content(multipartAlternative);
     htmlPart->contentType()->setMimeType("text/html");
     //FIXME This is supposed to select a charset out of the available charsets that contains all necessary characters to render the text
     // QTextCodec *charset = selectCharset(m_charsets, htmlBody);
@@ -242,8 +241,8 @@ void addProcessedBodyToMessage(const KMime::Message::Ptr &msg, const QString &pl
     const QByteArray boundary = KMime::multiPartBoundary();
     KMime::Content *const mainTextPart =
         htmlBody.isEmpty() ?
-        createPlainPartContent(msg, plainBody) :
-        createMultipartAlternativeContent(msg, plainBody, htmlBody);
+        createPlainPartContent(plainBody, msg.data()) :
+        createMultipartAlternativeContent(plainBody, htmlBody, msg.data());
     mainTextPart->assemble();
 
     KMime::Content *textPart = mainTextPart;
@@ -908,33 +907,11 @@ static KMime::Content *createAttachmentPart(const QByteArray &content, const QSt
     return part;
 }
 
-static KMime::Content *createPlainBodyPart(const QString &body) {
-    auto mainMessage = new KMime::Content;
-    mainMessage->setBody(body.toUtf8());
-    mainMessage->contentType(true)->setMimeType("text/plain");
-    return mainMessage;
-}
-
-static KMime::Content *createHtmlBodyPart(const QString &body) {
-    auto mainMessage = new KMime::Content;
-    mainMessage->setBody(body.toUtf8());
-    mainMessage->contentType(true)->setMimeType("text/html");
-    return mainMessage;
-}
-
-static KMime::Content *createBodyPart(const QByteArray &body, bool htmlBody) {
+static KMime::Content *createBodyPart(const QString &body, bool htmlBody) {
     if (htmlBody) {
-        auto bodyPart = new KMime::Content;
-        bodyPart->contentType(true)->setMimeType("multipart/alternative");
-        bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
-
-        bodyPart->addContent(createPlainBodyPart(toPlainText(body)));
-        bodyPart->addContent(createHtmlBodyPart(body));
-        return bodyPart;
-    } else {
-        return createPlainBodyPart(body);
+        return createMultipartAlternativeContent(toPlainText(body), body);
     }
-    return nullptr;
+    return createPlainPartContent(body);
 }
 
 static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list)
@@ -999,13 +976,13 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
             bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
             bodyPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
             bodyPart->setPreamble("This is a multi-part message in MIME format.\n");
-            bodyPart->addContent(createBodyPart(body.toUtf8(), htmlBody));
+            bodyPart->addContent(createBodyPart(body, htmlBody));
             for (const auto &attachment : attachments) {
                 bodyPart->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
             }
             return bodyPart;
         } else {
-            return createBodyPart(body.toUtf8(), htmlBody);
+            return createBodyPart(body, htmlBody);
         }
     }()};
     bodyPart->assemble();
