@@ -129,12 +129,11 @@ TestCase {
                 }]
         }
         TestStore.setup(initialState)
-        var composer = createTemporaryObject(composerComponent, testCase, {})
 
         var createdMail = TestStore.load("mail", {resource: "resource1"})
+        var composer = createTemporaryObject(composerComponent, testCase, {message: createdMail, loadAsDraft: false})
+        composer.setup()
 
-        var loadAsDraft = false
-        composer.loadMessage(createdMail, loadAsDraft)
         var subject = findChild(composer, "subject");
         verify(subject)
         tryVerify(function(){ return subject.text == "RE: subject" })

@@ -49,9 +49,8 @@ Kube.View {
         }
     ]
 
-    Component.onCompleted: loadMessage(root.message, root.loadAsDraft)
-
-    Controls2.StackView.onActivated: {
+    onSetup: {
+        loadMessage(root.message, root.loadAsDraft)
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "mail", "specialPurpose": "drafts"})
         //For autocompletion
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})

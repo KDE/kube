@@ -32,6 +32,12 @@ FocusScope {
     property int count: contentItems.length
     default property alias contentItems: content.data
 
+    //This signal will be emitted once all initial properties have been set and the view is ready to load
+    signal setup()
+    Controls2.StackView.onActivated: {
+        root.setup()
+    }
+
     onCurrentIndexChanged: showRelevantSplits()
     Component.onCompleted: showRelevantSplits()
 
