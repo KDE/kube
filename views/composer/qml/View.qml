@@ -247,6 +247,7 @@ Kube.View {
 
             Kube.TextField {
                 id: subject
+                objectName: "subject"
                 Layout.fillWidth: true
                 activeFocusOnTab: true
 

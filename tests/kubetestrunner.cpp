@@ -18,10 +18,12 @@
 */
 #include <QtQuickTest/quicktest.h>
 #include <QQmlEngine>
+#include <QApplication>
 #include <sink/test.h>
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
 
     QTEST_ADD_GPU_BLACKLIST_SUPPORT

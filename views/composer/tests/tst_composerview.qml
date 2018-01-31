@@ -98,4 +98,46 @@ TestCase {
         compare(outgoingMail.subject, "subject")
         compare(outgoingMail.draft, false)
     }
+
+    function test_4loadReply() {
+        var initialState = {
+            accounts: [{
+                    id: "account1",
+                }],
+            identities: [{
+                    account: "account1",
+                    name: "Test Identity",
+                    address: "identity@example.org"
+                }],
+            resources: [{
+                    id: "resource1",
+                    account: "account1",
+                    type: "dummy"
+                },
+                {
+                    id: "resource2",
+                    account: "account1",
+                    type: "mailtransport"
+                }],
+                mails:[{
+                    resource: "resource1",
+                    subject: "subject",
+                    body: "body",
+                    to: ["to@example.org"],
+                    cc: ["cc@example.org"],
+                    bcc: ["bcc@example.org"],
+                }]
+        }
+        TestStore.setup(initialState)
+        var composer = createTemporaryObject(composerComponent, testCase, {})
+
+        var createdMail = TestStore.load("mail", {resource: "resource1"})
+
+        var loadAsDraft = false
+        composer.loadMessage(createdMail, loadAsDraft)
+        var subject = findChild(composer, "subject");
+        verify(subject)
+        tryVerify(function(){ return subject.text == "RE: subject" })
+        tryVerify(function(){ return subject.body != "" })
+    }
 }
