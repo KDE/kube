@@ -97,7 +97,7 @@ FocusScope {
                 id: edit
 
                 width: flickableItem.width
-                height: flickableItem.height
+                height: contentHeight
 
                 focus: true
                 selectByMouse: true
