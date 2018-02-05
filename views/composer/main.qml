@@ -66,6 +66,17 @@ ApplicationWindow {
                             bcc: ["bcc@example.org"],
                             draft: true
                         },
+                        {
+                            resource: "resource1",
+                            messageId: "<msg2@test.com>",
+                            date: "2017-07-23T15:46:29",
+                            subject: "LooooooooooooooooooooooooooooooooooooooooooooooooooooooooonggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggEnd",
+                            body: "body\nbody\n\n\nbody\n\n\nbody\n\n\nbody\n\n\nbody\nbody\n\n\nbody\n\n\nbody\n\n\nbody\n\n\nbody\n\n\n\n\n\n\n\n\nbody\nbody\n\n\nbody\n\n\nbody\n\n\nbody\n\n\nbody\n\n\nbody",
+                            to: ["toLoooooooooooooooooooooooooooooooooooooooooooooooooong@example.org"],
+                            cc: ["ccLoooooooooooooooooooooooooooooooooooooooooooooooooong@example.org"],
+                            bcc: ["bccLoooooooooooooooooooooooooooooooooooooooooooooooooong@example.org"],
+                            draft: true
+                        }
                     ]
                 }],
         }
