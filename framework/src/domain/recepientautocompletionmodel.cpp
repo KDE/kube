@@ -30,7 +30,7 @@
 using namespace Sink::ApplicationDomain;
 
 RecipientAutocompletionModel::RecipientAutocompletionModel(QObject *parent)
-    : QSortFilterProxyModel(),
+    : QSortFilterProxyModel(parent),
     mSourceModel(new QStandardItemModel),
     mTimer(new QTimer)
 {

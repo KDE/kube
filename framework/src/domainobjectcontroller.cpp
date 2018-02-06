@@ -95,7 +95,7 @@ void DomainObjectController::monitor(const QVariant &object)
     mModel = Sink::Store::loadModel<Mail>(query);
     QObject::connect(mModel.data(), &QAbstractItemModel::rowsInserted, [=](const QModelIndex &index, int start, int end) {
         for (int i = start; i <= end; i++) {
-            auto mail = mModel->index(i, 0, QModelIndex()).data(Sink::Store::DomainObjectRole).value<Mail::Ptr>();
+            auto mail = mModel->index(i, 0, index).data(Sink::Store::DomainObjectRole).value<Mail::Ptr>();
             mCurrentObject = QVariant::fromValue(mail);
             emit currentObjectChanged();
             break;

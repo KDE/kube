@@ -146,7 +146,7 @@ public:
     SinkNotifier()
         : mNotifier{Sink::Query{Sink::Query::LiveQuery}}
     {
-        mNotifier.registerHandler([this] (const Sink::Notification &notification) {
+        mNotifier.registerHandler([] (const Sink::Notification &notification) {
             Notification n;
             SinkLog() << "Received notification: " << notification;
             QVariantMap message;

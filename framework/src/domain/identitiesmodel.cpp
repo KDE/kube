@@ -22,7 +22,7 @@
 
 using namespace Sink;
 
-IdentitiesModel::IdentitiesModel(QObject *parent) : QIdentityProxyModel()
+IdentitiesModel::IdentitiesModel(QObject *parent) : QIdentityProxyModel(parent)
 {
     Sink::Query query;
     query.setFlags(Query::LiveQuery);
