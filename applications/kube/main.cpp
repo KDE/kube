@@ -38,6 +38,8 @@
 #include <QFileInfo>
 #include <QFont>
 #include <QDebug>
+#include <QTimer>
+#include <sink/store.h>
 
 #include "framework/src/keyring.h"
 #include "kube_version.h"
@@ -130,6 +132,18 @@ void terminateHandler()
     std::abort();
 }
 
+
+QString findFile(const QString file, const QStringList importPathList)
+{
+    for (const auto &path : importPathList) {
+        const QString f = path + file;
+        if (QFileInfo::exists(f)) {
+            return f;
+        }
+    }
+    return {};
+}
+
 int main(int argc, char *argv[])
 {
     std::signal(SIGSEGV, crashHandler);
@@ -150,6 +164,7 @@ int main(int argc, char *argv[])
     parser.addOption({{"k", "keyring"},
         QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"), "keyring dictionary"}
     );
+    parser.addOption({{"u", "upgrade"}, "", ""});
     parser.process(app);
 
     if (parser.isSet("keyring")) {
@@ -168,17 +183,23 @@ int main(int argc, char *argv[])
         }
     }
 
+    {
+        bool upgradeComplete = false;
+        Sink::Store::upgrade().then([&] {
+            upgradeComplete = true;
+            app.quit();
+        }).exec();
+        if (!upgradeComplete) {
+            QQmlApplicationEngine engine;
+            const auto file = findFile("/org/kube/components/kube/upgrade.qml", engine.importPathList());
+            engine.load(QUrl::fromLocalFile(file));
+            app.exec();
+        }
+    }
+
     QQmlApplicationEngine engine;
     const auto file = "/org/kube/components/kube/main.qml";
-    const auto mainFile = [&] {
-        for (const auto &path : engine.importPathList()) {
-            QString f = path + file;
-            if (QFileInfo::exists(f)) {
-                return f;
-            }
-        }
-        return QString{};
-    }();
+    const auto mainFile = findFile(file, engine.importPathList());
     if (mainFile.isEmpty()) {
         qWarning() << "Failed to find " << file;
         qWarning() << "Searched: " << engine.importPathList();

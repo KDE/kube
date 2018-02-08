@@ -21,11 +21,29 @@ import QtQuick 2.4
 Repeater {
     id: root
     property var currentData
+    property int currentIndex: 0
+
+    function increaseCurrentIndex() {
+        if (currentIndex < count - 1) {
+            currentIndex = currentIndex + 1
+        }
+    }
+
+    function decreaseCurrentIndex() {
+        if (currentIndex > 0) {
+            currentIndex = currentIndex - 1
+        }
+    }
+
+    onCurrentIndexChanged: {
+        currentData = itemAt(currentIndex).currentData
+    }
     Item {
-        id: delegate
         property var currentData: model
         onCurrentDataChanged: {
-            root.currentData = model
+            if (index == root.currentIndex) {
+                root.currentData = model
+            }
         }
         visible: false
     }

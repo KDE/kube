@@ -33,7 +33,6 @@ void ImapSettings::load()
 
 void ImapSettings::save()
 {
-    mSmtpPassword = mImapPassword;
     saveAccount();
     saveImapResource();
     saveMailtransportResource();

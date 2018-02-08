@@ -177,6 +177,9 @@ Controls.SplitView {
                 if (subtype == Kube.Notifications.connectionError) {
                     return hostNotFoundErrorComponent
                 }
+                if (subtype == Kube.Notifications.transmissionError) {
+                    return transmissionErrorComponent
+                }
                 return detailsComponent
             }
 
@@ -326,4 +329,38 @@ Controls.SplitView {
             }
         }
     }
+
+    Component {
+        id: transmissionErrorComponent
+        Item {
+            Column {
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                spacing: Kube.Units.largeSpacing
+                Column {
+                    Kube.Heading {
+                        id: heading
+                        text: qsTr("Failed to send the message.")
+                        color: Kube.Colors.warningColor
+                    }
+                    Kube.Label {
+                        id: subHeadline
+                        text: accountName
+                        color: Kube.Colors.disabledTextColor
+                        wrapMode: Text.Wrap
+                    }
+                }
+                Kube.Button {
+                    text: qsTr("Try again")
+                    onClicked: {
+                        Kube.Fabric.postMessage(Kube.Messages.sendOutbox, {})
+                    }
+                }
+            }
+        }
+    }
+
 }

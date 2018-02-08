@@ -33,7 +33,7 @@ Item {
     }
 
     function login(){
-        settings.save()
+        settings.login({accountSecret: pwField.text})
     }
 
     GridLayout {
@@ -53,10 +53,7 @@ Item {
             id: pwField
             Layout.fillWidth: true
             focus: true
-
             placeholderText: qsTr("Password of your IMAP account")
-            text: settings.imapPassword
-            onTextChanged: settings.imapPassword = text
         }
     }
 }

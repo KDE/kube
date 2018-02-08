@@ -103,4 +103,5 @@ private:
 
     QScopedPointer<Completer> mRecipientCompleter;
     QScopedPointer<Selector> mIdentitySelector;
+    bool mRemoveDraft = false;
 };

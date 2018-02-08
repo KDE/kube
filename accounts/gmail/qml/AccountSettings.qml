@@ -27,7 +27,7 @@ Item {
 
     property string accountId
     property string heading: qsTr("Connect your GMail account")
-    property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube.")
+    property string subheadline: qsTr("To let Kube access your account, fill in email address, username and give the account a title that will be displayed inside Kube.")
     property bool valid: true
     implicitHeight: grid.implicitHeight
 
@@ -63,19 +63,6 @@ Item {
         }
 
         Kube.Label {
-            text: qsTr("Title of Account")
-            Layout.alignment: Qt.AlignRight
-        }
-        Kube.TextField {
-            Layout.fillWidth: true
-            placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
-            text: gmailSettings.accountName
-            onTextChanged: {
-                gmailSettings.accountName = text
-            }
-        }
-
-        Kube.Label {
             text: qsTr("Name")
             Layout.alignment: Qt.AlignRight
         }
@@ -98,25 +85,9 @@ Item {
             text: gmailSettings.emailAddress
             onTextChanged: {
                 gmailSettings.emailAddress = text
+                gmailSettings.accountName = text
             }
             placeholderText: qsTr("Your email address")
-        }
-
-        Kube.Label {
-            text: qsTr("Password")
-            Layout.alignment: Qt.AlignRight
-        }
-
-        Kube.PasswordField {
-            id: pwField
-            Layout.fillWidth: true
-
-            placeholderText: qsTr("Password of your email account")
-            text: gmailSettings.imapPassword
-            onTextChanged: {
-                gmailSettings.imapPassword = text
-                gmailSettings.smtpPassword = text
-            }
         }
     }
 }

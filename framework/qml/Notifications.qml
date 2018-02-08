@@ -28,5 +28,6 @@ Item {
     property string loginError: "loginError"
     property string hostNotFoundError: "hostNotFoundError"
     property string connectionError: "connectionError"
+    property string transmissionError: "transmissionError"
 }
 

@@ -30,7 +30,7 @@
 
 
 OutboxModel::OutboxModel(QObject *parent)
-    : QSortFilterProxyModel(),
+    : QSortFilterProxyModel(parent),
     mNotifier(new Sink::Notifier{Sink::Query{}.containsFilter<Sink::ApplicationDomain::SinkResource::Capabilities>(Sink::ApplicationDomain::ResourceCapabilities::Mail::transport)}),
     mStatus(NoStatus)
 {

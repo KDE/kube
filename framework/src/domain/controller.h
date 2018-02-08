@@ -109,6 +109,7 @@ class ListPropertyController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel* model READ model CONSTANT)
+    Q_PROPERTY(bool empty READ empty NOTIFY emptyChanged)
 
 public:
     ListPropertyController(const QStringList &roles);
@@ -132,8 +133,11 @@ public:
         return list;
     }
 
+    bool empty() const;
+
 Q_SIGNALS:
     void added(QByteArray, QVariantMap);
+    void emptyChanged();
 
 protected:
     QScopedPointer<QStandardItemModel> mModel;

@@ -56,6 +56,7 @@ Item {
         }
         Kube.RequiredTextField {
             id: nameField
+            objectName: "nameTextField"
             focus: true
             Layout.fillWidth: true
             placeholderText: qsTr("Your name")
@@ -71,6 +72,7 @@ Item {
         }
         Kube.RequiredTextField {
             id: emailField
+            objectName: "emailTextField"
             Layout.fillWidth: true
 
             text: kolabnowSettings.emailAddress

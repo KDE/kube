@@ -33,7 +33,10 @@ FocusScope {
     property bool isUnread : false
     property variant currentMail: null
 
-    onCurrentMailChanged: Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail":currentMail})
+    onCurrentMailChanged: {
+        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentMail})
+        Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
+    }
 
     Kube.Listener {
         filter: Kube.Messages.folderSelection
@@ -109,6 +112,7 @@ FocusScope {
 
         Kube.ListView {
             id: listView
+            objectName: "listView"
 
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -151,7 +155,7 @@ FocusScope {
                 //Required for D&D
                 property var mail: model.mail
 
-                width: listView.width - Kube.Units.smallSpacing
+                width: listView.availableWidth
                 height: Kube.Units.gridUnit * 5
 
                 color: Kube.Colors.viewBackgroundColor

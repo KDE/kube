@@ -1,0 +1,9 @@
+Most of this data has been imported from kdepim originally with the messagetreeparser.
+The .tree and .html files are anecdotal only.
+
+To generate new gpg encrypted content use an existing mime message to your liking, and then
+copy in ascii armored content in. The encrypted content can be created using:
+
+    gpg2 --home /src/kube/framework/src/domain/mime/mimetreeparser/tests/gnupg_home/ -a -r test@kolab.org --encrypt toEncrypt.txt
+
+where toEncrypt.txt contains the to be encrypted content.

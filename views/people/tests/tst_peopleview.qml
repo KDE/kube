@@ -19,19 +19,20 @@
 
 import QtQuick 2.7
 import QtTest 1.0
+import org.kube.test 1.0
 import "../qml"
 
 TestCase {
     id: testCase
     width: 400
     height: 400
-    name: "AccountsView"
+    name: "PeopleView"
 
-    AccountsView {
-        id: accountsView
+    View {
+        id: peopleView
     }
 
     function test_start() {
-        verify(accountsView)
+        verify(peopleView)
     }
 }

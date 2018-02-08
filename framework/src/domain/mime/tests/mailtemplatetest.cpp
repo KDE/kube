@@ -242,6 +242,7 @@ private slots:
         QCOMPARE(result->body(), body.toUtf8());
         QVERIFY(result->date(false)->dateTime().isValid());
         QVERIFY(result->contentType()->isMimeType("text/plain"));
+        QVERIFY(result->messageID(false) && !result->messageID(false)->isEmpty());
     }
 
     void testCreateHtmlMail()

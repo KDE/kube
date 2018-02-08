@@ -1,6 +1,5 @@
 /*
  *  Copyright (C) 2017 Michael Bohlender, <michael.bohlender@kdemail.net>
- *  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,36 +16,32 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.4
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0
+import QtQuick 2.7
+import QtQuick 2.7
+import QtQuick.Layouts 1.3
+import QtQuick.Window 2.0
+
+import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
-FocusScope {
-    id: root
-    property alias accountId: login.accountId
-    onActiveFocusChanged: {
-        if (activeFocus) {
-            popup.forceActiveFocus()
+Controls2.ApplicationWindow {
+    id: app
+    height: Screen.desktopAvailableHeight * 0.4
+    width: Screen.desktopAvailableWidth * 0.4
+    visible: true
+    font.family: Kube.Font.fontFamily
+    ColumnLayout  {
+        anchors {
+            centerIn: parent
+            margins: Kube.Units.largeSpacing
         }
-    }
-
-    Kube.Popup {
-        id: popup
-        visible: true
-        parent: ApplicationWindow.overlay
-        height: app.height
-        width: app.width - app.sidebarWidth
-        x: app.sidebarWidth
-        y: 0
-        modal: true
-        closePolicy: Popup.NoAutoClose
-        Kube.LoginAccount {
-            id: login
-            anchors {
-                fill: parent
-                bottomMargin: Kube.Units.largeSpacing
-            }
+        spacing: 0
+        Kube.Heading {
+            text: qsTr("Please wait while Kube is upgrading...")
+            color: Kube.Colors.highlightColor
+        }
+        Kube.Label {
+            text: qsTr("This might take a while.")
         }
     }
 }

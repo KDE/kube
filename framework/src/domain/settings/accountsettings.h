@@ -35,16 +35,13 @@ class AccountSettings : public QObject
     Q_PROPERTY(QString imapServer MEMBER mImapServer NOTIFY imapResourceChanged)
     Q_PROPERTY(QValidator* imapServerValidator READ imapServerValidator CONSTANT)
     Q_PROPERTY(QString imapUsername MEMBER mImapUsername NOTIFY imapResourceChanged)
-    Q_PROPERTY(QString imapPassword MEMBER mImapPassword NOTIFY imapResourceChanged)
 
     Q_PROPERTY(QString smtpServer MEMBER mSmtpServer NOTIFY smtpResourceChanged)
     Q_PROPERTY(QValidator* smtpServerValidator READ smtpServerValidator CONSTANT)
     Q_PROPERTY(QString smtpUsername MEMBER mSmtpUsername NOTIFY smtpResourceChanged)
-    Q_PROPERTY(QString smtpPassword MEMBER mSmtpPassword NOTIFY smtpResourceChanged)
 
     Q_PROPERTY(QString carddavServer MEMBER mCardDavServer NOTIFY cardDavResourceChanged)
     Q_PROPERTY(QString carddavUsername MEMBER mCardDavUsername NOTIFY cardDavResourceChanged)
-    Q_PROPERTY(QString carddavPassword MEMBER mCardDavPassword NOTIFY cardDavResourceChanged)
 
     Q_PROPERTY(QUrl path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(QValidator* pathValidator READ pathValidator CONSTANT)
@@ -68,6 +65,7 @@ public:
     Q_INVOKABLE virtual void load() = 0;
     Q_INVOKABLE virtual void save() = 0;
     Q_INVOKABLE virtual void remove() = 0;
+    Q_INVOKABLE void login(const QVariantMap &secrets);
 
 signals:
     void imapResourceChanged();
@@ -105,7 +103,6 @@ protected:
     QByteArray mImapIdentifier;
     QString mImapServer;
     QString mImapUsername;
-    QString mImapPassword;
 
     QByteArray mMaildirIdentifier;
     QString mPath;
@@ -113,7 +110,6 @@ protected:
     QByteArray mMailtransportIdentifier;
     QString mSmtpServer;
     QString mSmtpUsername;
-    QString mSmtpPassword;
 
     QByteArray mIdentityIdentifier;
     QString mUsername;
@@ -122,6 +118,5 @@ protected:
     QByteArray mCardDavIdentifier;
     QString mCardDavServer;
     QString mCardDavUsername;
-    QString mCardDavPassword;
 };
 

@@ -44,6 +44,16 @@ FocusScope {
             height: searchBar.height + Kube.Units.smallSpacing
             width: parent.width
 
+            Kube.PositiveButton {
+                anchors {
+                  verticalCenter: parent.verticalCenter
+                  left: parent.left
+                  leftMargin: Kube.Units.smallSpacing
+                }
+                text: "New Contact"
+                visible: stack.depth == 1
+            }
+
             Kube.IconButton {
                 anchors {
                     top: parent.top
@@ -60,14 +70,6 @@ FocusScope {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width * 0.5
                 placeholderText: "Search..."
-            }
-            Kube.IconButton {
-                anchors {
-                    top: parent.top
-                    right: parent.right
-                    rightMargin: Kube.Units.smallSpacing
-                }
-                iconName: Kube.Icons.addNew
             }
         }
 
@@ -213,169 +215,11 @@ FocusScope {
 
             color: Kube.Colors.viewBackgroundColor
 
-            Flickable {
-                id: personPageFlickable
-
-                anchors {
-                    fill: parent
-                    leftMargin: Kube.Units.largeSpacing
-                }
-
-                Controls2.ScrollBar.vertical: Kube.ScrollBar { }
-                contentHeight: contentColumn.height
-
-                clip: true
-
-                Kube.ScrollHelper {
-                    flickable: personPageFlickable
-                    anchors.fill: parent
-                }
-
-                ColumnLayout {
-                    id: contentColumn
-
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    spacing: Kube.Units.largeSpacing
-
-                    Item {
-                        width: parent.width
-                        height: Kube.Units.smallSpacing
-                    }
-
-                    Item {
-
-                        height: Kube.Units.gridUnit * 8
-                        width: personPageRoot.width - Kube.Units.largeSpacing
-
-                        Rectangle {
-                            id: avatar
-
-                            height: parent.height
-                            width: height
-                            Kube.KubeImage {
-                                anchors.fill: parent
-                                visible: contactController.imageData != ""
-                                imageData: contactController.imageData
-                            }
-                            Kube.Icon {
-                                anchors.fill: parent
-                                visible: contactController.imageData == ""
-                                iconName: Kube.Icons.user
-                            }
-                            color: Kube.Colors.buttonColor
-                        }
-
-                        Kube.Heading {
-                            id: nameLabel
-
-                            anchors {
-                                top: avatar.top
-                                left: avatar.right
-                                leftMargin: Kube.Units.largeSpacing
-                            }
-
-                            text: contactController.name
-                        }
-
-                        Kube.Label {
-                            id: jobTitle
-
-                            anchors {
-                                top: nameLabel.bottom
-                                left: avatar.right
-                                leftMargin: Kube.Units.largeSpacing
-                            }
-
-                            text: contactController.jobTitle
-                        }
-
-                        Rectangle {
-                            id: company
-                            visible: contactController.company != ""
-
-                            anchors {
-                                bottom: avatar.bottom
-                                left: avatar.right
-                                leftMargin: Kube.Units.largeSpacing
-                            }
-
-                            height: Kube.Units.gridUnit * 3
-                            width: Kube.Units.gridUnit * 10
-
-                            border.width: 1
-                            border.color: Kube.Colors.buttonColor
-
-                            Rectangle {
-                                id: av
-
-                                height: parent.height
-                                width: height
-
-                                color: Kube.Colors.buttonColor
-                            }
-
-                            Kube.Label {
-                                anchors {
-                                    verticalCenter: av.verticalCenter
-                                    left: av.right
-                                    leftMargin: Kube.Units.smallSpacing
-                                }
-
-                                text: contactController.company
-                            }
-                        }
-                    }
-
-                    Flow {
-                        id: emails
-
-                        width: personPageRoot.width - Kube.Units.largeSpacing
-
-                        Repeater {
-
-                            model: contactController.emails
-
-                            Row {
-                                spacing: Kube.Units.smallSpacing
-                                Kube.Label { text: qsTr("(main)") }
-                                Kube.Label { text: modelData ; color: Kube.Colors.highlightColor }
-                                Item { width: Kube.Units.smallSpacing; height: 1 }
-                            }
-                        }
-
-                    }
-
-                    Flow {
-                        id: phone
-
-                        width: personPageRoot.width - Kube.Units.largeSpacing
-                        spacing: Kube.Units.smallSpacing
-
-                        Repeater {
-                            model: contactController.phoneNumbers
-
-                            Row {
-                                spacing: Kube.Units.smallSpacing
-                                Kube.Label { text: qsTr("(main)") }
-                                Kube.Label { text: modelData ; opacity: 0.6 }
-                                Item { width: Kube.Units.smallSpacing; height: 1 }
-                            }
-                        }
-                    }
-
-                    Column {
-                        id: address
-
-                        width: personPageRoot.width - Kube.Units.largeSpacing
-
-                        Kube.Label { text: contactController.street }
-                        Kube.Label { text: contactController.city }
-                        Kube.Label { text: contactController.country }
-                    }
+            PersonPage {
+            }
+        }
+    }
+}
 
 //                     Column {
 //
@@ -418,12 +262,3 @@ FocusScope {
 //                         }
 //                     }
 
-                    Item {
-                        width: parent.width
-                        height: Kube.Units.largeSpacing
-                    }
-                }
-            }
-        }
-    }
-}

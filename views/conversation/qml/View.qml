@@ -35,6 +35,7 @@ FocusScope {
 
             Kube.PositiveButton {
                 id: newMailButton
+                objectName: "newMailButton"
 
                 anchors {
                     top: parent.top
@@ -104,6 +105,7 @@ FocusScope {
 
             Kube.MailListView  {
                 id: mailListView
+                objectName: "mailListView"
                 anchors.fill: parent
                 activeFocusOnTab: true
                 Layout.minimumWidth: Kube.Units.gridUnit * 10
@@ -112,6 +114,7 @@ FocusScope {
 
         Kube.ConversationView {
             id: mailView
+            objectName: "mailView"
             Layout.fillWidth: true
             Layout.fillHeight: parent.height
             activeFocusOnTab: true

@@ -24,12 +24,13 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property string accountId
-    property bool canRemove: true
+
+    signal done()
 
     function login() {
         loader.item.login()
-        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountIdentifier});
-        Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": loader.item.accountId});
+        root.done()
     }
 
     Kube.AccountFactory {

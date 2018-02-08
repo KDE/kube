@@ -44,14 +44,13 @@ Kube.View {
 
             property bool foundAllKeys: to.foundAllKeys && cc.foundAllKeys && bcc.foundAllKeys
 
-            sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys)
+            sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys) && !composerController.to.empty
             saveAsDraftAction.enabled: composerController.accountId
         }
     ]
 
-    Component.onCompleted: loadMessage(root.message, root.loadAsDraft)
-
-    Controls2.StackView.onActivated: {
+    onSetup: {
+        loadMessage(root.message, root.loadAsDraft)
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "mail", "specialPurpose": "drafts"})
         //For autocompletion
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
@@ -247,6 +246,7 @@ Kube.View {
 
             Kube.TextField {
                 id: subject
+                objectName: "subject"
                 Layout.fillWidth: true
                 activeFocusOnTab: true
 
@@ -517,6 +517,7 @@ Kube.View {
             }
 
             Kube.PositiveButton {
+                objectName: "sendButton"
                 id: sendButton
 
                 width: parent.width

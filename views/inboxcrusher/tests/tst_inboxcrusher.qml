@@ -22,24 +22,15 @@ import QtTest 1.0
 import "../qml"
 
 TestCase {
-    id: testCase
     width: 400
     height: 400
-    name: "ComposerView"
-    when: windowShown
+    name: "InboxCrusher"
 
-    ComposerView {
-        id: composer
-        focus: true
+    View {
+        id: view
     }
 
     function test_start() {
-        verify(composer)
-    }
-
-    function test_verifyInitialFocus() {
-        var newMailButton = findChild(composer, "newMailButton");
-        verify(newMailButton)
-        verify(newMailButton.activeFocus)
+        verify(view)
     }
 }

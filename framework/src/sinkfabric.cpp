@@ -146,14 +146,16 @@ public:
     SinkNotifier()
         : mNotifier{Sink::Query{Sink::Query::LiveQuery}}
     {
-        mNotifier.registerHandler([this] (const Sink::Notification &notification) {
+        mNotifier.registerHandler([] (const Sink::Notification &notification) {
             Notification n;
             SinkLog() << "Received notification: " << notification;
             QVariantMap message;
             if (notification.type == Sink::Notification::Warning) {
                 message["type"] = "warning";
+                message["resource"] = QString{notification.resource};
                 if (notification.code == Sink::ApplicationDomain::TransmissionError) {
                     message["message"] = QObject::tr("Failed to send message.");
+                    message["subtype"] = "transmissionError";
                 } else {
                     return;
                 }
@@ -186,7 +188,8 @@ public:
                         message["message"] = QObject::tr("No credentials available.");
                         break;
                     default:
-                        message["message"] = QObject::tr("An unknown error occurred.");
+                        //Ignore unknown errors, they are not going to help.
+                        return;
                 }
                 Fabric::Fabric{}.postMessage("errorNotification", message);
             } else if (notification.type == Sink::Notification::Info) {

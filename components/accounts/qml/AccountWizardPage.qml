@@ -146,6 +146,7 @@ FocusScope {
                     right: parent.right
                     bottom: parent.bottom
                 }
+                objectName: "saveButton"
 
                 text: qsTr("Save")
                 onClicked: save()

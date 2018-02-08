@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(kube VERSION 0.5)
+project(kube VERSION 0.6)
 
 set (QT_MIN_VERSION "5.9.0")
 
@@ -9,6 +9,8 @@ cmake_policy(SET CMP0028 NEW)
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0053 NEW)
 cmake_policy(SET CMP0063 NEW)
+
+option(EXPERIMENTAL_VIEWS "Install experimental views" OFF)
 
 include(CPack)
 include(FeatureSummary)
@@ -36,5 +38,6 @@ add_subdirectory(framework)
 add_subdirectory(components)
 add_subdirectory(icons)
 add_subdirectory(applications)
+add_subdirectory(views)
 add_subdirectory(accounts)
 add_subdirectory(tests)

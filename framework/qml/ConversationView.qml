@@ -53,6 +53,7 @@ FocusScope {
 
         Kube.ConversationListView {
             id: listView
+            objectName: "listView"
             focus: true
 
             anchors {
@@ -115,23 +116,6 @@ FocusScope {
                 }
             }
 
-            onCurrentItemChanged: {
-                if (currentItem) {
-                    markAsReadTimer.restart()
-                }
-            }
-
-            Timer {
-                id: markAsReadTimer
-                interval: 2000
-                running: false
-                repeat: false
-                onTriggered: {
-                    if (listView.currentItem && !!listView.currentItem.currentData.mail) {
-                        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": listView.currentItem.currentData.mail})
-                    }
-                }
-            }
         }
     }
 }

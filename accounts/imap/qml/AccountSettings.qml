@@ -52,19 +52,6 @@ Item {
         rowSpacing: Kube.Units.largeSpacing
 
         Kube.Label {
-            text: qsTr("Title of Account")
-            Layout.alignment: Qt.AlignRight
-        }
-        Kube.RequiredTextField {
-            Layout.fillWidth: true
-            placeholderText: qsTr("E.g. \"Work\", \"Home\" that will be displayed in Kube as name")
-            text: imapSettings.accountName
-            onTextChanged: {
-                imapSettings.accountName = text
-            }
-        }
-
-        Kube.Label {
             text: qsTr("Name")
             Layout.alignment: Qt.AlignRight
         }
@@ -89,6 +76,7 @@ Item {
                 imapSettings.emailAddress = text
                 imapSettings.imapUsername = text
                 imapSettings.smtpUsername = text
+                imapSettings.accountName = text
             }
             placeholderText: qsTr("Your email address")
         }
