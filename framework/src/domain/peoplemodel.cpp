@@ -23,7 +23,7 @@
 #include <sink/store.h>
 
 PeopleModel::PeopleModel(QObject *parent)
-    : QSortFilterProxyModel()
+    : QSortFilterProxyModel(parent)
 {
     using namespace Sink::ApplicationDomain;
 

@@ -91,7 +91,7 @@ QHash<int, QByteArray> AttachmentModel::roleNames() const
     return roles;
 }
 
-QModelIndex AttachmentModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex AttachmentModel::index(int row, int column, const QModelIndex &) const
 {
     if (row < 0 || column != 0) {
         return QModelIndex();
@@ -210,7 +210,7 @@ bool AttachmentModel::openAttachment(const QModelIndex &index)
     return false;
 }
 
-QModelIndex AttachmentModel::parent(const QModelIndex &index) const
+QModelIndex AttachmentModel::parent(const QModelIndex &) const
 {
     return QModelIndex();
 }
@@ -223,7 +223,7 @@ int AttachmentModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int AttachmentModel::columnCount(const QModelIndex &parent) const
+int AttachmentModel::columnCount(const QModelIndex &) const
 {
     return 1;
 }
