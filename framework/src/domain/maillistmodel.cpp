@@ -37,7 +37,21 @@ MailListModel::~MailListModel()
 
 void MailListModel::setFilter(const QString &filter)
 {
-    setFilterWildcard(filter);
+    if (filter.length() < 3 && !filter.isEmpty()) {
+        return;
+    }
+    auto oldQuery = mQuery;
+    auto query = mQuery;
+    if (!filter.isEmpty()) {
+        auto f = filter;
+        if (filter.contains(' ')) {
+            f = "\"" + filter + "\"";
+        }
+        f.append('*');
+        query.filter<Sink::ApplicationDomain::Mail::Subject>(Sink::QueryBase::Comparator(f, Sink::QueryBase::Comparator::Fulltext));
+    }
+    runQuery(query);
+    mQuery = oldQuery;
 }
 
 QString MailListModel::filter() const
@@ -188,6 +202,7 @@ bool MailListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePar
 
 void MailListModel::runQuery(const Sink::Query &query)
 {
+    mQuery = query;
     m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
     setSourceModel(m_model.data());
 }

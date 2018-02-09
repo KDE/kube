@@ -43,6 +43,7 @@ FocusScope {
         onMessageReceived: {
             parentFolder = message.folder
             currentMail = null
+            filterField.clearSearch()
         }
     }
 
@@ -82,6 +83,7 @@ FocusScope {
             function clearSearch() {
                 filterField.visible = false
                 find.text = ""
+                mailListModel.filter = ""
             }
 
             RowLayout {

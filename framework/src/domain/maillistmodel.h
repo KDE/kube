@@ -107,4 +107,5 @@ private:
     QSet<QByteArray> mFetchedMails;
     QByteArray mCurrentQueryItem;
     bool mIsThreaded = true;
+    Sink::Query mQuery;
 };
