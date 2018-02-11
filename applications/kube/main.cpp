@@ -39,6 +39,7 @@
 #include <QFont>
 #include <QDebug>
 #include <QTimer>
+#include <QQmlContext>
 #include <sink/store.h>
 
 #include "framework/src/keyring.h"
@@ -184,16 +185,20 @@ int main(int argc, char *argv[])
     }
 
     {
+        QQmlContext *rootContext = nullptr;
         bool upgradeComplete = false;
-        Sink::Store::upgrade().then([&] {
-            upgradeComplete = true;
-            app.quit();
+        Sink::Store::upgrade().then([&] (Sink::Store::UpgradeResult upgradeExecuted) {
+            upgradeComplete = !upgradeExecuted.upgradeExecuted;
+            if (rootContext) {
+                rootContext->setContextProperty("upgradeComplete", true);
+            }
         }).exec();
         if (!upgradeComplete) {
             QQmlApplicationEngine engine;
-            const auto file = findFile("/org/kube/components/kube/upgrade.qml", engine.importPathList());
-            engine.load(QUrl::fromLocalFile(file));
-            app.exec();
+            engine.rootContext()->setContextProperty("upgradeComplete", false);
+            rootContext = engine.rootContext();
+            engine.load(QUrl::fromLocalFile(findFile("/org/kube/components/kube/upgrade.qml", engine.importPathList())));
+            return app.exec();
         }
     }
 
