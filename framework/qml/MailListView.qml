@@ -32,27 +32,18 @@ FocusScope {
     property bool isTrash : false
     property bool isUnread : false
     property variant currentMail: null
+    property bool showFilter: false
+    property string filter: null
 
     onCurrentMailChanged: {
         Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentMail})
-        Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
     }
-
-    Kube.Listener {
-        filter: Kube.Messages.folderSelection
-        onMessageReceived: {
-            parentFolder = message.folder
-            currentMail = null
-            filterField.clearSearch()
-        }
+    onParentFolderChanged: {
+        currentMail = null
+        filterField.clearSearch()
     }
-
-    Kube.Listener {
-        filter: Kube.Messages.search
-        onMessageReceived: {
-           filterField.visible = true
-           find.forceActiveFocus()
-        }
+    onShowFilterChanged: {
+        find.forceActiveFocus()
     }
 
     Shortcut {
@@ -78,12 +69,12 @@ FocusScope {
             Layout.fillWidth: true
             height: Kube.Units.gridUnit * 2
             color: Kube.Colors.buttonColor
-            visible: false
+            visible: root.showFilter
 
             function clearSearch() {
-                filterField.visible = false
+                root.showFilter = false
                 find.text = ""
-                mailListModel.filter = ""
+                root.filter = ""
             }
 
             RowLayout {
@@ -104,7 +95,7 @@ FocusScope {
                     id: find
                     Layout.fillWidth: true
                     placeholderText: qsTr("Filter...")
-                    onTextChanged: mailListModel.filter = text
+                    onTextChanged: root.filter = text
                     activeFocusOnTab: visible
                     focus: visible
                     Keys.onEscapePressed: filterField.clearSearch()
@@ -150,6 +141,7 @@ FocusScope {
             model: Kube.MailListModel {
                 id: mailListModel
                 parentFolder: root.parentFolder
+                filter: root.filter
             }
 
             delegate: Kube.ListDelegate {

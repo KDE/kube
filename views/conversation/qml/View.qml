@@ -109,6 +109,18 @@ FocusScope {
                 anchors.fill: parent
                 activeFocusOnTab: true
                 Layout.minimumWidth: Kube.Units.gridUnit * 10
+                Kube.Listener {
+                    filter: Kube.Messages.folderSelection
+                    onMessageReceived: mailListView.parentFolder = message.folder
+                }
+
+                Kube.Listener {
+                    filter: Kube.Messages.search
+                    onMessageReceived: mailListView.showFilter = true
+                }
+                onCurrentMailChanged: {
+                    Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
+                }
             }
         }
 
@@ -118,6 +130,21 @@ FocusScope {
             Layout.fillWidth: true
             Layout.fillHeight: parent.height
             activeFocusOnTab: true
+            Kube.Listener {
+                filter: Kube.Messages.mailSelection
+                onMessageReceived: {
+                    mailView.mail = message.mail
+                }
+            }
+
+            Kube.Listener {
+                filter: Kube.Messages.folderSelection
+                onMessageReceived: {
+                    mailView.hideTrash = !message.trash
+                    mailView.hideNonTrash = message.trash
+                }
+            }
+
         }
     }
 }

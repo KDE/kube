@@ -48,6 +48,21 @@ void MailListModel::setFilter(const QString &filter)
             f = "\"" + filter + "\"";
         }
         f.append('*');
+        if (mCurrentQueryItem.isEmpty()) {
+            using namespace Sink::ApplicationDomain;
+            query.request<Mail::Subject>();
+            query.request<Mail::Sender>();
+            query.request<Mail::To>();
+            query.request<Mail::Cc>();
+            query.request<Mail::Bcc>();
+            query.request<Mail::Date>();
+            query.request<Mail::Unread>();
+            query.request<Mail::Important>();
+            query.request<Mail::Draft>();
+            query.request<Mail::Sent>();
+            query.request<Mail::Trash>();
+            query.request<Mail::Folder>();
+        }
         query.filter<Sink::ApplicationDomain::Mail::Subject>(Sink::QueryBase::Comparator(f, Sink::QueryBase::Comparator::Fulltext));
     }
     runQuery(query);
@@ -202,9 +217,15 @@ bool MailListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePar
 
 void MailListModel::runQuery(const Sink::Query &query)
 {
-    mQuery = query;
-    m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
-    setSourceModel(m_model.data());
+    if (query.getBaseFilters().isEmpty() && query.ids().isEmpty()) {
+        mQuery = {};
+        m_model.clear();
+        setSourceModel(nullptr);
+    } else {
+        mQuery = query;
+        m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+        setSourceModel(m_model.data());
+    }
 }
 
 bool MailListModel::isThreaded() const

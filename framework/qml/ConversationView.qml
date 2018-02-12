@@ -32,21 +32,6 @@ FocusScope {
     property bool hideTrash: true;
     property bool hideNonTrash: false;
 
-    Kube.Listener {
-        filter: Kube.Messages.mailSelection
-        onMessageReceived: {
-            root.mail = message.mail
-        }
-    }
-
-    Kube.Listener {
-        filter: Kube.Messages.folderSelection
-        onMessageReceived: {
-            root.hideTrash = !message.trash
-            root.hideNonTrash = message.trash
-        }
-    }
-
     Rectangle {
         anchors.fill: parent
         color: Kube.Colors.backgroundColor

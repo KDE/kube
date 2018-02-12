@@ -26,14 +26,59 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
-    Rectangle {
+    SplitView {
         anchors.fill: parent
-        Kube.MailListView  {
-            id: mailListView
-            anchors.fill: parent
-            activeFocusOnTab: true
+        ColumnLayout {
+            width: Kube.Units.gridUnit * 18
             Layout.minimumWidth: Kube.Units.gridUnit * 10
+            Rectangle {
+                id: filterField
+                Layout.fillWidth: true
+                height: Kube.Units.gridUnit * 2
+                color: Kube.Colors.textColor
+
+                function clearSearch() {
+                    find.text = ""
+                    mailListView.filter = ""
+                }
+
+                RowLayout {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                    }
+
+                    width: parent.width - Kube.Units.smallSpacing
+                    spacing: 0
+
+                    Kube.IconButton {
+                        iconName: Kube.Icons.remove
+                        onClicked: filterField.clearSearch()
+                    }
+
+                    Kube.TextField {
+                        id: find
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("Search...")
+                        onTextChanged: mailListView.filter = text
+                        focus: true
+                        Keys.onEscapePressed: filterField.clearSearch()
+                    }
+                }
+            }
+            Kube.MailListView  {
+                id: mailListView
+                showFilter: false
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
         }
-    }
+        Kube.ConversationView {
+            id: mailView
+            objectName: "mailView"
+            Layout.fillWidth: true
+            Layout.fillHeight: parent.height
+            activeFocusOnTab: true
+            mail: mailListView.currentMail
+        }
     }
 }
