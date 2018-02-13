@@ -88,6 +88,13 @@ ApplicationWindow {
                             body: "body4",
                             to: ["to@example.org"],
                         },
+                        {
+                            resource: "resource1",
+                            date: "2017-07-20T18:46:29",
+                            subject: "UTF-8 Madness öüä ❆",
+                            body: "öüä ❆",
+                            to: ["öüä@example.org"],
+                        },
                     ]
                 }],
         }
