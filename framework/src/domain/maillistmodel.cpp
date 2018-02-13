@@ -44,10 +44,6 @@ void MailListModel::setFilter(const QString &filter)
     auto query = mQuery;
     if (!filter.isEmpty()) {
         auto f = filter;
-        if (filter.contains(' ')) {
-            f = "\"" + filter + "\"";
-        }
-        f.append('*');
         if (mCurrentQueryItem.isEmpty()) {
             using namespace Sink::ApplicationDomain;
             query.request<Mail::Subject>();
