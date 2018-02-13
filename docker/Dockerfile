@@ -59,6 +59,7 @@ ENV XDG_CONFIG_DIRS /install/share/config
 ENV XDG_DATA_DIRS /install/share/:/usr/share
 RUN mkdir /tmp/runtime-developer
 ENV XDG_RUNTIME_DIR /tmp/runtime-developer
+ENV LANG en_US.UTF-8
 
 ADD bashrc /home/developer/.bashrc
 ADD startimap.sh /home/developer/startimap.sh
