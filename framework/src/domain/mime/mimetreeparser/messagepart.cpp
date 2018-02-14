@@ -830,7 +830,11 @@ void SignedMessagePart::startVerification()
         if (mNode == mSignedData) {
             startVerificationDetached(cleartext, nullptr, {});
         } else {
-            startVerificationDetached(cleartext, mSignedData, mNode->decodedContent());
+            if (mNode) {
+                startVerificationDetached(cleartext, mSignedData, mNode->decodedContent());
+            } else { //The case for clearsigned above
+                startVerificationDetached(cleartext, nullptr, {});
+            }
         }
     }
 }
