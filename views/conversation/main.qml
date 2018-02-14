@@ -91,8 +91,8 @@ ApplicationWindow {
                         {
                             resource: "resource1",
                             date: "2017-07-20T18:46:29",
-                            subject: "UTF-8 Madness öüä ❆",
-                            body: "öüä ❆",
+                            subject: "UTF-8 Madness Umlauts:öüä Snowflake:❆ Heart:♥",
+                            body: "UTF-8 Madness Umlauts:öüä Snowflake:❆ Heart:♥",
                             to: ["öüä@example.org"],
                         },
                     ]
