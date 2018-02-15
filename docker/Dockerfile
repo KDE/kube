@@ -70,3 +70,7 @@ ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
 ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
 ADD gpg.conf /home/developer/.gnupg/gpg.conf
+
+#Better qt support
+RUN git clone https://github.com/Lekensteyn/qt5printers.git ~/.gdb/qt5printers/
+ADD gdbinit /home/developer/.gdbinit
