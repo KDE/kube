@@ -1,5 +1,5 @@
 Name:           kube
-Version:        0.4.0
+Version:        0.6
 Release:        0%{?dist}
 Summary:        kube
 
@@ -26,12 +26,13 @@ BuildRequires:  libcurl-devel
 BuildRequires:  qt5-qtquickcontrols2-devel
 BuildRequires:  qgpgme-devel
 BuildRequires:  gpgme >= 1.8.0
+BuildRequires:  xapian-core-devel >= 1.4
 
 Requires:       qt5-qtquick1
 Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2
 Requires:       qt5-qtsvg
-Requires:       sink >= 0.4.0
+Requires:       sink >= 0.6
 Requires:       google-noto-sans-fonts
 
 %description
