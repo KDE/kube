@@ -5,4 +5,5 @@ pages:
 - Design: design.md
 - Requirements: requirements.md
 - Cryptography: cryptography.md
+- Dev environment setup: setting-up-dev-env.md
 theme: readthedocs
