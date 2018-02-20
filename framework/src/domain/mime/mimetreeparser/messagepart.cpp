@@ -866,13 +866,13 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     if (!signature.isEmpty()) {
         qWarning() << "We have a signature";
         auto result = ctx->verifyDetachedSignature(fromBA(signature), fromBA(text));
-        setVerificationResult(result, textNode, text);
+        setVerificationResult(result, false, text);
     } else {
         qWarning() << "We have no signature";
         QGpgME::QByteArrayDataProvider out;
         GpgME::Data outdata(&out);
         auto result = ctx->verifyOpaqueSignature(fromBA(text), outdata);
-        setVerificationResult(result, textNode, out.data());
+        setVerificationResult(result, false, out.data());
     }
 
     if (!mMetaData.isSigned) {
@@ -880,7 +880,7 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     }
 }
 
-void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, KMime::Content *textNode, const QByteArray &plainText)
+void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText)
 {
     auto signatures = result.signatures();
     mVerifiedText = plainText;
@@ -888,12 +888,10 @@ void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &r
     if (!signatures.empty()) {
         mMetaData.isSigned = true;
         sigStatusToMetaData(signatures.front());
-        if (mNode && !textNode) {
+        if (mNode && parseText) {
             mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
         }
-
-        if (!mVerifiedText.isEmpty() && !textNode) {
-
+        if (!mVerifiedText.isEmpty() && parseText) {
             auto tempNode = new KMime::Content();
             tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
             tempNode->parse();
@@ -1013,7 +1011,7 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     if (verifyResult.signatures().size() > 0) {
         //We simply attach a signed message part to indicate that this content is also signed
         auto subPart = SignedMessagePart::Ptr(new SignedMessagePart(mOtp, QString::fromUtf8(plainText), mProtocol, mFromAddress, nullptr, nullptr));
-        subPart->setVerificationResult(verifyResult, nullptr, plainText);
+        subPart->setVerificationResult(verifyResult, true, plainText);
         appendSubPart(subPart);
     }
 

@@ -364,7 +364,8 @@ public:
 
 private:
     void sigStatusToMetaData(const GpgME::Signature &signature);
-    void setVerificationResult(const GpgME::VerificationResult &result, KMime::Content *textNode, const QByteArray &plainText);
+    void setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText);
+
 protected:
     GpgME::Protocol mProtocol;
     QString mFromAddress;
