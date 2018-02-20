@@ -42,7 +42,7 @@ namespace MimeTreeParser
 namespace Interface
 {
 
-MessagePart::Ptr BodyPartFormatter::process(BodyPart &part) const
+MessagePart::Ptr BodyPartFormatter::process(BodyPart &) const
 {
     return {};
 }
