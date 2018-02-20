@@ -358,13 +358,12 @@ public:
     void startVerification();
 
     QByteArray mDecryptedData;
-    std::vector<GpgME::Signature> mSignatures;
 
     QString plaintextContent() const Q_DECL_OVERRIDE;
     QString htmlContent() const Q_DECL_OVERRIDE;
 
 private:
-    void sigStatusToMetaData();
+    void sigStatusToMetaData(const GpgME::Signature &signature);
     void setVerificationResult(const GpgME::VerificationResult &result, KMime::Content *textNode, const QByteArray &plainText);
 protected:
     GpgME::Protocol mProtocol;

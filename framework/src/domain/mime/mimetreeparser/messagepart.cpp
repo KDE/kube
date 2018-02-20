@@ -747,10 +747,9 @@ static GpgME::KeyListResult listKeys(GpgME::Context * ctx, const char *pattern, 
     return result;
 }
 
-void SignedMessagePart::sigStatusToMetaData()
+void SignedMessagePart::sigStatusToMetaData(const GpgME::Signature &signature)
 {
     GpgME::Key key;
-    GpgME::Signature signature = mSignatures.front();
     mMetaData.status_code = signatureToStatus(signature);
     mMetaData.isGoodSignature = mMetaData.status_code & GPGME_SIG_STAT_GOOD;
     // save extended signature status flags
@@ -883,12 +882,12 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
 
 void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, KMime::Content *textNode, const QByteArray &plainText)
 {
-    mSignatures = result.signatures();
+    auto signatures = result.signatures();
     mVerifiedText = plainText;
     mMetaData.auditLogError = result.error();
-    if (!mSignatures.empty()) {
+    if (!signatures.empty()) {
         mMetaData.isSigned = true;
-        sigStatusToMetaData();
+        sigStatusToMetaData(signatures.front());
         if (mNode && !textNode) {
             mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
         }
