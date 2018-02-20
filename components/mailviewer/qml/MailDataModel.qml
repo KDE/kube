@@ -83,7 +83,8 @@ DelegateModel {
                 color: getColor(model.securityLevel)
                 backgroundOpacity: 0.5
                 visible: model.encrypted
-                tooltip: qsTr("This message is encrypted.");
+                tooltip: qsTr("This message is encrypted to the key: %1").arg(model.encryptionDetails.keyId);
+
                 //FIXME make text copyable
                 // Kube.SelectableItem {
                 //     visualParent: encryptedButton
