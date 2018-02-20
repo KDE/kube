@@ -17,14 +17,25 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2.0
+import org.kube.framework 1.0 as Kube
 
-Controls2.ApplicationWindow {
+ApplicationWindow {
     id: app
     height: 900
     width: 1500
 
+    Kube.File {
+        id: file
+        path: "/build/kube/message.mime"
+    }
+    Kube.MessageParser {
+        id: messageParser
+        message: file.data
+    }
+
     MailViewer {
         visible: true
+        model: messageParser.parts
     }
 }

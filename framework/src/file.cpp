@@ -36,7 +36,7 @@ QString File::data()
 
 QString File::read(const QString &path)
 {
-    QFile file(QDir::homePath() + "/" + path);
+    QFile file(QDir::isAbsolutePath(path) ? path : QDir::homePath() + "/" + path);
     if (file.open(QIODevice::ReadOnly)) {
         return file.readAll();
     }
