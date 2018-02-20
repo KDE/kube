@@ -891,18 +891,19 @@ void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &r
         sigStatusToMetaData();
         if (mNode && !textNode) {
             mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
-            if (!mVerifiedText.isEmpty()) {
-                auto tempNode = new KMime::Content();
-                tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
-                tempNode->parse();
-                bindLifetime(tempNode);
+        }
 
-                if (!tempNode->head().isEmpty()) {
-                    tempNode->contentDescription()->from7BitString("signed data");
-                }
+        if (!mVerifiedText.isEmpty() && !textNode) {
 
-                parseInternal(tempNode, false);
+            auto tempNode = new KMime::Content();
+            tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
+            tempNode->parse();
+            bindLifetime(tempNode);
+
+            if (!tempNode->head().isEmpty()) {
+                tempNode->contentDescription()->from7BitString("signed data");
             }
+            parseInternal(tempNode, false);
         }
     }
 }
