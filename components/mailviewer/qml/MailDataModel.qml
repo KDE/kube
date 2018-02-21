@@ -23,6 +23,8 @@ import org.kube.framework 1.0 as Kube
 DelegateModel {
     id: root
 
+    property string searchString: ""
+
     delegate: Item {
         id: partColumn
 
@@ -124,6 +126,12 @@ DelegateModel {
             }
             height: item ? item.contentHeight : 0
             width: parent.width
+            Binding {
+                target: partLoader.item
+                property: "searchString"
+                value: root.searchString
+                when: partLoader.status == Loader.Ready
+            }
         }
         Component.onCompleted: {
             switch (model.type) {

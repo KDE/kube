@@ -42,6 +42,7 @@ Rectangle {
     property bool incomplete: false;
     property bool current: false;
     property bool unread;
+    property alias searchString: mailViewer.searchString
 
     implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + Kube.Units.largeSpacing
 

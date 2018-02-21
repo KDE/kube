@@ -1,5 +1,5 @@
 
-find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine)
+find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine Gui)
 find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
 find_package(Sink CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
@@ -48,6 +48,7 @@ add_library(kubeframework SHARED
     keyring.cpp
     domainobjectcontroller.cpp
     extensionmodel.cpp
+    viewhighlighter.cpp
     )
 target_link_libraries(kubeframework
     sink
@@ -58,6 +59,7 @@ target_link_libraries(kubeframework
     Qt5::WebEngineWidgets
     Qt5::Test
     Qt5::WebEngine
+    Qt5::Gui
     KF5::Codecs
     KF5::Contacts
     KAsync

@@ -35,6 +35,10 @@ FocusScope {
     property bool showFilter: false
     property string filter: null
 
+    onFilterChanged: {
+        Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
+    }
+
     onParentFolderChanged: {
         currentMail = null
         filterField.clearSearch()

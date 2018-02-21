@@ -42,6 +42,7 @@ Item {
     property string progressNotification: "progressNotification"
     property string errorNotification: "errorNotification"
     property string search: "search"
+    property string searchString: "searchString"
     property string synchronize: "synchronize"
     property string reply: "reply"
     property string forward: "forward"

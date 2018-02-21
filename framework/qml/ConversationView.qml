@@ -31,6 +31,12 @@ FocusScope {
     property variant mail;
     property bool hideTrash: true;
     property bool hideNonTrash: false;
+    property string searchString: ""
+
+    Kube.Listener {
+        filter: Kube.Messages.searchString
+        onMessageReceived: root.searchString = message.searchString
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -46,6 +52,7 @@ FocusScope {
                 left: parent.left
                 right: parent.right
             }
+
             //Shrink the listview if the content doesn't fill the full height, so the email appears on top instead of on the bottom.
             height: Math.min(contentHeight, parent.height)
 
@@ -98,6 +105,7 @@ FocusScope {
                     sent: model.sent
                     incomplete: model.incomplete
                     current: delegateRoot.isCurrentItem
+                    searchString: root.searchString
                 }
             }
 

@@ -27,7 +27,13 @@ Item {
     property bool embedded: true
     property string type
 
+    property string searchString
     property int contentHeight: textEdit.height
+
+    onSearchStringChanged: {
+        //This is a workaround because otherwise the view will not take the ViewHighlighter changes into account.
+        textEdit.text = root.content
+    }
 
     TextEdit {
         id: textEdit
@@ -55,6 +61,10 @@ Item {
             anchors.fill: parent
             acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
             cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+        }
+        Kube.ViewHighlighter {
+            textDocument: textEdit.textDocument
+            searchString: root.searchString
         }
     }
 }
