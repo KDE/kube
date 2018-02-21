@@ -41,6 +41,7 @@ Item {
     property string edit: "document-edit"
     property string edit_inverted: "document-edit-inverted"
     property string replyToSender: "mail-reply-sender"
+    property string forward: "mail-forward"
     property string outbox: "mail-folder-outbox"
     property string outbox_inverted: "mail-folder-outbox-inverted"
     property string copy: "edit-copy"

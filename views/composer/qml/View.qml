@@ -30,7 +30,7 @@ Kube.View {
     id: root
 
     property bool newMessage: false
-    property bool loadAsDraft: false
+    property int loadType: Kube.ComposerController.Draft
     property variant message: {}
     property variant recipients: []
 
@@ -58,11 +58,21 @@ Kube.View {
 
     function loadMessage(message, loadAsDraft) {
         if (message) {
-            composerController.loadMessage(message, loadAsDraft)
-            //Forward focus for replies directly
-            if (!loadAsDraft) {
-                subject.forceActiveFocus()
+
+            switch(loadType) {
+                case Kube.ComposerController.Draft:
+                    composerController.loadDraft(message)
+                    break;
+                case Kube.ComposerController.Reply:
+                    composerController.loadReply(message)
+                    subject.forceActiveFocus()
+                    break;
+                case Kube.ComposerController.Forward:
+                    composerController.loadForward(message)
+                    subject.forceActiveFocus()
+                    break;
             }
+
         } else if (newMessage) {
             composerController.clear()
             if (root.recipients) {

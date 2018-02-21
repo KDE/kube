@@ -81,12 +81,21 @@ class ComposerController : public Kube::Controller
     KUBE_CONTROLLER_ACTION(saveAsDraft)
 
 public:
+    enum LoadType {
+        Draft,
+        Reply,
+        Forward,
+    };
+    Q_ENUMS(LoadType);
+
     explicit ComposerController();
 
     Completer *recipientCompleter() const;
     Selector *identitySelector() const;
 
-    Q_INVOKABLE void loadMessage(const QVariant &draft, bool loadAsDraft);
+    Q_INVOKABLE void loadDraft(const QVariant &message);
+    Q_INVOKABLE void loadReply(const QVariant &message);
+    Q_INVOKABLE void loadForward(const QVariant &message);
 
 public slots:
     virtual void clear() Q_DECL_OVERRIDE;
@@ -95,6 +104,8 @@ private slots:
     void findPersonalKey();
 
 private:
+    void loadMessage(const QVariant &message, std::function<void(const KMime::Message::Ptr&)> callback);
+
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
     void addAttachmentPart(KMime::Content *partToAttach);

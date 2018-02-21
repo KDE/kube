@@ -44,6 +44,7 @@ Item {
     property string search: "search"
     property string synchronize: "synchronize"
     property string reply: "reply"
+    property string forward: "forward"
     property string edit: "edit"
     property string compose: "compose"
     property string sendOutbox: "sendOutbox"

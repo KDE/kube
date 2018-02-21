@@ -272,14 +272,8 @@ static QStringList getStringListFromAddresses(const KMime::Types::Mailbox::List 
 void ComposerController::addAttachmentPart(KMime::Content *partToAttach)
 {
     QVariantMap map;
-    if (partToAttach->contentType()->mimeType() == "multipart/digest" ||
-            partToAttach->contentType()->mimeType() == "message/rfc822") {
-        // if it is a digest or a full message, use the encodedContent() of the attachment,
-        // which already has the proper headers
-        map.insert("content", partToAttach->encodedContent());
-    } else {
-        map.insert("content", partToAttach->decodedContent());
-    }
+    // May need special care for the multipart/digest MIME type
+    map.insert("content", partToAttach->decodedContent());
     map.insert("mimetype", partToAttach->contentType()->mimeType());
 
     QMimeDatabase db;
@@ -337,27 +331,15 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
     setExistingMessage(msg);
 }
 
-void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
-{
-    using namespace Sink;
-    using namespace Sink::ApplicationDomain;
-
-    auto msg = message.value<Mail::Ptr>();
-    Q_ASSERT(msg);
-    Query query(*msg);
-    query.request<Mail::MimeMessage>();
-    Store::fetchOne<Mail>(query).then([this, loadAsDraft](const Mail &mail) {
-        mRemoveDraft = loadAsDraft;
-        setExistingMail(mail);
-
-        const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
-        if (!mailData.isEmpty()) {
-            KMime::Message::Ptr mail(new KMime::Message);
-            mail->setContent(mailData);
-            mail->parse();
-            if (loadAsDraft) {
+void ComposerController::loadDraft(const QVariant &message) {
+    loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
+                mRemoveDraft = true;
                 setMessage(mail);
-            } else {
+            });
+}
+
+void ComposerController::loadReply(const QVariant &message) {
+    loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
                 //Find all personal email addresses to exclude from reply
                 KMime::Types::AddrSpecList me;
                 auto list = static_cast<IdentitySelector*>(mIdentitySelector.data())->getAllAddresses();
@@ -368,10 +350,38 @@ void ComposerController::loadMessage(const QVariant &message, bool loadAsDraft)
                 }
 
                 MailTemplates::reply(mail, [this] (const KMime::Message::Ptr &reply) {
-                    //We assume reply
-                    setMessage(reply);
-                }, me);
-            }
+                            //We assume reply
+                            setMessage(reply);
+                        }, me);
+            });
+}
+
+void ComposerController::loadForward(const QVariant &message) {
+    loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
+                MailTemplates::forward(mail, [this] (const KMime::Message::Ptr &fwdMessage) {
+                            setMessage(fwdMessage);
+                        });
+            });
+}
+
+void ComposerController::loadMessage(const QVariant &message, std::function<void(const KMime::Message::Ptr&)> callback)
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    auto msg = message.value<Mail::Ptr>();
+    Q_ASSERT(msg);
+    Query query(*msg);
+    query.request<Mail::MimeMessage>();
+    Store::fetchOne<Mail>(query).then([this, callback](const Mail &mail) {
+        setExistingMail(mail);
+
+        const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
+        if (!mailData.isEmpty()) {
+            KMime::Message::Ptr mail(new KMime::Message);
+            mail->setContent(mailData);
+            mail->parse();
+            callback(mail);
         } else {
             qWarning() << "Retrieved empty message";
         }

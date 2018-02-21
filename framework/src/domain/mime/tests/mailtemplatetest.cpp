@@ -224,6 +224,30 @@ private slots:
         QCOMPARE(result->cc()->addresses(), l);
     }
 
+    void testForwardAsAttachment()
+    {
+        auto msg = readMail("plaintext.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::forward(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        QCOMPARE(result->subject(false)->asUnicodeString(), {"FW: A random subject with alternative contenttype"});
+        QCOMPARE(result->to()->addresses(), {});
+        QCOMPARE(result->cc()->addresses(), {});
+
+        auto attachments = result->attachments();
+        QCOMPARE(attachments.size(), 1);
+        auto attachment = attachments[0];
+        QCOMPARE(attachment->contentDisposition(false)->disposition(), KMime::Headers::CDinline);
+        QCOMPARE(attachment->contentDisposition(false)->filename(), {"A random subject with alternative contenttype.eml"});
+        QVERIFY(attachment->bodyIsMessage());
+
+        attachment->parse();
+        auto origMsg = attachment->bodyAsMessage();
+        QCOMPARE(origMsg->subject(false)->asUnicodeString(), {"A random subject with alternative contenttype"});
+    }
+
     void testCreatePlainMail()
     {
         QStringList to = {{"to@example.org"}};

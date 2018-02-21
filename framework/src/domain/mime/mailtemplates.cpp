@@ -864,6 +864,34 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     });
 }
 
+void MailTemplates::forward(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback)
+{
+    KMime::Message::Ptr wrapperMsg(new KMime::Message);
+
+    wrapperMsg->to()->clear();
+    wrapperMsg->cc()->clear();
+
+    wrapperMsg->subject()->fromUnicodeString(forwardSubject(origMsg->subject()->asUnicodeString()), "utf-8");
+
+    const QByteArray refStr = getRefStr(origMsg);
+    if (!refStr.isEmpty()) {
+        wrapperMsg->references()->fromUnicodeString(QString::fromLocal8Bit(refStr), "utf-8");
+    }
+
+    KMime::Content* fwdAttachment = new KMime::Content;
+
+    fwdAttachment->contentDisposition()->setDisposition(KMime::Headers::CDinline);
+    fwdAttachment->contentType()->setMimeType("message/rfc822");
+    fwdAttachment->contentDisposition()->setFilename(origMsg->subject()->asUnicodeString() + ".eml");
+    // The mail was parsed in loadMessage before, so no need to assemble it
+    fwdAttachment->setBody(origMsg->encodedContent());
+
+    wrapperMsg->addContent(fwdAttachment);
+    wrapperMsg->assemble();
+
+    callback(wrapperMsg);
+}
+
 QString MailTemplates::plaintextContent(const KMime::Message::Ptr &msg)
 {
     MimeTreeParser::ObjectTreeParser otp;
@@ -899,10 +927,14 @@ static KMime::Content *createAttachmentPart(const QByteArray &content, const QSt
     } else {
         part->contentDisposition(true)->setDisposition(KMime::Headers::CDattachment);
     }
+
     part->contentType(true)->setMimeType(mimeType);
     part->contentType(true)->setName(name, "utf-8");
-    //Just always encode attachments base64 so it's safe for binary data
-    part->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEbase64);
+    // Just always encode attachments base64 so it's safe for binary data,
+    // except when it's another message
+    if(mimeType != "message/rfc822") {
+        part->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEbase64);
+    }
     part->setBody(content);
     return part;
 }

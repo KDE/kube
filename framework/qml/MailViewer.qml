@@ -370,24 +370,40 @@ Rectangle {
             }
         }
 
-        Kube.IconButton {
-            visible: !model.trash
-            anchors{
+        Grid {
+            anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
                 rightMargin: Kube.Units.largeSpacing
             }
-            activeFocusOnTab: false
+            columns: 2
 
-            iconName: model.draft ? Kube.Icons.edit : Kube.Icons.replyToSender
-            onClicked: {
-                if (model.draft) {
-                    Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail, "isDraft": model.draft})
-                } else {
-                    Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail, "isDraft": model.draft})
+            Kube.IconButton {
+                visible: !model.trash
+                activeFocusOnTab: false
+
+                iconName: model.draft ? Kube.Icons.edit : Kube.Icons.replyToSender
+                onClicked: {
+                    if (model.draft) {
+                        Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail})
+                    } else {
+                        Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail})
+                    }
                 }
             }
+
+            Kube.IconButton {
+                visible: !model.trash && !model.draft
+                activeFocusOnTab: false
+
+                iconName: Kube.Icons.forward
+                onClicked: {
+                    Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
+                }
+            }
+
         }
+
     }
     Rectangle {
         anchors.fill: parent
