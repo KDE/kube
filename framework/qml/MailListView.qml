@@ -35,9 +35,6 @@ FocusScope {
     property bool showFilter: false
     property string filter: null
 
-    onCurrentMailChanged: {
-        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentMail})
-    }
     onParentFolderChanged: {
         currentMail = null
         filterField.clearSearch()
@@ -130,11 +127,16 @@ FocusScope {
 
             onCurrentItemChanged: {
                 if (currentItem) {
-                    root.currentMail = currentItem.currentData.mail;
-                    root.isDraft = currentItem.currentData.draft;
-                    root.isTrash = currentItem.currentData.trash;
-                    root.isImportant = currentItem.currentData.important;
-                    root.isUnread = currentItem.currentData.unread;
+                    var currentData = currentItem.currentData;
+                    root.currentMail = currentData.mail;
+                    root.isDraft = currentData.draft;
+                    root.isTrash = currentData.trash;
+                    root.isImportant = currentData.important;
+                    root.isUnread = currentData.unread;
+
+                    if (currentData.mail && currentData.unread) {
+                        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentData.mail})
+                    }
                 }
             }
 

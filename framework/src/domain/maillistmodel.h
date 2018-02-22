@@ -35,7 +35,6 @@ class MailListModel : public QSortFilterProxyModel
     Q_PROPERTY (bool showInbox READ showInbox WRITE setShowInbox)
 
     Q_PROPERTY (QString filter READ filter WRITE setFilter)
-    Q_PROPERTY (bool isThreaded READ isThreaded NOTIFY isThreadedChanged)
 
 public:
     enum Status {
@@ -52,8 +51,6 @@ public:
 
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
-
-    bool isThreaded() const;
 
     enum Roles {
         Subject  = Qt::UserRole + 1,
@@ -96,9 +93,6 @@ public:
     void setShowInbox(bool);
     bool showInbox() const;
 
-signals:
-    void isThreadedChanged();
-
 private:
     void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail);
 
@@ -106,6 +100,5 @@ private:
     bool mFetchMails = false;
     QSet<QByteArray> mFetchedMails;
     QByteArray mCurrentQueryItem;
-    bool mIsThreaded = true;
     Sink::Query mQuery;
 };

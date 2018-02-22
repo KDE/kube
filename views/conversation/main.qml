@@ -63,6 +63,7 @@ ApplicationWindow {
                             to: ["to@example.org"],
                             cc: ["cc@example.org"],
                             bcc: ["bcc@example.org"],
+                            unread: true
                         },
                         {
                             resource: "resource1",
@@ -71,6 +72,7 @@ ApplicationWindow {
                             subject: "subject2",
                             body: "body2",
                             to: ["to@example.org"],
+                            unread: true
                         },
                         {
                             resource: "resource1",
@@ -79,6 +81,7 @@ ApplicationWindow {
                             subject: "subject3",
                             body: "body3\n\n\n\nfoo\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe End",
                             to: ["to@example.org"],
+                            unread: true
                         },
                         {
                             resource: "resource1",
@@ -87,6 +90,7 @@ ApplicationWindow {
                             subject: "subject4",
                             body: "body4",
                             to: ["to@example.org"],
+                            unread: false
                         },
                         {
                             resource: "resource1",
@@ -94,6 +98,7 @@ ApplicationWindow {
                             subject: "UTF-8 Madness Umlauts:öüä Snowflake:❆ Heart:♥",
                             body: "UTF-8 Madness Umlauts:öüä Snowflake:❆ Heart:♥",
                             to: ["öüä@example.org"],
+                            unread: true
                         },
                     ]
                 }],

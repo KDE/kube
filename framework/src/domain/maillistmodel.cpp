@@ -139,14 +139,14 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
         case Date:
             return mail->getDate();
         case Unread:
-            if (mIsThreaded) {
-                return mail->getProperty("unreadCollected").toList().contains(true);
+            if (mail->isAggregate()) {
+                return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Unread>().contains(true);
             } else {
-                return mail->getUnread();
+                return mail->getImportant();
             }
         case Important:
-            if (mIsThreaded) {
-                return mail->getProperty("importantCollected").toList().contains(true);
+            if (mail->isAggregate()) {
+                return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Important>().contains(true);
             } else {
                 return mail->getImportant();
             }
@@ -166,11 +166,7 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             }
             return mail->getMimeMessage();
         case ThreadSize:
-            if (mIsThreaded) {
-                return mail->getProperty("count").toInt();
-            } else {
-                return 1;
-            }
+            return mail->count();
         case Mail:
             return QVariant::fromValue(mail);
         case Incomplete:
@@ -224,11 +220,6 @@ void MailListModel::runQuery(const Sink::Query &query)
     }
 }
 
-bool MailListModel::isThreaded() const
-{
-    return mIsThreaded;
-}
-
 void MailListModel::setParentFolder(const QVariant &parentFolder)
 {
     using namespace Sink::ApplicationDomain;
@@ -242,16 +233,14 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
         return;
     }
     mCurrentQueryItem = folder->identifier();
+    bool isThreaded = true;
     if (folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::drafts) ||
         folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::sent)) {
-        mIsThreaded = false;
-    } else {
-        mIsThreaded = true;
+        isThreaded = false;
     }
-    emit isThreadedChanged();
 
     Sink::Query query = [&] {
-        if (mIsThreaded) {
+        if (isThreaded) {
             return Sink::StandardQueries::threadLeaders(*folder);
         } else {
             Sink::Query query;
