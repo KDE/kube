@@ -100,6 +100,23 @@ ApplicationWindow {
                             to: ["öüä@example.org"],
                             unread: true
                         },
+                        {
+                            resource: "resource1",
+                            date: "2017-07-20T17:47:29",
+                            subject: "PlainLongLine",
+                            body: "Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n",
+                            to: ["to@example.org"],
+                            unread: true
+                        },
+                        {
+                            resource: "resource1",
+                            date: "2017-07-20T17:46:29",
+                            subject: "HTMLLongLine",
+                            body: "<pre>Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<pre>",
+                            bodyIsHtml: true,
+                            to: ["to@example.org"],
+                            unread: true
+                        },
                     ]
                 }],
         }

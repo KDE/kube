@@ -28,8 +28,6 @@ Item {
     //We have to give it a minimum size so the html content starts to expand
     property int contentHeight: 10;
 
-    height: contentHeight
-    width: partColumn.width
 
     WebEngineView {
         id: htmlView

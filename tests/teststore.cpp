@@ -73,7 +73,7 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
             mb,
             object["subject"].toString(),
             object["body"].toString(),
-            {},
+            object["bodyIsHtml"].toBool(),
             {},
             {},
             {});

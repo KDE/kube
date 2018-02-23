@@ -27,7 +27,7 @@ Item {
     property bool embedded: true
     property string type
 
-    height: textEdit.height
+    property int contentHeight: textEdit.height
 
     TextEdit {
         id: textEdit
