@@ -142,7 +142,7 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             if (mail->isAggregate()) {
                 return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Unread>().contains(true);
             } else {
-                return mail->getImportant();
+                return mail->getUnread();
             }
         case Important:
             if (mail->isAggregate()) {
