@@ -152,6 +152,13 @@ public:
             QVariantMap message;
             if (notification.type == Sink::Notification::Warning) {
                 message["type"] = "warning";
+
+                QVariantList entities;
+                for(const auto &entity : notification.entities) {
+                    entities << entity;
+                }
+                message["entities"] = entities;
+
                 message["resource"] = QString{notification.resource};
                 if (notification.code == Sink::ApplicationDomain::TransmissionError) {
                     message["message"] = QObject::tr("Failed to send message.");

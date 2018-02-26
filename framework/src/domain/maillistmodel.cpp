@@ -400,3 +400,36 @@ bool MailListModel::showInbox() const
 {
     return false;
 }
+
+void MailListModel::setEntityId(const QString &id)
+{
+    qDebug() << "Running mail query for mail with ID:" << id;
+    using namespace Sink::ApplicationDomain;
+    Sink::Query query;
+    query.setFlags(Sink::Query::LiveQuery);
+    query.filter(id.toUtf8());
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::Draft>();
+    query.request<Mail::Folder>();
+    query.request<Mail::Sent>();
+    query.request<Mail::Trash>();
+    query.request<Mail::MimeMessage>();
+    query.request<Mail::FullPayloadAvailable>();
+    mFetchMails = true;
+    mFetchedMails.clear();
+    // Latest mail at the top
+    sort(0, Qt::DescendingOrder);
+    runQuery(query);
+}
+
+QString MailListModel::entityId() const
+{
+    return {};
+}

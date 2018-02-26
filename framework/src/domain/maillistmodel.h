@@ -33,6 +33,7 @@ class MailListModel : public QSortFilterProxyModel
     Q_PROPERTY (QVariant mail READ mail WRITE setMail)
     Q_PROPERTY (bool showDrafts READ showDrafts WRITE setShowDrafts)
     Q_PROPERTY (bool showInbox READ showInbox WRITE setShowInbox)
+    Q_PROPERTY (QString entityId READ entityId WRITE setEntityId)
 
     Q_PROPERTY (QString filter READ filter WRITE setFilter)
 
@@ -92,6 +93,9 @@ public:
 
     void setShowInbox(bool);
     bool showInbox() const;
+
+    void setEntityId(const QString &id);
+    QString entityId() const;
 
 private:
     void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail);

@@ -160,11 +160,14 @@ QVariant TestStore::load(const QByteArray &type, const QVariantMap &filter)
     using namespace Sink::ApplicationDomain;
     const auto list = loadList(type, filter);
     if (!list.isEmpty()) {
+        if (list.size() > 1) {
+            qWarning() << "While loading" << type << "with filter" << filter
+                       << "; got multiple elements, but returning the first one.";
+        }
         return list.first();
     }
     return {};
 }
-
 template <typename T>
 QVariantList toVariantList(const QList<T> &list)
 {
@@ -183,6 +186,17 @@ QVariantList TestStore::loadList(const QByteArray &type, const QVariantMap &filt
     if (filter.contains("resource")) {
         query.resourceFilter(filter.value("resource").toByteArray());
     }
+
+    for (QVariantMap::const_iterator it = filter.begin(); it != filter.end(); ++it) {
+        if (it.key() == "messageId") {
+            query.filter<Mail::MessageId>(it.value());
+        } else if (it.key() == "draft") {
+            query.filter<Mail::Draft>(it.value());
+        } else if (it.key() == "subject") {
+            query.filter<Mail::Subject>(it.value());
+        }
+    }
+
     if (type == "mail") {
         return toVariantList(Sink::Store::read<Mail>(query));
     }
@@ -205,6 +219,7 @@ QVariantMap TestStore::read(const QVariant &object)
     using namespace Sink::ApplicationDomain;
     QVariantMap map;
     if (auto mail = object.value<Mail::Ptr>()) {
+        map.insert("uid", mail->identifier());
         map.insert("subject", mail->getSubject());
         map.insert("draft", mail->getDraft());
         return map;
