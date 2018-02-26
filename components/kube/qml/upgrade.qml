@@ -37,11 +37,18 @@ Controls2.ApplicationWindow {
         }
         spacing: 0
         Kube.Heading {
-            text: qsTr("Please wait while Kube is upgrading...")
+            text: !upgradeComplete ? qsTr("Please wait while Kube is upgrading...") : qsTr("Kube has upgraded the storage layer.")
             color: Kube.Colors.highlightColor
         }
         Kube.Label {
-            text: qsTr("This might take a while.")
+            text: !upgradeComplete ? qsTr("This might take a while.") : qsTr("Please exit and restart Kube.")
+        }
+        Kube.Button {
+            anchors.topMargin: Kube.Units.largeSpacing
+            text: qsTr("Exit")
+            onClicked: {
+                app.close()
+            }
         }
     }
 }

@@ -76,8 +76,8 @@ FocusScope {
                 flickable: flickableItem
             }
 
-            contentWidth: edit.paintedWidth
-            contentHeight: edit.height
+            contentWidth: Math.max(edit.paintedWidth, width)
+            contentHeight: Math.max(edit.implicitHeight, height)
 
             function ensureVisible(r) {
                 if (contentX >= r.x) {
@@ -96,8 +96,8 @@ FocusScope {
             TextEdit {
                 id: edit
 
-                width: flickableItem.width
-                height: implicitHeight
+                width: flickableItem.contentWidth
+                height: flickableItem.contentHeight
 
                 focus: true
                 selectByMouse: true

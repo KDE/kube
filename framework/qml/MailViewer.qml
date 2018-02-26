@@ -42,6 +42,7 @@ Rectangle {
     property bool incomplete: false;
     property bool current: false;
     property bool unread;
+    property alias searchString: mailViewer.searchString
 
     implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + Kube.Units.largeSpacing
 
@@ -370,25 +371,41 @@ Rectangle {
             }
         }
 
-        Kube.IconButton {
-            visible: !model.trash
-            anchors{
+        Grid {
+            anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
                 rightMargin: Kube.Units.largeSpacing
             }
-            activeFocusOnTab: false
+            columns: 2
+            spacing: Kube.Units.smallSpacing
 
-            iconName: model.draft ? Kube.Icons.edit : Kube.Icons.replyToSender
-            onClicked: {
-                if (model.draft) {
-                    Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail, "isDraft": model.draft})
-                } else {
-                    Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail, "isDraft": model.draft})
+            Kube.Button {
+                visible: !model.trash && !model.draft
+                activeFocusOnTab: false
+
+                text: "Share"
+                onClicked: {
+                    Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
+                }
+            }
+
+            Kube.Button {
+                visible: !model.trash
+                activeFocusOnTab: false
+
+                text: model.draft ? "Edit" : "Reply"
+                onClicked: {
+                    if (model.draft) {
+                        Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail})
+                    } else {
+                        Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail})
+                    }
                 }
             }
         }
     }
+
     Rectangle {
         anchors.fill: parent
         color: Kube.Colors.buttonColor

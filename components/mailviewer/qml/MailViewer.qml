@@ -22,6 +22,7 @@ Item {
     id: root
     property alias rootIndex: visualModel.rootIndex
     property alias model: visualModel.model
+    property alias searchString: visualModel.searchString
     height: partListView.height
 
     MailDataModel {

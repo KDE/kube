@@ -23,6 +23,8 @@ import org.kube.framework 1.0 as Kube
 DelegateModel {
     id: root
 
+    property string searchString: ""
+
     delegate: Item {
         id: partColumn
 
@@ -83,7 +85,8 @@ DelegateModel {
                 color: getColor(model.securityLevel)
                 backgroundOpacity: 0.5
                 visible: model.encrypted
-                tooltip: qsTr("This message is encrypted.");
+                tooltip: qsTr("This message is encrypted to the key: %1").arg(model.encryptionDetails.keyId);
+
                 //FIXME make text copyable
                 // Kube.SelectableItem {
                 //     visualParent: encryptedButton
@@ -123,6 +126,12 @@ DelegateModel {
             }
             height: item ? item.contentHeight : 0
             width: parent.width
+            Binding {
+                target: partLoader.item
+                property: "searchString"
+                value: root.searchString
+                when: partLoader.status == Loader.Ready
+            }
         }
         Component.onCompleted: {
             switch (model.type) {

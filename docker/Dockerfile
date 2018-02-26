@@ -29,6 +29,7 @@ RUN dnf -y install llvm
 RUN dnf -y install sudo
 RUN dnf -y install pinentry-gtk
 RUN dnf -y install gammaray heaptrack
+RUN dnf -y install xapian-core-devel
 
 RUN useradd -d /home/developer -m developer
 
@@ -58,6 +59,7 @@ ENV XDG_CONFIG_DIRS /install/share/config
 ENV XDG_DATA_DIRS /install/share/:/usr/share
 RUN mkdir /tmp/runtime-developer
 ENV XDG_RUNTIME_DIR /tmp/runtime-developer
+ENV LANG en_US.UTF-8
 
 ADD bashrc /home/developer/.bashrc
 ADD startimap.sh /home/developer/startimap.sh
@@ -68,3 +70,7 @@ ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
 ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
 ADD gpg.conf /home/developer/.gnupg/gpg.conf
+
+#Better qt support
+RUN git clone https://github.com/Lekensteyn/qt5printers.git ~/.gdb/qt5printers/
+ADD gdbinit /home/developer/.gdbinit

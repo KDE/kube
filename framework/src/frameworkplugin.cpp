@@ -42,6 +42,7 @@
 #include "controller.h"
 #include "domainobjectcontroller.h"
 #include "extensionmodel.h"
+#include "viewhighlighter.h"
 
 #include <QtQml>
 #include <QQuickImageProvider>
@@ -142,6 +143,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<KubeImage>(uri, 1, 0, "KubeImage");
     qmlRegisterType<ClipboardProxy>(uri, 1, 0, "Clipboard");
     qmlRegisterType<StartupCheck>(uri, 1, 0, "StartupCheck");
+    qmlRegisterType<ViewHighlighter>(uri, 1, 0, "ViewHighlighter");
     qmlRegisterSingletonType<WebEngineProfile>(uri, 1, 0, "WebEngineProfile", webengineprofile_singletontype_provider);
     qmlRegisterSingletonType<Kube::Keyring>(uri, 1, 0, "Keyring", keyring_singletontype_provider);
 }

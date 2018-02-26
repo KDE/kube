@@ -24,6 +24,7 @@ wantedIcons = [
     "mail-mark-important.svg",
     "mail-mark-unread-new.svg",
     "mail-reply-sender.svg",
+    "mail-forward.svg",
     "mail-folder-outbox.svg",
     "network-disconnect.svg",
     "view-refresh.svg",

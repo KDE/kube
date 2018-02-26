@@ -32,26 +32,19 @@ FocusScope {
     property bool isTrash : false
     property bool isUnread : false
     property variant currentMail: null
+    property bool showFilter: false
+    property string filter: null
 
-    onCurrentMailChanged: {
-        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentMail})
-        Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
+    onFilterChanged: {
+        Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
     }
 
-    Kube.Listener {
-        filter: Kube.Messages.folderSelection
-        onMessageReceived: {
-            parentFolder = message.folder
-            currentMail = null
-        }
+    onParentFolderChanged: {
+        currentMail = null
+        filterField.clearSearch()
     }
-
-    Kube.Listener {
-        filter: Kube.Messages.search
-        onMessageReceived: {
-           filterField.visible = true
-           find.forceActiveFocus()
-        }
+    onShowFilterChanged: {
+        find.forceActiveFocus()
     }
 
     Shortcut {
@@ -77,11 +70,12 @@ FocusScope {
             Layout.fillWidth: true
             height: Kube.Units.gridUnit * 2
             color: Kube.Colors.buttonColor
-            visible: false
+            visible: root.showFilter
 
             function clearSearch() {
-                filterField.visible = false
+                root.showFilter = false
                 find.text = ""
+                root.filter = ""
             }
 
             RowLayout {
@@ -102,7 +96,7 @@ FocusScope {
                     id: find
                     Layout.fillWidth: true
                     placeholderText: qsTr("Filter...")
-                    onTextChanged: mailListModel.filter = text
+                    onTextChanged: root.filter = text
                     activeFocusOnTab: visible
                     focus: visible
                     Keys.onEscapePressed: filterField.clearSearch()
@@ -137,17 +131,23 @@ FocusScope {
 
             onCurrentItemChanged: {
                 if (currentItem) {
-                    root.currentMail = currentItem.currentData.mail;
-                    root.isDraft = currentItem.currentData.draft;
-                    root.isTrash = currentItem.currentData.trash;
-                    root.isImportant = currentItem.currentData.important;
-                    root.isUnread = currentItem.currentData.unread;
+                    var currentData = currentItem.currentData;
+                    root.currentMail = currentData.mail;
+                    root.isDraft = currentData.draft;
+                    root.isTrash = currentData.trash;
+                    root.isImportant = currentData.important;
+                    root.isUnread = currentData.unread;
+
+                    if (currentData.mail && currentData.unread) {
+                        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentData.mail})
+                    }
                 }
             }
 
             model: Kube.MailListModel {
                 id: mailListModel
                 parentFolder: root.parentFolder
+                filter: root.filter
             }
 
             delegate: Kube.ListDelegate {

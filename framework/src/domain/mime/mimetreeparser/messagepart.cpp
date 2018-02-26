@@ -747,10 +747,9 @@ static GpgME::KeyListResult listKeys(GpgME::Context * ctx, const char *pattern, 
     return result;
 }
 
-void SignedMessagePart::sigStatusToMetaData()
+void SignedMessagePart::sigStatusToMetaData(const GpgME::Signature &signature)
 {
     GpgME::Key key;
-    GpgME::Signature signature = mSignatures.front();
     mMetaData.status_code = signatureToStatus(signature);
     mMetaData.isGoodSignature = mMetaData.status_code & GPGME_SIG_STAT_GOOD;
     // save extended signature status flags
@@ -830,7 +829,11 @@ void SignedMessagePart::startVerification()
         if (mNode == mSignedData) {
             startVerificationDetached(cleartext, nullptr, {});
         } else {
-            startVerificationDetached(cleartext, mSignedData, mNode->decodedContent());
+            if (mNode) {
+                startVerificationDetached(cleartext, mSignedData, mNode->decodedContent());
+            } else { //The case for clearsigned above
+                startVerificationDetached(cleartext, nullptr, {});
+            }
         }
     }
 }
@@ -863,13 +866,13 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     if (!signature.isEmpty()) {
         qWarning() << "We have a signature";
         auto result = ctx->verifyDetachedSignature(fromBA(signature), fromBA(text));
-        setVerificationResult(result, textNode, text);
+        setVerificationResult(result, false, text);
     } else {
         qWarning() << "We have no signature";
         QGpgME::QByteArrayDataProvider out;
         GpgME::Data outdata(&out);
         auto result = ctx->verifyOpaqueSignature(fromBA(text), outdata);
-        setVerificationResult(result, textNode, out.data());
+        setVerificationResult(result, false, out.data());
     }
 
     if (!mMetaData.isSigned) {
@@ -877,28 +880,27 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     }
 }
 
-void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, KMime::Content *textNode, const QByteArray &plainText)
+void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText)
 {
-    mSignatures = result.signatures();
+    auto signatures = result.signatures();
     mVerifiedText = plainText;
     mMetaData.auditLogError = result.error();
-    if (!mSignatures.empty()) {
+    if (!signatures.empty()) {
         mMetaData.isSigned = true;
-        sigStatusToMetaData();
-        if (mNode && !textNode) {
+        sigStatusToMetaData(signatures.front());
+        if (mNode && parseText) {
             mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
-            if (!mVerifiedText.isEmpty()) {
-                auto tempNode = new KMime::Content();
-                tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
-                tempNode->parse();
-                bindLifetime(tempNode);
+        }
+        if (!mVerifiedText.isEmpty() && parseText) {
+            auto tempNode = new KMime::Content();
+            tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
+            tempNode->parse();
+            bindLifetime(tempNode);
 
-                if (!tempNode->head().isEmpty()) {
-                    tempNode->contentDescription()->from7BitString("signed data");
-                }
-
-                parseInternal(tempNode, false);
+            if (!tempNode->head().isEmpty()) {
+                tempNode->contentDescription()->from7BitString("signed data");
             }
+            parseInternal(tempNode, false);
         }
     }
 }
@@ -1009,7 +1011,7 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     if (verifyResult.signatures().size() > 0) {
         //We simply attach a signed message part to indicate that this content is also signed
         auto subPart = SignedMessagePart::Ptr(new SignedMessagePart(mOtp, QString::fromUtf8(plainText), mProtocol, mFromAddress, nullptr, nullptr));
-        subPart->setVerificationResult(verifyResult, nullptr, plainText);
+        subPart->setVerificationResult(verifyResult, true, plainText);
         appendSubPart(subPart);
     }
 

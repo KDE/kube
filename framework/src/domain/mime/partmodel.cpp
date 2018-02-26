@@ -94,6 +94,7 @@ QHash<int, QByteArray> PartModel::roleNames() const
     roles[IsErrorRole] = "error";
     roles[SenderRole] = "sender";
     roles[SignatureDetails] = "signatureDetails";
+    roles[EncryptionDetails] = "encryptionDetails";
     roles[DateRole] = "date";
     return roles;
 }
@@ -139,6 +140,18 @@ static QString addCss(const QString &s)
     return header + s + QStringLiteral("</body></html>");
 }
 
+SignatureInfo *encryptionInfo(MimeTreeParser::MessagePart *messagePart)
+{
+    auto signatureInfo = new SignatureInfo;
+    const auto encryptions = messagePart->encryptions();
+    if (encryptions.size() > 1) {
+        qWarning() << "Can't deal with more than one encryption";
+    }
+    for (const auto &p : encryptions) {
+        signatureInfo->keyId = p->partMetaData()->keyId;
+    }
+    return signatureInfo;
+};
 
 SignatureInfo *signatureInfo(MimeTreeParser::MessagePart *messagePart)
 {
@@ -266,6 +279,8 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             }
             case SignatureDetails:
                 return QVariant::fromValue(signatureInfo(messagePart));
+            case EncryptionDetails:
+                return QVariant::fromValue(encryptionInfo(messagePart));
             case ErrorType:
                 return messagePart->error();
             case ErrorString: {

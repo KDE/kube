@@ -345,6 +345,34 @@ private slots:
         QVERIFY(otp.plainTextContent().contains(QString::fromUtf8("Why Pisa’s Tower")));
         QVERIFY(otp.htmlContent().contains(QString::fromUtf8("Why Pisa’s Tower")));
     }
+
+    void testInlineSigned()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("openpgp-inline-signed.mbox"));
+        otp.decryptParts();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QCOMPARE(part->signatures().size(), 1);
+        QCOMPARE(part->encryptionState(), MimeTreeParser::KMMsgNotEncrypted);
+        QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
+    }
+
+    void testEncryptedAndSigned()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("openpgp-encrypted+signed.mbox"));
+        otp.decryptParts();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QCOMPARE(part->signatures().size(), 1);
+        QCOMPARE(part->encryptions().size(), 1);
+        QCOMPARE(part->encryptionState(), MimeTreeParser::KMMsgFullyEncrypted);
+        QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
+        QVERIFY(otp.plainTextContent().contains(QString::fromUtf8("encrypted message text")));
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)

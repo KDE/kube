@@ -63,7 +63,6 @@ ApplicationWindow {
                             to: ["to@example.org"],
                             cc: ["cc@example.org"],
                             bcc: ["bcc@example.org"],
-                            unread: true
                         },
                         {
                             resource: "resource1",
@@ -72,7 +71,6 @@ ApplicationWindow {
                             subject: "subject2",
                             body: "body2",
                             to: ["to@example.org"],
-                            unread: true
                         },
                         {
                             resource: "resource1",
@@ -81,7 +79,6 @@ ApplicationWindow {
                             subject: "subject3",
                             body: "body3\n\n\n\nfoo\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe End",
                             to: ["to@example.org"],
-                            unread: true
                         },
                         {
                             resource: "resource1",
@@ -90,42 +87,6 @@ ApplicationWindow {
                             subject: "subject4",
                             body: "body4",
                             to: ["to@example.org"],
-                            unread: false
-                        },
-                        {
-                            resource: "resource1",
-                            date: "2017-07-20T18:46:29",
-                            subject: "UTF-8 Madness Umlauts:öüä Snowflake:❆ Heart:♥",
-                            body: "UTF-8 Madness Umlauts:öüä Snowflake:❆ Heart:♥",
-                            to: ["öüä@example.org"],
-                            unread: true
-                        },
-                        {
-                            resource: "resource1",
-                            date: "2017-07-20T17:47:29",
-                            subject: "PlainLongLine",
-                            body: "Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n",
-                            to: ["to@example.org"],
-                            unread: true
-                        },
-                        {
-                            resource: "resource1",
-                            date: "2017-07-20T17:46:29",
-                            subject: "HTMLLongLine",
-                            body: "<pre>Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<pre>",
-                            bodyIsHtml: true,
-                            to: ["to@example.org"],
-                            unread: true
-                        },
-                        {
-                            resource: "resource1",
-                            date: "2017-07-20T17:46:29",
-                            subject: "ComplexHTMLLongLine",
-                            //We assume that @media trigger the complex html view
-                            body: "<pre>Hi Mélanie,\n\nI'm sorry @media to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<pre>",
-                            bodyIsHtml: true,
-                            to: ["to@example.org"],
-                            unread: true
                         },
                     ]
                 }],
@@ -133,10 +94,6 @@ ApplicationWindow {
         TestStore.setup(initialState)
     }
 
-    Shortcut {
-        onActivated: Kube.Fabric.postMessage(Kube.Messages.search, {})
-        sequence: StandardKey.Find
-    }
     View {
         anchors.fill: parent
     }

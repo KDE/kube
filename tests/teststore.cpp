@@ -73,7 +73,7 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
             mb,
             object["subject"].toString(),
             object["body"].toString(),
-            {},
+            object["bodyIsHtml"].toBool(),
             {},
             {},
             {});
@@ -91,6 +91,7 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
 
     auto mail = ApplicationDomainType::createEntity<Mail>(object["resource"].toByteArray());
     mail.setMimeMessage(msg->encodedContent(true));
+    mail.setUnread(object["unread"].toBool());
     if (!folder.isEmpty()) {
         mail.setFolder(folder);
     }

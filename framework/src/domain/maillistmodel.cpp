@@ -37,7 +37,32 @@ MailListModel::~MailListModel()
 
 void MailListModel::setFilter(const QString &filter)
 {
-    setFilterWildcard(filter);
+    if (filter.length() < 3 && !filter.isEmpty()) {
+        return;
+    }
+    auto oldQuery = mQuery;
+    auto query = mQuery;
+    if (!filter.isEmpty()) {
+        auto f = filter;
+        if (mCurrentQueryItem.isEmpty()) {
+            using namespace Sink::ApplicationDomain;
+            query.request<Mail::Subject>();
+            query.request<Mail::Sender>();
+            query.request<Mail::To>();
+            query.request<Mail::Cc>();
+            query.request<Mail::Bcc>();
+            query.request<Mail::Date>();
+            query.request<Mail::Unread>();
+            query.request<Mail::Important>();
+            query.request<Mail::Draft>();
+            query.request<Mail::Sent>();
+            query.request<Mail::Trash>();
+            query.request<Mail::Folder>();
+        }
+        query.filter({}, Sink::QueryBase::Comparator(f, Sink::QueryBase::Comparator::Fulltext));
+    }
+    runQuery(query);
+    mQuery = oldQuery;
 }
 
 QString MailListModel::filter() const
@@ -114,14 +139,14 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
         case Date:
             return mail->getDate();
         case Unread:
-            if (mIsThreaded) {
-                return mail->getProperty("unreadCollected").toList().contains(true);
+            if (mail->isAggregate()) {
+                return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Unread>().contains(true);
             } else {
                 return mail->getUnread();
             }
         case Important:
-            if (mIsThreaded) {
-                return mail->getProperty("importantCollected").toList().contains(true);
+            if (mail->isAggregate()) {
+                return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Important>().contains(true);
             } else {
                 return mail->getImportant();
             }
@@ -141,11 +166,7 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
             }
             return mail->getMimeMessage();
         case ThreadSize:
-            if (mIsThreaded) {
-                return mail->getProperty("count").toInt();
-            } else {
-                return 1;
-            }
+            return mail->count();
         case Mail:
             return QVariant::fromValue(mail);
         case Incomplete:
@@ -188,13 +209,15 @@ bool MailListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePar
 
 void MailListModel::runQuery(const Sink::Query &query)
 {
-    m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
-    setSourceModel(m_model.data());
-}
-
-bool MailListModel::isThreaded() const
-{
-    return mIsThreaded;
+    if (query.getBaseFilters().isEmpty() && query.ids().isEmpty()) {
+        mQuery = {};
+        m_model.clear();
+        setSourceModel(nullptr);
+    } else {
+        mQuery = query;
+        m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+        setSourceModel(m_model.data());
+    }
 }
 
 void MailListModel::setParentFolder(const QVariant &parentFolder)
@@ -210,16 +233,14 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
         return;
     }
     mCurrentQueryItem = folder->identifier();
+    bool isThreaded = true;
     if (folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::drafts) ||
         folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::sent)) {
-        mIsThreaded = false;
-    } else {
-        mIsThreaded = true;
+        isThreaded = false;
     }
-    emit isThreadedChanged();
 
     Sink::Query query = [&] {
-        if (mIsThreaded) {
+        if (isThreaded) {
             return Sink::StandardQueries::threadLeaders(*folder);
         } else {
             Sink::Query query;

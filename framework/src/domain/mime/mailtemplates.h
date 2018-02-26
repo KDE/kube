@@ -35,6 +35,7 @@ struct Attachment {
 namespace MailTemplates
 {
     void reply(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback, const KMime::Types::AddrSpecList &me = {});
+    void forward(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback);
     QString plaintextContent(const KMime::Message::Ptr &origMsg);
     QString body(const KMime::Message::Ptr &msg, bool &isHtml);
     KMime::Message::Ptr createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, bool htmlBody, const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys = {}, const std::vector<GpgME::Key> &encryptionKeys = {});
