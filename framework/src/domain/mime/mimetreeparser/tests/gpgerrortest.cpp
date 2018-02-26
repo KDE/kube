@@ -68,13 +68,14 @@ private slots:
         otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
-        auto part = partList[0].dynamicCast<MimeTreeParser::SignedMessagePart>();
+        auto part = partList[0];
         QVERIFY(bool(part));
 
         qWarning() << part->metaObject()->className() << part->text() << part->partMetaData()->status;
         QVERIFY(part->text().startsWith("asdasd"));
         QCOMPARE(part->encryptions().size(), 1);
-        // auto enc = part->encryptions()[0];
+        auto enc = part->encryptions()[0];
+        QCOMPARE(enc->error(),  MimeTreeParser::MessagePart::NoError);
         // QCOMPARE(enc->errorType(), Encryption::NoError);
         // QCOMPARE(enc->errorString(), QString());
         // QCOMPARE((int) enc->recipients().size(), 2);

@@ -893,7 +893,7 @@ void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &r
         }
         if (!mVerifiedText.isEmpty() && parseText) {
             auto tempNode = new KMime::Content();
-            tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
+            tempNode->setBody(mVerifiedText);
             tempNode->parse();
             bindLifetime(tempNode);
 
