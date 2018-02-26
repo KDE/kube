@@ -838,15 +838,6 @@ void SignedMessagePart::startVerification()
     }
 }
 
-void SignedMessagePart::startVerification(const QByteArray &text, const QTextCodec *aCodec)
-{
-    startVerificationDetached(text, nullptr, QByteArray());
-
-    if (!mNode && mMetaData.isSigned) {
-        setText(aCodec->toUnicode(mVerifiedText));
-    }
-}
-
 void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray &signature)
 {
     mMetaData.isEncrypted = false;
@@ -881,7 +872,6 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
 void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText)
 {
     auto signatures = result.signatures();
-    mVerifiedText = plainText;
     mMetaData.auditLogError = result.error();
     if (!signatures.empty()) {
         mMetaData.isSigned = true;
@@ -889,9 +879,9 @@ void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &r
         if (mNode && parseText) {
             mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
         }
-        if (!mVerifiedText.isEmpty() && parseText) {
+        if (!plainText.isEmpty() && parseText) {
             auto tempNode = new KMime::Content();
-            tempNode->setBody(mVerifiedText);
+            tempNode->setBody(plainText);
             tempNode->parse();
             bindLifetime(tempNode);
 

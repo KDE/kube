@@ -353,7 +353,6 @@ public:
     void setIsSigned(bool isSigned);
     bool isSigned() const;
 
-    void startVerification(const QByteArray &text, const QTextCodec *aCodec);
     void startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray &signature);
     void startVerification();
 
@@ -369,7 +368,6 @@ private:
 protected:
     GpgME::Protocol mProtocol;
     QString mFromAddress;
-    QByteArray mVerifiedText;
     KMime::Content *mSignedData;
 
     friend EncryptedMessagePart;
