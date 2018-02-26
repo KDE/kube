@@ -378,12 +378,23 @@ Rectangle {
                 rightMargin: Kube.Units.largeSpacing
             }
             columns: 2
+            spacing: Kube.Units.smallSpacing
 
-            Kube.IconButton {
+            Kube.Button {
+                visible: !model.trash && !model.draft
+                activeFocusOnTab: false
+
+                text: "Share"
+                onClicked: {
+                    Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
+                }
+            }
+
+            Kube.Button {
                 visible: !model.trash
                 activeFocusOnTab: false
 
-                iconName: model.draft ? Kube.Icons.edit : Kube.Icons.replyToSender
+                text: model.draft ? "Edit" : "Reply"
                 onClicked: {
                     if (model.draft) {
                         Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail})
@@ -392,20 +403,9 @@ Rectangle {
                     }
                 }
             }
-
-            Kube.IconButton {
-                visible: !model.trash && !model.draft
-                activeFocusOnTab: false
-
-                iconName: Kube.Icons.forward
-                onClicked: {
-                    Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
-                }
-            }
-
         }
-
     }
+
     Rectangle {
         anchors.fill: parent
         color: Kube.Colors.buttonColor
