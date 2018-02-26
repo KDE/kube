@@ -864,11 +864,9 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     auto ctx = gpgContext(mProtocol);
 
     if (!signature.isEmpty()) {
-        qWarning() << "We have a signature";
         auto result = ctx->verifyDetachedSignature(fromBA(signature), fromBA(text));
         setVerificationResult(result, false, text);
     } else {
-        qWarning() << "We have no signature";
         QGpgME::QByteArrayDataProvider out;
         GpgME::Data outdata(&out);
         auto result = ctx->verifyOpaqueSignature(fromBA(text), outdata);
@@ -998,7 +996,6 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     mMetaData.auditLog.clear();
 
     const QByteArray ciphertext = data.decodedContent();
-    qWarning() << "Protocol: " << mProtocol;
     auto ctx = gpgContext(mProtocol);
     QGpgME::QByteArrayDataProvider out;
     GpgME::Data outdata(&out);
