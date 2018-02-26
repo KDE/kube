@@ -979,8 +979,6 @@ void EncryptedMessagePart::startDecryption(const QByteArray &text, const QTextCo
 bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 {
     mError = NoError;
-    auto passphraseError = false;
-    auto noSecKey = false;
     mMetaData.errorText.clear();
     mMetaData.auditLogError = GpgME::Error();
     mMetaData.auditLog.clear();
@@ -1003,36 +1001,37 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     }
 
     mDecryptRecipients = decryptResult.recipients();
-    auto decryptionOk = !decryptResult.error();
-
-    if (!decryptionOk && mMetaData.isSigned) {
+    if (decryptResult.error() && mMetaData.isSigned) {
         //Only a signed part
         mMetaData.isEncrypted = false;
         mDecryptedData = plainText;
         return true;
     }
 
-    passphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
-    mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
-    mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
     if (mMetaData.isEncrypted && decryptResult.numRecipients() > 0) {
         mMetaData.keyId = decryptResult.recipient(0).keyID();
     }
 
-    if (decryptionOk) {
+    if (!decryptResult.error()) {
         mDecryptedData = plainText;
         setText(QString::fromUtf8(mDecryptedData.constData()));
     } else {
-        noSecKey = true;
+        mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
+        mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
+
+        std::stringstream ss;
+        ss << decryptResult << '\n' << verifyResult;
+        qWarning() << "Decryption failed: " << ss.str().c_str();
+
+        bool passphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
+
+        auto noSecKey = true;
         foreach (const GpgME::DecryptionResult::Recipient &recipient, decryptResult.recipients()) {
             noSecKey &= (recipient.status().code() == GPG_ERR_NO_SECKEY);
         }
         if (!passphraseError && !noSecKey) {          // GpgME do not detect passphrase error correctly
             passphraseError = true;
         }
-        std::stringstream ss;
-        ss << decryptResult << '\n' << verifyResult;
-        qWarning() << "Decryption failed: " << ss.str().c_str();
 
         if(noSecKey) {
             mError = NoKeyError;
