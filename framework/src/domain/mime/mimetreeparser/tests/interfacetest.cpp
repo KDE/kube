@@ -155,12 +155,10 @@ private slots:
         auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
         QVERIFY(bool(part));
         QCOMPARE(part->charset(), QStringLiteral("ISO-8859-1").toLocal8Bit());
-        QEXPECT_FAIL("", "gpgpme break encoding it seems, or the original file is broken", Continue);
-        QCOMPARE(part->text(), QString::fromUtf8("asdasd asd asd asdf sadf sdaf sadf äöü"));
+        QCOMPARE(part->text(), QString::fromUtf8("asdasd asd asd asdf sadf sdaf sadf öäü"));
 
-        //FIXME
-        // QCOMPARE(part->encryptions().size(), 1);
-        // QCOMPARE(part->signatures().size(), 1);
+        QCOMPARE(part->encryptions().size(), 1);
+        QCOMPARE(part->signatures().size(), 1);
         QCOMPARE(otp.collectAttachmentParts().size(), 0);
     }
 

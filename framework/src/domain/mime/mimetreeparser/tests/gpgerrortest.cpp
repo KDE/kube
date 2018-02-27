@@ -68,15 +68,13 @@ private slots:
         otp.print();
         auto partList = otp.collectContentParts();
         QCOMPARE(partList.size(), 1);
-        auto part = partList[0].dynamicCast<MimeTreeParser::SignedMessagePart>();
+        auto part = partList[0];
         QVERIFY(bool(part));
 
-        qWarning() << part->metaObject()->className() << part->text() << part->partMetaData()->status;
         QVERIFY(part->text().startsWith("asdasd"));
         QCOMPARE(part->encryptions().size(), 1);
-        // auto enc = part->encryptions()[0];
-        // QCOMPARE(enc->errorType(), Encryption::NoError);
-        // QCOMPARE(enc->errorString(), QString());
+        auto enc = part->encryptions()[0];
+        QCOMPARE(enc->error(),  MimeTreeParser::MessagePart::NoError);
         // QCOMPARE((int) enc->recipients().size(), 2);
     }
 
@@ -108,11 +106,8 @@ private slots:
 
         QCOMPARE(part->encryptions().size(), 1);
         QVERIFY(part->text().isEmpty());
-        // auto enc = part->encryptions()[0];
-        // qDebug() << "HUHU"<< enc->errorType();
-        // QCOMPARE(enc->errorType(), Encryption::UnknownError);
-        // QCOMPARE(enc->errorString(), QString("Crypto plug-in \"OpenPGP\" could not decrypt the data.<br />Error: No data"));
-        // QCOMPARE((int) enc->recipients().size(), 0);
+        auto enc = part->encryptions()[0];
+        QCOMPARE(enc->error(), MimeTreeParser::MessagePart::NoKeyError);
     }
 
     void testGpgIncorrectGPGHOME_data()
@@ -142,10 +137,8 @@ private slots:
         QCOMPARE(part->encryptions().size(), 1);
         QCOMPARE(part->signatures().size(), 0);
         QVERIFY(part->text().isEmpty());
-        // auto enc = part->encryptions()[0];
-        // qDebug() << enc->errorType();
-        // QCOMPARE(enc->errorType(), Encryption::KeyMissing);
-        // QCOMPARE(enc->errorString(), QString("Crypto plug-in \"OpenPGP\" could not decrypt the data.<br />Error: Decryption failed"));
+        auto enc = part->encryptions()[0];
+        QCOMPARE(enc->error(), MimeTreeParser::MessagePart::NoKeyError);
         // QCOMPARE((int) enc->recipients().size(), 2);
     }
 
@@ -177,7 +170,7 @@ public Q_SLOTS:
         resetEnv();
     }
 private:
-    void unsetEnv(const QByteArray &name) 
+    void unsetEnv(const QByteArray &name)
     {
         mModifiedEnv << name;
         unsetenv(name);

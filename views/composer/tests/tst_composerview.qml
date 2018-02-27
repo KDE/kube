@@ -131,7 +131,7 @@ TestCase {
         TestStore.setup(initialState)
 
         var createdMail = TestStore.load("mail", {resource: "resource1"})
-        var composer = createTemporaryObject(composerComponent, testCase, {message: createdMail, loadAsDraft: false})
+        var composer = createTemporaryObject(composerComponent, testCase, {message: createdMail, loadType: Kube.ComposerController.Reply})
         composer.setup()
 
         var subject = findChild(composer, "subject");

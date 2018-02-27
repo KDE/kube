@@ -45,7 +45,18 @@ Controls.SplitView {
                 if (message.type == Kube.Notifications.error) {
                     root.pendingError = true
                 }
-                var error = {timestamp: new Date(), message: message.message, details: message.details, resource: message.resource}
+
+                var error = {
+                    timestamp: new Date(),
+                    message: message.message,
+                    details: message.details,
+                    resource: message.resource,
+                    // TODO: if we passed entities as a list, it would get
+                    // converted to a ListModel, in all likelihood because of
+                    // ListDelegate, which we should rewrite in C++
+                    entities: {elements: message.entities}
+                }
+
                 if (logModel.count > 0) {
                     var lastEntry = logModel.get(0)
                     //Merge if we get an entry of the same subtype
@@ -89,6 +100,8 @@ Controls.SplitView {
                 } else {
                     details.subtype = ""
                 }
+
+                details.entities = error.entities
             }
 
             delegate: Kube.ListDelegate {
@@ -145,6 +158,7 @@ Controls.SplitView {
         property date timestamp
         property string message: ""
         property string resourceId: ""
+        property var entities: []
 
         Kube.ModelIndexRetriever {
             id: retriever
@@ -166,6 +180,7 @@ Controls.SplitView {
             property string resourceId: details.resourceId
             property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
             property string accountName: retriever.currentData ? retriever.currentData.name : ""
+            property var entities: details.entities
 
             function getComponent(subtype) {
                 if (subtype == Kube.Notifications.loginError) {
@@ -340,19 +355,49 @@ Controls.SplitView {
                     right: parent.right
                 }
                 spacing: Kube.Units.largeSpacing
+
+                Kube.Heading {
+                    id: heading
+                    text: qsTr("Failed to send the message.")
+                    color: Kube.Colors.warningColor
+                }
+
                 Column {
-                    Kube.Heading {
-                        id: heading
-                        text: qsTr("Failed to send the message.")
-                        color: Kube.Colors.warningColor
-                    }
-                    Kube.Label {
-                        id: subHeadline
-                        text: accountName
-                        color: Kube.Colors.disabledTextColor
-                        wrapMode: Text.Wrap
+                    spacing: Kube.Units.largeSpacing
+
+                    Repeater {
+                        model: Kube.MailListModel {
+                            entityId: entities.elements[0]
+                        }
+                        delegate: Column {
+                            id: subHeadline
+
+                            Kube.Label {
+                                text: qsTr("Account") + ": " + accountName
+                                color: Kube.Colors.disabledTextColor
+                                wrapMode: Text.Wrap
+                            }
+                            Kube.Label {
+                                text: qsTr("Subject") + ": " + model.subject
+                                color: Kube.Colors.disabledTextColor
+                                wrapMode: Text.Wrap
+                            }
+                            Kube.Label {
+                                text: qsTr("To") + ": " + model.to
+                                color: Kube.Colors.disabledTextColor
+                                wrapMode: Text.Wrap
+                            }
+                            Kube.Label {
+                                visible: !!model.cc
+                                text: qsTr("Cc") + ": " + model.cc;
+                                color: Kube.Colors.disabledTextColor
+                                wrapMode: Text.Wrap
+                            }
+
+                        }
                     }
                 }
+
                 Kube.Button {
                     text: qsTr("Try again")
                     onClicked: {

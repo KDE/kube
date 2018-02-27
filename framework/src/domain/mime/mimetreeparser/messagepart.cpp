@@ -838,15 +838,6 @@ void SignedMessagePart::startVerification()
     }
 }
 
-void SignedMessagePart::startVerification(const QByteArray &text, const QTextCodec *aCodec)
-{
-    startVerificationDetached(text, nullptr, QByteArray());
-
-    if (!mNode && mMetaData.isSigned) {
-        setText(aCodec->toUnicode(mVerifiedText));
-    }
-}
-
 void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray &signature)
 {
     mMetaData.isEncrypted = false;
@@ -864,11 +855,9 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     auto ctx = gpgContext(mProtocol);
 
     if (!signature.isEmpty()) {
-        qWarning() << "We have a signature";
         auto result = ctx->verifyDetachedSignature(fromBA(signature), fromBA(text));
         setVerificationResult(result, false, text);
     } else {
-        qWarning() << "We have no signature";
         QGpgME::QByteArrayDataProvider out;
         GpgME::Data outdata(&out);
         auto result = ctx->verifyOpaqueSignature(fromBA(text), outdata);
@@ -883,7 +872,6 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
 void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText)
 {
     auto signatures = result.signatures();
-    mVerifiedText = plainText;
     mMetaData.auditLogError = result.error();
     if (!signatures.empty()) {
         mMetaData.isSigned = true;
@@ -891,9 +879,9 @@ void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &r
         if (mNode && parseText) {
             mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
         }
-        if (!mVerifiedText.isEmpty() && parseText) {
+        if (!plainText.isEmpty() && parseText) {
             auto tempNode = new KMime::Content();
-            tempNode->setContent(KMime::CRLFtoLF(mVerifiedText.constData()));
+            tempNode->setBody(plainText);
             tempNode->parse();
             bindLifetime(tempNode);
 
@@ -991,14 +979,11 @@ void EncryptedMessagePart::startDecryption(const QByteArray &text, const QTextCo
 bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 {
     mError = NoError;
-    auto passphraseError = false;
-    auto noSecKey = false;
     mMetaData.errorText.clear();
     mMetaData.auditLogError = GpgME::Error();
     mMetaData.auditLog.clear();
 
     const QByteArray ciphertext = data.decodedContent();
-    qWarning() << "Protocol: " << mProtocol;
     auto ctx = gpgContext(mProtocol);
     QGpgME::QByteArrayDataProvider out;
     GpgME::Data outdata(&out);
@@ -1016,36 +1001,37 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     }
 
     mDecryptRecipients = decryptResult.recipients();
-    auto decryptionOk = !decryptResult.error();
-
-    if (!decryptionOk && mMetaData.isSigned) {
+    if (decryptResult.error() && mMetaData.isSigned) {
         //Only a signed part
         mMetaData.isEncrypted = false;
         mDecryptedData = plainText;
         return true;
     }
 
-    passphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
-    mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
-    mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
     if (mMetaData.isEncrypted && decryptResult.numRecipients() > 0) {
         mMetaData.keyId = decryptResult.recipient(0).keyID();
     }
 
-    if (decryptionOk) {
+    if (!decryptResult.error()) {
         mDecryptedData = plainText;
         setText(QString::fromUtf8(mDecryptedData.constData()));
     } else {
-        noSecKey = true;
+        mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
+        mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
+
+        std::stringstream ss;
+        ss << decryptResult << '\n' << verifyResult;
+        qWarning() << "Decryption failed: " << ss.str().c_str();
+
+        bool passphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
+
+        auto noSecKey = true;
         foreach (const GpgME::DecryptionResult::Recipient &recipient, decryptResult.recipients()) {
             noSecKey &= (recipient.status().code() == GPG_ERR_NO_SECKEY);
         }
         if (!passphraseError && !noSecKey) {          // GpgME do not detect passphrase error correctly
             passphraseError = true;
         }
-        std::stringstream ss;
-        ss << decryptResult << '\n' << verifyResult;
-        qWarning() << "Decryption failed: " << ss.str().c_str();
 
         if(noSecKey) {
             mError = NoKeyError;
