@@ -1,0 +1,62 @@
+sudo: true
+language: c++
+cache: ccache
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+            - ubuntu-sdk-team
+            - sourceline: "ppa:beineri/opt-qt594-trusty"
+            - sourceline: "ppa:xapian-backports/ppa"
+        packages:
+            - g++-6
+            - cmake
+            - ninja-build
+            - qt59-meta-minimal
+            - qt59tools
+            - qt59script
+            - qt59webengine
+            - liblmdb-dev
+            - gperf
+            - libxapian-dev
+            - gnupg2
+            - gpgsm
+            - libassuan-dev
+            - libgpg-error-dev
+git:
+    depth: 1
+branches:
+    except:
+        - gh-pages
+
+before_install:
+    - source /opt/qt59/bin/qt59-env.sh
+
+install:
+    - ./.travis/install-kde.sh extra-cmake-modules v5.43.0
+    - ./.travis/install-kde.sh kcoreaddons v5.43.0
+    - ./.travis/install-kde.sh kcodecs v5.43.0
+    - ./.travis/install-kde.sh ki18n v5.43.0
+    - ./.travis/install-kde.sh kconfig v5.43.0
+
+    - ./.travis/install-kde.sh kmime v17.12.2
+    - ./.travis/install-kde.sh kasync v0.2.0
+    - ./.travis/install-kde.sh kcontacts v17.12.2
+
+    - ./.travis/install-flatbuffers.sh
+
+    - ./.travis/install-kde.sh kdav2 v0.1.0
+    - ./.travis/install-kde.sh kimap2 v0.2.1
+
+    - ./.travis/install-kde.sh sink develop
+
+    - ./.travis/install-gpg.sh libgpg-error 1.27 --enable-threads --enable-nls
+    - ./.travis/install-gpg.sh libassuan 2.5.1
+    - ./.travis/install-gpg.sh gpgme 1.10.0 --enable-languages="cpp qt"
+
+script:
+    - mkdir build
+    - cd build
+    - cmake .. -G Ninja
+    - ninja
+    #- ninja test
