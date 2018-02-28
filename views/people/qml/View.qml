@@ -28,7 +28,7 @@ Item {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
     }
 
-    Kube.People {
+    People {
         id: people
         anchors {
             fill: parent

@@ -82,7 +82,7 @@ Flickable {
                 color: Kube.Colors.buttonColor
             }
 
-                        Kube.Heading {
+            Kube.Heading {
                 id: nameLabel
 
                 anchors {
