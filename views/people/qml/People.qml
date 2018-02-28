@@ -257,7 +257,6 @@ FocusScope {
             }
 
             Kube.PositiveButton {
-
                 anchors {
                     bottom: parent.bottom
                     right: parent.right
@@ -267,6 +266,7 @@ FocusScope {
                 text: "Save"
 
                 onClicked: {
+                    contactController.saveAction.execute()
                     stack.pop()
                 }
             }
