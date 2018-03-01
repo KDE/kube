@@ -25,6 +25,8 @@ import org.kube.framework 1.0 as Kube
 StackView {
     id: stack
 
+    anchors.fill: parent
+
     property var searchTerm: ""
 
     initialItem: searchBar
@@ -32,26 +34,39 @@ StackView {
     Component {
         id: searchBar
 
-        Rectangle {
-            color: Kube.Colors.backgroundColor
+        FocusScope {
 
-            Row {
-                anchors.centerIn: parent
+            function search() {
+                stack.searchTerm = searchField.text
+                stack.push(searchResults)
+            }
 
-                spacing: Kube.Units.smallSpacing
+            Rectangle {
+                anchors.fill: parent
+                color: Kube.Colors.backgroundColor
 
-                Kube.TextField {
-                    id: searchField
-                    width: Kube.Units.gridUnit * 30
-                }
+                Row {
+                    anchors.centerIn: parent
 
-                Kube.PositiveButton {
-                    text: qsTr("Search")
-                    enabled: searchField.text != ""
+                    spacing: Kube.Units.smallSpacing
 
-                    onClicked: {
-                        searchTerm = searchField.text
-                        stack.push(searchResults)
+                    Kube.TextField {
+                        id: searchField
+                        width: Kube.Units.gridUnit * 30
+                        focus: true
+                        text: stack.searchTerm
+
+                        Keys.onEscapePressed: stack.searchTerm = ""
+                        onAccepted: search()
+                    }
+
+                    Kube.PositiveButton {
+                        text: qsTr("Search")
+                        enabled: searchField.text != ""
+
+                        onClicked: {
+                            search()
+                        }
                     }
                 }
             }
@@ -81,7 +96,10 @@ StackView {
                         leftMargin: Kube.Units.smallSpacing
                     }
                     iconName: Kube.Icons.goBack
-                    onClicked: stack.pop()
+                    onClicked: {
+                        stack.searchTerm = ""
+                        stack.pop()
+                    }
                 }
 
                 Kube.TextField {
