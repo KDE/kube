@@ -71,14 +71,16 @@ FocusScope {
                 model: DaylongEvents {}
 
                 delegate: Item {
-                    height: Kube.Units.gridUnit
+                    height: Kube.Units.gridUnit + 2 // +2 to make good for the white border
                     width: daylong.width
 
                     Rectangle {
                         width: Kube.Units.gridUnit * 7 * model.duration
-                        height: Kube.Units.gridUnit
+                        height: parent.height
                         x: Kube.Units.gridUnit * 7 * model.starts
                         color: model.color
+                        border.width: 1
+                        border.color: Kube.Colors.viewBackgroundColor
 
                         Kube.Label {
                             anchors {
@@ -94,7 +96,6 @@ FocusScope {
         }
 
         RowLayout {
-
             anchors.horizontalCenter: parent.horizontalCenter
 
             spacing: 0
@@ -127,6 +128,8 @@ FocusScope {
                             x: Kube.Units.gridUnit * model.indention
 
                             color: model.color
+                            border.width: 1
+                            border.color: Kube.Colors.viewBackgroundColor
 
                             Kube.Label {
                                 anchors {
