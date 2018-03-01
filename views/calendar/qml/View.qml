@@ -33,9 +33,7 @@ FocusScope {
         anchors.centerIn: parent
 
         DayOfWeekRow {
-
             anchors.horizontalCenter: parent.horizontalCenter
-
             spacing: 0
             locale: Qt.locale("de")
 
@@ -62,11 +60,16 @@ FocusScope {
             height: Kube.Units.gridUnit * 3
             width: parent.width
             color: Kube.Colors.viewBackgroundColor
+            border.width: 1
+            border.color: Kube.Colors.buttonColor
 
             ListView {
                 id: daylong
 
-                anchors.fill: parent
+                anchors {
+                    fill: parent
+                    margins: 1
+                }
 
                 model: DaylongEvents {}
 
