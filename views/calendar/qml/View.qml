@@ -29,7 +29,6 @@ FocusScope {
     property var month: Calendar.March
     property var year: 2017
 
-
     Column {
         anchors.centerIn: parent
 
@@ -118,10 +117,15 @@ FocusScope {
                         model: parent.events
 
                         delegate: Rectangle {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            width: parent.width - Kube.Units.smallSpacing * 2
-                            height: Kube.Units.gridUnit * duration
-                            y: Kube.Units.gridUnit * starts
+                            anchors {
+                                right: parent.right
+                                rightMargin: Kube.Units.smallSpacing
+                            }
+                            width: parent.width - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.indention
+                            height: Kube.Units.gridUnit * model.duration
+                            y: Kube.Units.gridUnit * model.starts
+                            x: Kube.Units.gridUnit * model.indention
+
                             color: model.color
 
                             Kube.Label {
