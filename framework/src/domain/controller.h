@@ -137,6 +137,7 @@ public:
 
 Q_SIGNALS:
     void added(QByteArray, QVariantMap);
+    void removed(QByteArray);
     void emptyChanged();
 
 protected:
