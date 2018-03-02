@@ -175,7 +175,7 @@ Flickable {
                     delegate: Row {
                         spacing: Kube.Units.smallSpacing
                         Kube.Label { text: qsTr("(main)") }
-                        Kube.TextField { text: modelData ; color: Kube.Colors.highlightColor }
+                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelData ; color: Kube.Colors.highlightColor }
                         Item { width: Kube.Units.smallSpacing; height: 1 }
                     }
                 }
@@ -205,7 +205,7 @@ Flickable {
                     Row {
                         spacing: Kube.Units.smallSpacing
                         Kube.Label { text: qsTr("(main)") }
-                        Kube.TextField { text: modelData ; opacity: 0.6 }
+                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelData}
                         Item { width: Kube.Units.smallSpacing; height: 1 }
                     }
                 }

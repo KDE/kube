@@ -66,7 +66,11 @@ FocusScope {
                 }
                 visible: stack.depth > 1
                 iconName: Kube.Icons.goBack
-                onClicked: stack.pop()
+                onClicked: {
+                    if(stack.depth == 1)
+                        root.currentContact = ""
+                    stack.pop()
+                }
             }
             Kube.TextField {
                 id: searchBar
@@ -229,7 +233,6 @@ FocusScope {
                     right: parent.right
                     margins: Kube.Units.largeSpacing
                 }
-
                 text: "Edit"
 
                 onClicked: {
@@ -239,7 +242,6 @@ FocusScope {
         }
     }
 
-
     Component {
         id: personComposer
 
@@ -248,7 +250,7 @@ FocusScope {
 
             Kube.ContactController {
                 id: contactController
-                contact: ""
+                contact: root.currentContact
             }
 
             color: Kube.Colors.viewBackgroundColor
