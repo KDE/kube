@@ -82,7 +82,9 @@ Controls2.ApplicationWindow {
     Kube.Listener {
         filter: Kube.Messages.notification
         onMessageReceived: {
-            notificationPopup.notify(message.message);
+            if (message.message) {
+                notificationPopup.notify(message.message);
+            }
         }
     }
 

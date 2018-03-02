@@ -42,6 +42,10 @@ Controls.SplitView {
         Kube.Listener {
             filter: Kube.Messages.notification
             onMessageReceived: {
+                //Ignore noise that we can't usefully render anyways
+                if (!message.message) {
+                    return
+                }
                 if (message.type == Kube.Notifications.error) {
                     root.pendingError = true
                 }
