@@ -22,6 +22,7 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QStandardItemModel>
 
 #include "controller.h"
 
@@ -42,6 +43,9 @@ class ContactController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(QString, Company, company)
     KUBE_CONTROLLER_PROPERTY(QString, JobTitle, jobTitle)
     KUBE_CONTROLLER_PROPERTY(QByteArray, ImageData, imageData)
+
+    KUBE_CONTROLLER_LISTCONTROLLER(mails)
+    KUBE_CONTROLLER_LISTCONTROLLER(phones)
 
     KUBE_CONTROLLER_ACTION(save)
 
