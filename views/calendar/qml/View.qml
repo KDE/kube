@@ -36,11 +36,12 @@ FocusScope {
         width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
         height: Kube.Units.gridUnit * 27
 
+        //BEGIN day labels
         DayOfWeekRow {
             id: dayLabels
             anchors.right: parent.right
             spacing: 0
-            locale: Qt.locale("de")
+            locale: Qt.locale("en_GB")
 
             delegate: Rectangle {
                 width: Kube.Units.gridUnit * 7
@@ -60,8 +61,9 @@ FocusScope {
                 }
             }
         }
+        //END day labels
 
-
+        //BEGIN daylong events
         Rectangle {
             id: daylong
 
@@ -109,6 +111,7 @@ FocusScope {
                 }
             }
         }
+        //END daylong events
 
         Flickable {
             id: mainWeekViewer
@@ -135,10 +138,11 @@ FocusScope {
 
                 spacing: 0
 
+                //BEGIN time labels
                 Column {
                     anchors.bottom: parent.bottom
                     Repeater {
-                        model: ["0:00","1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"]
+                        model: ["1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","0:00"]
                         delegate: Item {
                             height: Kube.Units.gridUnit * 2
                             width: Kube.Units.gridUnit * 2
@@ -147,12 +151,14 @@ FocusScope {
                                 anchors {
                                     right: parent.right
                                     rightMargin: Kube.Units.smallSpacing
+                                    bottom: parent.bottom
                                 }
                                 text: model.modelData
                             }
                         }
                     }
                 }
+                //END time labels
 
                 Repeater {
                     model: WeekEvents{}
@@ -167,6 +173,20 @@ FocusScope {
                         border.width: 1
                         border.color: "lightgrey"
                         color: Kube.Colors.viewBackgroundColor
+
+                        Column {
+                            anchors.fill: parent
+                            Repeater {
+                                model: 24
+                                delegate: Rectangle {
+                                    height: Kube.Units.gridUnit * 4
+                                    width: parent.width
+                                    color: "transparent"
+                                    border.width:1
+                                    border.color: "lightgrey"
+                                }
+                            }
+                        }
 
                         Repeater {
                             model: parent.events
@@ -207,7 +227,6 @@ FocusScope {
                                         eventDelegate.z = eventDelegate.z - 100
 
                                     }
-
                                 }
                             }
                         }
