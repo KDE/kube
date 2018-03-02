@@ -249,7 +249,20 @@ FocusScope {
                                         eventDelegate.z = eventDelegate.z - 100
 
                                     }
+
+                                    onReleased: eventDelegate.Drag.drop()
                                 }
+                            }
+                        }
+
+                        DropArea {
+                            anchors.fill: parent
+
+                            onDropped: {
+                                console.log("DROP")
+                                drop.accept(Qt.MoveAction)
+                                drop.source.visible = false
+                                console.log((drop.source.y - mainWeekViewer.y + mainWeekViewer.contentY) / Kube.Units.gridUnit)
                             }
                         }
                     }
