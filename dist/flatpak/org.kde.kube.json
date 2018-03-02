@@ -84,6 +84,21 @@
             "sources": [ { "type": "git", "url": "https://github.com/curl/curl.git", "branch": "curl-7_55_0"} ]
         },
         {
+            "name": "xapian",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://oligarchy.co.uk/xapian/1.4.2/xapian-core-1.4.2.tar.xz",
+                    "sha256": "aec2c4352998127a2f2316218bf70f48cef0a466a87af3939f5f547c5246e1ce"
+                }
+            ],
+            "cleanup": [
+                "/lib/libxapian.la",
+                "/share/doc/xapian-core",
+                "/bin/xapian-*"
+            ]
+        },
+        {
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib",
                             "-DCMAKE_C_COMPILER=/usr/bin/clang", "-DCMAKE_CXX_COMPILER=/usr/bin/clang++"],
             "name": "sink",
