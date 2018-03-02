@@ -63,7 +63,29 @@ ListModel {
         ]
     }
     ListElement {
-        events: []
+        events: [
+                    ListElement {
+            color: "#134bab"
+            starts: 8
+            duration: 5
+            indention: 0
+            text: "Meeting"
+        },
+        ListElement {
+            color: "#af1a6a"
+            starts: 8
+            duration: 4
+            indention: 1
+            text: "Meeting2"
+        },
+        ListElement {
+            color: "#af1a6a"
+            starts: 9
+            duration: 7
+            indention: 2
+            text: "Meeting2"
+        }
+        ]
     }
     ListElement {
         events: []

@@ -26,7 +26,6 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
 
-
     Item {
         anchors {
             top: parent.top
@@ -173,6 +172,7 @@ FocusScope {
                             model: parent.events
 
                             delegate: Rectangle {
+                                id: eventDelegate
                                 anchors {
                                     right: parent.right
                                     rightMargin: Kube.Units.smallSpacing
@@ -194,11 +194,25 @@ FocusScope {
                                     text: model.text
                                     color: Kube.Colors.highlightedTextColor
                                 }
+
+                                MouseArea {
+                                    anchors.fill: parent
+
+                                    hoverEnabled: true
+
+                                    onEntered: {
+                                        eventDelegate.z = eventDelegate.z + 100
+                                    }
+                                    onExited: {
+                                        eventDelegate.z = eventDelegate.z - 100
+
+                                    }
+
+                                }
                             }
                         }
                     }
                 }
-
             }
         }
     }
