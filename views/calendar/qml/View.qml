@@ -193,11 +193,26 @@ FocusScope {
 
                             delegate: Rectangle {
                                 id: eventDelegate
+
+                                states: [
+                                State {
+                                    name: "dnd"
+                                    when: mouseArea.drag.active
+
+                                    PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
+                                    PropertyChanges {target: eventDelegate; x: x; y: y}
+                                    PropertyChanges {target: eventDelegate; parent: root}
+                                    PropertyChanges {target: eventDelegate; opacity: 0.7}
+                                    PropertyChanges {target: eventDelegate; anchors.right: ""}
+                                    PropertyChanges {target: eventDelegate; width: Kube.Units.gridUnit * 7 - Kube.Units.smallSpacing * 2}
+                                }
+                                ]
+
                                 anchors {
                                     right: parent.right
                                     rightMargin: Kube.Units.smallSpacing
                                 }
-                                width: parent.width - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.indention
+                                width: Kube.Units.gridUnit * 7 - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.indention
                                 height: Kube.Units.gridUnit * model.duration
                                 y: Kube.Units.gridUnit * model.starts
                                 x: Kube.Units.gridUnit * model.indention
@@ -215,10 +230,17 @@ FocusScope {
                                     color: Kube.Colors.highlightedTextColor
                                 }
 
+                                Drag.active: mouseArea.drag.active
+                                Drag.hotSpot.x: mouseArea.mouseX
+                                Drag.hotSpot.y: mouseArea.mouseY
+                                Drag.source: eventDelegate
+
                                 MouseArea {
+                                    id: mouseArea
                                     anchors.fill: parent
 
                                     hoverEnabled: true
+                                    drag.target: parent
 
                                     onEntered: {
                                         eventDelegate.z = eventDelegate.z + 100
