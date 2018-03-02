@@ -99,19 +99,19 @@ class AddresseeController : public Kube::ListPropertyController
 public:
 
     bool mFoundAllKeys = true;
-
     QSet<QByteArray> mMissingKeys;
-    AddresseeController() : Kube::ListPropertyController{{"name", "keyFound", "key"}}
+    AddresseeController()
+        : Kube::ListPropertyController{{"name", "keyFound", "key"}}
     {
-        QObject::connect(
-            this, &Kube::ListPropertyController::added, this, [this](const QByteArray &id, const QVariantMap &map) {
-                findKey(id, map.value("name").toString());
-            });
-
+        QObject::connect(this, &Kube::ListPropertyController::added, this, [this] (const QByteArray &id, const QVariantMap &map) {
+            findKey(id, map.value("name").toString());
+        });
         QObject::connect(this, &Kube::ListPropertyController::removed, this, [this] (const QByteArray &id) {
             mMissingKeys.remove(id);
             setFoundAllKeys(mMissingKeys.isEmpty());
         });
+
+
     }
 
     bool foundAllKeys()
@@ -133,13 +133,12 @@ public:
         mb.fromUnicodeString(addressee);
 
         SinkLog() << "Searching key for: " << mb.address();
-        asyncRun<std::vector<GpgME::Key>>(this,
-            [mb] {
+        asyncRun<std::vector<GpgME::Key>>(this, [mb] {
                 return MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
             },
             [this, addressee, id](const std::vector<GpgME::Key> &keys) {
                 if (!keys.empty()) {
-                    if (keys.size() > 1) {
+                    if (keys.size() > 1 ) {
                         SinkWarning() << "Found more than one key, encrypting to all of them.";
                     }
                     SinkLog() << "Found key: " << keys.front().primaryFingerprint();
@@ -155,7 +154,7 @@ public:
 
     void set(const QStringList &list)
     {
-        for (const auto &email : list) {
+        for (const auto &email: list) {
             add({{"name", email}});
         }
     }

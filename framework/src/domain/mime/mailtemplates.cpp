@@ -53,18 +53,6 @@ static bool operator==(const KMime::Types::Mailbox &left, const KMime::Types::Ma
     return (left.addrSpec().asString() == right.addrSpec().asString());
 }
     }
-
-    Message* contentToMessage(Content* content) {
-        content->assemble();
-        const auto encoded = content->encodedContent();
-
-        auto message = new Message();
-        message->setContent(encoded);
-        message->parse();
-
-        return message;
-    }
-
 }
 
 static KMime::Types::Mailbox::List stripMyAddressesFromAddressList(const KMime::Types::Mailbox::List &list, const KMime::Types::AddrSpecList me)
@@ -233,19 +221,6 @@ KMime::Content *createMultipartAlternativeContent(const QString &plainBody, cons
     multipartAlternative->addContent(htmlPart);
 
     return multipartAlternative;
-}
-
-KMime::Message *createMultipartMixedContent(QVector<KMime::Content *> contents)
-{
-    KMime::Message *multiPartMixed = new KMime::Message();
-    multiPartMixed->contentType()->setMimeType("multipart/mixed");
-    multiPartMixed->contentType()->setBoundary(KMime::multiPartBoundary());
-
-    for (const auto &content : contents) {
-        multiPartMixed->addContent(content);
-    }
-
-    return multiPartMixed;
 }
 
 void addProcessedBodyToMessage(const KMime::Message::Ptr &msg, const QString &plainBody, const QString &htmlBody, bool forward)
@@ -889,73 +864,27 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     });
 }
 
-void MailTemplates::forward(const KMime::Message::Ptr &origMsg,
-    const std::function<void(const KMime::Message::Ptr &result)> &callback)
+void MailTemplates::forward(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback)
 {
     KMime::Message::Ptr wrapperMsg(new KMime::Message);
 
     wrapperMsg->to()->clear();
     wrapperMsg->cc()->clear();
 
-    // Decrypt the original message, it will be encrypted again in the composer
-    // for the right recipient
-    KMime::Message::Ptr forwardedMessage;
-    if (isEncrypted(origMsg.data())) {
-        qDebug() << "Original message was encrypted, decrypting it";
-        MimeTreeParser::ObjectTreeParser otp;
-        otp.parseObjectTree(origMsg.data());
-        otp.decryptParts();
+    wrapperMsg->subject()->fromUnicodeString(forwardSubject(origMsg->subject()->asUnicodeString()), "utf-8");
 
-        auto htmlContent = otp.htmlContent();
-        KMime::Content *recreatedMsg =
-            htmlContent.isEmpty() ? createPlainPartContent(otp.plainTextContent()) :
-                                    createMultipartAlternativeContent(otp.plainTextContent(), htmlContent);
-
-        if (hasAttachment(origMsg.data())) {
-            QVector<KMime::Content *> contents = {recreatedMsg};
-            contents.append(origMsg->attachments());
-
-            auto msg = createMultipartMixedContent(contents);
-
-            forwardedMessage.reset(KMime::contentToMessage(msg));
-        } else {
-            forwardedMessage.reset(KMime::contentToMessage(recreatedMsg));
-        }
-
-        forwardedMessage->subject()->from7BitString(origMsg->subject()->as7BitString());
-
-        for (const auto &addr : origMsg->to()->mailboxes()) {
-            forwardedMessage->to()->addAddress(addr);
-        }
-
-        for (const auto &addr : origMsg->cc()->mailboxes()) {
-            forwardedMessage->cc()->addAddress(addr);
-        }
-
-        for (const auto &addr : origMsg->bcc()->mailboxes()) {
-            forwardedMessage->bcc()->addAddress(addr);
-        }
-
-    } else {
-        qDebug() << "Original message was not encrypted, using it as-is";
-        forwardedMessage = origMsg;
-    }
-
-    wrapperMsg->subject()->fromUnicodeString(
-        forwardSubject(forwardedMessage->subject()->asUnicodeString()), "utf-8");
-
-    const QByteArray refStr = getRefStr(forwardedMessage);
+    const QByteArray refStr = getRefStr(origMsg);
     if (!refStr.isEmpty()) {
         wrapperMsg->references()->fromUnicodeString(QString::fromLocal8Bit(refStr), "utf-8");
     }
 
-    KMime::Content *fwdAttachment = new KMime::Content;
+    KMime::Content* fwdAttachment = new KMime::Content;
 
     fwdAttachment->contentDisposition()->setDisposition(KMime::Headers::CDinline);
     fwdAttachment->contentType()->setMimeType("message/rfc822");
-    fwdAttachment->contentDisposition()->setFilename(forwardedMessage->subject()->asUnicodeString() + ".eml");
+    fwdAttachment->contentDisposition()->setFilename(origMsg->subject()->asUnicodeString() + ".eml");
     // The mail was parsed in loadMessage before, so no need to assemble it
-    fwdAttachment->setBody(forwardedMessage->encodedContent());
+    fwdAttachment->setBody(origMsg->encodedContent());
 
     wrapperMsg->addContent(fwdAttachment);
     wrapperMsg->assemble();
