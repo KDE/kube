@@ -58,7 +58,10 @@ Controls2.ApplicationWindow {
         interval: 300000
         running: !!app.currentFolder
         repeat: true
-        onTriggered: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder})
+        onTriggered: {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder})
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount, "type": "folder"})
+        }
     }
 
     Kube.StartupCheck {
