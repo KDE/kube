@@ -18,7 +18,7 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.3
 import Qt.labs.calendar 1.0
 
 import org.kube.framework 1.0 as Kube
@@ -26,14 +26,20 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
 
-    property var month: Calendar.March
-    property var year: 2017
 
-    Column {
-        anchors.centerIn: parent
+    Item {
+        anchors {
+            top: parent.top
+            topMargin: Kube.Units.largeSpacing
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
+        height: Kube.Units.gridUnit * 27
 
         DayOfWeekRow {
-            anchors.horizontalCenter: parent.horizontalCenter
+            id: dayLabels
+            anchors.right: parent.right
             spacing: 0
             locale: Qt.locale("de")
 
@@ -56,15 +62,22 @@ FocusScope {
             }
         }
 
+
         Rectangle {
+            id: daylong
+
+            anchors {
+                top: dayLabels.bottom
+                right: parent.right
+            }
+
             height: Kube.Units.gridUnit * 3
-            width: parent.width
+            width: Kube.Units.gridUnit * 7 * 7
             color: Kube.Colors.viewBackgroundColor
             border.width: 1
             border.color: Kube.Colors.buttonColor
 
             ListView {
-                id: daylong
 
                 anchors {
                     fill: parent
@@ -98,53 +111,94 @@ FocusScope {
             }
         }
 
-        RowLayout {
-            anchors.horizontalCenter: parent.horizontalCenter
+        Flickable {
+            id: mainWeekViewer
 
-            spacing: 0
+            anchors {
+                top: daylong.bottom
+            }
 
-            Repeater {
-                model: WeekEvents{}
-                delegate: Rectangle {
-                    id: day
+            height: Kube.Units.gridUnit * 24
+            width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
 
-                    property var events: model.events
+            contentHeight: Kube.Units.gridUnit * 24 * 2
+            contentWidth: width
 
-                    width: Kube.Units.gridUnit * 7
-                    height: Kube.Units.gridUnit * 20
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
 
-                    border.width: 1
-                    border.color: "lightgrey"
-                    color: Kube.Colors.viewBackgroundColor
+            ScrollBar.vertical: Kube.ScrollBar {}
 
+            Row {
+
+                height: Kube.Units.gridUnit * 24 * 2
+                width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
+
+                spacing: 0
+
+                Column {
+                    anchors.bottom: parent.bottom
                     Repeater {
-                        model: parent.events
-
-                        delegate: Rectangle {
-                            anchors {
-                                right: parent.right
-                                rightMargin: Kube.Units.smallSpacing
-                            }
-                            width: parent.width - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.indention
-                            height: Kube.Units.gridUnit * model.duration
-                            y: Kube.Units.gridUnit * model.starts
-                            x: Kube.Units.gridUnit * model.indention
-
-                            color: model.color
-                            border.width: 1
-                            border.color: Kube.Colors.viewBackgroundColor
+                        model: ["0:00","1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"]
+                        delegate: Item {
+                            height: Kube.Units.gridUnit * 2
+                            width: Kube.Units.gridUnit * 2
 
                             Kube.Label {
                                 anchors {
-                                    left: parent.left
-                                    leftMargin: Kube.Units.smallSpacing
+                                    right: parent.right
+                                    rightMargin: Kube.Units.smallSpacing
                                 }
-                                text: model.text
-                                color: Kube.Colors.highlightedTextColor
+                                text: model.modelData
                             }
                         }
                     }
                 }
+
+                Repeater {
+                    model: WeekEvents{}
+                    delegate: Rectangle {
+                        id: day
+
+                        property var events: model.events
+
+                        width: Kube.Units.gridUnit * 7
+                        height: Kube.Units.gridUnit * 24 * 2
+
+                        border.width: 1
+                        border.color: "lightgrey"
+                        color: Kube.Colors.viewBackgroundColor
+
+                        Repeater {
+                            model: parent.events
+
+                            delegate: Rectangle {
+                                anchors {
+                                    right: parent.right
+                                    rightMargin: Kube.Units.smallSpacing
+                                }
+                                width: parent.width - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.indention
+                                height: Kube.Units.gridUnit * model.duration
+                                y: Kube.Units.gridUnit * model.starts
+                                x: Kube.Units.gridUnit * model.indention
+
+                                color: model.color
+                                border.width: 1
+                                border.color: Kube.Colors.viewBackgroundColor
+
+                                Kube.Label {
+                                    anchors {
+                                        left: parent.left
+                                        leftMargin: Kube.Units.smallSpacing
+                                    }
+                                    text: model.text
+                                    color: Kube.Colors.highlightedTextColor
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }
