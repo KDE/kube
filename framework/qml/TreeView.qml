@@ -36,10 +36,14 @@ FocusScope {
      * FIXME: This is what QItemSelectionModel selection vs current selection are for. Try to use that instead.
      */
     property var activeIndex: null
-    signal dropped(var drop, var model)
     signal activated(var index)
     onActivated: {
         activeIndex = index
+    }
+
+    function indexFromRow(row) {
+        //FIXME Uses internal API to get to the model index
+        return treeView.__model.mapRowToModelIndex(row)
     }
 
     Flickable {
@@ -115,8 +119,7 @@ FocusScope {
             style: TreeViewStyle {
                 rowDelegate: Controls2.Control {
                     id: delegateRoot
-                    //FIXME Uses internal API to get to the model index
-                    property bool isActive: root.activeIndex === treeView.__model.mapRowToModelIndex(styleData.row)
+                    property bool isActive: root.activeIndex === indexFromRow(styleData.row)
                     height: Kube.Units.gridUnit * 1.5
                     //FIXME This is the only way I could find to get the correct width. parent.width is way to wide
                     width: parent.parent.parent ? parent.parent.parent.width : 0
@@ -143,30 +146,6 @@ FocusScope {
 
                     color: Kube.Colors.viewBackgroundColor
                     text: styleData.isExpanded ? "-" : "+"
-                }
-
-                itemDelegate: Item {
-                    DropArea {
-                        anchors.fill: parent
-                        Rectangle {
-                            anchors.fill: parent
-                            color: Kube.Colors.viewBackgroundColor
-                            opacity: 0.3
-                            visible: parent.containsDrag
-                        }
-                        onDropped: root.dropped(drop, model)
-                    }
-
-                    Kube.Label {
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-                            left: parent.left
-                            right: parent.right
-                        }
-                        text: styleData.value
-                        elide: Qt.ElideRight
-                        color: Kube.Colors.viewBackgroundColor
-                    }
                 }
 
                 backgroundColor: Kube.Colors.textColor

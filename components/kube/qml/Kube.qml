@@ -100,7 +100,14 @@ Controls2.ApplicationWindow {
     Shortcut {
         id: syncShortcut
         sequence: StandardKey.Refresh
-        onActivated: !!app.currentFolder ? Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder}) : Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount})
+        onActivated: {
+            if (!!app.currentFolder) {
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder});
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount, "type": "folder"})
+            } else {
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount})
+            }
+        }
     }
     //END Shortcuts
 

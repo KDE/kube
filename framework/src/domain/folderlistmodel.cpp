@@ -21,6 +21,8 @@
 #include "folderlistmodel.h"
 #include <sink/store.h>
 #include <sink/log.h>
+#include <sink/notifier.h>
+#include <sink/notification.h>
 #include <settings/settings.h>
 
 using namespace Sink;
@@ -59,6 +61,7 @@ QHash< int, QByteArray > FolderListModel::roleNames() const
     roles[DomainObject] = "domainObject";
     roles[Status] = "status";
     roles[Trash] = "trash";
+    roles[HasNewData] = "hasNewData";
 
     return roles;
 }
@@ -92,14 +95,46 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
                 return folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash);
             }
             return false;
+        case HasNewData:
+            return mHasNewData.contains(folder->identifier());
     }
     return QSortFilterProxyModel::data(idx, role);
+}
+
+static QModelIndex findRecursive(QAbstractItemModel *model, const QModelIndex &parent, int role, const QVariant &value)
+{
+    for (auto row = 0; row < model->rowCount(parent); row++) {
+        const auto idx = model->index(row, 0, parent);
+        if (model->data(idx, role) == value) {
+            return idx;
+        }
+        auto result = findRecursive(model, idx, role, value);
+        if (result.isValid()) {
+            return result;
+        }
+    }
+    return {};
 }
 
 void FolderListModel::runQuery(const Query &query)
 {
     mModel = Store::loadModel<Folder>(query);
     setSourceModel(mModel.data());
+
+    Sink::Query resourceQuery;
+    resourceQuery.setFilter(query.getResourceFilter());
+    mNotifier.reset(new Sink::Notifier{resourceQuery});
+    mNotifier->registerHandler([&](const Sink::Notification &notification) {
+        if (notification.type == Sink::Notification::Info && notification.code == ApplicationDomain::NewContentAvailable) {
+            if (!notification.entities.isEmpty()) {
+                mHasNewData.insert(notification.entities.first());
+                auto idx = findRecursive(this, {}, Id, QVariant::fromValue(notification.entities.first()));
+                if (idx.isValid()) {
+                    emit dataChanged(idx, idx);
+                }
+            }
+        }
+    });
 }
 
 void FolderListModel::setAccountId(const QVariant &accountId)
@@ -162,6 +197,12 @@ bool FolderListModel::acceptRow(int sourceRow, const QModelIndex &sourceParent) 
     Q_ASSERT(folder);
     const auto enabled = folder->getEnabled();
     return enabled;
+}
+
+void FolderListModel::fetchMore(const QModelIndex &parent)
+{
+    mHasNewData.remove(parent.data(Id).toByteArray());
+    QAbstractItemModel::fetchMore(parent);
 }
 
 void FolderListModel::setFolderId(const QVariant &folderId)
