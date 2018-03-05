@@ -8,6 +8,9 @@ include_directories(
 
 include(ECMAddTests)
 
+find_package(Gpgmepp 1.7.1 CONFIG)
+find_package(QGpgme 1.7.1 CONFIG)
+
 add_executable(mimetreeparsertest interfacetest.cpp)
 add_gpg_crypto_test(mimetreeparsertest mimetreeparsertest)
 target_link_libraries(mimetreeparsertest
@@ -15,10 +18,9 @@ target_link_libraries(mimetreeparsertest
     Qt5::Core
     Qt5::Test
     KF5::Mime
+    Gpgmepp
+    QGpgme
 )
-
-find_package(Gpgmepp 1.7.1 CONFIG)
-find_package(QGpgme 1.7.1 CONFIG)
 
 ecm_add_test(gpgerrortest.cpp
     TEST_NAME "gpgerrortest"
