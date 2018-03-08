@@ -248,6 +248,55 @@ private slots:
         QCOMPARE(origMsg->subject(false)->asUnicodeString(), {"A random subject with alternative contenttype"});
     }
 
+    void testEncryptedForwardAsAttachment()
+    {
+        auto msg = readMail("openpgp-encrypted.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::forward(msg, [&](const KMime::Message::Ptr &r) { result = r; });
+        QTRY_VERIFY(result);
+        QCOMPARE(result->subject(false)->asUnicodeString(), {"FW: OpenPGP encrypted"});
+        QCOMPARE(result->to()->addresses(), {});
+        QCOMPARE(result->cc()->addresses(), {});
+
+        auto attachments = result->attachments();
+        QCOMPARE(attachments.size(), 1);
+        auto attachment = attachments[0];
+        QCOMPARE(attachment->contentDisposition(false)->disposition(), KMime::Headers::CDinline);
+        QCOMPARE(attachment->contentDisposition(false)->filename(), {"OpenPGP encrypted.eml"});
+        QVERIFY(attachment->bodyIsMessage());
+
+        attachment->parse();
+        auto origMsg = attachment->bodyAsMessage();
+        QCOMPARE(origMsg->subject(false)->asUnicodeString(), {"OpenPGP encrypted"});
+    }
+
+    void testEncryptedWithAttachmentsForwardAsAttachment()
+    {
+        auto msg = readMail("openpgp-encrypted-two-attachments.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::forward(msg, [&](const KMime::Message::Ptr &r) { result = r; });
+        QTRY_VERIFY(result);
+        QCOMPARE(result->subject(false)->asUnicodeString(), {"FW: OpenPGP encrypted with 2 text attachments"});
+        QCOMPARE(result->to()->addresses(), {});
+        QCOMPARE(result->cc()->addresses(), {});
+
+        auto attachments = result->attachments();
+        QCOMPARE(attachments.size(), 1);
+        auto attachment = attachments[0];
+        QCOMPARE(attachment->contentDisposition(false)->disposition(), KMime::Headers::CDinline);
+        QCOMPARE(attachment->contentDisposition(false)->filename(), {"OpenPGP encrypted with 2 text attachments.eml"});
+        QVERIFY(attachment->bodyIsMessage());
+
+        attachment->parse();
+        auto origMsg = attachment->bodyAsMessage();
+        QCOMPARE(origMsg->subject(false)->asUnicodeString(), {"OpenPGP encrypted with 2 text attachments"});
+
+        auto attattachments = origMsg->attachments();
+        QCOMPARE(attattachments.size(), 2);
+        QCOMPARE(attattachments[0]->contentDisposition(false)->filename(), {"attachment1.txt"});
+        QCOMPARE(attattachments[1]->contentDisposition(false)->filename(), {"attachment2.txt"});
+    }
+
     void testCreatePlainMail()
     {
         QStringList to = {{"to@example.org"}};

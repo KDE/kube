@@ -53,6 +53,18 @@ static bool operator==(const KMime::Types::Mailbox &left, const KMime::Types::Ma
     return (left.addrSpec().asString() == right.addrSpec().asString());
 }
     }
+
+    Message* contentToMessage(Content* content) {
+        content->assemble();
+        const auto encoded = content->encodedContent();
+
+        auto message = new Message();
+        message->setContent(encoded);
+        message->parse();
+
+        return message;
+    }
+
 }
 
 static KMime::Types::Mailbox::List stripMyAddressesFromAddressList(const KMime::Types::Mailbox::List &list, const KMime::Types::AddrSpecList me)
@@ -215,12 +227,25 @@ KMime::Content *createMultipartAlternativeContent(const QString &plainBody, cons
     //FIXME This is supposed to select a charset out of the available charsets that contains all necessary characters to render the text
     // QTextCodec *charset = selectCharset(m_charsets, htmlBody);
     // htmlPart->contentType()->setCharset(charset->name());
-    textPart->contentType()->setCharset("utf-8");
+    htmlPart->contentType()->setCharset("utf-8");
     htmlPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE8Bit);
     htmlPart->fromUnicodeString(htmlBody);
     multipartAlternative->addContent(htmlPart);
 
     return multipartAlternative;
+}
+
+KMime::Content *createMultipartMixedContent(QVector<KMime::Content *> contents)
+{
+    KMime::Content *multiPartMixed = new KMime::Content();
+    multiPartMixed->contentType()->setMimeType("multipart/mixed");
+    multiPartMixed->contentType()->setBoundary(KMime::multiPartBoundary());
+
+    for (const auto &content : contents) {
+        multiPartMixed->addContent(content);
+    }
+
+    return multiPartMixed;
 }
 
 void addProcessedBodyToMessage(const KMime::Message::Ptr &msg, const QString &plainBody, const QString &htmlBody, bool forward)
@@ -864,27 +889,70 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     });
 }
 
-void MailTemplates::forward(const KMime::Message::Ptr &origMsg, const std::function<void(const KMime::Message::Ptr &result)> &callback)
+void MailTemplates::forward(const KMime::Message::Ptr &origMsg,
+    const std::function<void(const KMime::Message::Ptr &result)> &callback)
 {
     KMime::Message::Ptr wrapperMsg(new KMime::Message);
 
     wrapperMsg->to()->clear();
     wrapperMsg->cc()->clear();
 
-    wrapperMsg->subject()->fromUnicodeString(forwardSubject(origMsg->subject()->asUnicodeString()), "utf-8");
+    // Decrypt the original message, it will be encrypted again in the composer
+    // for the right recipient
+    KMime::Message::Ptr forwardedMessage(new KMime::Message());
+    if (isEncrypted(origMsg.data())) {
+        qDebug() << "Original message was encrypted, decrypting it";
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(origMsg.data());
+        otp.decryptParts();
 
-    const QByteArray refStr = getRefStr(origMsg);
+        auto htmlContent = otp.htmlContent();
+
+        KMime::Content *recreatedMsg =
+            htmlContent.isEmpty() ? createPlainPartContent(otp.plainTextContent()) :
+                                    createMultipartAlternativeContent(otp.plainTextContent(), htmlContent);
+
+        KMime::Message::Ptr tmpForwardedMessage;
+        auto attachments = otp.collectAttachmentParts();
+        if (!attachments.isEmpty()) {
+            QVector<KMime::Content *> contents = {recreatedMsg};
+            for (const auto &attachment : attachments) {
+                contents.append(attachment->node());
+            }
+
+            auto msg = createMultipartMixedContent(contents);
+
+            tmpForwardedMessage.reset(KMime::contentToMessage(msg));
+        } else {
+            tmpForwardedMessage.reset(KMime::contentToMessage(recreatedMsg));
+        }
+
+        origMsg->contentType()->fromUnicodeString(tmpForwardedMessage->contentType()->asUnicodeString(), "utf-8");
+        origMsg->assemble();
+        forwardedMessage->setHead(origMsg->head());
+        forwardedMessage->setBody(tmpForwardedMessage->encodedBody());
+        forwardedMessage->parse();
+
+    } else {
+        qDebug() << "Original message was not encrypted, using it as-is";
+        forwardedMessage = origMsg;
+    }
+
+    wrapperMsg->subject()->fromUnicodeString(
+        forwardSubject(forwardedMessage->subject()->asUnicodeString()), "utf-8");
+
+    const QByteArray refStr = getRefStr(forwardedMessage);
     if (!refStr.isEmpty()) {
         wrapperMsg->references()->fromUnicodeString(QString::fromLocal8Bit(refStr), "utf-8");
     }
 
-    KMime::Content* fwdAttachment = new KMime::Content;
+    KMime::Content *fwdAttachment = new KMime::Content;
 
     fwdAttachment->contentDisposition()->setDisposition(KMime::Headers::CDinline);
     fwdAttachment->contentType()->setMimeType("message/rfc822");
-    fwdAttachment->contentDisposition()->setFilename(origMsg->subject()->asUnicodeString() + ".eml");
+    fwdAttachment->contentDisposition()->setFilename(forwardedMessage->subject()->asUnicodeString() + ".eml");
     // The mail was parsed in loadMessage before, so no need to assemble it
-    fwdAttachment->setBody(origMsg->encodedContent());
+    fwdAttachment->setBody(forwardedMessage->encodedContent());
 
     wrapperMsg->addContent(fwdAttachment);
     wrapperMsg->assemble();

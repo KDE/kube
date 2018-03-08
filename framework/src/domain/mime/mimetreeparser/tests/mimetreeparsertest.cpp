@@ -374,4 +374,4 @@ private slots:
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)
-#include "interfacetest.moc"
+#include "mimetreeparsertest.moc"
