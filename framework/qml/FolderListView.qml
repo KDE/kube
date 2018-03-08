@@ -54,7 +54,7 @@ Kube.TreeView {
                 }
                 text: styleData.value
                 elide: Qt.ElideRight
-                color: model.hasNewData ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
+                color: (model.hasNewData && !styleData.selected) ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
             }
         }
     }
