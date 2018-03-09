@@ -135,7 +135,7 @@ public:
         SinkLog() << "Searching key for: " << mb.address();
         asyncRun<std::vector<GpgME::Key>>(this,
             [mb] {
-                return MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
+                return MailCrypto::findKeys(QStringList{} << mb.address(), false, false);
             },
             [this, addressee, id](const std::vector<GpgME::Key> &keys) {
                 if (!keys.empty()) {
@@ -463,18 +463,25 @@ KMime::Message::Ptr ComposerController::assembleMessage()
         };
     });
 
+    GpgME::Key attachedKey;
     std::vector<GpgME::Key> signingKeys;
     if (getSign()) {
         signingKeys = getPersonalKeys().value<std::vector<GpgME::Key>>();
+        Q_ASSERT(!signingKeys.empty());
+        attachedKey = signingKeys[0];
     }
     std::vector<GpgME::Key> encryptionKeys;
     if (getEncrypt()) {
         //Encrypt to self so we can read the sent message
-        encryptionKeys += getPersonalKeys().value<std::vector<GpgME::Key>>();
+        auto personalKeys = getPersonalKeys().value<std::vector<GpgME::Key>>();
+
+        attachedKey = personalKeys[0];
+
+        encryptionKeys += personalKeys;
         encryptionKeys += getRecipientKeys();
     }
 
-    return MailTemplates::createMessage(mExistingMessage, toAddresses, ccAddresses, bccAddresses, getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments, signingKeys, encryptionKeys);
+    return MailTemplates::createMessage(mExistingMessage, toAddresses, ccAddresses, bccAddresses, getIdentity(), getSubject(), getBody(), getHtmlBody(), attachments, signingKeys, encryptionKeys, attachedKey);
 }
 
 void ComposerController::send()

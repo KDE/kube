@@ -20,324 +20,28 @@
     02110-1301, USA.
 */
 #include "mailcrypto.h"
-#include <QGpgME/Protocol>
-#include <QGpgME/SignJob>
+
+#include "framework/src/errors.h"
+
+#include <QGpgME/DataProvider>
 #include <QGpgME/EncryptJob>
-#include <QGpgME/SignEncryptJob>
+#include <QGpgME/ExportJob>
 #include <QGpgME/ImportFromKeyserverJob>
-#include <gpgme++/global.h>
-#include <gpgme++/signingresult.h>
+#include <QGpgME/Protocol>
+#include <QGpgME/SignEncryptJob>
+#include <QGpgME/SignJob>
+
+#include <gpgme++/data.h>
 #include <gpgme++/encryptionresult.h>
-#include <gpgme++/keylistresult.h>
+#include <gpgme++/global.h>
 #include <gpgme++/importresult.h>
+#include <gpgme++/keylistresult.h>
+#include <gpgme++/signingresult.h>
+
 #include <QDebug>
 
-/*
- * FIXME:
- *
- * This code is WIP.
- * It currently only implements OpenPGPMIMEFormat for signing.
- * All the commented code are intentional leftovers that we can clean-up
- * once all necessary signing mechanisms have been implemented.
- *
- * Creating an ecrypted mail:
- * * get keys (email -> fingreprint -> key)
- * * Use Kleo::OpenPGPMIMEFormat,
- *
- */
-
-// bool chooseCTE()
-// {
-//     Q_Q(SinglepartJob);
-
-//     auto allowed = KMime::encodingsForData(data);
-
-//     if (!q->globalPart()->is8BitAllowed()) {
-//         allowed.removeAll(KMime::Headers::CE8Bit);
-//     }
-
-// #if 0 //TODO signing
-//     // In the following cases only QP and Base64 are allowed:
-//     // - the buffer will be OpenPGP/MIME signed and it contains trailing
-//     //   whitespace (cf. RFC 3156)
-//     // - a line starts with "From "
-//     if ((willBeSigned && cf.hasTrailingWhitespace()) ||
-//             cf.hasLeadingFrom()) {
-//         ret.removeAll(DwMime::kCte8bit);
-//         ret.removeAll(DwMime::kCte7bit);
-//     }
-// #endif
-
-//     if (contentTransferEncoding) {
-//         // Specific CTE set.  Check that our data fits in it.
-//         if (!allowed.contains(contentTransferEncoding->encoding())) {
-//             q->setError(JobBase::BugError);
-//             q->setErrorText(i18n("%1 Content-Transfer-Encoding cannot correctly encode this message.",
-//                                  KMime::nameForEncoding(contentTransferEncoding->encoding())));
-//             return false;
-//             // TODO improve error message in case 8bit is requested but not allowed.
-//         }
-//     } else {
-//         // No specific CTE set.  Choose the best one.
-//         Q_ASSERT(!allowed.isEmpty());
-//         contentTransferEncoding = new KMime::Headers::ContentTransferEncoding;
-//         contentTransferEncoding->setEncoding(allowed.first());
-//     }
-//     qCDebug(MESSAGECOMPOSER_LOG) << "Settled on encoding" << KMime::nameForEncoding(contentTransferEncoding->encoding());
-//     return true;
-// }
-
-KMime::Content *createPart(const QByteArray &encodedBody, const QByteArray &mimeType, const QByteArray &charset)
-{
-    auto resultContent = new KMime::Content;
-
-    auto contentType = new KMime::Headers::ContentType;
-    contentType->setMimeType(mimeType);
-    contentType->setMimeType(charset);
-    // if (!chooseCTE()) {
-    //     Q_ASSERT(error());
-    //     emitResult();
-    //     return;
-    // }
-
-    // Set headers.
-    // if (contentDescription) {
-    //     resultContent->setHeader(contentDescription);
-    // }
-    // if (contentDisposition) {
-    //     resultContent->setHeader(contentDisposition);
-    // }
-    // if (contentID) {
-    //     resultContent->setHeader(contentID);
-    // }
-    // Q_ASSERT(contentTransferEncoding);   // chooseCTE() created it if it didn't exist.
-    auto contentTransferEncoding = new KMime::Headers::ContentTransferEncoding;
-    auto allowed = KMime::encodingsForData(encodedBody);
-    Q_ASSERT(!allowed.isEmpty());
-    contentTransferEncoding->setEncoding(allowed.first());
-    resultContent->setHeader(contentTransferEncoding);
-
-    if (contentType) {
-        resultContent->setHeader(contentType);
-    }
-
-    // Set data.
-    resultContent->setBody(encodedBody);
-    return resultContent;
-}
-
-KMime::Content *setBodyAndCTE(QByteArray &encodedBody, KMime::Headers::ContentType *contentType, KMime::Content *ret)
-{
-    // MessageComposer::Composer composer;
-    // MessageComposer::SinglepartJob cteJob(&composer);
-    auto part = createPart(encodedBody, contentType->mimeType(), contentType->charset());
-    part->assemble();
-
-    // cteJob.contentType()->setMimeType(contentType->mimeType());
-    // cteJob.contentType()->setCharset(contentType->charset());
-    // cteJob.setData(encodedBody);
-    // cteJob.exec();
-    // cteJob.content()->assemble();
-
-    ret->contentTransferEncoding()->setEncoding(part->contentTransferEncoding()->encoding());
-    ret->setBody(part->encodedBody());
-
-    return ret;
-}
-
-void makeToplevelContentType(KMime::Content *content, bool sign, const QByteArray &hashAlgo)
-{
-    //Kleo::CryptoMessageFormat format, 
-    // switch (format) {
-    // default:
-    // case Kleo::InlineOpenPGPFormat:
-    // case Kleo::OpenPGPMIMEFormat:
-        if (sign) {
-            content->contentType()->setMimeType(QByteArrayLiteral("multipart/signed"));
-            content->contentType()->setParameter(QStringLiteral("protocol"), QStringLiteral("application/pgp-signature"));
-            content->contentType()->setParameter(QStringLiteral("micalg"), QString::fromLatin1(QByteArray(QByteArrayLiteral("pgp-") + hashAlgo)).toLower());
-
-        } else {
-            content->contentType()->setMimeType(QByteArrayLiteral("multipart/encrypted"));
-            content->contentType()->setParameter(QStringLiteral("protocol"), QStringLiteral("application/pgp-encrypted"));
-        }
-        return;
-    // case Kleo::SMIMEFormat:
-    //     if (sign) {
-    //         qCDebug(MESSAGECOMPOSER_LOG) << "setting headers for SMIME";
-    //         content->contentType()->setMimeType(QByteArrayLiteral("multipart/signed"));
-    //         content->contentType()->setParameter(QStringLiteral("protocol"), QString::fromAscii("application/pkcs7-signature"));
-    //         content->contentType()->setParameter(QStringLiteral("micalg"), QString::fromAscii(hashAlgo).toLower());
-    //         return;
-    //     }
-    // // fall through (for encryption, there's no difference between
-    // // SMIME and SMIMEOpaque, since there is no mp/encrypted for
-    // // S/MIME)
-    // case Kleo::SMIMEOpaqueFormat:
-
-    //     qCDebug(MESSAGECOMPOSER_LOG) << "setting headers for SMIME/opaque";
-    //     content->contentType()->setMimeType(QByteArrayLiteral("application/pkcs7-mime"));
-
-    //     if (sign) {
-    //         content->contentType()->setParameter(QStringLiteral("smime-type"), QString::fromAscii("signed-data"));
-    //     } else {
-    //         content->contentType()->setParameter(QStringLiteral("smime-type"), QString::fromAscii("enveloped-data"));
-    //     }
-    //     content->contentType()->setParameter(QStringLiteral("name"), QString::fromAscii("smime.p7m"));
-    // }
-}
-
-void setNestedContentType(KMime::Content *content, bool sign)
-{
-// , Kleo::CryptoMessageFormat format
-    // switch (format) {
-    // case Kleo::OpenPGPMIMEFormat:
-        if (sign) {
-            content->contentType()->setMimeType(QByteArrayLiteral("application/pgp-signature"));
-            content->contentType()->setParameter(QStringLiteral("name"), QString::fromLatin1("signature.asc"));
-            content->contentDescription()->from7BitString("This is a digitally signed message part.");
-        } else {
-            content->contentType()->setMimeType(QByteArrayLiteral("application/octet-stream"));
-        }
-        return;
-    // case Kleo::SMIMEFormat:
-    //     if (sign) {
-    //         content->contentType()->setMimeType(QByteArrayLiteral("application/pkcs7-signature"));
-    //         content->contentType()->setParameter(QStringLiteral("name"), QString::fromAscii("smime.p7s"));
-    //         return;
-    //     }
-    // // fall through:
-    // default:
-    // case Kleo::InlineOpenPGPFormat:
-    // case Kleo::SMIMEOpaqueFormat:
-    //     ;
-    // }
-}
-
-void setNestedContentDisposition(KMime::Content *content, bool sign)
-{
-// Kleo::CryptoMessageFormat format, 
-    // if (!sign && format & Kleo::OpenPGPMIMEFormat) {
-    if (!sign) {
-        content->contentDisposition()->setDisposition(KMime::Headers::CDinline);
-        content->contentDisposition()->setFilename(QStringLiteral("msg.asc"));
-    // } else if (sign && format & Kleo::SMIMEFormat) {
-    //     content->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
-    //     content->contentDisposition()->setFilename(QStringLiteral("smime.p7s"));
-    }
-}
-
-// bool MessageComposer::Util::makeMultiMime(Kleo::CryptoMessageFormat format, bool sign)
-// {
-//     switch (format) {
-//     default:
-//     case Kleo::InlineOpenPGPFormat:
-//     case Kleo::SMIMEOpaqueFormat:   return false;
-//     case Kleo::OpenPGPMIMEFormat:   return true;
-//     case Kleo::SMIMEFormat:         return sign; // only on sign - there's no mp/encrypted for S/MIME
-//     }
-// }
-
-KMime::Content *composeHeadersAndBody(KMime::Content *orig, QByteArray encodedBody, bool sign, const QByteArray &hashAlgo)
-{
-    // Kleo::CryptoMessageFormat format,
-    KMime::Content *result = new KMime::Content;
-
-    // called should have tested that the signing/encryption failed
-    Q_ASSERT(!encodedBody.isEmpty());
-
-    // if (!(format & Kleo::InlineOpenPGPFormat)) {    // make a MIME message
-        // qDebug() << "making MIME message, format:" << format;
-        makeToplevelContentType(result, sign, hashAlgo);
-
-        // if (makeMultiMime(sign)) {      // sign/enc PGPMime, sign SMIME
-        if (true) {      // sign/enc PGPMime, sign SMIME
-
-            const QByteArray boundary = KMime::multiPartBoundary();
-            result->contentType()->setBoundary(boundary);
-
-            result->assemble();
-            //qCDebug(MESSAGECOMPOSER_LOG) << "processed header:" << result->head();
-
-            // Build the encapsulated MIME parts.
-            // Build a MIME part holding the code information
-            // taking the body contents returned in ciphertext.
-            KMime::Content *code = new KMime::Content;
-            setNestedContentType(code, sign);
-            setNestedContentDisposition(code, sign);
-
-            if (sign) {                           // sign PGPMime, sign SMIME
-                // if (format & Kleo::AnySMIME) {      // sign SMIME
-                //     code->contentTransferEncoding()->setEncoding(KMime::Headers::CEbase64);
-                //     code->contentTransferEncoding()->needToEncode();
-                //     code->setBody(encodedBody);
-                // } else {                            // sign PGPMmime
-                    setBodyAndCTE(encodedBody, orig->contentType(), code);
-                // }
-                result->addContent(orig);
-                result->addContent(code);
-            } else {                              // enc PGPMime
-                setBodyAndCTE(encodedBody, orig->contentType(), code);
-
-                // Build a MIME part holding the version information
-                // taking the body contents returned in
-                // structuring.data.bodyTextVersion.
-                KMime::Content *vers = new KMime::Content;
-                vers->contentType()->setMimeType("application/pgp-encrypted");
-                vers->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
-                vers->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
-                vers->setBody("Version: 1");
-
-                result->addContent(vers);
-                result->addContent(code);
-            }
-        } else {                                //enc SMIME, sign/enc SMIMEOpaque
-            result->contentTransferEncoding()->setEncoding(KMime::Headers::CEbase64);
-            result->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
-            result->contentDisposition()->setFilename(QStringLiteral("smime.p7m"));
-
-            result->assemble();
-            //qCDebug(MESSAGECOMPOSER_LOG) << "processed header:" << result->head();
-
-            result->setBody(encodedBody);
-        }
-    // } else {                                  // sign/enc PGPInline
-    //     result->setHead(orig->head());
-    //     result->parse();
-
-    //     // fixing ContentTransferEncoding
-    //     setBodyAndCTE(encodedBody, orig->contentType(), result);
-    // }
-    result->assemble();
-    return result;
-}
-
-// bool binaryHint(Kleo::CryptoMessageFormat f)
-// {
-//     switch (f) {
-//     case Kleo::SMIMEFormat:
-//     case Kleo::SMIMEOpaqueFormat:
-//         return true;
-//     default:
-//     case Kleo::OpenPGPMIMEFormat:
-//     case Kleo::InlineOpenPGPFormat:
-//         return false;
-//     }
-// }
-//
-    // GpgME::SignatureMode signingMode(Kleo::CryptoMessageFormat f)
-    // {
-    //     switch (f) {
-    //     case Kleo::SMIMEOpaqueFormat:
-    //         return GpgME::NormalSignatureMode;
-    //     case Kleo::InlineOpenPGPFormat:
-    //         return GpgME::Clearsigned;
-    //     default:
-    //     case Kleo::SMIMEFormat:
-    //     case Kleo::OpenPGPMIMEFormat:
-    //         return GpgME::Detached;
-    //     }
-    // }
+#include <future>
+#include <utility>
 
 // replace simple LFs by CRLFs for all MIME supporting CryptPlugs
 // according to RfC 2633, 3.1.1 Canonicalization
@@ -404,63 +108,319 @@ static QByteArray canonicalizeContent(KMime::Content *content)
 
 }
 
-KMime::Content *MailCrypto::processCrypto(KMime::Content *content, const std::vector<GpgME::Key> &signingKeys, const std::vector<GpgME::Key> &encryptionKeys, MailCrypto::Protocol protocol)
+/**
+ * Get the given `key` in the armor format.
+ */
+Expected<GpgME::Error, QByteArray> exportPublicKey(const GpgME::Key &key)
 {
-    const QGpgME::Protocol *const proto = protocol == MailCrypto::SMIME ? QGpgME::smime() : QGpgME::openpgp();
-    Q_ASSERT(proto);
+    // Not using the Qt API because it apparently blocks (the `result` signal is never
+    // triggered)
+    std::unique_ptr<GpgME::Context> ctx(GpgME::Context::createForProtocol(GpgME::OpenPGP));
+    ctx->setArmor(true);
 
-    auto signingMode = GpgME::Detached;
-    bool armor = true;
-    bool textMode = false;
-    const bool sign = !signingKeys.empty();
-    const bool encrypt = !encryptionKeys.empty();
+    QGpgME::QByteArrayDataProvider dp;
+    GpgME::Data data(&dp);
 
-    QByteArray resultContent;
-    QByteArray hashAlgo;
-    //Trust provided keys and don't check them for validity
-    bool alwaysTrust = true;
-    if (sign && encrypt) {
-        std::unique_ptr<QGpgME::SignEncryptJob> job(proto->signEncryptJob(armor, textMode));
-        const auto res = job->exec(signingKeys, encryptionKeys, canonicalizeContent(content), alwaysTrust, resultContent);
-        if (res.first.error().code()) {
-            qWarning() << "Signing failed:" << res.first.error().asString();
-            return nullptr;
-        } else {
-            hashAlgo = res.first.createdSignature(0).hashAlgorithmAsString();
-        }
-        if (res.second.error().code()) {
-            qWarning() << "Encryption failed:" << res.second.error().asString();
-            return nullptr;
-        }
-    } else if (sign) {
-        std::unique_ptr<QGpgME::SignJob> job(proto->signJob(armor, textMode));
-        auto result = job->exec(signingKeys, canonicalizeContent(content), signingMode, resultContent);
-        if (result.error().code()) {
-            qWarning() << "Signing failed:" << result.error().asString();
-            return nullptr;
-        }
-        hashAlgo = result.createdSignature(0).hashAlgorithmAsString();
-    } else if (encrypt) {
-        std::unique_ptr<QGpgME::EncryptJob> job(proto->encryptJob(armor, textMode));
-        const auto result = job->exec(encryptionKeys, canonicalizeContent(content), alwaysTrust, resultContent);
-        if (result.error().code()) {
-            qWarning() << "Encryption failed:" << result.error().asString();
-            return nullptr;
-        }
-        hashAlgo = "pgp-sha1";
-    } else {
-        qWarning() << "Not signing or encrypting";
-        return nullptr;
+    qDebug() << "Exporting public key:" << key.shortKeyID();
+    auto error = ctx->exportPublicKeys(key.keyID(), data);
+
+    if (error.code()) {
+        return makeUnexpected(error);
     }
 
-    return composeHeadersAndBody(content, resultContent, sign, hashAlgo);
+    return dp.data();
 }
 
-KMime::Content *MailCrypto::sign(KMime::Content *content, const std::vector<GpgME::Key> &signers)
+/**
+ * Create an Email with `msg` as a body and `key` as an attachment.
+ *
+ * Will create the given structure:
+ *
+ * + `multipart/mixed`
+ *   - the given `msg`
+ *   - `application/pgp-keys` (the given `key` as attachment)
+ *
+ * Used by the `createSignedEmail` and `createEncryptedEmail` functions.
+ */
+Expected<GpgME::Error, std::unique_ptr<KMime::Content>>
+appendPublicKey(std::unique_ptr<KMime::Content> msg, const GpgME::Key &key)
 {
-    return processCrypto(content, signers, {}, OPENPGP);
+    const auto publicKeyExportResult = exportPublicKey(key);
+
+    if (!publicKeyExportResult) {
+        // "Could not export public key"
+        return makeUnexpected(publicKeyExportResult.error());
+    }
+
+    const auto publicKeyData = publicKeyExportResult.value();
+
+    auto result = std::unique_ptr<KMime::Content>(new KMime::Content);
+    result->contentType()->setMimeType("multipart/mixed");
+    result->contentType()->setBoundary(KMime::multiPartBoundary());
+
+    KMime::Content *keyAttachment = new KMime::Content;
+    {
+        keyAttachment->contentType()->setMimeType("application/pgp-keys");
+        keyAttachment->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
+        keyAttachment->contentDisposition()->setFilename(QString("0x") + key.shortKeyID() + ".asc");
+        keyAttachment->setBody(publicKeyData);
+    }
+
+    msg->assemble();
+
+    result->addContent(msg.release());
+    result->addContent(keyAttachment);
+
+    result->assemble();
+
+    return result;
 }
 
+Expected<GpgME::Error, QByteArray> encrypt(const QByteArray &content, const std::vector<GpgME::Key> &encryptionKeys)
+{
+    QByteArray resultData;
+
+    const QGpgME::Protocol *const proto = QGpgME::openpgp();
+    std::unique_ptr<QGpgME::EncryptJob> job(proto->encryptJob(/* armor = */ true));
+    const auto result = job->exec(encryptionKeys, content, /* alwaysTrust = */ true, resultData);
+
+    if (result.error().code()) {
+        qWarning() << "Encryption failed:" << result.error().asString();
+        return makeUnexpected(result.error());
+    }
+
+    return resultData;
+}
+
+Expected<GpgME::Error, QByteArray> signAndEncrypt(const QByteArray &content,
+    const std::vector<GpgME::Key> &signingKeys, const std::vector<GpgME::Key> &encryptionKeys)
+{
+    QByteArray resultData;
+
+    const QGpgME::Protocol *const proto = QGpgME::openpgp();
+    std::unique_ptr<QGpgME::SignEncryptJob> job(proto->signEncryptJob(/* armor = */ true));
+    const auto result = job->exec(signingKeys, encryptionKeys, content, /* alwaysTrust = */ true, resultData);
+
+    if (result.first.error().code()) {
+        qWarning() << "Signing failed:" << result.first.error().asString();
+        return makeUnexpected(result.first.error());
+    }
+
+    if (result.second.error().code()) {
+        qWarning() << "Encryption failed:" << result.second.error().asString();
+        return makeUnexpected(result.second.error());
+    }
+
+    return resultData;
+}
+
+/**
+ * Create a message part like this (according to RFC 3156 Section 4):
+ *
+ * - multipart/encrypted
+ *   - application/pgp-encrypted (version information)
+ *   - application/octet-stream (given encrypted data)
+ *
+ * Should not be used directly since the public key should be attached, hence
+ * the `createEncryptedEmail` function.
+ *
+ * The encrypted data can be generated by the `encrypt` or `signAndEncrypt` functions.
+ */
+std::unique_ptr<KMime::Content> createEncryptedPart(QByteArray encryptedData)
+{
+    auto result = std::unique_ptr<KMime::Content>(new KMime::Content);
+
+    result->contentType()->setMimeType("multipart/encrypted");
+    result->contentType()->setBoundary(KMime::multiPartBoundary());
+    result->contentType()->setParameter("protocol", "application/pgp-encrypted");
+
+    KMime::Content *controlInformation = new KMime::Content;
+    {
+        controlInformation->contentType()->setMimeType("application/pgp-encrypted");
+        controlInformation->contentDescription()->from7BitString("PGP/MIME version identification");
+        controlInformation->setBody("Version: 1");
+
+        result->addContent(controlInformation);
+    }
+
+    KMime::Content *encryptedPartPart = new KMime::Content;
+    {
+        const QString filename = "msg.asc";
+
+        encryptedPartPart->contentType()->setMimeType("application/octet-stream");
+        encryptedPartPart->contentType()->setName(filename, "utf-8");
+
+        encryptedPartPart->contentDescription()->from7BitString("OpenPGP encrypted message");
+
+        encryptedPartPart->contentDisposition()->setDisposition(KMime::Headers::CDinline);
+        encryptedPartPart->contentDisposition()->setFilename(filename);
+
+        encryptedPartPart->setBody(encryptedData);
+
+        result->addContent(encryptedPartPart);
+    }
+
+    return result;
+}
+
+/**
+ * Create an encrypted (optionally signed) email with a public key attached to it.
+ *
+ * Will create a message like this:
+ *
+ * + `multipart/mixed`
+ *   - `multipart/encrypted`
+ *     + `application/pgp-encrypted
+ *     + `application/octet-stream` (a generated encrypted version of the original message)
+ *   - `application/pgp-keys` (the public key as attachment, which is the first of the
+ *     `signingKeys`)
+ */
+Expected<GpgME::Error, std::unique_ptr<KMime::Content>>
+createEncryptedEmail(KMime::Content *content, const std::vector<GpgME::Key> &encryptionKeys,
+    const GpgME::Key &attachedKey, const std::vector<GpgME::Key> &signingKeys = {})
+{
+    auto contentToEncrypt = canonicalizeContent(content);
+
+    auto encryptionResult = signingKeys.empty() ?
+                                encrypt(contentToEncrypt, encryptionKeys) :
+                                signAndEncrypt(contentToEncrypt, signingKeys, encryptionKeys);
+
+    if (!encryptionResult) {
+        return makeUnexpected(encryptionResult.error());
+    }
+
+    auto encryptedPart = createEncryptedPart(encryptionResult.value());
+
+    auto publicKeyAppendResult = appendPublicKey(std::move(encryptedPart), attachedKey);
+
+    if(publicKeyAppendResult) {
+        publicKeyAppendResult.value()->assemble();
+    }
+
+    return publicKeyAppendResult;
+}
+
+/**
+ * Sign the given content and returns the signing data and the algorithm used
+ * for integrity check in the "pgp-<algorithm>" format.
+ */
+Expected<GpgME::Error, std::pair<QByteArray, QString>>
+sign(const QByteArray &content, const std::vector<GpgME::Key> &signingKeys)
+{
+    QByteArray resultData;
+
+    const QGpgME::Protocol *const proto = QGpgME::openpgp();
+    std::unique_ptr<QGpgME::SignJob> job(proto->signJob(/* armor = */ true));
+    const auto result = job->exec(signingKeys, content, GpgME::Detached, resultData);
+
+    if (result.error().code()) {
+        qWarning() << "Signing failed:" << result.error().asString();
+        return makeUnexpected(result.error());
+    }
+
+    auto algo = result.createdSignature(0).hashAlgorithmAsString();
+    // RFC 3156 Section 5:
+    // Hash-symbols are constructed [...] by converting the text name to lower
+    // case and prefixing it with the four characters "pgp-".
+    auto micAlg = (QString("pgp-") + algo).toLower();
+
+    return std::pair<QByteArray, QString>{resultData, micAlg};
+}
+
+/**
+ * Create a message part like this (according to RFC 3156 Section 5):
+ *
+ * + `multipart/signed`
+ *   - whatever the given original `message` is (should be canonicalized)
+ *   - `application/octet-stream` (the given `signature`)
+ *
+ * Should not be used directly since the public key should be attached, hence
+ * the `createSignedEmail` function.
+ *
+ * The signature can be generated by the `sign` function.
+ */
+std::unique_ptr<KMime::Content> createSignedPart(
+    std::unique_ptr<KMime::Content> message, const QByteArray &signature, const QString &micAlg)
+{
+    auto result = std::unique_ptr<KMime::Content>(new KMime::Content);
+
+    result->contentType()->setMimeType("multipart/signed");
+    result->contentType()->setBoundary(KMime::multiPartBoundary());
+    result->contentType()->setParameter("micalg", micAlg);
+    result->contentType()->setParameter("protocol", "application/pgp-signature");
+
+    result->addContent(message.release());
+
+    KMime::Content *signedPartPart = new KMime::Content;
+    {
+        signedPartPart->contentType()->setMimeType("application/pgp-signature");
+        signedPartPart->contentType()->setName("signature.asc", "utf-8");
+
+        signedPartPart->contentDescription()->from7BitString(
+            "This is a digitally signed message part");
+
+        signedPartPart->setBody(signature);
+
+        result->addContent(signedPartPart);
+    }
+
+    return result;
+}
+
+/**
+ * Create a signed email with a public key attached to it.
+ *
+ * Will create a message like this:
+ *
+ * + `multipart/mixed`
+ *   - `multipart/signed`
+ *     + whatever the given original `content` is (should not be canonalized)
+ *     + `application/octet-stream` (a generated signature of the original message)
+ *   - `application/pgp-keys` (the public key as attachment, which is the first of the
+ *     `signingKeys`)
+ */
+Expected<GpgME::Error, std::unique_ptr<KMime::Content>>
+createSignedEmail(std::unique_ptr<KMime::Content> content,
+    const std::vector<GpgME::Key> &signingKeys, const GpgME::Key &attachedKey)
+{
+    Q_ASSERT(!signingKeys.empty());
+
+    auto contentToSign = canonicalizeContent(content.get());
+
+    auto signingResult = sign(contentToSign, signingKeys);
+
+    if (!signingResult) {
+        return makeUnexpected(signingResult.error());
+    }
+
+    QByteArray signingData;
+    QString micAlg;
+    std::tie(signingData, micAlg) = signingResult.value();
+
+    auto signedPart = createSignedPart(std::move(content), signingData, micAlg);
+
+    auto publicKeyAppendResult = appendPublicKey(std::move(signedPart), attachedKey);
+
+    if (publicKeyAppendResult) {
+        publicKeyAppendResult.value()->assemble();
+    }
+
+    return publicKeyAppendResult;
+}
+
+Expected<GpgME::Error, std::unique_ptr<KMime::Content>>
+MailCrypto::processCrypto(std::unique_ptr<KMime::Content> content, const std::vector<GpgME::Key> &signingKeys,
+    const std::vector<GpgME::Key> &encryptionKeys, const GpgME::Key &attachedKey)
+{
+    if (!encryptionKeys.empty()) {
+        return createEncryptedEmail(content.release(), encryptionKeys, attachedKey, signingKeys);
+    } else if (!signingKeys.empty()) {
+        return createSignedEmail(std::move(content), signingKeys, signingKeys[0]);
+    } else {
+        qWarning() << "Processing cryptography, but neither signing nor encrypting";
+        return content;
+    }
+}
 
 void MailCrypto::importKeys(const std::vector<GpgME::Key> &keys)
 {
@@ -470,7 +430,7 @@ void MailCrypto::importKeys(const std::vector<GpgME::Key> &keys)
     job->exec(keys);
 }
 
-static GpgME::KeyListResult listKeys(GpgME::Protocol protocol, const QStringList &patterns, bool secretOnly, int keyListMode, std::vector<GpgME::Key> &keys)
+static GpgME::KeyListResult listKeys(const QStringList &patterns, bool secretOnly, int keyListMode, std::vector<GpgME::Key> &keys)
 {
     QByteArrayList list;
     std::transform(patterns.constBegin(), patterns.constEnd(), std::back_inserter(list), [] (const QString &s) { return s.toUtf8(); });
@@ -479,7 +439,7 @@ static GpgME::KeyListResult listKeys(GpgME::Protocol protocol, const QStringList
     pattern.push_back(0);
 
     GpgME::initializeLibrary();
-    auto ctx = QSharedPointer<GpgME::Context>{GpgME::Context::createForProtocol(protocol)};
+    auto ctx = QSharedPointer<GpgME::Context>{GpgME::Context::createForProtocol(GpgME::OpenPGP)};
     ctx->setKeyListMode(keyListMode);
     if (const GpgME::Error err = ctx->startKeyListing(pattern.data(), secretOnly)) {
         return GpgME::KeyListResult(0, err);
@@ -497,10 +457,10 @@ static GpgME::KeyListResult listKeys(GpgME::Protocol protocol, const QStringList
     return result;
 }
 
-std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, bool remote, Protocol protocol)
+std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, bool remote)
 {
     std::vector<GpgME::Key> keys;
-    GpgME::KeyListResult res = listKeys(protocol == SMIME ? GpgME::CMS : GpgME::OpenPGP, filter, findPrivate, remote ? GpgME::Extern : GpgME::Local, keys);
+    GpgME::KeyListResult res = listKeys(filter, findPrivate, remote ? GpgME::Extern : GpgME::Local, keys);
     if (res.error()) {
         qWarning() << "Failed to lookup keys: " << res.error().asString();
         return keys;
@@ -517,4 +477,3 @@ std::vector<GpgME::Key> MailCrypto::findKeys(const QStringList &filter, bool fin
 
     return keys;
 }
-

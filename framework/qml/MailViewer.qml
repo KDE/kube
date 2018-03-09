@@ -283,6 +283,7 @@ Rectangle {
 
             delegate: AttachmentDelegate {
                 name: model.name
+                type: model.type
                 icon: model.iconName
 
                 clip: true
@@ -290,6 +291,7 @@ Rectangle {
                 actionIcon: Kube.Icons.save_inverted
                 onExecute: messageParser.attachments.saveAttachmentToDisk(messageParser.attachments.index(index, 0))
                 onClicked: messageParser.attachments.openAttachment(messageParser.attachments.index(index, 0))
+                onPublicKeyImport: messageParser.attachments.importPublicKey(messageParser.attachments.index(index, 0))
             }
         }
     }

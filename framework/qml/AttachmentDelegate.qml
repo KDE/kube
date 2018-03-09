@@ -23,10 +23,12 @@ Item {
     id: root
 
     property string name
+    property string type
     property string icon
     property alias actionIcon: actionButton.iconName
     signal clicked;
     signal execute;
+    signal publicKeyImport;
 
     width: content.width + Kube.Units.smallSpacing * 1.5
     height: content.height + Kube.Units.smallSpacing
@@ -68,6 +70,14 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: root.name
             color: Kube.Colors.backgroundColor
+        }
+        Kube.IconButton {
+            visible: root.type == "application/pgp-keys"
+            iconName: Kube.Icons.key_import_inverted
+            height: Kube.Units.gridUnit
+            width: height
+            onClicked: root.publicKeyImport()
+            padding: 0
         }
         Kube.IconButton {
             id: actionButton

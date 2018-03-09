@@ -1025,7 +1025,11 @@ static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list
     return mailboxes;
 }
 
-KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage, const QStringList &to, const QStringList &cc, const QStringList &bcc, const KMime::Types::Mailbox &from, const QString &subject, const QString &body, bool htmlBody, const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys, const std::vector<GpgME::Key> &encryptionKeys)
+KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage,
+    const QStringList &to, const QStringList &cc, const QStringList &bcc,
+    const KMime::Types::Mailbox &from, const QString &subject, const QString &body, bool htmlBody,
+    const QList<Attachment> &attachments, const std::vector<GpgME::Key> &signingKeys,
+    const std::vector<GpgME::Key> &encryptionKeys, const GpgME::Key &attachedKey)
 {
     auto mail = existingMessage;
     if (!mail) {
@@ -1089,12 +1093,12 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
 
     QByteArray bodyData;
     if (!signingKeys.empty() || !encryptionKeys.empty()) {
-        auto result = MailCrypto::processCrypto(bodyPart.get(), signingKeys, encryptionKeys, MailCrypto::OPENPGP);
+        auto result = MailCrypto::processCrypto(std::move(bodyPart), signingKeys, encryptionKeys, attachedKey);
         if (!result) {
-            qWarning() << "Signing failed";
+            qWarning() << "Crypto failed";
             return {};
         }
-        bodyData = result->encodedContent();
+        bodyData = result.value()->encodedContent();
     } else {
         if (!bodyPart->contentType(false)) {
             bodyPart->contentType(true)->setMimeType("text/plain");

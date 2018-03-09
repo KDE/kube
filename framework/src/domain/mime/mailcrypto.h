@@ -19,19 +19,24 @@
 
 #pragma once
 
-#include <QByteArray>
+#include "framework/src/errors.h"
+
 #include <KMime/Message>
 #include <gpgme++/key.h>
-#include <functional>
 
-namespace MailCrypto
-{
-    enum Protocol {
-        OPENPGP,
-        SMIME
-    };
-    KMime::Content *processCrypto(KMime::Content *content, const std::vector<GpgME::Key> &signingKeys, const std::vector<GpgME::Key> &encryptionKeys, MailCrypto::Protocol protocol);
-    KMime::Content *sign(KMime::Content *content, const std::vector<GpgME::Key> &signers);
-    std::vector<GpgME::Key> findKeys(const QStringList &filter, bool findPrivate = false, bool remote = false, Protocol protocol = OPENPGP);
-    void importKeys(const std::vector<GpgME::Key> &keys);
-};
+#include <QByteArray>
+
+#include <functional>
+#include <memory>
+
+namespace MailCrypto {
+
+Expected<GpgME::Error, std::unique_ptr<KMime::Content>>
+processCrypto(std::unique_ptr<KMime::Content> content, const std::vector<GpgME::Key> &signingKeys,
+    const std::vector<GpgME::Key> &encryptionKeys, const GpgME::Key &attachedKey);
+
+std::vector<GpgME::Key> findKeys(const QStringList &filter, bool findPrivate = false, bool remote = false);
+
+void importKeys(const std::vector<GpgME::Key> &keys);
+
+}; // namespace MailCrypto

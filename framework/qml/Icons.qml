@@ -63,6 +63,7 @@ Item {
     property string secure: "document-encrypt"
     property string insecure: "document-decrypt"
     property string signed: "document-sign"
+    property string key_import_inverted: "view-certificate-import-inverted"
 
     property string addNew: "list-add"
     property string remove: "kube-list-remove-inverted"

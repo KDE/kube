@@ -56,6 +56,8 @@ public:
     Q_INVOKABLE bool saveAttachmentToDisk(const QModelIndex &parent);
     Q_INVOKABLE bool openAttachment(const QModelIndex &index);
 
+    Q_INVOKABLE bool importPublicKey(const QModelIndex &index);
+
 private:
     std::unique_ptr<AttachmentModelPrivate> d;
 };

@@ -64,6 +64,19 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
     auto ccAddresses = toStringList(object["cc"].toList());
     auto bccAddresses = toStringList(object["bcc"].toList());
 
+    QList<Attachment> attachments = {};
+    if (object.contains("attachments")) {
+        auto attachmentSpecs = object["attachments"].toList();
+        for (int i = 0; i < attachmentSpecs.size(); ++i) {
+            auto const &spec = attachmentSpecs.at(i).toMap();
+            attachments << Attachment{spec["name"].toString(),
+                spec["name"].toString(),
+                spec["mimeType"].toByteArray(),
+                false,
+                spec["data"].toByteArray()};
+        }
+    }
+
     KMime::Types::Mailbox mb;
     mb.fromUnicodeString("identity@example.org");
     auto msg = MailTemplates::createMessage({},
@@ -74,7 +87,7 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
             object["subject"].toString(),
             object["body"].toString(),
             object["bodyIsHtml"].toBool(),
-            {},
+            attachments,
             {},
             {});
     if (object.contains("messageId")) {
