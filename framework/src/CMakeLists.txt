@@ -7,7 +7,7 @@ find_package(QGpgme CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(KF5Contacts CONFIG REQUIRED)
 
-add_definitions("-Wall -std=c++0x -g")
+add_definitions("-Wall -std=c++14 -g")
 set(CMAKE_CXX_VISIBILITY_PRESET default)
 
 include_directories(. domain/mime/mimetreeparser domain/ domain/mime)
