@@ -410,10 +410,10 @@ private slots:
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->date(false)->dateTime().isValid());
 
-        QCOMPARE(result->contentType()->mimeType(), "multipart/mixed");
+        QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/mixed"});
         auto resultAttachments = result->attachments();
         QCOMPARE(resultAttachments.size(), 1);
-        QCOMPARE(resultAttachments[0]->contentDisposition()->filename(), "0x8F246DE6.asc");
+        QCOMPARE(resultAttachments[0]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
 
         auto signedMessage = result->contents()[0];
 
@@ -450,12 +450,12 @@ private slots:
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->date(false)->dateTime().isValid());
 
-        QCOMPARE(result->contentType()->mimeType(), "multipart/mixed");
+        QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/mixed"});
         auto resultAttachments = result->attachments();
         QCOMPARE(resultAttachments.size(), 3);
         // It seems KMime searches for the attachments using depth-first
         // search, so the public key is last
-        QCOMPARE(resultAttachments[2]->contentDisposition()->filename(), "0x8F246DE6.asc");
+        QCOMPARE(resultAttachments[2]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
 
         auto signedMessage = result->contents()[0];
 
