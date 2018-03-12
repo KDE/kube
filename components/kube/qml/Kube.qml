@@ -58,7 +58,10 @@ Controls2.ApplicationWindow {
         interval: 300000
         running: !!app.currentFolder
         repeat: true
-        onTriggered: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder})
+        onTriggered: {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder})
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount, "type": "folder"})
+        }
     }
 
     Kube.StartupCheck {
@@ -82,7 +85,9 @@ Controls2.ApplicationWindow {
     Kube.Listener {
         filter: Kube.Messages.notification
         onMessageReceived: {
-            notificationPopup.notify(message.message);
+            if (message.message) {
+                notificationPopup.notify(message.message);
+            }
         }
     }
 
@@ -98,7 +103,14 @@ Controls2.ApplicationWindow {
     Shortcut {
         id: syncShortcut
         sequence: StandardKey.Refresh
-        onActivated: !!app.currentFolder ? Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder}) : Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount})
+        onActivated: {
+            if (!!app.currentFolder) {
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder});
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount, "type": "folder"})
+            } else {
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount})
+            }
+        }
     }
     //END Shortcuts
 

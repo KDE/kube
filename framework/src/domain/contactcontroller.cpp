@@ -21,8 +21,32 @@
 #include <sink/applicationdomaintype.h>
 #include <KContacts/VCardConverter>
 
+class MailsController : public Kube::ListPropertyController
+{
+public:
+
+    MailsController()
+        : Kube::ListPropertyController{{"email"}}
+    {
+    }
+
+};
+
+class PhonesController : public Kube::ListPropertyController
+{
+public:
+
+    PhonesController()
+        : Kube::ListPropertyController{{"number"}}
+    {
+    }
+
+};
+
 ContactController::ContactController()
     : Kube::Controller(),
+    controller_mails{new MailsController},
+    controller_phones(new PhonesController),
     action_save{new Kube::ControllerAction{this, &ContactController::save}}
 {
     updateSaveAction();

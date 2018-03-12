@@ -123,6 +123,7 @@ void ListPropertyController::remove(const QByteArray &id)
             break;
         }
     }
+    emit removed(id);
     if (mModel->rowCount() <= 0) {
         emit emptyChanged();
     }

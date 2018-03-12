@@ -42,7 +42,8 @@ wantedIcons = [
     "format-text-italic-symbolic.svg",
     "format-text-underline-symbolic.svg",
     "kdocumentinfo.svg",
-    "group.svg"
+    "group.svg",
+    "mail-task.svg"
 ]
 
 def ensure_dir(file_path):

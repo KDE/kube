@@ -1,5 +1,4 @@
 /*
- *  Copyright (C) 2017 Michael Bohlender, <michael.bohlender@kdemail.net>
  *  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -17,22 +16,18 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
-import QtQuick 2.7
-import QtQuick.Controls 2.1
+import QtQuick 2.4
+import QtQuick.Layouts 1.1
+import QtQuick.Controls 2.0
 import org.kube.framework 1.0 as Kube
 
-Item {
+FocusScope {
+    id: root
 
-    StackView.onActivated: {
-        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
-    }
-
-    People {
-        id: people
-        anchors {
-            fill: parent
-            margins: Kube.Units.smallSpacing
-        }
-    }
+   Kube.Label {
+       anchors {
+           centerIn: parent
+       }
+       text: "ToDo"
+   }
 }

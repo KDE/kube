@@ -203,6 +203,11 @@ public:
                 if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {
                     message["type"] = "info";
                     message["message"] = QObject::tr("A message has been sent.");
+                } else if (notification.code == Sink::ApplicationDomain::NewContentAvailable) {
+                    message["type"] = "info";
+                    if (!notification.entities.isEmpty()) {
+                        message["folderId"] = notification.entities.first();
+                    }
                 } else {
                     return;
                 }

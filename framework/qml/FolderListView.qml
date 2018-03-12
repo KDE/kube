@@ -30,6 +30,33 @@ Kube.TreeView {
     Controls1.TableViewColumn {
         title: "Name"
         role: "name"
+        delegate: Item {
+            DropArea {
+                anchors.fill: parent
+                Rectangle {
+                    anchors.fill: parent
+                    color: Kube.Colors.viewBackgroundColor
+                    opacity: 0.3
+                    visible: parent.containsDrag
+                }
+                onDropped: {
+                    Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": model.domainObject})
+                    drop.accept(Qt.MoveAction)
+                    drop.source.visible = false
+                }
+            }
+
+            Kube.Label {
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                    right: parent.right
+                }
+                text: styleData.value
+                elide: Qt.ElideRight
+                color: (model.hasNewData && !styleData.selected) ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
+            }
+        }
     }
 
     model: Kube.FolderListModel {
@@ -42,12 +69,5 @@ Kube.TreeView {
         model.fetchMore(index);
         Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
                                                                 "trash": model.data(index, Kube.FolderListModel.Trash)});
-    }
-
-
-    onDropped: {
-        Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": model.domainObject})
-        drop.accept(Qt.MoveAction)
-        drop.source.visible = false
     }
 }

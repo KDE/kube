@@ -294,6 +294,7 @@ FocusScope {
 
                     Kube.IconButton {
                         id: deleteButton
+                        objectName: "deleteButton"
                         iconName: Kube.Icons.moveToTrash
                         visible: !!model.mail
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})

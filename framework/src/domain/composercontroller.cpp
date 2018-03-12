@@ -94,37 +94,59 @@ public:
 
 class AddresseeController : public Kube::ListPropertyController
 {
+    Q_OBJECT
+    Q_PROPERTY(bool foundAllKeys READ foundAllKeys NOTIFY foundAllKeysChanged)
 public:
 
+    bool mFoundAllKeys = true;
+
     QSet<QByteArray> mMissingKeys;
-    AddresseeController()
-        : Kube::ListPropertyController{{"name", "keyFound", "key"}}
+    AddresseeController() : Kube::ListPropertyController{{"name", "keyFound", "key"}}
     {
-        QObject::connect(this, &Kube::ListPropertyController::added, this, [this] (const QByteArray &id, const QVariantMap &map) {
-            findKey(id, map.value("name").toString());
+        QObject::connect(
+            this, &Kube::ListPropertyController::added, this, [this](const QByteArray &id, const QVariantMap &map) {
+                findKey(id, map.value("name").toString());
+            });
+
+        QObject::connect(this, &Kube::ListPropertyController::removed, this, [this] (const QByteArray &id) {
+            mMissingKeys.remove(id);
+            setFoundAllKeys(mMissingKeys.isEmpty());
         });
+    }
+
+    bool foundAllKeys()
+    {
+        return mFoundAllKeys;
+    }
+
+    void setFoundAllKeys(bool found)
+    {
+        mFoundAllKeys = found;
+        emit foundAllKeysChanged();
     }
 
     void findKey(const QByteArray &id, const QString &addressee)
     {
         mMissingKeys << id;
+        setFoundAllKeys(mMissingKeys.isEmpty());
         KMime::Types::Mailbox mb;
         mb.fromUnicodeString(addressee);
 
         SinkLog() << "Searching key for: " << mb.address();
-        asyncRun<std::vector<GpgME::Key>>(this, [mb] {
+        asyncRun<std::vector<GpgME::Key>>(this,
+            [mb] {
                 return MailCrypto::findKeys(QStringList{} << mb.address(), false, false, MailCrypto::OPENPGP);
             },
             [this, addressee, id](const std::vector<GpgME::Key> &keys) {
                 if (!keys.empty()) {
-                    if (keys.size() > 1 ) {
+                    if (keys.size() > 1) {
                         SinkWarning() << "Found more than one key, encrypting to all of them.";
                     }
                     SinkLog() << "Found key: " << keys.front().primaryFingerprint();
                     setValue(id, "keyFound", true);
                     setValue(id, "key", QVariant::fromValue(keys));
                     mMissingKeys.remove(id);
-                    setProperty("foundAllKeys", mMissingKeys.isEmpty());
+                    setFoundAllKeys(mMissingKeys.isEmpty());
                 } else {
                     SinkWarning() << "Failed to find key for recipient.";
                 }
@@ -133,10 +155,12 @@ public:
 
     void set(const QStringList &list)
     {
-        for (const auto &email: list) {
+        for (const auto &email : list) {
             add({{"name", email}});
         }
     }
+signals:
+    void foundAllKeysChanged();
 };
 
 class AttachmentController : public Kube::ListPropertyController
@@ -542,3 +566,4 @@ void ComposerController::saveAsDraft()
     run(job);
 }
 
+#include "composercontroller.moc"

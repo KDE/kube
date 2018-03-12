@@ -22,6 +22,8 @@
 
 #include <krecursivefilterproxymodel.h>
 #include <QSharedPointer>
+#include <QSet>
+#include <sink/notifier.h>
 
 namespace Sink {
     class Query;
@@ -54,7 +56,8 @@ public:
         Id,
         DomainObject,
         Status,
-        Trash
+        Trash,
+        HasNewData
     };
     Q_ENUMS(Roles)
 
@@ -68,8 +71,11 @@ public:
 protected:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
     bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+    void fetchMore(const QModelIndex &left) Q_DECL_OVERRIDE;
 
 private:
     void runQuery(const Sink::Query &query);
     QSharedPointer<QAbstractItemModel> mModel;
+    QSet<QByteArray> mHasNewData;
+    QScopedPointer<Sink::Notifier> mNotifier;
 };

@@ -42,7 +42,7 @@ Kube.View {
             encrypt: encryptCheckbox.checked
             onDone: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
 
-            property bool foundAllKeys: to.foundAllKeys && cc.foundAllKeys && bcc.foundAllKeys
+            property bool foundAllKeys: composerController.to.foundAllKeys && composerController.cc.foundAllKeys && composerController.bcc.foundAllKeys
 
             sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys) && !composerController.to.empty
             saveAsDraftAction.enabled: composerController.accountId

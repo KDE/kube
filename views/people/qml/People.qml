@@ -52,6 +52,10 @@ FocusScope {
                 }
                 text: "New Contact"
                 visible: stack.depth == 1
+
+                onClicked: {
+                    stack.push(personComposer)
+                }
             }
 
             Kube.IconButton {
@@ -62,7 +66,11 @@ FocusScope {
                 }
                 visible: stack.depth > 1
                 iconName: Kube.Icons.goBack
-                onClicked: stack.pop()
+                onClicked: {
+                    if(stack.depth == 1)
+                        root.currentContact = ""
+                    stack.pop()
+                }
             }
             Kube.TextField {
                 id: searchBar
@@ -216,6 +224,53 @@ FocusScope {
             color: Kube.Colors.viewBackgroundColor
 
             PersonPage {
+            }
+
+            Kube.Button {
+
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                    margins: Kube.Units.largeSpacing
+                }
+                text: "Edit"
+
+                onClicked: {
+                    stack.push(personComposer)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: personComposer
+
+        Rectangle {
+            id: personComposerRoot
+
+            Kube.ContactController {
+                id: contactController
+                contact: root.currentContact
+            }
+
+            color: Kube.Colors.viewBackgroundColor
+
+            PersonComposer {
+            }
+
+            Kube.PositiveButton {
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                    margins: Kube.Units.largeSpacing
+                }
+
+                text: "Save"
+
+                onClicked: {
+                    contactController.saveAction.execute()
+                    stack.pop()
+                }
             }
         }
     }
