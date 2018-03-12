@@ -118,11 +118,13 @@ Flickable {
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
                     placeholderText: qsTr("First Name")
+                    backgroundColor: "white"
                 }
 
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
                     placeholderText: qsTr("Last Name")
+                    backgroundColor: "white"
                 }
             }
 
@@ -139,6 +141,7 @@ Flickable {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.jobTitle
                 placeholderText: qsTr("Job Title")
+                backgroundColor: "white"
             }
 
             Kube.TextField {
@@ -153,6 +156,7 @@ Flickable {
 
                 placeholderText: qsTr("Company")
                 text: contactController.company
+                backgroundColor: "white"
             }
         }
 
@@ -175,7 +179,7 @@ Flickable {
                     delegate: Row {
                         spacing: Kube.Units.smallSpacing
                         Kube.Label { text: qsTr("(main)") }
-                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelData ; color: Kube.Colors.highlightColor }
+                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelDatas; color: Kube.Colors.highlightColor; backgroundColor: "white" }
                         Item { width: Kube.Units.smallSpacing; height: 1 }
                     }
                 }
@@ -205,7 +209,7 @@ Flickable {
                     Row {
                         spacing: Kube.Units.smallSpacing
                         Kube.Label { text: qsTr("(main)") }
-                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelData}
+                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelData; backgroundColor: "white"}
                         Item { width: Kube.Units.smallSpacing; height: 1 }
                     }
                 }
@@ -229,16 +233,19 @@ Flickable {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.street
                 placeholderText: qsTr("Street")
+                backgroundColor: "white"
             }
             Kube.TextField {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.city
                 placeholderText: qsTr("City")
+                backgroundColor: "white"
             }
             Kube.TextField {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.country
                 placeholderText: qsTr("Country")
+                backgroundColor: "white"
             }
         }
         Item {
