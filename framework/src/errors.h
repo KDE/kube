@@ -104,9 +104,13 @@ template <typename Error, typename Type>
 struct StorageBase
 {
 protected:
-    // Rule of 5 {{{
 
-    StorageBase(const StorageBase &other) : mIsValue(other.mIsValue)
+    // To be able to define a copy constructor in a child class
+    StorageBase() {}
+
+    // Rule of 5 (copy constructors defined in StorageCopyConstructor) {{{
+
+    StorageBase(StorageBase &&other) : mIsValue(other.mIsValue)
     {
         // This is a constructor, you have to construct object, not assign them
         // (hence the placement new)
@@ -128,31 +132,10 @@ protected:
         // And so, the placement new allows us to call the constructor of
         // `Type` or `Error` instead of its assignment operator.
         if (mIsValue) {
-            new (std::addressof(mValue)) Type(other.mValue);
-        } else {
-            new (std::addressof(mError)) Unexpected<Error>(other.mError);
-        }
-    }
-
-    StorageBase(StorageBase &&other) : mIsValue(other.mIsValue)
-    {
-        // If you're thinking WTF, see the comment in the copy constructor above.
-        if (mIsValue) {
             new (std::addressof(mValue)) Type(std::move(other.mValue));
         } else {
             new (std::addressof(mError)) Unexpected<Error>(std::move(other.mError));
         }
-    }
-
-    constexpr StorageBase &operator=(const StorageBase &other)
-    {
-        mIsValue = other.mIsValue;
-        if (mIsValue) {
-            mValue = other.mValue;
-        } else {
-            mError = other.mError;
-        }
-        return *this;
     }
 
     constexpr StorageBase &operator=(StorageBase &&other)
@@ -215,13 +198,56 @@ protected:
     bool mIsValue;
 };
 
+// Struct used to add the copy constructor / assignment only if both types are copy constructible
+template <typename Error, typename Type,
+    bool both_copy_constructible = std::is_copy_constructible<Error>::value &&std::is_copy_constructible<Type>::value>
+struct StorageCopyConstructor;
+
+template <typename Error, typename Type>
+struct StorageCopyConstructor<Error, Type, true> : StorageBase<Error, Type>
+{
+protected:
+    using StorageBase<Error, Type>::StorageBase;
+
+    StorageCopyConstructor(const StorageCopyConstructor &other) : StorageBase<Error, Type>()
+    {
+        // If you're thinking WTF, see the comment in the move constructor above.
+        this->mIsValue = other.mIsValue;
+        if (this->mIsValue) {
+            new (std::addressof(this->mValue)) Type(other.mValue);
+        } else {
+            new (std::addressof(this->mError)) Unexpected<Error>(other.mError);
+        }
+    }
+
+    StorageCopyConstructor &operator=(const StorageCopyConstructor &other)
+    {
+        this->mIsValue = other.mIsValue;
+        if (this->mIsValue) {
+            this->mValue = other.mValue;
+        } else {
+            this->mError = other.mError;
+        }
+        return *this;
+    }
+
+};
+
+template <typename Error, typename Type>
+struct StorageCopyConstructor<Error, Type, false> : StorageBase<Error, Type>
+{
+protected:
+    using StorageBase<Error, Type>::StorageBase;
+};
+
+
 // Write functions here when storage related, whether Type is void or not
 template <typename Error, typename Type>
-struct Storage : StorageBase<Error, Type>
+struct Storage : StorageCopyConstructor<Error, Type>
 {
 protected:
     // Forward the construction to StorageBase
-    using StorageBase<Error, Type>::StorageBase;
+    using StorageCopyConstructor<Error, Type>::StorageCopyConstructor;
 };
 
 // Write functions here when dev API related and when Type != void
@@ -266,17 +292,17 @@ struct ExpectedBase : detail::Storage<Error, Type>
 
 // Write functions here when dev API related and when Type == void
 template <typename Error>
-struct ExpectedBase<Error, void> : detail::Storage<Error, void>
+struct ExpectedBase<Error, void> : Storage<Error, void>
 {
     // Rewrite constructors for unexpected because Expected doesn't have direct access to it.
     template <typename OtherError>
     constexpr ExpectedBase(const Unexpected<OtherError> &error)
-        : detail::Storage<Error, void>(detail::tags::Unexpected{}, error)
+        : Storage<Error, void>(tags::Unexpected{}, error)
     {
     }
     template <typename OtherError>
     constexpr ExpectedBase(Unexpected<OtherError> &&error)
-        : detail::Storage<Error, void>(detail::tags::Unexpected{}, std::move(error))
+        : Storage<Error, void>(tags::Unexpected{}, std::move(error))
     {
     }
 };
