@@ -280,7 +280,8 @@ struct ExpectedBase : detail::Storage<Error, Type>
     // an expected value before calling `.value()`
     constexpr const Type &value() const &
     {
-        Q_ASSERT(this->mIsValue);
+        //FIXME: Q_ASSERT cannot be used in a constexpr with qt 5.9. See also: https://git.qt.io/consulting-usa/qtbase-xcb-rendering/commit/8ea27bb1c669e21100a6a042b0378b3346bdf671
+        //Q_ASSERT(this->mIsValue);
         return this->mValue;
     }
     Type &&value() &&
