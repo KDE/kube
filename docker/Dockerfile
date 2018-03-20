@@ -61,12 +61,16 @@ RUN mkdir /tmp/runtime-developer
 ENV XDG_RUNTIME_DIR /tmp/runtime-developer
 ENV LANG en_US.UTF-8
 
+RUN git config --global url."git://anongit.kde.org/".insteadOf kde: && \
+    git config --global url."ssh://git@git.kde.org/".pushInsteadOf kde: && \
+
 ADD bashrc /home/developer/.bashrc
 ADD startimap.sh /home/developer/startimap.sh
 
 ADD keyconfig /home/developer/keyconfig
 ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
 ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
+ADD initrepositories.sh /home/developer/initrepositories.sh
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
 ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
 ADD gpg.conf /home/developer/.gnupg/gpg.conf

@@ -15,9 +15,10 @@ Multiple choices are available for developing the Kube project:
         - lmdb-devel / liblmdb-dev
         - readline-devel / libreadline-dev
         - libcurl-dev(el)
-        - kf5-kimap
-        - kf5-kimap-devel
-        - [KAsync](https://github.com/KDE/kasync/releases)
+        - flatbuffers-dev
+        - [KAsync](git://anongit.kde.org/kasync)
+        - [KDAV2](git://anongit.kde.org/kdav2)
+        - [KIMAP2](git://anongit.kde.org/kimap2)
     - Install Sink
 - Install the Kube project:
     - `mkdir build && cd build && cmake .. && make && sudo make install`
@@ -31,13 +32,18 @@ need to set the `QML2_IMPORT_PATH` to something like this:
 `$KUBE_INSTALL_PREFIX/lib/qml/`.
 
 ## Docker
+Building kube in a docker containers ensures reproducability and decouples the development environment from the host system (so upgrading your host system doesn't break all your builds). To avoid having to develop inside the container directly, source, build and install directories reside on the host system.
 
 - Go to the `docker` directory
 - In the `run.sh` script, set the SOURCEDIR, BUILDDIR and INSTALLDIR variables
   to an existing path containing respectively the source, build and
-  installation directory of kube. The build and installation directory can be
-  empty at first.
+  installation directory of kube. The build and installation directory should be
+  empty at first, for the source directory you may use an existing directory containing the necessary source directories.
 - Run the `./build.sh` script
 - Run the `./run.sh` script
-- In the now opened container shell, run `cmake -DCMAKE_INSTALL_PREFIX=/install /src`
-- Run `make install`
+- If you don't have the sources available yet, run the `~/initrepositories.sh` script
+- To configure the build directories, for each repository:
+    - `mkdir /build/$REPO && cd /build/$REPO`
+    - `cmake -DCMAKE_INSTALL_PREFIX=/install /src/$REPO`
+    - `make && make install`
+- You can now edit the sources outside the container, and build and run kube inside the container.
