@@ -138,7 +138,7 @@ protected:
         }
     }
 
-    constexpr StorageBase &operator=(StorageBase &&other)
+    StorageBase &operator=(StorageBase &&other)
     {
         this->~StorageBase();
         mIsValue = other.mIsValue;
