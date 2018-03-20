@@ -50,8 +50,8 @@ FocusScope {
                   left: parent.left
                   leftMargin: Kube.Units.smallSpacing
                 }
-                text: "New Contact"
                 visible: stack.depth == 1
+                text: qsTr("New Contact")
 
                 onClicked: {
                     stack.push(personComposer)
@@ -77,7 +77,7 @@ FocusScope {
                 focus: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width * 0.5
-                placeholderText: "Search..."
+                placeholderText: qsTr("Search...")
             }
         }
 
@@ -233,7 +233,7 @@ FocusScope {
                     right: parent.right
                     margins: Kube.Units.largeSpacing
                 }
-                text: "Edit"
+                text: qsTr("Edit")
 
                 onClicked: {
                     stack.push(personComposer)
