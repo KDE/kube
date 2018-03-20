@@ -50,8 +50,9 @@ FocusScope {
                   left: parent.left
                   leftMargin: Kube.Units.smallSpacing
                 }
-                visible: stack.depth == 1
                 text: qsTr("New Contact")
+                //visible: stack.depth == 1
+                visible: false
 
                 onClicked: {
                     stack.push(personComposer)
