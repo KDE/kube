@@ -134,8 +134,7 @@ Same as files? Import/Export calendar data
 * SMTP: based on libcurl
 
 ### Cryptography
-* PGP, PEP
-* ObjectTreeParser
+* PGP
 
 Keyselection, encryption, decryption, signing
 Probably requires access to identities in some way.
@@ -143,92 +142,11 @@ Probably requires access to identities in some way.
 see also [Cryptography](cryptography).
 
 ### MIME-Message parsing
-* ObjectTreeParser
 * KMime
 
 ## Testing
 
 TBD
-
-## Problems/Notes:
-* Dynamic switching between various component UI's can be solved using KPackage
-
-## Example usage in QML
-
-```
-KubeActions.Action {
-    requestId: "org.kde.kube.mail.reply"
-    onRequest {
-        mail: context.mail
-    }
-}
-
-KubeActions.ActionContext {
-    id: actionContext
-    mail: kubeMailListView.currentMail
-}
-
-KubeActions.ActionHandle {
-    property int progress
-    property bool complete
-    property bool error
-    property string errormessage
-}
-
-KubeActions.Action {
-    id: markAsReadAction
-    action: "org.kde.kube.action.mark-as-read"
-    context: actionContext
-    //execute() returns an ActionHandle
-}
-
-KubeComponents.FolderList {
-    id: kubeFolderListView
-}
-
-KubeComponents.MailList {
-    id: kubeMailListView
-    parentFolder: kubeFolderListView.currentFolder
-}
-
-KubeComponents.MailView {
-    id: kubeMailView
-    mail: kubeMailListView.currentMail
-}
-```
-
-## Email Domain Logic
-* Folder list
-    * Folder List Controller
-        * Move mail to folder
-        * Move/Copy/Delete folder
-        * Synchronize folder
-    * Folder List Model
-        * Mixes Sink queries and subqueries (folder list with smart folders)
-        * name
-        * statistics
-
-* Mail list
-    * MailListController
-        * Mark as read
-        * Flag as important
-        * Move to trash
-    * MailListModel
-        * subject
-        * date
-        * sender
-        * folder
-    * ThreadModel
-        * thread leader (otherwise like maillist model)
-        * number of mails in thread
-
-* Mail Viewer
-    * MailViewController
-        * reply
-        * forward
-        * move to trash
-    * MailModel
-        * subject, date, sender, folder, content, attachments
 
 ## Configuration and Accounts
 Kube is a groupware application, so one of its most important features is being able to work with various remote backends. We live in a world of multiple devies and applications, so it is interesting to share as much state and configuration accross all different devices and applications, which is why we try to store as much of that in the backend.
