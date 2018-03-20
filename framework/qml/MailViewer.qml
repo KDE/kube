@@ -386,7 +386,7 @@ Rectangle {
                 visible: !model.trash && !model.draft
                 activeFocusOnTab: false
 
-                text: "Share"
+                text: qsTr("Share")
                 onClicked: {
                     Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
                 }
@@ -396,7 +396,7 @@ Rectangle {
                 visible: !model.trash
                 activeFocusOnTab: false
 
-                text: model.draft ? "Edit" : "Reply"
+                text: model.draft ? qsTr("Edit") : qsTr("Reply")
                 onClicked: {
                     if (model.draft) {
                         Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail})
