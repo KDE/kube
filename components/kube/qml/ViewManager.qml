@@ -39,10 +39,14 @@ StackView {
                 return item
             }
         }
-        var v = Qt.createComponent(extensionModel.findSource(name, "View.qml"))
-        v = v.createObject(root)
-        viewDict[name] = v
-        return v;
+        var component = Qt.createComponent(extensionModel.findSource(name, "View.qml"))
+        if (component.status == Component.Ready) {
+            var o = component.createObject(root)
+            viewDict[name] = o
+            return o
+        }
+        console.error("Failed to load component: \n", component.errorString())
+        return null
     }
 
     onCurrentItemChanged: {
@@ -63,6 +67,9 @@ StackView {
             return
         }
         var view = getView(name, replace)
+        if (!view) {
+            return
+        }
         var item = push(view, properties, StackView.Immediate)
         item.parent = root
         item.anchors.fill = root
