@@ -79,6 +79,19 @@ static QStringList toStringList(const QList<Sink::ApplicationDomain::Contact::Em
     return out;
 }
 
+QPair<QString, QString> getFirstnameLastname(const QString &fn)
+{
+    auto parts = fn.split(' ');
+    if (parts.isEmpty()) {
+        return {};
+    }
+    if (parts.size() == 1) {
+        return {parts.first(), {}};
+    }
+    const auto lastName = parts.takeLast();
+    return {parts.join(' '), lastName};
+}
+
 QVariant PeopleModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
@@ -94,10 +107,22 @@ QVariant PeopleModel::data(const QModelIndex &idx, int role) const
             return "contact";
         case DomainObject:
             return QVariant::fromValue(contact);
-        case FirstName:
-            return contact->getFirstname();
-        case LastName:
-            return contact->getLastname();
+        case FirstName: {
+            const auto n = contact->getFirstname();
+            //Fall back to the fn if we have no name
+            if (n.isEmpty()) {
+                return getFirstnameLastname(contact->getFn()).first;
+            }
+            return n;
+        }
+        case LastName: {
+            const auto n = contact->getLastname();
+            //Fall back to the fn if we have no name
+            if (n.isEmpty()) {
+                return getFirstnameLastname(contact->getFn()).second;
+            }
+            return n;
+        }
         case ImageData:
             return contact->getPhoto();
     }
