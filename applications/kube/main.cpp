@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(kube_VERSION_STRING);
     app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
 
-    //On Mac OS we want to incluee Contents/Resources/icons in the bundle, and that path is in AppDataLocations.
+    //On Mac OS we want to include Contents/Resources/icons in the bundle, and that path is in AppDataLocations.
     QStringList iconSearchPaths;
     for (const auto &p : QStandardPaths::standardLocations(QStandardPaths::AppDataLocation)) {
         auto iconPath = p + "/icons/";
@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
         }
         iconSearchPaths << iconPath;
     }
-    QIcon::setThemeSearchPaths(iconSearchPaths);
+    QIcon::setThemeSearchPaths(QIcon::themeSearchPaths() + iconSearchPaths);
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A communication and collaboration client.");
