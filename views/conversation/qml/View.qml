@@ -26,6 +26,7 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
+    property alias currentAccount: accountFolderview.currentAccount
     SplitView {
         anchors.fill: parent
         Rectangle {

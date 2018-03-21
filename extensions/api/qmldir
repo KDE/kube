@@ -1,0 +1,4 @@
+module org.kube.extensionapi
+depends org.kube.framework 1.0
+
+plugin extensionapiplugin

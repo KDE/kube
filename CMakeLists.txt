@@ -11,6 +11,8 @@ cmake_policy(SET CMP0053 NEW)
 cmake_policy(SET CMP0063 NEW)
 
 option(EXPERIMENTAL_VIEWS "Install experimental views" OFF)
+#Do not enable this unless you actually distribute a custom extension.
+option(ENABLE_EXTENSION "Enable custom kube extensions" OFF)
 
 include(CPack)
 include(FeatureSummary)
@@ -41,3 +43,6 @@ add_subdirectory(applications)
 add_subdirectory(views)
 add_subdirectory(accounts)
 add_subdirectory(tests)
+if (${ENABLE_EXTENSION})
+    add_subdirectory(extensions)
+endif()

@@ -29,6 +29,7 @@ class ExtensionModel : public QSortFilterProxyModel
     Q_OBJECT
 
     Q_PROPERTY(QVariantList sortOrder WRITE setSortOrder READ sortOrder)
+    Q_PROPERTY(QString extensionPoint WRITE setExtensionPoint READ extensionPoint)
 public:
 
     ExtensionModel(QObject *parent = Q_NULLPTR);
@@ -49,6 +50,9 @@ public:
     void setSortOrder(const QVariantList &order);
     QVariantList sortOrder() const;
 
+    void setExtensionPoint(const QString &order);
+    QString extensionPoint() const;
+
     Q_INVOKABLE QString findSource(const QString &extensionName, const QString &sourceName);
 
 private slots:
@@ -57,6 +61,7 @@ private slots:
 private:
     QStringList mSortOrder;
     QHash<QString, QString> mPaths;
+    QString mExtensionPoint;
 };
 
 }

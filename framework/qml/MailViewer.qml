@@ -348,6 +348,8 @@ Rectangle {
     }
     Item {
         id: footer
+        property var mail: model.mail
+        property string subject: model.subject
 
         anchors.bottom: parent.bottom
 
@@ -373,13 +375,12 @@ Rectangle {
             }
         }
 
-        Grid {
+        Row {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
                 rightMargin: Kube.Units.largeSpacing
             }
-            columns: 2
             spacing: Kube.Units.smallSpacing
 
             Kube.Button {
@@ -403,6 +404,12 @@ Rectangle {
                     } else {
                         Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail})
                     }
+                }
+            }
+            Row {
+                Kube.ExtensionPoint {
+                    extensionPoint: "extensions/mailview"
+                    context: {"mail": footer.mail, "subject": footer.subject, "accountId": currentAccount}
                 }
             }
         }
