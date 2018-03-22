@@ -62,7 +62,7 @@ ENV XDG_RUNTIME_DIR /tmp/runtime-developer
 ENV LANG en_US.UTF-8
 
 RUN git config --global url."git://anongit.kde.org/".insteadOf kde: && \
-    git config --global url."ssh://git@git.kde.org/".pushInsteadOf kde: && \
+    git config --global url."ssh://git@git.kde.org/".pushInsteadOf kde:
 
 ADD bashrc /home/developer/.bashrc
 ADD startimap.sh /home/developer/startimap.sh
