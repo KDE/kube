@@ -80,12 +80,13 @@ void ContactController::loadContact(const QVariant &contact)
         const auto &vcard = c->getVcard();
         KContacts::VCardConverter converter;
         const auto addressee = converter.parseVCard(vcard);
-        setEmails(addressee.emails());
+        static_cast<MailsController*>(mailsController())->set(addressee.emails());
+
         QStringList numbers;
         for (const auto &n : addressee.phoneNumbers()) {
             numbers << n.number();
         }
-        setPhoneNumbers(numbers);
+        static_cast<PhonesController*>(phonesController())->set(numbers);
 
         for(const auto &a :addressee.addresses()) {
             setStreet(a.street());
@@ -96,27 +97,10 @@ void ContactController::loadContact(const QVariant &contact)
         setCompany(addressee.organization());
         setJobTitle(addressee.role());
         setImageData(addressee.photo().rawData());
-
-        static_cast<MailsController*>(mailsController())->set(addressee.emails());
-        static_cast<PhonesController*>(phonesController())->set(numbers);
     }
 }
 
 QVariant ContactController::contact() const
 {
     return QVariant{};
-}
-
-void ContactController::removeEmail(const QString &email)
-{
-    auto emails = getEmails();
-    emails.removeAll(email);
-    setEmails(emails);
-}
-
-void ContactController::addEmail(const QString &email)
-{
-    auto emails = getEmails();
-    emails.append(email);
-    setEmails(emails);
 }

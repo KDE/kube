@@ -35,8 +35,6 @@ class ContactController : public Kube::Controller
 
     //Interface properties
     KUBE_CONTROLLER_PROPERTY(QString, Name, name)
-    KUBE_CONTROLLER_PROPERTY(QStringList, Emails, emails)
-    KUBE_CONTROLLER_PROPERTY(QStringList, PhoneNumbers, phoneNumbers)
     KUBE_CONTROLLER_PROPERTY(QString, Street, street)
     KUBE_CONTROLLER_PROPERTY(QString, City, city)
     KUBE_CONTROLLER_PROPERTY(QString, Country, country)
@@ -53,8 +51,6 @@ public:
     explicit ContactController();
 
     Q_INVOKABLE void loadContact(const QVariant &contact);
-    Q_INVOKABLE void removeEmail(const QString &email);
-    Q_INVOKABLE void addEmail(const QString &email);
 
     QVariant contact() const;
 
