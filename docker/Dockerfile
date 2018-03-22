@@ -30,6 +30,7 @@ RUN dnf -y install sudo
 RUN dnf -y install pinentry-gtk
 RUN dnf -y install gammaray heaptrack
 RUN dnf -y install xapian-core-devel
+RUN dnf -y install flatbuffers-devel
 
 RUN useradd -d /home/developer -m developer
 
