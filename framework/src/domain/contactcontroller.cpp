@@ -30,6 +30,12 @@ public:
     {
     }
 
+    void set(const QStringList &list)
+    {
+        for (const auto &email: list) {
+            add({{"email", email}});
+        }
+    }
 };
 
 class PhonesController : public Kube::ListPropertyController
@@ -41,6 +47,12 @@ public:
     {
     }
 
+    void set(const QStringList &list)
+    {
+        for (const auto &number: list) {
+            add({{"number", number}});
+        }
+    }
 };
 
 ContactController::ContactController()
@@ -84,6 +96,9 @@ void ContactController::loadContact(const QVariant &contact)
         setCompany(addressee.organization());
         setJobTitle(addressee.role());
         setImageData(addressee.photo().rawData());
+
+        static_cast<MailsController*>(mailsController())->set(addressee.emails());
+        static_cast<PhonesController*>(phonesController())->set(numbers);
     }
 }
 

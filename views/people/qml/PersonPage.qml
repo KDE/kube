@@ -149,12 +149,12 @@ Flickable {
             width: personPageRoot.width - Kube.Units.largeSpacing
 
             Repeater {
-                model: contactController.emails
+                model: contactController.mails.model
 
                 delegate: Row {
                     spacing: Kube.Units.smallSpacing
                     Kube.Label { text: qsTr("(main)") }
-                    Kube.Label { text: modelData ; color: Kube.Colors.highlightColor }
+                    Kube.Label { text: model.email ; color: Kube.Colors.highlightColor }
                     Item { width: Kube.Units.smallSpacing; height: 1 }
                 }
             }
@@ -167,12 +167,11 @@ Flickable {
             spacing: Kube.Units.smallSpacing
 
             Repeater {
-                model: contactController.phoneNumbers
-
+                model: contactController.phones.model
                 Row {
                     spacing: Kube.Units.smallSpacing
                     Kube.Label { text: qsTr("(main)") }
-                    Kube.Label { text: modelData ; opacity: 0.6 }
+                    Kube.Label { text: model.number ; opacity: 0.6 }
                     Item { width: Kube.Units.smallSpacing; height: 1 }
                 }
             }
