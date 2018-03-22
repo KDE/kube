@@ -168,24 +168,8 @@ Flickable {
             Kube.Label {
                 text: qsTr("Email")
             }
-            Flow {
-                id: emails
-
-                width: personComposerRoot.width - Kube.Units.largeSpacing
-
-                Repeater {
-                    model: contactController.emails
-
-                    delegate: Row {
-                        spacing: Kube.Units.smallSpacing
-                        Kube.Label { text: qsTr("(main)") }
-                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelDatas; color: Kube.Colors.highlightColor; backgroundColor: "white" }
-                        Item { width: Kube.Units.smallSpacing; height: 1 }
-                    }
-                }
-            }
-            Kube.Button {
-                text: qsTr("Add")
+            MailListEditor {
+                controller: contactController.mails
             }
         }
 
@@ -197,25 +181,8 @@ Flickable {
                 text: qsTr("Phone")
             }
 
-            Flow {
-                id: phone
-
-                width: personComposerRoot.width - Kube.Units.largeSpacing
-                spacing: Kube.Units.smallSpacing
-
-                Repeater {
-                    model: contactController.phoneNumbers
-
-                    Row {
-                        spacing: Kube.Units.smallSpacing
-                        Kube.Label { text: qsTr("(main)") }
-                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelData; backgroundColor: "white"}
-                        Item { width: Kube.Units.smallSpacing; height: 1 }
-                    }
-                }
-            }
-            Kube.Button {
-                text: qsTr("Add")
+            PhoneListEditor {
+                controller: contactController.phones
             }
         }
 
