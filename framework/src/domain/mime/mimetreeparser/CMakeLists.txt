@@ -1,7 +1,7 @@
 set(CMAKE_CXX_VISIBILITY_PRESET default)
 
 find_package(Qt5 COMPONENTS REQUIRED Core Gui)
-find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
+find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
 find_package(QGpgme CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 
