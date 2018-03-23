@@ -142,6 +142,7 @@ void TestStore::setup(const QVariantMap &map)
                 resource.setResourceType("sink.dummy");
             } else if (object["type"] == "mailtransport") {
                 resource.setResourceType("sink.mailtransport");
+                resource.setProperty("testmode", true);
             } else {
                 Q_ASSERT(false);
             }
