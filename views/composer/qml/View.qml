@@ -50,15 +50,14 @@ Kube.View {
     ]
 
     onSetup: {
-        loadMessage(root.message, root.loadAsDraft)
+        loadMessage(root.message, root.loadType)
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "mail", "specialPurpose": "drafts"})
         //For autocompletion
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
     }
 
-    function loadMessage(message, loadAsDraft) {
+    function loadMessage(message, loadType) {
         if (message) {
-
             switch(loadType) {
                 case Kube.ComposerController.Draft:
                     composerController.loadDraft(message)
@@ -163,7 +162,7 @@ Kube.View {
 
                 onCurrentItemChanged: {
                     if (currentItem) {
-                        root.loadMessage(currentItem.currentData.domainObject, true)
+                        root.loadMessage(currentItem.currentData.domainObject, Kube.ComposerController.Draft)
                     }
                 }
 
