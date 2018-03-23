@@ -951,8 +951,7 @@ void MailTemplates::forward(const KMime::Message::Ptr &origMsg,
     fwdAttachment->contentDisposition()->setDisposition(KMime::Headers::CDinline);
     fwdAttachment->contentType()->setMimeType("message/rfc822");
     fwdAttachment->contentDisposition()->setFilename(forwardedMessage->subject()->asUnicodeString() + ".eml");
-    // The mail was parsed in loadMessage before, so no need to assemble it
-    fwdAttachment->setBody(forwardedMessage->encodedContent());
+    fwdAttachment->setBody(KMime::CRLFtoLF(forwardedMessage->encodedContent(false)));
 
     wrapperMsg->addContent(fwdAttachment);
     wrapperMsg->assemble();
