@@ -129,22 +129,17 @@ TestCase {
                     address: "identity@example.org"
                 }],
             resources: [{
-                    id: "resource1",
+                    id: "resource3",
                     account: "account1",
                     type: "dummy"
-                },
-                {
-                    id: "resource2",
-                    account: "account1",
-                    type: "mailtransport"
                 }],
             folders: [{
                     id: "folder1",
-                    resource: "resource1",
+                    resource: "resource3",
                     name: "Folder 1",
                     specialpurpose: ["inbox"],
                     mails: [{
-                            resource: "resource1",
+                            resource: "resource3",
                             subject: "subject1",
                             body: "body",
                             to: ["to@example.org"],
@@ -159,7 +154,7 @@ TestCase {
         var folderListView = findChild(mailView, "folderListView");
         verify(folderListView)
 
-        var folder = TestStore.load("folder", {resource: "resource1"})
+        var folder = TestStore.load("folder", {resource: "resource3"})
         verify(folder)
 
         Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": folder, "trash": false});
