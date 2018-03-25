@@ -65,17 +65,17 @@ ENV LANG en_US.UTF-8
 RUN git config --global url."git://anongit.kde.org/".insteadOf kde: && \
     git config --global url."ssh://git@git.kde.org/".pushInsteadOf kde:
 
-ADD bashrc /home/developer/.bashrc
-ADD startimap.sh /home/developer/startimap.sh
+ADD --chown=developer:developer bashrc /home/developer/.bashrc
+ADD --chown=developer:developer startimap.sh /home/developer/startimap.sh
 
-ADD keyconfig /home/developer/keyconfig
-ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
-ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
-ADD initrepositories.sh /home/developer/initrepositories.sh
+ADD --chown=developer:developer keyconfig /home/developer/keyconfig
+ADD --chown=developer:developer setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
+ADD --chown=developer:developer kubeunlocked.sh /home/developer/kubeunlocked.sh
+ADD --chown=developer:developer initrepositories.sh /home/developer/initrepositories.sh
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
-ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
-ADD gpg.conf /home/developer/.gnupg/gpg.conf
+ADD --chown=developer:developer gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
+ADD --chown=developer:developer gpg.conf /home/developer/.gnupg/gpg.conf
 
 #Better qt support
 RUN git clone https://github.com/Lekensteyn/qt5printers.git ~/.gdb/qt5printers/
-ADD gdbinit /home/developer/.gdbinit
+ADD --chown=developer:developer gdbinit /home/developer/.gdbinit
