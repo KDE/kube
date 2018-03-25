@@ -298,7 +298,7 @@ Kube.View {
                     text: checked ? qsTr("plain") : qsTr("html")
                     focusPolicy: Qt.TabFocus
                     focus: false
-                    checked: composerController.htmlBody
+                    checked: false
                 }
 
                 Row {
@@ -457,7 +457,7 @@ Kube.View {
                 enabled: composerController.foundPersonalKeys
                 Kube.CheckBox {
                     id: encryptCheckbox
-                    checked: composerController.encrypt
+                    checked: false
                 }
                 Kube.Label {
                     text: qsTr("encrypt")
@@ -468,7 +468,7 @@ Kube.View {
                 enabled: composerController.foundPersonalKeys
                 Kube.CheckBox {
                     id: signCheckbox
-                    checked: composerController.sign
+                    checked: false
                 }
                 Kube.Label {
                     text: qsTr("sign")
