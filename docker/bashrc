@@ -2,6 +2,6 @@
 ulimit -c 0
 
 sudo rsyslogd &
-sudo saslauthd -a pam &
+sudo saslauthd -a shadow &
 sudo /usr/libexec/cyrus-imapd/master -d
 

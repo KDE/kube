@@ -28,13 +28,16 @@ RUN dnf -y install google-noto-serif-fonts google-noto-sans-fonts
 
 RUN useradd -d /home/developer -m developer
 
+
+ADD rsyslog.conf /etc/rsyslog.conf
 #Setup cyrus imap
-RUN echo 'altnamespace: 0' >> /etc/imapd.conf
-RUN echo 'unixhierarchysep: 0' >> /etc/imapd.conf
+ADD imapd.conf /etc/imapd.conf
 RUN usermod -p `perl -e "print crypt("admin","Q4")"` cyrus
 RUN useradd -p `perl -e "print crypt("doe","Q4")"` doe
 RUN /usr/bin/sscg --package cyrus-imapd --cert-file /etc/pki/cyrus-imapd/cyrus-imapd.pem --cert-key-file /etc/pki/cyrus-imapd/cyrus-imapd-key.pem --ca-file /etc/pki/cyrus-imapd/cyrus-imapd-ca.pem
-RUN saslauthd -a pam && /usr/libexec/cyrus-imapd/master -d && sleep 1 && echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
+RUN saslauthd -a shadow && /usr/libexec/cyrus-imapd/master -d && sleep 1 && echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
+#RUN echo "doe" | saslpasswd2 -p -u example.org doe
+#RUN chown cyrus:root /etc/sasldb2
 
 #DBus For KCacheGrind
 RUN dbus-uuidgen --ensure
@@ -78,6 +81,3 @@ RUN sudo chown developer:developer /home/developer/.gnupg -R
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
 #Better qt support
 RUN git clone https://github.com/Lekensteyn/qt5printers.git ~/.gdb/qt5printers/
-
-ADD rsyslog.conf /etc/rsyslog.conf
-ADD imapd.conf /etc/imapd.conf
