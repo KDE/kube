@@ -80,3 +80,4 @@ RUN gpg2 --batch --generate-key /home/developer/keyconfig
 RUN git clone https://github.com/Lekensteyn/qt5printers.git ~/.gdb/qt5printers/
 
 ADD rsyslog.conf /etc/rsyslog.conf
+ADD imapd.conf /etc/imapd.conf
