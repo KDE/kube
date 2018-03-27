@@ -1,6 +1,7 @@
 #Disable coredumps
 ulimit -c 0
 
+sudo rsyslogd &
 sudo saslauthd -a pam &
 sudo /usr/libexec/cyrus-imapd/master -d
 

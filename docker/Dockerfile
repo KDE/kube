@@ -31,6 +31,7 @@ RUN dnf -y install pinentry-gtk
 RUN dnf -y install gammaray heaptrack
 RUN dnf -y install xapian-core-devel
 RUN dnf -y install flatbuffers-devel
+RUN dnf -y install rsyslog
 
 RUN useradd -d /home/developer -m developer
 
@@ -77,9 +78,12 @@ ADD keyconfig /home/developer/keyconfig
 ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
 ADD gpg.conf /home/developer/.gnupg/gpg.conf
 ADD gdbinit /home/developer/.gdbinit
+ADD enableDebug.sh /home/developer/enableDebug.sh
 RUN sudo chown developer:developer /home/developer/*
 RUN sudo chown developer:developer /home/developer/.gnupg -R
 
 RUN gpg2 --batch --generate-key /home/developer/keyconfig
 #Better qt support
 RUN git clone https://github.com/Lekensteyn/qt5printers.git ~/.gdb/qt5printers/
+
+ADD rsyslog.conf /etc/rsyslog.conf
