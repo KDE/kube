@@ -2,36 +2,29 @@ FROM fedora:27
 
 RUN dnf -y update
 
-RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar ninja-build clang procps-ng libcxx-devel
+RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar ninja-build clang procps-ng libcxx-devel sudo rsyslog
 
 #Sink deps
-RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel readline-devel libcurl-devel
+RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel readline-devel libcurl-devel xapian-core-devel flatbuffers-devel
 
 #Test and debugging
-RUN dnf -y install gdb xterm perf valgrind strace kcachegrind dbus-x11
+RUN dnf -y install gdb xterm perf valgrind strace kcachegrind dbus-x11 gammaray heaptrack
+#Required for the symbolizer for asan
+RUN dnf -y install llvm
 
 #kf5-mime
 RUN dnf -y install cyrus-sasl-devel
 
 #Stuff for kube
 RUN dnf -y install qt5-qtquickcontrols qt5-qtquickcontrols2-devel qt5-qtwebengine-devel qt5-qtxmlpatterns-devel
-RUN dnf -y install kf5-kpackage-devel kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel qgpgme-devel
+RUN dnf -y install kf5-kpackage-devel kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel qgpgme-devel kf5-kcalendarcore-devel
 
 # Imap tests
-RUN dnf -y install cyrus-imapd cyrus-sasl cyrus-sasl-plain gnupg2-smime
+RUN dnf -y install cyrus-imapd cyrus-sasl cyrus-sasl-plain gnupg2-smime pinentry-gtk
 
 #Fonts
 RUN dnf -y install google-noto-serif-fonts google-noto-sans-fonts
 
-#Required for the symbolizer for asan
-RUN dnf -y install llvm
-
-RUN dnf -y install sudo
-RUN dnf -y install pinentry-gtk
-RUN dnf -y install gammaray heaptrack
-RUN dnf -y install xapian-core-devel
-RUN dnf -y install flatbuffers-devel
-RUN dnf -y install rsyslog
 
 RUN useradd -d /home/developer -m developer
 
