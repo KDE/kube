@@ -14,6 +14,7 @@ if(APPLE OR WIN32)
 endif()
 
 add_executable(${PROJECT_NAME} ${SRCS})
+set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST MacOSXBundleInfo.plist.in)
 target_link_libraries(${PROJECT_NAME}
     Qt5::Quick
     ${CMAKE_DL_LIBS}

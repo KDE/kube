@@ -84,8 +84,7 @@ TestCase {
 
         var createdMail = TestStore.load("mail", {resource: "resource1"})
 
-        var loadAsDraft = true
-        composer.loadMessage(createdMail, loadAsDraft)
+        composer.loadMessage(createdMail, Kube.ComposerController.Draft)
         var sendMailButton = findChild(composer, "sendButton")
         verify(sendMailButton)
         tryVerify(function(){ return sendMailButton.enabled })

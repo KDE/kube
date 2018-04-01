@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(kube VERSION 0.6)
+project(kube VERSION 0.7)
 
-set (QT_MIN_VERSION "5.9.0")
+set(QT_MIN_VERSION 5.9.0)
 
 cmake_policy(SET CMP0011 NEW)
 cmake_policy(SET CMP0028 NEW)
@@ -11,13 +11,15 @@ cmake_policy(SET CMP0053 NEW)
 cmake_policy(SET CMP0063 NEW)
 
 option(EXPERIMENTAL_VIEWS "Install experimental views" OFF)
+#Do not enable this unless you actually distribute a custom extension.
+option(ENABLE_EXTENSION "Enable custom kube extensions" OFF)
 
 include(CPack)
 include(FeatureSummary)
 find_package(PkgConfig REQUIRED)
 find_package(ECM 5.29.0 REQUIRED NO_MODULE)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/ ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
 include(KDEInstallDirs)
 include(KDECompilerSettings)
@@ -41,3 +43,6 @@ add_subdirectory(applications)
 add_subdirectory(views)
 add_subdirectory(accounts)
 add_subdirectory(tests)
+if (${ENABLE_EXTENSION})
+    add_subdirectory(extensions)
+endif()

@@ -45,6 +45,7 @@ TreeView 1.0 TreeView.qml
 GridView 1.0 GridView.qml
 ScrollHelper 1.0 ScrollHelper.qml
 ModelIndexRetriever 1.0 ModelIndexRetriever.qml
+ExtensionPoint 1.0 ExtensionPoint.qml
 singleton Messages 1.0 Messages.qml
 singleton Notifications 1.0 Notifications.qml
 singleton Colors 1.0 Colors.qml

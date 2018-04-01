@@ -118,11 +118,13 @@ Flickable {
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
                     placeholderText: qsTr("First Name")
+                    backgroundColor: "white"
                 }
 
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
                     placeholderText: qsTr("Last Name")
+                    backgroundColor: "white"
                 }
             }
 
@@ -139,6 +141,7 @@ Flickable {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.jobTitle
                 placeholderText: qsTr("Job Title")
+                backgroundColor: "white"
             }
 
             Kube.TextField {
@@ -153,6 +156,7 @@ Flickable {
 
                 placeholderText: qsTr("Company")
                 text: contactController.company
+                backgroundColor: "white"
             }
         }
 
@@ -164,24 +168,8 @@ Flickable {
             Kube.Label {
                 text: qsTr("Email")
             }
-            Flow {
-                id: emails
-
-                width: personComposerRoot.width - Kube.Units.largeSpacing
-
-                Repeater {
-                    model: contactController.emails
-
-                    delegate: Row {
-                        spacing: Kube.Units.smallSpacing
-                        Kube.Label { text: qsTr("(main)") }
-                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelData ; color: Kube.Colors.highlightColor }
-                        Item { width: Kube.Units.smallSpacing; height: 1 }
-                    }
-                }
-            }
-            Kube.Button {
-                text: qsTr("Add")
+            MailListEditor {
+                controller: contactController.mails
             }
         }
 
@@ -193,25 +181,8 @@ Flickable {
                 text: qsTr("Phone")
             }
 
-            Flow {
-                id: phone
-
-                width: personComposerRoot.width - Kube.Units.largeSpacing
-                spacing: Kube.Units.smallSpacing
-
-                Repeater {
-                    model: contactController.phoneNumbers
-
-                    Row {
-                        spacing: Kube.Units.smallSpacing
-                        Kube.Label { text: qsTr("(main)") }
-                        Kube.TextField { width: Kube.Units.gridUnit * 15; text: modelData}
-                        Item { width: Kube.Units.smallSpacing; height: 1 }
-                    }
-                }
-            }
-            Kube.Button {
-                text: qsTr("Add")
+            PhoneListEditor {
+                controller: contactController.phones
             }
         }
 
@@ -229,16 +200,19 @@ Flickable {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.street
                 placeholderText: qsTr("Street")
+                backgroundColor: "white"
             }
             Kube.TextField {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.city
                 placeholderText: qsTr("City")
+                backgroundColor: "white"
             }
             Kube.TextField {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.country
                 placeholderText: qsTr("Country")
+                backgroundColor: "white"
             }
         }
         Item {

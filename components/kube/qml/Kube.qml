@@ -160,6 +160,7 @@ Controls2.ApplicationWindow {
                 Repeater {
                     model: Kube.ExtensionModel {
                         id: extensionModel
+                        extensionPoint: "views"
                         sortOrder: ["composer", "conversation", "people"]
                     }
                     Kube.IconButton {

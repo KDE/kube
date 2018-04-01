@@ -32,6 +32,11 @@
 #include <QUrl>
 #include <QMimeDatabase>
 
+#include <QGpgME/ImportJob>
+#include <QGpgME/Protocol>
+
+#include <memory>
+
 QString sizeHuman(float size)
 {
     QStringList list;
@@ -208,6 +213,36 @@ bool AttachmentModel::openAttachment(const QModelIndex &index)
     }
     Kube::Fabric::Fabric{}.postMessage("notification", {{"message", tr("Failed to save attachment for opening.")}});
     return false;
+}
+
+bool AttachmentModel::importPublicKey(const QModelIndex &index)
+{
+    Q_ASSERT(index.internalPointer());
+    const auto part = static_cast<MimeTreeParser::MessagePart *>(index.internalPointer());
+    Q_ASSERT(part);
+    auto pkey = part->node()->decodedContent();
+
+    const auto *proto = QGpgME::openpgp();
+    std::unique_ptr<QGpgME::ImportJob> job(proto->importJob());
+    auto result = job->exec(pkey);
+
+    bool success = true;
+
+    QString message;
+    if(result.numConsidered() == 0) {
+        message = tr("No keys were found in this attachment");
+        success = false;
+    } else {
+        message = tr("%n Key(s) imported", "", result.numImported());
+        if(result.numUnchanged() != 0) {
+            message += "\n" + tr("%n Key(s) were already imported", "", result.numUnchanged());
+        }
+    }
+
+    Kube::Fabric::Fabric{}.postMessage("notification",
+        {{"message", message}});
+
+    return success;
 }
 
 QModelIndex AttachmentModel::parent(const QModelIndex &) const

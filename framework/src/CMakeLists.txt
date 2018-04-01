@@ -1,13 +1,13 @@
 
 find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine Gui)
-find_package(KF5Mime "4.87.0" CONFIG REQUIRED)
-find_package(Sink CONFIG REQUIRED)
+find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
+find_package(Sink 0.6.0 CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
 find_package(QGpgme CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(KF5Contacts CONFIG REQUIRED)
 
-add_definitions("-Wall -std=c++0x -g")
+add_definitions("-Wall -std=c++14 -g")
 set(CMAKE_CXX_VISIBILITY_PRESET default)
 
 include_directories(. domain/mime/mimetreeparser domain/ domain/mime)

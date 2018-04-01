@@ -283,6 +283,7 @@ Rectangle {
 
             delegate: AttachmentDelegate {
                 name: model.name
+                type: model.type
                 icon: model.iconName
 
                 clip: true
@@ -290,6 +291,7 @@ Rectangle {
                 actionIcon: Kube.Icons.save_inverted
                 onExecute: messageParser.attachments.saveAttachmentToDisk(messageParser.attachments.index(index, 0))
                 onClicked: messageParser.attachments.openAttachment(messageParser.attachments.index(index, 0))
+                onPublicKeyImport: messageParser.attachments.importPublicKey(messageParser.attachments.index(index, 0))
             }
         }
     }
@@ -346,6 +348,8 @@ Rectangle {
     }
     Item {
         id: footer
+        property var mail: model.mail
+        property string subject: model.subject
 
         anchors.bottom: parent.bottom
 
@@ -371,20 +375,19 @@ Rectangle {
             }
         }
 
-        Grid {
+        Row {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
                 rightMargin: Kube.Units.largeSpacing
             }
-            columns: 2
             spacing: Kube.Units.smallSpacing
 
             Kube.Button {
                 visible: !model.trash && !model.draft
                 activeFocusOnTab: false
 
-                text: "Share"
+                text: qsTr("Share")
                 onClicked: {
                     Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
                 }
@@ -394,13 +397,19 @@ Rectangle {
                 visible: !model.trash
                 activeFocusOnTab: false
 
-                text: model.draft ? "Edit" : "Reply"
+                text: model.draft ? qsTr("Edit") : qsTr("Reply")
                 onClicked: {
                     if (model.draft) {
                         Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail})
                     } else {
                         Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail})
                     }
+                }
+            }
+            Row {
+                Kube.ExtensionPoint {
+                    extensionPoint: "extensions/mailview"
+                    context: {"mail": footer.mail, "subject": footer.subject, "accountId": currentAccount}
                 }
             }
         }

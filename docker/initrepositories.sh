@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SRCDIR="~/src"
+SRCDIR="/src"
 
 cd $SRCDIR
 

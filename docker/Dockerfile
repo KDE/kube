@@ -2,44 +2,42 @@ FROM fedora:27
 
 RUN dnf -y update
 
-RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar ninja-build clang procps-ng libcxx-devel
+RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar ninja-build clang procps-ng libcxx-devel sudo rsyslog
 
 #Sink deps
-RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel readline-devel libcurl-devel
+RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel readline-devel libcurl-devel xapian-core-devel flatbuffers-devel
 
 #Test and debugging
-RUN dnf -y install gdb xterm perf valgrind strace kcachegrind dbus-x11
+RUN dnf -y install gdb xterm perf valgrind strace kcachegrind dbus-x11 gammaray heaptrack
+#Required for the symbolizer for asan
+RUN dnf -y install llvm
 
 #kf5-mime
 RUN dnf -y install cyrus-sasl-devel
 
 #Stuff for kube
 RUN dnf -y install qt5-qtquickcontrols qt5-qtquickcontrols2-devel qt5-qtwebengine-devel qt5-qtxmlpatterns-devel
-RUN dnf -y install kf5-kpackage-devel kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel qgpgme-devel
+RUN dnf -y install kf5-kpackage-devel kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel qgpgme-devel kf5-kcalendarcore-devel
 
 # Imap tests
-RUN dnf -y install cyrus-imapd cyrus-sasl cyrus-sasl-plain gnupg2-smime
+RUN dnf -y install cyrus-imapd cyrus-sasl cyrus-sasl-plain gnupg2-smime pinentry-gtk
 
 #Fonts
 RUN dnf -y install google-noto-serif-fonts google-noto-sans-fonts
 
-#Required for the symbolizer for asan
-RUN dnf -y install llvm
-
-RUN dnf -y install sudo
-RUN dnf -y install pinentry-gtk
-RUN dnf -y install gammaray heaptrack
-RUN dnf -y install xapian-core-devel
 
 RUN useradd -d /home/developer -m developer
 
+
+ADD rsyslog.conf /etc/rsyslog.conf
 #Setup cyrus imap
-RUN echo 'altnamespace: 0' >> /etc/imapd.conf
-RUN echo 'unixhierarchysep: 0' >> /etc/imapd.conf
+ADD imapd.conf /etc/imapd.conf
 RUN usermod -p `perl -e "print crypt("admin","Q4")"` cyrus
 RUN useradd -p `perl -e "print crypt("doe","Q4")"` doe
 RUN /usr/bin/sscg --package cyrus-imapd --cert-file /etc/pki/cyrus-imapd/cyrus-imapd.pem --cert-key-file /etc/pki/cyrus-imapd/cyrus-imapd-key.pem --ca-file /etc/pki/cyrus-imapd/cyrus-imapd-ca.pem
-RUN saslauthd -a pam && /usr/libexec/cyrus-imapd/master -d && sleep 1 && echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
+RUN saslauthd -a shadow && /usr/libexec/cyrus-imapd/master -d && sleep 1 && echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
+#RUN echo "doe" | saslpasswd2 -p -u example.org doe
+#RUN chown cyrus:root /etc/sasldb2
 
 #DBus For KCacheGrind
 RUN dbus-uuidgen --ensure
@@ -61,16 +59,25 @@ RUN mkdir /tmp/runtime-developer
 ENV XDG_RUNTIME_DIR /tmp/runtime-developer
 ENV LANG en_US.UTF-8
 
+RUN git config --global url."git://anongit.kde.org/".insteadOf kde: && \
+    git config --global url."ssh://git@git.kde.org/".pushInsteadOf kde:
+
 ADD bashrc /home/developer/.bashrc
 ADD startimap.sh /home/developer/startimap.sh
 
-ADD keyconfig /home/developer/keyconfig
+
 ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
 ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
-RUN gpg2 --batch --generate-key /home/developer/keyconfig
+ADD initrepositories.sh /home/developer/initrepositories.sh
+
+ADD keyconfig /home/developer/keyconfig
 ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
 ADD gpg.conf /home/developer/.gnupg/gpg.conf
+ADD gdbinit /home/developer/.gdbinit
+ADD enableDebug.sh /home/developer/enableDebug.sh
+RUN sudo chown developer:developer /home/developer/*
+RUN sudo chown developer:developer /home/developer/.gnupg -R
 
+RUN gpg2 --batch --generate-key /home/developer/keyconfig
 #Better qt support
 RUN git clone https://github.com/Lekensteyn/qt5printers.git ~/.gdb/qt5printers/
-ADD gdbinit /home/developer/.gdbinit

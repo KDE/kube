@@ -47,12 +47,17 @@ QHash<int, QByteArray> ExtensionModel::roleNames() const
 
 void ExtensionModel::load()
 {
-    auto model = new QStandardItemModel(this);
-
+    if (auto m = sourceModel()) {
+        setSourceModel(nullptr);
+        delete m;
+    }
     auto engine = qmlEngine(this);
-    Q_ASSERT(engine);
+    if (!engine) {
+        return;
+    }
+    auto model = new QStandardItemModel(this);
     for (const auto &path : engine->importPathList()) {
-        QDir dir{path + "/org/kube/views"};
+        QDir dir{path + "/org/kube/" + mExtensionPoint};
         for (const auto &pluginName : dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
             const auto pluginPath = dir.path() + "/" + pluginName;
             mPaths.insert(pluginName, pluginPath);
@@ -99,6 +104,17 @@ void ExtensionModel::setSortOrder(const QVariantList &order)
 QVariantList ExtensionModel::sortOrder() const
 {
     return {};
+}
+
+void ExtensionModel::setExtensionPoint(const QString &extensionPoint)
+{
+    mExtensionPoint = extensionPoint;
+    QTimer::singleShot(0, this, &ExtensionModel::load);
+}
+
+QString ExtensionModel::extensionPoint() const
+{
+    return mExtensionPoint;
 }
 
 QVariant ExtensionModel::data(const QModelIndex &idx, int role) const
