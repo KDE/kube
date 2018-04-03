@@ -60,6 +60,14 @@ FocusScope {
         setCurrentItem()
     }
 
+    function incrementCurrentIndex() {
+        flickable.incrementCurrentIndex()
+    }
+
+    function decrementCurrentIndex() {
+        flickable.decrementCurrentIndex()
+    }
+
     Flickable {
         id: flickable
         anchors.fill: parent
@@ -116,21 +124,13 @@ FocusScope {
             if (currentIndex < repeater.count - 1) {
                 currentIndex = currentIndex + 1
             }
+            scrollToIndex(currentIndex)
         }
 
         function decrementCurrentIndex() {
             if (currentIndex > 0) {
                 currentIndex = currentIndex - 1
             }
-        }
-
-        Keys.onDownPressed: {
-            incrementCurrentIndex()
-            scrollToIndex(currentIndex)
-        }
-
-        Keys.onUpPressed: {
-            decrementCurrentIndex()
             scrollToIndex(currentIndex)
         }
 

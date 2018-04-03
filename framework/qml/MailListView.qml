@@ -16,7 +16,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 2.0
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
@@ -48,7 +48,7 @@ FocusScope {
     }
 
     Shortcut {
-        sequence: StandardKey.Delete
+        sequences: [StandardKey.Delete]
         enabled: !isTrash
         onActivated: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail":currentMail})
     }
@@ -121,12 +121,17 @@ FocusScope {
                 }
             }
 
-            Keys.onDownPressed: {
-                incrementCurrentIndex()
+            Keys.onPressed: {
+                if (event.text == "j" || event.matches(StandardKey.MoveToNextLine)) {
+                    incrementCurrentIndex()
+                } else if (event.text == "k" || event.matches(StandardKey.MoveToPreviousLine)) {
+                    decrementCurrentIndex()
+                } else if (event.text == "d") {
+                    //Not implemented as a shortcut because we want it only to apply if we have the focus
+                    Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": root.currentMail})
+                }
             }
-            Keys.onUpPressed: {
-                decrementCurrentIndex()
-            }
+
             //END keyboard nav
 
             onCurrentItemChanged: {

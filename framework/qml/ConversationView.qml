@@ -60,6 +60,18 @@ FocusScope {
                 mail: root.mail
             }
 
+            Keys.onPressed: {
+                if (event.text == "j" || event.matches(StandardKey.MoveToNextLine)) {
+                    listView.incrementCurrentIndex()
+                } else if (event.text == "k" || event.matches(StandardKey.MoveToPreviousLine)) {
+                    listView.decrementCurrentIndex()
+                } else if (event.text == "d") {
+                   //Not implemented as a shortcut because we want it only to apply if we have the focus
+                   Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": listView.currentItem.currentData.mail})
+                }
+            }
+
+
             delegate: FocusScope {
                 id: delegateRoot
 
@@ -77,6 +89,7 @@ FocusScope {
 
                 height: sheet.height + Kube.Units.gridUnit
                 width: listView.width
+                //FIXME breaks keyboard navigation because we don't jump over invisible items
                 visible: !((root.hideTrash && model.trash) || (root.hideNonTrash && !model.trash))
 
                 MouseArea {
