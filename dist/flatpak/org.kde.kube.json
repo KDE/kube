@@ -55,6 +55,18 @@
             "sources": [ { "type": "git", "url": "git://anongit.kde.org/kcontacts.git", "branch": "Applications/17.04" } ]
         },
         {
+            "config-opts": [ "-DCMAKE_INSTALL_LIBDIR=lib" ],
+            "name": "libical",
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "https://github.com/libical/libical.git", "branch": "v2.0.0" } ]
+        },
+        {
+            "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
+            "name": "kcalcore",
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kcalcore.git", "branch": "v17.12.2" } ]
+        },
+        {
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "name": "kdav2",
             "buildsystem": "cmake-ninja",
