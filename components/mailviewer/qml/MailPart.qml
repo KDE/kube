@@ -24,6 +24,7 @@ Item {
     id: root
     property alias rootIndex: visualModel.rootIndex
     property alias model: visualModel.model
+    property alias searchString: visualModel.searchString
     property variant sender
     property variant date
     height: childrenRect.height

@@ -23,6 +23,7 @@ Item {
     id: root
     property variant errorType
     property string errorString
+    property string searchString
     height: partListView.height
     width: parent.width
 
