@@ -18,7 +18,7 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Controls 2 as Controls2
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
@@ -60,7 +60,7 @@ FocusScope {
             flickable: flickableItem
         }
 
-        TreeView {
+        Controls1.TreeView {
             id: treeView
 
             anchors {

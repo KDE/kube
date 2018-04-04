@@ -19,7 +19,7 @@
 
 
 import QtQuick 2.7
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
 
@@ -27,7 +27,7 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     property alias currentAccount: accountFolderview.currentAccount
-    SplitView {
+    Controls1.SplitView {
         anchors.fill: parent
         Rectangle {
             width: Kube.Units.gridUnit * 10

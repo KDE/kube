@@ -18,7 +18,6 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4 as Controls
 import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 import org.kube.accounts.imap 1.0 as ImapAccount

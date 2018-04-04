@@ -18,7 +18,7 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.3 as Controls
+import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2.0
 import org.kube.framework 1.0 as Kube
 import org.kube.components.accounts 1.0 as KubeAccounts
@@ -30,7 +30,7 @@ FocusScope {
     //Defines available account types.
     property var availableAccountPlugins: ["kolabnow", "imap", "maildir", "gmail"]
 
-    Controls.SplitView {
+    Controls1.SplitView {
         height: parent.height
         width: parent.width
 

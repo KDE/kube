@@ -19,11 +19,11 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.3 as Controls
+import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
-Controls.SplitView {
+Controls1.SplitView {
     id: root
 
     property bool pendingError: false;
