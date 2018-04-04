@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.7
-//FIXME This should really be QtQuick.Templates, but that is crashing with qt 5.7, so we'll have to wait for a bit.
+//FIXME This should really be QtQuick.Templates, but that used to crash with qt 5.7, and doesn't render the background on mac with 5.9
 import QtQuick.Controls 2.0 as T
 import org.kube.framework 1.0
 
