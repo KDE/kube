@@ -60,6 +60,16 @@ FocusScope {
         text: qsTr("Nothing here...")
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.nextConversation
+        onMessageReceived: listView.incrementCurrentIndex()
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.previousConversation
+        onMessageReceived: listView.decrementCurrentIndex()
+    }
+
     ColumnLayout {
         anchors.fill: parent
 

@@ -62,9 +62,17 @@ FocusScope {
 
             Keys.onPressed: {
                 if (event.text == "j" || event.matches(StandardKey.MoveToNextLine)) {
+                    listView.scrollDown()
+                } else if (event.text == "J" || event.matches(StandardKey.MoveToNextPage)) {
                     listView.incrementCurrentIndex()
                 } else if (event.text == "k" || event.matches(StandardKey.MoveToPreviousLine)) {
+                    listView.scrollUp()
+                } else if (event.text == "K" || event.matches(StandardKey.MoveToPreviousPage)) {
                     listView.decrementCurrentIndex()
+                } else if (event.text == "n") {
+                   Kube.Fabric.postMessage(Kube.Messages.nextConversation, {})
+                } else if (event.text == "p") {
+                   Kube.Fabric.postMessage(Kube.Messages.previousConversation, {})
                 } else if (event.text == "d") {
                    //Not implemented as a shortcut because we want it only to apply if we have the focus
                    Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": listView.currentItem.currentData.mail})
