@@ -17,7 +17,8 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Templates 2.0 as T
+//FIXME This should really be QtQuick.Templates, but that is crashing with qt 5.7, so we'll have to wait for a bit.
+import QtQuick.Controls 2.0 as T
 import org.kube.framework 1.0
 
 T.Popup {
