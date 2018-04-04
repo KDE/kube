@@ -19,7 +19,6 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
@@ -48,7 +47,7 @@ FocusScope {
         accountType: root.accountType
     }
 
-    Controls.ToolButton {
+    Kube.IconButton {
         id: backButton
         iconName: Kube.Icons.goBack
         tooltip: "go back"
