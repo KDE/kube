@@ -43,6 +43,22 @@ MouseArea {
         root.parent = flickable
     }
 
+    function scrollByPixelDelta(flickableItem, pixelDelta) {
+        if (!pixelDelta) {
+            return flickableItem.contentY;
+        }
+
+        var minYExtent = flickableItem.originY + flickableItem.topMargin;
+        var maxYExtent = (flickableItem.contentHeight + flickableItem.bottomMargin + flickableItem.originY) - flickableItem.height;
+
+        if (typeof(flickableItem.headerItem) !== "undefined" && flickableItem.headerItem) {
+            minYExtent += flickableItem.headerItem.height
+        }
+
+        //Avoid overscrolling
+        return Math.max(minYExtent, Math.min(maxYExtent, flickableItem.contentY - pixelDelta));
+    }
+
     function calculateNewPosition(flickableItem, wheel) {
         //Nothing to scroll
         if (flickableItem.contentHeight < flickableItem.height) {
@@ -64,19 +80,17 @@ MouseArea {
             pixelDelta = wheel.pixelDelta.y
         }
 
-        if (!pixelDelta) {
-            return flickableItem.contentY;
-        }
+        return scrollByPixelDelta(flickableItem, pixelDelta);
+    }
 
-        var minYExtent = flickableItem.originY + flickableItem.topMargin;
-        var maxYExtent = (flickableItem.contentHeight + flickableItem.bottomMargin + flickableItem.originY) - flickableItem.height;
+    function scrollDown() {
+        flickable.flick(0, 0);
+        flickable.contentY = scrollByPixelDelta(flickable, -60); //3 lines * 20 pixels
+    }
 
-        if (typeof(flickableItem.headerItem) !== "undefined" && flickableItem.headerItem) {
-            minYExtent += flickableItem.headerItem.height
-        }
-
-        //Avoid overscrolling
-        return Math.max(minYExtent, Math.min(maxYExtent, flickableItem.contentY - pixelDelta));
+    function scrollUp() {
+        flickable.flick(0, 0);
+        flickable.contentY = scrollByPixelDelta(flickable, 60); //3 lines * 20 pixels
     }
 
     onWheel: {

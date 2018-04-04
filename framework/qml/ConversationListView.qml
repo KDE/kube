@@ -68,6 +68,14 @@ FocusScope {
         flickable.decrementCurrentIndex()
     }
 
+    function scrollDown() {
+        scrollHelper.scrollDown()
+    }
+
+    function scrollUp() {
+        scrollHelper.scrollUp()
+    }
+
     Flickable {
         id: flickable
         anchors.fill: parent
@@ -81,14 +89,17 @@ FocusScope {
         function scrollToIndex(index) {
             var item = repeater.itemAt(index)
             if (item) {
-                var pos = item.y
-                var scrollToEndPos = (flickable.contentHeight - flickable.height)
-                //Avoid scrolling past the end
-                if (pos < scrollToEndPos) {
-                    flickable.contentY = pos
-                } else {
-                    flickable.contentY = scrollToEndPos
-                }
+                scrollToPos(item.y)
+            }
+        }
+
+        function scrollToPos(pos) {
+            var scrollToEndPos = (flickable.contentHeight - flickable.height)
+            //Avoid scrolling past the end
+            if (pos < scrollToEndPos) {
+                flickable.contentY = pos
+            } else {
+                flickable.contentY = scrollToEndPos
             }
         }
 
