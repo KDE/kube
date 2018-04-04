@@ -129,8 +129,8 @@ FocusScope {
 
             parent: ApplicationWindow.overlay
             height: root.height
-            width: root.width
-            x: root.mapToGlobal(root.x, root.y).x
+            width: app.width - app.sidebarWidth
+            x: app.sidebarWidth
             y: 0
 
             availableAccountPlugins: root.availableAccountPlugins
