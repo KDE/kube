@@ -17,6 +17,7 @@
 */
 
 import QtQuick 2.7
+import QtQuick.Controls 2
 
 import org.kube.framework 1.0 as Kube
 
@@ -35,7 +36,7 @@ Item {
         textEdit.text = root.content
     }
 
-    TextEdit {
+    TextArea {
         id: textEdit
 
         anchors {
