@@ -23,7 +23,6 @@
 #include "htmlutils.h"
 
 #include <QDebug>
-#include <QMimeDatabase>
 #include <QTextDocument>
 
 #include <gpgme++/key.h>
@@ -223,6 +222,10 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                         }
                         //Media queries are too advanced
                         if (text.contains("@media")) {
+                            return true;
+                        }
+                        //auto css properties are not supported e.g margin-left: auto;
+                        if (text.contains(": auto;")) {
                             return true;
                         }
                         return false;
