@@ -31,6 +31,14 @@ In the same way, if did not install Kube in the `/usr` directory, you might
 need to set the `QML2_IMPORT_PATH` to something like this:
 `$KUBE_INSTALL_PREFIX/lib/qml/`.
 
+### Flatbuffers
+
+If your distro has a package, simply installing it should do the trick.
+
+If it doesn't (yet), follow the instructions here: http://google.github.io/flatbuffers/flatbuffers_guide_building.html
+
+Sink will require the flatc executable to generate some relevant headers that we require.
+
 ## Docker
 Building kube in a docker containers ensures reproducability and decouples the development environment from the host system (so upgrading your host system doesn't break all your builds). To avoid having to develop inside the container directly, source, build and install directories reside on the host system.
 
