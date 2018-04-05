@@ -25,6 +25,7 @@ RUN dnf -y install cyrus-imapd cyrus-sasl cyrus-sasl-plain gnupg2-smime pinentry
 #Fonts
 RUN dnf -y install google-noto-serif-fonts google-noto-sans-fonts
 
+RUN dnf -y install xorg-x11-server-Xvfb
 
 RUN useradd -d /home/developer -m developer
 
