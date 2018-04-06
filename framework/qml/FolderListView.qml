@@ -27,6 +27,16 @@ Kube.TreeView {
     id: root
     property variant accountId
 
+    Kube.Listener {
+        filter: Kube.Messages.selectNextFolder
+        onMessageReceived: root.selectNext()
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.selectPreviousFolder
+        onMessageReceived: root.selectPrevious()
+    }
+
     Controls1.TableViewColumn {
         title: "Name"
         role: "name"

@@ -46,6 +46,18 @@ FocusScope {
         return treeView.__model.mapRowToModelIndex(row)
     }
 
+    function selectNext() {
+        treeView.__listView.incrementCurrentIndexBlocking()
+        treeView.__mouseArea.keySelect(Qt.NoModifier)
+        activated(treeView.selection.currentIndex)
+    }
+
+    function selectPrevious() {
+        treeView.__listView.decrementCurrentIndexBlocking()
+        treeView.__mouseArea.keySelect(Qt.NoModifier)
+        activated(treeView.selection.currentIndex)
+    }
+
     Flickable {
         id: flickableItem
 

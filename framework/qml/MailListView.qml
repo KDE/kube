@@ -46,10 +46,20 @@ FocusScope {
         find.forceActiveFocus()
     }
 
-    Shortcut {
-        sequences: [StandardKey.Delete]
-        enabled: !isTrash
-        onActivated: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail":currentMail})
+    Kube.Listener {
+        filter: Kube.Messages.selectNextConversation
+        onMessageReceived: {
+            listView.incrementCurrentIndex()
+            listView.forceActiveFocus()
+        }
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.selectPreviousConversation
+        onMessageReceived: {
+            listView.decrementCurrentIndex()
+            listView.forceActiveFocus()
+        }
     }
 
     Kube.Label {
@@ -57,16 +67,6 @@ FocusScope {
         visible: listView.count === 0
         //TODO depending on whether we synchronized already or not the label should change.
         text: qsTr("Nothing here...")
-    }
-
-    Kube.Listener {
-        filter: Kube.Messages.nextConversation
-        onMessageReceived: listView.incrementCurrentIndex()
-    }
-
-    Kube.Listener {
-        filter: Kube.Messages.previousConversation
-        onMessageReceived: listView.decrementCurrentIndex()
     }
 
     ColumnLayout {
@@ -123,7 +123,6 @@ FocusScope {
             clip: true
             focus: true
 
-            //BEGIN keyboard nav
             onActiveFocusChanged: {
                 if (activeFocus && currentIndex < 0) {
                     currentIndex = 0
@@ -131,17 +130,11 @@ FocusScope {
             }
 
             Keys.onPressed: {
-                if (event.text == "j" || event.matches(StandardKey.MoveToNextLine)) {
-                    incrementCurrentIndex()
-                } else if (event.text == "k" || event.matches(StandardKey.MoveToPreviousLine)) {
-                    decrementCurrentIndex()
-                } else if (event.text == "d") {
+                if (event.text == "d") {
                     //Not implemented as a shortcut because we want it only to apply if we have the focus
                     Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": root.currentMail})
                 }
             }
-
-            //END keyboard nav
 
             onCurrentItemChanged: {
                 if (currentItem) {

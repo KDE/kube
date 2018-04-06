@@ -68,14 +68,6 @@ FocusScope {
         flickable.decrementCurrentIndex()
     }
 
-    function scrollDown() {
-        scrollHelper.scrollDown()
-    }
-
-    function scrollUp() {
-        scrollHelper.scrollUp()
-    }
-
     Flickable {
         id: flickable
         anchors.fill: parent
@@ -143,6 +135,14 @@ FocusScope {
                 currentIndex = currentIndex - 1
             }
             scrollToIndex(currentIndex)
+        }
+
+        Keys.onPressed: {
+            if (event.matches(StandardKey.MoveToNextLine)) {
+                scrollHelper.scrollDown()
+            } else if (event.matches(StandardKey.MoveToPreviousLine)) {
+                scrollHelper.scrollUp()
+            }
         }
 
         Kube.ScrollHelper {

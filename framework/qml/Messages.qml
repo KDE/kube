@@ -52,7 +52,11 @@ Item {
 
     property string componentDone: "done"
 
-    property string nextConversation: "nextConversation"
-    property string previousConversation: "previousConversation"
+    property string selectNextConversation: "selectNextConversation"
+    property string selectPreviousConversation: "selectPreviousConversation"
+    property string selectNextMessage: "selectNextMessage"
+    property string selectPreviousMessage: "selectPreviousMessage"
+    property string selectNextFolder: "selectNextFolder"
+    property string selectPreviousFolder: "selectPreviousFolder"
 }
 

@@ -17,7 +17,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
@@ -36,6 +36,22 @@ FocusScope {
     Kube.Listener {
         filter: Kube.Messages.searchString
         onMessageReceived: root.searchString = message.searchString
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.selectNextMessage
+        onMessageReceived: {
+            listView.incrementCurrentIndex()
+            listView.forceActiveFocus()
+        }
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.selectPreviousMessage
+        onMessageReceived: {
+            listView.decrementCurrentIndex()
+            listView.forceActiveFocus()
+        }
     }
 
     Rectangle {
@@ -61,21 +77,9 @@ FocusScope {
             }
 
             Keys.onPressed: {
-                if (event.text == "j" || event.matches(StandardKey.MoveToNextLine)) {
-                    listView.scrollDown()
-                } else if (event.text == "J" || event.matches(StandardKey.MoveToNextPage)) {
-                    listView.incrementCurrentIndex()
-                } else if (event.text == "k" || event.matches(StandardKey.MoveToPreviousLine)) {
-                    listView.scrollUp()
-                } else if (event.text == "K" || event.matches(StandardKey.MoveToPreviousPage)) {
-                    listView.decrementCurrentIndex()
-                } else if (event.text == "n") {
-                   Kube.Fabric.postMessage(Kube.Messages.nextConversation, {})
-                } else if (event.text == "p") {
-                   Kube.Fabric.postMessage(Kube.Messages.previousConversation, {})
-                } else if (event.text == "d") {
-                   //Not implemented as a shortcut because we want it only to apply if we have the focus
-                   Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": listView.currentItem.currentData.mail})
+                if (event.text == "d") {
+                    //Not implemented as a shortcut because we want it only to apply if we have the focus
+                    Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": listView.currentItem.currentData.mail})
                 }
             }
 

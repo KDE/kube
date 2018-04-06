@@ -29,6 +29,14 @@ ListView {
     clip: true
     ScrollBar.vertical: Kube.ScrollBar { id: scrollBar }
 
+    Keys.onPressed: {
+        if (event.matches(StandardKey.MoveToNextLine)) {
+            incrementCurrentIndex()
+        } else if (event.matches(StandardKey.MoveToPreviousLine)) {
+            decrementCurrentIndex()
+        }
+    }
+
     Kube.ScrollHelper {
         id: scrollHelper
         flickable: root

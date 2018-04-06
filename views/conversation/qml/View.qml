@@ -18,7 +18,7 @@
  */
 
 
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2.0 as Controls2
 import QtQuick.Layouts 1.1
@@ -27,6 +27,37 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     property alias currentAccount: accountFolderview.currentAccount
+
+    Shortcut {
+        sequences: ['j']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextConversation, {})
+    }
+    Shortcut {
+        sequences: ['k']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousConversation, {})
+    }
+    Shortcut {
+        sequences: ['n']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextMessage, {})
+    }
+    Shortcut {
+        sequences: ['p']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousMessage, {})
+    }
+    Shortcut {
+        sequences: ['f,n']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextFolder, {})
+    }
+    Shortcut {
+        sequences: ['f,p']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousFolder, {})
+    }
+    Shortcut {
+        sequences: ['c']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.compose, {})
+    }
+
+
     Controls1.SplitView {
         anchors.fill: parent
         Rectangle {
