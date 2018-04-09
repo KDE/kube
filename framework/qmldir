@@ -10,6 +10,7 @@ NewAccountDialog 1.0 NewAccountDialog.qml
 EditAccount 1.0 EditAccount.qml
 LoginAccount 1.0 LoginAccount.qml
 Outbox 1.0 Outbox.qml
+HelpPopup 1.0 HelpPopup.qml
 NotificationPopup 1.0 NotificationPopup.qml
 Icon 1.0 Icon.qml
 IconButton 1.0 IconButton.qml

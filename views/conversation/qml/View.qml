@@ -20,12 +20,13 @@
 
 import QtQuick 2.9
 import QtQuick.Controls 1.3 as Controls1
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
+    id: root
     property alias currentAccount: accountFolderview.currentAccount
 
     Shortcut {
@@ -55,6 +56,10 @@ FocusScope {
     Shortcut {
         sequences: ['c']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.compose, {})
+    }
+    Shortcut {
+        sequence: "?"
+        onActivated: helpViewComponent.createObject(root).open()
     }
 
 
@@ -179,4 +184,21 @@ FocusScope {
 
         }
     }
+
+    Component {
+        id: helpViewComponent
+        Kube.HelpPopup {
+            ListModel {
+                ListElement { description: qsTr("Jump to next thread:"); shortcut: "j" }
+                ListElement { description: qsTr("Jump to previous thread:"); shortcut: "k" }
+                ListElement { description: qsTr("Jump to next message:"); shortcut: "n" }
+                ListElement { description: qsTr("Jump to previous message:"); shortcut: "p" }
+                ListElement { description: qsTr("Jump to next folder:"); shortcut: "f,n" }
+                ListElement { description: qsTr("Jump to previous previous folder:"); shortcut: "f,p" }
+                ListElement { description: qsTr("Compose new message:"); shortcut: "c" }
+                ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
+            }
+        }
+    }
+
 }
