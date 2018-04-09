@@ -38,6 +38,14 @@ FocusScope {
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousConversation, {})
     }
     Shortcut {
+        sequences: ['Shift+J']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.scrollConversationDown, {})
+    }
+    Shortcut {
+        sequences: ['Shift+K']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.scrollConversationUp, {})
+    }
+    Shortcut {
         sequences: ['n']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextMessage, {})
     }

@@ -54,6 +54,16 @@ FocusScope {
         }
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.scrollConversationDown
+        onMessageReceived: listView.scrollDown()
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.scrollConversationUp
+        onMessageReceived: listView.scrollUp()
+    }
+
     Rectangle {
         anchors.fill: parent
         color: Kube.Colors.backgroundColor

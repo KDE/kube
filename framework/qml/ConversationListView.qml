@@ -37,6 +37,14 @@ FocusScope {
 
     property var currentItem: null
 
+    function scrollDown() {
+        scrollHelper.scrollDown()
+    }
+
+    function scrollUp() {
+        scrollHelper.scrollUp()
+    }
+
     function setCurrentItem() {
         if (currentItem) {
             currentItem.isCurrentItem = false
