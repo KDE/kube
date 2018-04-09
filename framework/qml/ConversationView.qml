@@ -87,9 +87,11 @@ FocusScope {
             }
 
             Keys.onPressed: {
+                //Not implemented as a shortcut because we want it only to apply if we have the focus
                 if (event.text == "d") {
-                    //Not implemented as a shortcut because we want it only to apply if we have the focus
                     Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": listView.currentItem.currentData.mail})
+                } else if (event.text == "r") {
+                    Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": listView.currentItem.currentData.mail})
                 }
             }
 

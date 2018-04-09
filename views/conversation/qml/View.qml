@@ -204,6 +204,8 @@ FocusScope {
                 ListElement { description: qsTr("Jump to next folder:"); shortcut: "f,n" }
                 ListElement { description: qsTr("Jump to previous previous folder:"); shortcut: "f,p" }
                 ListElement { description: qsTr("Compose new message:"); shortcut: "c" }
+                ListElement { description: qsTr("Reply to the currently focused message:"); shortcut: "r" }
+                ListElement { description: qsTr("Delete the currently focused message:"); shortcut: "d" }
                 ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
             }
         }
