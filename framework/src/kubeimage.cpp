@@ -28,7 +28,7 @@ KubeImage::KubeImage(QQuickItem *parent)
     setFlag(QQuickItem::ItemHasContents);
 }
 
-QSGNode *KubeImage::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *updatePaintNodeData)
+QSGNode *KubeImage::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *)
 {
     QSGSimpleTextureNode *node = static_cast<QSGSimpleTextureNode *>(oldNode);
     if (!node) {

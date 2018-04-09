@@ -142,7 +142,7 @@ void PeopleModel::runQuery(const Sink::Query &query)
     setSourceModel(mModel.data());
 }
 
-void PeopleModel::setAddressbook(const QVariant &parentFolder)
+void PeopleModel::setAddressbook(const QVariant &/*parentFolder*/)
 {
     //TODO filter query by addressbook
     qWarning() << "The addressbook filter is not yet implemented";

@@ -41,7 +41,7 @@ void Retriever::setModel(QAbstractItemModel* model)
     }
 }
 
-void Retriever::onRowsInserted(const QModelIndex &parent, int first, int last)
+void Retriever::onRowsInserted(const QModelIndex &, int, int)
 {
     if (!mValue.isValid()) {
         mValue = mModel->index(0, 0, QModelIndex()).data(mModel->roleNames().key(mPropertyName.toLatin1()));
