@@ -54,17 +54,17 @@ FocusScope {
             RowLayout {
                 spacing: Kube.Units.smallSpacing
 
-                Kube.ComboBox {
+                DayChooser { }
 
-                }
+                TimeChooser { }
 
                 Kube.Label {
-                    text: "till"
+                    text: " " + qsTr("till") + " "
                 }
 
-                Kube.ComboBox {
+                DayChooser { }
 
-                }
+                TimeChooser { }
             }
 
             RowLayout {
