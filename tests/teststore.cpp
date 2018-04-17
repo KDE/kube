@@ -21,9 +21,14 @@
 #include <sink/store.h>
 #include <sink/resourcecontrol.h>
 #include <sink/secretstore.h>
+
 #include <kmime/kmime_message.h>
 
+#include <KCalCore/Event>
+#include <KCalCore/ICalFormat>
+
 #include <QDebug>
+#include <QUuid>
 #include <QVariant>
 
 #include "framework/src/domain/mime/mailtemplates.h"
@@ -124,6 +129,59 @@ static void createFolder(const QVariantMap &object)
     });
 }
 
+static void createEvent(const QVariantMap &object, const QByteArray &calendarId = {})
+{
+    using Sink::ApplicationDomain::ApplicationDomainType;
+    using Sink::ApplicationDomain::Event;
+
+    auto sinkEvent = ApplicationDomainType::createEntity<Event>(object["resource"].toByteArray());
+
+    auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+
+    QString uid;
+    if (object.contains("uid")) {
+        uid = object["uid"].toString();
+    } else {
+        uid = QUuid::createUuid().toString();
+    }
+    calcoreEvent->setUid(uid);
+
+    auto summary = object["summary"].toString();
+    calcoreEvent->setSummary(summary);
+
+    if (object.contains("description")) {
+        auto description = object["description"].toString();
+        calcoreEvent->setDescription(description);
+    }
+
+    auto startTime = object["starts"].toDateTime();
+    auto endTime = object["ends"].toDateTime();
+
+    calcoreEvent->setDtStart(startTime);
+    calcoreEvent->setDtEnd(endTime);
+
+    auto ical = KCalCore::ICalFormat().toICalString(calcoreEvent);
+    sinkEvent.setIcal(ical.toUtf8());
+
+    sinkEvent.setCalendar(calendarId);
+
+    Sink::Store::create(sinkEvent).exec().waitForFinished();
+}
+
+static void createCalendar(const QVariantMap &object)
+{
+    using Sink::ApplicationDomain::Calendar;
+    using Sink::ApplicationDomain::ApplicationDomainType;
+
+    auto calendar = ApplicationDomainType::createEntity<Calendar>(object["resource"].toByteArray());
+    calendar.setName(object["name"].toString());
+    Sink::Store::create(calendar).exec().waitForFinished();
+
+    auto calendarId = calendar.identifier();
+    iterateOverObjects(object.value("events").toList(),
+        [calendarId](const QVariantMap &object) { createEvent(object, calendarId); });
+}
+
 void TestStore::setup(const QVariantMap &map)
 {
     using namespace Sink::ApplicationDomain;
@@ -142,6 +200,9 @@ void TestStore::setup(const QVariantMap &map)
                 resource.setResourceType("sink.dummy");
             } else if (object["type"] == "mailtransport") {
                 resource.setResourceType("sink.mailtransport");
+                resource.setProperty("testmode", true);
+            } else if (object["type"] == "caldav") {
+                resource.setResourceType("sink.caldav");
                 resource.setProperty("testmode", true);
             } else {
                 Q_ASSERT(false);
@@ -165,6 +226,8 @@ void TestStore::setup(const QVariantMap &map)
     iterateOverObjects(map.value("mails").toList(), [] (const QVariantMap &map) {
         createMail(map);
     });
+
+    iterateOverObjects(map.value("calendars").toList(), createCalendar);
 
     Sink::ResourceControl::flushMessageQueue(resources).exec().waitForFinished();
 }

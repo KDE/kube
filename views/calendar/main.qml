@@ -32,15 +32,40 @@ ApplicationWindow {
     Component.onCompleted: {
         var initialState = {
             accounts: [{
-                    id: "account1",
-                    name: "Test Account"
-                }],
+                id: "account1",
+                name: "Test Account"
+            }],
             identities: [{
-                    account: "account1",
-                    name: "Test Identity",
-                    address: "identity@example.org"
-                }],
-            resources: []
+                account: "account1",
+                name: "Test Identity",
+                address: "identity@example.org"
+            }],
+            resources: [{
+                id: "caldavresource",
+                account: "account1",
+                type: "caldav",
+            }],
+            calendars: [{
+                id: "calendar1",
+                resource: "caldavresource",
+                name: "Test Calendar",
+                events: [
+                    {
+                        resource: "caldavresource",
+                        summary: "Test Event1",
+                        description: "This is test event #1",
+                        starts: "2018-04-10T14:03:00",
+                        ends:   "2018-04-10T17:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Test Event2",
+                        description: "This is test event #2",
+                        starts: "2018-04-11T09:03:00",
+                        ends:   "2018-04-11T14:03:00",
+                    },
+                ],
+            }],
         }
         TestStore.setup(initialState)
     }
