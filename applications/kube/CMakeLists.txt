@@ -23,5 +23,21 @@ target_link_libraries(${PROJECT_NAME}
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(PROGRAMS org.kde.kube.desktop DESTINATION ${KDE_INSTALL_APPDIR} )
-install(FILES org.kde.kube.appdata.xml DESTINATION ${KDE_INSTALL_DATAROOTDIR}/appdata/)
+set(KUBE_APPLICATION_ID "org.kde.kube" CACHE STRING "The application identifier used for desktopfile and appdata")
+
+set(KUBE_DESKTOPFILE_NAME "Kube" CACHE STRING "desktopfile name property")
+set(KUBE_DESKTOPFILE_GENERICNAME "Mail Client" CACHE STRING "desktopfile genericname property")
+set(KUBE_DESKTOPFILE_COMMENT "Send, receive and manage your mail with Kube" CACHE STRING "desktopfile comment property")
+set(KUBE_DESKTOPFILE_CATEGORIES "Qt;KDE;Office;Network;Email;" CACHE STRING "desktopfile categories property")
+set(KUBE_DESKTOPFILENAME "${KUBE_APPLICATION_ID}.desktop")
+configure_file(kube.desktop.in ${KUBE_DESKTOPFILENAME})
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${KUBE_DESKTOPFILENAME} DESTINATION ${KDE_INSTALL_APPDIR} )
+
+set(KUBE_APPDATA_ID "${KUBE_DESKTOPFILENAME}" CACHE STRING "appdata homepage property")
+set(KUBE_APPDATA_HOMEPAGE "https://kube.kde.org" CACHE STRING "appdata homepage property")
+set(KUBE_APPDATA_BUGTRACKER "https://phabricator.kde.org/project/view/238/" CACHE STRING "appdata bugtracker property")
+set(KUBE_APPDATA_HELP "http://api.kde.org/doc/kube/" CACHE STRING "appdata help property")
+set(KUBE_APPDATA_PROJECTGROUP "KDE" CACHE STRING "appdata projectgroup property")
+set(KUBE_APPDATAFILENAME "${KUBE_APPLICATION_ID}.appdata.xml")
+configure_file(kube.appdata.xml.in ${KUBE_APPDATAFILENAME})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${KUBE_APPDATAFILENAME} DESTINATION ${KDE_INSTALL_DATAROOTDIR}/appdata/)

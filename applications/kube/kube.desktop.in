@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=@KUBE_DESKTOPFILE_NAME@
+Type=Application
+Exec=kube
+Icon=kube_icon
+GenericName=@KUBE_DESKTOPFILE_GENERICNAME@
+Comment=@KUBE_DESKTOPFILE_COMMENT@
+Terminal=false
+StartupNotify=true
+Categories=@KUBE_DESKTOPFILE_CATEGORIES@

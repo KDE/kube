@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component type="desktop">
-  <id>org.kde.kube.desktop</id>
+  <id>@KUBE_APPDATA_ID@</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Kube</name>
@@ -9,10 +9,10 @@
     <p>Kube is a modern communication and collaboration client built with QtQuick on top of a high performance, low resource usage core. It provides online and offline access to all your mail, contacts, calendars, notes, todo's and more. With a strong focus on usability, the team works with designers and UX experts from the ground up, to build a product that is not only visually appealing but also a joy to use.</p>
     <p>Communication and collaboration within large groups and spread over several time zones is complex and something of the norm in modern projects and the existing solutions available are not up to that challenge. Kube is a way to simplify and make communication elegant again by focusing on the key needs of users instead of filling it with any feature that comes to mind. Our strict focus on what is actually needed instead of what is wanted brings a new way of collaboration between group members and a simpler way of handling communication.</p>
   </description>
-  <url type="homepage">https://kube.kde.org</url>
-  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kube</url>
-  <url type="help">http://api.kde.org/doc/kube/</url>
-  <project_group>KDE</project_group>
+  <url type="homepage">@KUBE_APPDATA_HOMEPAGE@</url>
+  <url type="bugtracker">@KUBE_APPDATA_BUGTRACKER@</url>
+  <url type="help">@KUBE_APPDATA_HELP@</url>
+  <project_group>@KUBE_APPDATA_PROJECTGROUP@</project_group>
   <provides>
     <binary>kube</binary>
   </provides>
