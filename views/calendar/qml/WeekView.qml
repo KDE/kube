@@ -212,12 +212,12 @@ FocusScope {
                                     right: parent.right
                                     rightMargin: Kube.Units.smallSpacing
                                 }
-                                width: Kube.Units.gridUnit * 7 - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.indention
-                                height: Kube.Units.gridUnit * model.duration
-                                y: Kube.Units.gridUnit * model.starts
-                                x: Kube.Units.gridUnit * model.indention
+                                width: Kube.Units.gridUnit * 7 - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indention
+                                height: Kube.Units.gridUnit * model.modelData.duration
+                                y: Kube.Units.gridUnit * model.modelData.starts
+                                x: Kube.Units.gridUnit * model.modelData.indention
 
-                                color: model.color
+                                color: model.modelData.color
                                 border.width: 1
                                 border.color: Kube.Colors.viewBackgroundColor
 
@@ -226,7 +226,7 @@ FocusScope {
                                         left: parent.left
                                         leftMargin: Kube.Units.smallSpacing
                                     }
-                                    text: model.text
+                                    text: model.modelData.text
                                     color: Kube.Colors.highlightedTextColor
                                 }
 

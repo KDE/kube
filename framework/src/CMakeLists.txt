@@ -1,6 +1,7 @@
 
 find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine Gui)
 find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
+find_package(KF5CalendarCore CONFIG REQUIRED)
 find_package(Sink 0.6.0 CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
 find_package(QGpgme CONFIG REQUIRED)
@@ -16,6 +17,7 @@ add_library(kubeframework SHARED
     settings/settings.cpp
     domain/maillistmodel.cpp
     domain/folderlistmodel.cpp
+    domain/perioddayeventmodel.cpp
     domain/composercontroller.cpp
     domain/modeltest.cpp
     domain/retriever.cpp
