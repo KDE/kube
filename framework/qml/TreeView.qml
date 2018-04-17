@@ -130,6 +130,16 @@ FocusScope {
 
             onActivated: root.activated(index)
 
+            //Select the initial index when the folder list is loaded
+            Connections {
+                target: treeView.__listView
+                onCountChanged: {
+                    root.selectRootIndex()
+                    //Only do this initially
+                    enabled = false
+                }
+            }
+
             alternatingRowColors: false
             headerVisible: false
 
