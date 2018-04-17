@@ -70,6 +70,11 @@ FocusScope {
 
                 model: Kube.AccountsModel {}
 
+                onCountChanged: {
+                    if (count == 0) {
+                        edit.accountId = ""
+                    }
+                }
                 onCurrentItemChanged: {
                     if (currentItem) {
                         edit.accountId = currentItem.currentData.accountId
@@ -108,6 +113,13 @@ FocusScope {
                 }
 
                 canRemove: !root.singleAccountMode
+
+                onAccountIdChanged: {
+                    if (accountId == "") {
+                        //Require the setup to be completed since it's the first account
+                        accountWizardComponent.createObject(root, {requireSetup: true}).open()
+                    }
+                }
 
                 Component.onCompleted: {
                     //We don't have any accounts setup if accountId is empty, so we trigger the accountWizard
