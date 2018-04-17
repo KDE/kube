@@ -25,10 +25,10 @@ import org.kube.components.accounts 1.0 as KubeAccounts
 
 FocusScope {
     id: root
-    //Defines whether more than one account is supported.
-    property bool singleAccountMode: false
     //Defines available account types.
     property var availableAccountPlugins: ["kolabnow", "imap", "maildir", "gmail"]
+    //Defines whether more than one account is supported.
+    property bool singleAccountMode: availableAccountPlugins.length == 1
 
     Controls1.SplitView {
         height: parent.height
