@@ -26,7 +26,7 @@ import org.kube.components.accounts 1.0 as KubeAccounts
 FocusScope {
     id: root
     //Defines available account types.
-    property var availableAccountPlugins: ["kolabnow", "imap", "maildir", "gmail"]
+    property var availableAccountPlugins: KubeAccounts.AccountConfiguration.availableAccountPlugins
     //Defines whether more than one account is supported.
     property bool singleAccountMode: availableAccountPlugins.length == 1
 

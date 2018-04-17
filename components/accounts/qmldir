@@ -2,3 +2,4 @@ module org.kube.components.accounts
 
 Accounts 1.0 Accounts.qml
 AccountWizard 1.0 AccountWizard.qml
+singleton AccountConfiguration 1.0 AccountConfiguration.qml
