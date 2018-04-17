@@ -34,12 +34,18 @@ ApplicationWindow {
             accounts: [{
                     id: "account1",
                     name: "Test Account"
-                }],
+                },
+                {
+                    id: "account2",
+                    name: "Test Account2"
+                }
+            ],
             identities: [{
                     account: "account1",
                     name: "Test Identity",
                     address: "identity@example.org"
-                }],
+                }
+            ],
             resources: [{
                     id: "resource1",
                     account: "account1",
@@ -49,7 +55,13 @@ ApplicationWindow {
                     id: "resource2",
                     account: "account1",
                     type: "mailtransport"
-                }],
+                },
+                {
+                    id: "resource3",
+                    account: "account2",
+                    type: "dummy"
+                }
+            ],
             folders: [{
                     id: "folder1",
                     resource: "resource1",
@@ -203,7 +215,13 @@ Bvr+rojxTJ3X+pzb2LJQwJnALL/VdIF3yHtGu2//Yfu4oxGGA0M90KiW
                             ],
                         },
                     ]
-                }],
+                },
+                {
+                    id: "folder2",
+                    resource: "resource1",
+                    name: "Folder 2"
+                }
+            ],
         }
         TestStore.setup(initialState)
     }

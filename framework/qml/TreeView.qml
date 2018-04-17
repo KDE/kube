@@ -58,6 +58,11 @@ FocusScope {
         activated(treeView.selection.currentIndex)
     }
 
+    function selectRootIndex() {
+        treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
+        activated(treeView.selection.currentIndex)
+    }
+
     Flickable {
         id: flickableItem
 

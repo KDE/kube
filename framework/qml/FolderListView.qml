@@ -74,10 +74,4 @@ Kube.TreeView {
         accountId: root.accountId
     }
 
-    onActivated: {
-        //TODO do some event compression in case of double clicks
-        model.fetchMore(index);
-        Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
-                                                                "trash": model.data(index, Kube.FolderListModel.Trash)});
-    }
 }

@@ -86,6 +86,18 @@ FocusScope {
 
                     accountId: currentData.accountId
                     visible: isCurrent
+                    onVisibleChanged: {
+                        if (visible) {
+                            selectRootIndex()
+                        }
+                    }
+
+                    onActivated: {
+                        if (visible) {
+                            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
+                                                                                    "trash": model.data(index, Kube.FolderListModel.Trash)});
+                        }
+                    }
                 }
             }
         }
