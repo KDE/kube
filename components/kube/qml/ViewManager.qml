@@ -33,12 +33,20 @@ StackView {
 
     property var viewDict: new Object
     function getView(name, replaceView) {
-        if (!replaceView && name in viewDict) {
+        if (name in viewDict) {
             var item = viewDict[name]
             if (item) {
-                return item
+                if (replaceView) {
+                    if (item && item.aborted) {
+                        //Call the aborted hook on the view
+                        item.aborted()
+                    }
+                } else {
+                    return item
+                }
             }
         }
+
         var component = Qt.createComponent(extensionModel.findSource(name, "View.qml"))
         if (component.status == Component.Ready) {
             var o = component.createObject(root)

@@ -39,7 +39,7 @@ Kube.View {
             htmlBody: html.checked
             sign: signCheckbox.checked
             encrypt: encryptCheckbox.checked
-            onDone: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+            onDone: root.done()
 
             property bool foundAllKeys: composerController.to.foundAllKeys && composerController.cc.foundAllKeys && composerController.bcc.foundAllKeys
 
@@ -53,6 +53,13 @@ Kube.View {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "mail", "specialPurpose": "drafts"})
         //For autocompletion
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
+    }
+
+    onAborted: {
+        //Avoid loosing the message
+        if (composerController.saveAsDraftAction.enabled) {
+            composerController.saveAsDraftAction.execute()
+        }
     }
 
     function loadMessage(message, loadType) {
@@ -488,7 +495,7 @@ Kube.View {
                 Kube.Button {
                     width: saveDraftButton.width
                     text: qsTr("Discard")
-                    onClicked: Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+                    onClicked: root.done()
                 }
 
                 Kube.Button {

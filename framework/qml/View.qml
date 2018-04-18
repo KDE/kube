@@ -31,10 +31,26 @@ FocusScope {
     property int count: contentItems.length
     default property alias contentItems: content.data
 
+    property bool __aborted: false
+
     //This signal will be emitted once all initial properties have been set and the view is ready to load
     signal setup()
     Controls2.StackView.onActivated: {
         root.setup()
+    }
+
+    //This signal will be emitted before destruction if the view was not done
+    signal aborted()
+    onAborted: {
+        __aborted = true
+    }
+
+    //This signal will be emitted when the view is done
+    signal done()
+    onDone: {
+        if (!__aborted) {
+            Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
+        }
     }
 
     onCurrentIndexChanged: showRelevantSplits()
