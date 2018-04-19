@@ -64,6 +64,13 @@ ApplicationWindow {
                         starts: "2018-04-11T09:03:00",
                         ends:   "2018-04-11T14:03:00",
                     },
+                    {
+                        resource: "caldavresource",
+                        summary: "Test Event3",
+                        description: "This is test event #3",
+                        starts: "2018-04-11T10:03:00",
+                        ends:   "2018-04-11T15:00:00",
+                    },
                 ],
             }],
         }

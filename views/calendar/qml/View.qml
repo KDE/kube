@@ -23,7 +23,7 @@ import QtQuick.Layouts 1.2
 import org.kube.framework 1.0 as Kube
 
 
-Controls1.SplitView {
+RowLayout {
     id: root
 
     anchors.fill: parent
@@ -68,6 +68,10 @@ Controls1.SplitView {
                 color: Kube.Colors.highlightedTextColor
             }
 
+            Kube.Label {
+                text: "Agenda"
+                color: Kube.Colors.highlightedTextColor
+            }
         }
     }
 

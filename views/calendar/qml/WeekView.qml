@@ -29,7 +29,6 @@ FocusScope {
     property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / 7
     property var hourHeight: Kube.Units.gridUnit * 2
 
-
     Item {
         anchors {
             top: parent.top
