@@ -213,8 +213,8 @@ FocusScope {
                                     rightMargin: Kube.Units.smallSpacing
                                 }
                                 width: Kube.Units.gridUnit * 7 - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indention
-                                height: Kube.Units.gridUnit * model.modelData.duration
-                                y: Kube.Units.gridUnit * model.modelData.starts
+                                height: Kube.Units.gridUnit * model.modelData.duration * 2
+                                y: Kube.Units.gridUnit * model.modelData.starts * 2
                                 x: Kube.Units.gridUnit * model.modelData.indention
 
                                 color: model.modelData.color
