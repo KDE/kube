@@ -26,19 +26,18 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
 
-    property var dayWidth: Kube.Units.gridUnit * 7
+    property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / 7
     property var hourHeight: Kube.Units.gridUnit * 2
 
 
     Item {
         anchors {
             top: parent.top
-            topMargin: Kube.Units.largeSpacing
             right: parent.right
         }
 
         width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
-        height: Kube.Units.gridUnit * 27
+        height: root.height
 
         //BEGIN day labels
         DayOfWeekRow {
@@ -48,7 +47,7 @@ FocusScope {
             locale: Qt.locale("en_GB")
 
             delegate: Rectangle {
-                width: Kube.Units.gridUnit * 7
+                width: root.dayWidth
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
 
                 border.width: 1
@@ -77,7 +76,7 @@ FocusScope {
             }
 
             height: Kube.Units.gridUnit * 3
-            width: Kube.Units.gridUnit * 7 * 7
+            width: root.dayWidth * 7
             color: Kube.Colors.viewBackgroundColor
             border.width: 1
             border.color: Kube.Colors.buttonColor
@@ -96,9 +95,9 @@ FocusScope {
                     width: daylong.width
 
                     Rectangle {
-                        width: Kube.Units.gridUnit * 7 * model.duration
+                        width: root.dayWidth * model.duration
                         height: parent.height
-                        x: Kube.Units.gridUnit * 7 * model.starts
+                        x: root.dayWidth * model.starts
                         color: model.color
                         border.width: 1
                         border.color: Kube.Colors.viewBackgroundColor
@@ -124,7 +123,8 @@ FocusScope {
                 top: daylong.bottom
             }
 
-            height: Kube.Units.gridUnit * 24
+            Layout.fillWidth: true
+            height: root.height - daylong.height - dayLabels.height - Kube.Units.largeSpacing
             width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
 
             contentHeight: root.hourHeight * 24
@@ -145,7 +145,8 @@ FocusScope {
                 Column {
                     anchors.bottom: parent.bottom
                     Repeater {
-                        model: ["1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","0:00"]
+                        model: ["1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00",
+                        "13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","0:00"]
                         delegate: Item {
                             height: root.hourHeight
                             width: Kube.Units.gridUnit * 2
@@ -252,7 +253,6 @@ FocusScope {
                                         eventDelegate.z = eventDelegate.z - 100
 
                                     }
-
                                     onReleased: eventDelegate.Drag.drop()
                                 }
                             }
@@ -264,8 +264,8 @@ FocusScope {
                             onDropped: {
                                 console.log("DROP")
                                 drop.accept(Qt.MoveAction)
-                                drop.source.visible = false
-                                console.log((drop.source.y - mainWeekViewer.y + mainWeekViewer.contentY) / Kube.Units.gridUnit)
+                                //drop.source.visible = false
+                                console.log((drop.source.y - mainWeekViewer.y + mainWeekViewer.contentY) / hourHeight)
                             }
                         }
                     }
