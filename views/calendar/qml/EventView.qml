@@ -26,6 +26,8 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
 
+    property bool daylong
+
     Rectangle {
         anchors {
             top: parent.top
@@ -49,14 +51,16 @@ FocusScope {
 
             Kube.TextField {
                 width: parent.width
-                placeholderText: "Titel"
+                placeholderText: "Title"
             }
             RowLayout {
                 spacing: Kube.Units.smallSpacing
 
                 DayChooser { }
 
-                TimeChooser { }
+                TimeChooser {
+                    visible: !root.daylong
+                }
 
                 Kube.Label {
                     text: " " + qsTr("till") + " "
@@ -64,7 +68,10 @@ FocusScope {
 
                 DayChooser { }
 
-                TimeChooser { }
+                TimeChooser {
+                   visible: !root.daylong
+
+                }
             }
 
             RowLayout {
@@ -72,16 +79,22 @@ FocusScope {
 
                 RowLayout {
                     Layout.fillHeight: true
-                Kube.CheckBox {
-                }
+                    Kube.CheckBox {
+                        checked: root.daylong
 
-                Kube.Label {
-                    text: "daylong"
-                }
+                        onClicked: {
+                            root.daylong = !root.daylong
+                        }
+                    }
+
+                    Kube.Label {
+                        text: "daylong"
+                    }
                 }
 
                 Kube.ComboBox {
-                    model: ["once", "reoccuring"]
+                    model: ["once", "dayly", "weekly"]
+
                 }
             }
 

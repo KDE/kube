@@ -97,7 +97,6 @@ Item {
 
                         Layout.column: 1
                         Layout.fillWidth: true
-
                     }
 
                     WeekNumberColumn {
@@ -116,6 +115,12 @@ Item {
 
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+
+                        delegate: Kube.AbstractButton {
+                            text: model.day
+
+                            width: Kube.Units.gridUnit * 3
+                        }
                     }
                 }
             }
