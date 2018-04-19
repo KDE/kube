@@ -16,9 +16,63 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.4
+import QtQuick 2.9
+import QtQuick.Controls 1.3 as Controls1
+import QtQuick.Layouts 1.2
 
-WeekView {
+import org.kube.framework 1.0 as Kube
+
+
+Controls1.SplitView {
+    id: root
+
     anchors.fill: parent
-}
 
+    Rectangle {
+        width: Kube.Units.gridUnit * 10
+        Layout.fillHeight: parent.height
+        color: Kube.Colors.textColor
+
+        Kube.PositiveButton {
+            id: newEventButton
+            objectName: "newEventButton"
+
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                margins: Kube.Units.largeSpacing
+            }
+            focus: true
+            text: qsTr("New Event")
+            onClicked: {}
+        }
+
+        Column {
+            anchors {
+                top: newEventButton.bottom
+                left: newEventButton.left
+                topMargin: Kube.Units.largeSpacing
+            }
+
+            width: parent.width
+            spacing: Kube.Units.smallSpacing
+
+            Kube.Label {
+                text: "Week"
+                color: Kube.Colors.highlightedTextColor
+            }
+
+            Kube.Label {
+                text: "Month"
+                color: Kube.Colors.highlightedTextColor
+            }
+
+        }
+    }
+
+    WeekView {
+        Layout.fillHeight: parent.height
+        Layout.fillWidth: parent.height
+    }
+}
