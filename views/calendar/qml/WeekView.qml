@@ -26,14 +26,18 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
 
+    property var dayWidth: Kube.Units.gridUnit * 7
+    property var hourHeight: Kube.Units.gridUnit * 2
+
+
     Item {
         anchors {
             top: parent.top
             topMargin: Kube.Units.largeSpacing
-            horizontalCenter: parent.horizontalCenter
+            right: parent.right
         }
 
-        width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
+        width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
         height: Kube.Units.gridUnit * 27
 
         //BEGIN day labels
@@ -121,9 +125,9 @@ FocusScope {
             }
 
             height: Kube.Units.gridUnit * 24
-            width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
+            width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
 
-            contentHeight: Kube.Units.gridUnit * 24 * 2
+            contentHeight: root.hourHeight * 24
             contentWidth: width
 
             clip: true
@@ -132,9 +136,8 @@ FocusScope {
             ScrollBar.vertical: Kube.ScrollBar {}
 
             Row {
-
-                height: Kube.Units.gridUnit * 24 * 2
-                width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
+                height: root.hourHeight * 24
+                width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
 
                 spacing: 0
 
@@ -144,7 +147,7 @@ FocusScope {
                     Repeater {
                         model: ["1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","0:00"]
                         delegate: Item {
-                            height: Kube.Units.gridUnit * 2
+                            height: root.hourHeight
                             width: Kube.Units.gridUnit * 2
 
                             Kube.Label {
@@ -167,8 +170,8 @@ FocusScope {
 
                         property var events: model.events
 
-                        width: Kube.Units.gridUnit * 7
-                        height: Kube.Units.gridUnit * 24 * 2
+                        width: root.dayWidth
+                        height: root.hourHeight * 24
 
                         border.width: 1
                         border.color: "lightgrey"
@@ -179,7 +182,7 @@ FocusScope {
                             Repeater {
                                 model: 24
                                 delegate: Rectangle {
-                                    height: Kube.Units.gridUnit * 4
+                                    height: root.hourHeight * 2
                                     width: parent.width
                                     color: "transparent"
                                     border.width:1
@@ -204,7 +207,7 @@ FocusScope {
                                     PropertyChanges {target: eventDelegate; parent: root}
                                     PropertyChanges {target: eventDelegate; opacity: 0.7}
                                     PropertyChanges {target: eventDelegate; anchors.right: ""}
-                                    PropertyChanges {target: eventDelegate; width: Kube.Units.gridUnit * 7 - Kube.Units.smallSpacing * 2}
+                                    PropertyChanges {target: eventDelegate; width: root.dayWidth - Kube.Units.smallSpacing * 2}
                                 }
                                 ]
 
@@ -212,9 +215,9 @@ FocusScope {
                                     right: parent.right
                                     rightMargin: Kube.Units.smallSpacing
                                 }
-                                width: Kube.Units.gridUnit * 7 - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indention
-                                height: Kube.Units.gridUnit * model.modelData.duration * 2
-                                y: Kube.Units.gridUnit * model.modelData.starts * 2
+                                width: root.dayWidth - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indention
+                                height: root.hourHeight * model.modelData.duration
+                                y: root.hourHeight * model.modelData.starts
                                 x: Kube.Units.gridUnit * model.modelData.indention
 
                                 color: model.modelData.color
