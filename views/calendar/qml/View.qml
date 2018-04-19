@@ -73,6 +73,32 @@ RowLayout {
                 color: Kube.Colors.highlightedTextColor
             }
         }
+
+        Column {
+            anchors {
+                bottom: parent.bottom
+                left: newEventButton.left
+                bottomMargin: Kube.Units.largeSpacing
+            }
+
+            spacing: Kube.Units.smallSpacing
+
+            Repeater {
+
+                model: ["calendar_1","calendar_2","calendar_3"]
+                delegate: Row {
+                    spacing: Kube.Units.smallSpacing
+                    Kube.CheckBox {
+                        opacity: 0.9
+                    }
+                    Kube.Label {
+                        text: modelData
+                        color: Kube.Colors.highlightedTextColor
+                    }
+                }
+            }
+
+        }
     }
 
     WeekView {
