@@ -84,7 +84,6 @@ RowLayout {
             spacing: Kube.Units.smallSpacing
 
             Repeater {
-
                 model: ["calendar_1","calendar_2","calendar_3"]
                 delegate: Row {
                     spacing: Kube.Units.smallSpacing
@@ -97,7 +96,6 @@ RowLayout {
                     }
                 }
             }
-
         }
     }
 
