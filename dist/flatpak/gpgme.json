@@ -1,29 +1,17 @@
 {
     "name": "gpgme",
-    "sources": [ { "type": "git", "url": "git://git.gnupg.org/gpgme.git", "branch": "gpgme-1.9.0"} ],
+    "sources": [ { "type": "git", "url": "git://git.gnupg.org/gpgme.git", "branch": "gpgme-1.10.0"} ],
     "modules": [
         {
             "name": "libgpg-error",
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.22.tar.bz2",
-                    "sha256": "f2a04ee6317bdb41a625bea23fdc7f0b5a63fb677f02447c647ed61fb9e69d7b"
-                }
-            ],
+            "sources": [ { "type": "git", "url": "git://git.gnupg.org/libgpg-error.git", "branch": "libgpg-error-1.28" } ],
             "cleanup": [
                 "/lib/libgpg-error.la"
             ]
         },
         {
             "name": "libassuan",
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://www.gnupg.org/ftp/gcrypt/libassuan/libassuan-2.4.2.tar.bz2",
-                    "sha256": "bb06dc81380b74bf1b64d5849be5c0409a336f3b4c45f20ac688e86d1b5bcb20"
-                }
-            ],
+            "sources": [ { "type": "git", "url": "git://git.gnupg.org/libassuan.git", "branch": "libassuan-2.5.1" } ],
             "cleanup": [
                 "/lib/libassuan.la"
             ]
