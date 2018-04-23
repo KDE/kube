@@ -76,9 +76,12 @@ ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
 ADD gpg.conf /home/developer/.gnupg/gpg.conf
 ADD gdbinit /home/developer/.gdbinit
 ADD enableDebug.sh /home/developer/enableDebug.sh
+ADD private-key /home/developer/private-key
+ADD public-key /home/developer/public-key
 RUN sudo chown developer:developer /home/developer/*
 RUN sudo chown developer:developer /home/developer/.gnupg -R
 
-RUN gpg2 --batch --generate-key /home/developer/keyconfig
+RUN gpg2 --import /home/developer/public-key
+RUN gpg2 --batch --import /home/developer/private-key
 #Better qt support
 RUN git clone https://github.com/Lekensteyn/qt5printers.git ~/.gdb/qt5printers/
