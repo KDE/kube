@@ -92,34 +92,48 @@ class MessageRfc822BodyPartFormatter
 {
     static const MessageRfc822BodyPartFormatter *self;
 public:
-    MessagePart::Ptr process(Interface::BodyPart &) const Q_DECL_OVERRIDE;
-    static const MimeTreeParser::Interface::BodyPartFormatter *create();
+    MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE
+    {
+        return MessagePart::Ptr(new EncapsulatedRfc822MessagePart(part.objectTreeParser(), part.content(), part.content()->bodyAsMessage()));
+    }
+
+    static const MimeTreeParser::Interface::BodyPartFormatter *create()
+    {
+        if (!self) {
+            self = new MessageRfc822BodyPartFormatter();
+        }
+        return self;
+    }
 };
 
 const MessageRfc822BodyPartFormatter *MessageRfc822BodyPartFormatter::self;
 
-const MimeTreeParser::Interface::BodyPartFormatter *MessageRfc822BodyPartFormatter::create()
+class HeadersBodyPartFormatter
+    : public MimeTreeParser::Interface::BodyPartFormatter
 {
-    if (!self) {
-        self = new MessageRfc822BodyPartFormatter();
+    static const HeadersBodyPartFormatter *self;
+public:
+    MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE
+    {
+        return MessagePart::Ptr(new HeadersPart(part.objectTreeParser(), part.content()));
     }
-    return self;
-}
 
-MessagePart::Ptr MessageRfc822BodyPartFormatter::process(Interface::BodyPart &part) const
-{
-    const KMime::Message::Ptr message = part.content()->bodyAsMessage();
-    return MessagePart::Ptr(new EncapsulatedRfc822MessagePart(part.objectTreeParser(), part.content(), message));
-}
+    static const MimeTreeParser::Interface::BodyPartFormatter *create() {
+        if (!self) {
+            self = new HeadersBodyPartFormatter();
+        }
+        return self;
+    }
+};
 
-typedef TextPlainBodyPartFormatter ApplicationPgpBodyPartFormatter;
+const HeadersBodyPartFormatter *HeadersBodyPartFormatter::self = nullptr;
 
 } // anon namespace
 
 void BodyPartFormatterBaseFactoryPrivate::messageviewer_create_builtin_bodypart_formatters()
 {
     insert("application", "octet-stream", AnyTypeBodyPartFormatter::create());
-    insert("application", "pgp", ApplicationPgpBodyPartFormatter::create());
+    insert("application", "pgp", TextPlainBodyPartFormatter::create());
     insert("application", "pkcs7-mime", ApplicationPkcs7MimeBodyPartFormatter::create());
     insert("application", "x-pkcs7-mime", ApplicationPkcs7MimeBodyPartFormatter::create());
     insert("application", "pgp-encrypted", ApplicationPGPEncryptedBodyPartFormatter::create());
@@ -129,6 +143,7 @@ void BodyPartFormatterBaseFactoryPrivate::messageviewer_create_builtin_bodypart_
     insert("text", "rtf", AnyTypeBodyPartFormatter::create());
     insert("text", "plain", MailmanBodyPartFormatter::create());
     insert("text", "plain", TextPlainBodyPartFormatter::create());
+    insert("text", "rfc822-headers", HeadersBodyPartFormatter::create());
     insert("text", "*", MailmanBodyPartFormatter::create());
     insert("text", "*", TextPlainBodyPartFormatter::create());
 

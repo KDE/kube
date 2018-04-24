@@ -371,6 +371,21 @@ private slots:
         QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
         QVERIFY(otp.plainTextContent().contains(QString::fromUtf8("encrypted message text")));
     }
+
+    void testOpenpgpMultipartEmbedded()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("openpgp-multipart-embedded.mbox"));
+        otp.print();
+        otp.decryptParts();
+        otp.print();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QCOMPARE(part->encryptions().size(), 1);
+        QCOMPARE(part->encryptionState(), MimeTreeParser::KMMsgFullyEncrypted);
+        QCOMPARE(otp.plainTextContent(), QString::fromUtf8("sdflskjsdf\n\n-- \nThis is a HTML signature.\n"));
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)

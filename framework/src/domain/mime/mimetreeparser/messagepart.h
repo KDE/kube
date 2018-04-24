@@ -375,6 +375,15 @@ protected:
     friend class ::PartPrivate;
 };
 
+class HeadersPart : public MessagePart
+{
+    Q_OBJECT
+public:
+    typedef QSharedPointer<HeadersPart> Ptr;
+    HeadersPart(ObjectTreeParser *otp, KMime::Content *node);
+    virtual ~HeadersPart();
+};
+
 }
 
 #endif //__MIMETREEPARSER_MESSAGEPART_H__

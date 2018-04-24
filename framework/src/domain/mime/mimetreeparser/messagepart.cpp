@@ -1160,3 +1160,13 @@ QDateTime EncapsulatedRfc822MessagePart::date() const
     }
     return {};
 }
+
+HeadersPart::HeadersPart(ObjectTreeParser *otp, KMime::Content *node)
+    : MessagePart(otp, QString(), node)
+{
+}
+
+HeadersPart::~HeadersPart()
+{
+
+}
