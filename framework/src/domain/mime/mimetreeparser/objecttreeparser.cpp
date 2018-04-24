@@ -456,19 +456,13 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
 
         //Try the specific type handler
         if (auto mp = processType(node, mediaType, subType)) {
-            if (mp) {
-                parsedPart->appendSubPart(mp);
-            }
+            parsedPart->appendSubPart(mp);
         //Fallback to the generic handler
         } else if (auto mp = processType(node, mediaType, "*")) {
-            if (mp) {
-                parsedPart->appendSubPart(mp);
-            }
+            parsedPart->appendSubPart(mp);
         //Fallback to the default handler
-        } else {
-            if (auto mp = defaultHandling(node)) {
-                parsedPart->appendSubPart(mp);
-            }
+        } else if (auto mp = defaultHandling(node)) {
+            parsedPart->appendSubPart(mp);
         }
         mNodeHelper->setNodeProcessed(node, false);
 
@@ -492,8 +486,7 @@ MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node)
         }
     }
 
-    const auto mp = AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node));
-    return mp;
+    return AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node));
 }
 
 const QTextCodec *ObjectTreeParser::codecFor(KMime::Content *node) const
