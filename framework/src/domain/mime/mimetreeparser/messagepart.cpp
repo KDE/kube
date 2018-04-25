@@ -261,6 +261,28 @@ void MessagePart::parseInternal(KMime::Content *node, bool onlyOneMimePart)
     }
 }
 
+void MessagePart::parseInternal(const QByteArray &data)
+{
+    auto tempNode = new KMime::Content();
+
+    const auto lfData = KMime::CRLFtoLF(data);
+    //We have to deal with both bodies and full parts. In inline encrypted/signed parts we can have nested parts,
+    //or just plain-text, and both ends up here. setContent defaults to setting only the header, so we have to avoid this.
+    if (lfData.contains("\n\n")) {
+        tempNode->setContent(lfData);
+    } else {
+        tempNode->setBody(lfData);
+    }
+    tempNode->parse();
+    bindLifetime(tempNode);
+
+    if (!tempNode->head().isEmpty()) {
+        tempNode->contentDescription()->from7BitString("temporary node");
+    }
+
+    parseInternal(tempNode, false);
+}
+
 QString MessagePart::renderInternalText() const
 {
     QString text;
@@ -392,7 +414,8 @@ void TextMessagePart::parseContent()
     const QString &fromAddress = mOtp->nodeHelper()->fromAsString(mNode);
     mSignatureState  = KMMsgNotSigned;
     mEncryptionState = KMMsgNotEncrypted;
-    const auto blocks = prepareMessageForDecryption(mNode->decodedContent());
+    auto body = mNode->decodedContent();
+    const auto blocks = prepareMessageForDecryption(body);
 
     const auto cryptProto = GpgME::OpenPGP;
 
@@ -880,15 +903,8 @@ void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &r
             mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
         }
         if (!plainText.isEmpty() && parseText) {
-            auto tempNode = new KMime::Content();
-            tempNode->setBody(plainText);
-            tempNode->parse();
-            bindLifetime(tempNode);
+            parseInternal(plainText);
 
-            if (!tempNode->head().isEmpty()) {
-                tempNode->contentDescription()->from7BitString("signed data");
-            }
-            parseInternal(tempNode, false);
         }
     }
 }
@@ -1072,16 +1088,7 @@ void EncryptedMessagePart::startDecryption(KMime::Content *data)
 
     if (mNode && !mMetaData.isSigned) {
         mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
-        auto tempNode = new KMime::Content();
-        tempNode->setContent(KMime::CRLFtoLF(mDecryptedData.constData()));
-        tempNode->parse();
-        bindLifetime(tempNode);
-
-        if (!tempNode->head().isEmpty()) {
-            tempNode->contentDescription()->from7BitString("encrypted data");
-        }
-
-        parseInternal(tempNode, false);
+        parseInternal(mDecryptedData);
     }
 }
 

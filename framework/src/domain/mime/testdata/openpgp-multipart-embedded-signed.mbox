@@ -1,0 +1,83 @@
+To: test@kolab.org
+From: test1 <test1@kolab.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=test1@kolab.org; prefer-encrypt=mutual; keydata=
+ xsBNBFrd3FcBCADAGsU4BTBJ7nXGZ2IV6ZpSDcuZeCteDdrp9YNGYdax49Z9rn2RIfMur07i
+ A3zkLuQSI63QpWr/sp8Kkcs+OMRfeNAHSyQcdOwE/SU/PF45LHYcgvdgL7bvNRiyrn++eXar
+ woCH/QNZFgsy4PQCBW4DXor4jeDgeKisdk+ArpSY+Dd5l+Gdna8GQyUHWOL15gKUEDBq9dta
+ fswI18LxTSIbofsSxnQ0BgHNgn4bFXRLWiFJMyjvXXwZAXmChpxchESeIyu3Bvu38kA+jNDh
+ QmJL359mbXtu6JtvUjL0T9xhydHhGQ8iHCUpUkAh50KDJUUFQAUD+wSeMbsr7dk/osBdABEB
+ AAHNHVRlc3QxIEtvbGFiIDx0ZXN0MUBrb2xhYi5vcmc+wsCOBBMBCAA4FiEEy9EWSF25Vgyj
+ zZHgLjt3h7G3WSAFAlrd3FcCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQLjt3h7G3
+ WSBwjAf6A9D/BOo6ixWfrTAfunk06TIt309P33/aIrhmICUoJ3KxatnMfcFr9GDnVtGv7RZl
+ VG43dWLMz8ghjGVjWOQUzlYl19HS/7KfHFE3jQHawcidYHcsVBbD/Ml9lCRnE4CcO/7MqObh
+ FHVIO+M0XJK82Qqu1kZ2ySNOMG+DJ3JGMEWMwrf8HjdwfANCn9uW4G9+q3dyN7TWUaYVLf74
+ Ekz2KpCxi0Y/b/01+8UR6iSRbn+5R2CIPhgdrrfYlHaB1HHeeJlue8JK3zxYcRTfD4B2c8Jj
+ UAMO0Y8A7PMTj9SpnBt+t4XUyrTwwqLwulRBAQBHSPI7jQ6JVM2yTOe7Yy1dbc7ATQRa3dxX
+ AQgAy/RH8KEQHk2SJ60G0YJkOSioGNU+sAMP6rKIH8AXljZEwriiWqxcunoHlrOHOfuyBBL2
+ TTiien0247g7q2i7aPBZhll7/cp4DZKcsLZ9QIkB4sHY1SaVT865dIfhoxcKwi8NzbemDsUQ
+ QB6f9P3CSZqFW2EohzKf3vfYnLVLTRvzlndAzThYXso1iWeX9v1JtzOi4w7JP5RvTMx+FXCy
+ ibfkLGJL2ZG6rapK7jtn8SfJGiQeH441OmEDjtfqrADKDY/pKJdPeEzakuZuxhrh8FtFjtZX
+ WU9dbzE46uXUA/ChLW0H/zuyxseVCHyAbF5pFyibGfk1hmYFVwjQotHojwARAQABwsB2BBgB
+ CAAgFiEEy9EWSF25VgyjzZHgLjt3h7G3WSAFAlrd3FcCGwwACgkQLjt3h7G3WSDJrAgApMbl
+ U4PAoe04jVSIMApU8Q22NNysZGS3l6KLpOqS/1DXd2U0S6EbFcCmUUwu3tk6nz6qCBKu7SEe
+ E1bjJUSB5880IA3C8HC1VDHCdVMJGJKvpqnj/4Jf8STQROL7UeQXZvby5CRZGMV7lBDAquG6
+ vk3Eo3CeAfKel+XtHA/qruayTVHn1PV3/22ThcnXkwB3Mpdflz/tmPwHZqwOPavpJMckE03K
+ HNzSulXDNXdGqd4kKu43UIYnfm/3jnfK/LOrOK8zl40mk26Vm19MMRgc2TP6a70J5r6H1RLU
+ BTEkoVskD4m6I1G4FEIPq1g8jv7e0zcukh3vdpdKKxR+69M/2w==
+Message-ID: <a85660b4-6fdf-9d74-ad1c-e6899f57e4b0@kolab.org>
+Date: Tue, 24 Apr 2018 18:47:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
+MIME-Version: 1.0
+Subject: Encrypted Message
+Content-Type: multipart/encrypted;
+ protocol="application/pgp-encrypted";
+ boundary="aG9NpScyJQ450kGR5wZ2xj8QJwiCdpvXm"
+
+This is an OpenPGP/MIME encrypted message (RFC 4880 and 3156)
+--aG9NpScyJQ450kGR5wZ2xj8QJwiCdpvXm
+Content-Type: application/pgp-encrypted
+Content-Description: PGP/MIME version identification
+
+Version: 1
+
+--aG9NpScyJQ450kGR5wZ2xj8QJwiCdpvXm
+Content-Type: application/octet-stream; name="encrypted.asc"
+Content-Description: OpenPGP encrypted message
+Content-Disposition: inline; filename="encrypted.asc"
+
+-----BEGIN PGP MESSAGE-----
+
+hQEMAwzOQ1qnzNo7AQgA3kD1WyRdQawpduoJ3J9h3SpSC7YiNqU7aiyTMUGAdbGO
+BMhIzPdEkai9P486Wpg5h+ywmQrk3KoH/GioRjwvIaeNZY/cmxetT0/ig5rrnqxM
+j63vFFbCbE6kSeDbvYqF5mL3XH+TqpZRW5ApPSgkr7jMDOK7k1eF5A5ey84LYFny
+Ky63LGy5KEQk7E1cMLZOHAZnorcm7Lh3RVWgPj+DRDowMn3yVdFOpT5bQ66zAIkc
+Bs9IWuq0lMxGsdfRv5wlzUqZJGge3oT7tkZhI6D56MLIjqg7SurQMiWrn6wh51Sr
+R7W9N6lHyrKrffP2VjFwPPK1/Vjd0Am4gTPkf+GcJ4UBDAPKpRg2CPD7UAEIAJuC
+8s2uGAGF9zgoQdrmL6bInA5JCQiZI+B5Jgg9wQ/dW3idJN9esr1Ff7/d8DVuzf1V
+bFydMBqQk5Zkp5FuDhJsfGWK+NPJBUaOKGlGqRPZX+SjP2k1SuDoxvdxvtWYBVOt
+Zhq03zczRWo4dxJ++WYqxu6gMlBCO+z84kfhknWyBNeN7+8mmYGNWDo/ARWhspO0
+CIOfBCFeqwCpCZLIiCTBjGg98Ed+SGIdjQwq97suh3nANlKFpiNp2+w02H+rarMj
+IUkaVrKIGqaKw3X7JxuBcD8gzW2nyw6MKrm4q2iTCXYQb8lpUuvITJmNJFIkTmpt
+DjlDEZdJiNhs0IOIepbS6QETyg97HVDWmL4frclu4QAeF28007HHlg805IAjAZ/x
+wU9P3/VH74zZJinBLmXaIe3XidksWHES3H8ay+UtsUafC+4icSZRwplW9MexBNsl
+mJ4pfrHtAf+t+Tk0/BbuanSbL6OGA1wG7GVEfj39rsc4vYgSS/NLI5njq55AXFVG
+syeplNt2FNw3Ii6V3NnEkvlKcmj8sVnGCAIIeaG9yiAJ5qOsHP37sk3TAduKRGSE
+d8Ldty4mBftkTPyOG8eMr28XCldnhqnNWbcP9t2maKAyQ4bjv15Erx+1AfXXGtVq
+3PsVsUN2YQIib7VLBjOYzW9jysQWFFuE26sE2oH4of34E0jD6GV3d6Ng8gTtpIhO
+BWePihWtHdBGsNNoYrp19IXX594hayaF+WV8rpaBS0KxVoEHZhFusyvxcDiQnsO7
+3QPVu3btkkte8Hq9KtoFVeFm91M9fii3m3vFBsPu7weMm2zBCxTTRdLd5X+yEYah
+n8tKnUUFHFIcgdZ3FIoQmIJrrYtcjLnvXeDdB2F6HX7z9KMQ5RzKBZcCMnVViKxl
+PIF3bikUzhtg55BGNyiAu2sz1wLzOoERsb38GN3UK4qinFVXLHxXhcdpEXKocb+k
+PyRTykAunux+J5+klASl/k85s8gNvMH1CijdNseQEqLlsISERu+zxyFPPit6/tP6
+wDyvhjHcGV2Jpw5T01n5aJpKklbGb9qUBkzlfayc03ebtqPzBTwG8NEzu9rlZQpr
+ldbYUvXYBHSOqk2Z403I0PWR5DlcasFgciHFQw9PODRNK+OVY46btfyBXABlzYTH
+OMfnHd8HoCOKCp29+ugK2G8y91JNd4M8B2xI1zACFB3hlDoc7K4h85Yi0cCYZahX
+OUWZxSZjfl8X793RT5h+2BE+0bRGLOJIGhAxe+JKUC7O5njXBc3O5/ocfLif2t4y
+eYJmu/w46hJUPxYk4Poe3Oppcim1hKHI7DVSJeJydBRqJgDzRzQ/1u7dD15z69/0
+rbexuTVmwmXN695s/V0=
+=1o3V
+-----END PGP MESSAGE-----
+
+--aG9NpScyJQ450kGR5wZ2xj8QJwiCdpvXm--

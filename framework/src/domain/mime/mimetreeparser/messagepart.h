@@ -125,6 +125,7 @@ public:
 
 protected:
     void parseInternal(KMime::Content *node, bool onlyOneMimePart);
+    void parseInternal(const QByteArray &data);
     QString renderInternalText() const;
 
     QString mText;
