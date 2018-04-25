@@ -37,7 +37,6 @@
 #include "nodehelper.h"
 #include "messagepart.h"
 
-#include <gpgme++/verificationresult.h>
 #include <functional>
 
 class QString;

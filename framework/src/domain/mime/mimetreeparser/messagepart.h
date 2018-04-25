@@ -269,7 +269,7 @@ public:
     void import();
 
 private:
-    const GpgME::Protocol mCryptoProto;
+    const GpgME::Protocol mProtocol;
     friend class DefaultRendererPrivate;
 };
 

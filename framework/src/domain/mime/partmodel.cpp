@@ -25,7 +25,6 @@
 #include <QDebug>
 #include <QTextDocument>
 
-#include <gpgme++/key.h>
 #include <gpgme.h>
 
 class PartModelPrivate

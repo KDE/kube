@@ -59,6 +59,53 @@ static QSharedPointer<GpgME::Context> gpgContext(GpgME::Protocol protocol)
     return ctx;
 }
 
+static GpgME::VerificationResult verifyDetachedSignature(GpgME::Protocol protocol, const QByteArray &signature, const QByteArray &text)
+{
+    return gpgContext(protocol)->verifyDetachedSignature(fromBA(signature), fromBA(text));
+}
+
+static GpgME::VerificationResult verifyOpaqueSignature(GpgME::Protocol protocol, const QByteArray &signature, QByteArray &outdata)
+{
+    QGpgME::QByteArrayDataProvider out;
+    GpgME::Data wrapper(&out);
+    const auto result = gpgContext(protocol)->verifyOpaqueSignature(fromBA(signature), wrapper);
+    outdata = out.data();
+    return result;
+}
+
+
+static std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> decryptAndVerify(GpgME::Protocol protocol, const QByteArray &ciphertext, QByteArray &outdata)
+{
+    QGpgME::QByteArrayDataProvider out;
+    GpgME::Data wrapper(&out);
+    const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> res = gpgContext(protocol)->decryptAndVerify(fromBA(ciphertext), wrapper);
+    outdata = out.data();
+    return res;
+}
+
+static void importKeys(GpgME::Protocol protocol, const QByteArray &certData)
+{
+    gpgContext(protocol)->importKeys(fromBA(certData));
+}
+
+static GpgME::KeyListResult listKeys(GpgME::Protocol protocol, const char *pattern, bool secretOnly, std::vector<GpgME::Key> &keys) {
+    auto ctx = gpgContext(protocol);
+    if (const GpgME::Error err = ctx->startKeyListing(pattern, secretOnly)) {
+        return GpgME::KeyListResult( 0, err );
+    }
+
+    GpgME::Error err;
+    do {
+        keys.push_back( ctx->nextKey(err));
+    } while ( !err );
+
+    keys.pop_back();
+
+    const GpgME::KeyListResult result = ctx->endKeyListing();
+    ctx->cancelPendingOperation();
+    return result;
+}
+
 
 //------MessagePart-----------------------
 MessagePart::MessagePart(ObjectTreeParser *otp, const QString &text, KMime::Content *node)
@@ -670,7 +717,7 @@ QString AlternativeMessagePart::htmlContent() const
 
 CertMessagePart::CertMessagePart(ObjectTreeParser *otp, KMime::Content *node, const GpgME::Protocol cryptoProto)
     : MessagePart(otp, QString(), node)
-    , mCryptoProto(cryptoProto)
+    , mProtocol(cryptoProto)
 {
     if (!mNode) {
         qCWarning(MIMETREEPARSER_LOG) << "not a valid node";
@@ -686,8 +733,7 @@ CertMessagePart::~CertMessagePart()
 void CertMessagePart::import()
 {
     const QByteArray certData = mNode->decodedContent();
-    auto ctx = gpgContext(mCryptoProto);
-    const auto result = ctx->importKeys(fromBA(certData));
+    importKeys(mProtocol, certData);
 }
 
 QString CertMessagePart::text() const
@@ -753,23 +799,6 @@ QString prettifyDN(const char *uid)
     return QGpgME::DN(uid).prettyDN();
 }
 
-static GpgME::KeyListResult listKeys(GpgME::Context * ctx, const char *pattern, bool secretOnly, std::vector<GpgME::Key> &keys) {
-    if (const GpgME::Error err = ctx->startKeyListing(pattern, secretOnly)) {
-        return GpgME::KeyListResult( 0, err );
-    }
-
-    GpgME::Error err;
-    do {
-        keys.push_back( ctx->nextKey(err));
-    } while ( !err );
-
-    keys.pop_back();
-
-    const GpgME::KeyListResult result = ctx->endKeyListing();
-    ctx->cancelPendingOperation();
-    return result;
-}
-
 void SignedMessagePart::sigStatusToMetaData(const GpgME::Signature &signature)
 {
     GpgME::Key key;
@@ -779,10 +808,9 @@ void SignedMessagePart::sigStatusToMetaData(const GpgME::Signature &signature)
     mMetaData.sigSummary = signature.summary();
 
     if (mMetaData.isGoodSignature && !key.keyID()) {
-        auto ctx = gpgContext(mProtocol);
         // Search for the key by its fingerprint so that we can check for trust etc.
         std::vector<GpgME::Key> found_keys;
-        auto res = listKeys(ctx.data(), signature.fingerprint(), false, found_keys);
+        auto res = listKeys(mProtocol, signature.fingerprint(), false, found_keys);
         if (res.error()) {
             qCDebug(MIMETREEPARSER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
         }
@@ -875,16 +903,13 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     mMetaData.status = tr("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
 
-    auto ctx = gpgContext(mProtocol);
-
     if (!signature.isEmpty()) {
-        auto result = ctx->verifyDetachedSignature(fromBA(signature), fromBA(text));
+        auto result = verifyDetachedSignature(mProtocol, signature, text);
         setVerificationResult(result, false, text);
     } else {
-        QGpgME::QByteArrayDataProvider out;
-        GpgME::Data outdata(&out);
-        auto result = ctx->verifyOpaqueSignature(fromBA(text), outdata);
-        setVerificationResult(result, false, out.data());
+        QByteArray outdata;
+        auto result = verifyOpaqueSignature(mProtocol, text, outdata);
+        setVerificationResult(result, false, outdata);
     }
 
     if (!mMetaData.isSigned) {
@@ -1000,11 +1025,8 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
     mMetaData.auditLog.clear();
 
     const QByteArray ciphertext = data.decodedContent();
-    auto ctx = gpgContext(mProtocol);
-    QGpgME::QByteArrayDataProvider out;
-    GpgME::Data outdata(&out);
-    const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> res = ctx->decryptAndVerify(fromBA(ciphertext), outdata);
-    const QByteArray &plainText = out.data();
+    QByteArray plainText;
+    const auto res = decryptAndVerify(mProtocol, ciphertext, plainText);
     const GpgME::DecryptionResult &decryptResult = res.first;
     const GpgME::VerificationResult &verifyResult = res.second;
     mMetaData.isSigned = verifyResult.signatures().size() > 0;
