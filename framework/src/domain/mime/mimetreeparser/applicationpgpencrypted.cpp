@@ -59,7 +59,7 @@ MessagePart::Ptr ApplicationPGPEncryptedBodyPartFormatter::process(Interface::Bo
     }
 
     EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(part.objectTreeParser(),
-                                 data->decodedText(), GpgME::OpenPGP,
+                                 data->decodedText(), OpenPGP,
                                  part.nodeHelper()->fromAsString(data), node, data));
     mp->setIsEncrypted(true);
     return mp;

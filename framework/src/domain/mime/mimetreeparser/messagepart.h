@@ -57,6 +57,12 @@ class MultiPartAlternativeBodyPartFormatter;
 class SignedMessagePart;
 class EncryptedMessagePart;
 
+enum CryptoProtocol {
+    UnknownProtocol,
+    OpenPGP,
+    CMS
+};
+
 class MessagePart : public QObject
 {
     Q_OBJECT
@@ -262,14 +268,14 @@ class CertMessagePart : public MessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<CertMessagePart> Ptr;
-    CertMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, const GpgME::Protocol cryptoProto);
+    CertMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, const CryptoProtocol cryptoProto);
     virtual ~CertMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
     void import();
 
 private:
-    const GpgME::Protocol mProtocol;
+    const CryptoProtocol mProtocol;
     friend class DefaultRendererPrivate;
 };
 
@@ -298,7 +304,7 @@ public:
     typedef QSharedPointer<EncryptedMessagePart> Ptr;
     EncryptedMessagePart(ObjectTreeParser *otp,
                          const QString &text,
-                         const GpgME::Protocol protocol,
+                         const CryptoProtocol protocol,
                          const QString &fromAddress,
                          KMime::Content *node, KMime::Content *encryptedNode = nullptr);
 
@@ -327,7 +333,7 @@ private:
     bool okDecryptMIME(KMime::Content &data);
 
 protected:
-    const GpgME::Protocol mProtocol;
+    const CryptoProtocol mProtocol;
     QString mFromAddress;
     QByteArray mVerifiedText;
     std::vector<GpgME::DecryptionResult::Recipient> mDecryptRecipients;
@@ -345,7 +351,7 @@ public:
     typedef QSharedPointer<SignedMessagePart> Ptr;
     SignedMessagePart(ObjectTreeParser *otp,
                       const QString &text,
-                      const GpgME::Protocol protocol,
+                      const CryptoProtocol protocol,
                       const QString &fromAddress,
                       KMime::Content *node, KMime::Content *signedData);
 
@@ -367,7 +373,7 @@ private:
     void setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText);
 
 protected:
-    GpgME::Protocol mProtocol;
+    CryptoProtocol mProtocol;
     QString mFromAddress;
     KMime::Content *mSignedData;
 

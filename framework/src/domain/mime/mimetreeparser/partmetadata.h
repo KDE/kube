@@ -16,8 +16,6 @@
 #ifndef __MIMETREEPARSER_PARTMETADATA_H__
 #define __MIMETREEPARSER_PARTMETADATA_H__
 
-#include <gpgme++/verificationresult.h>
-
 #include <QStringList>
 #include <QDateTime>
 
@@ -27,35 +25,29 @@ namespace MimeTreeParser
 class PartMetaData
 {
 public:
-    PartMetaData()
-        : sigSummary(GpgME::Signature::None),
-          isSigned(false),
-          isGoodSignature(false),
-          isEncrypted(false),
-          isDecryptable(false),
-          technicalProblem(false),
-          isEncapsulatedRfc822Message(false)
-    {
-    }
-    GpgME::Signature::Summary sigSummary;
+    bool keyMissing = false;
+    bool keyExpired = false;
+    bool keyRevoked = false;
+    bool sigExpired = false;
+    bool crlMissing = false;
+    bool crlTooOld = false;
     QString signClass;
     QString signer;
     QStringList signerMailAddresses;
     QByteArray keyId;
-    GpgME::Signature::Validity keyTrust;
+    bool keyIsTrusted = false;
     QString status;  // to be used for unknown plug-ins
     int status_code; // to be used for i18n of OpenPGP and S/MIME CryptPlugs
     QString errorText;
     QDateTime creationTime;
     QString decryptionError;
     QString auditLog;
-    GpgME::Error auditLogError;
-    bool isSigned : 1;
-    bool isGoodSignature : 1;
-    bool isEncrypted : 1;
-    bool isDecryptable : 1;
-    bool technicalProblem : 1;
-    bool isEncapsulatedRfc822Message : 1;
+    bool isSigned = false;
+    bool isGoodSignature =false;
+    bool isEncrypted = false;
+    bool isDecryptable = false;
+    bool technicalProblem = false;
+    bool isEncapsulatedRfc822Message = false;
 };
 
 }

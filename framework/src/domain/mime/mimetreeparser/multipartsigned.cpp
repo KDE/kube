@@ -24,8 +24,6 @@
 
 #include <KMime/Content>
 
-#include <QGpgME/Protocol>
-
 #include "mimetreeparser_debug.h"
 
 #include <QTextCodec>
@@ -67,16 +65,16 @@ MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(Interface::BodyPart &
         protocolContentType = signatureContentType;
     }
 
-    GpgME::Protocol protocol = GpgME::UnknownProtocol;
+    CryptoProtocol protocol = UnknownProtocol;
     if (protocolContentType == QLatin1String("application/pkcs7-signature") ||
             protocolContentType == QLatin1String("application/x-pkcs7-signature")) {
-        protocol = GpgME::CMS;
+        protocol = CMS;
     } else if (protocolContentType == QLatin1String("application/pgp-signature") ||
                protocolContentType == QLatin1String("application/x-pgp-signature")) {
-        protocol = GpgME::OpenPGP;
+        protocol = OpenPGP;
     }
 
-    if (protocol == GpgME::UnknownProtocol) {
+    if (protocol == UnknownProtocol) {
         return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), signedData, false));
     }
 

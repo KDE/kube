@@ -47,24 +47,38 @@ static GpgME::Data fromBA(const QByteArray &ba)
     return {ba.data(), static_cast<size_t>(ba.size()), false};
 }
 
-static QSharedPointer<GpgME::Context> gpgContext(GpgME::Protocol protocol)
+
+static GpgME::Protocol toGpgMe(CryptoProtocol p)
+{
+    switch (p) {
+        case UnknownProtocol:
+            return GpgME::UnknownProtocol;
+        case CMS:
+            return GpgME::CMS;
+        case OpenPGP:
+            return GpgME::OpenPGP;
+    }
+    return GpgME::UnknownProtocol;
+}
+
+static QSharedPointer<GpgME::Context> gpgContext(CryptoProtocol protocol)
 {
     GpgME::initializeLibrary();
-    auto error = GpgME::checkEngine(protocol);
+    auto error = GpgME::checkEngine(toGpgMe(protocol));
     if (error) {
         qWarning() << "Engine check failed: " << error.asString();
     }
-    auto ctx = QSharedPointer<GpgME::Context>(GpgME::Context::createForProtocol(protocol));
+    auto ctx = QSharedPointer<GpgME::Context>(GpgME::Context::createForProtocol(toGpgMe(protocol)));
     Q_ASSERT(ctx);
     return ctx;
 }
 
-static GpgME::VerificationResult verifyDetachedSignature(GpgME::Protocol protocol, const QByteArray &signature, const QByteArray &text)
+static GpgME::VerificationResult verifyDetachedSignature(CryptoProtocol protocol, const QByteArray &signature, const QByteArray &text)
 {
     return gpgContext(protocol)->verifyDetachedSignature(fromBA(signature), fromBA(text));
 }
 
-static GpgME::VerificationResult verifyOpaqueSignature(GpgME::Protocol protocol, const QByteArray &signature, QByteArray &outdata)
+static GpgME::VerificationResult verifyOpaqueSignature(CryptoProtocol protocol, const QByteArray &signature, QByteArray &outdata)
 {
     QGpgME::QByteArrayDataProvider out;
     GpgME::Data wrapper(&out);
@@ -74,7 +88,7 @@ static GpgME::VerificationResult verifyOpaqueSignature(GpgME::Protocol protocol,
 }
 
 
-static std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> decryptAndVerify(GpgME::Protocol protocol, const QByteArray &ciphertext, QByteArray &outdata)
+static std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> decryptAndVerify(CryptoProtocol protocol, const QByteArray &ciphertext, QByteArray &outdata)
 {
     QGpgME::QByteArrayDataProvider out;
     GpgME::Data wrapper(&out);
@@ -83,12 +97,12 @@ static std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> decryptAndVe
     return res;
 }
 
-static void importKeys(GpgME::Protocol protocol, const QByteArray &certData)
+static void importKeys(CryptoProtocol protocol, const QByteArray &certData)
 {
     gpgContext(protocol)->importKeys(fromBA(certData));
 }
 
-static GpgME::KeyListResult listKeys(GpgME::Protocol protocol, const char *pattern, bool secretOnly, std::vector<GpgME::Key> &keys) {
+static GpgME::KeyListResult listKeys(CryptoProtocol protocol, const char *pattern, bool secretOnly, std::vector<GpgME::Key> &keys) {
     auto ctx = gpgContext(protocol);
     if (const GpgME::Error err = ctx->startKeyListing(pattern, secretOnly)) {
         return GpgME::KeyListResult( 0, err );
@@ -464,7 +478,7 @@ void TextMessagePart::parseContent()
     auto body = mNode->decodedContent();
     const auto blocks = prepareMessageForDecryption(body);
 
-    const auto cryptProto = GpgME::OpenPGP;
+    const auto cryptProto = OpenPGP;
 
     if (!blocks.isEmpty()) {
 
@@ -715,7 +729,7 @@ QString AlternativeMessagePart::htmlContent() const
 
 //-----CertMessageBlock----------------------
 
-CertMessagePart::CertMessagePart(ObjectTreeParser *otp, KMime::Content *node, const GpgME::Protocol cryptoProto)
+CertMessagePart::CertMessagePart(ObjectTreeParser *otp, KMime::Content *node, const CryptoProtocol cryptoProto)
     : MessagePart(otp, QString(), node)
     , mProtocol(cryptoProto)
 {
@@ -744,7 +758,7 @@ QString CertMessagePart::text() const
 //-----SignedMessageBlock---------------------
 SignedMessagePart::SignedMessagePart(ObjectTreeParser *otp,
                                      const QString &text,
-                                     const GpgME::Protocol cryptoProto,
+                                     const CryptoProtocol cryptoProto,
                                      const QString &fromAddress,
                                      KMime::Content *node, KMime::Content *signedData)
     : MessagePart(otp, text, node)
@@ -754,7 +768,8 @@ SignedMessagePart::SignedMessagePart(ObjectTreeParser *otp,
 {
     mMetaData.isSigned = true;
     mMetaData.isGoodSignature = false;
-    mMetaData.keyTrust = GpgME::Signature::Unknown;
+    //FIXME
+    // mMetaData.keyTrust = GpgME::Signature::Unknown;
     mMetaData.status = tr("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
 }
@@ -805,7 +820,13 @@ void SignedMessagePart::sigStatusToMetaData(const GpgME::Signature &signature)
     mMetaData.status_code = signatureToStatus(signature);
     mMetaData.isGoodSignature = mMetaData.status_code & GPGME_SIG_STAT_GOOD;
     // save extended signature status flags
-    mMetaData.sigSummary = signature.summary();
+    auto summary = signature.summary();
+    mMetaData.keyMissing = summary & GpgME::Signature::KeyMissing;
+    mMetaData.keyExpired = summary & GpgME::Signature::KeyExpired;
+    mMetaData.keyRevoked = summary & GpgME::Signature::KeyRevoked;
+    mMetaData.sigExpired = summary & GpgME::Signature::SigExpired;
+    mMetaData.crlMissing = summary & GpgME::Signature::CrlMissing;
+    mMetaData.crlTooOld = summary & GpgME::Signature::CrlTooOld;
 
     if (mMetaData.isGoodSignature && !key.keyID()) {
         // Search for the key by its fingerprint so that we can check for trust etc.
@@ -832,7 +853,8 @@ void SignedMessagePart::sigStatusToMetaData(const GpgME::Signature &signature)
     if (mMetaData.keyId.isEmpty()) {
         mMetaData.keyId = signature.fingerprint();
     }
-    mMetaData.keyTrust = signature.validity();
+    auto keyTrust = signature.validity();
+    mMetaData.keyIsTrusted = keyTrust & GpgME::Signature::Full || keyTrust & GpgME::Signature::Ultimate;
     if (key.numUserIDs() > 0 && key.userID(0).id()) {
         mMetaData.signer = prettifyDN(key.userID(0).id());
     }
@@ -899,7 +921,8 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     }
 
     mMetaData.isSigned = false;
-    mMetaData.keyTrust = GpgME::Signature::Unknown;
+    //FIXME
+    // mMetaData.keyTrust = GpgME::Signature::Unknown;
     mMetaData.status = tr("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
 
@@ -920,7 +943,8 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
 void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText)
 {
     auto signatures = result.signatures();
-    mMetaData.auditLogError = result.error();
+    // FIXME
+    // mMetaData.auditLogError = result.error();
     if (!signatures.empty()) {
         mMetaData.isSigned = true;
         sigStatusToMetaData(signatures.front());
@@ -955,7 +979,7 @@ QString SignedMessagePart::htmlContent() const
 //-----CryptMessageBlock---------------------
 EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
         const QString &text,
-        const GpgME::Protocol cryptoProto,
+        const CryptoProtocol cryptoProto,
         const QString &fromAddress,
         KMime::Content *node, KMime::Content *encryptedNode)
     : MessagePart(otp, text, node)
@@ -967,7 +991,8 @@ EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
     mMetaData.isGoodSignature = false;
     mMetaData.isEncrypted = false;
     mMetaData.isDecryptable = false;
-    mMetaData.keyTrust = GpgME::Signature::Unknown;
+    //FIXME
+    // mMetaData.keyTrust = GpgME::Signature::Unknown;
     mMetaData.status = tr("Wrong Crypto Plug-In.");
     mMetaData.status_code = GPGME_SIG_STAT_NONE;
 }
@@ -1021,7 +1046,8 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 {
     mError = NoError;
     mMetaData.errorText.clear();
-    mMetaData.auditLogError = GpgME::Error();
+    //FIXME
+    // mMetaData.auditLogError = GpgME::Error();
     mMetaData.auditLog.clear();
 
     const QByteArray ciphertext = data.decodedContent();

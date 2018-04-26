@@ -49,18 +49,18 @@ MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(Interface::BodyPar
         return MessagePart::Ptr();
     }
 
-    GpgME::Protocol useThisCryptProto = GpgME::UnknownProtocol;
+    CryptoProtocol useThisCryptProto = UnknownProtocol;
 
     /*
     ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
     */
     KMime::Content *data = findTypeInDirectChilds(node, "application/octet-stream");
     if (data) {
-        useThisCryptProto = GpgME::OpenPGP;
+        useThisCryptProto = OpenPGP;
     } else {
         data = findTypeInDirectChilds(node, "application/pkcs7-mime");
         if (data) {
-            useThisCryptProto = GpgME::CMS;
+            useThisCryptProto = CMS;
         }
     }
     /*
