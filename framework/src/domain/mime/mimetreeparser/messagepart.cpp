@@ -35,7 +35,10 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
+#include <gpgme++/decryptionresult.h>
+#include <gpgme++/importresult.h>
 #include <gpgme.h>
+
 
 #include <QTextCodec>
 #include <sstream>
@@ -1064,7 +1067,6 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
         appendSubPart(subPart);
     }
 
-    mDecryptRecipients = decryptResult.recipients();
     if (decryptResult.error() && mMetaData.isSigned) {
         //Only a signed part
         mMetaData.isEncrypted = false;

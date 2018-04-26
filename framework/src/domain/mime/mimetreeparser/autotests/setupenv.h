@@ -21,7 +21,6 @@
 #ifndef MESSAGECORE_TESTS_UTIL_H
 #define MESSAGECORE_TESTS_UTIL_H
 
-#include <gpgme++/key.h>
 #include <bodypartformatter.h>
 #include <bodypartformatterbasefactory.h>
 

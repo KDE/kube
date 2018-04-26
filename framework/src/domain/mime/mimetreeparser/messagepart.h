@@ -26,10 +26,6 @@
 
 #include <KMime/Message>
 
-#include <gpgme++/verificationresult.h>
-#include <gpgme++/decryptionresult.h>
-#include <gpgme++/importresult.h>
-
 #include <QString>
 #include <QSharedPointer>
 
@@ -39,6 +35,8 @@ class PartPrivate;
 namespace GpgME
 {
 class ImportResult;
+class VerificationResult;
+class Signature;
 }
 
 namespace KMime
@@ -336,7 +334,6 @@ protected:
     const CryptoProtocol mProtocol;
     QString mFromAddress;
     QByteArray mVerifiedText;
-    std::vector<GpgME::DecryptionResult::Recipient> mDecryptRecipients;
     KMime::Content *mEncryptedNode;
 
     friend class DefaultRendererPrivate;
