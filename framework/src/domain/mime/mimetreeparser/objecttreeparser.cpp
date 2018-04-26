@@ -90,17 +90,14 @@ static QVector<MessagePart::Ptr> collect(MessagePart::Ptr start, const std::func
 
 ObjectTreeParser::ObjectTreeParser()
     : mNodeHelper(nullptr),
-      mTopLevelContent(nullptr),
-      mShowOnlyOneMimePart(false)
+      mTopLevelContent(nullptr)
 {
     init();
 }
 
-ObjectTreeParser::ObjectTreeParser(MimeTreeParser::NodeHelper *nodeHelper,
-                                   bool showOnlyOneMimePart)
+ObjectTreeParser::ObjectTreeParser(MimeTreeParser::NodeHelper *nodeHelper)
     : mNodeHelper(nodeHelper),
-      mTopLevelContent(nullptr),
-      mShowOnlyOneMimePart(showOnlyOneMimePart)
+      mTopLevelContent(nullptr)
 {
     init();
 }
@@ -387,7 +384,7 @@ void ObjectTreeParser::parseObjectTree(const QByteArray &mimeMessage)
 void ObjectTreeParser::parseObjectTree(KMime::Content *node)
 {
     mTopLevelContent = node;
-    mParsedPart = parseObjectTreeInternal(node, showOnlyOneMimePart());
+    mParsedPart = parseObjectTreeInternal(node, false);
 }
 
 MessagePartPtr ObjectTreeParser::parsedPart() const
@@ -493,16 +490,6 @@ const QTextCodec *ObjectTreeParser::codecFor(KMime::Content *node) const
 {
     Q_ASSERT(node);
     return mNodeHelper->codec(node);
-}
-
-bool ObjectTreeParser::showOnlyOneMimePart() const
-{
-    return mShowOnlyOneMimePart;
-}
-
-void ObjectTreeParser::setShowOnlyOneMimePart(bool show)
-{
-    mShowOnlyOneMimePart = show;
 }
 
 MimeTreeParser::NodeHelper *ObjectTreeParser::nodeHelper() const

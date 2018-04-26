@@ -128,7 +128,7 @@ public:
     void bindLifetime(KMime::Content *);
 
 protected:
-    void parseInternal(KMime::Content *node, bool onlyOneMimePart);
+    void parseInternal(KMime::Content *node, bool onlyOneMimePart = false);
     void parseInternal(const QByteArray &data);
     QString renderInternalText() const;
 
@@ -150,7 +150,7 @@ class MimeMessagePart : public MessagePart
     Q_OBJECT
 public:
     typedef QSharedPointer<MimeMessagePart> Ptr;
-    MimeMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool onlyOneMimePart);
+    MimeMessagePart(MimeTreeParser::ObjectTreeParser *otp, KMime::Content *node, bool onlyOneMimePart = false);
     virtual ~MimeMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;

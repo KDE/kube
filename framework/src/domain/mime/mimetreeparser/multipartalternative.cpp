@@ -51,7 +51,7 @@ MessagePart::Ptr MultiPartAlternativeBodyPartFormatter::process(Interface::BodyP
     auto preferredMode = MimeTreeParser::Util::Html;
     AlternativeMessagePart::Ptr mp(new AlternativeMessagePart(part.objectTreeParser(), node));
     if (mp->mChildNodes.isEmpty()) {
-        return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0), false));
+        return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0)));
     }
 
     KMime::Content *dataIcal = mp->mChildNodes.contains(Util::MultipartIcal) ? mp->mChildNodes[Util::MultipartIcal] : nullptr;

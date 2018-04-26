@@ -344,7 +344,7 @@ void MessagePart::parseInternal(const QByteArray &data)
         tempNode->contentDescription()->from7BitString("temporary node");
     }
 
-    parseInternal(tempNode, false);
+    parseInternal(tempNode);
 }
 
 QString MessagePart::renderInternalText() const
@@ -920,7 +920,7 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     mMetaData.isDecryptable = false;
 
     if (textNode) {
-        parseInternal(textNode, false);
+        parseInternal(textNode);
     }
 
     mMetaData.isSigned = false;
@@ -1189,7 +1189,7 @@ EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *o
         return;
     }
 
-    parseInternal(message.data(), false);
+    parseInternal(message.data());
 }
 
 EncapsulatedRfc822MessagePart::~EncapsulatedRfc822MessagePart()

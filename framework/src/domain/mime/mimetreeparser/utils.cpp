@@ -32,7 +32,7 @@ MimeMessagePart::Ptr MimeTreeParser::createAndParseTempNode(Interface::BodyPart 
         newNode->contentDescription()->from7BitString(cntDesc);
     }
 
-    auto mp = MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), newNode, false));
+    auto mp = MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), newNode));
     mp->bindLifetime(newNode);
     return mp;
 }

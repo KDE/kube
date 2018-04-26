@@ -46,7 +46,7 @@ MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(Interface::BodyPart &
         qCDebug(MIMETREEPARSER_LOG) << "mulitpart/signed must have exactly two child parts!" << endl
                                     << "processing as multipart/mixed";
         if (!node->contents().isEmpty()) {
-            return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0), false));
+            return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0)));
         } else {
             return MessagePart::Ptr();
         }
@@ -75,7 +75,7 @@ MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(Interface::BodyPart &
     }
 
     if (protocol == UnknownProtocol) {
-        return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), signedData, false));
+        return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), signedData));
     }
 
     part.nodeHelper()->setNodeProcessed(signature, true);

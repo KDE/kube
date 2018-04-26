@@ -68,7 +68,7 @@ MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(Interface::BodyPar
     */
 
     if (!data) {
-        return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0), false));
+        return MessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0)));
     }
 
     EncryptedMessagePart::Ptr mp(new EncryptedMessagePart(part.objectTreeParser(),
