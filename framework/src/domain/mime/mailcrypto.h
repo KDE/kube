@@ -39,4 +39,12 @@ std::vector<GpgME::Key> findKeys(const QStringList &filter, bool findPrivate = f
 
 void importKeys(const std::vector<GpgME::Key> &keys);
 
+struct ImportResult {
+    int considered;
+    int imported;
+    int unchanged;
+};
+
+ImportResult importKey(const QByteArray &key);
+
 }; // namespace MailCrypto

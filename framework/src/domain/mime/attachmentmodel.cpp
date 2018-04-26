@@ -22,6 +22,7 @@
 
 #include <mimetreeparser/objecttreeparser.h>
 #include <fabric.h>
+#include <mailcrypto.h>
 
 #include <QDebug>
 #include <KMime/Content>
@@ -31,9 +32,6 @@
 #include <QDir>
 #include <QUrl>
 #include <QMimeDatabase>
-
-#include <QGpgME/ImportJob>
-#include <QGpgME/Protocol>
 
 #include <memory>
 
@@ -221,21 +219,17 @@ bool AttachmentModel::importPublicKey(const QModelIndex &index)
     const auto part = static_cast<MimeTreeParser::MessagePart *>(index.internalPointer());
     Q_ASSERT(part);
     auto pkey = part->node()->decodedContent();
-
-    const auto *proto = QGpgME::openpgp();
-    std::unique_ptr<QGpgME::ImportJob> job(proto->importJob());
-    auto result = job->exec(pkey);
+    auto result = MailCrypto::importKey(pkey);
 
     bool success = true;
-
     QString message;
-    if(result.numConsidered() == 0) {
+    if(result.considered == 0) {
         message = tr("No keys were found in this attachment");
         success = false;
     } else {
-        message = tr("%n Key(s) imported", "", result.numImported());
-        if(result.numUnchanged() != 0) {
-            message += "\n" + tr("%n Key(s) were already imported", "", result.numUnchanged());
+        message = tr("%n Key(s) imported", "", result.imported);
+        if(result.unchanged != 0) {
+            message += "\n" + tr("%n Key(s) were already imported", "", result.unchanged);
         }
     }
 

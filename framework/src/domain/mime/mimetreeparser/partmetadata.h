@@ -17,7 +17,6 @@
 #define __MIMETREEPARSER_PARTMETADATA_H__
 
 #include <gpgme++/verificationresult.h>
-#include <gpgme++/context.h>
 
 #include <QStringList>
 #include <QDateTime>

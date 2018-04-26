@@ -27,6 +27,7 @@
 #include <QGpgME/EncryptJob>
 #include <QGpgME/ExportJob>
 #include <QGpgME/ImportFromKeyserverJob>
+#include <QGpgME/ImportJob>
 #include <QGpgME/Protocol>
 #include <QGpgME/SignEncryptJob>
 #include <QGpgME/SignJob>
@@ -428,6 +429,14 @@ void MailCrypto::importKeys(const std::vector<GpgME::Key> &keys)
     Q_ASSERT(backend);
     auto *job = backend->importFromKeyserverJob();
     job->exec(keys);
+}
+
+MailCrypto::ImportResult MailCrypto::importKey(const QByteArray &pkey)
+{
+    const auto *proto = QGpgME::openpgp();
+    std::unique_ptr<QGpgME::ImportJob> job(proto->importJob());
+    auto result = job->exec(pkey);
+    return {result.numConsidered(), result.numImported(), result.numUnchanged()};
 }
 
 static GpgME::KeyListResult listKeys(const QStringList &patterns, bool secretOnly, int keyListMode, std::vector<GpgME::Key> &keys)

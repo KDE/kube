@@ -37,7 +37,6 @@ add_library(kubeframework SHARED
     domain/mime/attachmentmodel.cpp
     domain/mime/partmodel.cpp
     domain/mime/mailtemplates.cpp
-    domain/mime/mailcrypto.cpp
     accounts/accountfactory.cpp
     accounts/accountsmodel.cpp
     fabric.cpp
@@ -55,6 +54,7 @@ add_library(kubeframework SHARED
 target_link_libraries(kubeframework
     sink
     kube_otp
+    mailcrypto
     Qt5::Core
     Qt5::Quick
     Qt5::Qml
@@ -78,6 +78,7 @@ install(TARGETS frameworkplugin DESTINATION ${FRAMEWORK_INSTALL_DIR})
 set(BUILD_TESTING ON)
 
 add_subdirectory(tests)
+add_subdirectory(domain/mime)
 add_subdirectory(domain/mime/tests)
 add_subdirectory(domain/mime/mimetreeparser)
 add_subdirectory(domain/settings/tests)
