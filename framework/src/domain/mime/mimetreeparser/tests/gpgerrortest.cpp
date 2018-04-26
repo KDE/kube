@@ -19,9 +19,6 @@
 
 #include <objecttreeparser.h>
 
-#include <QGpgME/Protocol>
-#include <gpgme++/context.h>
-#include <gpgme++/engineinfo.h>
 #include <gpgme.h>
 
 #include <QDebug>
@@ -148,10 +145,14 @@ public Q_SLOTS:
         mResetGpgmeEngine = false;
         mModifiedEnv.clear();
         {
-            QGpgME::openpgp();      // We need to intialize it, otherwise ctx will be a nullpointer
-            const GpgME::Context *ctx = GpgME::Context::createForProtocol(GpgME::Protocol::OpenPGP);
-            const auto engineinfo = ctx->engineInfo();
-            mGpgmeEngine_fname = engineinfo.fileName();
+
+            gpgme_check_version(0);
+            gpgme_ctx_t ctx = 0;
+            gpgme_new(&ctx);
+            gpgme_set_protocol(ctx, GPGME_PROTOCOL_OpenPGP);
+            gpgme_engine_info_t info = gpgme_ctx_get_engine_info(ctx);
+            mGpgmeEngine_fname = info->file_name;
+            gpgme_release(ctx);
         }
         mEnv = QProcessEnvironment::systemEnvironment();
         unsetEnv("GNUPGHOME");
