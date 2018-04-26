@@ -72,21 +72,6 @@ public:
 
 const AnyTypeBodyPartFormatter *AnyTypeBodyPartFormatter::self = nullptr;
 
-class ImageTypeBodyPartFormatter : public MimeTreeParser::Interface::BodyPartFormatter
-{
-    static const ImageTypeBodyPartFormatter *self;
-public:
-    static const MimeTreeParser::Interface::BodyPartFormatter *create()
-    {
-        if (!self) {
-            self = new ImageTypeBodyPartFormatter();
-        }
-        return self;
-    }
-};
-
-const ImageTypeBodyPartFormatter *ImageTypeBodyPartFormatter::self = nullptr;
-
 class MessageRfc822BodyPartFormatter
     : public MimeTreeParser::Interface::BodyPartFormatter
 {
@@ -147,7 +132,7 @@ void BodyPartFormatterBaseFactoryPrivate::messageviewer_create_builtin_bodypart_
     insert("text", "*", MailmanBodyPartFormatter::create());
     insert("text", "*", TextPlainBodyPartFormatter::create());
 
-    insert("image", "*", ImageTypeBodyPartFormatter::create());
+    insert("image", "*", AnyTypeBodyPartFormatter::create());
 
     insert("message", "rfc822", MessageRfc822BodyPartFormatter::create());
     insert("message", "*", AnyTypeBodyPartFormatter::create());
