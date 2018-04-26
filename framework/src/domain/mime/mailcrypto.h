@@ -25,19 +25,28 @@
 #include <gpgme++/key.h>
 
 #include <QByteArray>
+#include <QVariant>
 
 #include <functional>
 #include <memory>
 
 namespace MailCrypto {
 
-Expected<GpgME::Error, std::unique_ptr<KMime::Content>>
-processCrypto(std::unique_ptr<KMime::Content> content, const std::vector<GpgME::Key> &signingKeys,
-    const std::vector<GpgME::Key> &encryptionKeys, const GpgME::Key &attachedKey);
+struct Key {
+    GpgME::Key key;
+};
 
-std::vector<GpgME::Key> findKeys(const QStringList &filter, bool findPrivate = false, bool remote = false);
+struct Error {
+    GpgME::Error key;
+};
 
-void importKeys(const std::vector<GpgME::Key> &keys);
+Expected<Error, std::unique_ptr<KMime::Content>>
+processCrypto(std::unique_ptr<KMime::Content> content, const std::vector<Key> &signingKeys,
+    const std::vector<Key> &encryptionKeys, const Key &attachedKey);
+
+std::vector<Key> findKeys(const QStringList &filter, bool findPrivate = false, bool remote = false);
+
+void importKeys(const std::vector<Key> &keys);
 
 struct ImportResult {
     int considered;
@@ -48,3 +57,7 @@ struct ImportResult {
 ImportResult importKey(const QByteArray &key);
 
 }; // namespace MailCrypto
+
+Q_DECLARE_METATYPE(MailCrypto::Key);
+
+QDebug operator<< (QDebug d, const MailCrypto::Key &);

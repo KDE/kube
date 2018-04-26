@@ -6,10 +6,6 @@
 #include <QDir>
 #include <QtWebEngine>
 
-#include <QGpgME/KeyListJob>
-#include <QGpgME/Protocol>
-#include <gpgme++/key.h>
-#include <gpgme++/keylistresult.h>
 
 #include "mailtemplates.h"
 #include "mailcrypto.h"
@@ -22,45 +18,6 @@ static KMime::Content *getSubpart(KMime::Content *msg, const QByteArray &mimeTyp
         }
     }
     return nullptr;
-}
-
-static std::vector< GpgME::Key, std::allocator< GpgME::Key > > getKeys(bool smime = false)
-{
-    QGpgME::KeyListJob *job = nullptr;
-
-    if (smime) {
-        const QGpgME::Protocol *const backend = QGpgME::smime();
-        Q_ASSERT(backend);
-        job = backend->keyListJob(/* remote = */ false);
-    } else {
-        const QGpgME::Protocol *const backend = QGpgME::openpgp();
-        Q_ASSERT(backend);
-        job = backend->keyListJob(/* remote = */ false);
-    }
-    Q_ASSERT(job);
-
-    std::vector< GpgME::Key > keys;
-    GpgME::KeyListResult res = job->exec(QStringList(), /* secretOnly = */ true, keys);
-
-    if (!smime) {
-        Q_ASSERT(keys.size() == 3);
-    }
-
-    Q_ASSERT(!res.error());
-
-    /*
-    qDebug() << "got private keys:" << keys.size();
-
-    for (std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i) {
-        qDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
-        qDebug() << "key numuserIds:" << i->numUserIDs();
-        for (uint k = 0; k < i->numUserIDs(); ++k) {
-            qDebug() << "userIDs:" << i->userID(k).email();
-        }
-    }
-    */
-
-    return keys;
 }
 
 static QByteArray readMailFromFile(const QString &mailFile)
@@ -399,8 +356,7 @@ private slots:
         QString body = "body";
         QList<Attachment> attachments;
 
-        std::vector<GpgME::Key> keys = getKeys();
-
+        auto keys = MailCrypto::findKeys({}, true, false);
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, keys, {}, keys[0]);
 
         QVERIFY(result);
@@ -442,9 +398,7 @@ private slots:
         QString body = "body";
         QList<Attachment> attachments = {{"name", "filename", "mimetype", true, "inlineAttachment"}, {"name", "filename", "mimetype", false, "nonInlineAttachment"}};
 
-        std::vector<GpgME::Key> keys = getKeys();
-
-        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, keys);
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, MailCrypto::findKeys({}, true, false));
 
         QVERIFY(result);
         QCOMPARE(result->subject()->asUnicodeString(), subject);

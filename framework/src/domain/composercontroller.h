@@ -26,7 +26,7 @@
 #include <QStandardItemModel>
 #include <sink/applicationdomaintype.h>
 #include <KMime/Message>
-#include <gpgme++/key.h>
+#include <mime/mailcrypto.h>
 
 #include "completer.h"
 #include "selector.h"
@@ -39,7 +39,6 @@ inline bool operator !=(const KMime::Types::Mailbox &l, const KMime::Types::Mail
 
 Q_DECLARE_METATYPE(KMime::Types::Mailbox);
 
-Q_DECLARE_METATYPE(GpgME::Key);
 
 namespace KMime {
 class Message;
@@ -66,7 +65,7 @@ class ComposerController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(KMime::Message::Ptr, ExistingMessage, existingMessage)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail, ExistingMail, existingMail)
 
-    KUBE_CONTROLLER_PROPERTY(/*std::vector<GpgME::Key>*/QVariant, PersonalKeys, personalKeys)
+    KUBE_CONTROLLER_PROPERTY(/*std::vector<MailCrypto::Key>*/QVariant, PersonalKeys, personalKeys)
     KUBE_CONTROLLER_PROPERTY(bool, FoundPersonalKeys, foundPersonalKeys)
 
     KUBE_CONTROLLER_LISTCONTROLLER(to)
@@ -110,7 +109,7 @@ private:
     void setMessage(const QSharedPointer<KMime::Message> &msg);
     void addAttachmentPart(KMime::Content *partToAttach);
     KMime::Message::Ptr assembleMessage();
-    std::vector<GpgME::Key> getRecipientKeys();
+    std::vector<MailCrypto::Key> getRecipientKeys();
 
     QScopedPointer<Completer> mRecipientCompleter;
     QScopedPointer<Selector> mIdentitySelector;
