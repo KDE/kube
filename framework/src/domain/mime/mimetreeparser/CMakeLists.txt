@@ -40,7 +40,7 @@ set(libmimetreeparser_SRCS
     util.cpp
     )
 
-add_library(kube_otp ${libmimetreeparser_SRCS})
+add_library(kube_otp STATIC ${libmimetreeparser_SRCS})
 
 target_link_libraries(kube_otp
     PUBLIC
@@ -54,7 +54,6 @@ target_link_libraries(kube_otp
     KF5::Codecs
     Qt5::Gui
 )
-install(TARGETS kube_otp DESTINATION ${LIB_INSTALL_DIR})
 
 add_subdirectory(autotests)
 add_subdirectory(tests)
