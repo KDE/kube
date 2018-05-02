@@ -25,6 +25,7 @@
 #include <QDir>
 #include <QProcess>
 #include <QTest>
+#include <QtGlobal>
 
 QByteArray readMailFromFile(const QString &mailFile)
 {
@@ -180,7 +181,7 @@ private:
     void setEnv(const QByteArray &name, const QByteArray &value)
     {
         mModifiedEnv << name;
-        setenv(name, value , 1);
+        qputenv(name, value);
     }
 
     void resetEnv()
