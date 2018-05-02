@@ -8,9 +8,6 @@ include_directories(
 
 include(ECMAddTests)
 
-find_package(Gpgmepp 1.7.1 CONFIG)
-find_package(QGpgme 1.7.1 CONFIG)
-
 add_executable(mimetreeparsertest mimetreeparsertest.cpp)
 add_gpg_crypto_test(mimetreeparsertest mimetreeparsertest)
 target_link_libraries(mimetreeparsertest
