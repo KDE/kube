@@ -174,7 +174,7 @@ private:
     void unsetEnv(const QByteArray &name)
     {
         mModifiedEnv << name;
-        unsetenv(name);
+        qunsetenv(name);
     }
 
     void setEnv(const QByteArray &name, const QByteArray &value)
@@ -187,9 +187,9 @@ private:
     {
         foreach(const auto &i, mModifiedEnv) {
             if (mEnv.contains(i)) {
-                setenv(i, mEnv.value(i).toUtf8(), 1);
+                qputenv(i, mEnv.value(i).toUtf8());
             } else {
-                unsetenv(i);
+                qunsetenv(i);
             }
         }
     }
