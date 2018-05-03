@@ -16,10 +16,12 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#pragma once
 
+#include "kube_export.h"
 #include <QQuickItem>
 
-class KubeImage : public QQuickItem {
+class KUBE_EXPORT KubeImage : public QQuickItem {
     Q_OBJECT
     Q_PROPERTY(QByteArray imageData MEMBER mImageData)
 public:
