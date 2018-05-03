@@ -21,7 +21,6 @@
 #include <csignal>
 #include <iostream>
 #include <cstdlib>
-#include <dlfcn.h>
 #include <ostream>
 #include <sstream>
 #include <thread>
