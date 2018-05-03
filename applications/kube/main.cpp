@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include <QtGlobal>
 #include <signal.h>
 #include <csignal>
 #include <iostream>
