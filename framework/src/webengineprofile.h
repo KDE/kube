@@ -16,10 +16,12 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#pragma once
 
+#include "kube_export.h"
 #include <QQuickWebEngineProfile>
 
-class WebEngineProfile : public QQuickWebEngineProfile
+class KUBE_EXPORT WebEngineProfile : public QQuickWebEngineProfile
 {
     Q_OBJECT
 public:

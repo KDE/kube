@@ -18,7 +18,7 @@
 */
 
 #pragma once
-
+#include "kube_export.h"
 #include <QObject>
 #include <QAbstractItemModel>
 #include <QVariant>
@@ -28,7 +28,7 @@
  * 
  * Assign a model that retrieves the index, set the property your interested in, and propery-bind "value".
  */
-class Retriever : public QObject
+class KUBE_EXPORT Retriever : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel* model READ model WRITE setModel)

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "kube_export.h"
 #include <QSortFilterProxyModel>
 #include <QSharedPointer>
 
@@ -30,7 +31,7 @@ namespace Sink {
 /**
  * A model that mixes addressbooks, contact groups and contacts
  */
-class PeopleModel : public QSortFilterProxyModel
+class KUBE_EXPORT PeopleModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY (QVariant addressbook READ addressbook WRITE setAddressbook)

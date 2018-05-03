@@ -19,7 +19,7 @@
 */
 
 #pragma once
-
+#include "kube_export.h"
 #include <sink/store.h>
 #include <sink/notifier.h>
 
@@ -27,7 +27,7 @@
 #include <QSharedPointer>
 #include <QStringList>
 
-class OutboxModel : public QSortFilterProxyModel
+class KUBE_EXPORT OutboxModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 

@@ -18,7 +18,7 @@
 */
 
 #pragma once
-
+#include "kube_export.h"
 #include <QObject>
 #include <QIdentityProxyModel>
 #include <QSharedPointer>
@@ -28,7 +28,7 @@ namespace Sink {
     class Query;
 }
 
-class AccountsModel : public QIdentityProxyModel
+class KUBE_EXPORT AccountsModel : public QIdentityProxyModel
 {
     Q_OBJECT
 

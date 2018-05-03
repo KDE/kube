@@ -19,7 +19,7 @@
 */
 
 #pragma once
-
+#include "kube_export.h"
 #include <krecursivefilterproxymodel.h>
 #include <QSharedPointer>
 #include <QSet>
@@ -29,7 +29,7 @@ namespace Sink {
     class Query;
 }
 
-class FolderListModel : public KRecursiveFilterProxyModel
+class KUBE_EXPORT FolderListModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 

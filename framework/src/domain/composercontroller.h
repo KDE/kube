@@ -19,7 +19,7 @@
 */
 
 #pragma once
-
+#include "kube_export.h"
 #include <QObject>
 #include <QString>
 #include <QVariant>
@@ -46,7 +46,7 @@ class Message;
 
 class AddresseeModel;
 
-class ComposerController : public Kube::Controller
+class KUBE_EXPORT ComposerController : public Kube::Controller
 {
     Q_OBJECT
 

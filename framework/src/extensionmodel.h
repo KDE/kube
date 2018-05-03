@@ -19,12 +19,13 @@
 
 #pragma once
 
+#include "kube_export.h"
 #include <QSortFilterProxyModel>
 #include <QSharedPointer>
 
 namespace Kube {
 
-class ExtensionModel : public QSortFilterProxyModel
+class KUBE_EXPORT ExtensionModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 

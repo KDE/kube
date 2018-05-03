@@ -18,6 +18,7 @@
 */
 #pragma once
 
+#include "kube_export.h"
 #include <QObject>
 #include <QVariant>
 #include <QAbstractItemModel>
@@ -25,7 +26,7 @@
 
 namespace Kube {
 
-class DomainObjectController : public QObject
+class KUBE_EXPORT DomainObjectController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariant currentObject READ currentObject NOTIFY currentObjectChanged)

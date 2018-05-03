@@ -16,10 +16,12 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#pragma once
 
+#include "kube_export.h"
 #include <QObject>
 
-class StartupCheck : public QObject {
+class KUBE_EXPORT StartupCheck : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool noAccount READ noAccount CONSTANT);
 public:

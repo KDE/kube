@@ -18,8 +18,10 @@
 */
 #pragma once
 
+#include "kube_export.h"
 #include <QObject>
-class ClipboardProxy : public QObject
+
+class KUBE_EXPORT ClipboardProxy : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString text READ dataText WRITE setDataText NOTIFY dataChanged)

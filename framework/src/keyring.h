@@ -16,13 +16,15 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#pragma once
 
+#include "kube_export.h"
 #include <QObject>
 #include <QSet>
 
 namespace Kube {
 
-class Keyring : public QObject {
+class KUBE_EXPORT Keyring : public QObject {
     Q_OBJECT
 public:
     Keyring();

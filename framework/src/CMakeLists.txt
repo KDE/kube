@@ -54,6 +54,11 @@ add_library(kubeframework SHARED
     extensionmodel.cpp
     viewhighlighter.cpp
     )
+generate_export_header(kubeframework BASE_NAME Kube EXPORT_FILE_NAME kube_export.h)
+set_target_properties(kubeframework PROPERTIES
+    ENABLE_EXPORTS 1
+    WINDOWS_EXPORT_ALL_SYMBOLS 1
+)
 target_link_libraries(kubeframework
     sink
     kube_otp

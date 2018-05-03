@@ -20,7 +20,7 @@
 */
 
 #pragma once
-
+#include "kube_export.h"
 #include <sink/applicationdomaintype.h>
 
 #include <QAbstractItemModel>
@@ -76,7 +76,7 @@
 //    |                '--- List of event pointers for that day
 //    '--- Partition / day
 //
-class PeriodDayEventModel : public QAbstractItemModel
+class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
 

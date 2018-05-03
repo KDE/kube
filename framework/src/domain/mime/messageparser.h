@@ -18,7 +18,7 @@
 */
 
 #pragma once
-
+#include "kube_export.h"
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -36,7 +36,7 @@ namespace MimeTreeParser {
     class ObjectTreeParser;
 }
 
-class MessageParser : public QObject
+class KUBE_EXPORT MessageParser : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (QVariant message READ message WRITE setMessage)

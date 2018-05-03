@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 #pragma once
-
+#include "kube_export.h"
 #include <QObject>
 #include <QVariant>
 #include <KAsync/Async>
@@ -69,7 +69,7 @@ private:
     bool mEnabled = false;
 };
 
-class ControllerAction : public ControllerState {
+class KUBE_EXPORT ControllerAction : public ControllerState {
     Q_OBJECT
 public:
     ControllerAction();

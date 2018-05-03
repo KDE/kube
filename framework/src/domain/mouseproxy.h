@@ -16,9 +16,10 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#include "kube_export.h"
 #include <QQuickItem>
 
-class MouseProxy : public QQuickItem
+class KUBE_EXPORT MouseProxy : public QQuickItem
 {
     Q_OBJECT
 

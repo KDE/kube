@@ -18,7 +18,7 @@
 
 
 #pragma once
-
+#include "kube_export.h"
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -26,7 +26,7 @@
 
 #include "controller.h"
 
-class ContactController : public Kube::Controller
+class KUBE_EXPORT ContactController : public Kube::Controller
 {
     Q_OBJECT
 

@@ -16,13 +16,15 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#pragma once
 
+#include "kube_export.h"
 #include <QObject>
 #include <QSharedPointer>
 
 class QQuickTextDocument;
 
-class ViewHighlighter : public QObject {
+class KUBE_EXPORT ViewHighlighter : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QString searchString WRITE setSearchString)

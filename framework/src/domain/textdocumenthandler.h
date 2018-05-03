@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 #pragma once
-
+#include "kube_export.h"
 #include <QObject>
 #include <QFont>
 #include <QTextCursor>
@@ -25,7 +25,7 @@
 class QTextDocument;
 class QQuickTextDocument;
 
-class TextDocumentHandler : public QObject
+class KUBE_EXPORT TextDocumentHandler : public QObject
 {
     Q_OBJECT
 

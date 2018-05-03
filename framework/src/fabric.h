@@ -18,6 +18,7 @@
 */
 #pragma once
 
+#include "kube_export.h"
 #include <QObject>
 #include <QVariant>
 #include <QVector>
@@ -32,7 +33,7 @@ namespace Kube {
  */
 namespace Fabric {
 
-class Fabric : public QObject {
+class KUBE_EXPORT Fabric : public QObject {
     Q_OBJECT
 public:
     Q_INVOKABLE void postMessage(const QString &id, const QVariantMap &);
@@ -48,7 +49,7 @@ public:
  *   }
  * }
  */
-class Listener : public QObject
+class KUBE_EXPORT Listener : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString filter MEMBER mFilter)

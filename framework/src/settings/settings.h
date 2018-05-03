@@ -18,6 +18,7 @@
 */
 #pragma once
 
+#include "kube_export.h"
 #include <QObject>
 #include <QByteArray>
 #include <QSettings>
@@ -25,7 +26,7 @@
 
 namespace Kube {
 
-class Settings : public QObject {
+class KUBE_EXPORT Settings : public QObject {
     Q_OBJECT
     Q_PROPERTY(QByteArray identifier READ identifier WRITE setIdentifier)
 public:

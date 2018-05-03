@@ -19,13 +19,14 @@
 
 #pragma once
 
+#include "kube_export.h"
 #include <QObject>
 #include <QVariant>
 
 /**
  * A factory to instantiate account-plugins.
  */
-class AccountFactory : public QObject
+class KUBE_EXPORT AccountFactory : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString accountId MEMBER mAccountId WRITE setAccountId);

@@ -19,14 +19,14 @@
 */
 
 #pragma once
-
+#include "kube_export.h"
 #include <sink/store.h>
 
 #include <QSortFilterProxyModel>
 #include <QSharedPointer>
 #include <QStringList>
 
-class MailListModel : public QSortFilterProxyModel
+class KUBE_EXPORT MailListModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
