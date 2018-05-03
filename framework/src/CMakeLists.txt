@@ -9,6 +9,8 @@ find_package(Gpgmepp CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(KF5Contacts CONFIG REQUIRED)
 
+include(GenerateExportHeader)
+
 set(CMAKE_CXX_VISIBILITY_PRESET default)
 set(CMAKE_CXX_STANDARD_REQUIRED 14)
 
