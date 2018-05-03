@@ -18,10 +18,11 @@
 */
 #pragma once
 
+#include "kube_export.h"
 #include <QObject>
 #include <QValidator>
 
-class AccountSettings : public QObject
+class KUBE_EXPORT AccountSettings : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
