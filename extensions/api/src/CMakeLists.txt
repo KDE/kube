@@ -1,5 +1,5 @@
-add_definitions("-Wall -std=c++14 -g")
 set(CMAKE_CXX_VISIBILITY_PRESET default)
+set(CMAKE_CXX_STANDARD_REQUIRED 14)
 
 find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine Gui)
 find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
