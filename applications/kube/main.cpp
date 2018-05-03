@@ -18,17 +18,23 @@
 */
 
 #include <signal.h>
-#include <execinfo.h>
 #include <csignal>
 #include <iostream>
 #include <cstdlib>
-#include <cxxabi.h>
 #include <dlfcn.h>
 #include <ostream>
 #include <sstream>
 #include <thread>
 #include <chrono>
+#ifndef Q_OS_WIN
+#include <execinfo.h>
 #include <unistd.h>
+#include <cxxabi.h>
+#include <dlfcn.h>
+#else
+#include <io.h>
+#include <process.h>
+#endif
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -50,6 +56,7 @@
 //Print a demangled stacktrace
 void printStacktrace()
 {
+#ifndef Q_OS_WIN
     int skip = 1;
     void *callstack[128];
     const int nMaxFrames = sizeof(callstack) / sizeof(callstack[0]);
@@ -84,6 +91,7 @@ void printStacktrace()
         trace_buf << "[truncated]\n";
     }
     std::cerr << trace_buf.str();
+#endif
 }
 
 static int sCounter = 0;
