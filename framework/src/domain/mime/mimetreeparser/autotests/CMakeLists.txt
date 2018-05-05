@@ -15,7 +15,7 @@ macro(add_mimetreeparser_unittest _source)
     ecm_add_test(${_source} util.cpp setupenv.cpp
         TEST_NAME ${_name}
         NAME_PREFIX "mimetreeparser-"
-        LINK_LIBRARIES kube_otp Qt5::Test KF5::Mime Gpgmepp
+        LINK_LIBRARIES kube_otp Qt5::Test KF5::Mime gpgme
     )
 endmacro ()
 
@@ -24,7 +24,7 @@ macro(add_mimetreeparser_class_unittest _source _additionalSource)
     ecm_add_test(${_source} ${_additionalSource}
         TEST_NAME ${_name}
         NAME_PREFIX "mimetreeparser-"
-        LINK_LIBRARIES kube_otp Qt5::Test KF5::Mime Gpgmepp
+        LINK_LIBRARIES kube_otp Qt5::Test KF5::Mime gpgme
     )
 endmacro ()
 
@@ -37,7 +37,7 @@ macro(add_mimetreeparser_crypto_unittest _source)
         kube_otp
         Qt5::Test
         KF5::Mime
-        Gpgmepp
+        gpgme
     )
     add_gpg_crypto_test(${_name} mimetreeparser-${_name})
 endmacro ()

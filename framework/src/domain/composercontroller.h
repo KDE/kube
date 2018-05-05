@@ -65,7 +65,7 @@ class KUBE_EXPORT ComposerController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(KMime::Message::Ptr, ExistingMessage, existingMessage)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail, ExistingMail, existingMail)
 
-    KUBE_CONTROLLER_PROPERTY(/*std::vector<MailCrypto::Key>*/QVariant, PersonalKeys, personalKeys)
+    KUBE_CONTROLLER_PROPERTY(/*std::vector<Crypto::Key>*/QVariant, PersonalKeys, personalKeys)
     KUBE_CONTROLLER_PROPERTY(bool, FoundPersonalKeys, foundPersonalKeys)
 
     KUBE_CONTROLLER_LISTCONTROLLER(to)
@@ -109,7 +109,7 @@ private:
     void setMessage(const QSharedPointer<KMime::Message> &msg);
     void addAttachmentPart(KMime::Content *partToAttach);
     KMime::Message::Ptr assembleMessage();
-    std::vector<MailCrypto::Key> getRecipientKeys();
+    std::vector<Crypto::Key> getRecipientKeys();
 
     QScopedPointer<Completer> mRecipientCompleter;
     QScopedPointer<Selector> mIdentitySelector;

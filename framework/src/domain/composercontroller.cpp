@@ -36,7 +36,7 @@
 #include "mime/mailcrypto.h"
 #include "async.h"
 
-std::vector<MailCrypto::Key> &operator+=(std::vector<MailCrypto::Key> &list, const std::vector<MailCrypto::Key> &add)
+std::vector<Crypto::Key> &operator+=(std::vector<Crypto::Key> &list, const std::vector<Crypto::Key> &add)
 {
     list.insert(std::end(list), std::begin(add), std::end(add));
     return list;
@@ -133,11 +133,11 @@ public:
         mb.fromUnicodeString(addressee);
 
         SinkLog() << "Searching key for: " << mb.address();
-        asyncRun<std::vector<MailCrypto::Key>>(this,
+        asyncRun<std::vector<Crypto::Key>>(this,
             [mb] {
-                return MailCrypto::findKeys(QStringList{} << mb.address(), false, false);
+                return Crypto::findKeys(QStringList{} << mb.address(), false, false);
             },
-            [this, addressee, id](const std::vector<MailCrypto::Key> &keys) {
+            [this, addressee, id](const std::vector<Crypto::Key> &keys) {
                 if (!keys.empty()) {
                     if (keys.size() > 1) {
                         SinkWarning() << "Found more than one key, encrypting to all of them.";
@@ -227,10 +227,10 @@ void ComposerController::findPersonalKey()
 {
     auto identity = getIdentity();
     SinkLog() << "Looking for personal key for: " << identity.address();
-    asyncRun<std::vector<MailCrypto::Key>>(this, [=] {
-            return MailCrypto::findKeys(QStringList{} << identity.address(), true);
+    asyncRun<std::vector<Crypto::Key>>(this, [=] {
+            return Crypto::findKeys(QStringList{} << identity.address(), true);
         },
-        [this](const std::vector<MailCrypto::Key> &keys) {
+        [this](const std::vector<Crypto::Key> &keys) {
             if (keys.empty()) {
                 SinkWarning() << "Failed to find a personal key.";
             } else if (keys.size() > 1) {
@@ -419,23 +419,23 @@ void ComposerController::recordForAutocompletion(const QByteArray &addrSpec, con
     }
 }
 
-std::vector<MailCrypto::Key> ComposerController::getRecipientKeys()
+std::vector<Crypto::Key> ComposerController::getRecipientKeys()
 {
-    std::vector<MailCrypto::Key> keys;
+    std::vector<Crypto::Key> keys;
     {
-        const auto list = toController()->getList<std::vector<MailCrypto::Key>>("key");
+        const auto list = toController()->getList<std::vector<Crypto::Key>>("key");
         for (const auto &l: list) {
             keys.insert(std::end(keys), std::begin(l), std::end(l));
         }
     }
     {
-        const auto list = ccController()->getList<std::vector<MailCrypto::Key>>("key");
+        const auto list = ccController()->getList<std::vector<Crypto::Key>>("key");
         for (const auto &l: list) {
             keys.insert(std::end(keys), std::begin(l), std::end(l));
         }
     }
     {
-        const auto list = bccController()->getList<std::vector<MailCrypto::Key>>("key");
+        const auto list = bccController()->getList<std::vector<Crypto::Key>>("key");
         for (const auto &l: list) {
             keys.insert(std::end(keys), std::begin(l), std::end(l));
         }
@@ -463,17 +463,17 @@ KMime::Message::Ptr ComposerController::assembleMessage()
         };
     });
 
-    MailCrypto::Key attachedKey;
-    std::vector<MailCrypto::Key> signingKeys;
+    Crypto::Key attachedKey;
+    std::vector<Crypto::Key> signingKeys;
     if (getSign()) {
-        signingKeys = getPersonalKeys().value<std::vector<MailCrypto::Key>>();
+        signingKeys = getPersonalKeys().value<std::vector<Crypto::Key>>();
         Q_ASSERT(!signingKeys.empty());
         attachedKey = signingKeys[0];
     }
-    std::vector<MailCrypto::Key> encryptionKeys;
+    std::vector<Crypto::Key> encryptionKeys;
     if (getEncrypt()) {
         //Encrypt to self so we can read the sent message
-        auto personalKeys = getPersonalKeys().value<std::vector<MailCrypto::Key>>();
+        auto personalKeys = getPersonalKeys().value<std::vector<Crypto::Key>>();
 
         attachedKey = personalKeys[0];
 

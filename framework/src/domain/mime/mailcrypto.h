@@ -22,42 +22,19 @@
 #include "framework/src/errors.h"
 
 #include <KMime/Message>
-#include <gpgme++/key.h>
 
 #include <QByteArray>
 #include <QVariant>
 
 #include <functional>
 #include <memory>
+#include "crypto.h"
 
 namespace MailCrypto {
 
-struct Key {
-    GpgME::Key key;
-};
-
-struct Error {
-    GpgME::Error key;
-};
-
-Expected<Error, std::unique_ptr<KMime::Content>>
-processCrypto(std::unique_ptr<KMime::Content> content, const std::vector<Key> &signingKeys,
-    const std::vector<Key> &encryptionKeys, const Key &attachedKey);
-
-std::vector<Key> findKeys(const QStringList &filter, bool findPrivate = false, bool remote = false);
-
-void importKeys(const std::vector<Key> &keys);
-
-struct ImportResult {
-    int considered;
-    int imported;
-    int unchanged;
-};
-
-ImportResult importKey(const QByteArray &key);
+Expected<Crypto::Error, std::unique_ptr<KMime::Content>>
+processCrypto(std::unique_ptr<KMime::Content> content, const std::vector<Crypto::Key> &signingKeys,
+    const std::vector<Crypto::Key> &encryptionKeys, const Crypto::Key &attachedKey);
 
 }; // namespace MailCrypto
 
-Q_DECLARE_METATYPE(MailCrypto::Key);
-
-QDebug operator<< (QDebug d, const MailCrypto::Key &);

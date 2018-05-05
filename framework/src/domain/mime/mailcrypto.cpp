@@ -22,22 +22,7 @@
 #include "mailcrypto.h"
 
 #include "framework/src/errors.h"
-
-#include <QGpgME/DataProvider>
-#include <QGpgME/EncryptJob>
-#include <QGpgME/ExportJob>
-#include <QGpgME/ImportFromKeyserverJob>
-#include <QGpgME/ImportJob>
-#include <QGpgME/Protocol>
-#include <QGpgME/SignEncryptJob>
-#include <QGpgME/SignJob>
-
-#include <gpgme++/data.h>
-#include <gpgme++/encryptionresult.h>
-#include <gpgme++/global.h>
-#include <gpgme++/importresult.h>
-#include <gpgme++/keylistresult.h>
-#include <gpgme++/signingresult.h>
+#include "crypto.h"
 
 #include <QDebug>
 
@@ -45,22 +30,8 @@
 #include <utility>
 
 using namespace MailCrypto;
+using namespace Crypto;
 
-QDebug operator<< (QDebug d, const MailCrypto::Key &key)
-{
-    d << key.key.primaryFingerprint();
-    return d;
-}
-
-static std::vector<GpgME::Key> toGpgME(const std::vector<Key> keys)
-{
-    std::vector<GpgME::Key> list;
-    std::transform(keys.begin(), keys.end(), std::back_inserter(list), [] (const Key &key) { return key.key; });
-    return list;
-}
-
-// replace simple LFs by CRLFs for all MIME supporting CryptPlugs
-// according to RfC 2633, 3.1.1 Canonicalization
 static QByteArray canonicalizeContent(KMime::Content *content)
 {
     // if (d->format & Kleo::InlineOpenPGPFormat) {
@@ -125,29 +96,6 @@ static QByteArray canonicalizeContent(KMime::Content *content)
 }
 
 /**
- * Get the given `key` in the armor format.
- */
-Expected<Error, QByteArray> exportPublicKey(const Key &key)
-{
-    // Not using the Qt API because it apparently blocks (the `result` signal is never
-    // triggered)
-    std::unique_ptr<GpgME::Context> ctx(GpgME::Context::createForProtocol(GpgME::OpenPGP));
-    ctx->setArmor(true);
-
-    QGpgME::QByteArrayDataProvider dp;
-    GpgME::Data data(&dp);
-
-    qDebug() << "Exporting public key:" << key.key.shortKeyID();
-    auto error = ctx->exportPublicKeys(key.key.keyID(), data);
-
-    if (error.code()) {
-        return makeUnexpected(Error{error});
-    }
-
-    return dp.data();
-}
-
-/**
  * Create an Email with `msg` as a body and `key` as an attachment.
  *
  * Will create the given structure:
@@ -178,7 +126,7 @@ appendPublicKey(std::unique_ptr<KMime::Content> msg, const Key &key)
     {
         keyAttachment->contentType()->setMimeType("application/pgp-keys");
         keyAttachment->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
-        keyAttachment->contentDisposition()->setFilename(QString("0x") + key.key.shortKeyID() + ".asc");
+        keyAttachment->contentDisposition()->setFilename(QString("0x") + key.shortKeyId + ".asc");
         keyAttachment->setBody(publicKeyData);
     }
 
@@ -190,44 +138,6 @@ appendPublicKey(std::unique_ptr<KMime::Content> msg, const Key &key)
     result->assemble();
 
     return result;
-}
-
-Expected<Error, QByteArray> encrypt(const QByteArray &content, const std::vector<Key> &encryptionKeys)
-{
-    QByteArray resultData;
-
-    const QGpgME::Protocol *const proto = QGpgME::openpgp();
-    std::unique_ptr<QGpgME::EncryptJob> job(proto->encryptJob(/* armor = */ true));
-    const auto result = job->exec(toGpgME(encryptionKeys), content, /* alwaysTrust = */ true, resultData);
-
-    if (result.error().code()) {
-        qWarning() << "Encryption failed:" << result.error().asString();
-        return makeUnexpected(Error{result.error()});
-    }
-
-    return resultData;
-}
-
-Expected<Error, QByteArray> signAndEncrypt(const QByteArray &content,
-    const std::vector<Key> &signingKeys, const std::vector<Key> &encryptionKeys)
-{
-    QByteArray resultData;
-
-    const QGpgME::Protocol *const proto = QGpgME::openpgp();
-    std::unique_ptr<QGpgME::SignEncryptJob> job(proto->signEncryptJob(/* armor = */ true));
-    const auto result = job->exec(toGpgME(signingKeys), toGpgME(encryptionKeys), content, /* alwaysTrust = */ true, resultData);
-
-    if (result.first.error().code()) {
-        qWarning() << "Signing failed:" << result.first.error().asString();
-        return makeUnexpected(Error{result.first.error()});
-    }
-
-    if (result.second.error().code()) {
-        qWarning() << "Encryption failed:" << result.second.error().asString();
-        return makeUnexpected(Error{result.second.error()});
-    }
-
-    return resultData;
 }
 
 /**
@@ -295,11 +205,7 @@ Expected<Error, std::unique_ptr<KMime::Content>>
 createEncryptedEmail(KMime::Content *content, const std::vector<Key> &encryptionKeys,
     const Key &attachedKey, const std::vector<Key> &signingKeys = {})
 {
-    auto contentToEncrypt = canonicalizeContent(content);
-
-    auto encryptionResult = signingKeys.empty() ?
-                                encrypt(contentToEncrypt, encryptionKeys) :
-                                signAndEncrypt(contentToEncrypt, signingKeys, encryptionKeys);
+    auto encryptionResult = signAndEncrypt(canonicalizeContent(content), encryptionKeys, signingKeys);
 
     if (!encryptionResult) {
         return makeUnexpected(Error{encryptionResult.error()});
@@ -314,33 +220,6 @@ createEncryptedEmail(KMime::Content *content, const std::vector<Key> &encryption
     }
 
     return publicKeyAppendResult;
-}
-
-/**
- * Sign the given content and returns the signing data and the algorithm used
- * for integrity check in the "pgp-<algorithm>" format.
- */
-Expected<Error, std::pair<QByteArray, QString>>
-sign(const QByteArray &content, const std::vector<Key> &signingKeys)
-{
-    QByteArray resultData;
-
-    const QGpgME::Protocol *const proto = QGpgME::openpgp();
-    std::unique_ptr<QGpgME::SignJob> job(proto->signJob(/* armor = */ true));
-    const auto result = job->exec(toGpgME(signingKeys), content, GpgME::Detached, resultData);
-
-    if (result.error().code()) {
-        qWarning() << "Signing failed:" << result.error().asString();
-        return makeUnexpected(Error{result.error()});
-    }
-
-    auto algo = result.createdSignature(0).hashAlgorithmAsString();
-    // RFC 3156 Section 5:
-    // Hash-symbols are constructed [...] by converting the text name to lower
-    // case and prefixing it with the four characters "pgp-".
-    auto micAlg = (QString("pgp-") + algo).toLower();
-
-    return std::pair<QByteArray, QString>{resultData, micAlg};
 }
 
 /**
@@ -438,66 +317,3 @@ MailCrypto::processCrypto(std::unique_ptr<KMime::Content> content, const std::ve
     }
 }
 
-void MailCrypto::importKeys(const std::vector<Key> &keys)
-{
-    const QGpgME::Protocol *const backend = QGpgME::openpgp();
-    Q_ASSERT(backend);
-    auto *job = backend->importFromKeyserverJob();
-    job->exec(toGpgME(keys));
-}
-
-MailCrypto::ImportResult MailCrypto::importKey(const QByteArray &pkey)
-{
-    const auto *proto = QGpgME::openpgp();
-    std::unique_ptr<QGpgME::ImportJob> job(proto->importJob());
-    auto result = job->exec(pkey);
-    return {result.numConsidered(), result.numImported(), result.numUnchanged()};
-}
-
-static GpgME::KeyListResult listKeys(const QStringList &patterns, bool secretOnly, int keyListMode, std::vector<Key> &keys)
-{
-    QByteArrayList list;
-    std::transform(patterns.constBegin(), patterns.constEnd(), std::back_inserter(list), [] (const QString &s) { return s.toUtf8(); });
-    std::vector<char const *> pattern;
-    std::transform(list.constBegin(), list.constEnd(), std::back_inserter(pattern), [] (const QByteArray &s) { return s.constData(); });
-    pattern.push_back(0);
-
-    GpgME::initializeLibrary();
-    auto ctx = QSharedPointer<GpgME::Context>{GpgME::Context::createForProtocol(GpgME::OpenPGP)};
-    ctx->setKeyListMode(keyListMode);
-    if (const GpgME::Error err = ctx->startKeyListing(pattern.data(), secretOnly)) {
-        return GpgME::KeyListResult(0, err);
-    }
-
-    GpgME::Error err;
-    do {
-        keys.push_back( Key{ctx->nextKey(err)});
-    } while ( !err );
-
-    keys.pop_back();
-
-    const GpgME::KeyListResult result = ctx->endKeyListing();
-    ctx->cancelPendingOperation();
-    return result;
-}
-
-std::vector<Key> MailCrypto::findKeys(const QStringList &filter, bool findPrivate, bool remote)
-{
-    std::vector<Key> keys;
-    GpgME::KeyListResult res = listKeys(filter, findPrivate, remote ? GpgME::Extern : GpgME::Local, keys);
-    if (res.error()) {
-        qWarning() << "Failed to lookup keys: " << res.error().asString();
-        return {};
-    }
-    qWarning() << "got keys:" << keys.size();
-
-    for (auto i = keys.begin(); i != keys.end(); ++i) {
-        qWarning() << "key isnull:" << i->key.isNull() << "isexpired:" << i->key.isExpired();
-        qWarning() << "key numuserIds:" << i->key.numUserIDs();
-        for (uint k = 0; k < i->key.numUserIDs(); ++k) {
-            qWarning() << "userIDs:" << i->key.userID(k).email();
-        }
-    }
-
-    return keys;
-}

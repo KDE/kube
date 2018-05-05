@@ -356,7 +356,7 @@ private slots:
         QString body = "body";
         QList<Attachment> attachments;
 
-        auto keys = MailCrypto::findKeys({}, true, false);
+        auto keys = Crypto::findKeys({}, true, false);
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, keys, {}, keys[0]);
 
         QVERIFY(result);
@@ -398,7 +398,7 @@ private slots:
         QString body = "body";
         QList<Attachment> attachments = {{"name", "filename", "mimetype", true, "inlineAttachment"}, {"name", "filename", "mimetype", false, "nonInlineAttachment"}};
 
-        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, MailCrypto::findKeys({}, true, false));
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, Crypto::findKeys({}, true, false));
 
         QVERIFY(result);
         QCOMPARE(result->subject()->asUnicodeString(), subject);

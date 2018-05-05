@@ -37,7 +37,6 @@ public:
     QByteArray keyId;
     bool keyIsTrusted = false;
     QString status;  // to be used for unknown plug-ins
-    int status_code; // to be used for i18n of OpenPGP and S/MIME CryptPlugs
     QString errorText;
     QDateTime creationTime;
     QString decryptionError;

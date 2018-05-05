@@ -2,9 +2,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET default)
 
 find_package(Qt5 COMPONENTS REQUIRED Core Gui)
 find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
-find_package(QGpgme CONFIG REQUIRED)
-find_package(Gpgmepp CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
+find_package(Gpgme REQUIRED)
 
 # target_include_directories does not handle empty include paths
 include_directories(${GPGME_INCLUDES})
@@ -49,8 +48,8 @@ target_link_libraries(kube_otp
 
 target_link_libraries(kube_otp
     PRIVATE
-    QGpgme
-    Gpgmepp
+    gpgme
+    mailcrypto
     KF5::Codecs
     Qt5::Gui
 )

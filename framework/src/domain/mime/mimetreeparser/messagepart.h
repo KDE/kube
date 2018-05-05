@@ -23,6 +23,7 @@
 #include "util.h"
 #include "enums.h"
 #include "partmetadata.h"
+#include <crypto.h>
 
 #include <KMime/Message>
 
@@ -31,13 +32,6 @@
 
 class QTextCodec;
 class PartPrivate;
-
-namespace GpgME
-{
-class ImportResult;
-class VerificationResult;
-class Signature;
-}
 
 namespace KMime
 {
@@ -55,11 +49,10 @@ class MultiPartAlternativeBodyPartFormatter;
 class SignedMessagePart;
 class EncryptedMessagePart;
 
-enum CryptoProtocol {
-    UnknownProtocol,
-    OpenPGP,
-    CMS
-};
+using Crypto::CryptoProtocol;
+using Crypto::CryptoProtocol::CMS;
+using Crypto::CryptoProtocol::OpenPGP;
+using Crypto::CryptoProtocol::UnknownProtocol;
 
 class MessagePart : public QObject
 {
@@ -366,8 +359,8 @@ public:
     QString htmlContent() const Q_DECL_OVERRIDE;
 
 private:
-    void sigStatusToMetaData(const GpgME::Signature &signature);
-    void setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText);
+    void sigStatusToMetaData(const Crypto::Signature &signature);
+    void setVerificationResult(const Crypto::VerificationResult &result, bool parseText, const QByteArray &plainText);
 
 protected:
     CryptoProtocol mProtocol;

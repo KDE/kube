@@ -15,12 +15,11 @@ target_link_libraries(mimetreeparsertest
     Qt5::Core
     Qt5::Test
     KF5::Mime
-    Gpgmepp
-    QGpgme
+    gpgme
 )
 
 ecm_add_test(gpgerrortest.cpp
     TEST_NAME "gpgerrortest"
     NAME_PREFIX "mimetreeparser-"
-    LINK_LIBRARIES Qt5::Core Qt5::Test kube_otp Gpgmepp QGpgme
+    LINK_LIBRARIES Qt5::Core Qt5::Test kube_otp gpgme
 )

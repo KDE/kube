@@ -4,8 +4,7 @@ find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
 find_package(KF5CalendarCore CONFIG REQUIRED)
 find_package(Sink 0.6.0 CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
-find_package(QGpgme CONFIG REQUIRED)
-find_package(Gpgmepp CONFIG REQUIRED)
+find_package(Gpgme REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(KF5Contacts CONFIG REQUIRED)
 
@@ -73,8 +72,7 @@ target_link_libraries(kubeframework
     KF5::Codecs
     KF5::Contacts
     KAsync
-    QGpgme
-    Gpgmepp
+    gpgme
 )
 install(TARGETS kubeframework DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

@@ -219,7 +219,7 @@ bool AttachmentModel::importPublicKey(const QModelIndex &index)
     const auto part = static_cast<MimeTreeParser::MessagePart *>(index.internalPointer());
     Q_ASSERT(part);
     auto pkey = part->node()->decodedContent();
-    auto result = MailCrypto::importKey(pkey);
+    auto result = Crypto::importKey(pkey);
 
     bool success = true;
     QString message;

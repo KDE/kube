@@ -27,102 +27,12 @@
 
 #include <KMime/Content>
 
-#include <QGpgME/DN>
-#include <QGpgME/DataProvider>
-
-#include <gpgme++/context.h>
-#include <gpgme++/data.h>
-#include <gpgme++/verificationresult.h>
-#include <gpgme++/key.h>
-#include <gpgme++/keylistresult.h>
-#include <gpgme++/decryptionresult.h>
-#include <gpgme++/importresult.h>
-#include <gpgme.h>
-
+#include <crypto.h>
 
 #include <QTextCodec>
-#include <sstream>
 
 using namespace MimeTreeParser;
-
-static GpgME::Data fromBA(const QByteArray &ba)
-{
-    return {ba.data(), static_cast<size_t>(ba.size()), false};
-}
-
-
-static GpgME::Protocol toGpgMe(CryptoProtocol p)
-{
-    switch (p) {
-        case UnknownProtocol:
-            return GpgME::UnknownProtocol;
-        case CMS:
-            return GpgME::CMS;
-        case OpenPGP:
-            return GpgME::OpenPGP;
-    }
-    return GpgME::UnknownProtocol;
-}
-
-static QSharedPointer<GpgME::Context> gpgContext(CryptoProtocol protocol)
-{
-    GpgME::initializeLibrary();
-    auto error = GpgME::checkEngine(toGpgMe(protocol));
-    if (error) {
-        qWarning() << "Engine check failed: " << error.asString();
-    }
-    auto ctx = QSharedPointer<GpgME::Context>(GpgME::Context::createForProtocol(toGpgMe(protocol)));
-    Q_ASSERT(ctx);
-    return ctx;
-}
-
-static GpgME::VerificationResult verifyDetachedSignature(CryptoProtocol protocol, const QByteArray &signature, const QByteArray &text)
-{
-    return gpgContext(protocol)->verifyDetachedSignature(fromBA(signature), fromBA(text));
-}
-
-static GpgME::VerificationResult verifyOpaqueSignature(CryptoProtocol protocol, const QByteArray &signature, QByteArray &outdata)
-{
-    QGpgME::QByteArrayDataProvider out;
-    GpgME::Data wrapper(&out);
-    const auto result = gpgContext(protocol)->verifyOpaqueSignature(fromBA(signature), wrapper);
-    outdata = out.data();
-    return result;
-}
-
-
-static std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> decryptAndVerify(CryptoProtocol protocol, const QByteArray &ciphertext, QByteArray &outdata)
-{
-    QGpgME::QByteArrayDataProvider out;
-    GpgME::Data wrapper(&out);
-    const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> res = gpgContext(protocol)->decryptAndVerify(fromBA(ciphertext), wrapper);
-    outdata = out.data();
-    return res;
-}
-
-static void importKeys(CryptoProtocol protocol, const QByteArray &certData)
-{
-    gpgContext(protocol)->importKeys(fromBA(certData));
-}
-
-static GpgME::KeyListResult listKeys(CryptoProtocol protocol, const char *pattern, bool secretOnly, std::vector<GpgME::Key> &keys) {
-    auto ctx = gpgContext(protocol);
-    if (const GpgME::Error err = ctx->startKeyListing(pattern, secretOnly)) {
-        return GpgME::KeyListResult( 0, err );
-    }
-
-    GpgME::Error err;
-    do {
-        keys.push_back( ctx->nextKey(err));
-    } while ( !err );
-
-    keys.pop_back();
-
-    const GpgME::KeyListResult result = ctx->endKeyListing();
-    ctx->cancelPendingOperation();
-    return result;
-}
-
+using namespace Crypto;
 
 //------MessagePart-----------------------
 MessagePart::MessagePart(ObjectTreeParser *otp, const QString &text, KMime::Content *node)
@@ -771,10 +681,7 @@ SignedMessagePart::SignedMessagePart(ObjectTreeParser *otp,
 {
     mMetaData.isSigned = true;
     mMetaData.isGoodSignature = false;
-    //FIXME
-    // mMetaData.keyTrust = GpgME::Signature::Unknown;
     mMetaData.status = tr("Wrong Crypto Plug-In.");
-    mMetaData.status_code = GPGME_SIG_STAT_NONE;
 }
 
 SignedMessagePart::~SignedMessagePart()
@@ -792,99 +699,65 @@ bool SignedMessagePart::isSigned() const
     return mMetaData.isSigned;
 }
 
-static int signatureToStatus(const GpgME::Signature &sig)
+
+static QString prettifyDN(const char *uid)
 {
-    switch (sig.status().code()) {
-    case GPG_ERR_NO_ERROR:
-        return GPGME_SIG_STAT_GOOD;
-    case GPG_ERR_BAD_SIGNATURE:
-        return GPGME_SIG_STAT_BAD;
-    case GPG_ERR_NO_PUBKEY:
-        return GPGME_SIG_STAT_NOKEY;
-    case GPG_ERR_NO_DATA:
-        return GPGME_SIG_STAT_NOSIG;
-    case GPG_ERR_SIG_EXPIRED:
-        return GPGME_SIG_STAT_GOOD_EXP;
-    case GPG_ERR_KEY_EXPIRED:
-        return GPGME_SIG_STAT_GOOD_EXPKEY;
-    default:
-        return GPGME_SIG_STAT_ERROR;
-    }
+    // We used to use QGpgME::DN::prettyDN here. But I'm not sure what we actually need it for.
+    return QString::fromUtf8(uid);
 }
 
-QString prettifyDN(const char *uid)
+void SignedMessagePart::sigStatusToMetaData(const Signature &signature)
 {
-    return QGpgME::DN(uid).prettyDN();
-}
-
-void SignedMessagePart::sigStatusToMetaData(const GpgME::Signature &signature)
-{
-    GpgME::Key key;
-    mMetaData.status_code = signatureToStatus(signature);
-    mMetaData.isGoodSignature = mMetaData.status_code & GPGME_SIG_STAT_GOOD;
+    mMetaData.isGoodSignature = signature.status & GPG_ERR_NO_ERROR;
     // save extended signature status flags
-    auto summary = signature.summary();
-    mMetaData.keyMissing = summary & GpgME::Signature::KeyMissing;
-    mMetaData.keyExpired = summary & GpgME::Signature::KeyExpired;
-    mMetaData.keyRevoked = summary & GpgME::Signature::KeyRevoked;
-    mMetaData.sigExpired = summary & GpgME::Signature::SigExpired;
-    mMetaData.crlMissing = summary & GpgME::Signature::CrlMissing;
-    mMetaData.crlTooOld = summary & GpgME::Signature::CrlTooOld;
+    auto summary = signature.summary;
+    mMetaData.keyMissing = summary & GPGME_SIGSUM_KEY_MISSING;
+    mMetaData.keyExpired = summary & GPGME_SIGSUM_KEY_EXPIRED;
+    mMetaData.keyRevoked = summary & GPGME_SIGSUM_KEY_REVOKED;
+    mMetaData.sigExpired = summary & GPGME_SIGSUM_SIG_EXPIRED;
+    mMetaData.crlMissing = summary & GPGME_SIGSUM_CRL_MISSING;
+    mMetaData.crlTooOld = summary & GPGME_SIGSUM_CRL_TOO_OLD;
 
-    if (mMetaData.isGoodSignature && !key.keyID()) {
+    Key key;
+    if (mMetaData.isGoodSignature) {
         // Search for the key by its fingerprint so that we can check for trust etc.
-        std::vector<GpgME::Key> found_keys;
-        auto res = listKeys(mProtocol, signature.fingerprint(), false, found_keys);
-        if (res.error()) {
-            qCDebug(MIMETREEPARSER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
-        }
-        if (found_keys.size() > 1) {
+        const auto keys =  findKeys({signature.fingerprint});
+        if (keys.size() > 1) {
             // Should not happen
-            qCDebug(MIMETREEPARSER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
+            qCDebug(MIMETREEPARSER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint;
         }
-        if (found_keys.empty()) {
+        if (keys.empty()) {
             // Should not happen at this point
-            qCWarning(MIMETREEPARSER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
+            qCWarning(MIMETREEPARSER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint;
         } else {
-            key = found_keys[0];
+            key = keys[0];
         }
     }
 
-    if (key.keyID()) {
-        mMetaData.keyId = key.keyID();
-    }
+    mMetaData.keyId = key.keyId;
     if (mMetaData.keyId.isEmpty()) {
-        mMetaData.keyId = signature.fingerprint();
+        mMetaData.keyId = signature.fingerprint;
     }
-    auto keyTrust = signature.validity();
-    mMetaData.keyIsTrusted = keyTrust & GpgME::Signature::Full || keyTrust & GpgME::Signature::Ultimate;
-    if (key.numUserIDs() > 0 && key.userID(0).id()) {
-        mMetaData.signer = prettifyDN(key.userID(0).id());
+    mMetaData.keyIsTrusted = signature.validity == GPGME_VALIDITY_FULL || signature.validity == GPGME_VALIDITY_ULTIMATE;
+    if (!key.userIds.empty()) {
+        mMetaData.signer = prettifyDN(key.userIds[0].id);
     }
-    for (uint iMail = 0; iMail < key.numUserIDs(); ++iMail) {
-        // The following if /should/ always result in TRUE but we
-        // won't trust implicitely the plugin that gave us these data.
-        if (key.userID(iMail).email()) {
-            QString email = QString::fromUtf8(key.userID(iMail).email());
-            // ### work around gpgme 0.3.QString text() const Q_DECL_OVERRIDE;x / cryptplug bug where the
-            // ### email addresses are specified as angle-addr, not addr-spec:
-            if (email.startsWith(QLatin1Char('<')) && email.endsWith(QLatin1Char('>'))) {
-                email = email.mid(1, email.length() - 2);
-            }
-            if (!email.isEmpty()) {
-                mMetaData.signerMailAddresses.append(email);
-            }
+    for (const auto &userId : key.userIds) {
+        QString email = QString::fromUtf8(userId.email);
+        // ### work around gpgme 0.3.QString text() const Q_DECL_OVERRIDE;x / cryptplug bug where the
+        // ### email addresses are specified as angle-addr, not addr-spec:
+        if (email.startsWith(QLatin1Char('<')) && email.endsWith(QLatin1Char('>'))) {
+            email = email.mid(1, email.length() - 2);
+        }
+        if (!email.isEmpty()) {
+            mMetaData.signerMailAddresses.append(email);
         }
     }
 
-    if (signature.creationTime()) {
-        mMetaData.creationTime.setTime_t(signature.creationTime());
-    } else {
-        mMetaData.creationTime = QDateTime();
-    }
+    mMetaData.creationTime = signature.creationTime;
     if (mMetaData.signer.isEmpty()) {
-        if (key.numUserIDs() > 0 && key.userID(0).name()) {
-            mMetaData.signer = prettifyDN(key.userID(0).name());
+        if (!key.userIds.empty()) {
+            mMetaData.signer = prettifyDN(key.userIds[0].name);
         }
         if (!mMetaData.signerMailAddresses.empty()) {
             if (mMetaData.signer.isEmpty()) {
@@ -924,18 +797,13 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     }
 
     mMetaData.isSigned = false;
-    //FIXME
-    // mMetaData.keyTrust = GpgME::Signature::Unknown;
     mMetaData.status = tr("Wrong Crypto Plug-In.");
-    mMetaData.status_code = GPGME_SIG_STAT_NONE;
 
     if (!signature.isEmpty()) {
-        auto result = verifyDetachedSignature(mProtocol, signature, text);
-        setVerificationResult(result, false, text);
+        setVerificationResult(verifyDetachedSignature(mProtocol, signature, text), false, text);
     } else {
         QByteArray outdata;
-        auto result = verifyOpaqueSignature(mProtocol, text, outdata);
-        setVerificationResult(result, false, outdata);
+        setVerificationResult(verifyOpaqueSignature(mProtocol, text, outdata), false, outdata);
     }
 
     if (!mMetaData.isSigned) {
@@ -943,11 +811,11 @@ void SignedMessagePart::startVerificationDetached(const QByteArray &text, KMime:
     }
 }
 
-void SignedMessagePart::setVerificationResult(const GpgME::VerificationResult &result, bool parseText, const QByteArray &plainText)
+void SignedMessagePart::setVerificationResult(const VerificationResult &result, bool parseText, const QByteArray &plainText)
 {
-    auto signatures = result.signatures();
+    auto signatures = result.signatures;
     // FIXME
-    // mMetaData.auditLogError = result.error();
+    // mMetaData.auditLogError = result.error;
     if (!signatures.empty()) {
         mMetaData.isSigned = true;
         sigStatusToMetaData(signatures.front());
@@ -994,10 +862,7 @@ EncryptedMessagePart::EncryptedMessagePart(ObjectTreeParser *otp,
     mMetaData.isGoodSignature = false;
     mMetaData.isEncrypted = false;
     mMetaData.isDecryptable = false;
-    //FIXME
-    // mMetaData.keyTrust = GpgME::Signature::Unknown;
     mMetaData.status = tr("Wrong Crypto Plug-In.");
-    mMetaData.status_code = GPGME_SIG_STAT_NONE;
 }
 
 EncryptedMessagePart::~EncryptedMessagePart()
@@ -1055,59 +920,61 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
     const QByteArray ciphertext = data.decodedContent();
     QByteArray plainText;
-    const auto res = decryptAndVerify(mProtocol, ciphertext, plainText);
-    const GpgME::DecryptionResult &decryptResult = res.first;
-    const GpgME::VerificationResult &verifyResult = res.second;
-    mMetaData.isSigned = verifyResult.signatures().size() > 0;
+    DecryptionResult decryptResult;
+    VerificationResult verifyResult;
+    std::tie(decryptResult, verifyResult) = decryptAndVerify(mProtocol, ciphertext, plainText);
+    mMetaData.isSigned = verifyResult.signatures.size() > 0;
 
-    if (verifyResult.signatures().size() > 0) {
+    if (verifyResult.signatures.size() > 0) {
         //We simply attach a signed message part to indicate that this content is also signed
         auto subPart = SignedMessagePart::Ptr(new SignedMessagePart(mOtp, QString::fromUtf8(plainText), mProtocol, mFromAddress, nullptr, nullptr));
         subPart->setVerificationResult(verifyResult, true, plainText);
         appendSubPart(subPart);
     }
 
-    if (decryptResult.error() && mMetaData.isSigned) {
+    if (decryptResult.error && mMetaData.isSigned) {
         //Only a signed part
         mMetaData.isEncrypted = false;
         mDecryptedData = plainText;
         return true;
     }
 
-    if (mMetaData.isEncrypted && decryptResult.numRecipients() > 0) {
-        mMetaData.keyId = decryptResult.recipient(0).keyID();
+    if (mMetaData.isEncrypted && decryptResult.recipients.size()) {
+        mMetaData.keyId = decryptResult.recipients.at(0).keyId;
     }
 
-    if (!decryptResult.error()) {
+    if (!decryptResult.error) {
         mDecryptedData = plainText;
         setText(QString::fromUtf8(mDecryptedData.constData()));
     } else {
-        mMetaData.isEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
-        mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
+        const auto errorCode = decryptResult.error.errorCode();
+        mMetaData.isEncrypted = errorCode != GPG_ERR_NO_DATA;
+        qWarning() << "Failed to decrypt : " << decryptResult.error;
 
-        std::stringstream ss;
-        ss << decryptResult << '\n' << verifyResult;
-        qWarning() << "Decryption failed: " << ss.str().c_str();
-
-        bool passphraseError =  decryptResult.error().isCanceled() || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
-
-        auto noSecKey = true;
-        foreach (const GpgME::DecryptionResult::Recipient &recipient, decryptResult.recipients()) {
-            noSecKey &= (recipient.status().code() == GPG_ERR_NO_SECKEY);
-        }
-        if (!passphraseError && !noSecKey) {          // GpgME do not detect passphrase error correctly
+        const bool noSecretKeyAvilable = [&] {
+            foreach (const auto &recipient, decryptResult.recipients) {
+                if (!(recipient.status.errorCode() == GPG_ERR_NO_SECKEY)) {
+                    return false;
+                }
+            }
+            return true;
+        }();
+        bool passphraseError = errorCode == GPG_ERR_CANCELED || errorCode == GPG_ERR_NO_SECKEY;
+        //We only get a decryption failed error when we enter the wrong passphrase....
+        if (!passphraseError && !noSecretKeyAvilable) {
             passphraseError = true;
         }
 
-        if(noSecKey) {
+        if(noSecretKeyAvilable) {
             mError = NoKeyError;
             mMetaData.errorText = tr("Could not decrypt the data. ") + tr("No key found for recepients.");
         } else if (passphraseError) {
             mError = PassphraseError;
+            // mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
         } else {
             mError = UnknownError;
-            mMetaData.errorText = tr("Could not decrypt the data. ")
-                                  + tr("Error: %1").arg(mMetaData.errorText);
+            mMetaData.errorText = tr("Could not decrypt the data. ");
+            //                         + tr("Error: %1").arg(QString::fromLocal8Bit(decryptResult.error().asString()));
         }
         return false;
     }

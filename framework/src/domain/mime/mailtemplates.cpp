@@ -1027,8 +1027,8 @@ static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list
 KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage,
     const QStringList &to, const QStringList &cc, const QStringList &bcc,
     const KMime::Types::Mailbox &from, const QString &subject, const QString &body, bool htmlBody,
-    const QList<Attachment> &attachments, const std::vector<MailCrypto::Key> &signingKeys,
-    const std::vector<MailCrypto::Key> &encryptionKeys, const MailCrypto::Key &attachedKey)
+    const QList<Attachment> &attachments, const std::vector<Crypto::Key> &signingKeys,
+    const std::vector<Crypto::Key> &encryptionKeys, const Crypto::Key &attachedKey)
 {
     auto mail = existingMessage;
     if (!mail) {
