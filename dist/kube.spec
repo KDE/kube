@@ -24,8 +24,7 @@ BuildRequires:  qt5-qtwebengine-devel
 BuildRequires:  sink-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  qt5-qtquickcontrols2-devel
-BuildRequires:  qgpgme-devel
-BuildRequires:  gpgme >= 1.8.0
+BuildRequires:  gpgme-devel
 BuildRequires:  xapian-core-devel >= 1.4
 
 Requires:       qt5-qtquick1
@@ -33,6 +32,7 @@ Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2
 Requires:       qt5-qtsvg
 Requires:       sink >= 0.6
+Requires:       gpgme >= 1.8.0
 Requires:       google-noto-sans-fonts
 
 %description
