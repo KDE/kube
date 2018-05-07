@@ -43,6 +43,8 @@ void MailListModel::setFilter(const QString &filter)
     auto oldQuery = mQuery;
     auto query = mQuery;
     if (!filter.isEmpty()) {
+        //Avoid live updates until we properly filter updates
+        query.setFlags(Sink::Query::NoFlags);
         auto f = filter;
         if (mCurrentQueryItem.isEmpty()) {
             using namespace Sink::ApplicationDomain;
