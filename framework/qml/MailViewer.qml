@@ -454,7 +454,7 @@ Rectangle {
                         textFormat: TextEdit.PlainText
                         wrapMode: TextEdit.Wrap
                         height: implicitHeight
-                        text: messageParser.rawContent
+                        text: messageParser.rawContent.substring(0, 100000) //The TextEdit deals poorly with messages that are too large.
                     }
                     Rectangle {
                         color: "black"
