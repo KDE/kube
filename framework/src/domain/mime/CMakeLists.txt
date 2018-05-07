@@ -5,5 +5,5 @@ add_library(mailcrypto STATIC
 target_link_libraries(mailcrypto
     Qt5::Core
     KF5::Mime
-    gpgme
+    ${GPGME_LIBRARIES}
 )

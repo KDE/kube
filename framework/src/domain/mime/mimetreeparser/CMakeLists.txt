@@ -47,7 +47,7 @@ target_link_libraries(kube_otp
 
 target_link_libraries(kube_otp
     PRIVATE
-    gpgme
+    ${GPGME_LIBRARIES}
     mailcrypto
     KF5::Codecs
     Qt5::Gui
