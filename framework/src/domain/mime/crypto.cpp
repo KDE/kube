@@ -27,6 +27,7 @@
 
 #include <QDebug>
 #include <QDateTime>
+#include <QFile>
 
 #include <future>
 #include <utility>
@@ -100,6 +101,23 @@ static std::pair<gpgme_error_t, gpgme_ctx_t> createForProtocol(CryptoProtocol pr
     return std::make_pair(GPG_ERR_NO_ERROR, ctx);
 }
 
+gpgme_error_t gpgme_passphrase(void *hook, const char *uid_hint, const char *passphrase_info, int prev_was_bad, int fd)
+{
+    Q_UNUSED(hook);
+    Q_UNUSED(prev_was_bad);
+    //uid_hint will be something like "CAA5183608F0FB50 Test1 Kolab <test1@kolab.org>" (CAA518... is the key)
+    //pahhphrase_info will be something like "CAA5183608F0FB50 2E3B7787B1B75920 1 0"
+    qInfo() << "Requested passphrase for " << (uid_hint ? QByteArray{uid_hint} : QByteArray{}) << (passphrase_info ? QByteArray{passphrase_info} : QByteArray{});
+
+    QFile file;
+    file.open(fd, QIODevice::WriteOnly);
+    //FIXME hardcoded as a test
+    auto passphrase = QByteArray{"test1"} + QByteArray{"\n"};
+    file.write(passphrase);
+    file.close();
+
+    return 0;
+}
 
 struct Context {
     Context(CryptoProtocol protocol = OpenPGP)
@@ -107,6 +125,11 @@ struct Context {
         gpgme_error_t code;
         std::tie(code, context) = createForProtocol(protocol);
         error = Error{code};
+        if (!error) {
+            gpgme_set_passphrase_cb (context, gpgme_passphrase, 0);
+            //TODO requires allow-loopback-pinentry to be enabled in the gpg-agent.conf
+            gpgme_set_pinentry_mode(context, GPGME_PINENTRY_MODE_LOOPBACK);
+        }
     }
 
     ~Context()
