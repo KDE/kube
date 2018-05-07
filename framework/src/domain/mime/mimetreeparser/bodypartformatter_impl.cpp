@@ -35,7 +35,6 @@
 #include "applicationpkcs7mime.h"
 #include "mailman.h"
 #include "multipartalternative.h"
-#include "multipartmixed.h"
 #include "multipartencrypted.h"
 #include "multipartsigned.h"
 #include "texthtml.h"
@@ -113,6 +112,52 @@ public:
 
 const HeadersBodyPartFormatter *HeadersBodyPartFormatter::self = nullptr;
 
+class MultiPartRelatedBodyPartFormatter: public MimeTreeParser::Interface::BodyPartFormatter {
+    static const MultiPartRelatedBodyPartFormatter *self;
+public:
+    MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE {
+        if (part.content()->contents().isEmpty()) {
+            return MessagePart::Ptr();
+        }
+        //We rely on the order of the parts.
+        //Theoretically there could also be a Start parameter which would break this..
+        //https://tools.ietf.org/html/rfc2387#section-4
+        return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), true));
+    }
+
+    static const MimeTreeParser::Interface::BodyPartFormatter *create() {
+        if (!self) {
+            self = new MultiPartRelatedBodyPartFormatter();
+        }
+        return self;
+    }
+};
+
+const MultiPartRelatedBodyPartFormatter *MultiPartRelatedBodyPartFormatter::self = nullptr;
+
+class MultiPartMixedBodyPartFormatter: public MimeTreeParser::Interface::BodyPartFormatter {
+    static const MultiPartMixedBodyPartFormatter *self;
+public:
+    MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE {
+        if (part.content()->contents().isEmpty()) {
+            return {};
+        }
+        //FIXME sometimes we get attachments in here as well
+        //TODO look for attachment parts anyways
+        // normal treatment of the parts in the mp/mixed container
+        return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), false));
+    }
+
+    static const MimeTreeParser::Interface::BodyPartFormatter *create() {
+        if (!self) {
+            self = new MultiPartMixedBodyPartFormatter();
+        }
+        return self;
+    }
+};
+
+const MultiPartMixedBodyPartFormatter *MultiPartMixedBodyPartFormatter::self = nullptr;
+
 } // anon namespace
 
 void BodyPartFormatterBaseFactoryPrivate::messageviewer_create_builtin_bodypart_formatters()
@@ -140,6 +185,7 @@ void BodyPartFormatterBaseFactoryPrivate::messageviewer_create_builtin_bodypart_
     insert("multipart", "alternative", MultiPartAlternativeBodyPartFormatter::create());
     insert("multipart", "encrypted", MultiPartEncryptedBodyPartFormatter::create());
     insert("multipart", "signed", MultiPartSignedBodyPartFormatter::create());
+    insert("multipart", "related", MultiPartRelatedBodyPartFormatter::create());
     insert("multipart", "*", MultiPartMixedBodyPartFormatter::create());
     insert("*", "*", AnyTypeBodyPartFormatter::create());
 }

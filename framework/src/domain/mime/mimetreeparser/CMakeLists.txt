@@ -17,7 +17,6 @@ set(libmimetreeparser_SRCS
     mailman.cpp
     multipartalternative.cpp
     multipartencrypted.cpp
-    multipartmixed.cpp
     multipartsigned.cpp
     textplain.cpp
     texthtml.cpp
