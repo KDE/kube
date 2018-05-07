@@ -399,7 +399,7 @@ MessagePartPtr ObjectTreeParser::parsedPart() const
     return mParsedPart;
 }
 
-MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, const QByteArray &mediaType, const QByteArray &subType)
+QVector<MessagePartPtr> ObjectTreeParser::processType(KMime::Content *node, const QByteArray &mediaType, const QByteArray &subType)
 {
     static MimeTreeParser::BodyPartFormatterBaseFactory factory;
     const auto sub = factory.subtypeRegistry(mediaType.constData());
@@ -410,8 +410,9 @@ MessagePartPtr ObjectTreeParser::processType(KMime::Content *node, const QByteAr
             continue;
         }
         PartNodeBodyPart part(this, mTopLevelContent, node, mNodeHelper);
-        if (const MessagePart::Ptr result = formatter->process(part)) {
-            return result;
+        const auto list = formatter->processList(part);
+        if (!list.isEmpty()) {
+            return list;
         }
     }
     return {};
@@ -458,16 +459,35 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
             subType = node->contentType()->subType();
         }
 
-        //Try the specific type handler
-        if (auto mp = processType(node, mediaType, subType)) {
-            parsedPart->appendSubPart(mp);
-        //Fallback to the generic handler
-        } else if (auto mp = processType(node, mediaType, "*")) {
-            parsedPart->appendSubPart(mp);
-        //Fallback to the default handler
-        } else if (auto mp = defaultHandling(node)) {
-            parsedPart->appendSubPart(mp);
+        auto mp = [&] {
+            //Try the specific type handler
+            {
+                auto list = processType(node, mediaType, subType);
+                if (!list.isEmpty()) {
+                    return list;
+                }
+            }
+            //Fallback to the generic handler
+            {
+                auto list = processType(node, mediaType, "*");
+                if (!list.isEmpty()) {
+                    return list;
+                }
+            }
+            //Fallback to the default handler
+            {
+                auto list = defaultHandling(node);
+                if (!list.isEmpty()) {
+                    return list;
+                }
+            }
+            return QVector<MessagePart::Ptr>{};
+        }();
+
+        for (const auto p : mp) {
+            parsedPart->appendSubPart(p);
         }
+
         mNodeHelper->setNodeProcessed(node, false);
 
         if (onlyOneMimePart) {
@@ -478,19 +498,20 @@ MessagePart::Ptr ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node,
     return parsedPart;
 }
 
-MessagePart::Ptr ObjectTreeParser::defaultHandling(KMime::Content *node)
+QVector<MessagePart::Ptr> ObjectTreeParser::defaultHandling(KMime::Content *node)
 {
     if (node->contentType()->mimeType() == QByteArrayLiteral("application/octet-stream") &&
             (node->contentType()->name().endsWith(QLatin1String("p7m")) ||
              node->contentType()->name().endsWith(QLatin1String("p7s")) ||
              node->contentType()->name().endsWith(QLatin1String("p7c"))
             )) {
-        if (auto mp = processType(node, "application", "pkcs7-mime")) {
-            return mp;
+        auto list = processType(node, "application", "pkcs7-mime");
+        if (!list.isEmpty()) {
+            return list;
         }
     }
 
-    return AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node));
+    return {AttachmentMessagePart::Ptr(new AttachmentMessagePart(this, node))};
 }
 
 const QTextCodec *ObjectTreeParser::codecFor(KMime::Content *node) const

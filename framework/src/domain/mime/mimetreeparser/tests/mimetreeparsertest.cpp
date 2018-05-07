@@ -261,7 +261,7 @@ private slots:
         QVERIFY(bool(part));
         QCOMPARE(part->encryptions().size(), 0);
         QCOMPARE(part->signatures().size(), 0);
-        QCOMPARE(otp.collectAttachmentParts().size(), 0);
+        QCOMPARE(otp.collectAttachmentParts().size(), 1);
     }
 
     void testAttachmentPart()

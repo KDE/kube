@@ -63,6 +63,7 @@ public:
     enum Result { Ok, NeedContent, AsIcon, Failed };
 
     virtual MessagePart::Ptr process(BodyPart &part) const;
+    virtual QVector<MessagePart::Ptr> processList(Interface::BodyPart &part) const;
 };
 
 /**

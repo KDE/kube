@@ -115,14 +115,25 @@ const HeadersBodyPartFormatter *HeadersBodyPartFormatter::self = nullptr;
 class MultiPartRelatedBodyPartFormatter: public MimeTreeParser::Interface::BodyPartFormatter {
     static const MultiPartRelatedBodyPartFormatter *self;
 public:
-    MessagePart::Ptr process(Interface::BodyPart &part) const Q_DECL_OVERRIDE {
+
+    QVector<MessagePart::Ptr> processList(Interface::BodyPart &part) const Q_DECL_OVERRIDE {
         if (part.content()->contents().isEmpty()) {
-            return MessagePart::Ptr();
+            return {};
         }
         //We rely on the order of the parts.
         //Theoretically there could also be a Start parameter which would break this..
         //https://tools.ietf.org/html/rfc2387#section-4
-        return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), true));
+
+        //We want to display attachments even if displayed inline.
+        QVector<MessagePart::Ptr> list;
+        list.append(MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), true)));
+        for (int i = 1; i < part.content()->contents().size(); i++) {
+            auto p = part.content()->contents().at(i);
+            if (KMime::isAttachment(p)) {
+                list.append(MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), p, true)));
+            }
+        }
+        return list;
     }
 
     static const MimeTreeParser::Interface::BodyPartFormatter *create() {
@@ -142,9 +153,6 @@ public:
         if (part.content()->contents().isEmpty()) {
             return {};
         }
-        //FIXME sometimes we get attachments in here as well
-        //TODO look for attachment parts anyways
-        // normal treatment of the parts in the mp/mixed container
         return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), part.content()->contents().at(0), false));
     }
 

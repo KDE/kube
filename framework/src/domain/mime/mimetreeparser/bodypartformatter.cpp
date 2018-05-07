@@ -46,5 +46,14 @@ MessagePart::Ptr BodyPartFormatter::process(BodyPart &) const
 {
     return {};
 }
+
+QVector<MessagePart::Ptr> BodyPartFormatter::processList(BodyPart &part) const
+{
+    if (auto p = process(part)) {
+        return {p};
+    }
+    return {};
+}
+
 }
 }
