@@ -46,7 +46,6 @@ namespace MimeTreeParser
 namespace Interface
 {
 
-class BodyPartURLHandler;
 class BodyPart;
 
 class BodyPartFormatter
@@ -54,41 +53,8 @@ class BodyPartFormatter
 public:
     virtual ~BodyPartFormatter() {}
 
-    /**
-    @li Ok returned when format() generated some HTML
-    @li NeedContent returned when format() needs the body of the part
-    @li AsIcon returned when the part should be shown iconified
-    @li Failed returned when formatting failed. Currently equivalent to Ok
-    */
-    enum Result { Ok, NeedContent, AsIcon, Failed };
-
     virtual MessagePart::Ptr process(BodyPart &part) const;
     virtual QVector<MessagePart::Ptr> processList(Interface::BodyPart &part) const;
-};
-
-/**
-    @short interface for BodyPartFormatter plugins
-
-    The interface is queried by for types, subtypes, and the
-    corresponding bodypart formatter, and the result inserted into
-    the bodypart formatter factory.
-
-    Subtype alone or both type and subtype may be "*", which is
-    taken as a wildcard, so that e.g. type=text subtype=* matches
-    any text subtype, but with lesser specificity than a concrete
-    mimetype such as text/plain. type=* is only allowed when
-    subtype=*, too.
-*/
-class BodyPartFormatterPlugin
-{
-public:
-    virtual ~BodyPartFormatterPlugin() {}
-
-    virtual const BodyPartFormatter *bodyPartFormatter(int idx) const = 0;
-    virtual const char *type(int idx) const = 0;
-    virtual const char *subtype(int idx) const = 0;
-
-    virtual const BodyPartURLHandler *urlHandler(int idx) const = 0;
 };
 
 } // namespace Interface
