@@ -68,6 +68,14 @@ QString MessageParser::rawContent() const
     return mRawContent;
 }
 
+QString MessageParser::structureAsString() const
+{
+    if (!d->mParser) {
+        return nullptr;
+    }
+    return d->mParser->structureAsString();
+}
+
 QAbstractItemModel *MessageParser::parts() const
 {
     if (!d->mParser) {

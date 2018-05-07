@@ -51,13 +51,11 @@
 #include <KMime/Headers>
 #include <KMime/Message>
 
-// KDE includes
-
-// Qt includes
 #include <QByteArray>
 #include <QTextCodec>
 #include <QUrl>
 #include <QMimeDatabase>
+#include <QTextStream>
 
 using namespace MimeTreeParser;
 
@@ -175,7 +173,7 @@ QString ObjectTreeParser::htmlContent()
     return content;
 }
 
-static void print(KMime::Content *node, const QString prefix = {})
+static void print(QTextStream &s, KMime::Content *node, const QString prefix = {})
 {
     QByteArray mediaType("text");
     QByteArray subType("plain");
@@ -184,28 +182,37 @@ static void print(KMime::Content *node, const QString prefix = {})
         mediaType = node->contentType()->mediaType();
         subType = node->contentType()->subType();
     }
-    qWarning() << prefix << "!" << mediaType << subType << "isAttachment: " << KMime::isAttachment(node);
+    s << prefix << "!" << mediaType << subType << "isAttachment: " << KMime::isAttachment(node) << "\n";
     for (const auto c: node->contents()) {
-        print(c, prefix + QLatin1String(" "));
+        print(s, c, prefix + QLatin1String(" "));
     }
 }
 
-static void print(const MessagePart &messagePart, const QByteArray pre = {})
+static void print(QTextStream &s, const MessagePart &messagePart, const QByteArray pre = {})
 {
-    qWarning() << pre << "#" << messagePart.metaObject()->className() << "isAttachment: " << messagePart.isAttachment();
+    s << pre << "#" << messagePart.metaObject()->className() << "isAttachment: " << messagePart.isAttachment() << "\n";
     for (const auto &p: messagePart.subParts()) {
-        print(*p, pre + " ");
+        print(s, *p, pre + " ");
     }
+}
+
+QString ObjectTreeParser::structureAsString() const
+{
+    QString string;
+    QTextStream s{&string};
+
+    if (mTopLevelContent) {
+        ::print(s, mTopLevelContent);
+    }
+    if (mParsedPart) {
+        ::print(s, *mParsedPart);
+    }
+    return string;
 }
 
 void ObjectTreeParser::print()
 {
-    if (mTopLevelContent) {
-        ::print(mTopLevelContent);
-    }
-    if (mParsedPart) {
-        ::print(*mParsedPart);
-    }
+    qInfo().noquote() << structureAsString();
 }
 
 static KMime::Content *find(KMime::Content *node, const std::function<bool(KMime::Content *)> &select)

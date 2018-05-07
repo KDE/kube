@@ -240,6 +240,7 @@ public:
 
     virtual ~ObjectTreeParser();
 
+    QString structureAsString() const;
     void print();
 
     /**

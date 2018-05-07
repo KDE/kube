@@ -447,6 +447,17 @@ Rectangle {
                     height: childrenRect.height
 
                     TextEdit {
+                        id: structure
+                        width: parent.width
+                        readOnly: true
+                        selectByMouse: true
+                        textFormat: TextEdit.PlainText
+                        wrapMode: TextEdit.Wrap
+                        height: implicitHeight
+                        text: messageParser.structureAsString
+                    }
+
+                    TextEdit {
                         id: rawContent
                         width: parent.width
                         readOnly: true
