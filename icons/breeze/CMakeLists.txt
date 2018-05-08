@@ -15,7 +15,13 @@ if(BINARY_ICONS_RESOURCE)
 
         file(REMOVE_RECURSE ${RESOURCES_WORKING_DIR})
         file(MAKE_DIRECTORY ${RESOURCES_WORKING_DIR})
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${target}/ DESTINATION ${RESOURCES_WORKING_DIR})
+        #Copying symlinks doesn't work on windows if the target is not yet available.
+        #We use execute_process because we expect failures and don't want to abort the script.
+        #We copy two times so we can deal with symlinks 2 levels deep.
+        #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${target}/ DESTINATION ${RESOURCES_WORKING_DIR})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${target}/ ${RESOURCES_WORKING_DIR})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${target}/ ${RESOURCES_WORKING_DIR})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${target}/ ${RESOURCES_WORKING_DIR})
         file(REMOVE
             ${RESOURCE_FILE}
             ${RESOURCE_FILE}.depends
