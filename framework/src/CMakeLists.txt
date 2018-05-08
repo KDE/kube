@@ -72,7 +72,6 @@ target_link_libraries(kubeframework
     KF5::Codecs
     KF5::Contacts
     KAsync
-    ${GPGME_LIBRARIES}
 )
 install(TARGETS kubeframework DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

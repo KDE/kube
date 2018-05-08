@@ -5,9 +5,6 @@ find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(Gpgme REQUIRED)
 
-# target_include_directories does not handle empty include paths
-include_directories(${GPGME_INCLUDES})
-
 set(libmimetreeparser_SRCS
     objecttreeparser.cpp
 
@@ -47,10 +44,10 @@ target_link_libraries(kube_otp
 
 target_link_libraries(kube_otp
     PRIVATE
-    ${GPGME_LIBRARIES}
     mailcrypto
     KF5::Codecs
     Qt5::Gui
+    gpgme
 )
 
 add_subdirectory(autotests)
