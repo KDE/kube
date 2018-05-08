@@ -48,6 +48,7 @@
 #include <QQmlContext>
 #include <QIcon>
 #include <QStandardPaths>
+#include <QResource>
 #include <sink/store.h>
 
 #include "framework/src/keyring.h"
@@ -168,17 +169,14 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(kube_VERSION_STRING);
     app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
 
-    //On Mac OS we want to include Contents/Resources/icons in the bundle, and that path is in AppDataLocations.
-    QStringList iconSearchPaths;
-    for (const auto &p : QStandardPaths::standardLocations(QStandardPaths::AppDataLocation)) {
-        auto iconPath = p + "/icons/";
-        //I'm getting broken paths reported from standardLocations
-        if (iconPath.contains("kube.appContents")) {
-            iconPath.replace("kube.appContents", "kube.app/Contents");
-        }
-        iconSearchPaths << iconPath;
+    const QString kubeIcons = QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("kube-icons.rcc"));
+    if (!QResource::registerResource(kubeIcons, "/icons/kube")) {
+        qWarning() << "Failed to register icon resource!" << kubeIcons;
+        Q_ASSERT(false);
+    } else {
+        QIcon::setThemeSearchPaths(QStringList() << QStringLiteral(":/icons"));
+        QIcon::setThemeName(QStringLiteral("kube"));
     }
-    QIcon::setThemeSearchPaths(QIcon::themeSearchPaths() + iconSearchPaths);
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A communication and collaboration client.");
