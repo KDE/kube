@@ -1,3 +1,4 @@
+include_directories(${GPGME_INCLUDE_DIRS})
 add_library(mailcrypto STATIC
     mailcrypto.cpp
     crypto.cpp

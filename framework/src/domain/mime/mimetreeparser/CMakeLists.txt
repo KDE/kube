@@ -5,6 +5,7 @@ find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(Gpgme REQUIRED)
 
+include_directories(${GPGME_INCLUDE_DIRS})
 add_library(kube_otp STATIC
     objecttreeparser.cpp
 
