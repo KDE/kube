@@ -5,7 +5,7 @@ find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(Gpgme REQUIRED)
 
-set(libmimetreeparser_SRCS
+add_library(kube_otp STATIC
     objecttreeparser.cpp
 
     #Bodyformatter
@@ -35,8 +35,6 @@ set(libmimetreeparser_SRCS
     util.cpp
     )
 
-add_library(kube_otp STATIC ${libmimetreeparser_SRCS})
-
 target_link_libraries(kube_otp
     PUBLIC
     KF5::Mime
@@ -47,7 +45,7 @@ target_link_libraries(kube_otp
     mailcrypto
     KF5::Codecs
     Qt5::Gui
-    gpgme
+    Gpgme::Gpgme
 )
 
 add_subdirectory(autotests)

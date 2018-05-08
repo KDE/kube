@@ -3,7 +3,8 @@ add_library(mailcrypto STATIC
     crypto.cpp
 )
 target_link_libraries(mailcrypto
+    PUBLIC
     Qt5::Core
     KF5::Mime
-    gpgme
+    Gpgme::Gpgme
 )

@@ -11,8 +11,10 @@ mark_as_advanced(GPGME_INCLUDE_DIR GPGME_LIBRARY GPGME_INCLUDE_DIR GPGME_LIBRARY
 set(GPGME_LIBRARIES ${GPGME_LIBRARY} ${GPGERROR_LIBRARY})
 set(GPGME_INCLUDE_DIRS ${GPGME_INCLUDE_DIR} ${GPGERROR_INCLUDE_DIR})
 
-if (NOT ${gpgme})
-    add_library(gpgme INTERFACE)
-    target_link_libraries(gpgme INTERFACE ${GPGME_LIBRARIES})
-    target_include_directories(gpgme INTERFACE ${GPGME_INCLUDE_DIRS})
+if (GPGME_FOUND AND NOT TARGET Gpgme::Gpgme)
+    add_library(Gpgme::Gpgme INTERFACE IMPORTED)
+    set_target_properties(Gpgme::Gpgme PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES  "${GPGME_INCLUDE_DIRS}"
+        INTERFACE_LINK_LIBRARIES "${GPGME_LIBRARIES}"
+        )
 endif()

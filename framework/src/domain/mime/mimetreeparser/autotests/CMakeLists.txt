@@ -37,7 +37,7 @@ macro(add_mimetreeparser_crypto_unittest _source)
         kube_otp
         Qt5::Test
         KF5::Mime
-        gpgme
+        Gpgme::Gpgme
     )
     add_gpg_crypto_test(${_name} mimetreeparser-${_name})
 endmacro ()
