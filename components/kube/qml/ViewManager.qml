@@ -56,7 +56,7 @@ StackView {
         } else if (component.status == Component.Error) {
             console.error("Error while loading the component: ", source, "\nError: ", component.errorString())
         } else if (component.status == Component.Loading) {
-            console.error("Error while loading the component: ", source, "\nThe component is loading.)
+            console.error("Error while loading the component: ", source, "\nThe component is loading.")
         } else {
             console.error("Unknown error while loading the component: ", source)
         }
