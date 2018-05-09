@@ -172,6 +172,7 @@ int main(int argc, char *argv[])
     const QString kubeIcons = QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("kube-icons.rcc"));
     if (!QResource::registerResource(kubeIcons, "/icons/kube")) {
         qWarning() << "Failed to register icon resource!" << kubeIcons;
+        qWarning() << "Searched paths: " << QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
         Q_ASSERT(false);
     } else {
         QIcon::setThemeSearchPaths(QStringList() << QStringLiteral(":/icons"));
