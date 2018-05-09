@@ -169,7 +169,11 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(kube_VERSION_STRING);
     app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
 
-    const QString kubeIcons = QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("kube-icons.rcc"));
+    QString kubeIcons = QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("kube-icons.rcc"));
+    //For windows
+    if (kubeIcons.isEmpty()) {
+        kubeIcons = findFile(QStringLiteral("kube/kube-icons.rcc"), QStandardPaths::standardLocations(QStandardPaths::AppDataLocation));
+    }
     if (!QResource::registerResource(kubeIcons, "/icons/kube")) {
         qWarning() << "Failed to register icon resource!" << kubeIcons;
         qWarning() << "Searched paths: " << QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
@@ -224,6 +228,8 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
+    //For windows
+    engine.addImportPath(QCoreApplication::applicationDirPath() + QStringLiteral("/../qml"));
     const auto file = "/org/kube/components/kube/main.qml";
     const auto mainFile = findFile(file, engine.importPathList());
     if (mainFile.isEmpty()) {
