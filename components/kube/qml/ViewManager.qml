@@ -47,13 +47,19 @@ StackView {
             }
         }
 
-        var component = Qt.createComponent(extensionModel.findSource(name, "View.qml"))
+        var source = extensionModel.findSource(name, "View.qml");
+        var component = Qt.createComponent(source)
         if (component.status == Component.Ready) {
             var o = component.createObject(root)
             viewDict[name] = o
             return o
+        } else if (component.status == Component.Error) {
+            console.error("Error while loading the component: ", source, "\nError: ", component.errorString())
+        } else if (component.status == Component.Loading) {
+            console.error("Error while loading the component: ", source, "\nThe component is loading.)
+        } else {
+            console.error("Unknown error while loading the component: ", source)
         }
-        console.error("Failed to load component: \n", component.errorString())
         return null
     }
 
