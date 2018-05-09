@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
     QString kubeIcons = QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("kube-icons.rcc"));
     //For windows
     if (kubeIcons.isEmpty()) {
-        kubeIcons = findFile(QStringLiteral("kube/kube-icons.rcc"), QStandardPaths::standardLocations(QStandardPaths::AppDataLocation));
+        kubeIcons = findFile(QStringLiteral("/kube/kube-icons.rcc"), QStandardPaths::standardLocations(QStandardPaths::AppDataLocation));
     }
     if (!QResource::registerResource(kubeIcons, "/icons/kube")) {
         qWarning() << "Failed to register icon resource!" << kubeIcons;
