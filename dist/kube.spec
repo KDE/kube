@@ -17,6 +17,7 @@ BuildRequires:  kf5-kpackage-devel
 BuildRequires:  kf5-kcodecs-devel
 BuildRequires:  kf5-kmime-devel
 BuildRequires:  kf5-kcontacts-devel
+BuildRequires:  kf5-kcalendarcore-devel
 BuildRequires:  lmdb-devel
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
@@ -27,7 +28,6 @@ BuildRequires:  qt5-qtquickcontrols2-devel
 BuildRequires:  gpgme-devel
 BuildRequires:  xapian-core-devel >= 1.4
 
-Requires:       qt5-qtquick1
 Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2
 Requires:       qt5-qtsvg
@@ -59,20 +59,18 @@ popd
 %files
 %doc
 %{_bindir}/kube
+%dir %{_datadir}/kube/
 %dir %{_libdir}/qt5/
 %dir %{_libdir}/qt5/qml/
 %dir %{_libdir}/qt5/qml/org/
 %{_libdir}/qt5/qml/org/kube/
-%{_libdir}/libkube_otp.so
 %{_libdir}/libkubeframework.so
 %{_datadir}/appdata/org.kde.kube.appdata.xml
 %{_datadir}/applications/org.kde.kube.desktop
-%{_datadir}/icons/kube
+%{_datadir}/kube/kube-icons.rcc
 %{_datadir}/icons/hicolor/256x256/apps/kube_icon.png
 %{_datadir}/icons/hicolor/scalable/apps/kube_icon.svg
 %{_datadir}/icons/hicolor/scalable/apps/kube_logo.svg
 %{_datadir}/icons/hicolor/scalable/apps/kube_symbol.svg
-%{_datadir}/kpackage/genericqml/org.kube.*/
-%{_datadir}/metainfo/org.kube.*
 
 %changelog
