@@ -199,7 +199,10 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.showView("log")
                     activeFocusOnTab: true
                     checkable: true
-                    alert: kubeViews.getView("log").pendingError
+                    Kube.Listener {
+                        filter: Kube.Messages.errorPending
+                        onMessageReceived: logButton.alert = message.errorPending
+                    }
                     checked: kubeViews.currentViewName == "log"
                     Controls2.ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("logview")

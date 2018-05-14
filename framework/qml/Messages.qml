@@ -51,6 +51,7 @@ Item {
     property string sendOutbox: "sendOutbox"
 
     property string componentDone: "done"
+    property string errorPending: "errorPending"
 
     property string selectNextConversation: "selectNextConversation"
     property string selectPreviousConversation: "selectPreviousConversation"

@@ -27,6 +27,9 @@ Controls1.SplitView {
     id: root
 
     property bool pendingError: false;
+    onPendingErrorChanged: {
+        Kube.Fabric.postMessage(Kube.Messages.errorPending, {errorPending: pendingError})
+    }
 
     Controls2.StackView.onActivated: {
         root.pendingError = false;

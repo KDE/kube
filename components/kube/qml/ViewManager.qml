@@ -19,54 +19,29 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 2.0
-/*
-* TODO
-* * Only replace composer if necessary (on reply, edit draft, ...)
-* * Shutdown procedure to save draft before destruction
-* * Separate logging from view and and make accessible to log (initialize()) call?
-*/
+
 StackView {
     id: root
     property string currentViewName: currentItem ? currentItem.objectName : ""
     property variant extensionModel: null
     property bool dontFocus: false
 
+    /*
+     * We maintain the view's lifetimes separately from the StackView in the viewDict.
+     */
     property var viewDict: new Object
-    function getView(name, replaceView) {
-        if (name in viewDict) {
-            var item = viewDict[name]
-            if (item) {
-                if (replaceView) {
-                    if (item && item.aborted) {
-                        //Call the aborted hook on the view
-                        item.aborted()
-                    }
-                } else {
-                    return item
-                }
-            }
-        }
-
-        var source = extensionModel.findSource(name, "View.qml");
-        var component = Qt.createComponent(source)
-        if (component.status == Component.Ready) {
-            var o = component.createObject(root)
-            viewDict[name] = o
-            return o
-        } else if (component.status == Component.Error) {
-            console.error("Error while loading the component: ", source, "\nError: ", component.errorString())
-        } else if (component.status == Component.Loading) {
-            console.error("Error while loading the component: ", source, "\nThe component is loading.")
-        } else {
-            console.error("Unknown error while loading the component: ", source)
-        }
-        return null
-    }
 
     onCurrentItemChanged: {
         if (currentItem && !dontFocus) {
             currentItem.forceActiveFocus()
         }
+    }
+
+    function pushView(view, properties, name) {
+        var item = push(view, properties, StackView.Immediate)
+        item.parent = root
+        item.anchors.fill = root
+        item.objectName = name
     }
 
     function showOrReplaceView(name, properties, replace) {
@@ -80,14 +55,41 @@ StackView {
         if (currentItem && currentItem.objectName == name) {
             return
         }
-        var view = getView(name, replace)
-        if (!view) {
-            return
+
+        var item = name in viewDict ? viewDict[name] : null
+        if (item) {
+            if (replace) {
+                if (item.aborted) {
+                    //Call the aborted hook on the view
+                    item.aborted()
+                }
+                //Fall through to create new component to replace this one
+            } else {
+                pushView(item, properties, name)
+                return
+            }
         }
-        var item = push(view, properties, StackView.Immediate)
-        item.parent = root
-        item.anchors.fill = root
-        item.objectName = name
+
+        //Creating a new view
+        var source = extensionModel.findSource(name, "View.qml");
+        //On windows it will be async anyways, so just always create it async
+        var component = Qt.createComponent(source, Qt.Asynchronous)
+
+        function finishCreation() {
+            if (component.status == Component.Ready) {
+                var view = component.createObject(root);
+                viewDict[name] = view
+                pushView(view, properties, name)
+            } else {
+                console.error("Error while loading the component: ", source, "\nError: ", component.errorString())
+            }
+        }
+
+        if (component.status == Component.Loading) {
+            component.statusChanged.connect(finishCreation);
+        } else {
+            finishCreation();
+        }
     }
 
     function showView(name, properties) {
