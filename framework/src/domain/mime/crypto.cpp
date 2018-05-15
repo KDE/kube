@@ -211,6 +211,10 @@ std::pair<DecryptionResult,VerificationResult> Crypto::decryptAndVerify(CryptoPr
     auto err = gpgme_op_decrypt_verify(ctx, Data{ciphertext}.data, out);
     if (err) {
         qWarning() << "Failed to decrypt and verify" << Error{err};
+        //We make sure we don't return any plain-text if the decryption failed to prevent EFAIL
+        if (err == GPG_ERR_DECRYPT_FAILED) {
+            return std::make_pair(DecryptionResult{{}, {err}}, VerificationResult{{}, {err}});
+        }
     }
 
     VerificationResult verificationResult{{}, {err}};
