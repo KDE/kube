@@ -160,6 +160,10 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId 
     calcoreEvent->setDtStart(startTime);
     calcoreEvent->setDtEnd(endTime);
 
+    if (object.contains("allDay")) {
+        calcoreEvent->setAllDay(object["allDay"].toBool());
+    }
+
     auto ical = KCalCore::ICalFormat().toICalString(calcoreEvent);
     sinkEvent.setIcal(ical.toUtf8());
 

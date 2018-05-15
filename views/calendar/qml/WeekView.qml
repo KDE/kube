@@ -97,7 +97,8 @@ FocusScope {
                         width: root.dayWidth * model.duration
                         height: parent.height
                         x: root.dayWidth * model.starts
-                        color: model.color
+                        //color: model.color
+                        color: Kube.Colors.jazzberryJam
                         border.width: 1
                         border.color: Kube.Colors.viewBackgroundColor
 
@@ -107,7 +108,7 @@ FocusScope {
                                 leftMargin: Kube.Units.smallSpacing
                             }
                             color: Kube.Colors.highlightedTextColor
-                            text: model.text
+                            text: model.summary
                         }
                     }
                 }

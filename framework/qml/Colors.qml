@@ -34,6 +34,7 @@ Item {
     property string bewareOrange: "#f67400"
     property string dangerRed: "#ed1515"
     property string darkCharcoalGrey: "#232629"
+    property string jazzberryJam: "#af1a6a"
     property string lightgrey: "lightgrey"
 
     //Colorusage:

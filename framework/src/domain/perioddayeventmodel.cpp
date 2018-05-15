@@ -39,6 +39,8 @@ PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
     query.request<Event::StartTime>();
     query.request<Event::EndTime>();
 
+    query.filter<Event::AllDay>(false);
+
     eventModel = Sink::Store::loadModel<Event>(query);
 
     QObject::connect(eventModel.data(), &QAbstractItemModel::dataChanged, this, &PeriodDayEventModel::partitionData);

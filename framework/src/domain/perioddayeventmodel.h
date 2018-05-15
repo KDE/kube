@@ -33,6 +33,8 @@
 // Facility used to get a restricted period into a Sink model comprised of
 // events, partitioned according to the day the events take place.
 //
+// Day-long events are filtered out.
+//
 // Model Format
 // ============
 //

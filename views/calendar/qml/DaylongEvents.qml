@@ -1,16 +1,8 @@
 import QtQuick 2.7
 
-ListModel {
-    ListElement {
-        color: "#af1a6a"
-        starts: 1
-        duration: 4
-        text: "Baustelle Adalbertstr."
-    }
-    ListElement  {
-        color: "#134bab"
-        starts: 0
-        duration: 6
-        text: "Urlaub"
-    }
+import org.kube.framework 1.0 as Kube
+
+Kube.DayLongEventModel {
+    start: "2018-04-09"
+    length: 7
 }
