@@ -68,8 +68,8 @@ void AccountFactory::loadPackage()
     if (pluginPath.isEmpty()) {
         qWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
     } else {
-        mUiPath = pluginPath + "/AccountSettings.qml";
-        mLoginUi = pluginPath + "/Login.qml";
+        mUiPath = QUrl::fromLocalFile(pluginPath + "/AccountSettings.qml");
+        mLoginUi = QUrl::fromLocalFile(pluginPath + "/Login.qml");
         if (QFileInfo::exists(pluginPath + "/metadata.json")) {
             QFile file{pluginPath + "/metadata.json"};
             file.open(QIODevice::ReadOnly);

@@ -22,6 +22,7 @@
 #include "kube_export.h"
 #include <QObject>
 #include <QVariant>
+#include <QUrl>
 
 /**
  * A factory to instantiate account-plugins.
@@ -31,8 +32,8 @@ class KUBE_EXPORT AccountFactory : public QObject
     Q_OBJECT
     Q_PROPERTY(QString accountId MEMBER mAccountId WRITE setAccountId);
     Q_PROPERTY(QString accountType MEMBER mAccountType WRITE setAccountType);
-    Q_PROPERTY(QString uiPath MEMBER mUiPath NOTIFY accountLoaded);
-    Q_PROPERTY(QString loginUi MEMBER mLoginUi NOTIFY accountLoaded);
+    Q_PROPERTY(QUrl uiPath MEMBER mUiPath NOTIFY accountLoaded);
+    Q_PROPERTY(QUrl loginUi MEMBER mLoginUi NOTIFY accountLoaded);
     Q_PROPERTY(bool requiresKeyring MEMBER mRequiresKeyring NOTIFY accountLoaded);
 public:
     explicit AccountFactory(QObject *parent = Q_NULLPTR);
@@ -46,8 +47,8 @@ signals:
 private:
     void loadPackage();
     QString mAccountId;
-    QString mUiPath;
-    QString mLoginUi;
+    QUrl mUiPath;
+    QUrl mLoginUi;
     QByteArray mAccountType;
     bool mRequiresKeyring = true;
 };
