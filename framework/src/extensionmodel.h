@@ -22,6 +22,7 @@
 #include "kube_export.h"
 #include <QSortFilterProxyModel>
 #include <QSharedPointer>
+#include <QUrl>
 
 namespace Kube {
 
