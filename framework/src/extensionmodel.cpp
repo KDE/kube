@@ -60,7 +60,7 @@ void ExtensionModel::load()
         QDir dir{path + "/org/kube/" + mExtensionPoint};
         for (const auto &pluginName : dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
             const auto pluginPath = dir.path() + "/" + pluginName;
-            mPaths.insert(pluginName, pluginPath);
+            mPaths.insert(pluginName, QUrl::fromLocalFile(pluginPath));
             auto item = new QStandardItem;
             item->setData(pluginName, Name);
             item->setData(pluginName, Tooltip);
@@ -85,12 +85,12 @@ void ExtensionModel::load()
     setSourceModel(model);
 }
 
-QString ExtensionModel::findSource(const QString &extensionName, const QString &sourceName)
+QUrl ExtensionModel::findSource(const QString &extensionName, const QString &sourceName)
 {
     if (mPaths.isEmpty()) {
         load();
     }
-    return mPaths.value(extensionName) + "/" + sourceName;
+    return mPaths.value(extensionName).resolved(QUrl{extensionName + "/" + sourceName});
 }
 
 void ExtensionModel::setSortOrder(const QVariantList &order)

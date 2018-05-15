@@ -54,14 +54,14 @@ public:
     void setExtensionPoint(const QString &order);
     QString extensionPoint() const;
 
-    Q_INVOKABLE QString findSource(const QString &extensionName, const QString &sourceName);
+    Q_INVOKABLE QUrl findSource(const QString &extensionName, const QString &sourceName);
 
 private slots:
     void load();
 
 private:
     QStringList mSortOrder;
-    QHash<QString, QString> mPaths;
+    QHash<QString, QUrl> mPaths;
     QString mExtensionPoint;
 };
 
