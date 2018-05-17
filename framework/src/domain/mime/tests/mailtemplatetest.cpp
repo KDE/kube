@@ -63,6 +63,17 @@ static QString unquote(const QString &s)
 class MailTemplateTest : public QObject
 {
     Q_OBJECT
+
+    bool validate(KMime::Message::Ptr msg)
+    {
+        const auto data = msg->encodedContent();
+        //IMAP compat: The ASCII NUL character, %x00, MUST NOT be used at any time.
+        if (data.contains('\0')) {
+            return false;
+        }
+        return true;
+    }
+
 private slots:
 
     void initTestCase()
@@ -268,6 +279,7 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments);
 
         QVERIFY(result);
+        QVERIFY(validate(result));
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QCOMPARE(result->body(), body.toUtf8());
         QVERIFY(result->date(false)->dateTime().isValid());
@@ -289,6 +301,7 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, true, attachments);
 
         QVERIFY(result);
+        QVERIFY(validate(result));
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->date(false)->dateTime().isValid());
         QVERIFY(result->contentType()->isMimeType("multipart/alternative"));
@@ -311,6 +324,7 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments);
 
         QVERIFY(result);
+        QVERIFY(validate(result));
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->contentType()->isMimeType("multipart/mixed"));
         QVERIFY(result->date(false)->dateTime().isValid());
@@ -335,6 +349,7 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, true, attachments);
 
         QVERIFY(result);
+        QVERIFY(validate(result));
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->contentType()->isMimeType("multipart/mixed"));
         QVERIFY(result->date(false)->dateTime().isValid());
@@ -360,6 +375,7 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, keys, {}, keys[0]);
 
         QVERIFY(result);
+        QVERIFY(validate(result));
         // qWarning() << "---------------------------------";
         // qWarning().noquote() << result->encodedContent();
         // qWarning() << "---------------------------------";
@@ -401,6 +417,7 @@ private slots:
         auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, Crypto::findKeys({}, true, false));
 
         QVERIFY(result);
+        QVERIFY(validate(result));
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->date(false)->dateTime().isValid());
 

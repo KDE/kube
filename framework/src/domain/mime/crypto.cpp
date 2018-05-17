@@ -97,6 +97,8 @@ static std::pair<gpgme_error_t, gpgme_ctx_t> createForProtocol(CryptoProtocol pr
             Q_ASSERT(false);
             return std::make_pair(1, nullptr);
     }
+    //We want the output to always be ASCII armored
+    gpgme_set_armor(ctx, 1);
     return std::make_pair(GPG_ERR_NO_ERROR, ctx);
 }
 
