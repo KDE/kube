@@ -169,19 +169,6 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(kube_VERSION_STRING);
     app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
 
-    QString kubeIcons = QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("kube-icons.rcc"));
-    //For windows
-    if (kubeIcons.isEmpty()) {
-        kubeIcons = findFile(QStringLiteral("/kube/kube-icons.rcc"), QStandardPaths::standardLocations(QStandardPaths::AppDataLocation));
-    }
-    if (!QResource::registerResource(kubeIcons, "/icons/kube")) {
-        qWarning() << "Failed to register icon resource!" << kubeIcons;
-        qWarning() << "Searched paths: " << QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
-        Q_ASSERT(false);
-    } else {
-        QIcon::setThemeSearchPaths(QStringList() << QStringLiteral(":/icons"));
-        QIcon::setThemeName(QStringLiteral("kube"));
-    }
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A communication and collaboration client.");

@@ -112,10 +112,36 @@ static QObject *keyring_singletontype_provider(QQmlEngine *engine, QJSEngine *sc
     return instance;
 }
 
+static QString findFile(const QString file, const QStringList importPathList)
+{
+    for (const auto &path : importPathList) {
+        const QString f = path + file;
+        if (QFileInfo::exists(f)) {
+            return f;
+        }
+    }
+    return {};
+}
+
 void FrameworkPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_UNUSED(uri);
     engine->addImageProvider(QLatin1String("kube"), new KubeImageProvider);
+
+    QString kubeIcons = QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("kube-icons.rcc"));
+    //For windows
+    if (kubeIcons.isEmpty()) {
+        const auto locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation) + QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+        kubeIcons = findFile(QStringLiteral("/kube/kube-icons.rcc"), locations);
+    }
+    if (!QResource::registerResource(kubeIcons, "/icons/kube")) {
+        qWarning() << "Failed to register icon resource!" << kubeIcons;
+        qWarning() << "Searched paths: " << QStandardPaths::standardLocations(QStandardPaths::AppDataLocation) + QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+        Q_ASSERT(false);
+    } else {
+        QIcon::setThemeSearchPaths(QStringList() << QStringLiteral(":/icons"));
+        QIcon::setThemeName(QStringLiteral("kube"));
+    }
 }
 
 void FrameworkPlugin::registerTypes (const char *uri)
