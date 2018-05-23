@@ -248,54 +248,6 @@ KMime::Content *createMultipartMixedContent(QVector<KMime::Content *> contents)
     return multiPartMixed;
 }
 
-void addProcessedBodyToMessage(const KMime::Message::Ptr &msg, const QString &plainBody, const QString &htmlBody, bool forward)
-{
-    //FIXME
-    // MessageCore::ImageCollector ic;
-    // ic.collectImagesFrom(mOrigMsg.data());
-
-    // Now, delete the old content and set the new content, which
-    // is either only the new text or the new text with some attachments.
-    auto parts = msg->contents();
-    foreach (KMime::Content *content, parts) {
-        msg->removeContent(content, true/*delete*/);
-    }
-
-    msg->contentType()->clear(); // to get rid of old boundary
-
-    const QByteArray boundary = KMime::multiPartBoundary();
-    KMime::Content *const mainTextPart =
-        htmlBody.isEmpty() ?
-        createPlainPartContent(plainBody, msg.data()) :
-        createMultipartAlternativeContent(plainBody, htmlBody, msg.data());
-    mainTextPart->assemble();
-
-    KMime::Content *textPart = mainTextPart;
-    // if (!ic.images().empty()) {
-    //     textPart = createMultipartRelated(ic, mainTextPart);
-    //     textPart->assemble();
-    // }
-
-    // If we have some attachments, create a multipart/mixed mail and
-    // add the normal body as well as the attachments
-    KMime::Content *mainPart = textPart;
-    //FIXME
-    // if (forward) {
-    //     auto attachments = mOrigMsg->attachments();
-    //     attachments += mOtp->nodeHelper()->attachmentsOfExtraContents();
-    //     if (!attachments.isEmpty()) {
-    //         mainPart = createMultipartMixed(attachments, textPart);
-    //         mainPart->assemble();
-    //     }
-    // }
-
-    msg->setBody(mainPart->encodedBody());
-    msg->setHeader(mainPart->contentType());
-    msg->setHeader(mainPart->contentTransferEncoding());
-    msg->assemble();
-    msg->parse();
-}
-
 QString plainToHtml(const QString &body)
 {
     QString str = body;
@@ -879,11 +831,21 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
             }();
 
             //Assemble the message
-            addProcessedBodyToMessage(msg, plainBodyResult, htmlBodyResult, false);
+            msg->contentType()->clear(); // to get rid of old boundary
+
+            KMime::Content *const mainTextPart =
+                htmlBodyResult.isEmpty() ?
+                createPlainPartContent(plainBodyResult, msg.data()) :
+                createMultipartAlternativeContent(plainBodyResult, htmlBodyResult, msg.data());
+            mainTextPart->assemble();
+
+            msg->setBody(mainTextPart->encodedBody());
+            msg->setHeader(mainTextPart->contentType());
+            msg->setHeader(mainTextPart->contentTransferEncoding());
             //FIXME this does more harm than good right now.
             // applyCharset(msg, origMsg);
             msg->assemble();
-            //We're done
+
             callback(msg);
         });
     });
