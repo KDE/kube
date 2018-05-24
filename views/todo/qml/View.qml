@@ -16,18 +16,46 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.4
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0
+import QtQuick 2.9
+import QtQuick.Layouts 1.2
+
 import org.kube.framework 1.0 as Kube
+
 
 FocusScope {
     id: root
 
-   Kube.Label {
-       anchors {
-           centerIn: parent
-       }
-       text: "ToDo"
-   }
+    RowLayout {
+        anchors.fill: parent
+
+        Rectangle {
+            width: Kube.Units.gridUnit * 10
+            Layout.fillHeight: parent.height
+            color: Kube.Colors.textColor
+
+            Kube.PositiveButton {
+                id: newTaskButton
+                objectName: "newTaskButton"
+
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                    margins: Kube.Units.largeSpacing
+                }
+                focus: true
+                text: qsTr("New Task")
+                onClicked: {}
+            }
+        }
+
+        Rectangle {
+        }
+    }
 }
+
+
+
+
+
+
