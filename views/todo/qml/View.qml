@@ -50,6 +50,7 @@ FocusScope {
         }
 
         Rectangle {
+            color: Kube.Colors.backgroundColor
         }
     }
 }
