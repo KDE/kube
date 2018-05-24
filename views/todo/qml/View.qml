@@ -28,6 +28,8 @@ FocusScope {
     RowLayout {
         anchors.fill: parent
 
+        spacing: 0
+
         Rectangle {
             width: Kube.Units.gridUnit * 10
             Layout.fillHeight: parent.height
@@ -50,7 +52,42 @@ FocusScope {
         }
 
         Rectangle {
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
             color: Kube.Colors.backgroundColor
+
+            Kube.ListView {
+                anchors.fill: parent
+
+                model: 5
+
+                delegate: Kube.ListDelegate {
+
+                    Kube.Label {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: Kube.Units.largeSpacing
+                        }
+                        text: "tilte"
+                    }
+
+                    Row {
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            right: parent.right
+                            rightMargin: Kube.Units.largeSpacing
+                        }
+
+                        Kube.IconButton {
+                            iconName: Kube.Icons.listRemove
+                        }
+
+                    }
+                }
+            }
         }
     }
 }
