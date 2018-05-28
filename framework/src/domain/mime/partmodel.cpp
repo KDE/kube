@@ -120,15 +120,17 @@ static QString addCss(const QString &s)
     //Get the default font from QApplication
     static const auto fontFamily = QFont{}.family();
     //overflow:hidden ensures no scrollbars are ever shown.
-    static const auto css = QString("<style>\n"
-               "body {\n"
+    static const auto css = QString("<style>\n")
+               + QString("body {\n"
                "  overflow:hidden;\n"
                "  font-family: \"%1\" ! important;\n"
                "  color: #31363b ! important;\n"
                "  background-color: #fcfcfc ! important\n"
-               "}\n"
-               "</style>")
-        .arg(fontFamily);
+               "}\n").arg(fontFamily)
+               + QString("blockquote { \n"
+               "  border-left: 2px solid #bdc3c7 ! important;\n"
+               "}\n")
+               + QString("</style>");
 
     const auto header = QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
                   "<html><head><title></title>")
