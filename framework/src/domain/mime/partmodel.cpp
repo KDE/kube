@@ -216,6 +216,10 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                                 return true;
                             }
                         }
+                        //Blockquotes don't support any styling which would be necessary so they become readable.
+                        if (text.contains("blockquote")) {
+                            return true;
+                        }
                         //Media queries are too advanced
                         if (text.contains("@media")) {
                             return true;
