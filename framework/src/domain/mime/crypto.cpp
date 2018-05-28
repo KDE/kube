@@ -240,7 +240,7 @@ ImportResult Crypto::importKeys(CryptoProtocol protocol, const QByteArray &certD
         qWarning() << "Failed to create context " << context.error;
         return {0, 0, 0};
     }
-    if (auto err = gpgme_op_import(context.context, Data{certData}.data)) {
+    if (gpgme_op_import(context.context, Data{certData}.data)) {
         qWarning() << "Import failed";
         return {0, 0, 0};
     }
@@ -287,7 +287,7 @@ static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const c
 
     while (true) {
         gpgme_key_t key;
-        if (auto e = gpgme_op_keylist_next(ctx, &key)) {
+        if (gpgme_op_keylist_next(ctx, &key)) {
             break;
         }
         Key k;
@@ -371,7 +371,6 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
     }
 
     return toBA(out);
-;
 }
 
 Expected<Error, std::pair<QByteArray, QString>>
