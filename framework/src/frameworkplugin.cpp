@@ -134,6 +134,21 @@ void FrameworkPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
         const auto locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation) + QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
         kubeIcons = findFile(QStringLiteral("/kube/kube-icons.rcc"), locations);
     }
+    //For osx
+    if (kubeIcons.isEmpty()) {
+        //On Mac OS we want to include Contents/Resources/ in the bundle, and that path is in AppDataLocations.
+        QStringList iconSearchPaths;
+        for (const auto &p : QStandardPaths::standardLocations(QStandardPaths::AppDataLocation)) {
+            auto iconPath = p;
+            //I'm getting broken paths reported from standardLocations
+            if (iconPath.contains("kube.appContents")) {
+                iconPath.replace("kube.appContents", "kube.app/Contents");
+            }
+            iconSearchPaths << iconPath;
+        }
+        kubeIcons = findFile(QStringLiteral("/kube/kube-icons.rcc"), iconSearchPaths);
+    }
+
     if (!QResource::registerResource(kubeIcons, "/icons/kube")) {
         qWarning() << "Failed to register icon resource!" << kubeIcons;
         qWarning() << "Searched paths: " << QStandardPaths::standardLocations(QStandardPaths::AppDataLocation) + QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
