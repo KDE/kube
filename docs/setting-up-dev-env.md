@@ -13,10 +13,11 @@ Multiple choices are available for developing the Kube project:
         - qt5-qtbase-devel / qtbase5-dev
         - libgit2-dev(el)
         - lmdb-devel / liblmdb-dev
-        - readline-devel / libreadline-dev
         - libcurl-dev(el)
         - flatbuffers-dev
         - [KAsync](git://anongit.kde.org/kasync)
+        - [KMime](git://anongit.kde.org/kmime)
+        - [KCalCore](git://anongit.kde.org/kcalcore)
         - [KDAV2](git://anongit.kde.org/kdav2)
         - [KIMAP2](git://anongit.kde.org/kimap2)
     - Install Sink
