@@ -5,7 +5,7 @@ RUN dnf -y update
 RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar ninja-build clang procps-ng libcxx-devel sudo rsyslog
 
 #Sink deps
-RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel readline-devel libcurl-devel xapian-core-devel flatbuffers-devel
+RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel libcurl-devel xapian-core-devel flatbuffers-devel
 
 #Test and debugging
 RUN dnf -y install gdb xterm perf valgrind strace kcachegrind dbus-x11 gammaray heaptrack
