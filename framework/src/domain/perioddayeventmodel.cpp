@@ -32,6 +32,11 @@
 PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
     : QAbstractItemModel(parent), partitionedEvents(7)
 {
+    updateQuery();
+}
+
+void PeriodDayEventModel::updateQuery()
+{
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Event::Summary>();
@@ -39,6 +44,10 @@ PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
     query.request<Event::StartTime>();
     query.request<Event::EndTime>();
 
+    auto periodEnd = mPeriodStart.addDays(mPeriodLength);
+
+    query.filter<Event::StartTime, Event::EndTime>(
+        Sink::Query::Comparator(QVariantList{mPeriodStart, periodEnd}, Sink::Query::Comparator::Overlap));
     query.filter<Event::AllDay>(false);
 
     eventModel = Sink::Store::loadModel<Event>(query);
@@ -72,10 +81,8 @@ void PeriodDayEventModel::partitionData()
 
         int bucket = bucketOf(eventDate);
 
-        if (bucket >= 0) {
-            SinkTrace() << "Adding event:" << event->getSummary() << "in bucket #" << bucket;
-            partitionedEvents[bucket].append(event);
-        }
+        SinkTrace() << "Adding event:" << event->getSummary() << "in bucket #" << bucket;
+        partitionedEvents[bucket].append(event);
     }
 
     endResetModel();
@@ -84,9 +91,6 @@ void PeriodDayEventModel::partitionData()
 int PeriodDayEventModel::bucketOf(const QDate &candidate) const
 {
     int bucket = mPeriodStart.daysTo(candidate);
-    if (bucket >= mPeriodLength || bucket < 0) {
-        return -1;
-    }
 
     return bucket;
 }
@@ -238,7 +242,7 @@ void PeriodDayEventModel::setPeriodStart(const QDate &start)
     }
 
     mPeriodStart = start;
-    partitionData();
+    updateQuery();
 }
 
 void PeriodDayEventModel::setPeriodStart(const QVariant &start)
@@ -254,5 +258,5 @@ int PeriodDayEventModel::periodLength() const
 void PeriodDayEventModel::setPeriodLength(int length)
 {
     mPeriodLength = length;
-    partitionData();
+    updateQuery();
 }

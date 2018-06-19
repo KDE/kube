@@ -117,6 +117,7 @@ public:
     void setPeriodLength(int);
 
 private:
+    void updateQuery();
     void partitionData();
 
     int bucketOf(const QDate &candidate) const;
