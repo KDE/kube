@@ -144,6 +144,9 @@ void FrameworkPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
             if (iconPath.contains("kube.appContents")) {
                 iconPath.replace("kube.appContents", "kube.app/Contents");
             }
+            if (iconPath.contains("kube-kolabnow.appContents")) {
+                iconPath.replace("kube-kolabnow.appContents", "kube-kolabnow.app/Contents");
+            }
             iconSearchPaths << iconPath;
         }
         kubeIcons = findFile(QStringLiteral("/kube/kube-icons.rcc"), iconSearchPaths);
