@@ -188,7 +188,7 @@ Controls2.ApplicationWindow {
                     width: height
 
                     Kube.ToolTip {
-                        text: qsTr("outbox")
+                        text: qsTr("Outbox")
                         visible: parent.hovered
                     }
                 }
@@ -221,7 +221,7 @@ Controls2.ApplicationWindow {
                     checkable: true
                     checked: kubeViews.currentViewName == "accounts"
                     Controls2.ButtonGroup.group: viewButtonGroup
-                    tooltip: qsTr("settings")
+                    tooltip: qsTr("Settings")
                 }
             }
         }
