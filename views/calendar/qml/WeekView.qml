@@ -87,6 +87,8 @@ FocusScope {
                     margins: 1
                 }
 
+                clip: true
+
                 model: DaylongEvents {}
 
                 delegate: Item {
