@@ -36,6 +36,7 @@ Item {
     property string markAsRead: "kuberead"
     property string markAsUnread: "kubeunread"
     property string markImportant: "kubeimportant"
+    property string markUnimportant: "kubeunimportant"
     property string undo: "edit-undo-inverted"
     property string moveToTrash: "kubetrash"
     property string edit: "document-edit"

@@ -31,7 +31,7 @@ Item {
     property string restoreFromTrash: "restoreFromTrash"
     property string markAsRead: "markAsRead"
     property string markAsUnread: "markAsUnread"
-    property string toggleImportant: "toggleImportant"
+    property string setImportant: "setImportant"
     property string moveToFolder: "moveToFolder"
     property string moveToDrafts: "moveToDrafts"
     property string unlockKeyring: "unlockKeyring"

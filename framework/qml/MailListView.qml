@@ -295,9 +295,9 @@ FocusScope {
 
                     Kube.IconButton {
                         id: importantButton
-                        iconName: Kube.Icons.markImportant
+                        iconName: model.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
                         visible: !!model.mail
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.toggleImportant, {"mail": model.mail, "important": model.important})
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": model.mail, "important": !model.important})
                         activeFocusOnTab: false
                     }
 

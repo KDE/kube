@@ -108,7 +108,7 @@ public:
                 Store::modify(*mail).exec();
             }
         }
-        if (id == "toggleImportant"/*Kube::Messages::synchronize*/) {
+        if (id == "setImportant"/*Kube::Messages::synchronize*/) {
             if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
                 mail->setImportant(message["important"].toBool());
                 Store::modify(*mail).exec();
