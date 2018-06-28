@@ -284,6 +284,7 @@ FocusScope {
                         visible: model.unread
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
                         activeFocusOnTab: false
+                        tooltip: qsTr("Mark as read")
                     }
                     Kube.IconButton {
                         id: unreadButton
@@ -291,6 +292,7 @@ FocusScope {
                         visible: !model.unread
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
                         activeFocusOnTab: false
+                        tooltip: qsTr("Mark as unread")
                     }
 
                     Kube.IconButton {
@@ -299,6 +301,7 @@ FocusScope {
                         visible: !!model.mail
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": model.mail, "important": !model.important})
                         activeFocusOnTab: false
+                        tooltip: qsTr("Mark as important")
                     }
 
                     Kube.IconButton {
@@ -308,6 +311,7 @@ FocusScope {
                         visible: !!model.mail
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                         activeFocusOnTab: false
+                        tooltip: qsTr("Move to trash")
                     }
 
                     Kube.IconButton {
@@ -316,6 +320,7 @@ FocusScope {
                         visible: !!model.trash
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
                         activeFocusOnTab: false
+                        tooltip: qsTr("Restore from trash")
                     }
                 }
             }
