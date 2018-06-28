@@ -199,13 +199,18 @@ Controls2.ApplicationWindow {
                     onClicked: kubeViews.showView("log")
                     activeFocusOnTab: true
                     checkable: true
+                    visible: false
                     Kube.Listener {
                         filter: Kube.Messages.errorPending
                         onMessageReceived: logButton.alert = message.errorPending
                     }
+                    Kube.Listener {
+                        filter: Kube.Messages.notificationPending
+                        onMessageReceived: logButton.visible = true
+                    }
                     checked: kubeViews.currentViewName == "log"
                     Controls2.ButtonGroup.group: viewButtonGroup
-                    tooltip: qsTr("logview")
+                    tooltip: qsTr("Notification View")
                 }
 
                 Kube.IconButton {
@@ -232,6 +237,7 @@ Controls2.ApplicationWindow {
 
             Component.onCompleted: {
                 dontFocus = true
+                prepareViewInBackground("log", {})
                 showView("conversation")
                 if (startupCheck.noAccount) {
                     showView("accounts")

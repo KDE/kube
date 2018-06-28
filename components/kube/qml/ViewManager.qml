@@ -44,6 +44,29 @@ StackView {
         item.objectName = name
     }
 
+    function createView(name, properties) {
+        //Creating a new view
+        var source = extensionModel.findSource(name, "View.qml");
+        //On windows it will be async anyways, so just always create it async
+        var component = Qt.createComponent(source, Qt.Asynchronous)
+
+        function finishCreation() {
+            if (component.status == Component.Ready) {
+                var view = component.createObject(root);
+                viewDict[name] = view
+                pushView(view, properties, name)
+            } else {
+                console.error("Error while loading the component: ", source, "\nError: ", component.errorString())
+            }
+        }
+
+        if (component.status == Component.Loading) {
+            component.statusChanged.connect(finishCreation);
+        } else {
+            finishCreation();
+        }
+    }
+
     function showOrReplaceView(name, properties, replace) {
         if (currentItem && currentItem.objectName == name) {
             return
@@ -70,30 +93,15 @@ StackView {
             }
         }
 
-        //Creating a new view
-        var source = extensionModel.findSource(name, "View.qml");
-        //On windows it will be async anyways, so just always create it async
-        var component = Qt.createComponent(source, Qt.Asynchronous)
-
-        function finishCreation() {
-            if (component.status == Component.Ready) {
-                var view = component.createObject(root);
-                viewDict[name] = view
-                pushView(view, properties, name)
-            } else {
-                console.error("Error while loading the component: ", source, "\nError: ", component.errorString())
-            }
-        }
-
-        if (component.status == Component.Loading) {
-            component.statusChanged.connect(finishCreation);
-        } else {
-            finishCreation();
-        }
+        createView(name)
     }
 
     function showView(name, properties) {
         showOrReplaceView(name, properties, false)
+    }
+
+    function prepareViewInBackground(name, properties) {
+        createView(name, properties)
     }
 
     function replaceView(name, properties) {

@@ -27,12 +27,17 @@ Controls1.SplitView {
     id: root
 
     property bool pendingError: false;
+    property bool pendingNotification: false;
     onPendingErrorChanged: {
         Kube.Fabric.postMessage(Kube.Messages.errorPending, {errorPending: pendingError})
+    }
+    onPendingNotificationChanged: {
+        Kube.Fabric.postMessage(Kube.Messages.notificationPending, {notificationPending: pendingNotification})
     }
 
     Controls2.StackView.onActivated: {
         root.pendingError = false;
+        root.pendingNotification = false;
         //Always select the latest notification
         listView.currentIndex = 0
     }
@@ -52,6 +57,8 @@ Controls1.SplitView {
                 if (message.type == Kube.Notifications.error) {
                     root.pendingError = true
                 }
+
+                root.pendingNotification = true
 
                 var error = {
                     timestamp: new Date(),

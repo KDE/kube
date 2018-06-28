@@ -52,6 +52,7 @@ Item {
 
     property string componentDone: "done"
     property string errorPending: "errorPending"
+    property string notificationPending: "notificationPending"
 
     property string selectNextConversation: "selectNextConversation"
     property string selectPreviousConversation: "selectPreviousConversation"
