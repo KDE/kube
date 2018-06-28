@@ -152,6 +152,10 @@ static QString saveAttachmentToDisk(const QModelIndex &index, const QString &pat
         Q_ASSERT(part);
         auto node = part->node();
         auto data = node->decodedContent();
+        //This is necessary to store messages embedded messages (EncapsulatedRfc822MessagePart)
+        if (data.isEmpty()) {
+            data = node->encodedContent();
+        }
         if (part->isText()) {
             // convert CRLF to LF before writing text attachments to disk
             data = KMime::CRLFtoLF(data);
