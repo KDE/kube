@@ -401,6 +401,23 @@ private slots:
         QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
         QCOMPARE(otp.plainTextContent(), QString::fromUtf8("test\n\n-- \nThis is a HTML signature.\n"));
     }
+
+    void testAppleHtmlWithAttachments()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("applehtmlwithattachments.mbox"));
+        otp.decryptParts();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QCOMPARE(part->encryptions().size(), 0);
+        QCOMPARE(part->signatures().size(), 0);
+        QCOMPARE(otp.plainTextContent(), QString::fromUtf8("Hi,\n\nThis is an HTML message with attachments.\n\nCheers,\nChristian"));
+        QCOMPARE(otp.htmlContent(), QString::fromUtf8("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=us-ascii\"></head><body style=\"word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;\" class=\"\"><meta http-equiv=\"Content-Type\" content=\"text/html; charset=us-ascii\" class=\"\"><div style=\"word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;\" class=\"\">Hi,<div class=\"\"><br class=\"\"></div><blockquote style=\"margin: 0 0 0 40px; border: none; padding: 0px;\" class=\"\"><div class=\"\">This is an <b class=\"\">HTML</b> message with attachments.</div></blockquote><div class=\"\"><br class=\"\"></div><div class=\"\">Cheers,</div><div class=\"\">Christian<img apple-inline=\"yes\" id=\"B9EE68A9-83CA-41CD-A3E4-E5BA301F797A\" class=\"\" src=\"cid:F5B62D1D-E4EC-4C59-AA5A-708525C2AC3C\"></div></div></body></html>"));
+
+        auto attachments = otp.collectAttachmentParts();
+        QCOMPARE(attachments.size(), 1);
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)

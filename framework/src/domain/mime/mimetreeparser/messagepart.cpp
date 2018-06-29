@@ -568,6 +568,17 @@ AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Con
         // immediate children of this multipart/alternative node.
         // In this case, the HTML node is a child of multipart/related.
         dataHtml = findTypeInDirectChilds(mNode, "multipart/related");
+        if (dataHtml) {
+            const auto parts = dataHtml->contents();
+            for (int i = 0; i < parts.size(); i++) {
+                const auto p = parts.at(i);
+                if (i == 0 ) {
+                    dataHtml = p;
+                } else if (KMime::isAttachment(p)) {
+                    appendSubPart(MimeMessagePart::Ptr(new MimeMessagePart(otp, p, true)));
+                }
+            }
+        }
 
         // Still not found? Stupid apple mail actually puts the attachments inside of the
         // multipart/alternative, which is wrong. Therefore we also have to look for multipart/mixed
