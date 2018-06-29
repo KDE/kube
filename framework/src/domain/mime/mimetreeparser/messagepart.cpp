@@ -558,64 +558,36 @@ QString MimeMessagePart::htmlContent() const
 AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Content *node)
     : MessagePart(otp, QString(), node)
 {
-    KMime::Content *dataIcal = findTypeInDirectChilds(mNode, "text/calendar");
-    KMime::Content *dataHtml = findTypeInDirectChilds(mNode, "text/html");
-    KMime::Content *dataText = findTypeInDirectChilds(mNode, "text/plain");
+    if (auto dataIcal = findTypeInDirectChilds(mNode, "text/calendar")) {
+        mChildParts[Util::MultipartIcal] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataIcal, true));
+    }
 
-    if (!dataHtml) {
+    if (auto dataText = findTypeInDirectChilds(mNode, "text/plain")) {
+        mChildParts[Util::MultipartPlain] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataText, true));
+    }
+
+    if (auto dataHtml = findTypeInDirectChilds(mNode, "text/html")) {
+        mChildParts[Util::MultipartHtml] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataHtml, true));
+    } else {
         // If we didn't find the HTML part as the first child of the multipart/alternative, it might
         // be that this is a HTML message with images, and text/plain and multipart/related are the
         // immediate children of this multipart/alternative node.
         // In this case, the HTML node is a child of multipart/related.
-        dataHtml = findTypeInDirectChilds(mNode, "multipart/related");
-        if (dataHtml) {
-            const auto parts = dataHtml->contents();
+        if (auto data = findTypeInDirectChilds(mNode, "multipart/related")) {
+            const auto parts = data->contents();
             for (int i = 0; i < parts.size(); i++) {
                 const auto p = parts.at(i);
                 if (i == 0 ) {
-                    dataHtml = p;
+                    mChildParts[Util::MultipartHtml] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, p, true));
                 } else if (KMime::isAttachment(p)) {
                     appendSubPart(MimeMessagePart::Ptr(new MimeMessagePart(otp, p, true)));
                 }
             }
+        //Same for multipart/mixed
+        } else if (auto data  = findTypeInDirectChilds(mNode, "multipart/mixed")) {
+            //FIXME: This doesn't populate mChildParts but instead attaches subparts. That way we at least process all parts as we should.
+            parseInternal(data);
         }
-
-        // Still not found? Stupid apple mail actually puts the attachments inside of the
-        // multipart/alternative, which is wrong. Therefore we also have to look for multipart/mixed
-        // here.
-        // Do this only when prefering HTML mail, though, since otherwise the attachments are hidden
-        // when displaying plain text.
-        if (!dataHtml) {
-            dataHtml  = findTypeInDirectChilds(mNode, "multipart/mixed");
-            if (dataHtml) {
-                const auto parts = dataHtml->contents();
-                for (int i = 0; i < parts.size(); i++) {
-                    const auto p = parts.at(i);
-                    if (i == 0 ) {
-                        // FIXME multipart/mixed should display all types serially, not just one
-                        dataHtml = p;
-                    } else if (KMime::isAttachment(p)) {
-                        appendSubPart(MimeMessagePart::Ptr(new MimeMessagePart(otp, p, true)));
-                    }
-                }
-            }
-        }
-    }
-
-    if (dataIcal) {
-        mChildParts[Util::MultipartIcal] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataIcal, true));
-    }
-
-    if (dataText) {
-        mChildParts[Util::MultipartPlain] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataText, true));
-    }
-
-    if (dataHtml) {
-        mChildParts[Util::MultipartHtml] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataHtml, true));
-    }
-
-    if (mChildParts.isEmpty()) {
-        qCWarning(MIMETREEPARSER_LOG) << "no valid nodes";
     }
 }
 
