@@ -47,35 +47,9 @@ MessagePart::Ptr MultiPartAlternativeBodyPartFormatter::process(Interface::BodyP
         return MessagePart::Ptr();
     }
 
-    //Hardcoded after removing the source
-    auto preferredMode = MimeTreeParser::Util::Html;
     AlternativeMessagePart::Ptr mp(new AlternativeMessagePart(part.objectTreeParser(), node));
-    if (mp->mChildNodes.isEmpty()) {
+    if (mp->mChildParts.isEmpty()) {
         return MimeMessagePart::Ptr(new MimeMessagePart(part.objectTreeParser(), node->contents().at(0)));
-    }
-
-    KMime::Content *dataIcal = mp->mChildNodes.contains(Util::MultipartIcal) ? mp->mChildNodes[Util::MultipartIcal] : nullptr;
-    KMime::Content *dataHtml = mp->mChildNodes.contains(Util::MultipartHtml) ? mp->mChildNodes[Util::MultipartHtml] : nullptr;
-    KMime::Content *dataPlain = mp->mChildNodes.contains(Util::MultipartPlain) ? mp->mChildNodes[Util::MultipartPlain] : nullptr;
-
-    // Make sure that in default ical is prefered over html and plain text
-    if (dataIcal && ((preferredMode != Util::MultipartHtml && preferredMode != Util::MultipartPlain))) {
-        if (dataHtml) {
-            part.nodeHelper()->setNodeProcessed(dataHtml, false);
-        }
-        if (dataPlain) {
-            part.nodeHelper()->setNodeProcessed(dataPlain, false);
-        }
-        preferredMode = Util::MultipartIcal;
-    } else if ((dataHtml && (preferredMode == Util::MultipartHtml || preferredMode == Util::Html)) ||
-               (dataHtml && dataPlain && dataPlain->body().isEmpty())) {
-        if (dataPlain) {
-            part.nodeHelper()->setNodeProcessed(dataPlain, false);
-        }
-        preferredMode = Util::MultipartHtml;
-    } else if (!(preferredMode == Util::MultipartHtml) && dataPlain) {
-        part.nodeHelper()->setNodeProcessed(dataHtml, false);
-        preferredMode = Util::MultipartPlain;
     }
     return mp;
 }

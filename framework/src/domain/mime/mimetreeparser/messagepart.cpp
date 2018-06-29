@@ -587,30 +587,35 @@ AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Con
         // when displaying plain text.
         if (!dataHtml) {
             dataHtml  = findTypeInDirectChilds(mNode, "multipart/mixed");
+            if (dataHtml) {
+                const auto parts = dataHtml->contents();
+                for (int i = 0; i < parts.size(); i++) {
+                    const auto p = parts.at(i);
+                    if (i == 0 ) {
+                        // FIXME multipart/mixed should display all types serially, not just one
+                        dataHtml = p;
+                    } else if (KMime::isAttachment(p)) {
+                        appendSubPart(MimeMessagePart::Ptr(new MimeMessagePart(otp, p, true)));
+                    }
+                }
+            }
         }
     }
 
     if (dataIcal) {
-        mChildNodes[Util::MultipartIcal] = dataIcal;
+        mChildParts[Util::MultipartIcal] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataIcal, true));
     }
 
     if (dataText) {
-        mChildNodes[Util::MultipartPlain] = dataText;
+        mChildParts[Util::MultipartPlain] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataText, true));
     }
 
     if (dataHtml) {
-        mChildNodes[Util::MultipartHtml] = dataHtml;
+        mChildParts[Util::MultipartHtml] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataHtml, true));
     }
 
-    if (mChildNodes.isEmpty()) {
+    if (mChildParts.isEmpty()) {
         qCWarning(MIMETREEPARSER_LOG) << "no valid nodes";
-        return;
-    }
-
-    QMapIterator<Util::HtmlMode, KMime::Content *> i(mChildNodes);
-    while (i.hasNext()) {
-        i.next();
-        mChildParts[i.key()] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, i.value(), true));
     }
 }
 

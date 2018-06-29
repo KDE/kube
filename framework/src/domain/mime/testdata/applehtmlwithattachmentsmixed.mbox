@@ -1,0 +1,74 @@
+Return-Path: <test1@kolab.org>
+Received: from imapb020.mykolab.com ([unix socket])
+	 by imapb020.mykolab.com (Cyrus 2.5.11-41-gd53406f3f-Kolab-2.5.11-15.1.el7.kolab_16) with LMTPA;
+	 Fri, 29 Jun 2018 17:10:33 +0200
+X-Sieve: CMU Sieve 2.4
+Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
+	by imapb020.mykolab.com (Postfix) with ESMTPS id DCFFB184
+	for <test1@kolab.org>; Fri, 29 Jun 2018 17:10:33 +0200 (CEST)
+Received: from ext-subm002.mykolab.com (unknown [10.9.6.2])
+	by int-mx003.mykolab.com (Postfix) with ESMTPS id C5438A48
+	for <test1@kolab.org>; Fri, 29 Jun 2018 17:10:33 +0200 (CEST)
+From: Kolab <test1@kolab.org>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_9D1C74B7-3E22-4635-805F-B86CE5F663C3"
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Subject: Apple attachment + signature
+Message-Id: <0EDA7426-FD89-4C6D-8B28-9ACA7544FA6C@kolab.org>
+Date: Fri, 29 Jun 2018 08:10:32 -0700
+To: John Doe <test1@kolab.org>
+
+
+--Apple-Mail=_9D1C74B7-3E22-4635-805F-B86CE5F663C3
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
+
+Hello
+
+
+
+Regards
+
+Fsdfsdf
+--Apple-Mail=_9D1C74B7-3E22-4635-805F-B86CE5F663C3
+Content-Type: multipart/mixed;
+	boundary="Apple-Mail=_FA5BEB3B-6B22-4219-964C-85261C367D87"
+
+
+--Apple-Mail=_FA5BEB3B-6B22-4219-964C-85261C367D87
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii"></head><body style="word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;" class=""><strike class="">Hello</strike><div class=""><br class=""></div><div class=""></div></body></html>
+--Apple-Mail=_FA5BEB3B-6B22-4219-964C-85261C367D87
+Content-Disposition: attachment;
+	filename=rebuildkube.sh
+Content-Type: application/octet-stream;
+	x-unix-mode=0755;
+	name="rebuildkube.sh"
+Content-Transfer-Encoding: 7bit
+
+set -e
+
+export CMAKE_LIBRARY_PATH=/usr/local/Cellar/gettext/0.19.8.1/lib:/usr/local/Cellar/readline/7.0.3_1/lib
+export CMAKE_INCLUDE_PATH=/usr/local/Cellar/gettext/0.19.8.1/include:/usr/local/Cellar/readline/7.0.3_1/include
+export PATH=/usr/local/Cellar/gettext/0.19.8.1/bin:$PATH
+export MACOSX_DEPLOYMENT_TARGET=10.9.0 #Minimum version to find the required type_traits header
+export SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/
+
+. craft/craftenv.sh
+
+craft --install-deps --fetch --unpack --compile --install extragear/sink
+craft --install-deps --fetch --unpack --compile --install --package extragear/kube
+
+--Apple-Mail=_FA5BEB3B-6B22-4219-964C-85261C367D87
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii"></head><body style="word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;" class=""><div class=""></div><div class=""><br class=""></div><div class=""><b class="">Regards</b></div><div class=""><b class=""><br class=""></b></div><div class="">Fsdfsdf</div></body></html>
+--Apple-Mail=_FA5BEB3B-6B22-4219-964C-85261C367D87--
+
+--Apple-Mail=_9D1C74B7-3E22-4635-805F-B86CE5F663C3--

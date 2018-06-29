@@ -418,6 +418,26 @@ private slots:
         auto attachments = otp.collectAttachmentParts();
         QCOMPARE(attachments.size(), 1);
     }
+
+    void testAppleHtmlWithAttachmentsMixed()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("applehtmlwithattachmentsmixed.mbox"));
+        otp.decryptParts();
+        otp.print();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::MessagePart>();
+        QCOMPARE(part->encryptions().size(), 0);
+        QCOMPARE(part->signatures().size(), 0);
+        qWarning() << otp.plainTextContent();
+        qWarning() << otp.htmlContent();
+        QCOMPARE(otp.plainTextContent(), QString::fromUtf8("Hello\n\n\n\nRegards\n\nFsdfsdf"));
+        QCOMPARE(otp.htmlContent(), QString::fromUtf8("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=us-ascii\"></head><body style=\"word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;\" class=\"\"><strike class=\"\">Hello</strike><div class=\"\"><br class=\"\"></div><div class=\"\"></div></body></html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=us-ascii\"></head><body style=\"word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;\" class=\"\"><div class=\"\"></div><div class=\"\"><br class=\"\"></div><div class=\"\"><b class=\"\">Regards</b></div><div class=\"\"><b class=\"\"><br class=\"\"></b></div><div class=\"\">Fsdfsdf</div></body></html>"));
+
+        auto attachments = otp.collectAttachmentParts();
+        QCOMPARE(attachments.size(), 1);
+    }
 };
 
 QTEST_GUILESS_MAIN(InterfaceTest)
