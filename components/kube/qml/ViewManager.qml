@@ -44,12 +44,15 @@ StackView {
         item.objectName = name
     }
 
-    function createView(name, properties) {
+    function createComponent(name) {
         //Creating a new view
         var source = extensionModel.findSource(name, "View.qml");
         //On windows it will be async anyways, so just always create it async
-        var component = Qt.createComponent(source, Qt.Asynchronous)
+        return Qt.createComponent(source, Qt.Asynchronous)
+    }
 
+    function createView(name, properties) {
+        var component = createComponent(name)
         function finishCreation() {
             if (component.status == Component.Ready) {
                 var view = component.createObject(root);
@@ -93,7 +96,7 @@ StackView {
             }
         }
 
-        createView(name)
+        createView(name, properties)
     }
 
     function showView(name, properties) {
@@ -110,8 +113,8 @@ StackView {
 
     function closeView() {
         //The initial view remains
-        if (kubeViews.depth > 1) {
-            var item = kubeViews.pop(StackView.Immediate)
+        if (root.depth > 1) {
+            var item = root.pop(StackView.Immediate)
             viewDict[item.objectName] = null
             item.destroy()
         }
