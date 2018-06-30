@@ -30,7 +30,7 @@ TestCase {
 
     Kube.TextEditor {
         id: editor
-        initialText: "Foobar"
+        initialText: "Foobar\nBarBar"
         htmlEnabled: false
     }
 
@@ -41,7 +41,9 @@ TestCase {
     function test_2htmlConversion() {
         editor.htmlEnabled = true
         verify(editor.text.indexOf("<html>") !== -1)
-        verify(editor.text.indexOf(editor.initialText) !== -1)
+        //It's converted into two paragraphs, so we can't check as a single string
+        verify(editor.text.indexOf("Foobar") !== -1)
+        verify(editor.text.indexOf("BarBar") !== -1)
         editor.htmlEnabled = false
         compare(editor.text, editor.initialText)
     }

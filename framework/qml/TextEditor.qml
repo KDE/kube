@@ -39,7 +39,7 @@ FocusScope {
 
     onHtmlEnabledChanged: {
         if (htmlEnabled) {
-            var t = document.plainText
+            var t = document.htmlText
             edit.textFormat = Qt.RichText
             edit.text = t
         } else {
