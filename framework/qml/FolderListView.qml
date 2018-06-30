@@ -41,6 +41,8 @@ Kube.TreeView {
         title: "Name"
         role: "name"
         delegate: Item {
+            id: delegateRoot
+            property bool isActive: root.activeIndex === root.indexFromRow(styleData.row)
             DropArea {
                 anchors.fill: parent
                 Rectangle {
@@ -64,7 +66,7 @@ Kube.TreeView {
                 }
                 text: styleData.value
                 elide: Qt.ElideRight
-                color: (model.hasNewData && !styleData.selected) ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
+                color: (model.hasNewData && !delegateRoot.isActive) ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
             }
         }
     }
