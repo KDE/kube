@@ -27,6 +27,8 @@ Item {
     //We have to give it a minimum size so the html content starts to expand
     property int contentHeight: 10;
     property string searchString
+    property bool autoLoadImages: false
+
     onSearchStringChanged: {
         htmlView.findText(searchString)
     }
@@ -75,7 +77,7 @@ Item {
             fullScreenSupportEnabled: false
             errorPageEnabled: false
             //defaultTextEncoding: ???
-            autoLoadImages: true
+            autoLoadImages: root.autoLoadImages
             autoLoadIconsForPage: false
             accelerated2dCanvasEnabled: false
             //The webview should not steal focus

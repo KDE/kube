@@ -24,6 +24,7 @@ Item {
     property variant errorType
     property string errorString
     property string searchString
+    property bool autoLoadImages: false
     height: partListView.height
     width: parent.width
 

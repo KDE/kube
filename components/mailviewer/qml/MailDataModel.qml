@@ -24,6 +24,7 @@ DelegateModel {
     id: root
 
     property string searchString: ""
+    property bool autoLoadImages: false
 
     delegate: Item {
         id: partColumn
@@ -130,6 +131,12 @@ DelegateModel {
                 target: partLoader.item
                 property: "searchString"
                 value: root.searchString
+                when: partLoader.status == Loader.Ready
+            }
+            Binding {
+                target: partLoader.item
+                property: "autoLoadImages"
+                value: root.autoLoadImages
                 when: partLoader.status == Loader.Ready
             }
         }

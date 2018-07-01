@@ -32,6 +32,7 @@ FocusScope {
     property bool hideTrash: true;
     property bool hideNonTrash: false;
     property string searchString: ""
+    property bool autoLoadImages: true
 
     Kube.Listener {
         filter: Kube.Messages.searchString
@@ -143,6 +144,7 @@ FocusScope {
                     incomplete: model.incomplete
                     current: delegateRoot.isCurrentItem
                     searchString: root.searchString
+                    autoLoadImages: root.autoLoadImages
                 }
             }
 
