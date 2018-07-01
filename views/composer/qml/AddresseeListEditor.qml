@@ -50,32 +50,27 @@ FocusScope {
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
                 width: parent.width
                 color: Kube.Colors.buttonColor
-                Row {
+                Kube.Label {
+                    id: label
                     anchors {
-                        top: parent.top
-                        bottom: parent.bottom
+                        verticalCenter: parent.verticalCenter
                         left: parent.left
-                        right: removeButton.left
+                        right: keyIcon.left
                         margins: Kube.Units.smallSpacing
                     }
-                    spacing: Kube.Units.smallSpacing
-                    Kube.Label {
-                        id: label
-                        anchors {
-                            top: parent.top
-                        }
-                        text: model.name
-                        elide: Text.ElideRight
+                    text: model.name
+                    elide: Text.ElideRight
+                }
+                Kube.Icon {
+                    id: keyIcon
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        right: removeButton.left
                     }
-                    Kube.Icon {
-                        anchors {
-                            top: parent.top
-                        }
-                        height: Kube.Units.gridUnit
-                        width: height
-                        visible: root.encrypt
-                        iconName: model.keyFound ? Kube.Icons.secure: Kube.Icons.insecure
-                    }
+                    height: Kube.Units.gridUnit
+                    width: visible ? height : 0
+                    visible: root.encrypt
+                    iconName: model.keyFound ? Kube.Icons.secure: Kube.Icons.insecure
                 }
                 Kube.IconButton {
                     id: removeButton
