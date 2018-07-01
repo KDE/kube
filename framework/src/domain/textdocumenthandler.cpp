@@ -289,3 +289,9 @@ void TextDocumentHandler::mergeFormatOnWordOrSelection(const QTextCharFormat &fo
         }
     }
 }
+
+
+bool TextDocumentHandler::isHtml(const QString &text)
+{
+    return Qt::mightBeRichText(text);
+}

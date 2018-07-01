@@ -34,6 +34,7 @@ FocusScope {
 
     property string initialText
     onInitialTextChanged: {
+        htmlEnabled = document.isHtml(initialText)
         edit.text = initialText
     }
 
@@ -55,7 +56,9 @@ FocusScope {
         document: edit.textDocument
         selectionStart: edit.selectionStart
         selectionEnd: edit.selectionEnd
-        onTextChanged: root.htmlEnabled ? root.text = htmlText : root.text = plainText
+        onTextChanged: {
+            root.htmlEnabled ? root.text = htmlText : root.text = plainText
+        }
         cursorPosition: edit.cursorPosition
     }
 

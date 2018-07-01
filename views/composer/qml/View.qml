@@ -36,7 +36,6 @@ Kube.View {
     resources: [
         Kube.ComposerController {
             id: composerController
-            htmlBody: html.checked
             sign: signCheckbox.checked
             encrypt: encryptCheckbox.checked
             onDone: root.done()
@@ -305,6 +304,9 @@ Kube.View {
                     focusPolicy: Qt.TabFocus
                     focus: false
                     checked: false
+                    onCheckedChanged: {
+                        textEditor.htmlEnabled = checked
+                    }
                 }
 
                 Row {
@@ -369,12 +371,17 @@ Kube.View {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                htmlEnabled: html.checked
+                onHtmlEnabledChanged: {
+                    html.checked = htmlEnabled
+                    composerController.htmlBody = htmlEnabled;
+                }
 
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
                 Keys.onEscapePressed: recipients.forceActiveFocus()
                 initialText: composerController.body
-                onTextChanged: composerController.body = text;
+                onTextChanged: {
+                    composerController.body = text;
+                }
             }
         }
     }

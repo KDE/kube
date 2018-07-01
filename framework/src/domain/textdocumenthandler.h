@@ -88,6 +88,8 @@ public:
 
     Q_INVOKABLE void resetFormat();
 
+    Q_INVOKABLE static bool isHtml(const QString &);
+
 Q_SIGNALS:
     void documentChanged();
     void cursorPositionChanged();
