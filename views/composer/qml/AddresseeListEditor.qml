@@ -20,6 +20,7 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
+import QtQuick.Controls 2.2
 
 import org.kube.framework 1.0 as Kube
 
@@ -60,6 +61,13 @@ FocusScope {
                     }
                     text: model.name
                     elide: Text.ElideRight
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                    }
+                    ToolTip.visible: mouseArea.containsMouse
+                    ToolTip.text: text
                 }
                 Kube.Icon {
                     id: keyIcon
