@@ -138,4 +138,44 @@ TestCase {
         tryVerify(function(){ return subject.text == "RE: subject" })
         tryVerify(function(){ return subject.body != "" })
     }
+
+    function test_5loadHtmlDraft() {
+        var initialState = {
+            accounts: [{
+                    id: "account1",
+                }],
+            identities: [{
+                    account: "account1",
+                    name: "Test Identity",
+                    address: "identity@example.org"
+                }],
+            resources: [{
+                    id: "resource1",
+                    account: "account1",
+                    type: "dummy"
+                },
+                {
+                    id: "resource2",
+                    account: "account1",
+                    type: "mailtransport"
+                }],
+                mails:[{
+                    resource: "resource1",
+                    subject: "subject",
+                    body: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;\"><p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">body</span></p></body></html>",
+                    to: ["to@example.org"],
+                    cc: ["cc@example.org"],
+                    bcc: ["bcc@example.org"],
+                }]
+        }
+        TestStore.setup(initialState)
+
+        var createdMail = TestStore.load("mail", {resource: "resource1"})
+        var composer = createTemporaryObject(composerComponent, testCase, {message: createdMail, loadType: Kube.ComposerController.Draft})
+        composer.setup()
+
+        var textEditor = findChild(composer, "textEditor");
+        verify(textEditor)
+        tryVerify(function(){ return textEditor.htmlEnabled == true })
+    }
 }
