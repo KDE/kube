@@ -189,6 +189,13 @@ static void createCalendar(const QVariantMap &object)
 void TestStore::setup(const QVariantMap &map)
 {
     using namespace Sink::ApplicationDomain;
+
+    //Cleanup any old data
+    const auto accounts = Sink::Store::read<SinkAccount>({});
+    for (const auto &account : accounts) {
+        Sink::Store::remove(account).exec().waitForFinished();
+    }
+
     iterateOverObjects(map.value("accounts").toList(), [&] (const QVariantMap &object) {
         auto account = ApplicationDomainType::createEntity<SinkAccount>("", object["id"].toByteArray());
         account.setName(object["name"].toString());
