@@ -47,6 +47,17 @@ Item {
                 console.warn("Error is ", loadRequest.errorString)
             }
         }
+        onLinkHovered: {
+            console.debug("Link hovered ", hoveredUrl)
+        }
+        onNavigationRequested: {
+            console.debug("Nav request ", request)
+        }
+        onNewViewRequested: {
+            console.debug("New view request ", request, request.requestedUrl)
+            //We ignore requests for new views and open a browser instead
+            Qt.openUrlExternally(request.requestedUrl)
+        }
         settings {
             webGLEnabled: false
             touchIconsEnabled: false
