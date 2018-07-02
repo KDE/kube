@@ -125,52 +125,27 @@ Kube.TextField {
                 width: parent.width
                 interactive: true
                 model: root.model
-                //TODO abstract listItem
-                delegate: T.ItemDelegate {
+                delegate: Kube.ListDelegate {
                     id: listDelegate
 
-                    width: listView.width
                     height: root.height
                     padding: Kube.Units.smallSpacing
 
                     text: model.text
 
-                    checked: listView.currentIndex == index
-
-                    onClicked:  {
-                        listView.currentIndex = model.index
-                        accept()
-                    }
-
-                    //Content
                     contentItem: Item {
                         width: parent.width - padding * 2
                         height: parent.height - padding * 2
-
-                        Column {
+                        Kube.Label{
                             anchors {
                                 verticalCenter: parent.verticalCenter
                                 left: parent.left
                                 right: parent.right
                             }
-
-                            Kube.Label{
-                                anchors {
-                                    left: parent.left
-                                    right: parent.right
-                                }
-                                text: model.text
-                                color: listDelegate.checked ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
-                                elide: Text.ElideRight
-                            }
+                            text: model.text
+                            color: listDelegate.textColor
+                            elide: Text.ElideRight
                         }
-                    }
-
-                    background: Rectangle {
-                        color: listDelegate.checked ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
-
-                        border.width: 1
-                        border.color: Kube.Colors.buttonColor
                     }
                 }
             }
