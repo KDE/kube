@@ -19,6 +19,8 @@
 #include "messageparser.h"
 
 #include <mimetreeparser/objecttreeparser.h>
+#include <QTime>
+#include <sink/log.h>
 
 #include "partmodel.h"
 #include "attachmentmodel.h"
@@ -52,9 +54,13 @@ void MessageParser::setMessage(const QVariant &message)
 {
     mRawContent = message.toString();
     asyncRun<std::shared_ptr<MimeTreeParser::ObjectTreeParser>>(this, [=] {
+            QTime time;
+            time.start();
             auto parser = std::make_shared<MimeTreeParser::ObjectTreeParser>();
             parser->parseObjectTree(message.toByteArray());
+            SinkLog() << "Message parsing took: " << time.elapsed();
             parser->decryptParts();
+            SinkLog() << "Message parsing and decryption/verification: " << time.elapsed();
             return parser;
         },
         [this](const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser) {
