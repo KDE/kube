@@ -51,13 +51,15 @@ StackView {
         return Qt.createComponent(source, Qt.Asynchronous)
     }
 
-    function createView(name, properties) {
+    function createView(name, properties, push) {
         var component = createComponent(name)
         function finishCreation() {
             if (component.status == Component.Ready) {
-                var view = component.createObject(root);
+                var view = component.createObject(root, properties ? properties : {});
                 viewDict[name] = view
-                pushView(view, properties, name)
+                if (push) {
+                    pushView(view, properties, name)
+                }
             } else {
                 console.error("Error while loading the component: ", source, "\nError: ", component.errorString())
             }
@@ -96,7 +98,7 @@ StackView {
             }
         }
 
-        createView(name, properties)
+        createView(name, properties, true)
     }
 
     function showView(name, properties) {
@@ -104,7 +106,7 @@ StackView {
     }
 
     function prepareViewInBackground(name, properties) {
-        createView(name, properties)
+        createView(name, properties, false)
     }
 
     function replaceView(name, properties) {

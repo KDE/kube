@@ -29,24 +29,29 @@ TestCase {
     height: 400
     name: "ViewManager"
 
-    ViewManager {
-        id: viewManager
-        anchors.fill: parent
+    Component {
+        id: viewManagerComponent
+        ViewManager {
+            id: viewManager
+            anchors.fill: parent
 
-        function createComponent(name) {
-            return testViewComponent
-        }
+            function createComponent(name) {
+                return testViewComponent
+            }
 
-        Component {
-            id: testViewComponent
-            Rectangle {
-                property string test: "not initialized"
+            Component {
+                id: testViewComponent
+                Rectangle {
+                    property string test: "not initialized"
+                }
             }
         }
     }
 
 
-    function test_testStack() {
+    function test_1testStack() {
+        var viewManager = createTemporaryObject(viewManagerComponent, viewmanagerTestcase, {})
+
         viewManager.showView("view1", {test: "test1"})
         compare(viewManager.currentViewName, "view1")
         compare(viewManager.currentItem.test, "test1")
@@ -79,8 +84,35 @@ TestCase {
         compare(viewManager.currentItem.test, "test1")
         compare(viewManager.depth, 1)
 
-        //Never close the last windows
+        //Never close the last view
         viewManager.closeView()
+        compare(viewManager.depth, 1)
+    }
+
+    function test_2testBackgroundView() {
+        var viewManager = createTemporaryObject(viewManagerComponent, viewmanagerTestcase, {})
+
+        viewManager.prepareViewInBackground("backgroundView", {test: "background"})
+
+        viewManager.showView("view1", {test: "test1"})
+        compare(viewManager.currentViewName, "view1")
+        compare(viewManager.currentItem.test, "test1")
+        compare(viewManager.depth, 1)
+
+        viewManager.showView("backgroundView")
+        compare(viewManager.currentViewName, "backgroundView")
+        compare(viewManager.currentItem.test, "background")
+        compare(viewManager.depth, 2)
+
+        viewManager.closeView()
+        compare(viewManager.currentViewName, "view1")
+        compare(viewManager.currentItem.test, "test1")
+        compare(viewManager.depth, 1)
+
+        //Never close the last view
+        viewManager.closeView()
+        compare(viewManager.currentViewName, "view1")
+        compare(viewManager.currentItem.test, "test1")
         compare(viewManager.depth, 1)
     }
 }
