@@ -26,6 +26,7 @@ Item {
     property string type
     property string icon
     property alias actionIcon: actionButton.iconName
+    property alias actionTooltip: actionButton.tooltip
     signal clicked;
     signal execute;
     signal publicKeyImport;
@@ -78,6 +79,7 @@ Item {
             width: height
             onClicked: root.publicKeyImport()
             padding: 0
+            tooltip: qsTr("Import key")
         }
         Kube.IconButton {
             id: actionButton
