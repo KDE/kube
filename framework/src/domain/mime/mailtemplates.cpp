@@ -30,7 +30,7 @@
 #include <QWebEngineSettings>
 #include <QWebEngineScript>
 #include <QSysInfo>
-#include <QHostInfo>
+#include <QUuid>
 #include <QTextCodec>
 #include <QTextDocument>
 
@@ -1022,12 +1022,9 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
 
     mail->subject(true)->fromUnicodeString(subject, "utf-8");
     if (!mail->messageID(false)) {
-        auto fqdn = QUrl::toAce(QHostInfo::localHostName());
-        if (fqdn.isEmpty()) {
-            qWarning() << "Unable to generate a Message-ID, falling back to 'localhost.localdomain'.";
-            fqdn = "local.domain";
-        }
-        mail->messageID(true)->generate(fqdn);
+        //A globally unique messageId that doesn't leak the local hostname
+        const auto messageId = "<" + QUuid::createUuid().toString().mid(1, 36).remove('-') + "@kube>";
+        mail->messageID(true)->fromUnicodeString(messageId, "utf-8");
     }
     if (!mail->date(true)->dateTime().isValid()) {
         mail->date(true)->setDateTime(QDateTime::currentDateTimeUtc());
