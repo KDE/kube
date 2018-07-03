@@ -356,17 +356,18 @@ private slots:
         QCOMPARE(part->encryptionState(), MimeTreeParser::KMMsgNotEncrypted);
         QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
 
-        QCOMPARE(part->partMetaData()->isGoodSignature, true);
-        QCOMPARE(part->partMetaData()->keyIsTrusted, true);
-        QCOMPARE(part->partMetaData()->keyMissing, false);
-        QCOMPARE(part->partMetaData()->keyExpired, false);
-        QCOMPARE(part->partMetaData()->keyRevoked, false);
-        QCOMPARE(part->partMetaData()->sigExpired, false);
-        QCOMPARE(part->partMetaData()->crlMissing, false);
-        QCOMPARE(part->partMetaData()->crlTooOld, false);
-        QCOMPARE(part->partMetaData()->keyId, QByteArray{"8D9860C58F246DE6"});
-        QCOMPARE(part->partMetaData()->signer, {"unittest key (no password) <test@kolab.org>"});
-        QCOMPARE(part->partMetaData()->signerMailAddresses, QStringList{{"test@kolab.org"}});
+        auto signaturePart = part->signatures().first();
+        QCOMPARE(signaturePart->partMetaData()->isGoodSignature, true);
+        QCOMPARE(signaturePart->partMetaData()->keyIsTrusted, true);
+        QCOMPARE(signaturePart->partMetaData()->keyMissing, false);
+        QCOMPARE(signaturePart->partMetaData()->keyExpired, false);
+        QCOMPARE(signaturePart->partMetaData()->keyRevoked, false);
+        QCOMPARE(signaturePart->partMetaData()->sigExpired, false);
+        QCOMPARE(signaturePart->partMetaData()->crlMissing, false);
+        QCOMPARE(signaturePart->partMetaData()->crlTooOld, false);
+        QCOMPARE(signaturePart->partMetaData()->keyId, QByteArray{"8D9860C58F246DE6"});
+        QCOMPARE(signaturePart->partMetaData()->signer, {"unittest key (no password) <test@kolab.org>"});
+        QCOMPARE(signaturePart->partMetaData()->signerMailAddresses, QStringList{{"test@kolab.org"}});
     }
 
     void testEncryptedAndSigned()
@@ -382,6 +383,10 @@ private slots:
         QCOMPARE(part->encryptionState(), MimeTreeParser::KMMsgFullyEncrypted);
         QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
         QVERIFY(otp.plainTextContent().contains(QString::fromUtf8("encrypted message text")));
+
+        auto signaturePart = part->signatures().first();
+        QCOMPARE(signaturePart->partMetaData()->keyId, QByteArray{"8D9860C58F246DE6"});
+        QCOMPARE(signaturePart->partMetaData()->isGoodSignature, true);
     }
 
     void testOpenpgpMultipartEmbedded()
@@ -412,6 +417,12 @@ private slots:
         QCOMPARE(part->encryptionState(), MimeTreeParser::KMMsgFullyEncrypted);
         QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
         QCOMPARE(otp.plainTextContent(), QString::fromUtf8("test\n\n-- \nThis is a HTML signature.\n"));
+
+        auto signaturePart = part->signatures().first();
+        QCOMPARE(signaturePart->partMetaData()->keyId, QByteArray{"2E3B7787B1B75920"});
+        //We lack the public key for this message
+        QCOMPARE(signaturePart->partMetaData()->isGoodSignature, false);
+        QCOMPARE(signaturePart->partMetaData()->keyMissing, true);
     }
 
     void testAppleHtmlWithAttachments()
