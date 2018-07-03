@@ -355,6 +355,18 @@ private slots:
         QCOMPARE(part->signatures().size(), 1);
         QCOMPARE(part->encryptionState(), MimeTreeParser::KMMsgNotEncrypted);
         QCOMPARE(part->signatureState(), MimeTreeParser::KMMsgFullySigned);
+
+        QCOMPARE(part->partMetaData()->isGoodSignature, true);
+        QCOMPARE(part->partMetaData()->keyIsTrusted, true);
+        QCOMPARE(part->partMetaData()->keyMissing, false);
+        QCOMPARE(part->partMetaData()->keyExpired, false);
+        QCOMPARE(part->partMetaData()->keyRevoked, false);
+        QCOMPARE(part->partMetaData()->sigExpired, false);
+        QCOMPARE(part->partMetaData()->crlMissing, false);
+        QCOMPARE(part->partMetaData()->crlTooOld, false);
+        QCOMPARE(part->partMetaData()->keyId, QByteArray{"8D9860C58F246DE6"});
+        QCOMPARE(part->partMetaData()->signer, {"unittest key (no password) <test@kolab.org>"});
+        QCOMPARE(part->partMetaData()->signerMailAddresses, QStringList{{"test@kolab.org"}});
     }
 
     void testEncryptedAndSigned()

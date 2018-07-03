@@ -696,7 +696,7 @@ static QString prettifyDN(const char *uid)
 
 void SignedMessagePart::sigStatusToMetaData(const Signature &signature)
 {
-    mMetaData.isGoodSignature = signature.status & GPG_ERR_NO_ERROR;
+    mMetaData.isGoodSignature = signature.status == GPG_ERR_NO_ERROR;
     // save extended signature status flags
     auto summary = signature.summary;
     mMetaData.keyMissing = summary & GPGME_SIGSUM_KEY_MISSING;
