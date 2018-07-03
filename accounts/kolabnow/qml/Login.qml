@@ -26,6 +26,7 @@ Item {
     property alias accountId: settings.accountIdentifier
     property string heading: qsTr("Login")
     property string subheadline: settings.accountName
+    property bool valid: pwField.acceptableInput
 
     KolabnowAccount.KolabnowSettings {
         id: settings

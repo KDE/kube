@@ -97,7 +97,11 @@ Item {
                 }
             }
         }
-        Keys.onReturnPressed: login()
+        Keys.onReturnPressed: {
+            if (loader.item.valid) {
+                login()
+            }
+        }
 
         Item {
             id: footer
@@ -112,6 +116,7 @@ Item {
                 anchors.right: parent.right
                 text: qsTr("Login")
                 onClicked: login()
+                enabled: loader.item.valid
             }
         }
     }
