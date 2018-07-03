@@ -20,7 +20,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.3 as Controls1
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2.2 as Controls2
 import org.kube.framework 1.0 as Kube
 
 Controls1.SplitView {
@@ -55,7 +55,7 @@ Controls1.SplitView {
                     return
                 }
                 //Avoid highlighting the iconbutton again if we're already looking at this view.
-                if (!Controls2.StackView.visible) {
+                if (root.Controls2.StackView.status != Controls2.StackView.Active) {
                     if (message.type == Kube.Notifications.error) {
                         root.pendingError = true
                     }
