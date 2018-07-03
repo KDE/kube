@@ -179,7 +179,7 @@ FocusScope {
                     PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
                     PropertyChanges {target: delegateRoot; x: x; y: y}
                     PropertyChanges {target: delegateRoot; parent: root}
-                    PropertyChanges {target: delegateRoot; opacity: 0.7}
+                    PropertyChanges {target: delegateRoot; opacity: 0.2}
                     PropertyChanges {target: delegateRoot; highlighted: true}
                 }
                 ]
