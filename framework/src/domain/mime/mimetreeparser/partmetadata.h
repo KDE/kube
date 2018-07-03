@@ -31,7 +31,6 @@ public:
     bool sigExpired = false;
     bool crlMissing = false;
     bool crlTooOld = false;
-    QString signClass;
     QString signer;
     QStringList signerMailAddresses;
     QByteArray keyId;

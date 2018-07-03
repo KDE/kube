@@ -76,7 +76,6 @@ class SignatureInfo : public QObject
     Q_PROPERTY(bool crlTooOld MEMBER crlTooOld CONSTANT)
 
     Q_PROPERTY(QString signer MEMBER signer CONSTANT)
-    Q_PROPERTY(QString signClass MEMBER signClass CONSTANT)
     Q_PROPERTY(QStringList signerMailAddresses MEMBER signerMailAddresses CONSTANT)
     Q_PROPERTY(bool signatureIsGood MEMBER signatureIsGood CONSTANT)
     Q_PROPERTY(bool keyIsTrusted MEMBER keyIsTrusted CONSTANT)
@@ -91,7 +90,6 @@ public:
     QByteArray keyId;
 
     QString signer;
-    QString signClass;
     QStringList signerMailAddresses;
     bool signatureIsGood = false;
     bool keyIsTrusted = false;
