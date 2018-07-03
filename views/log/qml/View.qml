@@ -54,11 +54,13 @@ Controls1.SplitView {
                 if (!message.message) {
                     return
                 }
-                if (message.type == Kube.Notifications.error) {
-                    root.pendingError = true
+                //Avoid highlighting the iconbutton again if we're already looking at this view.
+                if (!Controls2.StackView.visible) {
+                    if (message.type == Kube.Notifications.error) {
+                        root.pendingError = true
+                    }
+                    root.pendingNotification = true
                 }
-
-                root.pendingNotification = true
 
                 var error = {
                     timestamp: new Date(),
