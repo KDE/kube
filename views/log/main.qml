@@ -86,7 +86,7 @@ ApplicationWindow {
             {
                 "type": Kube.Notifications.error,
                 "subtype": Kube.Notifications.loginError,
-                message: "merge1",
+                message: "Failed to login",
                 resource: "resource1",
                 entities: []
             }
@@ -96,7 +96,7 @@ ApplicationWindow {
             {
                 "type": Kube.Notifications.error,
                 "subtype": Kube.Notifications.hostNotFoundError,
-                message: "merge1",
+                message: "Host Not Found",
                 resource: "resource1",
                 entities: []
             }
@@ -106,7 +106,7 @@ ApplicationWindow {
             {
                 "type": Kube.Notifications.error,
                 "subtype": Kube.Notifications.connectionError,
-                message: "merge1",
+                message: "connection error",
                 resource: "resource1",
                 entities: []
             }
@@ -118,7 +118,7 @@ ApplicationWindow {
             {
                 "type": Kube.Notifications.error,
                 "subtype": Kube.Notifications.transmissionError,
-                message: "merge1",
+                message: "transmission error with mail uid",
                 resource: "resource1",
                 entities: [mail_uid]
             }
@@ -130,7 +130,7 @@ ApplicationWindow {
             {
                 "type": Kube.Notifications.error,
                 "subtype": Kube.Notifications.transmissionError,
-                message: "merge1",
+                message: "transmission error with another mail uid",
                 resource: "resource1",
                 entities: [mail2_uid]
             }
@@ -140,7 +140,7 @@ ApplicationWindow {
             {
                 "type": Kube.Notifications.error,
                 "subtype": "customSubType",
-                message: "merge1",
+                message: "custom subtype error",
                 resource: "resource1",
                 entities: []
             }

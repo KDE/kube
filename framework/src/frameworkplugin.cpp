@@ -46,6 +46,7 @@
 #include "extensionmodel.h"
 #include "viewhighlighter.h"
 #include "file.h"
+#include "logmodel.h"
 
 #include <QtQml>
 #include <QQuickImageProvider>
@@ -178,6 +179,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<ContactController>(uri, 1, 0,"ContactController");
     qmlRegisterType<PeopleModel>(uri, 1, 0,"PeopleModel");
     qmlRegisterType<TextDocumentHandler>(uri, 1, 0, "TextDocumentHandler");
+    qmlRegisterType<LogModel>(uri, 1, 0, "LogModel");
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");

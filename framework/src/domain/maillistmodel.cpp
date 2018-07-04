@@ -406,6 +406,15 @@ bool MailListModel::showInbox() const
 void MailListModel::setEntityId(const QString &id)
 {
     qDebug() << "Running mail query for mail with ID:" << id;
+    if (id.isEmpty()) {
+        mCurrentQueryItem.clear();
+        setSourceModel(nullptr);
+        return;
+    }
+    if (mCurrentQueryItem == id) {
+        return;
+    }
+    mCurrentQueryItem = id.toLatin1();
     using namespace Sink::ApplicationDomain;
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);

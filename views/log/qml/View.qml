@@ -61,27 +61,7 @@ Controls1.SplitView {
                     }
                     root.pendingNotification = true
                 }
-
-                var error = {
-                    timestamp: new Date(),
-                    message: message.message,
-                    details: message.details,
-                    resource: message.resource,
-                    // TODO: if we passed entities as a list, it would get
-                    // converted to a ListModel, in all likelihood because of
-                    // ListDelegate, which we should rewrite in C++
-                    entities: {elements: message.entities}
-                }
-
-                if (logModel.count > 0) {
-                    var lastEntry = logModel.get(0)
-                    //Merge if we get an entry of the same subtype
-                    if (lastEntry.subtype && lastEntry.subtype == message.subtype) {
-                        logModel.set(0, {type: message.type, subtype: message.subtype, errors: [error].concat(lastEntry.errors)})
-                        return
-                    }
-                }
-                logModel.insert(0, {type: message.type, subtype: message.subtype, errors: [error]})
+                logModel.insert(message)
             }
         }
 
@@ -99,25 +79,23 @@ Controls1.SplitView {
 
             clip: true
 
-            model: ListModel {
+            model: Kube.LogModel {
                 id: logModel
                 objectName: "logModel"
             }
 
             onCurrentItemChanged: {
-                var error = currentItem.currentData.errors.get(0)
-                if (!!error.resource) {
-                    details.resourceId = error.resource
+                if (!!currentItem.currentData.resource) {
+                    details.resourceId = currentItem.currentData.resource
                 }
-                details.message = error.message + "\n" + error.details
-                details.timestamp = error.timestamp
+                details.message = currentItem.currentData.message + "\n" + currentItem.currentData.details
+                details.timestamp = currentItem.currentData.timestamp
+                details.entities = currentItem.currentData.entities
                 if (!!currentItem.currentData.subtype) {
                     details.subtype = currentItem.currentData.subtype
                 } else {
                     details.subtype = ""
                 }
-
-                details.entities = error.entities
             }
 
             delegate: Kube.ListDelegate {
@@ -149,7 +127,7 @@ Controls1.SplitView {
                     maximumLineCount: 1
                     elide: Text.ElideRight
                     color: Kube.Colors.disabledTextColor
-                    text: model.errors.get(0).message
+                    text: model.message
                 }
 
                 Kube.Label {
@@ -160,7 +138,7 @@ Controls1.SplitView {
                         bottom: parent.bottom
                         rightMargin: Kube.Units.smallSpacing
                     }
-                    text: Qt.formatDateTime(model.errors.get(0).timestamp, " hh:mm:ss dd MMM yyyy")
+                    text: Qt.formatDateTime(model.timestamp, " hh:mm:ss dd MMM yyyy")
                     font.italic: true
                     color: Kube.Colors.disabledTextColor
                     font.pointSize: Kube.Units.smallFontSize
@@ -196,7 +174,7 @@ Controls1.SplitView {
             property string resourceId: details.resourceId
             property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
             property string accountName: retriever.currentData ? retriever.currentData.name : ""
-            property var entities: details.entities
+            property string entityId: details.entities.length != 0 ? details.entities[0] : ""
 
             function getComponent(subtype) {
                 if (subtype == Kube.Notifications.loginError) {
@@ -364,6 +342,7 @@ Controls1.SplitView {
     Component {
         id: transmissionErrorComponent
         Item {
+            id: componentRoot
             Column {
                 anchors {
                     top: parent.top
@@ -383,7 +362,7 @@ Controls1.SplitView {
 
                     Repeater {
                         model: Kube.MailListModel {
-                            entityId: entities.elements[0]
+                            entityId: componentRoot.parent ? componentRoot.parent.entityId : ""
                         }
                         delegate: Column {
                             id: subHeadline

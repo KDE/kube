@@ -54,6 +54,7 @@ add_library(kubeframework SHARED
     extensionmodel.cpp
     viewhighlighter.cpp
     file.cpp
+    logmodel.cpp
     )
 generate_export_header(kubeframework BASE_NAME Kube EXPORT_FILE_NAME kube_export.h)
 set_target_properties(kubeframework PROPERTIES
