@@ -88,10 +88,7 @@ FocusScope {
             left: container.left
         }
         z: 1
-        background: Rectangle {
-            anchors.fill: parent
-            color: Kube.Colors.textColor
-        }
+        color: Kube.Colors.textColor
         iconName: Kube.Icons.goBack_inverted
         visible: currentIndex > 0
         onClicked: decrementCurrentIndex()
