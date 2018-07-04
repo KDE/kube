@@ -4,7 +4,7 @@
     "runtime": "org.kde.Platform",
     "runtime-version": "5.9",
     "sdk": "org.kde.Sdk",
-    "command": "kube",
+    "command": "kubewrapper.sh",
     "rename-icon": "kube_icon",
     "tags": ["nightly"],
     "desktop-file-name-prefix": "(Nightly) ",
@@ -122,6 +122,21 @@
             "name": "kube",
             "buildsystem": "cmake-ninja",
             "sources": [ { "type": "dir", "path": "..",  "skip": [".git"] } ]
+        },
+        {
+            "name": "kubewrapper",
+            "buildsystem": "simple",
+            "build-commands": [
+                "cp kubewrapper.sh /app/bin/kubewrapper.sh",
+                "chmod +x /app/bin/kubewrapper.sh"
+            ],
+            "sources": [
+                {
+                    "type": "script",
+                    "commands": ["gpg-agent --homedir ~/.gnupg --daemon --pinentry-program /app/bin/pinentry-qt", "kube", "gpg-connect-agent killagent /bye"],
+                    "dest-filename": "kubewrapper.sh"
+                }
+            ]
         }
     ]
 }
