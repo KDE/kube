@@ -224,11 +224,13 @@ Rectangle {
 
         Rectangle {
             id: goDown
-
             anchors {
                 bottom: seperator.top
                 right: seperator.right
             }
+
+            //Only show the expand button if there is something to expand
+            visible: recipients.truncated || root.cc || root.bcc
 
             height: Kube.Units.gridUnit
             width: height
