@@ -382,7 +382,7 @@ Kube.View {
                 }
 
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
-                Keys.onEscapePressed: recipients.forceActiveFocus()
+                Keys.onEscapePressed: recipients.forceActiveFocus(Qt.TabFocusReason)
                 onTextChanged: {
                     composerController.body = text;
                 }

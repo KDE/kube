@@ -127,12 +127,12 @@ FocusScope {
                     root.controller.add({name: text});
                     clear()
                     visible = false
-                    button.forceActiveFocus()
+                    button.forceActiveFocus(Qt.TabFocusReason)
                 }
                 onAborted: {
                     clear()
                     visible = false
-                    button.forceActiveFocus()
+                    button.forceActiveFocus(Qt.TabFocusReason)
                 }
             }
         }
