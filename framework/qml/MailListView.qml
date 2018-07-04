@@ -251,7 +251,7 @@ FocusScope {
                         visible: !delegateRoot.hovered
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                         font.italic: true
-                        color: !delegateRoot.highlighted ? Kube.Colors.disabledTextColor : delegateRoot.textColor
+                        color: delegateRoot.disabledTextColor
                         font.pointSize: Kube.Units.tinyFontSize
                     }
 

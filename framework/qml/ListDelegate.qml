@@ -27,6 +27,7 @@ T.ItemDelegate {
     property alias color: background.color
     property alias border: background.border
     property color textColor: highlighted ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
+    property color disabledTextColor: highlighted ? Kube.Colors.highlightedTextColor : Kube.Colors.disabledTextColor
 
     height: Kube.Units.gridUnit * 3
     width: root.ListView.view.width

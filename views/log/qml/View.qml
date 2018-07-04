@@ -99,6 +99,7 @@ Controls1.SplitView {
             }
 
             delegate: Kube.ListDelegate {
+                id: delegateRoot
                 border.color: Kube.Colors.buttonColor
                 border.width: 1
                 Kube.Label {
@@ -126,7 +127,7 @@ Controls1.SplitView {
                     width: parent.width - Kube.Units.largeSpacing * 2
                     maximumLineCount: 1
                     elide: Text.ElideRight
-                    color: Kube.Colors.disabledTextColor
+                    color: delegateRoot.disabledTextColor
                     text: model.message
                 }
 
@@ -140,7 +141,7 @@ Controls1.SplitView {
                     }
                     text: Qt.formatDateTime(model.timestamp, " hh:mm:ss dd MMM yyyy")
                     font.italic: true
-                    color: Kube.Colors.disabledTextColor
+                    color: delegateRoot.disabledTextColor
                     font.pointSize: Kube.Units.smallFontSize
                 }
             }
