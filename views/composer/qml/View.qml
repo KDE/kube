@@ -135,6 +135,7 @@ Kube.View {
             Kube.Label{
                 text: qsTr("Drafts")
                 color: Kube.Colors.highlightedTextColor
+                font.weight: Font.Bold
             }
 
             Kube.ListView {
