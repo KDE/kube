@@ -353,6 +353,7 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
     }
 
     setExistingMessage(msg);
+    emit messageLoaded(body);
 }
 
 void ComposerController::loadDraft(const QVariant &message) {

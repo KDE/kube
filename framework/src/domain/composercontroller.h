@@ -96,6 +96,9 @@ public:
     Q_INVOKABLE void loadReply(const QVariant &message);
     Q_INVOKABLE void loadForward(const QVariant &message);
 
+signals:
+    void messageLoaded(const QString &body);
+
 public slots:
     virtual void clear() Q_DECL_OVERRIDE;
 

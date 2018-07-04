@@ -44,6 +44,8 @@ Kube.View {
 
             sendAction.enabled: composerController.accountId && composerController.subject && (!composerController.encrypt || composerController.foundAllKeys) && (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys) && !composerController.to.empty
             saveAsDraftAction.enabled: composerController.accountId
+            onMessageLoaded: { textEditor.initialText = body }
+            onCleared: { textEditor.initialText = "" }
         }
     ]
 
@@ -380,7 +382,6 @@ Kube.View {
 
                 onActiveFocusChanged: closeFirstSplitIfNecessary()
                 Keys.onEscapePressed: recipients.forceActiveFocus()
-                initialText: composerController.body
                 onTextChanged: {
                     composerController.body = text;
                 }

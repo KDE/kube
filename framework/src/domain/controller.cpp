@@ -54,6 +54,7 @@ void Controller::clear()
     for (const auto &p : dynamicPropertyNames()) {
         setProperty(p, QVariant());
     }
+    emit cleared();
 }
 
 void Controller::run(const KAsync::Job<void> &job)

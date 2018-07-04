@@ -100,6 +100,7 @@ public slots:
 signals:
     void done();
     void error();
+    void cleared();
 
 protected:
     void run(const KAsync::Job<void> &job);
