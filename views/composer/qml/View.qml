@@ -372,6 +372,7 @@ Kube.View {
             Kube.TextEditor {
                 id: textEditor
                 objectName: "textEditor"
+                activeFocusOnTab: true
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
