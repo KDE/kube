@@ -28,17 +28,18 @@ TestCase {
     height: 400
     name: "TextEditor"
 
-    Kube.TextEditor {
-        id: editor
-        initialText: "Foobar\nBarBar"
-        htmlEnabled: false
+    Component {
+        id: editorComponent
+        Kube.TextEditor {}
     }
 
     function test_1initialText() {
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "Foobar\nBarBar", htmlEnabled: false})
         compare(editor.text, editor.initialText)
     }
 
-    function test_2htmlConversion() {
+    function test_2plainToHtmlConversion() {
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "Foobar\nBarBar", htmlEnabled: false})
         editor.htmlEnabled = true
         verify(editor.text.indexOf("<html>") !== -1)
         //It's converted into two paragraphs, so we can't check as a single string
@@ -46,5 +47,27 @@ TestCase {
         verify(editor.text.indexOf("BarBar") !== -1)
         editor.htmlEnabled = false
         compare(editor.text, editor.initialText)
+
+        editor.htmlEnabled = true
+        verify(editor.text.indexOf("<html>") !== -1)
+    }
+
+    function test_3htmlToPlainConversion() {
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;\"><p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">test</p></body></html>", htmlEnabled: true})
+        editor.htmlEnabled = false
+        compare(editor.text, "test")
+
+        editor.htmlEnabled = true
+        verify(editor.text.indexOf("<html>") !== -1)
+    }
+
+    function test_4detectPlain() {
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "Foobar\nBarBar", htmlEnabled: true})
+        compare(editor.htmlEnabled, false)
+    }
+
+    function test_5detectHtml() {
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;\"><p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">test</p></body></html>", htmlEnabled: false})
+        compare(editor.htmlEnabled, true)
     }
 }
