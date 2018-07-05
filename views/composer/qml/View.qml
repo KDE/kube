@@ -114,7 +114,8 @@ Kube.View {
 
             anchors {
                 fill: parent
-                margins: Kube.Units.largeSpacing
+                topMargin: Kube.Units.largeSpacing
+                leftMargin: Kube.Units.largeSpacing
             }
 
             spacing: Kube.Units.largeSpacing
