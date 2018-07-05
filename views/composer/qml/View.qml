@@ -105,7 +105,7 @@ Kube.View {
             bottom: parent.bottom
         }
 
-        width: Kube.Units.gridUnit * 10
+        width: Kube.Units.gridUnit * 15
         Layout.minimumWidth: Kube.Units.gridUnit * 5
 
         color: Kube.Colors.textColor
@@ -122,10 +122,8 @@ Kube.View {
 
             Kube.PositiveButton {
                 objectName: "newMailButton"
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
+
+                width: parent.width - Kube.Units.largeSpacing
                 focus: true
                 text: qsTr("New Email")
                 onClicked: {
@@ -195,7 +193,7 @@ Kube.View {
                         }
 
                         Kube.Label {
-                            width: content.width
+                            width: content.width - Kube.Units.largeSpacing
                             text: model.subject == "" ? "no subject" : model.subject
                             color: Kube.Colors.highlightedTextColor
                             maximumLineCount: 2
@@ -206,6 +204,7 @@ Kube.View {
                         Kube.Label {
                             anchors {
                                 right: parent.right
+                                rightMargin: Kube.Units.largeSpacing
                                 bottom: parent.bottom
                             }
                             text: Qt.formatDateTime(model.date, "dd MMM yyyy")
@@ -221,7 +220,8 @@ Kube.View {
                         anchors {
                             right: parent.right
                             bottom: parent.bottom
-                            margins: Kube.Units.smallSpacing
+                            bottomMargin: Kube.Units.smallSpacing
+                            rightMargin: Kube.Units.largeSpacing
                         }
 
                         visible: delegateRoot.hovered
