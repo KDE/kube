@@ -26,6 +26,8 @@ T.CheckBox {
     implicitWidth: indicator.width
     implicitHeight: indicator.width
 
+    Keys.onReturnPressed: root.toggle()
+
     indicator: Rectangle {
         width: Kube.Units.gridUnit
         height: Kube.Units.gridUnit
@@ -33,6 +35,14 @@ T.CheckBox {
         color: Kube.Colors.viewBackgroundColor
         border.width: 1
         border.color: Kube.Colors.buttonColor
+
+        Rectangle {
+            id: highlight
+            anchors.fill: parent
+            visible: root.hovered || root.visualFocus
+            color: Kube.Colors.highlightColor
+            opacity: 0.4
+        }
 
         Kube.Icon {
             anchors.centerIn: parent
