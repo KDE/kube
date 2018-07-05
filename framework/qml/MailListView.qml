@@ -248,7 +248,7 @@ FocusScope {
                             right: parent.right
                             bottom: parent.bottom
                         }
-                        visible: !delegateRoot.hovered
+                        visible: !delegateRoot.focused
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                         font.italic: true
                         color: delegateRoot.disabledTextColor
@@ -273,7 +273,7 @@ FocusScope {
                         margins: Kube.Units.smallSpacing
                     }
 
-                    visible: delegateRoot.hovered && !mouseArea.drag.active
+                    visible: delegateRoot.focused && !mouseArea.drag.active
 
                     spacing: Kube.Units.smallSpacing
                     opacity: 0.7
@@ -283,7 +283,6 @@ FocusScope {
                         iconName: Kube.Icons.markAsRead
                         visible: model.unread
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
-                        activeFocusOnTab: false
                         tooltip: qsTr("Mark as read")
                     }
                     Kube.IconButton {
