@@ -28,6 +28,7 @@ T.ItemDelegate {
     property alias border: background.border
     property color textColor: highlighted ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
     property color disabledTextColor: highlighted ? Kube.Colors.highlightedTextColor : Kube.Colors.disabledTextColor
+    property bool focused: root.hovered || root.activeFocus
 
     height: Kube.Units.gridUnit * 3
     width: root.ListView.view.width
@@ -44,7 +45,7 @@ T.ItemDelegate {
         border.color: Kube.Colors.buttonColor
         border.width: 1
         color: Kube.Colors.viewBackgroundColor
-        focused: root.hovered || root.activeFocus
+        focused: root.focused
         selected: root.highlighted
     }
 }
