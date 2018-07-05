@@ -61,7 +61,7 @@ StackView {
                     pushView(view, properties, name)
                 }
             } else {
-                console.error("Error while loading the component: ", source, "\nError: ", component.errorString())
+                console.error("Error while loading the component:", component.errorString())
             }
         }
 
