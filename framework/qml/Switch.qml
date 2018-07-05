@@ -9,6 +9,8 @@ T.Switch {
     implicitWidth: indicator.width
     implicitHeight: indicator.height
 
+    Keys.onReturnPressed: root.toggle()
+
     indicator: Item {
         height: Kube.Units.gridUnit
         width: Kube.Units.gridUnit * 2
@@ -26,8 +28,10 @@ T.Switch {
             x: root.visualPosition * Kube.Units.gridUnit
             radius: 2
             color: Kube.Colors.viewBackgroundColor
-            border.width: 1
-            border.color: Kube.Colors.buttonColor
+            border {
+                width: root.hovered || root.visualFocus ? 2 : 1
+                color: root.hovered || root.visualFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+            }
         }
     }
 }
