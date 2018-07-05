@@ -53,7 +53,9 @@ Item {
             console.debug("Link hovered ", hoveredUrl)
         }
         onNavigationRequested: {
-            console.debug("Nav request ", request)
+            console.debug("Nav request ", request, request.url)
+            Qt.openUrlExternally(request.url)
+            request.action = WebEngineNavigationRequest.IgnoreRequest
         }
         onNewViewRequested: {
             console.debug("New view request ", request, request.requestedUrl)
@@ -83,7 +85,6 @@ Item {
             //The webview should not steal focus
             focusOnNavigationEnabled: false
         }
-        profile: Kube.WebEngineProfile
         onContextMenuRequested: function(request) {
             request.accepted = true
         }
