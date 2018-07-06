@@ -30,35 +30,18 @@ Item {
     property rect searchArea
     property string backgroundColor: Kube.Colors.darkCharcoalGrey
     property real backgroundOpacity: 0.6
+    property string filter: ""
 
     parent: ApplicationWindow.overlay
     anchors.fill: parent
     enabled: false
 
-    //topLeft
+    //left
     Rectangle {
         x: 0
         y: 0
         width: searchArea.x
-        height: searchArea.y
-        color: parent.backgroundColor
-        opacity: parent.backgroundOpacity
-    }
-    //left
-    Rectangle {
-        x: 0
-        y: searchArea.y
-        width: searchArea.x
-        height: searchArea.height
-        color: parent.backgroundColor
-        opacity: parent.backgroundOpacity
-    }
-    //bottomleft
-    Rectangle {
-        x: 0
-        y: searchArea.y + searchArea.height
-        width: searchArea.x
-        height: parent.height - y
+        height: parent.height
         color: parent.backgroundColor
         opacity: parent.backgroundOpacity
     }
@@ -71,30 +54,12 @@ Item {
         color: parent.backgroundColor
         opacity: parent.backgroundOpacity
     }
-    //bottomright
-    Rectangle {
-        x: searchArea.x + searchArea.width
-        y: searchArea.y + searchArea.height
-        width: parent.width - x
-        height: parent.height - y
-        color: parent.backgroundColor
-        opacity: parent.backgroundOpacity
-    }
     //right
-    Rectangle {
-        x: searchArea.x + searchArea.width
-        y: searchArea.y
-        width: parent.width - x
-        height: searchArea.height
-        color: parent.backgroundColor
-        opacity: parent.backgroundOpacity
-    }
-    //topright
     Rectangle {
         x: searchArea.x + searchArea.width
         y: 0
         width: parent.width - x
-        height: searchArea.y
+        height: parent.height
         color: parent.backgroundColor
         opacity: parent.backgroundOpacity
     }
@@ -134,7 +99,6 @@ Item {
 
         function clearSearch() {
             find.text = ""
-            mailListView.filter = ""
             root.destroy()
         }
 
@@ -161,7 +125,7 @@ Item {
                 id: find
                 Layout.fillWidth: true
                 placeholderText: qsTr("Filter...")
-                onTextChanged: mailListView.filter = text
+                onTextChanged: root.filter = text
                 activeFocusOnTab: visible
                 focus: visible
                 Keys.onEscapePressed: filterField.clearSearch()
