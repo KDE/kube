@@ -72,6 +72,18 @@ Item {
         color: parent.backgroundColor
         opacity: parent.backgroundOpacity
     }
+    //outline
+    Rectangle {
+        x: searchArea.x
+        y: searchArea.y
+        width: searchArea.width
+        height: searchArea.height
+        color: "transparent"
+        border {
+            width: 2
+            color: Kube.Colors.highlightColor
+        }
+    }
 
 
     Rectangle {
