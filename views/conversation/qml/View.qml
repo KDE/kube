@@ -224,6 +224,9 @@ Kube.View {
         id: searchComponent
         Kube.SearchPopup {
             searchArea: root.searchArea
+            onFilterChanged: {
+                mailListView.filter = filter
+            }
         }
 
     }
