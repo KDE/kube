@@ -25,7 +25,7 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-FocusScope {
+Kube.View {
     id: root
     property alias currentAccount: accountFolderview.currentAccount
 
