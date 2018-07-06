@@ -29,6 +29,8 @@ Kube.View {
     id: root
     property alias currentAccount: accountFolderview.currentAccount
 
+    property rect searchArea: Qt.rect(mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
+
     property bool hasHelp: true
     function showHelp() {
         helpViewComponent.createObject(root).open()
@@ -72,7 +74,7 @@ Kube.View {
     }
     Shortcut {
         sequence: "?"
-        onActivated: helpViewComponent.createObject(root).open()
+        onActivated: showHelp()
     }
 
 
@@ -166,7 +168,9 @@ Kube.View {
 
                 Kube.Listener {
                     filter: Kube.Messages.search
-                    onMessageReceived: mailListView.showFilter = true
+                    onMessageReceived: {
+                        searchComponent.createObject(root).open()
+                    }
                 }
                 onCurrentMailChanged: {
                     Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
@@ -212,6 +216,107 @@ Kube.View {
                 ListElement { description: qsTr("Reply to the currently focused message:"); shortcut: "r" }
                 ListElement { description: qsTr("Delete the currently focused message:"); shortcut: "d" }
                 ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
+            }
+        }
+    }
+
+    Component {
+        id: searchComponent
+        Kube.SearchPopup {
+            id: searchPopup
+
+            //x: (parent.width / 2) - (width / 2)
+            //y: parent.height / 3
+            //height: Kube.Units.gridUnit * 2
+            //width: Kube.Units.gridUnit * 30
+
+            parent: root
+            //x: root.x + Kube.Units.gridUnit
+            x: root.searchArea.x
+            y: root.searchArea.y
+            width: root.searchArea.width
+            height: root.searchArea.height
+
+
+            modal: false
+            dim: true
+            //closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+            closePolicy: Popup.CloseOnEscape
+
+            //TODO use dimming outside of search area
+            //Use popup transparency for main area (how do we interact with the content?
+            //Overlay.modal: Item {}
+
+            background: Rectangle {
+                color: "transparent"
+                enabled: false
+                border {
+                    width: 2
+                    color: Kube.Colors.highlightColor
+                }
+                Rectangle {
+                    anchors.fill: parent
+                    color: Kube.Colors.backgroundColor
+                    opacity: 0.2
+                }
+
+            }
+
+            Rectangle {
+                id: filterField
+                enabled: false
+
+                //anchors.fill: parent
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                }
+                y: parent.height / 3
+                height: Kube.Units.gridUnit * 2
+                width: Kube.Units.gridUnit * 30
+
+
+                color: Kube.Colors.buttonColor
+
+                states: [
+                    State {
+                        name: "searchInProgress"
+                        when: find.text.length != 0
+                        PropertyChanges {target: filterField; y: Kube.Units.gridUnit}
+                        PropertyChanges {target: searchPopup; closePolicy: Popup.CloseOnEscape}
+                        PropertyChanges {target: searchPopup; modal: false}
+                    }
+                ]
+
+                function clearSearch() {
+                    find.text = ""
+                    mailListView.filter = ""
+                    close()
+                }
+
+                RowLayout {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                    }
+
+                    width: parent.width - Kube.Units.smallSpacing
+                    spacing: 0
+
+                    Kube.IconButton {
+                        iconName: Kube.Icons.remove
+                        activeFocusOnTab: visible
+                        onClicked: filterField.clearSearch()
+                    }
+
+                    Kube.TextField {
+                        id: find
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("Filter...")
+                        onTextChanged: mailListView.filter = text
+                        activeFocusOnTab: visible
+                        focus: visible
+                        Keys.onEscapePressed: filterField.clearSearch()
+                    }
+                }
             }
         }
     }
