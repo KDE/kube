@@ -24,14 +24,148 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
+Item {
+    id: root
 
-Kube.Popup {
-    modal: true
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-    x: (parent.width - width)/2
-    y: Kube.Units.largeSpacing
-    width: parent.width / 2
-    height: parent.height - Kube.Units.largeSpacing * 2
-    clip: true
+    property rect searchArea
+    property string backgroundColor: Kube.Colors.darkCharcoalGrey
+    property real backgroundOpacity: 0.6
 
+    parent: ApplicationWindow.overlay
+    anchors.fill: parent
+    enabled: false
+
+    //topLeft
+    Rectangle {
+        x: 0
+        y: 0
+        width: searchArea.x
+        height: searchArea.y
+        color: parent.backgroundColor
+        opacity: parent.backgroundOpacity
+    }
+    //left
+    Rectangle {
+        x: 0
+        y: searchArea.y
+        width: searchArea.x
+        height: searchArea.height
+        color: parent.backgroundColor
+        opacity: parent.backgroundOpacity
+    }
+    //bottomleft
+    Rectangle {
+        x: 0
+        y: searchArea.y + searchArea.height
+        width: searchArea.x
+        height: parent.height - y
+        color: parent.backgroundColor
+        opacity: parent.backgroundOpacity
+    }
+    //bottom
+    Rectangle {
+        x: searchArea.x
+        y: searchArea.y + searchArea.height
+        width: searchArea.width
+        height: parent.height - y
+        color: parent.backgroundColor
+        opacity: parent.backgroundOpacity
+    }
+    //bottomright
+    Rectangle {
+        x: searchArea.x + searchArea.width
+        y: searchArea.y + searchArea.height
+        width: parent.width - x
+        height: parent.height - y
+        color: parent.backgroundColor
+        opacity: parent.backgroundOpacity
+    }
+    //right
+    Rectangle {
+        x: searchArea.x + searchArea.width
+        y: searchArea.y
+        width: parent.width - x
+        height: searchArea.height
+        color: parent.backgroundColor
+        opacity: parent.backgroundOpacity
+    }
+    //topright
+    Rectangle {
+        x: searchArea.x + searchArea.width
+        y: 0
+        width: parent.width - x
+        height: searchArea.y
+        color: parent.backgroundColor
+        opacity: parent.backgroundOpacity
+    }
+    //bottom
+    Rectangle {
+        x: searchArea.x
+        y: 0
+        width: searchArea.width
+        height: searchArea.y
+        color: parent.backgroundColor
+        opacity: parent.backgroundOpacity
+    }
+
+
+    Rectangle {
+        id: filterField
+        enabled: true
+        parent: ApplicationWindow.overlay
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+        }
+        y: parent.height / 3
+        height: Kube.Units.gridUnit * 2
+        width: Kube.Units.gridUnit * 30
+        radius: Kube.Units.smallSpacing
+
+        color: Kube.Colors.buttonColor
+
+        states: [
+            State {
+                name: "searchInProgress"
+                when: find.text.length != 0
+                PropertyChanges {target: filterField; y: Kube.Units.gridUnit}
+            }
+        ]
+
+        function clearSearch() {
+            find.text = ""
+            mailListView.filter = ""
+            root.destroy()
+        }
+
+        Shortcut {
+            sequences: [StandardKey.Cancel]
+            onActivated: filterField.clearSearch()
+        }
+
+        RowLayout {
+            anchors {
+                verticalCenter: parent.verticalCenter
+            }
+
+            width: parent.width - Kube.Units.smallSpacing
+            spacing: 0
+
+            Kube.IconButton {
+                iconName: Kube.Icons.remove
+                activeFocusOnTab: visible
+                onClicked: filterField.clearSearch()
+            }
+
+            Kube.TextField {
+                id: find
+                Layout.fillWidth: true
+                placeholderText: qsTr("Filter...")
+                onTextChanged: mailListView.filter = text
+                activeFocusOnTab: visible
+                focus: visible
+                Keys.onEscapePressed: filterField.clearSearch()
+            }
+        }
+    }
 }
