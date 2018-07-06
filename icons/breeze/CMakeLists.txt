@@ -13,6 +13,7 @@ if(BINARY_ICONS_RESOURCE)
 
         get_target_property(QT_RCC_EXECUTABLE Qt5::rcc LOCATION)
 
+        file(REMOVE ${BINARY_RESOURCE_FILE})
         file(REMOVE_RECURSE ${RESOURCES_WORKING_DIR})
         file(MAKE_DIRECTORY ${RESOURCES_WORKING_DIR})
         #Copying symlinks doesn't work on windows if the target is not yet available.
@@ -29,20 +30,23 @@ if(BINARY_ICONS_RESOURCE)
             ${RESOURCES_WORKING_DIR}/CMakeLists.txt
         )
 
-        add_custom_command(OUTPUT ${RESOURCE_FILE}
+        add_custom_command(OUTPUT ${RESOURCE_FILE} always_rebuild1
             COMMAND ${QT_RCC_EXECUTABLE} --project -o ${CMAKE_CURRENT_BINARY_DIR}/tmp.qrc
             COMMAND $<TARGET_FILE:qrcAlias> -i ${CMAKE_CURRENT_BINARY_DIR}/tmp.qrc -o ${RESOURCE_FILE}
+            DEPENDS ${RESOURCES_WORKING_DIR}
             WORKING_DIRECTORY ${RESOURCES_WORKING_DIR}
+            COMMENT "Generating ${RESOURCE_FILE}"
         )
-        add_custom_command(OUTPUT ${BINARY_RESOURCE_FILE}
+        add_custom_command(OUTPUT ${BINARY_RESOURCE_FILE} always_rebuild2
             COMMAND ${QT_RCC_EXECUTABLE} --binary
                         -o ${BINARY_RESOURCE_FILE}
                         ${RESOURCE_FILE}
-            DEPENDS ${RESOURCE_FILE}
+            DEPENDS ${RESOURCE_FILE} always_rebuild1
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMENT "Generating ${BINARY_RESOURCE_FILE}"
         )
 
-        add_custom_target(kube-${target}-rcc ALL DEPENDS ${BINARY_RESOURCE_FILE})
+        add_custom_target(kube-${target}-rcc ALL DEPENDS ${BINARY_RESOURCE_FILE} always_rebuild2)
 
         set(${outfile} ${BINARY_RESOURCE_FILE} PARENT_SCOPE)
     endfunction()
