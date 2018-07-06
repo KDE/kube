@@ -175,7 +175,7 @@ Controls1.SplitView {
             property string resourceId: details.resourceId
             property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
             property string accountName: retriever.currentData ? retriever.currentData.name : ""
-            property string entityId: details.entities.length != 0 ? details.entities[0] : ""
+            property string entityId: (details.entities && details.entities.length != 0) ? details.entities[0] : ""
 
             function getComponent(subtype) {
                 if (subtype == Kube.Notifications.loginError) {
