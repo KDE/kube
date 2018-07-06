@@ -29,7 +29,8 @@ Kube.View {
     id: root
     property alias currentAccount: accountFolderview.currentAccount
 
-    property rect searchArea: Qt.rect(mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
+    //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
+    property rect searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
 
     property bool hasHelp: true
     function showHelp() {
