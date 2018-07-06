@@ -141,8 +141,8 @@ FocusScope {
 
             parent: ApplicationWindow.overlay
             height: root.height
-            width: app.width - app.sidebarWidth
-            x: app.sidebarWidth
+            width: ApplicationWindow.window.width - ApplicationWindow.window.sidebarWidth
+            x: ApplicationWindow.window.sidebarWidth
             y: 0
 
             availableAccountPlugins: root.availableAccountPlugins
