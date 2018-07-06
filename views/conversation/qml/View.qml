@@ -169,7 +169,7 @@ Kube.View {
                 Kube.Listener {
                     filter: Kube.Messages.search
                     onMessageReceived: {
-                        searchComponent.createObject(root).open()
+                        searchComponent.createObject(root)
                     }
                 }
                 onCurrentMailChanged: {
@@ -223,102 +223,9 @@ Kube.View {
     Component {
         id: searchComponent
         Kube.SearchPopup {
-            id: searchPopup
-
-            //x: (parent.width / 2) - (width / 2)
-            //y: parent.height / 3
-            //height: Kube.Units.gridUnit * 2
-            //width: Kube.Units.gridUnit * 30
-
-            parent: root
-            //x: root.x + Kube.Units.gridUnit
-            x: root.searchArea.x
-            y: root.searchArea.y
-            width: root.searchArea.width
-            height: root.searchArea.height
-
-
-            modal: false
-            dim: true
-            //closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-            closePolicy: Popup.CloseOnEscape
-
-            //TODO use dimming outside of search area
-            //Use popup transparency for main area (how do we interact with the content?
-            //Overlay.modal: Item {}
-
-            background: Rectangle {
-                color: "transparent"
-                enabled: false
-                border {
-                    width: 2
-                    color: Kube.Colors.highlightColor
-                }
-                Rectangle {
-                    anchors.fill: parent
-                    color: Kube.Colors.backgroundColor
-                    opacity: 0.2
-                }
-
-            }
-
-            Rectangle {
-                id: filterField
-                enabled: false
-
-                //anchors.fill: parent
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                }
-                y: parent.height / 3
-                height: Kube.Units.gridUnit * 2
-                width: Kube.Units.gridUnit * 30
-
-
-                color: Kube.Colors.buttonColor
-
-                states: [
-                    State {
-                        name: "searchInProgress"
-                        when: find.text.length != 0
-                        PropertyChanges {target: filterField; y: Kube.Units.gridUnit}
-                        PropertyChanges {target: searchPopup; closePolicy: Popup.CloseOnEscape}
-                        PropertyChanges {target: searchPopup; modal: false}
-                    }
-                ]
-
-                function clearSearch() {
-                    find.text = ""
-                    mailListView.filter = ""
-                    close()
-                }
-
-                RowLayout {
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                    }
-
-                    width: parent.width - Kube.Units.smallSpacing
-                    spacing: 0
-
-                    Kube.IconButton {
-                        iconName: Kube.Icons.remove
-                        activeFocusOnTab: visible
-                        onClicked: filterField.clearSearch()
-                    }
-
-                    Kube.TextField {
-                        id: find
-                        Layout.fillWidth: true
-                        placeholderText: qsTr("Filter...")
-                        onTextChanged: mailListView.filter = text
-                        activeFocusOnTab: visible
-                        focus: visible
-                        Keys.onEscapePressed: filterField.clearSearch()
-                    }
-                }
-            }
+            searchArea: root.searchArea
         }
+
     }
 
 }
