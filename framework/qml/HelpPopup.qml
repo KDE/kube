@@ -32,7 +32,7 @@ Kube.Popup {
 
     modal: true
     parent: ApplicationWindow.overlay
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     x: (parent.width - width)/2
     y: Kube.Units.largeSpacing
     width: parent.width / 2
