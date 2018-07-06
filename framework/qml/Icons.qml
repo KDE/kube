@@ -23,7 +23,7 @@ import QtQuick 2.7
 
 Item {
     property string error: "error"
-    property string info_inverted: "kdocumentinfo-inverted"
+    property string info_inverted: "documentinfo-inverted"
     property string error_inverted: "error-inverted"
     property string busy: "view-refresh"
     property string busy_inverted: "view-refresh-inverted"
@@ -76,5 +76,6 @@ Item {
     property string italic: "format-text-italic-symbolic"
     property string underline: "format-text-underline-symbolic"
 
+    property string help: "question-inverted"
 }
 
