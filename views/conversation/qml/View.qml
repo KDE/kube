@@ -29,6 +29,18 @@ Kube.View {
     id: root
     property alias currentAccount: accountFolderview.currentAccount
 
+    //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
+    searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
+    onFilterChanged: {
+        mailListView.filter = filter
+        Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
+    }
+
+    Kube.Listener {
+        filter: Kube.Messages.search
+        onMessageReceived: root.triggerSearch()
+    }
+
     Shortcut {
         sequences: ['j']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextConversation, {})
@@ -156,12 +168,10 @@ Kube.View {
                 Layout.minimumWidth: Kube.Units.gridUnit * 10
                 Kube.Listener {
                     filter: Kube.Messages.folderSelection
-                    onMessageReceived: mailListView.parentFolder = message.folder
-                }
-
-                Kube.Listener {
-                    filter: Kube.Messages.search
-                    onMessageReceived: mailListView.showFilter = true
+                    onMessageReceived: {
+                        root.clearSearch()
+                        mailListView.parentFolder = message.folder
+                    }
                 }
                 onCurrentMailChanged: {
                     Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
@@ -210,5 +220,4 @@ Kube.View {
             }
         }
     }
-
 }

@@ -31,6 +31,19 @@ FocusScope {
     property int count: contentItems.length
     default property alias contentItems: content.data
 
+    property rect searchArea: null
+    property string filter: ""
+    property var searchObject: null
+    function triggerSearch() {
+        root.searchObject = searchComponent.createObject(root)
+    }
+    function clearSearch() {
+        if (root.searchObject) {
+            root.searchObject.close()
+            root.searchObject = null
+        }
+    }
+
     property bool __aborted: false
 
     //This signal will be emitted once all initial properties have been set and the view is ready to load
@@ -104,4 +117,16 @@ FocusScope {
         id: content
         anchors.fill: parent
     }
+
+    Component {
+        id: searchComponent
+        Kube.SearchPopup {
+            searchArea: root.searchArea
+            onFilterChanged: {
+                root.filter = filter
+            }
+        }
+
+    }
+
 }
