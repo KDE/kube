@@ -29,6 +29,11 @@ FocusScope {
     id: root
     property alias currentAccount: accountFolderview.currentAccount
 
+    property bool hasHelp: true
+    function showHelp() {
+        helpViewComponent.createObject(root).open()
+    }
+
     Shortcut {
         sequences: ['j']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextConversation, {})
