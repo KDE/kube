@@ -76,6 +76,7 @@ Item {
     property string italic: "format-text-italic-symbolic"
     property string underline: "format-text-underline-symbolic"
 
-    property string help: "question-inverted"
+    property string help: "question"
+    property string help_inverted: "question-inverted"
 }
 

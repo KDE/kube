@@ -214,6 +214,14 @@ Controls2.ApplicationWindow {
                 }
 
                 Kube.IconButton {
+                    iconName: Kube.Icons.help_inverted
+                    activeFocusOnTab: true
+                    onClicked: kubeViews.currentItem.showHelp()
+                    tooltip: qsTr("Help")
+                    visible: !!(kubeViews.currentItem && kubeViews.currentItem.hasHelp)
+                }
+
+                Kube.IconButton {
                     id: accountsButton
                     iconName: Kube.Icons.menu_inverted
                     onClicked: kubeViews.showView("accounts")

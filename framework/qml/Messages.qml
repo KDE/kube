@@ -37,6 +37,7 @@ Item {
     property string unlockKeyring: "unlockKeyring"
     property string requestLogin: "requestLogin"
     property string requestAccountsConfiguration: "requestAccountsConfiguration"
+    property string help: "help"
 
     property string notification: "notification"
     property string progressNotification: "progressNotification"
