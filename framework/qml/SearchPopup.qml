@@ -30,6 +30,7 @@ Item {
     property rect searchArea
     property string backgroundColor: Kube.Colors.darkCharcoalGrey
     property real backgroundOpacity: 0
+    property real searchAreaOpacity: backgroundOpacity / 4
 
     NumberAnimation on backgroundOpacity {
         id: fadeIn
@@ -106,8 +107,13 @@ Item {
         height: searchArea.height
         color: "transparent"
         border {
-            width: 2
+            width: 3
             color: Kube.Colors.highlightColor
+        }
+        Rectangle {
+            anchors.fill: parent
+            color: parent.parent.backgroundColor
+            opacity: parent.parent.searchAreaOpacity
         }
     }
 
@@ -132,6 +138,7 @@ Item {
                 name: "searchInProgress"
                 when: find.text.length != 0
                 PropertyChanges {target: filterField; y: Kube.Units.gridUnit}
+                PropertyChanges {target: root; searchAreaOpacity: 0}
             }
         ]
 
