@@ -29,7 +29,33 @@ Item {
 
     property rect searchArea
     property string backgroundColor: Kube.Colors.darkCharcoalGrey
-    property real backgroundOpacity: 0.6
+    property real backgroundOpacity: 0
+
+    NumberAnimation on backgroundOpacity {
+        id: fadeIn
+        from: 0
+        to: 0.6
+        duration: 100
+    }
+
+    Component.onCompleted: fadeIn.start()
+
+    NumberAnimation on backgroundOpacity {
+        id: fadeOut
+        running: false
+        to: 0
+        duration: 100
+        onRunningChanged: {
+             if (!running) {
+                root.destroy()
+             }
+        }
+    }
+
+    function close() {
+        fadeOut.start()
+    }
+
     property string filter: ""
 
     parent: ApplicationWindow.overlay
@@ -109,9 +135,13 @@ Item {
             }
         ]
 
+        transitions: Transition {
+            NumberAnimation { properties: "y"; easing.type: Easing.InOutQuad }
+        }
+
         function clearSearch() {
             find.text = ""
-            root.destroy()
+            root.close()
         }
 
         Shortcut {
