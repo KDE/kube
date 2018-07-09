@@ -136,6 +136,11 @@ Kube.TextField {
                     contentItem: Item {
                         width: parent.width - padding * 2
                         height: parent.height - padding * 2
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                        }
                         Kube.Label{
                             anchors {
                                 verticalCenter: parent.verticalCenter
@@ -145,6 +150,8 @@ Kube.TextField {
                             text: model.text
                             color: listDelegate.textColor
                             elide: Text.ElideRight
+                            ToolTip.visible: mouseArea.containsMouse
+                            ToolTip.text: text
                         }
                     }
                 }
