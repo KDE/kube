@@ -35,7 +35,7 @@ Item {
     NumberAnimation on backgroundOpacity {
         id: fadeIn
         from: 0
-        to: 0.6
+        to: 0.8
         duration: 100
     }
 
@@ -131,7 +131,7 @@ Item {
         width: Kube.Units.gridUnit * 30
         radius: Kube.Units.smallSpacing
 
-        color: Kube.Colors.buttonColor
+        color: Kube.Colors.darkBackgroundColor
 
         states: [
             State {
