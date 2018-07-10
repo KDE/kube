@@ -41,6 +41,7 @@ Item {
     property string textColor: charcoalGrey
     property string disabledTextColor: coastalFog
     property string backgroundColor: cardboardGrey
+    property string darkBackgroundColor: charcoalGrey
     property string viewBackgroundColor: paperWhite
     property string highlightColor: plasmaBlue
     property string highlightedTextColor: paperWhite
