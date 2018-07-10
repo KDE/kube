@@ -18,7 +18,7 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.3
+import QtQuick.Controls 2.2
 import Qt.labs.calendar 1.0
 
 import org.kube.framework 1.0 as Kube
