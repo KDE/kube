@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
     QApplication app(argc, argv);
     app.setApplicationName("kube");
-    app.setApplicationVersion(kube_VERSION_STRING);
+    app.setApplicationVersion(QString("%1 Branch: %2 Commit: %3").arg(kube_VERSION_STRING).arg(kube_BRANCH).arg(kube_COMMIT));
     app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
 
 

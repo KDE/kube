@@ -1,0 +1,10 @@
+#pragma once
+
+#define kube_VERSION_STRING "${kube_VERSION_STRING}"
+#define kube_VERSION_MAJOR ${kube_VERSION_MAJOR}
+#define kube_VERSION_MINOR ${kube_VERSION_MINOR}
+#define kube_VERSION_PATCH ${kube_VERSION_PATCH}
+#define kube_VERSION ((${kube_VERSION_MAJOR}<<16)|(${kube_VERSION_MINOR}<<8)|(${kube_VERSION_PATCH}))
+#define kube_BRANCH "${GIT_BRANCH}"
+#define kube_COMMIT "${GIT_COMMIT_HASH}"
+
