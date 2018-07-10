@@ -46,6 +46,7 @@ wantedIcons = [
     "documentinfo.svg",
     "group.svg",
     "mail-task.svg",
+    "view-calendar.svg",
     "question.svg"
 ]
 
