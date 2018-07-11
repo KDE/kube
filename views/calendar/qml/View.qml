@@ -26,6 +26,9 @@ import org.kube.framework 1.0 as Kube
 RowLayout {
     id: root
 
+    //TODO update every second
+    property date currentDate: new Date()
+
     anchors.fill: parent
 
     Rectangle {
@@ -100,7 +103,8 @@ RowLayout {
     }
 
     WeekView {
-        Layout.fillHeight: parent.height
-        Layout.fillWidth: parent.height
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        currentDate: root.currentDate
     }
 }

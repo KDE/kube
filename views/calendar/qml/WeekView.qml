@@ -28,6 +28,25 @@ FocusScope {
 
     property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / 7
     property var hourHeight: Kube.Units.gridUnit * 2
+    property date currentDate
+
+    function getMonday(date) {
+        var year = date.getFullYear()
+        var month = date.getMonth()
+        //Jup, getDate returns the day of the month
+        var day = date.getDate()
+
+        while (true) {
+            if (date.getDay() === Locale.Monday) {
+                return date
+            }
+            day = day - 1
+            date = new Date(year, month, day)
+        }
+        return date
+    }
+
+    property date startDate: getMonday(currentDate)
 
     Item {
         anchors {
@@ -167,7 +186,10 @@ FocusScope {
                 //END time labels
 
                 Repeater {
-                    model: WeekEvents{}
+                    model: WeekEvents {
+                        start: root.startDate
+                        length: 7
+                    }
                     delegate: Rectangle {
                         id: day
 
@@ -219,7 +241,7 @@ FocusScope {
                                     rightMargin: Kube.Units.smallSpacing
                                 }
                                 width: root.dayWidth - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indention
-                                height: root.hourHeight * model.modelData.duration
+                                height: Math.max(root.hourHeight * 0.5, root.hourHeight * model.modelData.duration)
                                 y: root.hourHeight * model.modelData.starts
                                 x: Kube.Units.gridUnit * model.modelData.indention
 
