@@ -75,6 +75,10 @@ public:
                 }
                 if (type == "contacts") {
                     scope.setType<ApplicationDomain::Contact>();
+                } else if (type == "event") {
+                    scope.setType<ApplicationDomain::Event>();
+                } else if (type == "calendar") {
+                    scope.setType<ApplicationDomain::Calendar>();
                 } else if (type == "mail") {
                     scope.setType<ApplicationDomain::Mail>();
                 } else if (type == "folder") {

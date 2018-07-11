@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.9
-import QtQuick.Controls 1.3 as Controls1
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.2
 
 import org.kube.framework 1.0 as Kube
@@ -30,6 +30,10 @@ RowLayout {
     property date currentDate: new Date()
 
     anchors.fill: parent
+
+    StackView.onActivated: {
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
+    }
 
     Rectangle {
         width: Kube.Units.gridUnit * 10
