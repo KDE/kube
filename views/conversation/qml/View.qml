@@ -37,6 +37,10 @@ Kube.View {
         helpViewComponent.createObject(root).open()
     }
 
+    function search() {
+        searchComponent.createObject(root)
+    }
+
     Shortcut {
         sequences: ['j']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextConversation, {})
@@ -78,6 +82,65 @@ Kube.View {
         onActivated: showHelp()
     }
 
+    Item {
+        z: 1
+        visible: true
+        anchors {
+            top: parent.top
+            right: parent.right
+        }
+        layer.enabled: true
+        opacity: mouseArea.containsMouse ? 0.6 : 0.2
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            onClicked: root.search()
+        }
+
+        width: Kube.Units.gridUnit * 2
+        height: Kube.Units.gridUnit * 2
+
+        Rectangle {
+            color: Kube.Colors.darkBackgroundColor
+            radius: Kube.Units.smallSpacing
+            anchors.fill: parent
+            Rectangle {
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                }
+                width: parent.radius
+                height: parent.radius
+                color: parent.color
+            }
+            Rectangle {
+                anchors {
+                    top: parent.top
+                    right: parent.right
+                }
+                width: parent.radius
+                height: parent.radius
+                color: parent.color
+            }
+            Rectangle {
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                }
+                width: parent.radius
+                height: parent.radius
+                color: parent.color
+            }
+        }
+
+        Kube.Icon {
+            anchors.centerIn: parent
+            width: Kube.Units.gridUnit
+            height: Kube.Units.gridUnit
+            iconName: Kube.Icons.search_inverted
+        }
+    }
 
     Controls1.SplitView {
         anchors.fill: parent
@@ -169,9 +232,7 @@ Kube.View {
 
                 Kube.Listener {
                     filter: Kube.Messages.search
-                    onMessageReceived: {
-                        searchComponent.createObject(root)
-                    }
+                    onMessageReceived: root.search()
                 }
                 onCurrentMailChanged: {
                     Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
