@@ -136,7 +136,7 @@ Controls2.ApplicationWindow {
                 bottom: mainContent.bottom
             }
             width: app.sidebarWidth
-            color: Kube.Colors.textColor
+            color: Kube.Colors.darkBackgroundColor
 
             Rectangle {
                 anchors.right: parent.right

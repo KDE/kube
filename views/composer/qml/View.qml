@@ -108,7 +108,7 @@ Kube.View {
         width: Kube.Units.gridUnit * 15
         Layout.minimumWidth: Kube.Units.gridUnit * 5
 
-        color: Kube.Colors.textColor
+        color: Kube.Colors.darkBackgroundColor
 
         ColumnLayout {
 
@@ -181,7 +181,7 @@ Kube.View {
                 delegate: Kube.ListDelegate {
                     id: delegateRoot
 
-                    color: Kube.Colors.textColor
+                    color: Kube.Colors.darkBackgroundColor
                     border.width: 0
 
                     Item {

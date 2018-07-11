@@ -33,7 +33,7 @@ FocusScope {
         Rectangle {
             width: Kube.Units.gridUnit * 10
             Layout.fillHeight: parent.height
-            color: Kube.Colors.textColor
+            color: Kube.Colors.darkBackgroundColor
 
             Kube.PositiveButton {
                 id: newTaskButton

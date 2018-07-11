@@ -175,7 +175,7 @@ FocusScope {
                     text: styleData.isExpanded ? "-" : "+"
                 }
 
-                backgroundColor: Kube.Colors.textColor
+                backgroundColor: Kube.Colors.darkBackgroundColor
                 highlightedTextColor: Kube.Colors.highlightedTextColor
             }
         }
