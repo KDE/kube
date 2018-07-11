@@ -35,7 +35,7 @@ FocusScope {
                 id: filterField
                 Layout.fillWidth: true
                 height: Kube.Units.gridUnit * 2
-                color: Kube.Colors.textColor
+                color: Kube.Colors.darkBackgroundColor
 
                 function clearSearch() {
                     find.text = ""
