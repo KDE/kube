@@ -18,6 +18,7 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 2
+import QtQuick.Templates 2.0 as T
 
 import org.kube.framework 1.0 as Kube
 
@@ -37,7 +38,7 @@ Item {
         textEdit.text = root.content
     }
 
-    TextArea {
+    T.TextArea {
         id: textEdit
 
         anchors {
@@ -46,8 +47,10 @@ Item {
             right: parent.right
         }
 
-        selectionColor: Kube.Colors.highlightColor
+        implicitWidth: contentWidth
+        implicitHeight: contentHeight
 
+        selectionColor: Kube.Colors.highlightColor
         readOnly: true
         selectByMouse: true
 
