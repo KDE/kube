@@ -1,5 +1,5 @@
 Name:           kube
-Version:        0.6
+Version:        0.8
 Release:        0%{?dist}
 Summary:        kube
 
@@ -13,7 +13,6 @@ BuildRequires:  cmake >= 2.8.12
 BuildRequires:  extra-cmake-modules
 BuildRequires:  gcc-c++
 BuildRequires:  kasync-devel
-BuildRequires:  kf5-kpackage-devel
 BuildRequires:  kf5-kcodecs-devel
 BuildRequires:  kf5-kmime-devel
 BuildRequires:  kf5-kcontacts-devel
@@ -31,7 +30,7 @@ BuildRequires:  xapian-core-devel >= 1.4
 Requires:       qt5-qtquickcontrols
 Requires:       qt5-qtquickcontrols2
 Requires:       qt5-qtsvg
-Requires:       sink >= 0.6
+Requires:       sink >= 0.8
 Requires:       gpgme >= 1.8.0
 Requires:       google-noto-sans-fonts
 

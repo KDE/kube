@@ -64,7 +64,7 @@ If we look at the example of the org.kube.mail component:
 This makes it possible for i.e. a maillist to display a note-widget directly inline, or letting the parent component handle the action to show a full note editor. If nothing handles the action, the root component (the shell)can switch to the note application component.
 
 ## Third party users of components
-Since components are self contained and made available throuh the KPackage sytem, external applications can load fully functional Kube components.
+Since components are self contained and made available as QML plugins, external applications can load fully functional Kube components.
 
 For example, the KDE calendar plasmoid could load the Kube Event Viewer component when available, and thus provide Kube's full functionality of that component, including all actions etc, without having to reimplement the Domain Logic (as is the case if only data access is provided through Sink).
 
@@ -169,7 +169,7 @@ The configuraton controller is not only used in the configuration UI to provide 
 This allows the account to retrieve configruation data on a property-by-property basis i.e. from Sink or a local config file.
 
 ### Accounts-Plugin
-The account is supplied as a kpackage based plugin. The plugin is loaded into kube directly from QML. The plugin registers it's configuration controller and potentially actions.
+The account is supplied as a plugin. The plugin is loaded into kube directly from QML. The plugin registers it's configuration controller and potentially actions.
 
 Note: We could have a plugin mechanism that discovers account-plugins should that become necessary at some point.
 

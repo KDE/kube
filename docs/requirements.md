@@ -56,8 +56,7 @@ Since the codebase needs to be portable across various platforms old and new, de
 Currently available dependencies:
 
 * GCC 4.6.3 / MSVC 2013
-* Qt 5.2
-* kf5-kpackage
+* Qt 5.9
 ** Used as installation format for all qml parts. Intended to serve as abstraction layer to allow replacing certain modules on differnet platforms/formfactors.
 * kf5-kcodecs
 ** dependency of kmime, email address handling (KEmailAddress)
@@ -65,10 +64,8 @@ Currently available dependencies:
 ** Parsing and assembling of mails
 * libcurl 7.20
 ** mailtransport
-* libkleo
+* gpgme
 ** crypto-stack, currently only gpg
-* libotp
-** parsing and html rendering of emails
 
 # Codebase
 
