@@ -24,25 +24,35 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
-    id: container
+    id: root
 
-    property int visibleViews: 2
-    property int currentIndex: 0
-    property int count: contentItems.length
-    default property alias contentItems: content.data
-
+    //Search
     property rect searchArea: null
     property string filter: ""
     property var searchObject: null
     function triggerSearch() {
-        root.searchObject = searchComponent.createObject(root)
+        searchObject = searchComponent.createObject(root)
     }
     function clearSearch() {
-        if (root.searchObject) {
-            root.searchObject.close()
-            root.searchObject = null
+        if (searchObject) {
+            searchObject.close()
+            searchObject = null
         }
     }
+
+    //Help
+    property Component helpViewComponent: null
+    function showHelp() {
+        if (helpViewComponent) {
+            helpViewComponent.createObject(root).open()
+        }
+    }
+
+    //View columns
+    property int visibleViews: 2
+    property int currentIndex: 0
+    property int count: contentItems.length
+    default property alias contentItems: content.data
 
     property bool __aborted: false
 
@@ -97,8 +107,8 @@ FocusScope {
 
     Kube.IconButton {
         anchors {
-            top: container.top
-            left: container.left
+            top: root.top
+            left: root.left
         }
         z: 1
         color: Kube.Colors.darkBackgroundColor

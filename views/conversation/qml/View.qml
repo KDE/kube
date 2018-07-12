@@ -41,6 +41,21 @@ Kube.View {
         onMessageReceived: root.triggerSearch()
     }
 
+    helpViewComponent: Kube.HelpPopup {
+        ListModel {
+            ListElement { description: qsTr("Jump to next thread:"); shortcut: "j" }
+            ListElement { description: qsTr("Jump to previous thread:"); shortcut: "k" }
+            ListElement { description: qsTr("Jump to next message:"); shortcut: "n" }
+            ListElement { description: qsTr("Jump to previous message:"); shortcut: "p" }
+            ListElement { description: qsTr("Jump to next folder:"); shortcut: "f,n" }
+            ListElement { description: qsTr("Jump to previous previous folder:"); shortcut: "f,p" }
+            ListElement { description: qsTr("Compose new message:"); shortcut: "c" }
+            ListElement { description: qsTr("Reply to the currently focused message:"); shortcut: "r" }
+            ListElement { description: qsTr("Delete the currently focused message:"); shortcut: "d" }
+            ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
+        }
+    }
+
     Shortcut {
         sequences: ['j']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextConversation, {})
@@ -79,7 +94,7 @@ Kube.View {
     }
     Shortcut {
         sequence: "?"
-        onActivated: helpViewComponent.createObject(root).open()
+        onActivated: root.showHelp()
     }
 
 
@@ -203,21 +218,4 @@ Kube.View {
         }
     }
 
-    Component {
-        id: helpViewComponent
-        Kube.HelpPopup {
-            ListModel {
-                ListElement { description: qsTr("Jump to next thread:"); shortcut: "j" }
-                ListElement { description: qsTr("Jump to previous thread:"); shortcut: "k" }
-                ListElement { description: qsTr("Jump to next message:"); shortcut: "n" }
-                ListElement { description: qsTr("Jump to previous message:"); shortcut: "p" }
-                ListElement { description: qsTr("Jump to next folder:"); shortcut: "f,n" }
-                ListElement { description: qsTr("Jump to previous previous folder:"); shortcut: "f,p" }
-                ListElement { description: qsTr("Compose new message:"); shortcut: "c" }
-                ListElement { description: qsTr("Reply to the currently focused message:"); shortcut: "r" }
-                ListElement { description: qsTr("Delete the currently focused message:"); shortcut: "d" }
-                ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
-            }
-        }
-    }
 }
