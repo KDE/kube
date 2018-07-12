@@ -310,7 +310,7 @@ Rectangle {
             right: header.right
             leftMargin: Kube.Units.largeSpacing
             rightMargin: Kube.Units.largeSpacing
-            topMargin: Math.max(attachments.height, Kube.Units.largeSpacing)
+            topMargin: Math.max(attachments.height + Kube.Units.smallSpacing, Kube.Units.largeSpacing)
         }
         height: mailViewer.height + 20
 
