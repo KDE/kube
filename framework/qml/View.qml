@@ -27,7 +27,7 @@ FocusScope {
     id: root
 
     //Search
-    property rect searchArea: null
+    property rect searchArea
     property string filter: ""
     property var searchObject: null
     function triggerSearch() {
@@ -51,7 +51,7 @@ FocusScope {
     }
 
     //View columns
-    property int visibleViews: 2
+    property int visibleViews: 0 //0 means the feature is disabled entirely
     property int currentIndex: 0
     property int count: contentItems.length
     default property alias contentItems: content.data
@@ -94,14 +94,19 @@ FocusScope {
     }
 
     function showRelevantSplits() {
+        if (!visibleViews) {
+            return
+        }
         var i;
         for (i = 0; i < count; i++) {
-            if (i < currentIndex) {
-                contentItems[i].visible = false;
-            } else if (i > (currentIndex + visibleViews - 1)) {
-                contentItems[i].visible = false;
-            } else {
-                contentItems[i].visible = true;
+            if ('visible' in contentItems[i]) {
+                if (i < currentIndex) {
+                    contentItems[i].visible = false;
+                } else if (i > (currentIndex + visibleViews - 1)) {
+                    contentItems[i].visible = false;
+                } else {
+                    contentItems[i].visible = true;
+                }
             }
         }
 

@@ -28,6 +28,7 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
     id: root
 
+    visibleViews: 2
     property bool newMessage: false
     property int loadType: Kube.ComposerController.Draft
     property variant message: {}
