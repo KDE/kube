@@ -31,7 +31,9 @@ FocusScope {
     property string filter: ""
     property var searchObject: null
     function triggerSearch() {
-        searchObject = searchComponent.createObject(root)
+        if (!searchObject) {
+            searchObject = searchComponent.createObject(root)
+        }
     }
     function clearSearch() {
         if (searchObject) {
