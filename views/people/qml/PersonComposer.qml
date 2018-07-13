@@ -18,7 +18,7 @@
 */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.0 as Dialogs
 
@@ -27,20 +27,22 @@ import org.kube.framework 1.0 as Kube
 
 
 Flickable {
-    id: personComposerFlickable
+    id: root
+
+    property var contactController
 
     anchors {
         fill: parent
         leftMargin: Kube.Units.largeSpacing
     }
 
-    Controls2.ScrollBar.vertical: Kube.ScrollBar { }
+    ScrollBar.vertical: Kube.ScrollBar { }
     contentHeight: contentColumn.height
 
     clip: true
 
     Kube.ScrollHelper {
-        flickable: personComposerFlickable
+        flickable: root
         anchors.fill: parent
     }
 
@@ -63,7 +65,7 @@ Flickable {
         Item {
 
             height: Kube.Units.gridUnit * 8
-            width: personComposerRoot.width - Kube.Units.largeSpacing
+            width: root.width - Kube.Units.largeSpacing
 
             Rectangle {
                 id: avatar
@@ -162,7 +164,7 @@ Flickable {
 
 
         Column {
-            width: personComposerRoot.width - Kube.Units.largeSpacing
+            width: root.width - Kube.Units.largeSpacing
             spacing: Kube.Units.smallSpacing
 
             Kube.Label {
@@ -174,7 +176,7 @@ Flickable {
         }
 
         Column {
-            width: personComposerRoot.width - Kube.Units.largeSpacing
+            width: root.width - Kube.Units.largeSpacing
             spacing: Kube.Units.smallSpacing
 
             Kube.Label {
@@ -189,7 +191,7 @@ Flickable {
         Column{
             id: address
 
-            width: personComposerRoot.width - Kube.Units.largeSpacing
+            width: root.width - Kube.Units.largeSpacing
             spacing: Kube.Units.smallSpacing
 
             Kube.Label {

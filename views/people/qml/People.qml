@@ -18,7 +18,7 @@
 */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
@@ -82,7 +82,7 @@ FocusScope {
             }
         }
 
-        Controls2.StackView {
+        StackView {
             id: stack
 
             anchors {
@@ -249,14 +249,13 @@ FocusScope {
         Rectangle {
             id: personComposerRoot
 
-            Kube.ContactController {
-                id: contactController
-                contact: root.currentContact
-            }
-
             color: Kube.Colors.viewBackgroundColor
 
             PersonComposer {
+                contactController: Kube.ContactController {
+                    id: contactController
+                    contact: root.currentContact
+                }
             }
 
             Kube.PositiveButton {
