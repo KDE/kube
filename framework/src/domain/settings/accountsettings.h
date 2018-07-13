@@ -44,6 +44,9 @@ class KUBE_EXPORT AccountSettings : public QObject
     Q_PROPERTY(QString carddavServer MEMBER mCardDavServer NOTIFY cardDavResourceChanged)
     Q_PROPERTY(QString carddavUsername MEMBER mCardDavUsername NOTIFY cardDavResourceChanged)
 
+    Q_PROPERTY(QString caldavServer MEMBER mCalDavServer NOTIFY calDavResourceChanged)
+    Q_PROPERTY(QString caldavUsername MEMBER mCalDavUsername NOTIFY calDavResourceChanged)
+
     Q_PROPERTY(QUrl path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(QValidator* pathValidator READ pathValidator CONSTANT)
 
@@ -75,6 +78,7 @@ signals:
     void pathChanged();
     void changed();
     void cardDavResourceChanged();
+    void calDavResourceChanged();
 
 protected:
     void saveAccount();
@@ -83,6 +87,7 @@ protected:
     void saveMailtransportResource();
     void saveIdentity();
     void saveCardDavResource();
+    void saveCalDavResource();
 
     void loadAccount();
     void loadImapResource();
@@ -90,6 +95,7 @@ protected:
     void loadMailtransportResource();
     void loadIdentity();
     void loadCardDavResource();
+    void loadCalDavResource();
 
     void removeAccount();
     void removeResource(const QByteArray &identifier);
@@ -119,5 +125,9 @@ protected:
     QByteArray mCardDavIdentifier;
     QString mCardDavServer;
     QString mCardDavUsername;
+
+    QByteArray mCalDavIdentifier;
+    QString mCalDavServer;
+    QString mCalDavUsername;
 };
 

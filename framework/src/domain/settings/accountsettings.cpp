@@ -60,6 +60,8 @@ void AccountSettings::setAccountIdentifier(const QByteArray &id)
     mSmtpUsername = QString();
     mCardDavServer = QString();
     mCardDavUsername = QString();
+    mCalDavServer = QString();
+    mCalDavUsername = QString();
     mPath = QString();
     emit changed();
     emit imapResourceChanged();
@@ -253,6 +255,19 @@ void AccountSettings::loadCardDavResource()
         }).exec().waitForFinished();
 }
 
+void AccountSettings::loadCalDavResource()
+{
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).filter<SinkResource::ResourceType>("sink.carddav"))
+        .then([this](const SinkResource &resource) {
+            mCalDavIdentifier = resource.identifier();
+            mCalDavServer = resource.getProperty("server").toString();
+            mCalDavUsername = resource.getProperty("username").toString();
+            emit cardDavResourceChanged();
+        }).onError([](const KAsync::Error &error) {
+            qWarning() << "Failed to load the CalDAV resource: " << error.errorMessage;
+        }).exec().waitForFinished();
+}
+
 
 template<typename ResourceType>
 static QByteArray saveResource(const QByteArray &accountIdentifier, const QByteArray &identifier, const std::map<QByteArray, QVariant> &properties)
@@ -296,6 +311,14 @@ void AccountSettings::saveCardDavResource()
     mCardDavIdentifier = saveResource<CardDavResource>(mAccountIdentifier, mCardDavIdentifier, {
             {"server", mCardDavServer},
             {"username", mCardDavUsername}
+        });
+}
+
+void AccountSettings::saveCalDavResource()
+{
+    mCalDavIdentifier = saveResource<CalDavResource>(mAccountIdentifier, mCalDavIdentifier, {
+            {"server", mCalDavServer},
+            {"username", mCalDavUsername}
         });
 }
 

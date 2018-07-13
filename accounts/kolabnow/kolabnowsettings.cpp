@@ -40,13 +40,17 @@ void KolabnowSettings::save()
     mSmtpServer = "smtps://smtp.kolabnow.com:587";
     mSmtpUsername = mEmailAddress;
 
-    mCardDavServer = "https://apps.kolabnow.com;
+    mCardDavServer = "https://apps.kolabnow.com";
     mCardDavUsername = mEmailAddress;
+
+    mCalDavServer = "https://apps.kolabnow.com";
+    mCalDavUsername = mEmailAddress;
 
     saveAccount();
     saveImapResource();
     saveMailtransportResource();
     saveCardDavResource();
+    saveCalDavResource();
     saveIdentity();
 }
 
@@ -55,6 +59,7 @@ void KolabnowSettings::remove()
     removeResource(mMailtransportIdentifier);
     removeResource(mImapIdentifier);
     removeResource(mCardDavIdentifier);
+    removeResource(mCalDavIdentifier);
     removeIdentity();
     removeAccount();
 }
