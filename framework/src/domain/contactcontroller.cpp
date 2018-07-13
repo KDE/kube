@@ -103,9 +103,10 @@ void ContactController::updateSaveAction()
     saveAction()->setEnabled(!getFirstName().isEmpty());
 }
 
-void ContactController::loadContact(const QVariant &contact)
+void ContactController::loadContact(const QVariant &variant)
 {
-    if (auto c = contact.value<Sink::ApplicationDomain::Contact::Ptr>()) {
+    mContact = variant;
+    if (auto c = variant.value<Sink::ApplicationDomain::Contact::Ptr>()) {
         const auto &vcard = c->getVcard();
         KContacts::VCardConverter converter;
         const auto addressee = converter.parseVCard(vcard);
@@ -134,7 +135,14 @@ void ContactController::loadContact(const QVariant &contact)
     }
 }
 
+void ContactController::remove()
+{
+    if (auto c = mContact.value<Sink::ApplicationDomain::Contact::Ptr>()) {
+        run(Sink::Store::remove(*c));
+    }
+}
+
 QVariant ContactController::contact() const
 {
-    return QVariant{};
+    return mContact;
 }

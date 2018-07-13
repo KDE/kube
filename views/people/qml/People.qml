@@ -228,7 +228,20 @@ FocusScope {
             }
 
             Kube.Button {
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    margins: Kube.Units.largeSpacing
+                }
+                text: qsTr("Remove")
 
+                onClicked: {
+                    contactController.remove()
+                    stack.pop()
+                }
+            }
+
+            Kube.Button {
                 anchors {
                     bottom: parent.bottom
                     right: parent.right

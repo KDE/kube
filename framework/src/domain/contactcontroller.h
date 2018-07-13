@@ -54,9 +54,13 @@ public:
     explicit ContactController();
 
     Q_INVOKABLE void loadContact(const QVariant &contact);
+    Q_INVOKABLE void remove();
 
     QVariant contact() const;
 
 private slots:
     void updateSaveAction();
+
+private:
+    QVariant mContact;
 };
