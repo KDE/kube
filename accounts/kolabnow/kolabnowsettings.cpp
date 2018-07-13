@@ -40,7 +40,7 @@ void KolabnowSettings::save()
     mSmtpServer = "smtps://smtp.kolabnow.com:587";
     mSmtpUsername = mEmailAddress;
 
-    mCardDavServer = "https://apps.kolabnow.com/addressbooks/" + mEmailAddress;
+    mCardDavServer = "https://apps.kolabnow.com;
     mCardDavUsername = mEmailAddress;
 
     saveAccount();
