@@ -121,12 +121,16 @@ Flickable {
                     width: Kube.Units.gridUnit * 15
                     placeholderText: qsTr("First Name")
                     backgroundColor: "white"
+                    text: contactController.firstName
+                    onTextChanged: contactController.firstName = text
                 }
 
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
                     placeholderText: qsTr("Last Name")
                     backgroundColor: "white"
+                    text: contactController.lastName
+                    onTextChanged: contactController.lastName = text
                 }
             }
 
@@ -142,6 +146,7 @@ Flickable {
 
                 width: Kube.Units.gridUnit * 20
                 text: contactController.jobTitle
+                onTextChanged: contactController.jobTitle = text
                 placeholderText: qsTr("Job Title")
                 backgroundColor: "white"
             }
@@ -158,6 +163,7 @@ Flickable {
 
                 placeholderText: qsTr("Company")
                 text: contactController.company
+                onTextChanged: contactController.company = text
                 backgroundColor: "white"
             }
         }
@@ -201,18 +207,21 @@ Flickable {
             Kube.TextField {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.street
+                onTextChanged: contactController.stree = text
                 placeholderText: qsTr("Street")
                 backgroundColor: "white"
             }
             Kube.TextField {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.city
+                onTextChanged: contactController.city = text
                 placeholderText: qsTr("City")
                 backgroundColor: "white"
             }
             Kube.TextField {
                 width: Kube.Units.gridUnit * 20
                 text: contactController.country
+                onTextChanged: contactController.country = text
                 placeholderText: qsTr("Country")
                 backgroundColor: "white"
             }

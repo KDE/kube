@@ -34,6 +34,9 @@ class KUBE_EXPORT ContactController : public Kube::Controller
     Q_PROPERTY(QVariant contact READ contact WRITE loadContact)
 
     //Interface properties
+    KUBE_CONTROLLER_PROPERTY(QByteArray, AccountId, accountId)
+    KUBE_CONTROLLER_PROPERTY(QString, FirstName, firstName)
+    KUBE_CONTROLLER_PROPERTY(QString, LastName, lastName)
     KUBE_CONTROLLER_PROPERTY(QString, Name, name)
     KUBE_CONTROLLER_PROPERTY(QString, Street, street)
     KUBE_CONTROLLER_PROPERTY(QString, City, city)

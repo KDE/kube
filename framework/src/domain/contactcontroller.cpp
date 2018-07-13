@@ -19,6 +19,8 @@
 #include "contactcontroller.h"
 
 #include <sink/applicationdomaintype.h>
+#include <sink/store.h>
+#include <sink/log.h>
 #include <KContacts/VCardConverter>
 
 class MailsController : public Kube::ListPropertyController
@@ -64,22 +66,54 @@ ContactController::ContactController()
     updateSaveAction();
 }
 
-void ContactController::save() {
-    qWarning() << "Saving is not implemented";
+void ContactController::save()
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+    Query query;
+    query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Contact::storage);
+    auto job = Store::fetchAll<SinkResource>(query)
+        .then([=](const QList<SinkResource::Ptr> &resources) {
+            if (!resources.isEmpty()) {
+                auto resourceId = resources[0]->identifier();
+                KContacts::Addressee addressee;
+                addressee.setGivenName(getFirstName());
+                addressee.setFamilyName(getLastName());
+                addressee.setFormattedName(getFirstName() + " " + getLastName());
+                KContacts::VCardConverter converter;
+                const auto vcard = converter.createVCard(addressee, KContacts::VCardConverter::v3_0);
+
+                Contact contact(resourceId);
+                contact.setVcard(vcard);
+
+                return Store::create(contact);
+            }
+            SinkWarning() << "Failed to find a resource for the contact";
+            return KAsync::error<void>(0, "Failed to find a contact resource.");
+        })
+        .then([&] (const KAsync::Error &error) {
+            SinkLog() << "Failed to save the contact: " << error;
+            emit done();
+        });
+    run(job);
 }
 
 void ContactController::updateSaveAction()
 {
-    saveAction()->setEnabled(!getName().isEmpty());
+    saveAction()->setEnabled(!getFirstName().isEmpty());
 }
 
 void ContactController::loadContact(const QVariant &contact)
 {
     if (auto c = contact.value<Sink::ApplicationDomain::Contact::Ptr>()) {
-        setName(c->getFn());
         const auto &vcard = c->getVcard();
         KContacts::VCardConverter converter;
         const auto addressee = converter.parseVCard(vcard);
+
+        setName(c->getFn());
+        setFirstName(addressee.givenName());
+        setLastName(addressee.familyName());
+
         static_cast<MailsController*>(mailsController())->set(addressee.emails());
 
         QStringList numbers;
