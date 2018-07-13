@@ -16,13 +16,15 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#pragma once
 
 #include <QObject>
 #include <QString>
+#include "kube_export.h"
 
 namespace Kube {
 
-class File : public QObject {
+class KUBE_EXPORT File : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString path MEMBER mPath)
     Q_PROPERTY(QString defaultContent MEMBER mDefaultContent)
