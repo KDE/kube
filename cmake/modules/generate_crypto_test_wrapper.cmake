@@ -1,5 +1,6 @@
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2013, Sandro Knauß <mail@sandroknauss.de>
+# Copyright (c) 2018, Christian Mollekopf <mollekopf@kolabsys.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -8,7 +9,7 @@
 if (UNIX)
 
 file(WRITE "${_filename}"
-"#!/bin/sh
+"#!/usr/bin/env sh
 # created by cmake, don't edit, changes will be lost
 
 # don't mess with a gpg-agent already running on the system
@@ -16,18 +17,7 @@ unset GPG_AGENT_INFO
 
 ${_library_path_variable}=${_ld_library_path}\${${_library_path_variable}:+:\$${_library_path_variable}} GNUPGHOME=${_gnupghome} gpg-agent --daemon \"${_executable}\" \"$@\"
 _result=$?
-_pid=`echo GETINFO pid | GNUPGHOME=${_gnupghome} gpg-connect-agent | grep 'D' | cut -d' ' -f2`
-if [ ! -z \"\$_pid\" ]; then
-    echo \"Waiting for gpg-agent to terminate (PID: $_pid)...\"
-    while kill -0 \"\$_pid\"; do
-        sleep 1
-        output=`ps -p \"\$_pid\" | grep \"gpg-agent\" | grep \"defunc\"`
-        if [ ! -z \"\$output\" ]; then
-            echo \"Process is defunc, moving on\"
-            break
-        fi
-    done
-fi
+GNUPGHOME=${_gnupghome} gpg-connect-agent killagent /bye
 exit \$_result
 ")
 
