@@ -47,7 +47,6 @@ add_library(kubeframework SHARED
     kubeimage.cpp
     clipboardproxy.cpp
     krecursivefilterproxymodel.cpp
-    webengineprofile.cpp
     startupcheck.cpp
     keyring.cpp
     domainobjectcontroller.cpp
