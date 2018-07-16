@@ -267,11 +267,11 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
 
                 if (messageIsSigned) {
                     auto sigInfo = std::unique_ptr<SignatureInfo>{signatureInfo(messagePart)};
-                    if (!sigInfo->signatureIsGood || sigInfo->keyRevoked) {
+                    if (!sigInfo->signatureIsGood) {
+                        if (sigInfo->keyMissing || sigInfo->keyExpired) {
+                            return "notsogood";
+                        }
                         return "bad";
-                    }
-                    if (sigInfo->keyMissing || sigInfo->keyExpired) {
-                        return "notsogood";
                     }
                 }
                 //All good
