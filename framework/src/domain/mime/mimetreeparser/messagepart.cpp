@@ -927,8 +927,15 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
         return true;
     }
 
-    if (mMetaData.isEncrypted && decryptResult.recipients.size()) {
-        mMetaData.keyId = decryptResult.recipients.at(0).keyId;
+    if (mMetaData.isEncrypted) {
+        mMetaData.keyId = [&] {
+            foreach (const auto &recipient, decryptResult.recipients) {
+                if (recipient.status.errorCode() != GPG_ERR_NO_SECKEY) {
+                    return recipient.keyId;
+                }
+            }
+            return QByteArray{};
+        }();
     }
 
     if (!decryptResult.error) {
@@ -939,14 +946,7 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
         mMetaData.isEncrypted = errorCode != GPG_ERR_NO_DATA;
         qWarning() << "Failed to decrypt : " << decryptResult.error;
 
-        const bool noSecretKeyAvilable = [&] {
-            foreach (const auto &recipient, decryptResult.recipients) {
-                if (!(recipient.status.errorCode() == GPG_ERR_NO_SECKEY)) {
-                    return false;
-                }
-            }
-            return true;
-        }();
+        const bool noSecretKeyAvilable = mMetaData.keyId.isEmpty();
         bool passphraseError = errorCode == GPG_ERR_CANCELED || errorCode == GPG_ERR_NO_SECKEY;
         //We only get a decryption failed error when we enter the wrong passphrase....
         if (!passphraseError && !noSecretKeyAvilable) {
