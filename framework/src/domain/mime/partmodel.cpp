@@ -287,6 +287,9 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 auto encryption = messagePart->encryptionState();
                 bool messageIsEncrypted = encryption == MimeTreeParser::KMMsgPartiallyEncrypted ||
                                           encryption == MimeTreeParser::KMMsgFullyEncrypted;
+                if (messagePart->error()) {
+                    return "bad";
+                }
                 //All good
                 if (messageIsEncrypted) {
                     return "good";

@@ -68,6 +68,7 @@ DelegateModel {
                 if (!signatureDetails.signatureIsGood && !signatureDetails.keyRevoked && !signatureDetails.keyExpired && !signatureDetails.keyIsTrusted) {
                     details += qsTr("The signature is invalid.") + "\n"
                 }
+            }
             return details
         }
 
@@ -85,7 +86,7 @@ DelegateModel {
                 color: getColor(model.encryptionSecurityLevel)
                 backgroundOpacity: 0.5
                 visible: model.encrypted
-                tooltip: qsTr("This message is encrypted to the key: %1").arg(model.encryptionDetails.keyId);
+                tooltip: model.encryptionDetails.keyId == "" ? qsTr("This message is encrypted but we don't have the key for it.") : qsTr("This message is encrypted to the key: %1").arg(model.encryptionDetails.keyId);
 
                 //FIXME make text copyable
                 // Kube.SelectableItem {
