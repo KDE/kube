@@ -19,7 +19,6 @@
 #include <QtQuickTest/quicktest.h>
 #include <QQmlEngine>
 #include <QApplication>
-#include <sink/test.h>
 
 int main(int argc, char **argv)
 {
