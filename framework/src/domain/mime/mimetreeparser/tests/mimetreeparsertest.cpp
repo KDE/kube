@@ -29,7 +29,7 @@ QByteArray readMailFromFile(const QString &mailFile)
     return file.readAll();
 }
 
-class InterfaceTest : public QObject
+class MimeTreeParserTest : public QObject
 {
     Q_OBJECT
 private slots:
@@ -461,5 +461,5 @@ private slots:
     }
 };
 
-QTEST_GUILESS_MAIN(InterfaceTest)
+QTEST_GUILESS_MAIN(MimeTreeParserTest)
 #include "mimetreeparsertest.moc"
