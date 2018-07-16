@@ -67,7 +67,6 @@ FocusScope {
             }
             Kube.MailListView  {
                 id: mailListView
-                showFilter: false
                 Layout.fillWidth: true
                 Layout.fillHeight: true
             }
