@@ -51,12 +51,9 @@ DelegateModel {
             var details = "";
             if (signatureDetails.noSignaturesFound) {
                 details += qsTr("This message has been signed but we failed to validate the signature.") + "\n"
-            } else if (!signatureDetails.signatureIsGood) {
-                details += qsTr("This message is signed but the signature is invalid.") + "\n"
             } else if (signatureDetails.keyMissing) {
                 details += qsTr("This message has been signed using the key %1.").arg(signatureDetails.keyId) + "\n";
                 details += qsTr("The key details are not available.") + "\n";
-                return details;
             } else {
                 details += qsTr("This message has been signed using the key %1 by %2.").arg(signatureDetails.keyId).arg(signatureDetails.signer) + "\n";
                 if (signatureDetails.keyRevoked) {
@@ -68,7 +65,9 @@ DelegateModel {
                 if (signatureDetails.keyIsTrusted) {
                     details += qsTr("You are trusting this key.") + "\n"
                 }
-            }
+                if (!signatureDetails.signatureIsGood && !signatureDetails.keyRevoked && !signatureDetails.keyExpired && !signatureDetails.keyIsTrusted) {
+                    details += qsTr("The signature is invalid.") + "\n"
+                }
             return details
         }
 
