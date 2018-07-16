@@ -82,7 +82,7 @@ DelegateModel {
                 width: Kube.Units.gridUnit
                 height: width
                 iconName: Kube.Icons.secure
-                color: getColor(model.securityLevel)
+                color: getColor(model.encryptionSecurityLevel)
                 backgroundOpacity: 0.5
                 visible: model.encrypted
                 tooltip: qsTr("This message is encrypted to the key: %1").arg(model.encryptionDetails.keyId);
@@ -98,7 +98,7 @@ DelegateModel {
                 width: Kube.Units.gridUnit
                 height: width
                 iconName: Kube.Icons.signed
-                color: getColor(model.securityLevel)
+                color: getColor(model.signatureSecurityLevel)
                 backgroundOpacity: 0.5
                 visible: model.signed
                 tooltip: getDetails(model.signatureDetails)

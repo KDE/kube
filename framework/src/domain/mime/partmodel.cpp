@@ -85,6 +85,8 @@ QHash<int, QByteArray> PartModel::roleNames() const
     roles[IsEncryptedRole] = "encrypted";
     roles[IsSignedRole] = "signed";
     roles[SecurityLevelRole] = "securityLevel";
+    roles[EncryptionSecurityLevelRole] = "encryptionSecurityLevel";
+    roles[SignatureSecurityLevelRole] = "signatureSecurityLevel";
     roles[ErrorType] = "errorType";
     roles[ErrorString] = "errorString";
     roles[IsErrorRole] = "error";
@@ -280,6 +282,35 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 }
                 //No info
                 return "unknown";
+            }
+            case EncryptionSecurityLevelRole: {
+                auto encryption = messagePart->encryptionState();
+                bool messageIsEncrypted = encryption == MimeTreeParser::KMMsgPartiallyEncrypted ||
+                                          encryption == MimeTreeParser::KMMsgFullyEncrypted;
+                //All good
+                if (messageIsEncrypted) {
+                    return "good";
+                }
+                //No info
+                return "unknown";
+            }
+            case SignatureSecurityLevelRole: {
+                auto signature = messagePart->signatureState();
+                bool messageIsSigned = signature == MimeTreeParser::KMMsgPartiallySigned ||
+                                       signature == MimeTreeParser::KMMsgFullySigned;
+                if (messageIsSigned) {
+                    auto sigInfo = std::unique_ptr<SignatureInfo>{signatureInfo(messagePart)};
+                    if (!sigInfo->signatureIsGood) {
+                        if (sigInfo->keyMissing || sigInfo->keyExpired) {
+                            return "notsogood";
+                        }
+                        return "bad";
+                    }
+                    return "good";
+                }
+                //No info
+                return "unknown";
+
             }
             case SignatureDetails:
                 return QVariant::fromValue(signatureInfo(messagePart));

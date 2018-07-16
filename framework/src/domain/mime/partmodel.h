@@ -45,6 +45,8 @@ public:
         IsSignedRole,
         IsErrorRole,
         SecurityLevelRole,
+        EncryptionSecurityLevelRole,
+        SignatureSecurityLevelRole,
         SignatureDetails,
         EncryptionDetails,
         ErrorType,
