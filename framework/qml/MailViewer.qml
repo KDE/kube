@@ -357,7 +357,7 @@ Rectangle {
 
         anchors.bottom: parent.bottom
 
-        height: Kube.Units.gridUnit * 2
+        height: Kube.Units.gridUnit * 2 + Kube.Units.largeSpacing
         width: parent.width
 
         Kube.TextButton {
