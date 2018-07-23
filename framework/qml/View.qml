@@ -31,7 +31,7 @@ FocusScope {
     property string filter: ""
     property var searchObject: null
     function triggerSearch() {
-        if (!searchObject) {
+        if (!searchObject && Controls2.StackView.visible) {
             searchObject = searchComponent.createObject(root)
         }
     }
