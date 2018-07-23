@@ -45,6 +45,7 @@ QDebug operator<< (QDebug d, const Error &error)
     return d;
 }
 
+namespace Crypto {
 struct Data {
     Data(const QByteArray &buffer)
     {
@@ -61,6 +62,7 @@ struct Data {
     }
     gpgme_data_t data;
 };
+}
 
 static gpgme_error_t checkEngine(CryptoProtocol protocol)
 {
@@ -103,6 +105,7 @@ static std::pair<gpgme_error_t, gpgme_ctx_t> createForProtocol(CryptoProtocol pr
 }
 
 
+namespace Crypto {
 struct Context {
     Context(CryptoProtocol protocol = OpenPGP)
     {
@@ -123,6 +126,7 @@ struct Context {
     Error error;
     gpgme_ctx_t context;
 };
+}
 
 
 static QByteArray toBA(gpgme_data_t out)
