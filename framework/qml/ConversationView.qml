@@ -28,7 +28,7 @@ import QtQml 2.2 as QtQml
 FocusScope {
     id: root
 
-    property variant mail;
+    property alias model: listView.model
     property bool hideTrash: true;
     property bool hideNonTrash: false;
     property string searchString: ""
@@ -82,10 +82,6 @@ FocusScope {
 
             //Shrink the listview if the content doesn't fill the full height, so the email appears on top instead of on the bottom.
             height: Math.min(contentHeight, parent.height)
-
-            model: Kube.MailListModel {
-                mail: root.mail
-            }
 
             Keys.onPressed: {
                 //Not implemented as a shortcut because we want it only to apply if we have the focus

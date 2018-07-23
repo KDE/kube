@@ -31,6 +31,7 @@ class KUBE_EXPORT MailListModel : public QSortFilterProxyModel
     Q_OBJECT
     Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
     Q_PROPERTY (QVariant mail READ mail WRITE setMail)
+    Q_PROPERTY (QVariant singleMail READ singleMail WRITE setSingleMail)
     Q_PROPERTY (bool showDrafts READ showDrafts WRITE setShowDrafts)
     Q_PROPERTY (bool showInbox READ showInbox WRITE setShowInbox)
     Q_PROPERTY (QString entityId READ entityId WRITE setEntityId)
@@ -84,6 +85,9 @@ public:
 
     void setMail(const QVariant &mail);
     QVariant mail() const;
+
+    void setSingleMail(const QVariant &mail);
+    QVariant singleMail() const;
 
     void setFilter(const QString &mail);
     QString filter() const;

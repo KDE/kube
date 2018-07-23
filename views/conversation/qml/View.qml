@@ -200,10 +200,13 @@ Kube.View {
             Layout.fillWidth: true
             Layout.fillHeight: parent.height
             activeFocusOnTab: true
+            model: Kube.MailListModel {
+                id: mailViewModel
+            }
             Kube.Listener {
                 filter: Kube.Messages.mailSelection
                 onMessageReceived: {
-                    mailView.mail = message.mail
+                    mailViewModel.mail = message.mail
                 }
             }
 

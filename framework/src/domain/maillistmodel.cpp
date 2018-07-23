@@ -328,6 +328,48 @@ QVariant MailListModel::mail() const
     return QVariant();
 }
 
+void MailListModel::setSingleMail(const QVariant &variant)
+{
+    using namespace Sink::ApplicationDomain;
+    auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>();
+    if (!mail) {
+        mCurrentQueryItem.clear();
+        setSourceModel(nullptr);
+        return;
+    }
+    if (mCurrentQueryItem == mail->identifier()) {
+        return;
+    }
+    mCurrentQueryItem = mail->identifier();
+    Sink::Query query{*mail};
+    query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::Draft>();
+    query.request<Mail::Folder>();
+    query.request<Mail::Sent>();
+    query.request<Mail::Trash>();
+    query.request<Mail::MimeMessage>();
+    query.request<Mail::FullPayloadAvailable>();
+    mFetchMails = true;
+    mFetchedMails.clear();
+    qDebug() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
+    //Latest mail at the bottom
+    sort(0, Qt::AscendingOrder);
+    runQuery(query);
+}
+
+QVariant MailListModel::singleMail() const
+{
+    return {};
+}
+
 
 void MailListModel::setShowDrafts(bool)
 {
