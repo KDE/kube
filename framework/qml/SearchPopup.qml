@@ -31,6 +31,7 @@ Item {
     property string backgroundColor: Kube.Colors.darkCharcoalGrey
     property real backgroundOpacity: 0
     property real searchAreaOpacity: backgroundOpacity / 4
+    property bool movedSearchBox: false
 
     NumberAnimation on backgroundOpacity {
         id: fadeIn
@@ -137,8 +138,8 @@ Item {
             State {
                 name: "searchInProgress"
                 when: find.text.length != 0
-                PropertyChanges {target: filterField; y: Kube.Units.gridUnit}
-                PropertyChanges {target: root; searchAreaOpacity: 0}
+                PropertyChanges {target: filterField; restoreEntryValues: false; y: Kube.Units.gridUnit}
+                PropertyChanges {target: root; restoreEntryValues: false; searchAreaOpacity: 0}
             }
         ]
 
