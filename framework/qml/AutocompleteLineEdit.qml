@@ -140,6 +140,10 @@ Kube.TextField {
                             id: mouseArea
                             anchors.fill: parent
                             hoverEnabled: true
+                            onClicked: {
+                                listView.currentIndex = index
+                                accept()
+                            }
                         }
                         Kube.Label{
                             anchors {
