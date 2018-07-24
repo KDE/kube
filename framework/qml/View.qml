@@ -64,6 +64,10 @@ FocusScope {
         root.setup()
     }
 
+    Controls2.StackView.onDeactivated: {
+        clearSearch()
+    }
+
     //This signal will be emitted before destruction if the view was not done
     signal aborted()
     onAborted: {
