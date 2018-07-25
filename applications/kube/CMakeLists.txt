@@ -9,7 +9,7 @@ set(SRCS main.cpp)
 
 if(APPLE OR WIN32)
     # Sets the icon on Windows and OSX
-    file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/*-apps-kube_icon.*")
+    file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/*-apps-kube_icon.png")
     ecm_add_app_icon(SRCS ICONS ${ICONS_SRCS})
 endif()
 
