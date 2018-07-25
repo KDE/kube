@@ -17,19 +17,14 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import QtQuick 2.7
 import QtTest 1.0
 import org.kube.test 1.0
-import "../qml"
 
-ViewTestCase {
-    name: "Todo"
+TestCase {
+    width: 400
+    height: 400
 
-    View {
-        id: view
-    }
-
-    function test_start() {
-        verify(view)
+    function cleanup() {
+        TestStore.shutdownResources();
     }
 }

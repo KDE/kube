@@ -18,10 +18,10 @@
  */
 
 import QtQuick 2.7
-import QtTest 1.0
+import org.kube.test 1.0
 import "../qml"
 
-TestCase {
+ViewTestCase {
     width: 400
     height: 400
     name: "InboxCrusher"
@@ -33,4 +33,5 @@ TestCase {
     function test_start() {
         verify(view)
     }
+
 }

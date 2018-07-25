@@ -22,16 +22,10 @@ import QtTest 1.0
 import org.kube.test 1.0
 import "../qml"
 
-TestCase {
+ViewTestCase {
     id: testCase
-    width: 400
-    height: 400
     name: "AccountsView"
     when: windowShown
-
-    function cleanup() {
-        TestStore.shutdownResources();
-    }
 
     function visitChildren(item) {
         console.warn(item)

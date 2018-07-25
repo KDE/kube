@@ -23,10 +23,8 @@ import org.kube.framework 1.0 as Kube
 import org.kube.test 1.0
 import "../qml"
 
-TestCase {
+ViewTestCase {
     id: logviewTestcase
-    width: 400
-    height: 400
     name: "LogView"
 
     View {

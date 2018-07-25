@@ -1,3 +1,5 @@
 module org.kube.test
 
+ViewTestCase 1.0 ViewTestCase.qml
+
 plugin testplugin

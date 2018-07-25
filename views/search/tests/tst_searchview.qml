@@ -20,13 +20,10 @@
 import QtQuick 2.7
 import QtTest 1.0
 import "../qml"
-import org.kube.framework 1.0 as Kube
 import org.kube.test 1.0
 
-TestCase {
+ViewTestCase {
     id: testCase
-    width: 400
-    height: 400
     name: "SearchView"
 
     Component {

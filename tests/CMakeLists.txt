@@ -11,6 +11,7 @@ target_link_libraries(kubetestrunner
     kubeframework
 )
 
+install(DIRECTORY qml/ DESTINATION ${QML_INSTALL_DIR}/org/kube/test)
 install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kube/test)
 
 add_library(testplugin SHARED testplugin.cpp teststore.cpp)
