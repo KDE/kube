@@ -73,6 +73,6 @@ TestCase {
         var accounts = TestStore.loadList("account", {})
         compare(accounts.length, 1)
         var resources = TestStore.loadList("resource", {})
-        compare(resources.length, 3)
+        compare(resources.length, 4)
     }
 }
