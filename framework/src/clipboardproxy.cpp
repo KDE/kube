@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 Christian Mollekofp <mollekopf@kolabsys.com>
+    Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,12 +19,12 @@
 #include "clipboardproxy.h"
 
 #include <QClipboard>
-#include <QApplication>
+#include <QGuiApplication>
 
 ClipboardProxy::ClipboardProxy(QObject *parent)
     : QObject(parent)
 {
-    QClipboard *clipboard = QApplication::clipboard();
+    QClipboard *clipboard = QGuiApplication::clipboard();
     QObject::connect(clipboard, &QClipboard::dataChanged,
             this, &ClipboardProxy::dataChanged);
     QObject::connect(clipboard, &QClipboard::selectionChanged,
@@ -33,7 +33,7 @@ ClipboardProxy::ClipboardProxy(QObject *parent)
 
 void ClipboardProxy::setDataText(const QString &text)
 {
-    QApplication::clipboard()->setText(text, QClipboard::Clipboard);
+    QGuiApplication::clipboard()->setText(text, QClipboard::Clipboard);
 }
 
 QString ClipboardProxy::dataText() const
@@ -43,10 +43,10 @@ QString ClipboardProxy::dataText() const
 
 void ClipboardProxy::setSelectionText(const QString &text)
 {
-    QApplication::clipboard()->setText(text, QClipboard::Selection);
+    QGuiApplication::clipboard()->setText(text, QClipboard::Selection);
 }
 
 QString ClipboardProxy::selectionText() const
 {
-    return QApplication::clipboard()->text(QClipboard::Selection);
+    return QGuiApplication::clipboard()->text(QClipboard::Selection);
 }
