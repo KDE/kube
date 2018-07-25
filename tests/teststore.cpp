@@ -243,6 +243,14 @@ void TestStore::setup(const QVariantMap &map)
     Sink::ResourceControl::flushMessageQueue(resources).exec().waitForFinished();
 }
 
+void TestStore::shutdownResources()
+{
+    const auto resources = Sink::Store::read<Sink::ApplicationDomain::SinkResource>({});
+    for (const auto &resource : resources) {
+        Sink::ResourceControl::shutdown(resource.identifier()).exec().waitForFinished();
+    }
+}
+
 QVariant TestStore::load(const QByteArray &type, const QVariantMap &filter)
 {
     using namespace Sink::ApplicationDomain;

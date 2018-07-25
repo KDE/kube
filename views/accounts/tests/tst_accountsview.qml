@@ -29,6 +29,10 @@ TestCase {
     name: "AccountsView"
     when: windowShown
 
+    function cleanup() {
+        TestStore.shutdownResources();
+    }
+
     function visitChildren(item) {
         console.warn(item)
         for (var i = 0; i < item.children.length; i++) {

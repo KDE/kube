@@ -27,6 +27,7 @@ class TestStore : public QObject {
     Q_OBJECT
 public:
     Q_INVOKABLE void setup(const QVariantMap &);
+    Q_INVOKABLE void shutdownResources();
     Q_INVOKABLE QVariant load(const QByteArray &type, const QVariantMap &);
     Q_INVOKABLE QVariantList loadList(const QByteArray &type, const QVariantMap &);
     Q_INVOKABLE QVariantMap read(const QVariant &);
