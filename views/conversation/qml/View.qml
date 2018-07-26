@@ -52,6 +52,8 @@ Kube.View {
             ListElement { description: qsTr("Compose new message:"); shortcut: "c" }
             ListElement { description: qsTr("Reply to the currently focused message:"); shortcut: "r" }
             ListElement { description: qsTr("Delete the currently focused message:"); shortcut: "d" }
+            ListElement { description: qsTr("Mark the currently focused message as important:"); shortcut: "i" }
+            ListElement { description: qsTr("Mark the currently focused message as unread:"); shortcut: "u" }
             ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
         }
     }

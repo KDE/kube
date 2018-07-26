@@ -87,6 +87,10 @@ FocusScope {
                     Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": root.currentMail})
                 } else if (event.text == "r") {
                     Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": root.currentMail})
+                } else if (event.text == "i") {
+                    Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": root.currentMail, "important": !currentItem.currentData.important})
+                } else if (event.text == "u") {
+                    Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": root.currentMail})
                 }
             }
 
@@ -114,6 +118,7 @@ FocusScope {
                 id: delegateRoot
                 //Required for D&D
                 property var mail: model.mail
+                property bool buttonsVisible: delegateRoot.hovered
 
                 width: listView.availableWidth
                 height: Kube.Units.gridUnit * 5
@@ -199,7 +204,7 @@ FocusScope {
                             right: parent.right
                             bottom: parent.bottom
                         }
-                        visible: !delegateRoot.focused
+                        visible: !delegateRoot.buttonsVisible
                         text: Qt.formatDateTime(model.date, "dd MMM yyyy")
                         font.italic: true
                         color: delegateRoot.disabledTextColor
@@ -214,20 +219,20 @@ FocusScope {
                         }
                         text: model.threadSize
                         color: content.unreadColor
-                        visible: model.threadSize > 1 &&  !delegateRoot.focused
+                        visible: model.threadSize > 1 && !delegateRoot.buttonsVisible
 
                     }
                 }
 
                 Kube.Icon {
-                        anchors {
-                            right: parent.right
-                            verticalCenter: parent.verticalCenter
-                            margins: Kube.Units.smallSpacing
-                        }
+                    anchors {
+                        right: parent.right
+                        verticalCenter: parent.verticalCenter
+                        margins: Kube.Units.smallSpacing
+                    }
 
-                        visible:  model.important && !delegateRoot.focused && !mouseArea.drag.active
-                        iconName: Kube.Icons.isImportant
+                    visible:  model.important && !delegateRoot.buttonsVisible && !mouseArea.drag.active
+                    iconName: Kube.Icons.isImportant
                 }
 
                 Column {
@@ -239,7 +244,7 @@ FocusScope {
                         verticalCenter: parent.verticalCenter
                     }
 
-                    visible: delegateRoot.focused && !mouseArea.drag.active
+                    visible: delegateRoot.buttonsVisible && !mouseArea.drag.active
                     opacity: 0.7
 
                     Kube.IconButton {
