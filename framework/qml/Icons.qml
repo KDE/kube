@@ -35,8 +35,9 @@ Item {
 
     property string markAsRead: "mail-mark-read-inverted"
     property string markAsUnread: "mail-mark-unread-new-inverted"
-    property string markImportant: "kubeimportant"
+    property string markImportant: "kubeimportant-inverted"
     property string markUnimportant: "kubeunimportant"
+    property string isImportant: "kubeimportant"
     property string undo: "edit-undo-inverted"
     property string moveToTrash: "kubetrash"
     property string edit: "document-edit"

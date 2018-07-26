@@ -11,7 +11,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="kubeimportant.svg"
+   sodipodi:docname="kubeiconsimportant24.svg"
    width="24"
    height="24">
   <metadata
@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -36,7 +36,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1280"
-     inkscape:window-height="1005"
+     inkscape:window-height="1387"
      id="namedview8"
      showgrid="true"
      inkscape:snap-bbox="true"
@@ -44,11 +44,11 @@
      inkscape:object-nodes="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="5.6568542"
-     inkscape:cx="24.592961"
-     inkscape:cy="-17.569332"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="-152.28924"
+     inkscape:cy="14.675262"
      inkscape:window-x="440"
-     inkscape:window-y="0"
+     inkscape:window-y="290"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2"
      inkscape:snap-global="true">
@@ -106,6 +106,6 @@
      id="path4449"
      class="ColorScheme-Text"
      d="M 12,4 9.523438,9.265625 4,10.109375 8,14.210938 7.054687,20 12,17.265625 16.945312,20 16,14.210938 20,10.109375 14.476562,9.265625 12,4 Z"
-     style="color:#4d4d4d;fill:#4d4d4d;fill-opacity:1;stroke:none"
+     style="color:#4d4d4d;fill:#ffffff;fill-opacity:1;stroke:none"
      inkscape:connector-curvature="0" />
 </svg>

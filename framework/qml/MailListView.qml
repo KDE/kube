@@ -208,25 +208,38 @@ FocusScope {
 
                     Kube.Label {
                         id: threadCounter
-                        anchors.right: parent.right
+                        anchors {
+                            right: parent.right
+                            margins: Kube.Units.smallSpacing
+                        }
                         text: model.threadSize
                         color: content.unreadColor
-                        visible: model.threadSize > 1
+                        visible: model.threadSize > 1 &&  !delegateRoot.focused
+
                     }
                 }
 
-                Row {
+                Kube.Icon {
+                        anchors {
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+                            margins: Kube.Units.smallSpacing
+                        }
+
+                        visible:  model.important && !delegateRoot.focused && !mouseArea.drag.active
+                        iconName: Kube.Icons.isImportant
+                }
+
+                Column {
                     id: buttons
 
                     anchors {
                         right: parent.right
-                        bottom: parent.bottom
                         margins: Kube.Units.smallSpacing
+                        verticalCenter: parent.verticalCenter
                     }
 
                     visible: delegateRoot.focused && !mouseArea.drag.active
-
-                    spacing: Kube.Units.smallSpacing
                     opacity: 0.7
 
                     Kube.IconButton {
