@@ -73,11 +73,23 @@ Item {
             text: imapSettings.emailAddress
             onTextChanged: {
                 imapSettings.emailAddress = text
-                imapSettings.imapUsername = text
-                imapSettings.smtpUsername = text
                 imapSettings.accountName = text
             }
             placeholderText: qsTr("Your email address")
+        }
+        Kube.Label {
+            text: qsTr("Username")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.RequiredTextField {
+            Layout.fillWidth: true
+
+            text: imapSettings.imapUsername
+            onTextChanged: {
+                imapSettings.imapUsername = text
+                imapSettings.smtpUsername = text
+            }
+            placeholderText: qsTr("Your username for IMAP and SMTP access.")
         }
 
         Kube.Label {
@@ -105,7 +117,7 @@ Item {
             id: smtpServer
             Layout.fillWidth: true
 
-            placeholderText: "smtps://mainserver.example.net:993"
+            placeholderText: "smtps://mainserver.example.net:587"
             text: imapSettings.smtpServer
             onTextChanged: {
                 imapSettings.smtpServer = text
