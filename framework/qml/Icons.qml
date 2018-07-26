@@ -33,9 +33,9 @@ Item {
     property string success: "dialog-ok"
     property string success_inverted: "dialog-ok-inverted"
 
-    property string markAsRead: "mail-mark-read-inverted"
-    property string markAsUnread: "mail-mark-unread-new-inverted"
-    property string markImportant: "kubeimportant-inverted"
+    property string markAsRead: "mail-mark-read"
+    property string markAsUnread: "mail-mark-unread-new"
+    property string markImportant: "kubeimportant"
     property string markUnimportant: "kubeunimportant"
     property string isImportant: "kubeimportant"
     property string undo: "edit-undo-inverted"
