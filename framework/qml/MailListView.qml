@@ -243,16 +243,25 @@ FocusScope {
                     opacity: 0.7
 
                     Kube.IconButton {
+                        id: restoreButton
+                        iconName: Kube.Icons.undo
+                        visible: !!model.trash
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
+                        activeFocusOnTab: false
+                        tooltip: qsTr("Restore from trash")
+                    }
+
+                    Kube.IconButton {
                         id: readButton
                         iconName: Kube.Icons.markAsRead
-                        visible: model.unread
+                        visible: model.unread && !model.trash
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
                         tooltip: qsTr("Mark as read")
                     }
                     Kube.IconButton {
                         id: unreadButton
                         iconName: Kube.Icons.markAsUnread
-                        visible: !model.unread
+                        visible: !model.unread && !model.trash
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
                         activeFocusOnTab: false
                         tooltip: qsTr("Mark as unread")
@@ -275,15 +284,6 @@ FocusScope {
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
                         activeFocusOnTab: false
                         tooltip: qsTr("Move to trash")
-                    }
-
-                    Kube.IconButton {
-                        id: restoreButton
-                        iconName: Kube.Icons.undo
-                        visible: !!model.trash
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
-                        activeFocusOnTab: false
-                        tooltip: qsTr("Restore from trash")
                     }
                 }
             }
