@@ -62,6 +62,7 @@ void MailListModel::setFilter(const QString &filter)
             query.request<Mail::Folder>();
         }
         query.filter({}, Sink::QueryBase::Comparator(f, Sink::QueryBase::Comparator::Fulltext));
+        query.limit(0);
     }
     runQuery(query);
     mQuery = oldQuery;
