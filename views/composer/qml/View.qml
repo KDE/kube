@@ -303,19 +303,7 @@ Kube.View {
 
                 spacing: Kube.Units.largeSpacing
 
-                Kube.Switch {
-                    id: html
-                    text: checked ? qsTr("plain") : qsTr("html")
-                    focusPolicy: Qt.TabFocus
-                    focus: false
-                    checked: false
-                    onCheckedChanged: {
-                        textEditor.htmlEnabled = checked
-                    }
-                }
-
                 Row {
-                    visible: html.checked
                     spacing: 1
 
                     Kube.IconButton {
@@ -341,6 +329,12 @@ Kube.View {
                         onClicked: textEditor.underline = !textEditor.underline
                         focusPolicy: Qt.TabFocus
                         focus: false
+                    }
+                    Kube.TextButton {
+                        id: deleteButton
+                        text: qsTr("Remove Formatting")
+                        visible: textEditor.htmlEnabled
+                        onClicked: textEditor.clearFormatting()
                     }
                 }
 
@@ -379,7 +373,6 @@ Kube.View {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 onHtmlEnabledChanged: {
-                    html.checked = htmlEnabled
                     composerController.htmlBody = htmlEnabled;
                 }
 

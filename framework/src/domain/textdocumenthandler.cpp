@@ -32,13 +32,37 @@ TextDocumentHandler::TextDocumentHandler(QObject *parent)
 {
 }
 
+bool TextDocumentHandler::containsFormatting()
+{
+    if (mDocument) {
+        for (const auto &format : mDocument->textDocument()->allFormats()) {
+            switch(format.type()) {
+                case QTextFormat::CharFormat: {
+                    const auto charFormat = format.toCharFormat();
+                    if (charFormat.fontWeight() != QFont::Normal) {
+                        return true;
+                    }
+                    if (charFormat.fontItalic()) {
+                        return true;
+                    }
+                    if (charFormat.fontUnderline()) {
+                        return true;
+                    }
+                    break;
+                }
+                case QTextFormat::BlockFormat:
+                case QTextFormat::FrameFormat:
+                default:
+                    break;
+            }
+        }
+    }
+    return false;
+}
+
 void TextDocumentHandler::resetFormat()
 {
-    //Clear all formatting from the document.
-    auto cursor = textCursor();
-    cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
-    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
-    cursor.setCharFormat({});
+    mDocument->textDocument()->setPlainText(mDocument->textDocument()->toPlainText());
     mCachedTextFormat = {};
     reset();
 }

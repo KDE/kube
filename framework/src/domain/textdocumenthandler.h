@@ -87,6 +87,7 @@ public:
     void setFontSize(int size);
 
     Q_INVOKABLE void resetFormat();
+    Q_INVOKABLE bool containsFormatting();
 
     Q_INVOKABLE static bool isHtml(const QString &);
 

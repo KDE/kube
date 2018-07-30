@@ -34,21 +34,11 @@ FocusScope {
 
     property string initialText
     onInitialTextChanged: {
-        htmlEnabled = document.isHtml(initialText)
         edit.text = initialText
     }
 
-    onHtmlEnabledChanged: {
-        if (htmlEnabled) {
-            var t = document.htmlText
-            edit.textFormat = Qt.RichText
-            edit.text = t
-        } else {
-            var t = document.plainText
-            document.resetFormat()
-            edit.textFormat = Qt.PlainText
-            edit.text = t
-        }
+    function clearFormatting() {
+        document.resetFormat()
     }
 
     Kube.TextDocumentHandler {
@@ -57,6 +47,7 @@ FocusScope {
         selectionStart: edit.selectionStart
         selectionEnd: edit.selectionEnd
         onTextChanged: {
+            root.htmlEnabled = containsFormatting();
             root.htmlEnabled ? root.text = htmlText : root.text = plainText
         }
         cursorPosition: edit.cursorPosition
@@ -105,7 +96,7 @@ FocusScope {
                 focus: true
                 selectByMouse: true
                 wrapMode: TextEdit.Wrap
-                textFormat: Qt.PlainText
+                textFormat: Qt.RichText
                 onCursorRectangleChanged: flickableItem.ensureVisible(cursorRectangle)
 
                 color: Kube.Colors.textColor
