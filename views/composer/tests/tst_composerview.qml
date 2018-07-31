@@ -119,7 +119,7 @@ ViewTestCase {
                 mails:[{
                     resource: "resource1",
                     subject: "subject",
-                    body: "body",
+                    body: "body\nnewline",
                     to: ["to@example.org"],
                     cc: ["cc@example.org"],
                     bcc: ["bcc@example.org"],
@@ -134,7 +134,11 @@ ViewTestCase {
         var subject = findChild(composer, "subject");
         verify(subject)
         tryVerify(function(){ return subject.text == "RE: subject" })
-        tryVerify(function(){ return subject.body != "" })
+
+        var textEditor = findChild(composer, "textEditor");
+        verify(textEditor)
+        var expectedText = "you wrote:\n> body\n> newline"
+        tryVerify(function(){ return textEditor.text.match(expectedText) })
     }
 
     function test_5loadHtmlDraft() {

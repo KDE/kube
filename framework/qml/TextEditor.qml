@@ -96,7 +96,7 @@ FocusScope {
                 focus: true
                 selectByMouse: true
                 wrapMode: TextEdit.Wrap
-                textFormat: Qt.RichText
+                textFormat: Qt.AutoText
                 onCursorRectangleChanged: flickableItem.ensureVisible(cursorRectangle)
 
                 color: Kube.Colors.textColor
