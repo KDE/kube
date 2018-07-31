@@ -33,41 +33,27 @@ TestCase {
         Kube.TextEditor {}
     }
 
+    property string htmlText: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;\"><p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><b>Foobar</b><br>BarBar</p></body></html>"
+    property string plainText: "Foobar\nBarBar"
+
     function test_1initialText() {
-        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "Foobar\nBarBar", htmlEnabled: false})
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: plainText})
         compare(editor.text, editor.initialText)
-    }
-
-    function test_2plainToHtmlConversion() {
-        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "Foobar\nBarBar", htmlEnabled: false})
-        editor.htmlEnabled = true
-        verify(editor.text.indexOf("<html>") !== -1)
-        //It's converted into two paragraphs, so we can't check as a single string
-        verify(editor.text.indexOf("Foobar") !== -1)
-        verify(editor.text.indexOf("BarBar") !== -1)
-        editor.htmlEnabled = false
-        compare(editor.text, editor.initialText)
-
-        editor.htmlEnabled = true
-        verify(editor.text.indexOf("<html>") !== -1)
     }
 
     function test_3htmlToPlainConversion() {
-        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;\"><p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">test</p></body></html>", htmlEnabled: true})
-        editor.htmlEnabled = false
-        compare(editor.text, "test")
-
-        editor.htmlEnabled = true
-        verify(editor.text.indexOf("<html>") !== -1)
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: htmlText})
+        editor.clearFormatting()
+        compare(editor.text, plainText)
     }
 
     function test_4detectPlain() {
-        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "Foobar\nBarBar", htmlEnabled: true})
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: plainText})
         compare(editor.htmlEnabled, false)
     }
 
     function test_5detectHtml() {
-        var editor = createTemporaryObject(editorComponent, testCase, {initialText: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;\"><p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">test</p></body></html>", htmlEnabled: false})
+        var editor = createTemporaryObject(editorComponent, testCase, {initialText: htmlText})
         compare(editor.htmlEnabled, true)
     }
 }

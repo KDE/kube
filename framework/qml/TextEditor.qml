@@ -24,9 +24,8 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
-    property string text: ""
-
-    property bool htmlEnabled: false
+    property string text: document.text
+    property bool htmlEnabled: document.containsFormatting
 
     property alias bold: document.bold
     property alias italic: document.italic
@@ -46,10 +45,6 @@ FocusScope {
         document: edit.textDocument
         selectionStart: edit.selectionStart
         selectionEnd: edit.selectionEnd
-        onTextChanged: {
-            root.htmlEnabled = containsFormatting();
-            root.htmlEnabled ? root.text = htmlText : root.text = plainText
-        }
         cursorPosition: edit.cursorPosition
     }
 

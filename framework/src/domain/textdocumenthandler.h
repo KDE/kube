@@ -41,9 +41,11 @@ class KUBE_EXPORT TextDocumentHandler : public QObject
     Q_PROPERTY(bool bold READ bold WRITE setBold NOTIFY boldChanged)
     Q_PROPERTY(bool italic READ italic WRITE setItalic NOTIFY italicChanged)
     Q_PROPERTY(bool underline READ underline WRITE setUnderline NOTIFY underlineChanged)
+    Q_PROPERTY(bool containsFormatting READ containsFormatting NOTIFY textChanged)
 
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
+    Q_PROPERTY(QString text READ text NOTIFY textChanged)
     Q_PROPERTY(QString plainText READ plainText NOTIFY textChanged)
     Q_PROPERTY(QString htmlText READ htmlText NOTIFY textChanged)
 
@@ -53,8 +55,11 @@ public:
     QQuickTextDocument *document() const;
     void setDocument(QQuickTextDocument *document);
 
+    QString text() const;
     QString plainText() const;
     QString htmlText() const;
+
+    bool containsFormatting() const;
 
     int cursorPosition() const;
     void setCursorPosition(int position);
@@ -87,7 +92,6 @@ public:
     void setFontSize(int size);
 
     Q_INVOKABLE void resetFormat();
-    Q_INVOKABLE bool containsFormatting();
 
     Q_INVOKABLE static bool isHtml(const QString &);
 

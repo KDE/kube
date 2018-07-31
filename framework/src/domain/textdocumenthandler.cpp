@@ -32,7 +32,7 @@ TextDocumentHandler::TextDocumentHandler(QObject *parent)
 {
 }
 
-bool TextDocumentHandler::containsFormatting()
+bool TextDocumentHandler::containsFormatting() const
 {
     if (mDocument) {
         for (const auto &format : mDocument->textDocument()->allFormats()) {
@@ -62,7 +62,9 @@ bool TextDocumentHandler::containsFormatting()
 
 void TextDocumentHandler::resetFormat()
 {
-    mDocument->textDocument()->setPlainText(mDocument->textDocument()->toPlainText());
+    if (mDocument) {
+        mDocument->textDocument()->setPlainText(mDocument->textDocument()->toPlainText());
+    }
     mCachedTextFormat = {};
     reset();
 }
@@ -76,12 +78,18 @@ void TextDocumentHandler::setDocument(QQuickTextDocument *document)
 {
     if (document != mDocument) {
         mDocument = document;
-        connect(mDocument->textDocument(), &QTextDocument::contentsChanged, this, [this] () {
-            emit textChanged();
-        });
         connect(mDocument->textDocument(), &QTextDocument::contentsChange, this, &TextDocumentHandler::contentsChange);
         emit documentChanged();
+        emit textChanged();
     }
+}
+
+QString TextDocumentHandler::text() const
+{
+    if (containsFormatting()) {
+        return htmlText();
+    }
+    return plainText();
 }
 
 QString TextDocumentHandler::plainText() const
@@ -296,6 +304,7 @@ void TextDocumentHandler::contentsChange(int position, int charsRemoved, int cha
         }
         mCachedTextFormat = {};
     }
+    emit textChanged();
 }
 
 void TextDocumentHandler::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
