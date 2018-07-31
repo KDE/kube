@@ -268,6 +268,7 @@ Kube.View {
                 objectName: "subject"
                 Layout.fillWidth: true
                 activeFocusOnTab: true
+                font.bold: true
 
                 placeholderText: qsTr("Enter Subject...")
                 text: composerController.subject
