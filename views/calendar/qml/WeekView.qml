@@ -129,6 +129,18 @@ FocusScope {
                     }
                 }
             }
+
+            //Dimm days in the past
+            Rectangle {
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                    bottom: parent.bottom
+                }
+                width: (root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
+                color: Kube.Colors.buttonColor
+                opacity: 0.2
+            }
         }
         //END daylong events
 
