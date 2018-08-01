@@ -111,6 +111,7 @@ RowLayout {
                     spacing: Kube.Units.smallSpacing
                     Kube.CheckBox {
                         opacity: 0.9
+                        checked: true
                     }
                     Kube.Label {
                         text: model.name
