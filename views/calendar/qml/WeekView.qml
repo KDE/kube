@@ -70,7 +70,7 @@ FocusScope {
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
 
                 border.width: 1
-                border.color: "lightgrey"
+                border.color: Kube.Colors.lightgrey
                 color: Kube.Colors.viewBackgroundColor
 
                 Kube.Label {
@@ -200,7 +200,7 @@ FocusScope {
                         height: root.hourHeight * 24
 
                         border.width: 1
-                        border.color: "lightgrey"
+                        border.color: Kube.Colors.lightgrey
                         color: Kube.Colors.viewBackgroundColor
 
                         Column {
@@ -212,7 +212,7 @@ FocusScope {
                                     width: parent.width
                                     color: "transparent"
                                     border.width:1
-                                    border.color: "lightgrey"
+                                    border.color: Kube.Colors.lightgrey
                                 }
                             }
                         }
@@ -241,12 +241,14 @@ FocusScope {
                                     right: parent.right
                                     rightMargin: Kube.Units.smallSpacing
                                 }
+                                radius: 2
                                 width: root.dayWidth - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indention
                                 height: Math.max(root.hourHeight * 0.5, root.hourHeight * model.modelData.duration)
                                 y: root.hourHeight * model.modelData.starts
                                 x: Kube.Units.gridUnit * model.modelData.indention
 
-                                color: model.modelData.color
+                                //color: model.modelData.color
+                                color: Kube.Colors.bewareOrange
                                 border.width: 1
                                 border.color: Kube.Colors.viewBackgroundColor
 
