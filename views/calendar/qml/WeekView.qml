@@ -19,14 +19,14 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.2
-import Qt.labs.calendar 1.0 as Calendar
 
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
 
-    property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / 7
+    property int daysToShow: 7
+    property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / root.daysToShow
     property var hourHeight: Kube.Units.gridUnit * 2
     property date currentDate
 
@@ -48,6 +48,12 @@ FocusScope {
 
     property date startDate: getMonday(currentDate)
 
+    function addDaysToDate(date, days) {
+        var date = new Date(date);
+        date.setDate(date.getDate() + days);
+        return date;
+    }
+
     Item {
         anchors {
             top: parent.top
@@ -55,25 +61,30 @@ FocusScope {
             rightMargin: Kube.Units.largeSpacing
         }
 
-        width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
+        width: root.dayWidth * root.daysToShow + Kube.Units.gridUnit * 2
         height: root.height
 
         //BEGIN day labels
-        Calendar.DayOfWeekRow {
+        Row {
             id: dayLabels
+            anchors.top: parent.top
             anchors.right: parent.right
             spacing: 0
-            locale: Qt.locale()
+            height: childrenRect.height
+            width: root.dayWidth * root.daysToShow
+            Repeater {
+                model: root.daysToShow
 
-            delegate: Rectangle {
-                width: root.dayWidth
-                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
+                delegate: Rectangle {
+                    width: root.dayWidth
+                    height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
 
-                color: Kube.Colors.viewBackgroundColor
+                    color: "yellow"
 
-                Kube.Label {
-                    anchors.centerIn: parent
-                    text: model.longName
+                    Kube.Label {
+                        anchors.centerIn: parent
+                        text: addDaysToDate(root.startDate, modelData).toLocaleString(Qt.locale(), "dddd")
+                    }
                 }
             }
         }
@@ -89,7 +100,7 @@ FocusScope {
             }
 
             height: Kube.Units.gridUnit * 3
-            width: root.dayWidth * 7
+            width: root.dayWidth * root.daysToShow
             color: Kube.Colors.viewBackgroundColor
             border.width: 1
             border.color: Kube.Colors.buttonColor
@@ -153,7 +164,7 @@ FocusScope {
 
             Layout.fillWidth: true
             height: root.height - daylong.height - dayLabels.height - Kube.Units.largeSpacing
-            width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
+            width: root.dayWidth * root.daysToShow + Kube.Units.gridUnit * 2
 
             contentHeight: root.hourHeight * 24
             contentWidth: width
@@ -165,7 +176,7 @@ FocusScope {
 
             Row {
                 height: root.hourHeight * 24
-                width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
+                width: root.dayWidth * root.daysToShow + Kube.Units.gridUnit * 2
 
                 spacing: 0
 
@@ -195,7 +206,7 @@ FocusScope {
                 Repeater {
                     model: WeekEvents {
                         start: root.startDate
-                        length: 7
+                        length: root.daysToShow
                     }
                     delegate: Rectangle {
                         id: dayDelegate
