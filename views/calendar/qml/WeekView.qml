@@ -48,12 +48,6 @@ FocusScope {
 
     property date startDate: getMonday(currentDate)
 
-    function addDaysToDate(date, days) {
-        var date = new Date(date);
-        date.setDate(date.getDate() + days);
-        return date;
-    }
-
     Item {
         anchors {
             top: parent.top
@@ -74,14 +68,17 @@ FocusScope {
             width: root.dayWidth * root.daysToShow
             Repeater {
                 model: root.daysToShow
-
-                delegate: Rectangle {
+                delegate: Item {
                     width: root.dayWidth
                     height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
-
-                    color: "yellow"
-
                     Kube.Label {
+                        function addDaysToDate(date, days) {
+                            var date = new Date(date);
+                            date.setDate(date.getDate() + days);
+                            return date;
+                        }
+                        font.bold: true
+
                         anchors.centerIn: parent
                         text: addDaysToDate(root.startDate, modelData).toLocaleString(Qt.locale(), "dddd")
                     }
