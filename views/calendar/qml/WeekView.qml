@@ -204,6 +204,7 @@ FocusScope {
 
                         color: Kube.Colors.viewBackgroundColor
 
+                        //Grid
                         Column {
                             anchors.fill: parent
                             Repeater {
@@ -212,7 +213,7 @@ FocusScope {
                                     height: root.hourHeight * 2
                                     width: parent.width
                                     color: "transparent"
-                                    border.width:1
+                                    border.width: 1
                                     border.color: Kube.Colors.lightgrey
                                 }
                             }
@@ -250,6 +251,7 @@ FocusScope {
 
                                 //color: model.modelData.color
                                 color: Kube.Colors.bewareOrange
+                                opacity: 0.8
                                 border.width: 1
                                 border.color: Kube.Colors.viewBackgroundColor
 
@@ -303,7 +305,7 @@ FocusScope {
                         Rectangle {
                             anchors.fill: parent
                             color: Kube.Colors.buttonColor
-                            opacity: 0.4
+                            opacity: 0.2
                             visible: root.currentDate.getDate() > dayDelegate.date.getDate()
                         }
 
