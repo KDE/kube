@@ -52,6 +52,7 @@ FocusScope {
         anchors {
             top: parent.top
             right: parent.right
+            rightMargin: Kube.Units.largeSpacing
         }
 
         width: root.dayWidth * 7 + Kube.Units.gridUnit * 2
