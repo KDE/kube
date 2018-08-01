@@ -200,14 +200,12 @@ FocusScope {
                         width: root.dayWidth
                         height: root.hourHeight * 24
 
-                        border.width: 1
-                        border.color: Kube.Colors.lightgrey
                         color: Kube.Colors.viewBackgroundColor
 
                         Column {
                             anchors.fill: parent
                             Repeater {
-                                model: 24
+                                model: 12
                                 delegate: Rectangle {
                                     height: root.hourHeight * 2
                                     width: parent.width
