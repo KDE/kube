@@ -47,7 +47,6 @@ QVariant EntityModel::data(const QModelIndex &idx, int role) const
     auto entity = srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
 
     const auto roleName = mRoleNames.value(role);
-    qWarning() << "Fetch data" << idx << role << roleName;
     if (roleName == "identifier") {
         return entity->identifier();
     } else if (roleName == "object") {
