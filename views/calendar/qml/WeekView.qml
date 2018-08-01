@@ -19,7 +19,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.2
-import Qt.labs.calendar 1.0
+import Qt.labs.calendar 1.0 as Calendar
 
 import org.kube.framework 1.0 as Kube
 
@@ -59,7 +59,7 @@ FocusScope {
         height: root.height
 
         //BEGIN day labels
-        DayOfWeekRow {
+        Calendar.DayOfWeekRow {
             id: dayLabels
             anchors.right: parent.right
             spacing: 0
@@ -69,17 +69,11 @@ FocusScope {
                 width: root.dayWidth
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
 
-                border.width: 1
-                border.color: Kube.Colors.lightgrey
                 color: Kube.Colors.viewBackgroundColor
 
                 Kube.Label {
-                    anchors {
-                        top: parent.top
-                        left: parent.left
-                        margins: Kube.Units.smallSpacing
-                    }
-                    text: model.shortName
+                    anchors.centerIn: parent
+                    text: model.longName
                 }
             }
         }
