@@ -62,7 +62,7 @@ FocusScope {
             id: dayLabels
             anchors.right: parent.right
             spacing: 0
-            locale: Qt.locale("en_GB")
+            locale: Qt.locale()
 
             delegate: Rectangle {
                 width: root.dayWidth
