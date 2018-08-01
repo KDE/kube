@@ -91,20 +91,6 @@ RowLayout {
                 }
 
             }
-            Kube.Label {
-                text: "Week"
-                color: Kube.Colors.highlightedTextColor
-            }
-
-            Kube.Label {
-                text: "Month"
-                color: Kube.Colors.highlightedTextColor
-            }
-
-            Kube.Label {
-                text: "Agenda"
-                color: Kube.Colors.highlightedTextColor
-            }
         }
 
         Column {
