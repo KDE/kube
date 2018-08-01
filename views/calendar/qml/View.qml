@@ -26,8 +26,12 @@ import org.kube.framework 1.0 as Kube
 RowLayout {
     id: root
 
-    //TODO update every second
     property date currentDate: new Date()
+
+    Timer {
+        interval: 2000; running: true; repeat: true
+        onTriggered: root.currentDate = new Date()
+    }
 
     anchors.fill: parent
 
