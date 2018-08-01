@@ -192,9 +192,10 @@ FocusScope {
                         length: 7
                     }
                     delegate: Rectangle {
-                        id: day
+                        id: dayDelegate
 
                         property var events: model.events
+                        property var date: model.date
 
                         width: root.dayWidth
                         height: root.hourHeight * 24
@@ -283,6 +284,27 @@ FocusScope {
                                     onReleased: eventDelegate.Drag.drop()
                                 }
                             }
+                        }
+
+                        Rectangle {
+                            id: currentTimeLine
+                            anchors {
+                                right: parent.right
+                                left: parent.left
+                            }
+                            y: root.hourHeight * root.currentDate.getHours() + root.hourHeight / 60 * root.currentDate.getMinutes()
+                            height: 2
+                            color: Kube.Colors.plasmaBlue
+                            visible: root.currentDate.getDate() == dayDelegate.date.getDate()
+                            opacity: 0.8
+                        }
+
+                        //Dimm days in the past
+                        Rectangle {
+                            anchors.fill: parent
+                            color: Kube.Colors.buttonColor
+                            opacity: 0.4
+                            visible: root.currentDate.getDate() > dayDelegate.date.getDate()
                         }
 
                         DropArea {

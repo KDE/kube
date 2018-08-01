@@ -91,6 +91,7 @@ public:
     enum Roles
     {
         Events = Qt::UserRole + 1,
+        Date,
         Summary,
         Description,
         StartTime,

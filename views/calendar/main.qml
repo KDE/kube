@@ -143,7 +143,7 @@ ApplicationWindow {
 
     View {
         anchors.fill: parent
-        currentDate: "2018-04-09"
+        currentDate: "2018-04-11T13:00:00"
         autoUpdateDate: false
     }
 }

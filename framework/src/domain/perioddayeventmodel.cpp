@@ -168,6 +168,8 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
         switch (role) {
             case Qt::DisplayRole:
                 return mPeriodStart.addDays(day).toString();
+            case Date:
+                return mPeriodStart.addDays(day);
             case Events: {
                 auto result = QVariantList{};
 
@@ -222,6 +224,7 @@ QHash<int, QByteArray> PeriodDayEventModel::roleNames() const
 {
     return {
         {Events, "events"},
+        {Date, "date"},
         {Summary, "summary"},
         {Description, "description"},
         {StartTime, "starts"},
