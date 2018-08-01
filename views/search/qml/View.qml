@@ -80,10 +80,10 @@ Kube.View {
                 }
                 RowLayout {
                     Kube.CheckBox {
-                        checked: true
+                        checked: false
                     }
                     Kube.Label {
-                        text: qsTr("Mail")
+                        text: qsTr("Unread")
                         color: Kube.Colors.highlightedTextColor
                     }
                 }
@@ -92,16 +92,7 @@ Kube.View {
                         checked: false
                     }
                     Kube.Label {
-                        text: qsTr("Contacts")
-                        color: Kube.Colors.highlightedTextColor
-                    }
-                }
-                RowLayout {
-                    Kube.CheckBox {
-                        checked: false
-                    }
-                    Kube.Label {
-                        text: qsTr("Events")
+                        text: qsTr("Important")
                         color: Kube.Colors.highlightedTextColor
                     }
                 }
