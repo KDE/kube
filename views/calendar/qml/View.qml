@@ -27,13 +27,13 @@ RowLayout {
     id: root
 
     property date currentDate: new Date()
+    property bool autoUpdateDate: true
 
     Timer {
-        interval: 2000; running: true; repeat: true
+        running: autoUpdateDate
+        interval: 2000; repeat: true
         onTriggered: root.currentDate = new Date()
     }
-
-    anchors.fill: parent
 
     StackView.onActivated: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
