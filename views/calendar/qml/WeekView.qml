@@ -200,6 +200,8 @@ FocusScope {
                         width: root.dayWidth
                         height: root.hourHeight * 24
 
+                        clip: true
+
                         color: Kube.Colors.viewBackgroundColor
 
                         Column {
