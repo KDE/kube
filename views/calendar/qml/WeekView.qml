@@ -114,7 +114,10 @@ FocusScope {
 
                 clip: true
 
-                model: DaylongEvents {}
+                model: DaylongEvents {
+                    start: root.startDate
+                    length: root.daysToShow
+                }
 
                 delegate: Item {
                     height: Kube.Units.gridUnit + 2 // +2 to make good for the white border
