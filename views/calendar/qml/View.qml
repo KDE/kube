@@ -95,14 +95,17 @@ RowLayout {
             spacing: Kube.Units.smallSpacing
 
             Repeater {
-                model: ["calendar_1","calendar_2","calendar_3"]
+                model: Kube.EntityModel {
+                    type: "calendar"
+                    roles: ["name"]
+                }
                 delegate: Row {
                     spacing: Kube.Units.smallSpacing
                     Kube.CheckBox {
                         opacity: 0.9
                     }
                     Kube.Label {
-                        text: modelData
+                        text: model.name
                         color: Kube.Colors.highlightedTextColor
                     }
                 }

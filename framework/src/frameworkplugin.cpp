@@ -46,6 +46,7 @@
 #include "viewhighlighter.h"
 #include "file.h"
 #include "logmodel.h"
+#include "entitymodel.h"
 
 #include <QtQml>
 #include <QQuickImageProvider>
@@ -172,6 +173,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<PeopleModel>(uri, 1, 0,"PeopleModel");
     qmlRegisterType<TextDocumentHandler>(uri, 1, 0, "TextDocumentHandler");
     qmlRegisterType<LogModel>(uri, 1, 0, "LogModel");
+    qmlRegisterType<EntityModel>(uri, 1, 0, "EntityModel");
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
