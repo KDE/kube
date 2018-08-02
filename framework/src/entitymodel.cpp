@@ -60,8 +60,11 @@ void EntityModel::runQuery(const Query &query)
 {
     if (mType == "calendar") {
         mModel = Store::loadModel<Calendar>(query);
+    } else if (mType == "addressbook") {
+        mModel = Store::loadModel<Addressbook>(query);
     } else {
         qWarning() << "Type not supported " << mType;
+        Q_ASSERT(false);
     }
     setSourceModel(mModel.data());
 }
@@ -138,4 +141,14 @@ void EntityModel::setFilter(const QVariantMap &)
 QVariantMap EntityModel::filter() const
 {
     return {};
+}
+
+
+QVariantMap EntityModel::data(int row) const
+{
+    QVariantMap map;
+    for (const auto &r : mRoleNames.keys()) {
+        map.insert(mRoleNames.value(r), data(index(row, 0), r));
+    }
+    return map;
 }

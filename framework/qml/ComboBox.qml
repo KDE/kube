@@ -32,6 +32,13 @@ T.ComboBox {
     spacing: Kube.Units.largeSpacing
     padding: Kube.Units.smallSpacing
 
+    //Autoselect the first item
+    onCountChanged: {
+        if (currentIndex < 0) {
+            currentIndex = 0
+        }
+    }
+
     contentItem: Kube.Label {
         leftPadding: Kube.Units.smallSpacing
         rightPadding: Kube.Units.largeSpacing

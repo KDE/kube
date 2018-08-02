@@ -23,6 +23,7 @@
 #include <QString>
 #include <QStringList>
 #include <QStandardItemModel>
+#include <sink/applicationdomaintype.h>
 
 #include "controller.h"
 
@@ -44,6 +45,7 @@ class KUBE_EXPORT ContactController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(QString, Company, company)
     KUBE_CONTROLLER_PROPERTY(QString, JobTitle, jobTitle)
     KUBE_CONTROLLER_PROPERTY(QByteArray, ImageData, imageData)
+    KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::ApplicationDomainType::Ptr, Addressbook, addressbook)
 
     KUBE_CONTROLLER_LISTCONTROLLER(mails)
     KUBE_CONTROLLER_LISTCONTROLLER(phones)

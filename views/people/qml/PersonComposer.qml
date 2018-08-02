@@ -194,7 +194,7 @@ Flickable {
             }
         }
 
-        Column{
+        Column {
             id: address
 
             width: root.width - Kube.Units.largeSpacing
@@ -226,6 +226,32 @@ Flickable {
                 backgroundColor: "white"
             }
         }
+
+        Column{
+            width: root.width - Kube.Units.largeSpacing
+            spacing: Kube.Units.smallSpacing
+
+            Kube.Label {
+                text: "Addressbook"
+            }
+            Kube.ComboBox {
+                width: Kube.Units.gridUnit * 20
+
+                model: Kube.EntityModel {
+                    id: addressbookModel
+                    type: "addressbook"
+                    //TODO
+                    //accountId: ""
+                    roles: ["name", "color"]
+                }
+                textRole: "name"
+                Layout.fillWidth: true
+                onCurrentIndexChanged: {
+                    contactController.addressbook = addressbookModel.data(currentIndex).object
+                }
+            }
+        }
+
         Item {
             width: parent.width
             height: Kube.Units.largeSpacing

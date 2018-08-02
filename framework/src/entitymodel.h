@@ -63,6 +63,8 @@ public:
     void setFilter(const QVariantMap &);
     QVariantMap filter() const;
 
+    Q_INVOKABLE QVariantMap data(int row) const;
+
 private:
     void runQuery(const Sink::Query &query);
     void updateQuery();

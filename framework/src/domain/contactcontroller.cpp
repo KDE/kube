@@ -70,31 +70,30 @@ void ContactController::save()
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
-    Query query;
-    query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Contact::storage);
-    auto job = Store::fetchAll<SinkResource>(query)
-        .then([=](const QList<SinkResource::Ptr> &resources) {
-            if (!resources.isEmpty()) {
-                auto resourceId = resources[0]->identifier();
-                KContacts::Addressee addressee;
-                addressee.setGivenName(getFirstName());
-                addressee.setFamilyName(getLastName());
-                addressee.setFormattedName(getFirstName() + " " + getLastName());
-                KContacts::VCardConverter converter;
-                const auto vcard = converter.createVCard(addressee, KContacts::VCardConverter::v3_0);
 
-                Contact contact(resourceId);
-                contact.setVcard(vcard);
+    const auto addressbook = getAddressbook();
+    if (!addressbook) {
+        qWarning() << "No addressbook selected";
+    }
 
-                return Store::create(contact);
-            }
-            SinkWarning() << "Failed to find a resource for the contact";
-            return KAsync::error<void>(0, "Failed to find a contact resource.");
-        })
+    KContacts::Addressee addressee;
+    addressee.setGivenName(getFirstName());
+    addressee.setFamilyName(getLastName());
+    addressee.setFormattedName(getFirstName() + " " + getLastName());
+    KContacts::VCardConverter converter;
+
+    Contact contact(addressbook->resourceInstanceIdentifier());
+    contact.setVcard(converter.createVCard(addressee, KContacts::VCardConverter::v3_0));
+    contact.setAddressbook(*addressbook);
+
+    auto job = Store::create(contact)
         .then([&] (const KAsync::Error &error) {
-            SinkLog() << "Failed to save the contact: " << error;
+            if (error) {
+                SinkWarning() << "Failed to save the contact: " << error;
+            }
             emit done();
         });
+
     run(job);
 }
 
