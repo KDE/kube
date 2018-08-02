@@ -1,34 +1,17 @@
-FROM fedora:27
+FROM fedora:28
 
 RUN dnf -y update
 
-RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar ninja-build clang procps-ng libcxx-devel sudo rsyslog
-
-#Sink deps
-RUN dnf -y install extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel libcurl-devel xapian-core-devel flatbuffers-devel
-
-#Test and debugging
-RUN dnf -y install gdb xterm perf valgrind strace kcachegrind dbus-x11 gammaray heaptrack
-#Required for the symbolizer for asan
-RUN dnf -y install llvm
-
-#kf5-mime
-RUN dnf -y install cyrus-sasl-devel
-
-#Stuff for kube
-RUN dnf -y install qt5-qtquickcontrols qt5-qtquickcontrols2-devel qt5-qtwebengine-devel qt5-qtxmlpatterns-devel
-RUN dnf -y install kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel gpgme-devel kf5-kcalendarcore-devel
-
-# Imap tests
-RUN dnf -y install cyrus-imapd cyrus-sasl cyrus-sasl-plain gnupg2-smime pinentry-gtk
-
-#Fonts
-RUN dnf -y install google-noto-serif-fonts google-noto-sans-fonts
-
-RUN dnf -y install xorg-x11-server-Xvfb
+RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar make ninja-build clang procps-ng libcxx-devel sudo rsyslog llvm \
+    extra-cmake-modules qt5-qtbase-devel libgit2-devel lmdb-devel libcurl-devel xapian-core-devel flatbuffers-devel \
+    gdb xterm perf valgrind strace kcachegrind dbus-x11 gammaray heaptrack hotspot \
+    qt5-qtquickcontrols qt5-qtquickcontrols2-devel qt5-qtwebengine-devel qt5-qtxmlpatterns-devel \
+    kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel gpgme-devel kf5-kcalendarcore-devel \
+    cyrus-imapd cyrus-sasl cyrus-sasl-devel cyrus-sasl-plain gnupg2-smime pinentry-gtk \
+    google-noto-serif-fonts google-noto-sans-fonts \
+    xorg-x11-server-Xvfb
 
 RUN useradd -d /home/developer -m developer
-
 
 ADD rsyslog.conf /etc/rsyslog.conf
 #Setup cyrus imap
