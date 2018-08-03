@@ -26,6 +26,7 @@
 
 #include <KCalCore/Event>
 #include <KCalCore/ICalFormat>
+#include <KContacts/VCardConverter>
 
 #include <QDebug>
 #include <QUuid>
@@ -186,6 +187,46 @@ static void createCalendar(const QVariantMap &object)
         [calendarId](const QVariantMap &object) { createEvent(object, calendarId); });
 }
 
+static void createContact(const QVariantMap &object, const QByteArray &addressbookId = {})
+{
+    using Sink::ApplicationDomain::ApplicationDomainType;
+    using Sink::ApplicationDomain::Contact;
+
+    QString uid;
+    if (object.contains("uid")) {
+        uid = object["uid"].toString();
+    } else {
+        uid = QUuid::createUuid().toString();
+    }
+
+    auto sinkContact = ApplicationDomainType::createEntity<Contact>(object["resource"].toByteArray());
+
+    KContacts::Addressee addressee;
+    addressee.setUid(uid);
+    addressee.setGivenName(object["givenname"].toString());
+    addressee.setFamilyName(object["familyname"].toString());
+
+    KContacts::VCardConverter converter;
+
+    auto contact = ApplicationDomainType::createEntity<Contact>(object["resource"].toByteArray());
+    contact.setVcard(converter.createVCard(addressee, KContacts::VCardConverter::v3_0));
+    contact.setAddressbook(addressbookId);
+
+    Sink::Store::create(contact).exec().waitForFinished();
+}
+
+static void createAddressbook(const QVariantMap &object)
+{
+    using namespace Sink::ApplicationDomain;
+    auto addressbook = ApplicationDomainType::createEntity<Addressbook>(object["resource"].toByteArray());
+    addressbook.setName(object["name"].toString());
+    Sink::Store::create(addressbook).exec().waitForFinished();
+
+    iterateOverObjects(object.value("contacts").toList(), [=](const QVariantMap &object) {
+        createContact(object, addressbook.identifier());
+    });
+}
+
 void TestStore::setup(const QVariantMap &map)
 {
     using namespace Sink::ApplicationDomain;
@@ -215,6 +256,9 @@ void TestStore::setup(const QVariantMap &map)
             } else if (object["type"] == "caldav") {
                 resource.setResourceType("sink.caldav");
                 resource.setProperty("testmode", true);
+            } else if (object["type"] == "carddav") {
+                resource.setResourceType("sink.carddav");
+                resource.setProperty("testmode", true);
             } else {
                 Q_ASSERT(false);
             }
@@ -239,6 +283,7 @@ void TestStore::setup(const QVariantMap &map)
     });
 
     iterateOverObjects(map.value("calendars").toList(), createCalendar);
+    iterateOverObjects(map.value("addressbooks").toList(), createAddressbook);
 
     Sink::ResourceControl::flushMessageQueue(resources).exec().waitForFinished();
 }
