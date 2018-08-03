@@ -23,6 +23,8 @@
 #include <sink/log.h>
 #include <KContacts/VCardConverter>
 
+using namespace Sink::ApplicationDomain;
+
 class MailsController : public Kube::ListPropertyController
 {
 public:
