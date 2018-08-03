@@ -125,6 +125,7 @@ FocusScope {
                         height: parent.height
                         x: root.dayWidth * model.starts
                         color: model.color
+                        radius: 2
                         border.width: 1
                         border.color: Kube.Colors.viewBackgroundColor
 
