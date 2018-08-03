@@ -96,13 +96,18 @@ FocusScope {
                 right: parent.right
             }
 
-            height: Kube.Units.gridUnit * 3
             width: root.dayWidth * root.daysToShow
             color: Kube.Colors.viewBackgroundColor
             border.width: 1
             border.color: Kube.Colors.buttonColor
 
-            ListView {
+            //+2 to compensate for borders
+            height: fullDayListView.contentHeight + 2
+
+            visible: fullDayListView.count
+
+            Kube.ListView {
+                id: fullDayListView
 
                 anchors {
                     fill: parent
