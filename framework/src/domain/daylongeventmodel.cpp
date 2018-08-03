@@ -81,7 +81,10 @@ QVariant DayLongEventModel::data(const QModelIndex &idx, int role) const
             return dayIndex;
         }
         case Duration:
-            return event->getStartTime().date().daysTo(event->getEndTime().date());
+            if (!event->getEndTime().isValid()) {
+                return 1;
+            }
+            return qMax(event->getStartTime().date().daysTo(event->getEndTime().date()), 1ll);
         case Color:
             return getColor(event->getCalendar());
     }

@@ -100,8 +100,7 @@ ApplicationWindow {
                         resource: "caldavresource",
                         summary: "Test day-long event2",
                         description: "This is test day-long event #2",
-                        starts: "2018-04-11T00:00:00",
-                        ends:   "2018-04-23T00:00:00",
+                        starts: "2018-04-11",
                         allDay: true,
                     },
                     {
