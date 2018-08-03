@@ -85,9 +85,19 @@ void PeriodDayEventModel::partitionData()
         }
 
         int bucket = bucketOf(eventDate);
-
         SinkTrace() << "Adding event:" << event->getSummary() << "in bucket #" << bucket;
         partitionedEvents[bucket].append(event);
+
+        //Also add the event to all other days it spans
+        QDate endDate = event->getEndTime().date();
+        if (endDate.isValid()) {
+            const int endBucket = qMin(bucketOf(endDate), periodLength());
+            for (int i = bucket + 1; i <= endBucket; i++) {
+                partitionedEvents[i].append(event);
+            }
+
+        }
+
     }
 
     endResetModel();
@@ -167,6 +177,22 @@ QByteArray PeriodDayEventModel::getColor(const QByteArray &calendar) const
     return mCalendarCache->getProperty(calendar, "color").toByteArray();
 }
 
+QDateTime PeriodDayEventModel::getStartTimeOfDay(const QDateTime &dateTime, int day) const
+{
+    if (bucketOf(dateTime.date()) < day) {
+        return QDateTime{mPeriodStart.addDays(day), QTime{0,0}};
+    }
+    return dateTime;
+}
+
+QDateTime PeriodDayEventModel::getEndTimeOfDay(const QDateTime &dateTime, int day) const
+{
+    if (bucketOf(dateTime.date()) > day) {
+        return QDateTime{mPeriodStart.addDays(day), QTime{23, 59, 59}};
+    }
+    return dateTime;
+}
+
 QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
 {
     if (id.internalId() == DAY_ID) {
@@ -235,13 +261,13 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
             case Description:
                 return event->getDescription();
             case StartTime:
-                return event->getStartTime();
+                return getStartTimeOfDay(event->getStartTime(), day);
             case EndTime:
-                return event->getEndTime();
+                return getEndTimeOfDay(event->getEndTime(), day);
             case Duration: {
-                auto start = event->getStartTime();
-                auto end   = event->getEndTime();
-                return start.secsTo(end) / 3600;
+                auto start = getStartTimeOfDay(event->getStartTime(), day);
+                auto end = getEndTimeOfDay(event->getEndTime(), day);
+                return qRound(start.secsTo(end) / 3600.0);
             }
             case Color:
                 return getColor(event->getCalendar());

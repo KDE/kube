@@ -126,6 +126,8 @@ private:
     void updateQuery();
     void partitionData();
     QByteArray getColor(const QByteArray &calendar) const;
+    QDateTime getStartTimeOfDay(const QDateTime &dateTime, int day) const;
+    QDateTime getEndTimeOfDay(const QDateTime &dateTime, int day) const;
 
     int bucketOf(const QDate &candidate) const;
 

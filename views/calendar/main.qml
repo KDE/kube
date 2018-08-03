@@ -76,8 +76,8 @@ ApplicationWindow {
                         resource: "caldavresource",
                         summary: "Test Event4",
                         description: "This is test event #4",
-                        starts: "2018-04-12T22:00:00",
-                        ends:   "2018-04-15T03:00:00",
+                        starts: "2018-04-12T03:00:00",
+                        ends:   "2018-04-14T22:00:00",
                     },
                     {
                         resource: "caldavresource",
