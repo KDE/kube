@@ -183,11 +183,29 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
             case Events: {
                 auto result = QVariantList{};
 
+                QMap<QTime, int> sorted;
                 for (int i = 0; i < partitionedEvents[day].size(); ++i) {
-                    auto eventId = index(i, 0, id);
+                    const auto eventId = index(i, 0, id);
+                    sorted.insert(data(eventId, StartTime).toDateTime().time(), i);
+                }
+
+                QMap<QTime, int> indentationStack;
+                for (auto it = sorted.begin(); it != sorted.end(); it++) {
+                    auto eventId = index(it.value(), 0, id);
                     SinkTrace() << "Appending event:" << data(eventId, Summary);
 
-                    auto startTime = data(eventId, StartTime).toDateTime().time();
+                    const auto startTime = data(eventId, StartTime).toDateTime().time();
+
+                    //Remove all dates before startTime
+                    for (auto it = indentationStack.begin(); it != indentationStack.end();) {
+                        if (it.key() < startTime) {
+                            it = indentationStack.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+                    const int indentation = indentationStack.size();
+                    indentationStack.insert(data(eventId, EndTime).toDateTime().time(), 0);
 
                     result.append(QVariantMap{
                         {"text", data(eventId, Summary)},
@@ -195,7 +213,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
                         {"starts", startTime.hour() + startTime.minute() / 60.},
                         {"duration", data(eventId, Duration)},
                         {"color", data(eventId, Color)},
-                        {"indention", 0},
+                        {"indentation", indentation},
                     });
                 }
 
@@ -218,6 +236,8 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
                 return event->getDescription();
             case StartTime:
                 return event->getStartTime();
+            case EndTime:
+                return event->getEndTime();
             case Duration: {
                 auto start = event->getStartTime();
                 auto end   = event->getEndTime();

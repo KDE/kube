@@ -98,6 +98,7 @@ public:
         Summary,
         Description,
         StartTime,
+        EndTime,
         Duration,
         Color
     };

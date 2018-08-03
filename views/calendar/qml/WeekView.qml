@@ -260,10 +260,10 @@ FocusScope {
                                     rightMargin: Kube.Units.smallSpacing
                                 }
                                 radius: 2
-                                width: root.dayWidth - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indention
+                                width: root.dayWidth - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indentation
                                 height: Math.max(root.hourHeight * 0.5, root.hourHeight * model.modelData.duration)
                                 y: root.hourHeight * model.modelData.starts
-                                x: Kube.Units.gridUnit * model.modelData.indention
+                                x: Kube.Units.gridUnit * model.modelData.indentation
 
                                 color: model.modelData.color
                                 opacity: 0.8
