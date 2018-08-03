@@ -240,9 +240,7 @@ Flickable {
                 model: Kube.EntityModel {
                     id: addressbookModel
                     type: "addressbook"
-                    //TODO
-                    //accountId: ""
-                    roles: ["name", "color"]
+                    roles: ["name"]
                 }
                 textRole: "name"
                 Layout.fillWidth: true

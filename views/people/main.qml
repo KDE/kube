@@ -46,6 +46,11 @@ ApplicationWindow {
                 type: "carddav",
             }],
             addressbooks: [{
+                id: "addressbook0",
+                resource: "carddavresource",
+                name: "Addressbook(wrong)"
+            },
+            {
                 id: "addressbook1",
                 resource: "carddavresource",
                 name: "Default Addressbook",

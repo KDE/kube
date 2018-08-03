@@ -104,8 +104,12 @@ void ContactController::updateSaveAction()
 
 void ContactController::loadContact(const QVariant &variant)
 {
+    using namespace Sink;
+
     mContact = variant;
-    if (auto c = variant.value<Sink::ApplicationDomain::Contact::Ptr>()) {
+    if (auto c = variant.value<ApplicationDomain::Contact::Ptr>()) {
+
+        setAddressbook(ApplicationDomainType::Ptr::create(ApplicationDomainType::createEntity<ApplicationDomain::Addressbook>(c->resourceInstanceIdentifier(), c->getAddressbook())));
         const auto &vcard = c->getVcard();
         KContacts::VCardConverter converter;
         const auto addressee = converter.parseVCard(vcard);
