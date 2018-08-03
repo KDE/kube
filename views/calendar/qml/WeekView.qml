@@ -179,6 +179,12 @@ FocusScope {
 
             ScrollBar.vertical: Kube.ScrollBar {}
 
+            Kube.ScrollHelper {
+                id: scrollHelper
+                flickable: mainWeekViewer
+                anchors.fill: parent
+            }
+
             Row {
                 height: root.hourHeight * 24
                 width: root.dayWidth * root.daysToShow + Kube.Units.gridUnit * 2
