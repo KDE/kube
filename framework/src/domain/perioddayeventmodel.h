@@ -78,6 +78,8 @@
 //    |                '--- List of event pointers for that day
 //    '--- Partition / day
 //
+
+class EntityCacheInterface;
 class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -87,6 +89,7 @@ class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
 
 public:
     using Event = Sink::ApplicationDomain::Event;
+    using Calendar = Sink::ApplicationDomain::Calendar;
 
     enum Roles
     {
@@ -96,6 +99,7 @@ public:
         Description,
         StartTime,
         Duration,
+        Color
     };
     Q_ENUM(Roles);
     PeriodDayEventModel(QObject *parent = nullptr);
@@ -120,6 +124,7 @@ public:
 private:
     void updateQuery();
     void partitionData();
+    QByteArray getColor(const QByteArray &calendar) const;
 
     int bucketOf(const QDate &candidate) const;
 
@@ -128,6 +133,7 @@ private:
 
     QSharedPointer<QAbstractItemModel> eventModel;
     QVector<QList<QSharedPointer<Event>>> partitionedEvents;
+    QSharedPointer<EntityCacheInterface> mCalendarCache;
 
     static const constexpr quintptr DAY_ID = std::numeric_limits<quintptr>::max();
 };

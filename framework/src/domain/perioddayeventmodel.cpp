@@ -29,6 +29,8 @@
 #include <QJsonObject>
 #include <QMetaEnum>
 
+#include <entitycache.h>
+
 PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
     : QAbstractItemModel(parent), partitionedEvents(7)
 {
@@ -43,6 +45,7 @@ void PeriodDayEventModel::updateQuery()
     query.request<Event::Description>();
     query.request<Event::StartTime>();
     query.request<Event::EndTime>();
+    query.request<Event::Calendar>();
 
     auto periodEnd = mPeriodStart.addDays(mPeriodLength);
 
@@ -58,6 +61,8 @@ void PeriodDayEventModel::updateQuery()
     QObject::connect(eventModel.data(), &QAbstractItemModel::rowsInserted, this, &PeriodDayEventModel::partitionData);
     QObject::connect(eventModel.data(), &QAbstractItemModel::rowsMoved, this, &PeriodDayEventModel::partitionData);
     QObject::connect(eventModel.data(), &QAbstractItemModel::rowsRemoved, this, &PeriodDayEventModel::partitionData);
+
+    mCalendarCache = EntityCache<Calendar, Calendar::Color>::Ptr::create();
 
     partitionData();
 }
@@ -157,6 +162,11 @@ int PeriodDayEventModel::columnCount(const QModelIndex &parent) const
     return eventModel->columnCount();
 }
 
+QByteArray PeriodDayEventModel::getColor(const QByteArray &calendar) const
+{
+    return mCalendarCache->getProperty(calendar, "color").toByteArray();
+}
+
 QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
 {
     if (id.internalId() == DAY_ID) {
@@ -184,7 +194,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
                         {"description", data(eventId, Description)},
                         {"starts", startTime.hour() + startTime.minute() / 60.},
                         {"duration", data(eventId, Duration)},
-                        {"color", "#134bab"},
+                        {"color", data(eventId, Color)},
                         {"indention", 0},
                     });
                 }
@@ -213,6 +223,8 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
                 auto end   = event->getEndTime();
                 return start.secsTo(end) / 3600;
             }
+            case Color:
+                return getColor(event->getCalendar());
             default:
                 SinkWarning() << "Unknown role for event:" << QMetaEnum::fromType<Roles>().valueToKey(role);
                 return {};
@@ -229,6 +241,7 @@ QHash<int, QByteArray> PeriodDayEventModel::roleNames() const
         {Description, "description"},
         {StartTime, "starts"},
         {Duration, "duration"},
+        {Color, "color"}
     };
 }
 

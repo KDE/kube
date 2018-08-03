@@ -25,6 +25,8 @@
 #include <sink/query.h>
 #include <sink/store.h>
 
+#include "entitycache.h"
+
 DayLongEventModel::DayLongEventModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
     Sink::Query query;
@@ -33,10 +35,13 @@ DayLongEventModel::DayLongEventModel(QObject *parent) : QSortFilterProxyModel(pa
     query.request<Event::Description>();
     query.request<Event::StartTime>();
     query.request<Event::EndTime>();
+    query.request<Event::Calendar>();
 
     query.filter<Event::AllDay>(true);
 
     mModel = Sink::Store::loadModel<Event>(query);
+
+    mCalendarCache = EntityCache<Calendar, Calendar::Color>::Ptr::create();
 
     setSourceModel(mModel.data());
 }
@@ -48,7 +53,13 @@ QHash<int, QByteArray> DayLongEventModel::roleNames() const
         {Description, "description"},
         {StartDate, "starts"},
         {Duration, "duration"},
+        {Color, "color"},
     };
+}
+
+QByteArray DayLongEventModel::getColor(const QByteArray &calendar) const
+{
+    return mCalendarCache->getProperty(calendar, "color").toByteArray();
 }
 
 QVariant DayLongEventModel::data(const QModelIndex &idx, int role) const
@@ -71,6 +82,8 @@ QVariant DayLongEventModel::data(const QModelIndex &idx, int role) const
         }
         case Duration:
             return event->getStartTime().date().daysTo(event->getEndTime().date());
+        case Color:
+            return getColor(event->getCalendar());
     }
 
     return QSortFilterProxyModel::data(idx, role);

@@ -111,7 +111,7 @@ FocusScope {
 
                 clip: true
 
-                model: DaylongEvents {
+                model: Kube.DayLongEventModel {
                     start: root.startDate
                     length: root.daysToShow
                 }
@@ -124,8 +124,7 @@ FocusScope {
                         width: root.dayWidth * model.duration
                         height: parent.height
                         x: root.dayWidth * model.starts
-                        //color: model.color
-                        color: Kube.Colors.jazzberryJam
+                        color: model.color
                         border.width: 1
                         border.color: Kube.Colors.viewBackgroundColor
 
@@ -204,7 +203,7 @@ FocusScope {
                 //END time labels
 
                 Repeater {
-                    model: WeekEvents {
+                    model: Kube.PeriodDayEventModel {
                         start: root.startDate
                         length: root.daysToShow
                     }
@@ -266,8 +265,7 @@ FocusScope {
                                 y: root.hourHeight * model.modelData.starts
                                 x: Kube.Units.gridUnit * model.modelData.indention
 
-                                //color: model.modelData.color
-                                color: Kube.Colors.bewareOrange
+                                color: model.modelData.color
                                 opacity: 0.8
                                 border.width: 1
                                 border.color: Kube.Colors.viewBackgroundColor

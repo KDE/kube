@@ -28,6 +28,7 @@
 #include <QSortFilterProxyModel>
 #include <QVector>
 
+class EntityCacheInterface;
 class KUBE_EXPORT DayLongEventModel : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -37,6 +38,7 @@ class KUBE_EXPORT DayLongEventModel : public QSortFilterProxyModel
 
 public:
     using Event = Sink::ApplicationDomain::Event;
+    using Calendar = Sink::ApplicationDomain::Calendar;
 
     enum Roles
     {
@@ -44,6 +46,7 @@ public:
         Description,
         StartDate,
         Duration,
+        Color
     };
     Q_ENUM(Roles);
 
@@ -62,7 +65,10 @@ public:
     void setPeriodLength(int);
 
 private:
+    QByteArray getColor(const QByteArray &calendar) const;
+
     QSharedPointer<QAbstractItemModel> mModel;
+    QSharedPointer<EntityCacheInterface> mCalendarCache;
 
     QDate mPeriodStart;
     int mPeriodLength = 7;
