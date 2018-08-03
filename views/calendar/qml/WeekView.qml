@@ -106,6 +106,18 @@ FocusScope {
 
             visible: fullDayListView.count
 
+            //Dimm days in the past
+            Rectangle {
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                    bottom: parent.bottom
+                }
+                width: (root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
+                color: Kube.Colors.buttonColor
+                opacity: 0.2
+            }
+
             Kube.ListView {
                 id: fullDayListView
 
@@ -144,18 +156,6 @@ FocusScope {
                         }
                     }
                 }
-            }
-
-            //Dimm days in the past
-            Rectangle {
-                anchors {
-                    left: parent.left
-                    top: parent.top
-                    bottom: parent.bottom
-                }
-                width: (root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
-                color: Kube.Colors.buttonColor
-                opacity: 0.2
             }
         }
         //END daylong events
@@ -232,6 +232,14 @@ FocusScope {
 
                         color: Kube.Colors.viewBackgroundColor
 
+                        //Dimm days in the past
+                        Rectangle {
+                            anchors.fill: parent
+                            color: Kube.Colors.buttonColor
+                            opacity: 0.2
+                            visible: root.currentDate.getDate() > dayDelegate.date.getDate()
+                        }
+
                         //Grid
                         Column {
                             anchors.fill: parent
@@ -278,7 +286,6 @@ FocusScope {
                                 x: Kube.Units.gridUnit * model.modelData.indentation
 
                                 color: model.modelData.color
-                                opacity: 0.8
                                 border.width: 1
                                 border.color: Kube.Colors.viewBackgroundColor
 
@@ -328,13 +335,6 @@ FocusScope {
                             opacity: 0.8
                         }
 
-                        //Dimm days in the past
-                        Rectangle {
-                            anchors.fill: parent
-                            color: Kube.Colors.buttonColor
-                            opacity: 0.2
-                            visible: root.currentDate.getDate() > dayDelegate.date.getDate()
-                        }
 
                         DropArea {
                             anchors.fill: parent
