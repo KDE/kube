@@ -97,6 +97,7 @@ RowLayout {
             anchors {
                 bottom: parent.bottom
                 left: newEventButton.left
+                right: parent.right
                 bottomMargin: Kube.Units.largeSpacing
             }
 
@@ -105,17 +106,30 @@ RowLayout {
             Repeater {
                 model: Kube.EntityModel {
                     type: "calendar"
-                    roles: ["name"]
+                    roles: ["name", "color"]
                 }
-                delegate: Row {
-                    spacing: Kube.Units.smallSpacing
-                    Kube.CheckBox {
-                        opacity: 0.9
-                        checked: true
+                delegate: Item {
+                    width: parent.width - Kube.Units.largeSpacing
+                    height: Kube.Units.gridUnit
+                    Row {
+                        spacing: Kube.Units.smallSpacing
+                        Kube.CheckBox {
+                            opacity: 0.9
+                            checked: true
+                        }
+                        Kube.Label {
+                            text: model.name
+                            color: Kube.Colors.highlightedTextColor
+                        }
                     }
-                    Kube.Label {
-                        text: model.name
-                        color: Kube.Colors.highlightedTextColor
+                    Rectangle {
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: Kube.Units.gridUnit
+                        height: width
+                        radius: width / 2
+                        color: model.color
+                        opacity: 0.9
                     }
                 }
             }

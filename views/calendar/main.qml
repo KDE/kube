@@ -49,6 +49,7 @@ ApplicationWindow {
                 id: "calendar1",
                 resource: "caldavresource",
                 name: "Test Calendar",
+                color: "#af1a6a",
                 events: [
                     {
                         resource: "caldavresource",
@@ -136,6 +137,12 @@ ApplicationWindow {
                         allDay: true,
                     },
                 ],
+            },
+            {
+                id: "calendar2",
+                resource: "caldavresource",
+                name: "Test Calendar2",
+                color: "#f67400"
             }],
         }
         TestStore.setup(initialState)
