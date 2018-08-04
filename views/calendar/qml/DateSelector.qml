@@ -97,5 +97,9 @@ Column {
                 visible: model.day === root.selectedDate.getDate() && model.month === root.selectedDate.getMonth()
             }
         }
+
+        onClicked: {
+            root.selectedDate = date
+        }
     }
 }

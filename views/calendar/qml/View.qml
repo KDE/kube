@@ -105,9 +105,11 @@ RowLayout {
             spacing: Kube.Units.largeSpacing
 
             DateSelector {
+                id: dateSelector
                 selectedDate: root.selectedDate
                 onSelectedDateChanged: {
-                    root.selectedDate = selectedDate
+                    root.selectedDate = getFirstDayOfWeek(dateSelector.selectedDate)
+                    selectedDate = root.selectedDate
                 }
             }
 
