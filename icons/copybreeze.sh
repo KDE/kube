@@ -33,6 +33,7 @@ wantedIcons = [
     "go-down.svg",
     "go-up.svg",
     "go-previous.svg",
+    "go-next.svg",
     "mail-message.svg",
     "list-add.svg",
     "list-remove.svg",
