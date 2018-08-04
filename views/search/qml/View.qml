@@ -39,7 +39,7 @@ Kube.View {
         x: app.sidebarWidth
         y: 0
 
-        visible: root.searchTerm == ""
+        visible: root.visible && root.searchTerm == ""
 
         Row {
             anchors.centerIn: parent
