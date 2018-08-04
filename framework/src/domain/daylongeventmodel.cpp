@@ -29,6 +29,8 @@
 
 DayLongEventModel::DayLongEventModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
+    setDynamicSortFilter(true);
+
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Event::Summary>();
@@ -121,6 +123,7 @@ void DayLongEventModel::setPeriodStart(const QDate &start)
     }
 
     mPeriodStart = start;
+    invalidateFilter();
 }
 
 void DayLongEventModel::setPeriodStart(const QVariant &start)
@@ -136,4 +139,5 @@ int DayLongEventModel::periodLength() const
 void DayLongEventModel::setPeriodLength(int length)
 {
     mPeriodLength = length;
+    invalidateFilter();
 }
