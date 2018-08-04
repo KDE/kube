@@ -59,34 +59,14 @@ FocusScope {
         width: root.dayWidth * root.daysToShow + Kube.Units.gridUnit * 2
         height: root.height
 
-        //BEGIN day labels
-        Row {
+        DayLabels {
             id: dayLabels
             anchors.top: parent.top
             anchors.right: parent.right
-            spacing: 0
-            height: childrenRect.height
-            width: root.dayWidth * root.daysToShow
-            Repeater {
-                model: root.daysToShow
-                delegate: Item {
-                    width: root.dayWidth
-                    height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
-                    Kube.Label {
-                        function addDaysToDate(date, days) {
-                            var date = new Date(date);
-                            date.setDate(date.getDate() + days);
-                            return date;
-                        }
-                        font.bold: true
-
-                        anchors.centerIn: parent
-                        text: addDaysToDate(root.startDate, modelData).toLocaleString(Qt.locale(), "dddd")
-                    }
-                }
-            }
+            startDate: root.startDate
+            dayWidth: root.dayWidth
+            daysToShow: root.daysToShow
         }
-        //END day labels
 
         //BEGIN daylong events
         Rectangle {

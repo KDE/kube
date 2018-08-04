@@ -69,27 +69,11 @@ RowLayout {
             width: parent.width
             spacing: Kube.Units.smallSpacing
 
-            Row {
-                spacing: Kube.Units.smallSpacing
-                Kube.Label {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: root.currentDate.getDate()
+            DateView {
+                date: root.currentDate
+            }
                     color: Kube.Colors.highlightedTextColor
-                    font.pointSize: Kube.Units.defaultFontSize * 3
                 }
-                Column {
-                    anchors.verticalCenter: parent.verticalCenter
-                    Kube.Label {
-                        text: root.currentDate.toLocaleString(Qt.locale(), "dddd")
-                        color: Kube.Colors.highlightedTextColor
-                    }
-                    Kube.Label {
-                        text: root.currentDate.toLocaleString(Qt.locale(), "MMMM yyyy")
-                        color: Kube.Colors.highlightedTextColor
-                        font.pointSize: Kube.Units.smallFontSize
-                    }
-                }
-
             }
         }
 
