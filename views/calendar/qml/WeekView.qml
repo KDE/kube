@@ -198,13 +198,15 @@ FocusScope {
                         function roundToDay(date) {
                             return new Date(date.getFullYear(), date.getMonth(), date.getDate())
                         }
+                        property bool isInPast: roundToDay(root.currentDate) > roundToDay(dayDelegate.date)
+                        property bool isToday: roundToDay(root.currentDate).getTime() == roundToDay(dayDelegate.date).getTime()
 
                         //Dimm days in the past
                         Rectangle {
                             anchors.fill: parent
                             color: Kube.Colors.buttonColor
                             opacity: 0.2
-                            visible: roundToDay(root.currentDate) > roundToDay(dayDelegate.date)
+                            visible: isInPast
                         }
 
                         //Grid
@@ -298,7 +300,7 @@ FocusScope {
                             y: root.hourHeight * root.currentDate.getHours() + root.hourHeight / 60 * root.currentDate.getMinutes()
                             height: 2
                             color: Kube.Colors.plasmaBlue
-                            visible: root.currentDate.getDate() == dayDelegate.date.getDate()
+                            visible: isToday
                             opacity: 0.8
                         }
 
