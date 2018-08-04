@@ -26,8 +26,17 @@ Column {
     property date selectedDate
     spacing: Kube.Units.smallSpacing
 
-    Row {
+    Item {
+        anchors {
+            left: parent.left
+            right: parent.right
+        }
+        height: Kube.Units.gridUnit
         Kube.IconButton {
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left
+            }
             color: Kube.Colors.darkBackgroundColor
             iconName: Kube.Icons.goBack_inverted
             onClicked: {
@@ -38,12 +47,19 @@ Column {
             }
         }
         Kube.Label {
-            anchors.verticalCenter: parent.verticalCenter
+            anchors {
+                verticalCenter: parent.verticalCenter
+                horizontalCenter: parent.horizontalCenter
+            }
             color: Kube.Colors.highlightedTextColor
             font.bold: true
             text: root.selectedDate.toLocaleString(Qt.locale(), "MMMM yyyy")
         }
         Kube.IconButton {
+            anchors {
+                verticalCenter: parent.verticalCenter
+                right: parent.right
+            }
             color: Kube.Colors.darkBackgroundColor
             iconName: Kube.Icons.goNext_inverted
             onClicked: {
