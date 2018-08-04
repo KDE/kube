@@ -232,12 +232,16 @@ FocusScope {
 
                         color: Kube.Colors.viewBackgroundColor
 
+                        function roundToDay(date) {
+                            return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+                        }
+
                         //Dimm days in the past
                         Rectangle {
                             anchors.fill: parent
                             color: Kube.Colors.buttonColor
                             opacity: 0.2
-                            visible: root.currentDate.getDate() > dayDelegate.date.getDate()
+                            visible: roundToDay(root.currentDate) > roundToDay(dayDelegate.date)
                         }
 
                         //Grid
