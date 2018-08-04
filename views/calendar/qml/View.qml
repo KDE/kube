@@ -27,7 +27,7 @@ RowLayout {
     id: root
 
     property date currentDate: new Date()
-    property date selectedDate: currentDate
+    property date selectedDate: getFirstDayOfWeek(currentDate)
     property bool autoUpdateDate: true
 
     Timer {
@@ -35,6 +35,24 @@ RowLayout {
         interval: 2000; repeat: true
         onTriggered: root.currentDate = new Date()
     }
+
+    function getFirstDayOfWeek(date) {
+        var firstDay = Qt.locale().firstDayOfWeek
+        var year = date.getFullYear()
+        var month = date.getMonth()
+        //Jup, getDate returns the day of the month
+        var day = date.getDate()
+
+        while (true) {
+            if (date.getDay() === firstDay) {
+                return date
+            }
+            day = day - 1
+            date = new Date(year, month, day)
+        }
+        return date
+    }
+
 
     StackView.onActivated: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
@@ -136,6 +154,7 @@ RowLayout {
     WeekView {
         Layout.fillHeight: true
         Layout.fillWidth: true
-        currentDate: root.selectedDate
+        currentDate: root.currentDate
+        startDate: root.selectedDate
     }
 }

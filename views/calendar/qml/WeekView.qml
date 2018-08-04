@@ -29,25 +29,7 @@ FocusScope {
     property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / root.daysToShow
     property var hourHeight: Kube.Units.gridUnit * 2
     property date currentDate
-
-    function getFirstDayOfWeek(date) {
-        var firstDay = Qt.locale().firstDayOfWeek
-        var year = date.getFullYear()
-        var month = date.getMonth()
-        //Jup, getDate returns the day of the month
-        var day = date.getDate()
-
-        while (true) {
-            if (date.getDay() === firstDay) {
-                return date
-            }
-            day = day - 1
-            date = new Date(year, month, day)
-        }
-        return date
-    }
-
-    property date startDate: getFirstDayOfWeek(currentDate)
+    property date startDate: currentDate
 
     Item {
         anchors {
