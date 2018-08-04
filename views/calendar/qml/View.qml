@@ -27,6 +27,7 @@ RowLayout {
     id: root
 
     property date currentDate: new Date()
+    property date selectedDate: currentDate
     property bool autoUpdateDate: true
 
     Timer {
@@ -72,12 +73,10 @@ RowLayout {
             DateView {
                 date: root.currentDate
             }
-                    color: Kube.Colors.highlightedTextColor
-                }
-            }
+
         }
 
-        Column {
+        ColumnLayout {
             anchors {
                 bottom: parent.bottom
                 left: newEventButton.left
@@ -85,35 +84,49 @@ RowLayout {
                 bottomMargin: Kube.Units.largeSpacing
             }
 
-            spacing: Kube.Units.smallSpacing
+            spacing: Kube.Units.largeSpacing
 
-            Repeater {
-                model: Kube.EntityModel {
-                    type: "calendar"
-                    roles: ["name", "color"]
+            DateSelector {
+                selectedDate: root.selectedDate
+                onSelectedDateChanged: {
+                    root.selectedDate = selectedDate
                 }
-                delegate: Item {
-                    width: parent.width - Kube.Units.largeSpacing
-                    height: Kube.Units.gridUnit
-                    Row {
-                        spacing: Kube.Units.smallSpacing
-                        Kube.CheckBox {
-                            opacity: 0.9
-                            checked: true
-                        }
-                        Kube.Label {
-                            text: model.name
-                            color: Kube.Colors.highlightedTextColor
-                        }
+            }
+
+            Column {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                spacing: Kube.Units.smallSpacing
+                Repeater {
+                    model: Kube.EntityModel {
+                        type: "calendar"
+                        roles: ["name", "color"]
                     }
-                    Rectangle {
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: Kube.Units.gridUnit
-                        height: width
-                        radius: width / 2
-                        color: model.color
-                        opacity: 0.9
+                    delegate: Item {
+                        width: parent.width - Kube.Units.largeSpacing
+                        height: Kube.Units.gridUnit
+                        Row {
+                            spacing: Kube.Units.smallSpacing
+                            Kube.CheckBox {
+                                opacity: 0.9
+                                checked: true
+                            }
+                            Kube.Label {
+                                text: model.name
+                                color: Kube.Colors.highlightedTextColor
+                            }
+                        }
+                        Rectangle {
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: Kube.Units.gridUnit
+                            height: width
+                            radius: width / 2
+                            color: model.color
+                            opacity: 0.9
+                        }
                     }
                 }
             }
@@ -123,6 +136,6 @@ RowLayout {
     WeekView {
         Layout.fillHeight: true
         Layout.fillWidth: true
-        currentDate: root.currentDate
+        currentDate: root.selectedDate
     }
 }
