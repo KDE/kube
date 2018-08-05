@@ -26,6 +26,14 @@ AbstractButton {
     highlightOpacity: 0.2
 
     Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+        border.width: 2
+        border.color: Colors.highlightColor
+        visible: hovered || visualFocus
+    }
+
+    Rectangle {
       anchors.fill: parent
       color: "transparent"
       border.width: 1
