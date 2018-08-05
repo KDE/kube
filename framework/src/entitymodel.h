@@ -21,6 +21,8 @@
 #include "kube_export.h"
 #include <QSharedPointer>
 #include <QSortFilterProxyModel>
+#include <QSet>
+#include <QByteArray>
 
 namespace Sink {
     class Query;
@@ -43,13 +45,12 @@ public:
         SuccessStatus,
     };
     Q_ENUMS(Status)
-
     EntityModel(QObject *parent = Q_NULLPTR);
-    ~EntityModel();
+    virtual ~EntityModel();
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    virtual QHash<int, QByteArray> roleNames() const override;
 
     void setAccountId(const QString &);
     QString accountId() const;
@@ -73,4 +74,27 @@ private:
     QHash<QByteArray, int> mRoles;
     QString mAccountId;
     QString mType;
+};
+
+
+class KUBE_EXPORT CheckableEntityModel : public EntityModel {
+
+    Q_OBJECT
+
+    Q_PROPERTY (QSet<QByteArray> checkedEntities READ checkedEntities NOTIFY checkedEntitiesChanged)
+public:
+    CheckableEntityModel(QObject *parent = Q_NULLPTR);
+    virtual ~CheckableEntityModel();
+
+    QHash<int, QByteArray> roleNames() const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+
+    QSet<QByteArray> checkedEntities() const;
+
+signals:
+    void checkedEntitiesChanged();
+
+private:
+    QSet<QByteArray> mCheckedEntities;
 };

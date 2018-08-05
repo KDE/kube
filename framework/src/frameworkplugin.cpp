@@ -174,6 +174,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<TextDocumentHandler>(uri, 1, 0, "TextDocumentHandler");
     qmlRegisterType<LogModel>(uri, 1, 0, "LogModel");
     qmlRegisterType<EntityModel>(uri, 1, 0, "EntityModel");
+    qmlRegisterType<CheckableEntityModel>(uri, 1, 0, "CheckableEntityModel");
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");

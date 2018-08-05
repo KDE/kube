@@ -30,6 +30,7 @@ FocusScope {
     property var hourHeight: Kube.Units.gridUnit * 2
     property date currentDate
     property date startDate: currentDate
+    property var calendarFilter
 
     Item {
         anchors {
@@ -94,6 +95,7 @@ FocusScope {
                 model: Kube.DayLongEventModel {
                     start: root.startDate
                     length: root.daysToShow
+                    calendarFilter: root.calendarFilter
                 }
 
                 delegate: Item {
@@ -181,6 +183,7 @@ FocusScope {
                     model: Kube.PeriodDayEventModel {
                         start: root.startDate
                         length: root.daysToShow
+                        calendarFilter: root.calendarFilter
                     }
                     delegate: Rectangle {
                         id: dayDelegate

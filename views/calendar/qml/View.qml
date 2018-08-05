@@ -120,7 +120,8 @@ RowLayout {
                 }
                 spacing: Kube.Units.smallSpacing
                 Repeater {
-                    model: Kube.EntityModel {
+                    model: Kube.CheckableEntityModel {
+                        id: calendarModel
                         type: "calendar"
                         roles: ["name", "color"]
                     }
@@ -131,7 +132,8 @@ RowLayout {
                             spacing: Kube.Units.smallSpacing
                             Kube.CheckBox {
                                 opacity: 0.9
-                                checked: true
+                                checked: model.checked
+                                onToggled: model.checked = checked
                             }
                             Kube.Label {
                                 text: model.name
@@ -158,5 +160,6 @@ RowLayout {
         Layout.fillWidth: true
         currentDate: root.currentDate
         startDate: root.selectedDate
+        calendarFilter: calendarModel.checkedEntities
     }
 }

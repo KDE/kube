@@ -99,6 +99,10 @@ bool DayLongEventModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     auto idx   = sourceModel()->index(sourceRow, 0, sourceParent);
     auto event = idx.data(Sink::Store::DomainObjectRole).value<Event::Ptr>();
 
+    if (!mCalendarFilter.contains(event->getCalendar())) {
+        return false;
+    }
+
     auto eventStart = event->getStartTime().date();
     auto eventEnd   = event->getEndTime().date();
 
@@ -139,5 +143,16 @@ int DayLongEventModel::periodLength() const
 void DayLongEventModel::setPeriodLength(int length)
 {
     mPeriodLength = length;
+    invalidateFilter();
+}
+
+QSet<QByteArray> DayLongEventModel::calendarFilter() const
+{
+    return mCalendarFilter;
+}
+
+void DayLongEventModel::setCalendarFilter(const QSet<QByteArray> &filter)
+{
+    mCalendarFilter = filter;
     invalidateFilter();
 }

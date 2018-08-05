@@ -35,6 +35,7 @@ class KUBE_EXPORT DayLongEventModel : public QSortFilterProxyModel
 
     Q_PROPERTY(QVariant start READ periodStart WRITE setPeriodStart)
     Q_PROPERTY(int length READ periodLength WRITE setPeriodLength)
+    Q_PROPERTY(QSet<QByteArray> calendarFilter READ calendarFilter WRITE setCalendarFilter)
 
 public:
     using Event = Sink::ApplicationDomain::Event;
@@ -64,11 +65,15 @@ public:
     int periodLength() const;
     void setPeriodLength(int);
 
+    QSet<QByteArray> calendarFilter() const;
+    void setCalendarFilter(const QSet<QByteArray> &);
+
 private:
     QByteArray getColor(const QByteArray &calendar) const;
 
     QSharedPointer<QAbstractItemModel> mModel;
     QSharedPointer<EntityCacheInterface> mCalendarCache;
+    QSet<QByteArray> mCalendarFilter;
 
     QDate mPeriodStart;
     int mPeriodLength = 7;

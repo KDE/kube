@@ -83,6 +83,9 @@ void PeriodDayEventModel::partitionData()
             SinkWarning() << "Invalid date in the eventModel, ignoring...";
             continue;
         }
+        if (!mCalendarFilter.contains(event->getCalendar())) {
+            continue;
+        }
 
         int bucket = bucketOf(eventDate);
         SinkTrace() << "Adding event:" << event->getSummary() << "in bucket #" << bucket;
@@ -320,5 +323,16 @@ int PeriodDayEventModel::periodLength() const
 void PeriodDayEventModel::setPeriodLength(int length)
 {
     mPeriodLength = length;
+    updateQuery();
+}
+
+QSet<QByteArray> PeriodDayEventModel::calendarFilter() const
+{
+    return mCalendarFilter;
+}
+
+void PeriodDayEventModel::setCalendarFilter(const QSet<QByteArray> &filter)
+{
+    mCalendarFilter = filter;
     updateQuery();
 }

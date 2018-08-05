@@ -36,7 +36,7 @@ EntityModel::~EntityModel()
 
 }
 
-QHash< int, QByteArray > EntityModel::roleNames() const
+QHash<int, QByteArray> EntityModel::roleNames() const
 {
     return mRoleNames;
 }
@@ -151,4 +151,49 @@ QVariantMap EntityModel::data(int row) const
         map.insert(mRoleNames.value(r), data(index(row, 0), r));
     }
     return map;
+}
+
+
+CheckableEntityModel::CheckableEntityModel(QObject *parent) : EntityModel(parent)
+{
+}
+
+CheckableEntityModel::~CheckableEntityModel()
+{
+
+}
+
+QHash<int, QByteArray > CheckableEntityModel::roleNames() const
+{
+    auto roleNames = EntityModel::roleNames();
+    roleNames.insert(Qt::CheckStateRole, "checked");
+    return roleNames;
+}
+
+QVariant CheckableEntityModel::data(const QModelIndex &index, int role) const
+{
+    if (role == Qt::CheckStateRole) {
+        const auto identifier = EntityModel::data(index, Qt::UserRole + 1).toByteArray();
+        return mCheckedEntities.contains(identifier);
+    }
+    return EntityModel::data(index, role);
+}
+
+bool CheckableEntityModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (role == Qt::CheckStateRole) {
+        const auto identifier = EntityModel::data(index, Qt::UserRole + 1).toByteArray();
+        if (value.toBool()) {
+            mCheckedEntities.insert(identifier);
+        } else {
+            mCheckedEntities.remove(identifier);
+        }
+        emit checkedEntitiesChanged();
+    }
+    return EntityModel::setData(index, value, role);
+}
+
+QSet<QByteArray> CheckableEntityModel::checkedEntities() const
+{
+    return mCheckedEntities;
 }
