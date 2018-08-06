@@ -62,7 +62,7 @@ ADD enableDebug.sh /home/developer/enableDebug.sh
 ADD private-key /home/developer/private-key
 ADD public-key /home/developer/public-key
 RUN sudo chown developer:developer /home/developer/*
-RUN sudo chown developer:developer /home/developer/.gnupg -R
+RUN sudo chown developer:developer /home/developer/.* -R
 
 RUN gpg2 --import /home/developer/public-key
 RUN gpg2 --batch --import /home/developer/private-key
