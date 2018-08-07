@@ -99,7 +99,7 @@ bool DayLongEventModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     auto idx   = sourceModel()->index(sourceRow, 0, sourceParent);
     auto event = idx.data(Sink::Store::DomainObjectRole).value<Event::Ptr>();
 
-    if (!mCalendarFilter.contains(event->getCalendar())) {
+    if (mCalendarFilter.contains(event->getCalendar())) {
         return false;
     }
 

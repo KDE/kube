@@ -132,8 +132,8 @@ RowLayout {
                             spacing: Kube.Units.smallSpacing
                             Kube.CheckBox {
                                 opacity: 0.9
-                                checked: model.checked
-                                onToggled: model.checked = checked
+                                checked: !model.checked
+                                onToggled: model.checked = !checked
                             }
                             Kube.Label {
                                 text: model.name

@@ -83,7 +83,7 @@ void PeriodDayEventModel::partitionData()
             SinkWarning() << "Invalid date in the eventModel, ignoring...";
             continue;
         }
-        if (!mCalendarFilter.contains(event->getCalendar())) {
+        if (mCalendarFilter.contains(event->getCalendar())) {
             continue;
         }
 
