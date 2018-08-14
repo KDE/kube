@@ -39,9 +39,9 @@
 #include <QDebug>
 #include <QTimer>
 #include <QQmlContext>
-#include <QIcon>
 #include <QStandardPaths>
-#include <QResource>
+#include <QLockFile>
+#include <QDir>
 #include <sink/store.h>
 
 #include "backtrace.h"
@@ -130,8 +130,29 @@ int main(int argc, char *argv[])
     parser.addOption({{"k", "keyring"},
         QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"), "keyring dictionary"}
     );
-    parser.addOption({{"u", "upgrade"}, "", ""});
+    parser.addOption({{"l", "lockfile"}, "Use a lockfile to enforce that only a single instance can be started.", ""});
     parser.process(app);
+
+
+    static QString location = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/kube";
+    QDir{}.mkpath(location);
+    QLockFile lockfile(location + QString("/%1.lock").arg(QString("kube")));
+    lockfile.setStaleLockTime(500);
+    if (parser.isSet("lockfile")) {
+        if (!lockfile.tryLock(0)) {
+            const auto error = lockfile.error();
+            if (error == QLockFile::LockFailedError) {
+                qint64 pid;
+                QString hostname, appname;
+                lockfile.getLockInfo(&pid, &hostname, &appname);
+                qWarning() << "Failed to acquire exclusive lock. You can only run one instance of Kube.";
+                qWarning() << "Pid:" << pid << "Host:" << hostname << "App:" << appname;
+            } else {
+                qWarning() << "Error while trying to acquire exclusive lock: " << error;
+            }
+            return -1;
+        }
+    }
 
     if (parser.isSet("keyring")) {
         auto keyringDict = parser.value("keyring");
