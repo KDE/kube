@@ -5,7 +5,7 @@ include(ECMAddAppIcon)
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Quick)
 
 # install executable
-set(SRCS main.cpp)
+set(SRCS main.cpp backtrace.cpp)
 
 if(APPLE OR WIN32)
     # Sets the icon on Windows and OSX
