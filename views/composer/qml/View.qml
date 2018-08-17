@@ -291,8 +291,8 @@ Kube.View {
                 Repeater {
                     model: composerController.attachments.model
                     delegate: Kube.AttachmentDelegate {
-                        name: model.filename
-                        icon: model.iconname
+                        name: model.filename ? model.filename : ""
+                        icon: model.iconname ? model.iconname : ""
                         clip: true
                         actionIcon: Kube.Icons.remove
                         onExecute: composerController.attachments.remove(model.id)
