@@ -356,10 +356,15 @@ Kube.View {
                         Dialogs.FileDialog {
                             id: fileDialog
                             visible: true
-                            title: "Choose a file to attach"
+                            title: qsTr("Choose a file to attach")
+                            folder: shortcuts.home
                             selectFolder: false
+                            selectExisting: true
+                            selectMultiple: true
                             onAccepted: {
-                                composerController.attachments.add({url: fileDialog.fileUrl})
+                                for (var i = 0; i < fileDialog.fileUrls.length; ++i) {
+                                    composerController.attachments.add({url: fileDialog.fileUrls[i]})
+                                }
                             }
                         }
                     }
