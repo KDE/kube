@@ -1,5 +1,3 @@
-project(kube)
-
 include(ECMAddAppIcon)
 
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Quick)
@@ -14,7 +12,18 @@ if(APPLE OR WIN32)
 endif()
 
 add_executable(${PROJECT_NAME} ${SRCS})
-set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST MacOSXBundleInfo.plist.in)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    MACOSX_BUNDLE_INFO_PLIST MacOSXBundleInfo.plist.in
+    MACOSX_BUNDLE_INFO_STRING "A modern communication and collaboration client."
+    #MACOSX_BUNDLE_ICON_FILE already set by ecm_add_app_icon
+    MACOSX_BUNDLE_GUI_IDENTIFIER "com.kubeproject.kube"
+    MACOSX_BUNDLE_LONG_VERSION_STRING ${PROJECT_VERSION}
+    MACOSX_BUNDLE_BUNDLE_NAME "Kube"
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_COPYRIGHT "Free and open-source under the GPL"
+    )
+
 target_link_libraries(${PROJECT_NAME}
     Qt5::Quick
     ${CMAKE_DL_LIBS}
@@ -34,9 +43,9 @@ configure_file(kube.desktop.in ${KUBE_DESKTOPFILENAME})
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${KUBE_DESKTOPFILENAME} DESTINATION ${KDE_INSTALL_APPDIR} )
 
 set(KUBE_APPDATA_ID "${KUBE_DESKTOPFILENAME}" CACHE STRING "appdata homepage property")
-set(KUBE_APPDATA_HOMEPAGE "https://kube.kde.org" CACHE STRING "appdata homepage property")
+set(KUBE_APPDATA_HOMEPAGE "https://kube-project.com" CACHE STRING "appdata homepage property")
 set(KUBE_APPDATA_BUGTRACKER "https://phabricator.kde.org/project/view/238/" CACHE STRING "appdata bugtracker property")
-set(KUBE_APPDATA_HELP "http://api.kde.org/doc/kube/" CACHE STRING "appdata help property")
+set(KUBE_APPDATA_HELP "https://kube.readthedocs.io/en/latest/" CACHE STRING "appdata help property")
 set(KUBE_APPDATA_PROJECTGROUP "KDE" CACHE STRING "appdata projectgroup property")
 set(KUBE_APPDATAFILENAME "${KUBE_APPLICATION_ID}.appdata.xml")
 configure_file(kube.appdata.xml.in ${KUBE_APPDATAFILENAME})
