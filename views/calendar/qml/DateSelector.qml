@@ -73,6 +73,11 @@ Column {
 
     MonthGrid {
         id: grid
+        anchors {
+            left: parent.left
+            right: parent.right
+        }
+
         month: root.selectedDate.getMonth()
         year: root.selectedDate.getFullYear()
         locale: Qt.locale()

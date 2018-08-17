@@ -106,6 +106,11 @@ RowLayout {
 
             DateSelector {
                 id: dateSelector
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    rightMargin: Kube.Units.largeSpacing
+                }
                 selectedDate: root.selectedDate
                 onSelectedDateChanged: {
                     root.selectedDate = getFirstDayOfWeek(dateSelector.selectedDate)
