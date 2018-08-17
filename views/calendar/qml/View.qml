@@ -133,7 +133,8 @@ RowLayout {
                     delegate: Item {
                         width: parent.width - Kube.Units.largeSpacing
                         height: Kube.Units.gridUnit
-                        Row {
+                        RowLayout {
+                            anchors.fill: parent
                             spacing: Kube.Units.smallSpacing
                             Kube.CheckBox {
                                 opacity: 0.9
@@ -141,18 +142,20 @@ RowLayout {
                                 onToggled: model.checked = !checked
                             }
                             Kube.Label {
+                                Layout.fillWidth: true
                                 text: model.name
                                 color: Kube.Colors.highlightedTextColor
+                                elide: Text.ElideRight
+                                clip: true
                             }
-                        }
-                        Rectangle {
-                            anchors.right: parent.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: Kube.Units.gridUnit
-                            height: width
-                            radius: width / 2
-                            color: model.color
-                            opacity: 0.9
+                            Rectangle {
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: Kube.Units.gridUnit
+                                height: width
+                                radius: width / 2
+                                color: model.color
+                                opacity: 0.9
+                            }
                         }
                     }
                 }
