@@ -16,14 +16,14 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "kolabnowsettings.h"
+#include "settings.h"
 
-KolabnowSettings::KolabnowSettings(QObject *parent)
+Settings::Settings(QObject *parent)
     : AccountSettings(parent)
 {
 }
 
-void KolabnowSettings::load()
+void Settings::load()
 {
     loadAccount();
     loadImapResource();
@@ -33,20 +33,8 @@ void KolabnowSettings::load()
     loadIdentity();
 }
 
-void KolabnowSettings::save()
+void Settings::save()
 {
-    mImapServer = "imaps://beta.kolabnow.com:143";
-    mImapUsername = mEmailAddress;
-
-    mSmtpServer = "smtps://smtp.kolabnow.com:587";
-    mSmtpUsername = mEmailAddress;
-
-    mCardDavServer = "https://apps.kolabnow.com";
-    mCardDavUsername = mEmailAddress;
-
-    mCalDavServer = "https://apps.kolabnow.com";
-    mCalDavUsername = mEmailAddress;
-
     saveAccount();
     saveImapResource();
     saveMailtransportResource();
@@ -55,7 +43,7 @@ void KolabnowSettings::save()
     saveIdentity();
 }
 
-void KolabnowSettings::remove()
+void Settings::remove()
 {
     removeResource(mMailtransportIdentifier);
     removeResource(mImapIdentifier);
