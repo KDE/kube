@@ -15,4 +15,5 @@ target_link_libraries(gmailaccountplugin
 )
 
 install(TARGETS gmailaccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/gmail)
+install(FILES metadata.json DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/gmail)
 install_qml_account(gmail)

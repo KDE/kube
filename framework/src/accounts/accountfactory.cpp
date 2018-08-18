@@ -64,17 +64,20 @@ void AccountFactory::loadPackage()
     }();
     mUiPath.clear();
     mLoginUi.clear();
+    mAccountName.clear();
     mRequiresKeyring = false;
     if (pluginPath.isEmpty()) {
         qWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
     } else {
         mUiPath = QUrl::fromLocalFile(pluginPath + "/AccountSettings.qml");
         mLoginUi = QUrl::fromLocalFile(pluginPath + "/Login.qml");
+        mAccountName = mAccountType;
         if (QFileInfo::exists(pluginPath + "/metadata.json")) {
             QFile file{pluginPath + "/metadata.json"};
             file.open(QIODevice::ReadOnly);
             auto json = QJsonDocument::fromJson(file.readAll());
             mRequiresKeyring = json.object().value("RequiresKeyring").toBool(true);
+            mAccountName = json.object().value("Name").toString();
         } else {
             mRequiresKeyring = true;
         }

@@ -20,4 +20,5 @@ target_link_libraries(genericaccountplugin
 )
 
 install(TARGETS genericaccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/generic)
+install(FILES metadata.json DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/generic)
 install_qml_account(generic)

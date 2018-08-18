@@ -72,8 +72,12 @@ Kube.Popup {
                     delegate: Kube.Button {
                         objectName: "accountTypeButton" + modelData
                         Layout.fillWidth: true
-                        text: modelData
+                        text: accountFactory.accountName
                         onClicked: stack.push(wizardPage.createObject(stack, {accountType:modelData}))
+                        Kube.AccountFactory {
+                            id: accountFactory
+                            accountType: modelData
+                        }
                     }
                 }
             }

@@ -32,6 +32,7 @@ class KUBE_EXPORT AccountFactory : public QObject
     Q_OBJECT
     Q_PROPERTY(QString accountId MEMBER mAccountId WRITE setAccountId);
     Q_PROPERTY(QString accountType MEMBER mAccountType WRITE setAccountType);
+    Q_PROPERTY(QString accountName MEMBER mAccountName NOTIFY accountLoaded);
     Q_PROPERTY(QUrl uiPath MEMBER mUiPath NOTIFY accountLoaded);
     Q_PROPERTY(QUrl loginUi MEMBER mLoginUi NOTIFY accountLoaded);
     Q_PROPERTY(bool requiresKeyring MEMBER mRequiresKeyring NOTIFY accountLoaded);
@@ -47,6 +48,7 @@ signals:
 private:
     void loadPackage();
     QString mAccountId;
+    QString mAccountName;
     QUrl mUiPath;
     QUrl mLoginUi;
     QByteArray mAccountType;

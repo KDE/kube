@@ -15,4 +15,5 @@ target_link_libraries(kolabnowaccountplugin
 )
 
 install(TARGETS kolabnowaccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/kolabnow)
+install(FILES metadata.json DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/kolabnow)
 install_qml_account(kolabnow)

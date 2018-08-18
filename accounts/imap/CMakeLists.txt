@@ -20,4 +20,5 @@ target_link_libraries(imapaccountplugin
 )
 
 install(TARGETS imapaccountplugin DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/imap)
+install(FILES metadata.json DESTINATION ${QML_INSTALL_DIR}/org/kube/accounts/imap)
 install_qml_account(imap)
