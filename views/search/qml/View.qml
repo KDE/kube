@@ -29,10 +29,8 @@ Kube.View {
     id: root
     property string searchTerm: ""
 
-
+    //Initial search-box overlay
     Rectangle {
-        id: overlay
-
         parent: ApplicationWindow.overlay
         height: overlayArea.height
         width: overlayArea.width
@@ -67,7 +65,10 @@ Kube.View {
 
     RowLayout {
         spacing: 0
+        //Sidebar
         Rectangle {
+            //It contains nothing useful right now
+            visible: false
             Layout.fillHeight: true
             width: Kube.Units.gridUnit * 10
             color: Kube.Colors.darkBackgroundColor
