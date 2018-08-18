@@ -19,7 +19,7 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
 
@@ -28,7 +28,7 @@ FocusScope {
     property string accountType
     signal done()
 
-    property bool isFirstView: root.Controls2.StackView.index == 0
+    property bool isFirstView: root.StackView.index == 0
     property bool requireSetup: false
 
     function save() {

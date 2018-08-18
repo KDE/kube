@@ -18,7 +18,7 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
 Kube.Popup {
@@ -29,11 +29,11 @@ Kube.Popup {
     property var availableAccountPlugins: []
 
     modal: true
-    closePolicy: requireSetup ? Controls2.Popup.NoAutoClose : Controls2.Popup.CloseOnEscape | Controls2.Popup.CloseOnPressOutside
+    closePolicy: requireSetup ? Popup.NoAutoClose : Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
     clip: true
 
-    Controls2.StackView {
+    StackView {
         id: stack
         anchors.fill: parent
         Component.onCompleted: {
