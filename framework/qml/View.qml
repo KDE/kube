@@ -19,19 +19,25 @@
 
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
 
+    //Use overlayArea to position an overlay window, parented to ApplicationWindow.window, over just the view-section without the sidebar.
+    property int sidebarWidth: ApplicationWindow.window.sidebarWidth ? ApplicationWindow.window.sidebarWidth : 0
+    property int windowWidth: ApplicationWindow.window.width ? ApplicationWindow.window.width : width
+    property int windowHeight: ApplicationWindow.window.height ? ApplicationWindow.window.height : height
+    property rect overlayArea: Qt.rect(sidebarWidth, 0, windowWidth - sidebarWidth, windowHeight)
+
     //Search
     property rect searchArea
     property string filter: ""
     property var searchObject: null
     function triggerSearch() {
-        if (!searchObject && Controls2.StackView.visible) {
+        if (!searchObject && StackView.visible) {
             searchObject = searchComponent.createObject(root)
         }
     }
@@ -60,11 +66,11 @@ FocusScope {
 
     //This signal will be emitted once all initial properties have been set and the view is ready to load
     signal setup()
-    Controls2.StackView.onActivated: {
+    StackView.onActivated: {
         root.setup()
     }
 
-    Controls2.StackView.onDeactivated: {
+    StackView.onDeactivated: {
         clearSearch()
     }
 

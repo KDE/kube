@@ -34,10 +34,10 @@ Kube.View {
         id: overlay
 
         parent: ApplicationWindow.overlay
-        height: app.height
-        width: app.width - app.sidebarWidth
-        x: app.sidebarWidth
-        y: 0
+        height: overlayArea.height
+        width: overlayArea.width
+        x: overlayArea.x
+        y: overlayArea.y
 
         visible: root.visible && root.searchTerm == ""
 
