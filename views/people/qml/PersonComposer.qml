@@ -90,19 +90,18 @@ Flickable {
                     color: "#00000000"
 
                     onClicked: {
-                        fileDialogComponent.createObject(parent)
+                        fileDialog.open()
                     }
 
-                    Component {
-                        id: fileDialogComponent
-                        Dialogs.FileDialog {
-                            id: fileDialog
-                            visible: true
-                            title: "Choose an Avatar"
-                            selectFolder: false
-                            onAccepted: {
-                                //TODO
-                            }
+                    Dialogs.FileDialog {
+                        id: fileDialog
+                        title: qsTr("Choose an Avatar")
+                        folder: shortcuts.home
+                        selectFolder: false
+                        selectExisting: true
+                        selectMultiple: false
+                        onAccepted: {
+                            //TODO
                         }
                     }
                 }

@@ -82,22 +82,18 @@ Item {
                 iconName: Kube.Icons.folder
 
                 onClicked: {
-                    fileDialogComponent.createObject(parent)
+                    fileDialog.open()
                 }
 
-                Component {
-                    id: fileDialogComponent
-                    Dialogs.FileDialog {
-                        id: fileDialog
-
-                        visible: true
-                        title: "Choose the maildir folder"
-
-                        selectFolder: true
-
-                        onAccepted: {
-                            maildirSettings.path = fileDialog.fileUrl
-                        }
+                Dialogs.FileDialog {
+                    id: fileDialog
+                    title: qsTr("Choose a maildir folder")
+                    folder: shortcuts.home
+                    selectFolder: true
+                    selectExisting: true
+                    selectMultiple: false
+                    onAccepted: {
+                        maildirSettings.path = fileDialog.fileUrl
                     }
                 }
             }
