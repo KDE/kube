@@ -142,6 +142,90 @@ ApplicationWindow {
                 resource: "caldavresource",
                 name: "Test Calendar2",
                 color: "#f67400"
+            },
+            {
+                id: "calendar3",
+                resource: "caldavresource",
+                name: "Test Calendar3 Loooooooooooooooooooooooooooooong Name",
+                color: "#f67400"
+            },
+            {
+                id: "calendar4",
+                resource: "caldavresource",
+                name: "Test Calendar4",
+                color: "#f67400"
+            },
+            {
+                id: "calendar5",
+                resource: "caldavresource",
+                name: "Test Calendar5",
+                color: "#f67400"
+            },
+            {
+                id: "calendar6",
+                resource: "caldavresource",
+                name: "Test Calendar6",
+                color: "#f67400"
+            },
+            {
+                id: "calendar7",
+                resource: "caldavresource",
+                name: "Test Calendar7",
+                color: "#f67400"
+            },
+            {
+                id: "calendar8",
+                resource: "caldavresource",
+                name: "Test Calendar8",
+                color: "#f67400"
+            },
+            {
+                id: "calendar9",
+                resource: "caldavresource",
+                name: "Test Calendar9",
+                color: "#f67400"
+            },
+            {
+                id: "calendar10",
+                resource: "caldavresource",
+                name: "Test Calendar 10",
+                color: "#f67400"
+            },
+            {
+                id: "calendar11",
+                resource: "caldavresource",
+                name: "Test Calendar11",
+                color: "#f67400"
+            },
+            {
+                id: "calendar12",
+                resource: "caldavresource",
+                name: "Test Calendar12",
+                color: "#f67400"
+            },
+            {
+                id: "calendar13",
+                resource: "caldavresource",
+                name: "Test Calendar13",
+                color: "#f67400"
+            },
+            {
+                id: "calendar14",
+                resource: "caldavresource",
+                name: "Test Calendar14",
+                color: "#f67400"
+            },
+            {
+                id: "calendar15",
+                resource: "caldavresource",
+                name: "Test Calendar15",
+                color: "#f67400"
+            },
+            {
+                id: "calendar16",
+                resource: "caldavresource",
+                name: "Test Calendar16",
+                color: "#f67400"
             }],
         }
         TestStore.setup(initialState)

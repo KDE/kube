@@ -59,48 +59,52 @@ RowLayout {
     }
 
     Rectangle {
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+        }
         width: Kube.Units.gridUnit * 10
-        Layout.fillHeight: parent.height
         color: Kube.Colors.darkBackgroundColor
 
-        Kube.PositiveButton {
-            id: newEventButton
-            objectName: "newEventButton"
-
+        Column {
+            id: topLayout
             anchors {
                 top: parent.top
                 left: parent.left
                 right: parent.right
                 margins: Kube.Units.largeSpacing
             }
-            focus: true
-            text: qsTr("New Event")
-            onClicked: {}
-        }
+            Kube.PositiveButton {
+                id: newEventButton
+                objectName: "newEventButton"
 
-        Column {
-            anchors {
-                top: newEventButton.bottom
-                left: newEventButton.left
-                topMargin: Kube.Units.largeSpacing
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                focus: true
+                text: qsTr("New Event")
+                onClicked: {}
             }
-
-            width: parent.width
-            spacing: Kube.Units.smallSpacing
-
             DateView {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
                 date: root.currentDate
             }
-
         }
 
         ColumnLayout {
+            //Grow from the button but don't go over topLayout
             anchors {
                 bottom: parent.bottom
-                left: newEventButton.left
+                left: topLayout.left
                 right: parent.right
                 bottomMargin: Kube.Units.largeSpacing
+                rightMargin: Kube.Units.largeSpacing
             }
+            height: Math.min(implicitHeight, parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing)
 
             spacing: Kube.Units.largeSpacing
 
@@ -109,7 +113,6 @@ RowLayout {
                 anchors {
                     left: parent.left
                     right: parent.right
-                    rightMargin: Kube.Units.largeSpacing
                 }
                 selectedDate: root.selectedDate
                 onSelectedDateChanged: {
@@ -118,44 +121,45 @@ RowLayout {
                 }
             }
 
-            Column {
+            Kube.ListView {
+                Layout.fillHeight: true
+                Layout.preferredHeight: contentHeight
+                Layout.minimumHeight: Kube.Units.gridUnit
                 anchors {
                     left: parent.left
                     right: parent.right
                 }
                 spacing: Kube.Units.smallSpacing
-                Repeater {
-                    model: Kube.CheckableEntityModel {
-                        id: calendarModel
-                        type: "calendar"
-                        roles: ["name", "color"]
-                    }
-                    delegate: Item {
-                        width: parent.width - Kube.Units.largeSpacing
-                        height: Kube.Units.gridUnit
-                        RowLayout {
-                            anchors.fill: parent
-                            spacing: Kube.Units.smallSpacing
-                            Kube.CheckBox {
-                                opacity: 0.9
-                                checked: !model.checked
-                                onToggled: model.checked = !checked
-                            }
-                            Kube.Label {
-                                Layout.fillWidth: true
-                                text: model.name
-                                color: Kube.Colors.highlightedTextColor
-                                elide: Text.ElideRight
-                                clip: true
-                            }
-                            Rectangle {
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: Kube.Units.gridUnit
-                                height: width
-                                radius: width / 2
-                                color: model.color
-                                opacity: 0.9
-                            }
+                model: Kube.CheckableEntityModel {
+                    id: calendarModel
+                    type: "calendar"
+                    roles: ["name", "color"]
+                }
+                delegate: Item {
+                    width: parent.width
+                    height: Kube.Units.gridUnit
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: Kube.Units.smallSpacing
+                        Kube.CheckBox {
+                            opacity: 0.9
+                            checked: !model.checked
+                            onToggled: model.checked = !checked
+                        }
+                        Kube.Label {
+                            Layout.fillWidth: true
+                            text: model.name
+                            color: Kube.Colors.highlightedTextColor
+                            elide: Text.ElideRight
+                            clip: true
+                        }
+                        Rectangle {
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: Kube.Units.gridUnit
+                            height: width
+                            radius: width / 2
+                            color: model.color
+                            opacity: 0.9
                         }
                     }
                 }
