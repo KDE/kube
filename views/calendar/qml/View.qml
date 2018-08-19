@@ -136,32 +136,46 @@ RowLayout {
                     type: "calendar"
                     roles: ["name", "color"]
                 }
-                delegate: Item {
+                delegate: RowLayout {
                     width: listView.availableWidth
                     height: Kube.Units.gridUnit
-                    RowLayout {
-                        anchors.fill: parent
-                        spacing: Kube.Units.smallSpacing
-                        Kube.CheckBox {
-                            opacity: 0.9
-                            checked: !model.checked
-                            onToggled: model.checked = !checked
-                        }
-                        Kube.Label {
-                            Layout.fillWidth: true
-                            text: model.name
-                            color: Kube.Colors.highlightedTextColor
-                            elide: Text.ElideLeft
-                            clip: true
-                        }
-                        Rectangle {
-                            anchors.verticalCenter: parent.verticalCenter
+                    spacing: Kube.Units.smallSpacing
+                    Kube.CheckBox {
+                        id: checkBox
+                        opacity: 0.9
+                        checked: !model.checked
+                        onToggled: model.checked = !checked
+
+                        indicator: Rectangle {
                             width: Kube.Units.gridUnit
-                            height: width
-                            radius: width / 2
+                            height: Kube.Units.gridUnit
+
                             color: model.color
-                            opacity: 0.9
+
+                            Rectangle {
+                                id: highlight
+                                anchors.fill: parent
+                                visible: checkBox.hovered || checkBox.visualFocus
+                                color: Kube.Colors.highlightColor
+                                opacity: 0.4
+                            }
+
+                            Kube.Icon {
+                                anchors.centerIn: parent
+                                height: Kube.Units.gridUnit
+                                width: Kube.Units.gridUnit
+                                visible: checkBox.checked
+                                iconName: Kube.Icons.checkbox_inverted
+                            }
                         }
+
+                    }
+                    Kube.Label {
+                        Layout.fillWidth: true
+                        text: model.name
+                        color: Kube.Colors.highlightedTextColor
+                        elide: Text.ElideLeft
+                        clip: true
                     }
                 }
             }

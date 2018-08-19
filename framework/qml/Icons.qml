@@ -62,6 +62,7 @@ Item {
     property string goDown_inverted: "go-down-inverted"
     property string goUp: "go-up"
     property string checkbox: "checkbox"
+    property string checkbox_inverted: "checkbox-inverted"
     property string password_show: "password-show-on"
     property string password_hide: "password-show-off"
     property string secure: "document-encrypt"
