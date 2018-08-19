@@ -122,6 +122,7 @@ RowLayout {
             }
 
             Kube.ListView {
+                id: listView
                 Layout.fillHeight: true
                 Layout.preferredHeight: contentHeight
                 Layout.minimumHeight: Kube.Units.gridUnit
@@ -136,7 +137,7 @@ RowLayout {
                     roles: ["name", "color"]
                 }
                 delegate: Item {
-                    width: parent.width
+                    width: listView.availableWidth
                     height: Kube.Units.gridUnit
                     RowLayout {
                         anchors.fill: parent
