@@ -151,7 +151,7 @@ RowLayout {
                             Layout.fillWidth: true
                             text: model.name
                             color: Kube.Colors.highlightedTextColor
-                            elide: Text.ElideRight
+                            elide: Text.ElideLeft
                             clip: true
                         }
                         Rectangle {
