@@ -32,7 +32,9 @@
 #include <entitycache.h>
 
 PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
-    : QAbstractItemModel(parent), partitionedEvents(7)
+    : QAbstractItemModel(parent),
+    partitionedEvents(7),
+    mCalendarCache{EntityCache<Calendar, Calendar::Color>::Ptr::create()}
 {
     updateQuery();
 }
@@ -62,15 +64,11 @@ void PeriodDayEventModel::updateQuery()
     QObject::connect(eventModel.data(), &QAbstractItemModel::rowsMoved, this, &PeriodDayEventModel::partitionData);
     QObject::connect(eventModel.data(), &QAbstractItemModel::rowsRemoved, this, &PeriodDayEventModel::partitionData);
 
-    mCalendarCache = EntityCache<Calendar, Calendar::Color>::Ptr::create();
-
     partitionData();
 }
 
 void PeriodDayEventModel::partitionData()
 {
-    SinkLog() << "Partitioning event data";
-
     beginResetModel();
 
     partitionedEvents = QVector<QList<QSharedPointer<Event>>>(mPeriodLength);
@@ -177,7 +175,11 @@ int PeriodDayEventModel::columnCount(const QModelIndex &parent) const
 
 QByteArray PeriodDayEventModel::getColor(const QByteArray &calendar) const
 {
-    return mCalendarCache->getProperty(calendar, "color").toByteArray();
+    const auto color = mCalendarCache->getProperty(calendar, "color").toByteArray();
+    if (color.isEmpty()) {
+        qWarning() << "Failed to get color for calendar " << calendar;
+    }
+    return color;
 }
 
 QDateTime PeriodDayEventModel::getStartTimeOfDay(const QDateTime &dateTime, int day) const

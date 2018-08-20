@@ -27,7 +27,9 @@
 
 #include "entitycache.h"
 
-DayLongEventModel::DayLongEventModel(QObject *parent) : QSortFilterProxyModel(parent)
+DayLongEventModel::DayLongEventModel(QObject *parent)
+    : QSortFilterProxyModel(parent),
+    mCalendarCache{EntityCache<Calendar, Calendar::Color>::Ptr::create()}
 {
     setDynamicSortFilter(true);
 
@@ -42,8 +44,6 @@ DayLongEventModel::DayLongEventModel(QObject *parent) : QSortFilterProxyModel(pa
     query.filter<Event::AllDay>(true);
 
     mModel = Sink::Store::loadModel<Event>(query);
-
-    mCalendarCache = EntityCache<Calendar, Calendar::Color>::Ptr::create();
 
     setSourceModel(mModel.data());
 }
@@ -61,7 +61,11 @@ QHash<int, QByteArray> DayLongEventModel::roleNames() const
 
 QByteArray DayLongEventModel::getColor(const QByteArray &calendar) const
 {
-    return mCalendarCache->getProperty(calendar, "color").toByteArray();
+    const auto color = mCalendarCache->getProperty(calendar, "color").toByteArray();
+    if (color.isEmpty()) {
+        qWarning() << "Failed to get color for calendar " << calendar;
+    }
+    return color;
 }
 
 QVariant DayLongEventModel::data(const QModelIndex &idx, int role) const
