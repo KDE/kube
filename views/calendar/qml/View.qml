@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.9
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2
 import QtQuick.Layouts 1.2
 
 import org.kube.framework 1.0 as Kube
@@ -156,7 +156,9 @@ RowLayout {
                             id: checkBox
                             opacity: 0.9
                             checked: !model.checked
-                            onToggled: model.checked = !checked
+                            onCheckedChanged: {
+                                model.checked = !checked
+                            }
 
                             indicator: Rectangle {
                                 width: Kube.Units.gridUnit

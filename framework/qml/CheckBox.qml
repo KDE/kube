@@ -26,7 +26,9 @@ T.CheckBox {
     implicitWidth: indicator.width
     implicitHeight: indicator.width
 
-    Keys.onReturnPressed: root.toggle()
+    Keys.onReturnPressed: {
+        root.checked = !root.checked
+    }
 
     indicator: Rectangle {
         width: Kube.Units.gridUnit
