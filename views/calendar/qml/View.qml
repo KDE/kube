@@ -30,6 +30,10 @@ RowLayout {
     property date selectedDate: getFirstDayOfWeek(currentDate)
     property bool autoUpdateDate: true
 
+    onSelectedDateChanged: {
+        console.log("Selected date changed", selectedDate)
+    }
+
     Timer {
         running: autoUpdateDate
         interval: 2000; repeat: true
