@@ -107,8 +107,8 @@ bool DayLongEventModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
         return false;
     }
 
-    auto eventStart = event->getStartTime().date();
-    auto eventEnd   = event->getEndTime().date();
+    const auto eventStart = event->getStartTime().date();
+    const auto eventEnd   = event->getEndTime().date();
 
     if (!eventStart.isValid() || !eventEnd.isValid()) {
         SinkWarning() << "Invalid date in the event model, ignoring...";
@@ -131,7 +131,7 @@ void DayLongEventModel::setPeriodStart(const QDate &start)
     }
 
     mPeriodStart = start;
-    invalidateFilter();
+    invalidate();
 }
 
 void DayLongEventModel::setPeriodStart(const QVariant &start)
@@ -147,7 +147,7 @@ int DayLongEventModel::periodLength() const
 void DayLongEventModel::setPeriodLength(int length)
 {
     mPeriodLength = length;
-    invalidateFilter();
+    invalidate();
 }
 
 QSet<QByteArray> DayLongEventModel::calendarFilter() const
