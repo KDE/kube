@@ -136,46 +136,56 @@ RowLayout {
                     type: "calendar"
                     roles: ["name", "color"]
                 }
-                delegate: RowLayout {
+                delegate: ItemDelegate {
+                    id: delegate
                     width: listView.availableWidth
                     height: Kube.Units.gridUnit
-                    spacing: Kube.Units.smallSpacing
-                    Kube.CheckBox {
-                        id: checkBox
-                        opacity: 0.9
-                        checked: !model.checked
-                        onToggled: model.checked = !checked
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: Kube.Units.smallSpacing
+                        Kube.CheckBox {
+                            id: checkBox
+                            opacity: 0.9
+                            checked: !model.checked
+                            onToggled: model.checked = !checked
 
-                        indicator: Rectangle {
-                            width: Kube.Units.gridUnit
-                            height: Kube.Units.gridUnit
-
-                            color: model.color
-
-                            Rectangle {
-                                id: highlight
-                                anchors.fill: parent
-                                visible: checkBox.hovered || checkBox.visualFocus
-                                color: Kube.Colors.highlightColor
-                                opacity: 0.4
-                            }
-
-                            Kube.Icon {
-                                anchors.centerIn: parent
-                                height: Kube.Units.gridUnit
+                            indicator: Rectangle {
                                 width: Kube.Units.gridUnit
-                                visible: checkBox.checked
-                                iconName: Kube.Icons.checkbox_inverted
-                            }
-                        }
+                                height: Kube.Units.gridUnit
 
-                    }
-                    Kube.Label {
-                        Layout.fillWidth: true
-                        text: model.name
-                        color: Kube.Colors.highlightedTextColor
-                        elide: Text.ElideLeft
-                        clip: true
+                                color: model.color
+
+                                Rectangle {
+                                    id: highlight
+                                    anchors.fill: parent
+                                    visible: checkBox.hovered || checkBox.visualFocus
+                                    color: Kube.Colors.highlightColor
+                                    opacity: 0.4
+                                }
+
+                                Kube.Icon {
+                                    anchors.centerIn: parent
+                                    height: Kube.Units.gridUnit
+                                    width: Kube.Units.gridUnit
+                                    visible: checkBox.checked
+                                    iconName: Kube.Icons.checkbox_inverted
+                                }
+                            }
+
+                        }
+                        Kube.Label {
+                            id: label
+                            Layout.fillWidth: true
+                            text: model.name
+                            color: Kube.Colors.highlightedTextColor
+                            elide: Text.ElideLeft
+                            clip: true
+                        }
+                        ToolTip {
+                            id: toolTipItem
+                            visible: delegate.hovered && label.truncated
+                            text: label.text
+                        }
                     }
                 }
             }
