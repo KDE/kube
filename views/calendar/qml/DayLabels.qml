@@ -36,16 +36,25 @@ Row {
         delegate: Item {
             width: root.dayWidth
             height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
-            Kube.Label {
-                function addDaysToDate(date, days) {
-                    var date = new Date(date);
-                    date.setDate(date.getDate() + days);
-                    return date;
-                }
-                font.bold: true
-
+            function addDaysToDate(date, days) {
+                var date = new Date(date);
+                date.setDate(date.getDate() + days);
+                return date;
+            }
+            property date day: addDaysToDate(root.startDate, modelData)
+            Column {
                 anchors.centerIn: parent
-                text: addDaysToDate(root.startDate, modelData).toLocaleString(Qt.locale(), "dddd")
+                Kube.Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    font.bold: true
+                    text: day.toLocaleString(Qt.locale(), "dddd")
+                }
+                Kube.Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: day.toLocaleString(Qt.locale(), "d")
+                    color: Kube.Colors.disabledTextColor
+                    font.pointSize: Kube.Units.tinyFontSize
+                }
             }
         }
     }
