@@ -21,28 +21,30 @@ import QtQuick.Controls 2.2
 
 import org.kube.framework 1.0 as Kube
 
-Row {
+Item {
     id: root
     property date date: null
-
-    spacing: Kube.Units.smallSpacing
-
-    Kube.Label {
-        anchors.verticalCenter: parent.verticalCenter
-        text: root.date.getDate()
-        color: Kube.Colors.highlightedTextColor
-        font.pointSize: Kube.Units.defaultFontSize * 3
-    }
-    Column {
-        anchors.verticalCenter: parent.verticalCenter
+    height: Kube.Units.gridUnit * 2
+    Row {
+        anchors.fill: parent
+        spacing: Kube.Units.smallSpacing
         Kube.Label {
-            text: root.date.toLocaleString(Qt.locale(), "dddd")
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.date.getDate()
             color: Kube.Colors.highlightedTextColor
+            font.pointSize: Kube.Units.defaultFontSize * 3
         }
-        Kube.Label {
-            text: root.date.toLocaleString(Qt.locale(), "MMMM yyyy")
-            color: Kube.Colors.highlightedTextColor
-            font.pointSize: Kube.Units.smallFontSize
+        Column {
+            anchors.verticalCenter: parent.verticalCenter
+            Kube.Label {
+                text: root.date.toLocaleString(Qt.locale(), "dddd")
+                color: Kube.Colors.highlightedTextColor
+            }
+            Kube.Label {
+                text: root.date.toLocaleString(Qt.locale(), "MMMM yyyy")
+                color: Kube.Colors.highlightedTextColor
+                font.pointSize: Kube.Units.smallFontSize
+            }
         }
     }
 }

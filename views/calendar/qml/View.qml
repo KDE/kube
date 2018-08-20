@@ -78,6 +78,7 @@ RowLayout {
                 right: parent.right
                 margins: Kube.Units.largeSpacing
             }
+            spacing: Kube.Units.largeSpacing
             Kube.PositiveButton {
                 id: newEventButton
                 objectName: "newEventButton"
@@ -108,7 +109,7 @@ RowLayout {
                 bottomMargin: Kube.Units.largeSpacing
                 rightMargin: Kube.Units.largeSpacing
             }
-            height: Math.min(implicitHeight, parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing)
+            height: Math.min(implicitHeight, parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin)
 
             spacing: Kube.Units.largeSpacing
 

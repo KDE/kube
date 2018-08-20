@@ -37,6 +37,8 @@ Column {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
+            height: parent.height
+            width: parent.height
             color: Kube.Colors.darkBackgroundColor
             iconName: Kube.Icons.goBack_inverted
             onClicked: {
@@ -60,6 +62,8 @@ Column {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
             }
+            height: parent.height
+            width: parent.height
             color: Kube.Colors.darkBackgroundColor
             iconName: Kube.Icons.goNext_inverted
             onClicked: {
