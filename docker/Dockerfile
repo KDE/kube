@@ -9,7 +9,7 @@ RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar make ninja-build clang 
     kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel gpgme-devel kf5-kcalendarcore-devel \
     cyrus-imapd cyrus-sasl cyrus-sasl-devel cyrus-sasl-plain gnupg2-smime pinentry-gtk \
     google-noto-serif-fonts google-noto-sans-fonts \
-    xorg-x11-server-Xvfb
+    xorg-x11-server-Xvfb qt5ct
 
 RUN useradd -d /home/developer -m developer
 
@@ -42,6 +42,7 @@ ENV XDG_DATA_DIRS /install/share/:/usr/share
 RUN mkdir /tmp/runtime-developer
 ENV XDG_RUNTIME_DIR /tmp/runtime-developer
 ENV LANG en_US.UTF-8
+ENV QT_QPA_PLATFORMTHEME qt5ct
 
 RUN git config --global url."git://anongit.kde.org/".insteadOf kde: && \
     git config --global url."ssh://git@git.kde.org/".pushInsteadOf kde:
@@ -61,6 +62,7 @@ ADD gdbinit /home/developer/.gdbinit
 ADD enableDebug.sh /home/developer/enableDebug.sh
 ADD private-key /home/developer/private-key
 ADD public-key /home/developer/public-key
+ADD qt5ct /home/developer/.config/qt5ct
 RUN sudo chown developer:developer /home/developer/*
 RUN sudo chown developer:developer /home/developer/.* -R
 

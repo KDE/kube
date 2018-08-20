@@ -122,6 +122,7 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(QString("%1 Branch: %2 Commit: %3").arg(kube_VERSION_STRING).arg(kube_BRANCH).arg(kube_COMMIT));
     app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
 
+    qDebug() << "Font size:" << app.font().pointSize();
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A communication and collaboration client.");
