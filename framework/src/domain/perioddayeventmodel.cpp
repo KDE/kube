@@ -85,15 +85,20 @@ void PeriodDayEventModel::partitionData()
             continue;
         }
 
-        int bucket = bucketOf(eventDate);
+        const int bucket = bucketOf(eventDate);
         SinkTrace() << "Adding event:" << event->getSummary() << "in bucket #" << bucket;
-        partitionedEvents[bucket].append(event);
+        //Avoid adding events that start in the past
+        if (bucket >= 0) {
+            Q_ASSERT(bucket >= 0 && bucket < partitionedEvents.size());
+            partitionedEvents[bucket].append(event);
+        }
 
         //Also add the event to all other days it spans
-        QDate endDate = event->getEndTime().date();
+        const QDate endDate = event->getEndTime().date();
         if (endDate.isValid()) {
-            const int endBucket = qMin(bucketOf(endDate), periodLength());
+            const int endBucket = qMin(bucketOf(endDate), periodLength() - 1);
             for (int i = bucket + 1; i <= endBucket; i++) {
+                Q_ASSERT(i >= 0 && i < partitionedEvents.size());
                 partitionedEvents[i].append(event);
             }
 
@@ -130,7 +135,7 @@ QModelIndex PeriodDayEventModel::index(int row, int column, const QModelIndex &p
     // Asking for an Event
     auto day = static_cast<int>(parent.row());
 
-    Q_ASSERT(0 <= day && day <= mPeriodLength);
+    Q_ASSERT(0 <= day && day < partitionedEvents.size());
     if (row >= partitionedEvents[day].size()) {
         return {};
     }
@@ -160,7 +165,7 @@ int PeriodDayEventModel::rowCount(const QModelIndex &parent) const
     }
 
     auto day = parent.row();
-
+    Q_ASSERT(0 <= day && day < partitionedEvents.size());
     return partitionedEvents[day].size();
 }
 
@@ -215,6 +220,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
                 auto result = QVariantList{};
 
                 QMap<QTime, int> sorted;
+                Q_ASSERT(0 <= day && day <= partitionedEvents.size());
                 for (int i = 0; i < partitionedEvents[day].size(); ++i) {
                     const auto eventId = index(i, 0, id);
                     sorted.insert(data(eventId, StartTime).toDateTime().time(), i);
@@ -258,6 +264,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
         auto day = id.internalId();
         SinkTrace() << "Fetching data for event on day" << day << "with role"
                     << QMetaEnum::fromType<Roles>().valueToKey(role);
+        Q_ASSERT(0 <= day && day < partitionedEvents.size());
         auto event = partitionedEvents[day].at(id.row());
 
         switch (role) {
