@@ -120,9 +120,15 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setApplicationName("kube");
     app.setApplicationVersion(QString("%1 Branch: %2 Commit: %3").arg(kube_VERSION_STRING).arg(kube_BRANCH).arg(kube_COMMIT));
-    app.setFont(QFont{"Noto Sans", app.font().pointSize(), QFont::Normal});
-
-    qDebug() << "Font size:" << app.font().pointSize();
+    auto fontSize = app.font().pointSize();
+#ifdef Q_OS_UNIX
+    if (qgetenv("QT_QPA_PLATFORMTHEME").isEmpty()) {
+        //The hardcoded default in qgenericunixthemes.cpp of 9 is tiny, so we default to something larger.
+        fontSize = 11;
+    }
+#endif
+    qWarning() << "Font size:" << fontSize;
+    app.setFont(QFont{"Noto Sans", fontSize, QFont::Normal});
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A communication and collaboration client.");
