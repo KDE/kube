@@ -97,6 +97,10 @@ RowLayout {
                     right: parent.right
                 }
                 date: root.currentDate
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: dateSelector.selectedDate = root.currentDate
+                }
             }
         }
 
