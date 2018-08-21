@@ -311,6 +311,7 @@ FocusScope {
                                     anchors {
                                         fill: parent
                                         leftMargin: Kube.Units.smallSpacing
+                                        rightMargin: Kube.Units.smallSpacing
                                     }
                                     text: model.modelData.text
                                     color: Kube.Colors.highlightedTextColor
