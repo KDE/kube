@@ -23,7 +23,7 @@ import QtQuick.Layouts 1.2
 import org.kube.framework 1.0 as Kube
 
 
-RowLayout {
+Kube.View {
     id: root
 
     property date currentDate: new Date()
@@ -34,10 +34,8 @@ RowLayout {
         console.log("Selected date changed", selectedDate)
     }
 
-    Timer {
-        running: autoUpdateDate
-        interval: 2000; repeat: true
-        onTriggered: root.currentDate = new Date()
+    onRefresh: {
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
     }
 
     function getFirstDayOfWeek(date) {
@@ -58,156 +56,161 @@ RowLayout {
     }
 
 
-    StackView.onActivated: {
-        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
-    }
+    RowLayout {
 
-    Rectangle {
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
+        Timer {
+            running: autoUpdateDate
+            interval: 2000; repeat: true
+            onTriggered: root.currentDate = new Date()
         }
-        width: Kube.Units.gridUnit * 10
-        color: Kube.Colors.darkBackgroundColor
 
-        Column {
-            id: topLayout
+        Rectangle {
             anchors {
                 top: parent.top
-                left: parent.left
-                right: parent.right
-                margins: Kube.Units.largeSpacing
-            }
-            spacing: Kube.Units.largeSpacing
-            Kube.PositiveButton {
-                id: newEventButton
-                objectName: "newEventButton"
-
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                focus: true
-                text: qsTr("New Event")
-                onClicked: {}
-            }
-            DateView {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                date: root.currentDate
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: dateSelector.selectedDate = root.currentDate
-                }
-            }
-        }
-
-        ColumnLayout {
-            //Grow from the button but don't go over topLayout
-            anchors {
                 bottom: parent.bottom
-                left: topLayout.left
-                right: parent.right
-                bottomMargin: Kube.Units.largeSpacing
-                rightMargin: Kube.Units.largeSpacing
             }
-            height: Math.min(implicitHeight, parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin)
+            width: Kube.Units.gridUnit * 10
+            color: Kube.Colors.darkBackgroundColor
 
-            spacing: Kube.Units.largeSpacing
-
-            DateSelector {
-                id: dateSelector
+            Column {
+                id: topLayout
                 anchors {
+                    top: parent.top
                     left: parent.left
                     right: parent.right
+                    margins: Kube.Units.largeSpacing
                 }
-                selectedDate: root.selectedDate
-                onSelectedDateChanged: {
-                    root.selectedDate = getFirstDayOfWeek(dateSelector.selectedDate)
-                    selectedDate = root.selectedDate
-                }
-            }
+                spacing: Kube.Units.largeSpacing
+                Kube.PositiveButton {
+                    id: newEventButton
+                    objectName: "newEventButton"
 
-            Kube.ListView {
-                id: listView
-                Layout.fillHeight: true
-                Layout.preferredHeight: contentHeight
-                Layout.minimumHeight: Kube.Units.gridUnit
-                anchors {
-                    left: parent.left
-                    right: parent.right
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    focus: true
+                    text: qsTr("New Event")
+                    onClicked: {}
                 }
-                spacing: Kube.Units.smallSpacing
-                model: Kube.CheckableEntityModel {
-                    id: calendarModel
-                    type: "calendar"
-                    roles: ["name", "color"]
-                }
-                delegate: ItemDelegate {
-                    id: delegate
-                    width: listView.availableWidth
-                    height: Kube.Units.gridUnit
-                    RowLayout {
+                DateView {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    date: root.currentDate
+                    MouseArea {
                         anchors.fill: parent
-                        spacing: Kube.Units.smallSpacing
-                        Kube.CheckBox {
-                            id: checkBox
-                            opacity: 0.9
-                            checked: !model.checked
-                            onCheckedChanged: {
-                                model.checked = !checked
-                            }
+                        onClicked: dateSelector.selectedDate = root.currentDate
+                    }
+                }
+            }
 
-                            indicator: Rectangle {
-                                width: Kube.Units.gridUnit
-                                height: Kube.Units.gridUnit
+            ColumnLayout {
+                //Grow from the button but don't go over topLayout
+                anchors {
+                    bottom: parent.bottom
+                    left: topLayout.left
+                    right: parent.right
+                    bottomMargin: Kube.Units.largeSpacing
+                    rightMargin: Kube.Units.largeSpacing
+                }
+                height: Math.min(implicitHeight, parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin)
 
-                                color: model.color
+                spacing: Kube.Units.largeSpacing
 
-                                Rectangle {
-                                    id: highlight
-                                    anchors.fill: parent
-                                    visible: checkBox.hovered || checkBox.visualFocus
-                                    color: Kube.Colors.highlightColor
-                                    opacity: 0.4
+                DateSelector {
+                    id: dateSelector
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    selectedDate: root.selectedDate
+                    onSelectedDateChanged: {
+                        root.selectedDate = getFirstDayOfWeek(dateSelector.selectedDate)
+                        selectedDate = root.selectedDate
+                    }
+                }
+
+                Kube.ListView {
+                    id: listView
+                    Layout.fillHeight: true
+                    Layout.preferredHeight: contentHeight
+                    Layout.minimumHeight: Kube.Units.gridUnit
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    spacing: Kube.Units.smallSpacing
+                    model: Kube.CheckableEntityModel {
+                        id: calendarModel
+                        type: "calendar"
+                        roles: ["name", "color"]
+                    }
+                    delegate: ItemDelegate {
+                        id: delegate
+                        width: listView.availableWidth
+                        height: Kube.Units.gridUnit
+                        RowLayout {
+                            anchors.fill: parent
+                            spacing: Kube.Units.smallSpacing
+                            Kube.CheckBox {
+                                id: checkBox
+                                opacity: 0.9
+                                checked: !model.checked
+                                onCheckedChanged: {
+                                    model.checked = !checked
                                 }
 
-                                Kube.Icon {
-                                    anchors.centerIn: parent
-                                    height: Kube.Units.gridUnit
+                                indicator: Rectangle {
                                     width: Kube.Units.gridUnit
-                                    visible: checkBox.checked
-                                    iconName: Kube.Icons.checkbox_inverted
-                                }
-                            }
+                                    height: Kube.Units.gridUnit
 
-                        }
-                        Kube.Label {
-                            id: label
-                            Layout.fillWidth: true
-                            text: model.name
-                            color: Kube.Colors.highlightedTextColor
-                            elide: Text.ElideLeft
-                            clip: true
-                        }
-                        ToolTip {
-                            id: toolTipItem
-                            visible: delegate.hovered && label.truncated
-                            text: label.text
+                                    color: model.color
+
+                                    Rectangle {
+                                        id: highlight
+                                        anchors.fill: parent
+                                        visible: checkBox.hovered || checkBox.visualFocus
+                                        color: Kube.Colors.highlightColor
+                                        opacity: 0.4
+                                    }
+
+                                    Kube.Icon {
+                                        anchors.centerIn: parent
+                                        height: Kube.Units.gridUnit
+                                        width: Kube.Units.gridUnit
+                                        visible: checkBox.checked
+                                        iconName: Kube.Icons.checkbox_inverted
+                                    }
+                                }
+
+                            }
+                            Kube.Label {
+                                id: label
+                                Layout.fillWidth: true
+                                text: model.name
+                                color: Kube.Colors.highlightedTextColor
+                                elide: Text.ElideLeft
+                                clip: true
+                            }
+                            ToolTip {
+                                id: toolTipItem
+                                visible: delegate.hovered && label.truncated
+                                text: label.text
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    WeekView {
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        currentDate: root.currentDate
-        startDate: root.selectedDate
-        calendarFilter: calendarModel.checkedEntities
+        WeekView {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            currentDate: root.currentDate
+            startDate: root.selectedDate
+            calendarFilter: calendarModel.checkedEntities
+        }
     }
 }
