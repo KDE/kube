@@ -28,12 +28,23 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
     id: root
     property alias currentAccount: accountFolderview.currentAccount
+    property alias currentFolder: accountFolderview.currentFolder
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
+
     onFilterChanged: {
         mailListView.filter = filter
         Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
+    }
+
+    onRefresh: {
+        if (!!root.currentFolder) {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": root.currentAccount, "type": "folder"})
+        } else {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": root.currentAccount})
+        }
     }
 
     Kube.Listener {

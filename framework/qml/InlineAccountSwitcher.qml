@@ -27,6 +27,8 @@ FocusScope {
         Kube.Fabric.postMessage(Kube.Messages.accountSelection, {accountId: currentAccount});
     }
 
+    property var currentFolder
+
     ColumnLayout {
         id: layout
         anchors.fill: parent
@@ -95,7 +97,8 @@ FocusScope {
                     onActivated: {
                         if (visible) {
                             Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
-                                                                                    "trash": model.data(index, Kube.FolderListModel.Trash)});
+                                                                                    "trash": model.data(index, Kube.FolderListModel.Trash)})
+                            root.currentFolder = model.data(index, Kube.FolderListModel.DomainObject)
                         }
                     }
                 }

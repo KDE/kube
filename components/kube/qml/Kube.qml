@@ -107,12 +107,6 @@ Controls2.ApplicationWindow {
             if (kubeViews.currentItem && kubeViews.currentItem.refresh) {
                 kubeViews.currentItem.refresh()
             }
-            if (!!app.currentFolder) {
-                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder});
-                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount, "type": "folder"})
-            } else {
-                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount})
-            }
         }
     }
     //END Shortcuts
