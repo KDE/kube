@@ -309,11 +309,13 @@ FocusScope {
 
                                 Kube.Label {
                                     anchors {
-                                        left: parent.left
+                                        fill: parent
                                         leftMargin: Kube.Units.smallSpacing
                                     }
                                     text: model.modelData.text
                                     color: Kube.Colors.highlightedTextColor
+                                    wrapMode: Text.Wrap
+                                    elide: Text.ElideRight
                                 }
 
                                 Drag.active: mouseArea.drag.active

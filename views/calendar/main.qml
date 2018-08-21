@@ -53,10 +53,10 @@ ApplicationWindow {
                 events: [
                     {
                         resource: "caldavresource",
-                        summary: "Test Event1",
+                        summary: "Test Event1 with a waaaaaaaay to long summary. Why don't you just use the description you fool!",
                         description: "This is test event #1",
                         starts: "2018-04-10T14:03:00",
-                        ends:   "2018-04-10T17:03:00",
+                        ends:   "2018-04-10T16:03:00",
                     },
                     {
                         resource: "caldavresource",
