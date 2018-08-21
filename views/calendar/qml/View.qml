@@ -151,6 +151,7 @@ Kube.View {
                         id: delegate
                         width: listView.availableWidth
                         height: Kube.Units.gridUnit
+                        hoverEnabled: true
                         RowLayout {
                             anchors.fill: parent
                             spacing: Kube.Units.smallSpacing
