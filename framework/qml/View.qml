@@ -64,10 +64,14 @@ FocusScope {
 
     property bool __aborted: false
 
+    //This signal will be emitted to refresh the views contents. Fetch data in here.
+    signal refresh()
+
     //This signal will be emitted once all initial properties have been set and the view is ready to load
     signal setup()
     StackView.onActivated: {
         root.setup()
+        root.refresh()
     }
 
     StackView.onDeactivated: {
