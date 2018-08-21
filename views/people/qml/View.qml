@@ -22,9 +22,9 @@ import QtQuick 2.7
 import QtQuick.Controls 2.1
 import org.kube.framework 1.0 as Kube
 
-Item {
+Kube.View {
 
-    StackView.onActivated: {
+    onRefresh: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
     }
 

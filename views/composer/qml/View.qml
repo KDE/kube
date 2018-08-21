@@ -52,6 +52,9 @@ Kube.View {
 
     onSetup: {
         loadMessage(root.message, root.loadType)
+    }
+
+    onRefresh: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "mail", "specialPurpose": "drafts"})
         //For autocompletion
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
