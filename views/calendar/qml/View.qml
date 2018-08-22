@@ -193,7 +193,7 @@ Kube.View {
                                 id: label
                                 Layout.fillWidth: true
                                 text: model.name
-                                color: Kube.Colors.highlightColor
+                                color: Kube.Colors.highlightedTextColor
                                 elide: Text.ElideLeft
                                 clip: true
                             }
