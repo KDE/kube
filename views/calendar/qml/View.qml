@@ -148,11 +148,12 @@ Kube.View {
                         roles: ["name", "color"]
                         sortRole: "name"
                     }
-                    delegate: ItemDelegate {
+                    delegate: Kube.ListDelegate {
                         id: delegate
                         width: listView.availableWidth
                         height: Kube.Units.gridUnit
                         hoverEnabled: true
+                        background: Item {}
                         RowLayout {
                             anchors.fill: parent
                             spacing: Kube.Units.smallSpacing
@@ -192,7 +193,7 @@ Kube.View {
                                 id: label
                                 Layout.fillWidth: true
                                 text: model.name
-                                color: Kube.Colors.textColor
+                                color: Kube.Colors.highlightColor
                                 elide: Text.ElideLeft
                                 clip: true
                             }
