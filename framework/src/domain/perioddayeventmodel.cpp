@@ -261,7 +261,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
                 return {};
         }
     } else {
-        auto day = id.internalId();
+        auto day = static_cast<int>(id.internalId());
         SinkTrace() << "Fetching data for event on day" << day << "with role"
                     << QMetaEnum::fromType<Roles>().valueToKey(role);
         Q_ASSERT(0 <= day && day < partitionedEvents.size());
