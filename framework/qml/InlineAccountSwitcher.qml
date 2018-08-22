@@ -47,12 +47,9 @@ FocusScope {
                 property variant currentData: model
                 property bool isCurrent: (model.accountId == root.currentAccount)
 
-                anchors {
-                    left: layout.left
-                    right: layout.right
-                }
                 height: Kube.Units.gridUnit
                 Layout.fillHeight: isCurrent
+                Layout.fillWidth: true
 
                 Kube.TextButton {
                     id: accountButton
