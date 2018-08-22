@@ -35,6 +35,7 @@ class KUBE_EXPORT EntityModel : public QSortFilterProxyModel
     Q_PROPERTY (QString accountId READ accountId WRITE setAccountId)
     Q_PROPERTY (QString type READ type WRITE setType)
     Q_PROPERTY (QStringList roles READ roles WRITE setRoles)
+    Q_PROPERTY (QString sortRole READ sortRole WRITE setSortRole)
     Q_PROPERTY (QVariantMap filter READ filter WRITE setFilter)
 
 public:
@@ -64,6 +65,9 @@ public:
     void setFilter(const QVariantMap &);
     QVariantMap filter() const;
 
+    void setSortRole(const QString &);
+    QString sortRole() const;
+
     Q_INVOKABLE QVariantMap data(int row) const;
 
 private:
@@ -74,6 +78,7 @@ private:
     QHash<QByteArray, int> mRoles;
     QString mAccountId;
     QString mType;
+    QString mSortRole;
 };
 
 

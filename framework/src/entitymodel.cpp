@@ -29,6 +29,7 @@ EntityModel::EntityModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
     sort(0, Qt::AscendingOrder);
+    setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
 EntityModel::~EntityModel()
@@ -124,6 +125,9 @@ void EntityModel::setRoles(const QStringList &roles)
     for (const auto &r : mRoleNames.keys()) {
         mRoles.insert(mRoleNames.value(r), r);
     }
+    if (!mSortRole.isEmpty()) {
+        QSortFilterProxyModel::setSortRole(mRoles.value(mSortRole.toUtf8()));
+    }
     updateQuery();
 }
 
@@ -141,6 +145,19 @@ void EntityModel::setFilter(const QVariantMap &)
 QVariantMap EntityModel::filter() const
 {
     return {};
+}
+
+void EntityModel::setSortRole(const QString &sortRole)
+{
+    mSortRole = sortRole;
+    if (!mRoles.isEmpty()) {
+        QSortFilterProxyModel::setSortRole(mRoles.value(sortRole.toUtf8()));
+    }
+}
+
+QString EntityModel::sortRole() const
+{
+    return mSortRole;
 }
 
 

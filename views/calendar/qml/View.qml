@@ -146,6 +146,7 @@ Kube.View {
                         id: calendarModel
                         type: "calendar"
                         roles: ["name", "color"]
+                        sortRole: "name"
                     }
                     delegate: ItemDelegate {
                         id: delegate
