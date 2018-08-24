@@ -39,9 +39,17 @@ void GmailSettings::save()
     mSmtpServer = "smtps://smtp.gmail.com:587";
     mSmtpUsername = mEmailAddress;
 
+    mCardDavServer = QStringLiteral("https://www.googleapis.com/carddav/v1/principals/") + mEmailAddress + "/";
+    mCardDavUsername = mEmailAddress;
+
+    mCalDavServer = QStringLiteral("https://www.google.com/calendar/dav/") + mEmailAddress + "/";
+    mCalDavUsername = mEmailAddress;
+
     saveAccount();
     saveImapResource();
     saveMailtransportResource();
+    saveCardDavResource();
+    saveCalDavResource();
     saveIdentity();
 }
 

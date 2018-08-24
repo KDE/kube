@@ -25,7 +25,7 @@ import org.kube.accounts.gmail 1.0 as GmailAccount
 Item {
 
     property string accountId
-    property string heading: qsTr("Connect your GMail account")
+    property string heading: qsTr("Connect your Google account")
     property string subheadline: qsTr("To let Kube access your account, fill in email address, username and give the account a title that will be displayed inside Kube.")
     property bool valid: true
     implicitHeight: grid.implicitHeight
@@ -52,7 +52,7 @@ Item {
         rowSpacing: Kube.Units.largeSpacing
 
         Kube.Label {
-            text: "Please note that GMail requires you to configure your account to allow IMAP connections from Kube:
+            text: "Please note that Google requires you to configure your account to allow IMAP connections from Kube:
 <ol type=''>
 <li> See <a href='https://support.google.com/mail/answer/7126229'>https://support.google.com/mail/answer/7126229</a> to configure your account to allow IMAP connections.
 <li> Visit <a href='https://myaccount.google.com/lesssecureapps'>https://myaccount.google.com/lesssecureapps</a> and enable the setting to allow Kube to connect to your account."
