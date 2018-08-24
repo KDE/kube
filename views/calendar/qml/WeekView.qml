@@ -63,6 +63,11 @@ FocusScope {
         }
         return weeknum;
     }
+
+    function roundToDay(date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+    }
+
     Item {
         anchors {
             top: parent.top
@@ -123,7 +128,8 @@ FocusScope {
                     top: parent.top
                     bottom: parent.bottom
                 }
-                width: (root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
+                //if more than 7 days in past, set to 7, otherwise actual number of days in the past
+                width: (new Date(root.startDate.getFullYear(), root.startDate.getMonth(), root.startDate.getDate() + 7) < roundToDay(root.currentDate) ? 7 : root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
                 color: Kube.Colors.buttonColor
                 opacity: 0.2
             }
@@ -244,9 +250,6 @@ FocusScope {
 
                         color: Kube.Colors.viewBackgroundColor
 
-                        function roundToDay(date) {
-                            return new Date(date.getFullYear(), date.getMonth(), date.getDate())
-                        }
                         property bool isInPast: roundToDay(root.currentDate) > roundToDay(dayDelegate.date)
                         property bool isToday: roundToDay(root.currentDate).getTime() == roundToDay(dayDelegate.date).getTime()
 
