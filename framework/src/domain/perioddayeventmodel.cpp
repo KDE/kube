@@ -29,18 +29,27 @@
 #include <QJsonObject>
 #include <QMetaEnum>
 
+#include <KCalCore/ICalFormat>
+#include <KCalCore/OccurrenceIterator>
+#include <KCalCore/MemoryCalendar>
+
 #include <entitycache.h>
 
 PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
     : QAbstractItemModel(parent),
     partitionedEvents(7),
-    mCalendarCache{EntityCache<Calendar, Calendar::Color>::Ptr::create()}
+    mCalendarCache{EntityCache<Calendar, Calendar::Color>::Ptr::create()},
+    mCalendar{new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()}}
 {
+    mRefreshTimer.setSingleShot(true);
+    QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &PeriodDayEventModel::partitionData);
+
     updateQuery();
 }
 
 void PeriodDayEventModel::updateQuery()
 {
+    qWarning() << "Update query";
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Event::Summary>();
@@ -48,6 +57,7 @@ void PeriodDayEventModel::updateQuery()
     query.request<Event::StartTime>();
     query.request<Event::EndTime>();
     query.request<Event::Calendar>();
+    query.request<Event::Ical>();
 
     auto periodEnd = mPeriodStart.addDays(mPeriodLength);
 
@@ -57,14 +67,23 @@ void PeriodDayEventModel::updateQuery()
 
     eventModel = Sink::Store::loadModel<Event>(query);
 
-    QObject::connect(eventModel.data(), &QAbstractItemModel::dataChanged, this, &PeriodDayEventModel::partitionData);
-    QObject::connect(eventModel.data(), &QAbstractItemModel::layoutChanged, this, &PeriodDayEventModel::partitionData);
-    QObject::connect(eventModel.data(), &QAbstractItemModel::modelReset, this, &PeriodDayEventModel::partitionData);
-    QObject::connect(eventModel.data(), &QAbstractItemModel::rowsInserted, this, &PeriodDayEventModel::partitionData);
-    QObject::connect(eventModel.data(), &QAbstractItemModel::rowsMoved, this, &PeriodDayEventModel::partitionData);
-    QObject::connect(eventModel.data(), &QAbstractItemModel::rowsRemoved, this, &PeriodDayEventModel::partitionData);
+    QObject::connect(eventModel.data(), &QAbstractItemModel::dataChanged, this, &PeriodDayEventModel::refreshView);
+    QObject::connect(eventModel.data(), &QAbstractItemModel::layoutChanged, this, &PeriodDayEventModel::refreshView);
+    QObject::connect(eventModel.data(), &QAbstractItemModel::modelReset, this, &PeriodDayEventModel::refreshView);
+    QObject::connect(eventModel.data(), &QAbstractItemModel::rowsInserted, this, &PeriodDayEventModel::refreshView);
+    QObject::connect(eventModel.data(), &QAbstractItemModel::rowsMoved, this, &PeriodDayEventModel::refreshView);
+    QObject::connect(eventModel.data(), &QAbstractItemModel::rowsRemoved, this, &PeriodDayEventModel::refreshView);
 
-    partitionData();
+    refreshView();
+}
+
+void PeriodDayEventModel::refreshView()
+{
+    if (!mRefreshTimer.isActive()) {
+        //Instant update, but then only refresh every 50ms max.
+        partitionData();
+        mRefreshTimer.start(50);
+    }
 }
 
 void PeriodDayEventModel::partitionData()
@@ -75,33 +94,59 @@ void PeriodDayEventModel::partitionData()
 
     for (int i = 0; i < eventModel->rowCount(); ++i) {
         auto event = eventModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<Event::Ptr>();
-        QDate eventDate = event->getStartTime().date();
-
-        if (!eventDate.isValid()) {
-            SinkWarning() << "Invalid date in the eventModel, ignoring...";
-            continue;
-        }
         if (mCalendarFilter.contains(event->getCalendar())) {
             continue;
         }
 
-        const int bucket = bucketOf(eventDate);
-        SinkTrace() << "Adding event:" << event->getSummary() << "in bucket #" << bucket;
-        //Avoid adding events that start in the past
-        if (bucket >= 0) {
-            Q_ASSERT(bucket >= 0 && bucket < partitionedEvents.size());
-            partitionedEvents[bucket].append(event);
+        //Parse the event
+        auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
+        if(!icalEvent) {
+            SinkWarning() << "Invalid ICal to process, ignoring...";
+            continue;
         }
 
-        //Also add the event to all other days it spans
-        const QDate endDate = event->getEndTime().date();
-        if (endDate.isValid()) {
-            const int endBucket = qMin(bucketOf(endDate), periodLength() - 1);
-            for (int i = bucket + 1; i <= endBucket; i++) {
-                Q_ASSERT(i >= 0 && i < partitionedEvents.size());
-                partitionedEvents[i].append(event);
+        auto addEvent = [&] (Event::Ptr event) {
+            const QDate eventDate = event->getStartTime().date();
+            const int bucket = bucketOf(eventDate);
+            SinkLog() << "Adding event:" << event->getSummary() << eventDate << "in bucket #" << bucket;
+            //Only let events part of this view pass
+            if (bucket < 0 || bucket >= partitionedEvents.size()) {
+                return;
             }
+            partitionedEvents[bucket].append(event);
 
+            //Also add the event to all other days it spans
+            const QDate endDate = event->getEndTime().date();
+            if (endDate.isValid()) {
+                const int endBucket = qMin(bucketOf(endDate), periodLength() - 1);
+                for (int i = bucket + 1; i <= endBucket; i++) {
+                    Q_ASSERT(i >= 0 && i < partitionedEvents.size());
+                    partitionedEvents[i].append(event);
+                }
+
+            }
+        };
+
+        addEvent(event);
+
+        if (icalEvent->recurs()) {
+            auto startOfPeriod = icalEvent->dtStart();
+            startOfPeriod.setDate(mPeriodStart);
+            const auto endOfPeriod = startOfPeriod.addDays(mPeriodLength);
+
+            const auto duration = icalEvent->hasDuration() ? icalEvent->duration().asSeconds() : 0;
+
+            KCalCore::OccurrenceIterator occurrenceIterator{*mCalendar, icalEvent, startOfPeriod, endOfPeriod};
+            while (occurrenceIterator.hasNext()) {
+                occurrenceIterator.next();
+                const auto start = occurrenceIterator.occurrenceStartDate();
+                //FIXME don't abuse ApplicationDomainType here
+                Event::Ptr occurrence = Sink::ApplicationDomain::ApplicationDomainType::getInMemoryRepresentation<Event>(*event);
+                occurrence->setExtractedStartTime(start);
+                occurrence->setExtractedEndTime(start.addSecs(duration));
+
+                addEvent(occurrence);
+            }
         }
 
     }
@@ -111,9 +156,7 @@ void PeriodDayEventModel::partitionData()
 
 int PeriodDayEventModel::bucketOf(const QDate &candidate) const
 {
-    int bucket = mPeriodStart.daysTo(candidate);
-
-    return bucket;
+    return mPeriodStart.daysTo(candidate);
 }
 
 QModelIndex PeriodDayEventModel::index(int row, int column, const QModelIndex &parent) const
