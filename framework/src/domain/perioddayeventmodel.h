@@ -27,6 +27,7 @@
 #include <QList>
 #include <QSharedPointer>
 #include <QVector>
+#include <QTimer>
 
 #include <limits>
 
@@ -78,6 +79,9 @@
 //    |                '--- List of event pointers for that day
 //    '--- Partition / day
 //
+namespace KCalCore {
+    class MemoryCalendar;
+}
 
 class EntityCacheInterface;
 class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
@@ -129,6 +133,7 @@ public:
 private:
     void updateQuery();
     void partitionData();
+    void refreshView();
     QByteArray getColor(const QByteArray &calendar) const;
     QDateTime getStartTimeOfDay(const QDateTime &dateTime, int day) const;
     QDateTime getEndTimeOfDay(const QDateTime &dateTime, int day) const;
@@ -142,6 +147,9 @@ private:
     QVector<QList<QSharedPointer<Event>>> partitionedEvents;
     QSharedPointer<EntityCacheInterface> mCalendarCache;
     QSet<QByteArray> mCalendarFilter;
+
+    QSharedPointer<KCalCore::MemoryCalendar> mCalendar;
+    QTimer mRefreshTimer;
 
     static const constexpr quintptr DAY_ID = std::numeric_limits<quintptr>::max();
 };

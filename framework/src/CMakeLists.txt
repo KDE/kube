@@ -74,6 +74,7 @@ target_link_libraries(kubeframework
     Qt5::Gui
     KF5::Codecs
     KF5::Contacts
+    KF5::CalendarCore
     KAsync
 )
 install(TARGETS kubeframework DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
