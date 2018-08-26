@@ -154,7 +154,7 @@ Kube.Popup {
                         PropertyChanges {target: tillTime; visible: false}
                     }
                     ]
-                    state: regular
+                    state: "regular"
 
                     spacing: Kube.Units.smallSpacing
 
