@@ -52,6 +52,7 @@ ADD startimap.sh /home/developer/startimap.sh
 
 
 ADD setupkolabnowtest.sh /home/developer/setupkolabnowtest.sh
+ADD setupgoogletest.sh /home/developer/setupgoogletest.sh
 ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
 ADD initrepositories.sh /home/developer/initrepositories.sh
 
