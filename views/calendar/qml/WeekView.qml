@@ -334,13 +334,6 @@ FocusScope {
                                     hoverEnabled: true
                                     drag.target: parent
 
-                                    onEntered: {
-                                        eventDelegate.z = eventDelegate.z + 100
-                                    }
-                                    onExited: {
-                                        eventDelegate.z = eventDelegate.z - 100
-
-                                    }
                                     onReleased: eventDelegate.Drag.drop()
                                 }
                             }
