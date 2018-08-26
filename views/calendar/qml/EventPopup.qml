@@ -21,48 +21,44 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-Item {
-    id: app
+Kube.Popup {
+    id: popup
 
-    width: 900
-    height: 600
+    Item {
+        id: root
 
-    Kube.Popup {
-        id: popup
+        states: [
+        State {
+            name: "display"
+            PropertyChanges { target: eventDisplay; visible: true }
+            PropertyChanges { target: eventEditor; visible: false }
 
-        x: app.width * 0.05
-        y: app.height * 0.15
+        },
+        State {
+            name: "edit"
+            PropertyChanges { target: eventDisplay; visible: false }
+            PropertyChanges { target: eventEditor; visible: true }
+        },
+        State {
+            name: "new"
+            PropertyChanges { target: eventDisplay; visible: false }
+            PropertyChanges { target: eventEditor; visible: true }
+        }
+        ]
 
-        width: app.width * 0.7
-        height: app.height * 0.7
+        state: "display"
 
+        anchors.fill: parent
 
         Item {
-            id: root
+            id: eventDisplay
+
             anchors.fill: parent
-
-            states: [
-            State {
-                name: "display"
-                PropertyChanges { target: editButton; visible: true }
-                PropertyChanges { target: discardButton; visible: false }
-                PropertyChanges { target: saveButton; visible: false }
-            },
-            State {
-                name: "edit"
-                PropertyChanges { target: editButton; visible: false }
-                PropertyChanges { target: discardButton; visible: true }
-                PropertyChanges { target: saveButton; visible: true }
-            }
-            ]
-
-            state: "display"
 
             Kube.Heading {
                 id: title
                 text: "Event Title"
             }
-
 
             ColumnLayout {
                 anchors {
@@ -71,17 +67,17 @@ Item {
                 }
                 spacing: Kube.Units.smallSpacing
 
-            Kube.Label {
-                text: "15:00 bis 17:30"
-            }
+                Kube.Label {
+                    text: "15:00 bis 17:30"
+                }
 
-            Kube.Label {
-                text: "Location"
-            }
+                Kube.Label {
+                    text: "Location"
+                }
 
-            Kube.Label {
-                text: "Description"
-            }
+                Kube.Label {
+                    text: "Description"
+                }
             }
 
             Kube.Button {
@@ -89,6 +85,76 @@ Item {
                     bottom: parent.bottom
                     left: parent.left
                 }
+
+                text: "Delete"
+                onClicked: {
+                    popup.close()
+                }
+            }
+
+            Kube.Button {
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                }
+
+                text: "Edit"
+                onClicked: {
+                    root.state = "edit"
+                }
+            }
+        }
+
+        Item {
+            id: eventEditor
+
+            anchors.fill: parent
+
+
+            Kube.TextField {
+                id: titleEdit
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                placeholderText: "Event Title"
+            }
+
+            ColumnLayout {
+                anchors {
+                    top: titleEdit.bottom
+                    topMargin: Kube.Units.largeSpacing
+                    left: parent.left
+                    right: parent.right
+                    bottom: buttons.top
+                    bottomMargin: Kube.Units.largeSpacing
+                }
+
+                spacing: Kube.Units.smallSpacing
+
+                Kube.Label {
+                    Layout.fillWidth: true
+                    text: "15:00 bis 17:30"
+                }
+
+                Kube.TextField {
+                    Layout.fillWidth: true
+                    placeholderText: "Location"
+                }
+
+                Kube.TextEditor {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    //TODO placeholderText: "Description"
+                }
+            }
+
+            Kube.Button {
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                }
+
                 text: "Delete"
                 onClicked: {
                     popup.close()
@@ -96,37 +162,31 @@ Item {
             }
 
             RowLayout {
+                id: buttons
+
                 anchors {
                     bottom: parent.bottom
                     right: parent.right
                 }
 
-                Kube.Button {
-                    id: editButton
-                    text: "Edit"
+                spacing: Kube.Units.smallSpacing
 
+                Kube.Button {
+                    text: "Discard Changes"
                     onClicked: {
-                        root.state = "edit"
+                        root.state =  "display"
+                        popup.close()
                     }
                 }
-                Kube.Button {
-                    id: discardButton
-                    text:"Discard Changes"
 
-                    onClicked: {
-                        root.state = "display"
-                    }
-                }
                 Kube.PositiveButton {
-                    id: saveButton
                     text: "Save Changes"
-
                     onClicked: {
                         root.state = "display"
+                        popup.close()
                     }
                 }
             }
         }
-        visible: true
     }
 }

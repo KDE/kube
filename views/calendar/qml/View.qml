@@ -91,7 +91,9 @@ Kube.View {
                     }
                     focus: true
                     text: qsTr("New Event")
-                    onClicked: {}
+                    onClicked: {
+                        eventPopup.open()
+                    }
                 }
                 DateView {
                     anchors {
@@ -215,5 +217,15 @@ Kube.View {
             startDate: root.selectedDate
             calendarFilter: calendarModel.checkedEntities
         }
+    }
+
+    EventPopup {
+        id: eventPopup
+
+        x: root.width * 0.15
+        y: root.height * 0.15
+
+        width: root.width * 0.7
+        height: root.height * 0.7
     }
 }
