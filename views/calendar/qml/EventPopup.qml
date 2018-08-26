@@ -120,42 +120,94 @@ Kube.Popup {
 
             anchors.fill: parent
 
-
-            Kube.TextField {
-                id: titleEdit
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                placeholderText: "Event Title"
-            }
-
             ColumnLayout {
+
                 anchors {
-                    top: titleEdit.bottom
-                    topMargin: Kube.Units.largeSpacing
+                    top: parent.top
                     left: parent.left
                     right: parent.right
                     bottom: buttons.top
                     bottomMargin: Kube.Units.largeSpacing
                 }
 
-                spacing: Kube.Units.smallSpacing
+                spacing: Kube.Units.largeSpacing
 
-                Kube.Label {
-                    Layout.fillWidth: true
-                    text: "15:00 bis 17:30"
-                }
 
                 Kube.TextField {
+                    id: titleEdit
                     Layout.fillWidth: true
-                    placeholderText: "Location"
+                    placeholderText: "Event Title"
                 }
 
-                Kube.TextEditor {
+                ColumnLayout {
+                    id: dateAndTimeChooser
+
+                    states: [
+                    State {
+                        name: "regular"
+                        PropertyChanges {target: fromTime; visible: true}
+                        PropertyChanges {target: tillTime; visible: true}
+                    },
+                    State {
+                        name: "daylong"
+                        PropertyChanges {target: fromTime; visible: false}
+                        PropertyChanges {target: tillTime; visible: false}
+                    }
+                    ]
+                    state: regular
+
+                    spacing: Kube.Units.smallSpacing
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: Kube.Units.largeSpacing
+                        RowLayout {
+                            spacing: Kube.Units.smallSpacing
+
+                            DayChooser {}
+                            TimeChooser {
+                                id: fromTime
+                            }
+                        }
+                        Kube.Label {
+                            text: "till"
+                        }
+                        RowLayout {
+                            spacing: Kube.Units.smallSpacing
+
+                            DayChooser {}
+                            TimeChooser {
+                                id: tillTime
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        spacing: Kube.Units.smallSpacing
+                        Kube.CheckBox {
+                            onClicked: {
+                                checked ? dateAndTimeChooser.state = "daylong" :  dateAndTimeChooser.state = "regular"
+                            }
+                        }
+                        Kube.Label {
+                            text: "daylong"
+                        }
+                    }
+                }
+
+                ColumnLayout {
+                    spacing: Kube.Units.smallSpacing
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    //TODO placeholderText: "Description"
+                    Kube.TextField {
+                        Layout.fillWidth: true
+                        placeholderText: "Location"
+                    }
+
+                    Kube.TextEditor {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        //TODO placeholderText: "Description"
+                    }
                 }
             }
 
