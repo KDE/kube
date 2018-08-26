@@ -38,15 +38,25 @@ Kube.Popup {
             name: "edit"
             PropertyChanges { target: eventDisplay; visible: false }
             PropertyChanges { target: eventEditor; visible: true }
+            PropertyChanges { target: deleteButton; visible: true }
+            PropertyChanges { target: abortButton; visible: false }
+            PropertyChanges { target: saveButton; visible: true }
+            PropertyChanges { target: discardButton; visible: true }
+            PropertyChanges { target: createButton; visible: false }
         },
         State {
             name: "new"
             PropertyChanges { target: eventDisplay; visible: false }
             PropertyChanges { target: eventEditor; visible: true }
+            PropertyChanges { target: deleteButton; visible: false }
+            PropertyChanges { target: abortButton; visible: true }
+            PropertyChanges { target: saveButton; visible: false }
+            PropertyChanges { target: discardButton; visible: false }
+            PropertyChanges { target: createButton; visible: true }
         }
         ]
 
-        state: "display"
+        state: "new"
 
         anchors.fill: parent
 
@@ -149,15 +159,24 @@ Kube.Popup {
                 }
             }
 
-            Kube.Button {
+            RowLayout {
                 anchors {
                     bottom: parent.bottom
                     left: parent.left
                 }
 
-                text: "Delete"
-                onClicked: {
-                    popup.close()
+                Kube.Button {
+                    id: deleteButton
+                    text: "Delete"
+                    onClicked: {
+                    }
+                }
+                Kube.Button {
+                    id: abortButton
+                    text: "Abort"
+                    onClicked: {
+                        popup.close()
+                    }
                 }
             }
 
@@ -172,17 +191,25 @@ Kube.Popup {
                 spacing: Kube.Units.smallSpacing
 
                 Kube.Button {
+                    id: discardButton
                     text: "Discard Changes"
                     onClicked: {
                         root.state =  "display"
-                        popup.close()
                     }
                 }
 
                 Kube.PositiveButton {
+                    id: saveButton
                     text: "Save Changes"
                     onClicked: {
                         root.state = "display"
+                    }
+                }
+
+                Kube.PositiveButton {
+                    id: createButton
+                    text: "Create Event"
+                    onClicked: {
                         popup.close()
                     }
                 }
