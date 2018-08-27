@@ -92,6 +92,9 @@ FocusScope {
                 } else if (event.text == "u") {
                     Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": root.currentMail})
                 }
+                if (event.key == Qt.Key_Home) {
+                    listView.currentIndex = 0
+                }
             }
 
             onCurrentItemChanged: {
