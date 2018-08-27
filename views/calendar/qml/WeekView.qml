@@ -169,11 +169,13 @@ FocusScope {
 
                         Kube.Label {
                             anchors {
-                                left: parent.left
+                                fill: parent
                                 leftMargin: Kube.Units.smallSpacing
+                                rightMargin: Kube.Units.smallSpacing
                             }
                             color: Kube.Colors.highlightedTextColor
                             text: model.modelData.text
+                            elide: Text.ElideRight
                         }
                     }
                 }
