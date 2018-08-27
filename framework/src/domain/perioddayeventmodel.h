@@ -91,6 +91,7 @@ class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
     Q_PROPERTY(QVariant start READ periodStart WRITE setPeriodStart)
     Q_PROPERTY(int length READ periodLength WRITE setPeriodLength)
     Q_PROPERTY(QSet<QByteArray> calendarFilter READ calendarFilter WRITE setCalendarFilter)
+    Q_PROPERTY(QVariantList daylongEvents READ daylongEvents NOTIFY daylongEventsChanged)
 
 public:
     using Event = Sink::ApplicationDomain::Event;
@@ -130,6 +131,11 @@ public:
     QSet<QByteArray> calendarFilter() const;
     void setCalendarFilter(const QSet<QByteArray> &);
 
+    QVariantList daylongEvents();
+
+Q_SIGNALS:
+    void daylongEventsChanged();
+
 private:
     void updateQuery();
     void partitionData();
@@ -145,6 +151,7 @@ private:
 
     QSharedPointer<QAbstractItemModel> eventModel;
     QVector<QList<QSharedPointer<Event>>> partitionedEvents;
+    QList<QSharedPointer<Event>> mAllDayEvents;
     QSharedPointer<EntityCacheInterface> mCalendarCache;
     QSet<QByteArray> mCalendarFilter;
 

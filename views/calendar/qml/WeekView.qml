@@ -132,6 +132,8 @@ FocusScope {
                 width: (new Date(root.startDate.getFullYear(), root.startDate.getMonth(), root.startDate.getDate() + 7) < roundToDay(root.currentDate) ? 7 : root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
                 color: Kube.Colors.buttonColor
                 opacity: 0.2
+                //Avoid showing at all in the future (the width calculation will not work either)
+                visible: roundToDay(root.currentDate) >= roundToDay(root.startDate)
             }
 
             Kube.ListView {
@@ -144,7 +146,9 @@ FocusScope {
 
                 clip: true
 
-                model: Kube.DayLongEventModel {
+                model: eventModel.daylongEvents
+                Kube.PeriodDayEventModel {
+                    id: eventModel
                     start: root.startDate
                     length: root.daysToShow
                     calendarFilter: root.calendarFilter
@@ -155,10 +159,10 @@ FocusScope {
                     width: daylong.width
 
                     Rectangle {
-                        width: root.dayWidth * model.duration
+                        width: root.dayWidth * model.modelData.duration
                         height: parent.height
-                        x: root.dayWidth * model.starts
-                        color: model.color
+                        x: root.dayWidth * model.modelData.starts
+                        color: model.modelData.color
                         radius: 2
                         border.width: 1
                         border.color: Kube.Colors.viewBackgroundColor
@@ -169,7 +173,7 @@ FocusScope {
                                 leftMargin: Kube.Units.smallSpacing
                             }
                             color: Kube.Colors.highlightedTextColor
-                            text: model.summary
+                            text: model.modelData.text
                         }
                     }
                 }

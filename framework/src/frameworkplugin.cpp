@@ -23,7 +23,6 @@
 #include "domain/maillistmodel.h"
 #include "domain/folderlistmodel.h"
 #include "domain/perioddayeventmodel.h"
-#include "domain/daylongeventmodel.h"
 #include "domain/composercontroller.h"
 #include "domain/mime/messageparser.h"
 #include "domain/retriever.h"
@@ -162,7 +161,6 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<FolderListModel>(uri, 1, 0, "FolderListModel");
     qmlRegisterType<MailListModel>(uri, 1, 0, "MailListModel");
     qmlRegisterType<PeriodDayEventModel>(uri, 1, 0, "PeriodDayEventModel");
-    qmlRegisterType<DayLongEventModel>(uri, 1, 0, "DayLongEventModel");
     qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");
     qmlRegisterType<Kube::ControllerAction>(uri, 1, 0, "ControllerAction");
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");

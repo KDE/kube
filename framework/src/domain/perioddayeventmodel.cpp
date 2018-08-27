@@ -58,12 +58,12 @@ void PeriodDayEventModel::updateQuery()
     query.request<Event::EndTime>();
     query.request<Event::Calendar>();
     query.request<Event::Ical>();
+    query.request<Event::AllDay>();
 
     auto periodEnd = mPeriodStart.addDays(mPeriodLength);
 
     query.filter<Event::StartTime, Event::EndTime>(
         Sink::Query::Comparator(QVariantList{mPeriodStart, periodEnd}, Sink::Query::Comparator::Overlap));
-    query.filter<Event::AllDay>(false);
 
     eventModel = Sink::Store::loadModel<Event>(query);
 
@@ -91,6 +91,7 @@ void PeriodDayEventModel::partitionData()
     beginResetModel();
 
     partitionedEvents = QVector<QList<QSharedPointer<Event>>>(mPeriodLength);
+    mAllDayEvents = QList<QSharedPointer<Event>>();
 
     for (int i = 0; i < eventModel->rowCount(); ++i) {
         auto event = eventModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<Event::Ptr>();
@@ -102,6 +103,34 @@ void PeriodDayEventModel::partitionData()
         auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
         if(!icalEvent) {
             SinkWarning() << "Invalid ICal to process, ignoring...";
+            continue;
+        }
+
+        if (event->getAllDay() || icalEvent->allDay()) {
+            if (icalEvent->recurs()) {
+                auto startOfPeriod = icalEvent->dtStart();
+                startOfPeriod.setDate(mPeriodStart);
+                const auto endOfPeriod = startOfPeriod.addDays(mPeriodLength);
+                const auto duration = icalEvent->hasDuration() ? icalEvent->duration().asSeconds() : 0;
+
+                KCalCore::OccurrenceIterator occurrenceIterator{*mCalendar, icalEvent, startOfPeriod, endOfPeriod};
+                while (occurrenceIterator.hasNext()) {
+                    occurrenceIterator.next();
+                    const auto start = occurrenceIterator.occurrenceStartDate();
+                    const auto end = start.addSecs(duration);
+                    //FIXME don't abuse ApplicationDomainType here
+                    Event::Ptr occurrence = Sink::ApplicationDomain::ApplicationDomainType::getInMemoryRepresentation<Event>(*event);
+                    occurrence->setExtractedStartTime(start);
+                    occurrence->setExtractedEndTime(end);
+                    if (start.date() < mPeriodStart.addDays(mPeriodLength) && end.date() >= mPeriodStart) {
+                        mAllDayEvents.append(occurrence);
+                    }
+                }
+            } else {
+                if (icalEvent->dtStart().date() < mPeriodStart.addDays(mPeriodLength) && icalEvent->dtEnd().date() >= mPeriodStart) {
+                    mAllDayEvents.append(event);
+                }
+            }
             continue;
         }
 
@@ -127,7 +156,6 @@ void PeriodDayEventModel::partitionData()
             }
         };
 
-        addEvent(event);
 
         if (icalEvent->recurs()) {
             auto startOfPeriod = icalEvent->dtStart();
@@ -147,11 +175,14 @@ void PeriodDayEventModel::partitionData()
 
                 addEvent(occurrence);
             }
+        } else {
+            addEvent(event);
         }
 
     }
 
     endResetModel();
+    emit daylongEventsChanged();
 }
 
 int PeriodDayEventModel::bucketOf(const QDate &candidate) const
@@ -387,4 +418,19 @@ void PeriodDayEventModel::setCalendarFilter(const QSet<QByteArray> &filter)
 {
     mCalendarFilter = filter;
     updateQuery();
+}
+
+QVariantList PeriodDayEventModel::daylongEvents()
+{
+    auto result = QVariantList{};
+    for (const auto &event : mAllDayEvents) {
+        result.append(QVariantMap{
+            {"text", event->getSummary()},
+            {"description", event->getDescription()},
+            {"starts", qMax(mPeriodStart.daysTo(event->getStartTime().date()), 0ll)},
+            {"duration", qMax(event->getStartTime().date().daysTo(event->getEndTime().date()), 1ll)},
+            {"color", getColor(event->getCalendar())},
+        });
+    }
+    return result;
 }
