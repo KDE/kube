@@ -124,6 +124,7 @@ FocusScope {
             }
 
             Keys.onReturnPressed: treeView.activated(selection.currentIndex)
+            Keys.onSpacePressed: treeView.isExpanded(selection.currentIndex) ? treeView.collapse(selection.currentIndex) : treeView.expand(selection.currentIndex)
 
             //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
             onClicked: treeView.activated(index)
