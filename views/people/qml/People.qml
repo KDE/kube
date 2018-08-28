@@ -54,7 +54,7 @@ FocusScope {
                 visible: stack.depth == 1
 
                 onClicked: {
-                    stack.push(personComposer)
+                    stack.push(personComposer, {contact: null})
                 }
             }
 
@@ -251,7 +251,7 @@ FocusScope {
                 visible: false
 
                 onClicked: {
-                    stack.push(personComposer)
+                    stack.push(personComposer, {contact: root.currentContact})
                 }
             }
         }
@@ -263,12 +263,14 @@ FocusScope {
         Rectangle {
             id: personComposerRoot
 
+            property var contact: null
+
             color: Kube.Colors.viewBackgroundColor
 
             PersonComposer {
                 contactController: Kube.ContactController {
                     id: contactController
-                    contact: root.currentContact
+                    contact: personComposerRoot.contact
                 }
             }
 
