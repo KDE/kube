@@ -955,7 +955,7 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
         if(noSecretKeyAvilable) {
             mError = NoKeyError;
-            mMetaData.errorText = tr("Could not decrypt the data. ") + tr("No key found for recipients.");
+            mMetaData.errorText = tr("Could not decrypt the data. No key found for recipients.");
         } else if (passphraseError) {
             mError = PassphraseError;
             // mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());

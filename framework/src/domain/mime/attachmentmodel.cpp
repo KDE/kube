@@ -197,7 +197,7 @@ bool AttachmentModel::saveAttachmentToDisk(const QModelIndex &index)
     if (path.isEmpty()) {
         return false;
     }
-    Kube::Fabric::Fabric{}.postMessage("notification", {{"message", tr("Saved the attachment to disk: ") + path}});
+    Kube::Fabric::Fabric{}.postMessage("notification", {{"message", tr("Saved the attachment to disk: %1").arg(path)}});
     return true;
 }
 
@@ -231,9 +231,13 @@ bool AttachmentModel::importPublicKey(const QModelIndex &index)
         message = tr("No keys were found in this attachment");
         success = false;
     } else {
-        message = tr("%n Key(s) imported", "", result.imported);
+        //~ singular %n key imported
+        //~ plural %n keys imported
+        message = tr("%n key(s) imported", "", result.imported);
         if(result.unchanged != 0) {
-            message += "\n" + tr("%n Key(s) were already imported", "", result.unchanged);
+            //~ singular %n key was already imported
+            //~ plural %n keys were already imported
+            message += "\n" + tr("%n key(s) were already imported", "", result.unchanged);
         }
     }
 

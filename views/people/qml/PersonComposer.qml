@@ -117,13 +117,13 @@ Flickable {
 
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
-                    placeholderText: qsTr("First Name")
+                    placeholderText: qsTr("First name")
                     backgroundColor: "white"
                 }
 
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
-                    placeholderText: qsTr("Last Name")
+                    placeholderText: qsTr("Last name")
                     backgroundColor: "white"
                 }
             }
@@ -140,7 +140,7 @@ Flickable {
 
                 width: Kube.Units.gridUnit * 20
                 text: contactController.jobTitle
-                placeholderText: qsTr("Job Title")
+                placeholderText: qsTr("Job title")
                 backgroundColor: "white"
             }
 

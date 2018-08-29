@@ -149,7 +149,7 @@ Rectangle {
                     clip: true
 
                     Kube.TextButton {
-                        text: qsTr("Send mail to")
+                        text: qsTr("Send Mail to")
                         onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {"recipients": [root.sender]})
                     }
                 }
@@ -368,7 +368,7 @@ Rectangle {
             }
             activeFocusOnTab: false
 
-            text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
+            text: model.trash ? qsTr("Delete Mail") : qsTr("Move to Trash")
             opacity: 0.5
             onClicked: {
                 if (model.trash) {

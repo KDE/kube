@@ -81,17 +81,17 @@ FocusScope {
             height: Kube.Units.gridUnit
             Kube.Button {
                 focus: true
-                text: qsTr("Delete!")
+                text: qsTr("Delete")
                 onClicked: {
                 }
             }
             Kube.Button {
-                text: qsTr("Reply!")
+                text: qsTr("Reply")
                 onClicked: {
                 }
             }
             Kube.Button {
-                text: qsTr("Flag!")
+                text: qsTr("Flag")
                 onClicked: {
                 }
             }

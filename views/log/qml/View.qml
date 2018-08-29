@@ -289,7 +289,7 @@ Controls1.SplitView {
 
                     Kube.Label {
                         id: subHeadline
-                        text: accountName + ": " + qsTr("Please check your credentials.")
+                        text: qsTr("%1: please check your credentials.").arg(accountName)
                         color: Kube.Colors.disabledTextColor
                         wrapMode: Text.Wrap
                     }
@@ -324,13 +324,13 @@ Controls1.SplitView {
 
                     Kube.Label {
                         id: subHeadline
-                        text: accountName + ": " + qsTr("Please check your network connection and settings.")
+                        text: qsTr("%1: please check your network connection and settings.").arg(accountName)
                         color: Kube.Colors.disabledTextColor
                         wrapMode: Text.Wrap
                     }
                 }
                 Kube.Button {
-                    text: qsTr("Account settings")
+                    text: qsTr("Account Settings")
                     onClicked: {
                         Kube.Fabric.postMessage(Kube.Messages.componentDone, {})
                         Kube.Fabric.postMessage(Kube.Messages.requestAccountsConfiguration, {})
@@ -369,23 +369,23 @@ Controls1.SplitView {
                             id: subHeadline
 
                             Kube.Label {
-                                text: qsTr("Account") + ": " + accountName
+                                text: qsTr("Account: %1").arg(accountName)
                                 color: Kube.Colors.disabledTextColor
                                 wrapMode: Text.Wrap
                             }
                             Kube.Label {
-                                text: qsTr("Subject") + ": " + model.subject
+                                text: qsTr("Subject: %1").arg(model.subject)
                                 color: Kube.Colors.disabledTextColor
                                 wrapMode: Text.Wrap
                             }
                             Kube.Label {
-                                text: qsTr("To") + ": " + model.to
+                                text: qsTr("To: %1").arg(model.to)
                                 color: Kube.Colors.disabledTextColor
                                 wrapMode: Text.Wrap
                             }
                             Kube.Label {
                                 visible: !!model.cc
-                                text: qsTr("Cc") + ": " + model.cc;
+                                text: qsTr("Cc: %1").arg(model.cc)
                                 color: Kube.Colors.disabledTextColor
                                 wrapMode: Text.Wrap
                             }
@@ -395,7 +395,7 @@ Controls1.SplitView {
                 }
 
                 Kube.Button {
-                    text: qsTr("Try again")
+                    text: qsTr("Try Again")
                     onClicked: {
                         Kube.Fabric.postMessage(Kube.Messages.sendOutbox, {})
                     }

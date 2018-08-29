@@ -268,7 +268,7 @@ Kube.View {
                 Layout.fillWidth: true
                 activeFocusOnTab: true
 
-                placeholderText: qsTr("Enter Subject...")
+                placeholderText: qsTr("Enter subject...")
                 text: composerController.subject
                 onTextChanged: composerController.subject = text;
                 onActiveFocusChanged: {
@@ -304,7 +304,7 @@ Kube.View {
 
                 Kube.Switch {
                     id: html
-                    text: checked ? qsTr("plain") : qsTr("html")
+                    text: checked ? qsTr("plain") : qsTr("HTML")
                     focusPolicy: Qt.TabFocus
                     focus: false
                     checked: false
@@ -349,7 +349,7 @@ Kube.View {
                 }
 
                 Kube.Button {
-                    text: qsTr("Attach file")
+                    text: qsTr("Attach File")
 
                     onClicked: {
                         fileDialogComponent.createObject(parent)
@@ -427,7 +427,7 @@ Kube.View {
                 Layout.fillHeight: true
 
                 Kube.Label {
-                    text: qsTr("Sending Email to:")
+                    text: qsTr("Sending email to:")
                 }
 
                 AddresseeListEditor {
@@ -441,7 +441,7 @@ Kube.View {
                 }
 
                 Kube.Label {
-                    text: qsTr("Sending Copy to (CC):")
+                    text: qsTr("Sending copy to (CC):")
                 }
                 AddresseeListEditor {
                     id: cc
@@ -454,7 +454,7 @@ Kube.View {
                 }
 
                 Kube.Label {
-                    text: qsTr("Sending Secret Copy to (Bcc):")
+                    text: qsTr("Sending secret copy to (Bcc):")
                 }
                 AddresseeListEditor {
                     id: bcc
