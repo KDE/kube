@@ -391,7 +391,7 @@ Kube.View {
         }
     }
 
-    //Recepients
+    //Recipients
     FocusScope {
         id: recipients
         anchors {

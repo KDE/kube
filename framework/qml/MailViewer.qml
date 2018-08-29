@@ -102,7 +102,7 @@ Rectangle {
             id: date_label
 
             anchors {
-                right: seperator.right
+                right: separator.right
                 top: parent.top
             }
 
@@ -225,8 +225,8 @@ Rectangle {
         Rectangle {
             id: goDown
             anchors {
-                bottom: seperator.top
-                right: seperator.right
+                bottom: separator.top
+                right: separator.right
             }
 
             //Only show the expand button if there is something to expand
@@ -250,7 +250,7 @@ Rectangle {
         }
 
         Rectangle {
-            id: seperator
+            id: separator
 
             anchors {
                 left: parent.left
