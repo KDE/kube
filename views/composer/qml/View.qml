@@ -441,7 +441,7 @@ Kube.View {
                 }
 
                 Kube.Label {
-                    text: qsTr("Sending copy to (CC):")
+                    text: qsTr("Sending copy to (Cc):")
                 }
                 AddresseeListEditor {
                     id: cc

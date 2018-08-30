@@ -98,7 +98,7 @@ Item {
         }
 
         Kube.Label {
-            text: qsTr("Smtp address")
+            text: qsTr("SMTP address")
             Layout.alignment: Qt.AlignRight
         }
         Kube.RequiredTextField {

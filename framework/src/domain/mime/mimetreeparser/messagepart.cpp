@@ -955,13 +955,13 @@ bool EncryptedMessagePart::okDecryptMIME(KMime::Content &data)
 
         if(noSecretKeyAvilable) {
             mError = NoKeyError;
-            mMetaData.errorText = tr("Could not decrypt the data. No key found for recipients.");
+            mMetaData.errorText = tr("Could not decrypt the data: no key found for recipients.");
         } else if (passphraseError) {
             mError = PassphraseError;
             // mMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
         } else {
             mError = UnknownError;
-            mMetaData.errorText = tr("Could not decrypt the data. ");
+            mMetaData.errorText = tr("Could not decrypt the data.");
             //                         + tr("Error: %1").arg(QString::fromLocal8Bit(decryptResult.error().asString()));
         }
         return false;

@@ -346,7 +346,7 @@ Rectangle {
             },
             State {
                 name: "error"; when: model.status == Kube.MailListModel.ErrorStatus
-                PropertyChanges { target: incompleteBody; text: qsTr("Failed to download message...") }
+                PropertyChanges { target: incompleteBody; text: qsTr("Failed to download message") }
             }
         ]
     }
