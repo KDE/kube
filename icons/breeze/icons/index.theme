@@ -1,7 +1,21 @@
 [Icon Theme]
 Name=Kube
+Name[ca]=Kube
+Name[ca@valencia]=Kube
+Name[nl]=Kube
+Name[pt]=Kube
+Name[sv]=Kube
+Name[uk]=Kube
+Name[x-test]=xxKubexx
 
 Comment=Kube Theme
+Comment[ca]=Tema del Kube
+Comment[ca@valencia]=Tema del Kube
+Comment[nl]=Kube-thema
+Comment[pt]=Tema do Kube
+Comment[sv]=Kube tema
+Comment[uk]=Тема Kube
+Comment[x-test]=xxKube Themexx
 
 DisplayDepth=32
 
