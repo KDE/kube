@@ -68,6 +68,13 @@ FocusScope {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     }
 
+    Kube.PeriodDayEventModel {
+        id: eventModel
+        start: root.startDate
+        length: root.daysToShow
+        calendarFilter: root.calendarFilter
+    }
+
     Item {
         anchors {
             top: parent.top
@@ -133,12 +140,6 @@ FocusScope {
                 opacity: 0.2
                 //Avoid showing at all in the future (the width calculation will not work either)
                 visible: roundToDay(root.currentDate) >= roundToDay(root.startDate)
-            }
-            Kube.PeriodDayEventModel {
-                id: eventModel
-                start: root.startDate
-                length: root.daysToShow
-                calendarFilter: root.calendarFilter
             }
 
             Column {
@@ -243,11 +244,7 @@ FocusScope {
                 //END time labels
 
                 Repeater {
-                    model: Kube.PeriodDayEventModel {
-                        start: root.startDate
-                        length: root.daysToShow
-                        calendarFilter: root.calendarFilter
-                    }
+                    model: eventModel
                     delegate: Rectangle {
                         id: dayDelegate
 
