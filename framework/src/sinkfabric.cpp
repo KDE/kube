@@ -73,7 +73,7 @@ public:
                     //FIXME this should work with either string or bytearray, but is apparently very picky
                     scope.resourceFilter<SinkResource::Account>(accountId.toLatin1());
                 }
-                scope.setType(type);
+                scope.setType(type.toUtf8());
                 SinkLog() << "Synchronizing... AccountId: " << accountId << " Type: " << scope.type();
                 Store::synchronize(scope).exec();
             }
