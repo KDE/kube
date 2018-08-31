@@ -25,7 +25,8 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
 
     onRefresh: {
-        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contacts"})
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "addressbook"})
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "contact"})
     }
 
     People {

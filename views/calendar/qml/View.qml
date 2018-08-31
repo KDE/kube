@@ -35,6 +35,7 @@ Kube.View {
     }
 
     onRefresh: {
+        Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "calendar"})
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
     }
 

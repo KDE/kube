@@ -66,27 +66,14 @@ public:
                         }).exec();
                 }
             } else {
-                auto accountId = message["accountId"].value<QString>();
-                auto type = message["type"].value<QString>();
+                const auto accountId = message["accountId"].value<QString>();
+                const auto type = message["type"].value<QString>();
                 SyncScope scope;
                 if (!accountId.isEmpty()) {
                     //FIXME this should work with either string or bytearray, but is apparently very picky
                     scope.resourceFilter<SinkResource::Account>(accountId.toLatin1());
                 }
-                if (type == "contacts") {
-                    scope.setType<ApplicationDomain::Contact>();
-                } else if (type == "event") {
-                    scope.setType<ApplicationDomain::Event>();
-                } else if (type == "calendar") {
-                    scope.setType<ApplicationDomain::Calendar>();
-                } else if (type == "mail") {
-                    scope.setType<ApplicationDomain::Mail>();
-                } else if (type == "folder") {
-                    scope.setType<ApplicationDomain::Folder>();
-                } else {
-                    //Only synchronize folders by default for now
-                    scope.setType<ApplicationDomain::Folder>();
-                }
+                scope.setType(type);
                 SinkLog() << "Synchronizing... AccountId: " << accountId << " Type: " << scope.type();
                 Store::synchronize(scope).exec();
             }
