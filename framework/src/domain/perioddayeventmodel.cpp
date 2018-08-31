@@ -293,7 +293,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
             case Events: {
                 auto result = QVariantList{};
 
-                QMap<QTime, int> sorted;
+                QMultiMap<QTime, int> sorted;
                 Q_ASSERT(0 <= day && day <= partitionedEvents.size());
                 for (int i = 0; i < partitionedEvents[day].size(); ++i) {
                     const auto eventId = index(i, 0, id);
