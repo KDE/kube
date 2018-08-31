@@ -117,9 +117,8 @@ FocusScope {
             border.color: Kube.Colors.buttonColor
 
             //+2 to compensate for borders
-            height: fullDayListView.contentHeight + 2
-
-            visible: fullDayListView.count
+            height: linesRepeater.count * Kube.Units.gridUnit + 2
+            visible: linesRepeater.count
 
             //Dimm days in the past
             Rectangle {
@@ -135,47 +134,53 @@ FocusScope {
                 //Avoid showing at all in the future (the width calculation will not work either)
                 visible: roundToDay(root.currentDate) >= roundToDay(root.startDate)
             }
+            Kube.PeriodDayEventModel {
+                id: eventModel
+                start: root.startDate
+                length: root.daysToShow
+                calendarFilter: root.calendarFilter
+            }
 
-            Kube.ListView {
+            Column {
                 id: fullDayListView
-
                 anchors {
                     fill: parent
                     margins: 1
                 }
+                //Lines
+                Repeater {
+                    id: linesRepeater
+                    model: eventModel.daylongEvents
+                    Item {
+                        id: line
+                        height: Kube.Units.gridUnit
+                        width: parent.width
+                        //Events
+                        Repeater {
+                            id: eventsRepeater
+                            model: modelData
+                            Rectangle {
+                                x: root.dayWidth * modelData.starts
+                                y: 0
+                                width: root.dayWidth * modelData.duration
+                                height: parent.height
 
-                clip: true
+                                color: modelData.color
+                                radius: 2
+                                border.width: 1
+                                border.color: Kube.Colors.viewBackgroundColor
 
-                model: eventModel.daylongEvents
-                Kube.PeriodDayEventModel {
-                    id: eventModel
-                    start: root.startDate
-                    length: root.daysToShow
-                    calendarFilter: root.calendarFilter
-                }
-
-                delegate: Item {
-                    height: Kube.Units.gridUnit + 2 // +2 to make good for the white border
-                    width: daylong.width
-
-                    Rectangle {
-                        width: root.dayWidth * model.modelData.duration
-                        height: parent.height
-                        x: root.dayWidth * model.modelData.starts
-                        color: model.modelData.color
-                        radius: 2
-                        border.width: 1
-                        border.color: Kube.Colors.viewBackgroundColor
-
-                        Kube.Label {
-                            anchors {
-                                fill: parent
-                                leftMargin: Kube.Units.smallSpacing
-                                rightMargin: Kube.Units.smallSpacing
+                                Kube.Label {
+                                    anchors {
+                                        fill: parent
+                                        leftMargin: Kube.Units.smallSpacing
+                                        rightMargin: Kube.Units.smallSpacing
+                                    }
+                                    color: Kube.Colors.highlightedTextColor
+                                    text: modelData.text
+                                    elide: Text.ElideRight
+                                }
                             }
-                            color: Kube.Colors.highlightedTextColor
-                            text: model.modelData.text
-                            elide: Text.ElideRight
                         }
                     }
                 }

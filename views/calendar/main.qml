@@ -53,6 +53,21 @@ ApplicationWindow {
                 events: [
                     {
                         resource: "caldavresource",
+                        summary: "Short event1!",
+                        starts: "2018-04-09T14:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event2!",
+                        starts: "2018-04-09T14:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event3!",
+                        starts: "2018-04-09T14:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
                         summary: "Test Event1 with a waaaaaaaay to long summary. Why don't you just use the description you fool!",
                         description: "This is test event #1",
                         starts: "2018-04-10T14:03:00",
@@ -133,6 +148,13 @@ ApplicationWindow {
                         description: "!!! This is test day-long event #6",
                         starts: "2018-04-23T00:00:00",
                         ends:   "2018-04-25T00:00:00",
+                        allDay: true,
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Test day-long event7",
+                        description: "This is test day-long event #7",
+                        starts: "2018-04-12",
                         allDay: true,
                     },
                 ],

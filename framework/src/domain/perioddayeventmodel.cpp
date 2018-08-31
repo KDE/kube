@@ -306,6 +306,11 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
                     SinkTrace() << "Appending event:" << data(eventId, Summary);
 
                     const auto startTime = data(eventId, StartTime).toDateTime().time();
+                    auto endTime = data(eventId, EndTime).toDateTime().time();
+                    if (!endTime.isValid()) {
+                        //Even without duration we still take some space visually
+                        endTime = startTime.addSecs(60 * 20);
+                    }
 
                     //Remove all dates before startTime
                     for (auto it = indentationStack.begin(); it != indentationStack.end();) {
@@ -316,7 +321,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &id, int role) const
                         }
                     }
                     const int indentation = indentationStack.size();
-                    indentationStack.insert(data(eventId, EndTime).toDateTime().time(), 0);
+                    indentationStack.insert(endTime, 0);
 
                     result.append(QVariantMap{
                         {"text", data(eventId, Summary)},
@@ -420,17 +425,62 @@ void PeriodDayEventModel::setCalendarFilter(const QSet<QByteArray> &filter)
     updateQuery();
 }
 
+/*
+ * We return a list of lists,
+ * where the first list is the number of lines,
+ * and the contained list the events of that line.
+ *
+ * We try to merge multiple events into single lines if they don't overlap.
+ */
 QVariantList PeriodDayEventModel::daylongEvents()
 {
-    auto result = QVariantList{};
+    auto getStart = [this] (const Event &event) {
+        return qMax(mPeriodStart.daysTo(event.getStartTime().date()), 0ll);
+    };
+
+    auto getDuration = [] (const Event &event) {
+        return qMax(event.getStartTime().date().daysTo(event.getEndTime().date()), 1ll);
+    };
+
+    QMultiMap<int, Event::Ptr> sorted;
+    //Sort by duration
     for (const auto &event : mAllDayEvents) {
-        result.append(QVariantMap{
+        sorted.insert(getDuration(*event), event);
+    }
+
+    auto result = QVariantList{};
+    auto currentLine = QVariantList{};
+    int lastStart = -1;
+    int lastDuration = 0;
+    for (const auto &event : sorted) {
+        const auto start = getStart(*event);
+        const auto duration = qMin(getDuration(*event), mPeriodLength - start);
+        const auto end = start + duration;
+        currentLine.append(QVariantMap{
             {"text", event->getSummary()},
             {"description", event->getDescription()},
-            {"starts", qMax(mPeriodStart.daysTo(event->getStartTime().date()), 0ll)},
-            {"duration", qMax(event->getStartTime().date().daysTo(event->getEndTime().date()), 1ll)},
+            {"starts", start},
+            {"duration", duration},
             {"color", getColor(event->getCalendar())},
         });
+
+        if (lastStart >= 0) {
+            const auto lastEnd = lastStart + lastDuration;
+
+            //Does intersect
+            if (((start >= lastStart) && (start <= lastEnd)) ||
+                ((end >= lastStart) && (end <= lastStart)) ||
+                ((start <= lastStart) && (end >= lastEnd))) {
+                result.append(QVariant::fromValue(currentLine));
+                currentLine = {};
+            }
+        }
+        lastStart = start;
+        lastDuration = duration;
     }
+    if (!currentLine.isEmpty()) {
+        result.append(QVariant::fromValue(currentLine));
+    }
+
     return result;
 }
