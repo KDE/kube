@@ -95,7 +95,7 @@ void PeriodDayEventModel::partitionData()
 
     for (int i = 0; i < eventModel->rowCount(); ++i) {
         auto event = eventModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<Event::Ptr>();
-        if (mCalendarFilter.contains(event->getCalendar())) {
+        if (!mCalendarFilter.contains(event->getCalendar())) {
             continue;
         }
 

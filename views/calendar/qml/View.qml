@@ -147,7 +147,7 @@ Kube.View {
                     model: Kube.CheckableEntityModel {
                         id: calendarModel
                         type: "calendar"
-                        roles: ["name", "color"]
+                        roles: ["name", "color", "enabled"]
                         sortRole: "name"
                     }
                     delegate: Kube.ListDelegate {
@@ -162,9 +162,10 @@ Kube.View {
                             Kube.CheckBox {
                                 id: checkBox
                                 opacity: 0.9
-                                checked: !model.checked
+                                checked: model.checked || model.enabled
                                 onCheckedChanged: {
-                                    model.checked = !checked
+                                    model.checked = checked
+                                    model.enabled = checked
                                 }
 
                                 indicator: Rectangle {
