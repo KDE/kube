@@ -186,7 +186,10 @@ bool EntityModel::setData(const QModelIndex &index, const QVariant &value, int r
     Sink::ApplicationDomain::Calendar modifiedEntity{*entity};
     const auto propertyName = mRoleNames.value(role);
     modifiedEntity.setProperty(propertyName, value.toBool());
-    Sink::Store::modify(modifiedEntity).exec();
+    //Ignore if we didn't modify anything.
+    if (!modifiedEntity.changedProperties().isEmpty()) {
+        Sink::Store::modify(modifiedEntity).exec();
+    }
     return true;
 }
 
