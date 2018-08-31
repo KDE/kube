@@ -25,6 +25,12 @@
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
 
+enum Roles {
+    IdRole = Qt::UserRole + 1,
+    ObjectRole,
+    LastRole
+};
+
 EntityModel::EntityModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
@@ -115,9 +121,9 @@ QString EntityModel::type() const
 void EntityModel::setRoles(const QStringList &roles)
 {
     mRoleNames.clear();
-    int role = Qt::UserRole + 1;
-    mRoleNames.insert(role++, "identifier");
-    mRoleNames.insert(role++, "object");
+    mRoleNames.insert(IdRole, "identifier");
+    mRoleNames.insert(ObjectRole, "object");
+    int role = LastRole;
     for (int i = 0; i < roles.size(); i++) {
         mRoleNames.insert(role++, roles.at(i).toLatin1());
     }
@@ -170,6 +176,20 @@ QVariantMap EntityModel::data(int row) const
     return map;
 }
 
+bool EntityModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!mRoleNames.contains(role)) {
+        return false;
+    }
+    const auto entity = EntityModel::data(index, ObjectRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
+    //FIXME hardcoding calendar is not a great idea here.
+    Sink::ApplicationDomain::Calendar modifiedEntity{*entity};
+    const auto propertyName = mRoleNames.value(role);
+    modifiedEntity.setProperty(propertyName, value.toBool());
+    Sink::Store::modify(modifiedEntity).exec();
+    return true;
+}
+
 
 CheckableEntityModel::CheckableEntityModel(QObject *parent) : EntityModel(parent)
 {
@@ -190,8 +210,7 @@ QHash<int, QByteArray > CheckableEntityModel::roleNames() const
 QVariant CheckableEntityModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::CheckStateRole) {
-        const auto identifier = EntityModel::data(index, Qt::UserRole + 1).toByteArray();
-        return mCheckedEntities.contains(identifier);
+        return mCheckedEntities.contains(EntityModel::data(index, IdRole).toByteArray());
     }
     return EntityModel::data(index, role);
 }
@@ -199,13 +218,14 @@ QVariant CheckableEntityModel::data(const QModelIndex &index, int role) const
 bool CheckableEntityModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == Qt::CheckStateRole) {
-        const auto identifier = EntityModel::data(index, Qt::UserRole + 1).toByteArray();
+        auto identifier = EntityModel::data(index, IdRole).toByteArray();
         if (value.toBool()) {
             mCheckedEntities.insert(identifier);
         } else {
             mCheckedEntities.remove(identifier);
         }
         emit checkedEntitiesChanged();
+        return true;
     }
     return EntityModel::setData(index, value, role);
 }
