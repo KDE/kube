@@ -137,7 +137,7 @@ void PeriodDayEventModel::partitionData()
         auto addEvent = [&] (Event::Ptr event) {
             const QDate eventDate = event->getStartTime().date();
             const int bucket = bucketOf(eventDate);
-            SinkLog() << "Adding event:" << event->getSummary() << eventDate << "in bucket #" << bucket;
+            SinkTrace() << "Adding event:" << event->getSummary() << eventDate << "in bucket #" << bucket;
             //Only let events part of this view pass
             if (bucket < 0 || bucket >= partitionedEvents.size()) {
                 return;
