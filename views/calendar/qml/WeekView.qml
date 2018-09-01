@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2018 Michael Bohlender, <bohlender@kolabsys.com>
+ *  Copyright (C) 2018 Christian Mollekopf, <mollekopf@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -68,13 +69,6 @@ FocusScope {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     }
 
-    Kube.PeriodDayEventModel {
-        id: eventModel
-        start: root.startDate
-        length: root.daysToShow
-        calendarFilter: root.calendarFilter
-    }
-
     Item {
         anchors {
             top: parent.top
@@ -109,85 +103,18 @@ FocusScope {
             daysToShow: root.daysToShow
         }
 
-        //BEGIN daylong events
-        Rectangle {
+        MultiDayView {
             id: daylong
-
             anchors {
                 top: dayLabels.bottom
                 right: parent.right
             }
-
-            width: root.dayWidth * root.daysToShow
-            color: Kube.Colors.viewBackgroundColor
-            border.width: 1
-            border.color: Kube.Colors.buttonColor
-
-            //+2 to compensate for borders
-            height: linesRepeater.count * Kube.Units.gridUnit + 2
-            visible: linesRepeater.count
-
-            //Dimm days in the past
-            Rectangle {
-                anchors {
-                    left: parent.left
-                    top: parent.top
-                    bottom: parent.bottom
-                }
-                //if more than 7 days in past, set to 7, otherwise actual number of days in the past
-                width: (new Date(root.startDate.getFullYear(), root.startDate.getMonth(), root.startDate.getDate() + 7) < roundToDay(root.currentDate) ? 7 : root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
-                color: Kube.Colors.buttonColor
-                opacity: 0.2
-                //Avoid showing at all in the future (the width calculation will not work either)
-                visible: roundToDay(root.currentDate) >= roundToDay(root.startDate)
-            }
-
-            Column {
-                id: fullDayListView
-                anchors {
-                    fill: parent
-                    margins: 1
-                }
-                //Lines
-                Repeater {
-                    id: linesRepeater
-                    model: eventModel.daylongEvents
-                    Item {
-                        id: line
-                        height: Kube.Units.gridUnit
-                        width: parent.width
-                        //Events
-                        Repeater {
-                            id: eventsRepeater
-                            model: modelData
-                            Rectangle {
-                                x: root.dayWidth * modelData.starts
-                                y: 0
-                                width: root.dayWidth * modelData.duration
-                                height: parent.height
-
-                                color: modelData.color
-                                radius: 2
-                                border.width: 1
-                                border.color: Kube.Colors.viewBackgroundColor
-
-                                Kube.Label {
-                                    anchors {
-                                        fill: parent
-                                        leftMargin: Kube.Units.smallSpacing
-                                        rightMargin: Kube.Units.smallSpacing
-                                    }
-                                    color: Kube.Colors.highlightedTextColor
-                                    text: modelData.text
-                                    elide: Text.ElideRight
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            dayWidth: root.dayWidth
+            daysToShow: root.daysToShow
+            currentDate: root.currentDate
+            startDate: root.startDate
+            calendarFilter: root.calendarFilter
         }
-        //END daylong events
 
         Flickable {
             id: mainWeekViewer
@@ -244,12 +171,15 @@ FocusScope {
                 //END time labels
 
                 Repeater {
-                    model: eventModel
+                    model: Kube.PeriodDayEventModel {
+                        model: Kube.EventModel {
+                            start: root.startDate
+                            length: root.daysToShow
+                            calendarFilter: root.calendarFilter
+                        }
+                    }
                     delegate: Rectangle {
                         id: dayDelegate
-
-                        property var events: model.events
-                        property var date: model.date
 
                         width: root.dayWidth
                         height: root.hourHeight * 24
@@ -258,8 +188,8 @@ FocusScope {
 
                         color: Kube.Colors.viewBackgroundColor
 
-                        property bool isInPast: roundToDay(root.currentDate) > roundToDay(dayDelegate.date)
-                        property bool isToday: roundToDay(root.currentDate).getTime() == roundToDay(dayDelegate.date).getTime()
+                        property bool isInPast: roundToDay(root.currentDate) > roundToDay(date)
+                        property bool isToday: roundToDay(root.currentDate).getTime() == roundToDay(date).getTime()
 
                         //Dimm days in the past
                         Rectangle {
@@ -285,7 +215,7 @@ FocusScope {
                         }
 
                         Repeater {
-                            model: parent.events
+                            model: events
 
                             delegate: Rectangle {
                                 id: eventDelegate

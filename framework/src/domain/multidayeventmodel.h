@@ -23,22 +23,33 @@
 #include "kube_export.h"
 
 #include <QAbstractItemModel>
-#include <QSharedPointer>
-#include <QDate>
-#include <QVariant>
+#include <QList>
 #include <QSet>
-#include <limits>
+#include <QSharedPointer>
+#include <QTimer>
+#include <QDateTime>
 #include "eventmodel.h"
 
-class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
+namespace KCalCore {
+    class MemoryCalendar;
+    class Incidence;
+}
+class EntityCacheInterface;
+
+/**
+ * Each toplevel index represents a week.
+ * The "events" roles provides a list of lists, where each list represents a visual line,
+ * containing a number of events to display.
+ */
+class KUBE_EXPORT MultiDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
 
     Q_PROPERTY(EventModel* model WRITE setModel)
 
 public:
-    PeriodDayEventModel(QObject *parent = nullptr);
-    ~PeriodDayEventModel() = default;
+    MultiDayEventModel(QObject *parent = nullptr);
+    ~MultiDayEventModel() = default;
 
     QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
     QModelIndex parent(const QModelIndex &index) const override;
@@ -51,12 +62,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void setModel(EventModel *model);
-
 private:
-    QDateTime getStartTimeOfDay(const QDateTime &dateTime, const QDate &today) const;
-    QDateTime getEndTimeOfDay(const QDateTime &dateTime, const QDate &today) const;
-
     EventModel *mSourceModel{nullptr};
-
-    static const constexpr quintptr DAY_ID = std::numeric_limits<quintptr>::max();
+    int mPeriodLength{7};
 };

@@ -22,3 +22,12 @@ target_link_libraries(maillistmodeltest
     Qt5::Gui
     kubeframework
 )
+
+add_executable(eventmodeltest eventmodeltest.cpp)
+add_test(eventmodeltest eventmodeltest)
+target_link_libraries(eventmodeltest
+    Qt5::Core
+    Qt5::Test
+    Qt5::Gui
+    kubeframework
+)
