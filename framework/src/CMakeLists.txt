@@ -20,6 +20,7 @@ add_library(kubeframework SHARED
     domain/maillistmodel.cpp
     domain/folderlistmodel.cpp
     domain/perioddayeventmodel.cpp
+    domain/eventmodel.cpp
     domain/composercontroller.cpp
     domain/modeltest.cpp
     domain/retriever.cpp
