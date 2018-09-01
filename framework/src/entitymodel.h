@@ -71,6 +71,9 @@ public:
 
     Q_INVOKABLE QVariantMap data(int row) const;
 
+protected:
+    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
+
 private:
     void runQuery(const Sink::Query &query);
     void updateQuery();

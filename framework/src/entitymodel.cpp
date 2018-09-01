@@ -34,8 +34,8 @@ enum Roles {
 EntityModel::EntityModel(QObject *parent) : QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
-    sort(0, Qt::AscendingOrder);
     setFilterCaseSensitivity(Qt::CaseInsensitive);
+    setSortCaseSensitivity(Qt::CaseInsensitive);
 }
 
 EntityModel::~EntityModel()
@@ -61,6 +61,15 @@ QVariant EntityModel::data(const QModelIndex &idx, int role) const
     } else {
         return entity->getProperty(roleName);
     }
+}
+
+bool EntityModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
+{
+    auto left = sourceLeft.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
+    auto right = sourceRight.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
+    const auto leftProperty =  left->getProperty(mSortRole.toUtf8()).toString();
+    const auto rightProperty =  right->getProperty(mSortRole.toUtf8()).toString();
+    return leftProperty < rightProperty;
 }
 
 void EntityModel::runQuery(const Query &query)
@@ -131,9 +140,6 @@ void EntityModel::setRoles(const QStringList &roles)
     for (const auto &r : mRoleNames.keys()) {
         mRoles.insert(mRoleNames.value(r), r);
     }
-    if (!mSortRole.isEmpty()) {
-        QSortFilterProxyModel::setSortRole(mRoles.value(mSortRole.toUtf8()));
-    }
     updateQuery();
 }
 
@@ -156,9 +162,7 @@ QVariantMap EntityModel::filter() const
 void EntityModel::setSortRole(const QString &sortRole)
 {
     mSortRole = sortRole;
-    if (!mRoles.isEmpty()) {
-        QSortFilterProxyModel::setSortRole(mRoles.value(sortRole.toUtf8()));
-    }
+    sort(0, Qt::AscendingOrder);
 }
 
 QString EntityModel::sortRole() const
