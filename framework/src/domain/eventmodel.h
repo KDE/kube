@@ -44,7 +44,8 @@ public:
         Description,
         StartTime,
         EndTime,
-        Color
+        Color,
+        AllDay
     };
     Q_ENUM(Roles);
     EventModel(QObject *parent = nullptr);
@@ -81,6 +82,7 @@ private:
         QDateTime end;
         QSharedPointer<KCalCore::Incidence> incidence;
         QByteArray color;
+        bool allDay;
     };
 
     QList<Occurrence> mEvents;

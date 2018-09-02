@@ -112,12 +112,12 @@ void EventModel::updateFromSource()
                 const auto start = occurrenceIterator.occurrenceStartDate();
                 const auto end = start.addSecs(duration);
                 if (start.date() < mEnd && end.date() >= mStart) {
-                    mEvents.append({start, end, occurrenceIterator.incidence(), getColor(event->getCalendar())});
+                    mEvents.append({start, end, occurrenceIterator.incidence(), getColor(event->getCalendar()), event->getAllDay()});
                 }
             }
         } else {
             if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
-                mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar())});
+                mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay()});
             }
         }
     }
@@ -198,6 +198,8 @@ QVariant EventModel::data(const QModelIndex &idx, int role) const
             return event.end;
         case Color:
             return event.color;
+        case AllDay:
+            return event.allDay;
         default:
             SinkWarning() << "Unknown role for event:" << QMetaEnum::fromType<Roles>().valueToKey(role);
             return {};
