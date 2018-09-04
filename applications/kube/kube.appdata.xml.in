@@ -6,6 +6,7 @@
   <name>Kube</name>
   <name xml:lang="ca">Kube</name>
   <name xml:lang="ca-valencia">Kube</name>
+  <name xml:lang="cs">Kube</name>
   <name xml:lang="fr">Kube</name>
   <name xml:lang="it">Kube</name>
   <name xml:lang="nl">Kube</name>
@@ -17,6 +18,7 @@
   <summary>E-mail client</summary>
   <summary xml:lang="ca">Client per a correu electrònic</summary>
   <summary xml:lang="ca-valencia">Client per a correu electrònic</summary>
+  <summary xml:lang="cs">Klient pro čtení elektronické pošty</summary>
   <summary xml:lang="fr">Client de courrier électronique</summary>
   <summary xml:lang="it">Client di posta elettronica</summary>
   <summary xml:lang="nl">E-mailclient</summary>
