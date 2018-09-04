@@ -2,6 +2,7 @@
 Name=Kube
 Name[ca]=Kube
 Name[ca@valencia]=Kube
+Name[cs]=Kube
 Name[fr]=Kube
 Name[it]=Kube
 Name[nl]=Kube
@@ -14,6 +15,7 @@ Name[x-test]=xxKubexx
 Comment=Kube Theme
 Comment[ca]=Tema del Kube
 Comment[ca@valencia]=Tema del Kube
+Comment[cs]=Motiv Kube
 Comment[fr]=Thème Kube
 Comment[it]=Tema di Kube
 Comment[nl]=Kube-thema
