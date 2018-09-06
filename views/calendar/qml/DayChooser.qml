@@ -44,85 +44,13 @@ Item {
 
             x: button.x
             y: button.y + button.height
-            width: monthGrid.width + Kube.Units.largeSpacing * 2
-            height: monthGrid.height + Kube.Units.largeSpacing * 2
+            width: 100 + Kube.Units.largeSpacing * 2
+            height: 100 + Kube.Units.largeSpacing * 2
             modal: true
             focus: true
 
-            ColumnLayout {
-                id: monthGrid
+            DateSelector {
 
-                anchors.centerIn: parent
-
-                RowLayout {
-                    Kube.Label {
-                        text: "May" //FIXME popup.month
-                    }
-                    Kube.Label {
-                        text: popup.year
-                    }
-                    Kube.IconButton {
-                        iconName: Kube.Icons.goUp
-
-                        onClicked: {
-                            if (popup.month == Calendar.January) {
-                                popup.month = Calendar.December
-                                popup.year--;
-                            } else {
-                                popup.month--;
-                            }
-                        }
-
-                    }
-                    Kube.IconButton {
-                        iconName: Kube.Icons.goDown
-
-                        onClicked: {
-                            if (popup.month == Calendar.December) {
-                                popup.month = Calendar.January
-                                popup.year++;
-                            } else {
-                                popup.month++;
-                            }
-                        }
-                    }
-                }
-
-                GridLayout {
-
-                    columns: 2
-
-                    DayOfWeekRow {
-                        locale: grid.locale
-
-                        Layout.column: 1
-                        Layout.fillWidth: true
-                    }
-
-                    WeekNumberColumn {
-                        month: grid.month
-                        year: grid.year
-                        locale: grid.locale
-
-                        Layout.fillHeight: true
-                    }
-
-                    MonthGrid {
-                        id: grid
-                        month: popup.month
-                        year: popup.year
-                        locale: Qt.locale("en_GB") //FIXME
-
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        delegate: Kube.AbstractButton {
-                            text: model.day
-
-                            width: Kube.Units.gridUnit * 3
-                        }
-                    }
-                }
             }
         }
     }
