@@ -29,12 +29,6 @@ Kube.Popup {
 
         states: [
         State {
-            name: "display"
-            PropertyChanges { target: eventDisplay; visible: true }
-            PropertyChanges { target: eventEditor; visible: false }
-
-        },
-        State {
             name: "edit"
             PropertyChanges { target: eventDisplay; visible: false }
             PropertyChanges { target: eventEditor; visible: true }
@@ -59,61 +53,6 @@ Kube.Popup {
         state: "new"
 
         anchors.fill: parent
-
-        Item {
-            id: eventDisplay
-
-            anchors.fill: parent
-
-            Kube.Heading {
-                id: title
-                text: "Event Title"
-            }
-
-            ColumnLayout {
-                anchors {
-                    margins: Kube.Units.largeSpacing
-                    top: title.bottom
-                }
-                spacing: Kube.Units.smallSpacing
-
-                Kube.Label {
-                    text: "15:00 bis 17:30"
-                }
-
-                Kube.Label {
-                    text: "Location"
-                }
-
-                Kube.Label {
-                    text: "Description"
-                }
-            }
-
-            Kube.Button {
-                anchors {
-                    bottom: parent.bottom
-                    left: parent.left
-                }
-
-                text: "Delete"
-                onClicked: {
-                    popup.close()
-                }
-            }
-
-            Kube.Button {
-                anchors {
-                    bottom: parent.bottom
-                    right: parent.right
-                }
-
-                text: "Edit"
-                onClicked: {
-                    root.state = "edit"
-                }
-            }
-        }
 
         Item {
             id: eventEditor
