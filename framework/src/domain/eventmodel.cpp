@@ -48,12 +48,35 @@ EventModel::EventModel(QObject *parent)
     QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &EventModel::updateFromSource);
 }
 
-void EventModel::updateQuery(const QDate &start, const QDate &end, const QSet<QByteArray> &calendarFilter)
+void EventModel::setStart(const QDate &start)
 {
-    qWarning() << "Update query" << start << end << calendarFilter;
-    mCalendarFilter = calendarFilter;
     mStart = start;
-    mEnd = end;
+    updateQuery();
+}
+
+QDate EventModel::start() const
+{
+    return mStart;
+}
+
+void EventModel::setLength(int length)
+{
+    mLength = length;
+    updateQuery();
+}
+
+void EventModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
+{
+    mCalendarFilter = calendarFilter;
+    updateQuery();
+}
+
+void EventModel::updateQuery()
+{
+    if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
+        return;
+    }
+    mEnd = mStart.addDays(mLength);
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Event::Summary>();
@@ -64,7 +87,7 @@ void EventModel::updateQuery(const QDate &start, const QDate &end, const QSet<QB
     query.request<Event::Ical>();
     query.request<Event::AllDay>();
 
-    query.filter<Event::StartTime, Event::EndTime>(Sink::Query::Comparator(QVariantList{start, end}, Sink::Query::Comparator::Overlap));
+    query.filter<Event::StartTime, Event::EndTime>(Sink::Query::Comparator(QVariantList{mStart, mEnd}, Sink::Query::Comparator::Overlap));
 
     mSourceModel = Sink::Store::loadModel<Event>(query);
 

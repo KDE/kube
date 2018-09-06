@@ -68,8 +68,11 @@ Rectangle {
         Repeater {
             id: daysRepeater
             model: Kube.MultiDayEventModel {
-                configuration: {"start": root.startDate, "length": root.daysToShow, "calendarFilter": root.calendarFilter}
-                calendarFilter: root.calendarFilter
+                model: Kube.EventModel {
+                    start: root.startDate
+                    length: root.daysToShow
+                    calendarFilter: root.calendarFilter
+                }
             }
             Repeater {
                 id: linesRepeater

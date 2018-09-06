@@ -28,6 +28,7 @@
 #include <QSharedPointer>
 #include <QTimer>
 #include <QDateTime>
+#include "eventmodel.h"
 
 namespace KCalCore {
     class MemoryCalendar;
@@ -44,19 +45,7 @@ class KUBE_EXPORT MultiDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
 
-    /**
-     * {
-     *  start: QDateTime,
-     *  length: int,
-     *  calendarFilter: QList<QByteArray>
-     * }
-     */
-    Q_PROPERTY(QVariantMap configuration WRITE setConfiguration)
-
-    // Q_PROPERTY(QVariant start READ periodStart WRITE setPeriodStart)
-    // Q_PROPERTY(int length READ periodLength WRITE setPeriodLength)
-
-    Q_PROPERTY(QSet<QByteArray> calendarFilter WRITE setCalendarFilter)
+    Q_PROPERTY(EventModel* model WRITE setModel)
 
 public:
     MultiDayEventModel(QObject *parent = nullptr);
@@ -72,15 +61,8 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void setConfiguration(const QVariantMap &configuration);
-    void setCalendarFilter(const QSet<QByteArray> &filter);
+    void setModel(EventModel *model);
 private:
-    void setupModel(const QDate &start, int length, const QSet<QByteArray> &filter);
-    QSharedPointer<QAbstractItemModel> mSourceModel;
-    QTimer mRefreshTimer;
+    EventModel *mSourceModel;
     int mPeriodLength{7};
-
-    QDate mStart;
-    int mLength;
-    QSet<QByteArray> mFilter;
 };
