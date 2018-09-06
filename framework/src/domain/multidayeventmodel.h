@@ -35,22 +35,32 @@ namespace KCalCore {
 }
 class EntityCacheInterface;
 
-class KUBE_EXPORT EventModel : public QAbstractItemModel
+/**
+ * Each toplevel index represents a week.
+ * The "events" roles provides a list of lists, where each list represents a visual line,
+ * containing a number of events to display.
+ */
+class KUBE_EXPORT MultiDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
+
+    /**
+     * {
+     *  start: QDateTime,
+     *  length: int,
+     *  calendarFilter: QList<QByteArray>
+     * }
+     */
+    Q_PROPERTY(QVariantMap configuration WRITE setConfiguration)
+
+    // Q_PROPERTY(QVariant start READ periodStart WRITE setPeriodStart)
+    // Q_PROPERTY(int length READ periodLength WRITE setPeriodLength)
+
+    Q_PROPERTY(QSet<QByteArray> calendarFilter WRITE setCalendarFilter)
+
 public:
-    enum Roles {
-        Summary = Qt::UserRole + 1,
-        Description,
-        StartTime,
-        EndTime,
-        Color,
-        AllDay,
-        LastRole
-    };
-    Q_ENUM(Roles);
-    EventModel(QObject *parent = nullptr);
-    ~EventModel() = default;
+    MultiDayEventModel(QObject *parent = nullptr);
+    ~MultiDayEventModel() = default;
 
     QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
     QModelIndex parent(const QModelIndex &index) const override;
@@ -60,31 +70,17 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const override;
 
-    void updateQuery(const QDate &start, const QDate &end, const QSet<QByteArray> &calendarFilter);
+    QHash<int, QByteArray> roleNames() const override;
 
+    void setConfiguration(const QVariantMap &configuration);
+    void setCalendarFilter(const QSet<QByteArray> &filter);
 private:
-    void updateQuery();
-
-    void refreshView();
-    void updateFromSource();
-    QByteArray getColor(const QByteArray &calendar) const;
-
+    void setupModel(const QDate &start, int length, const QSet<QByteArray> &filter);
     QSharedPointer<QAbstractItemModel> mSourceModel;
-    QSet<QByteArray> mCalendarFilter;
-    QDate mStart;
-    QDate mEnd;
-    QSharedPointer<EntityCacheInterface> mCalendarCache;
-
-    QSharedPointer<KCalCore::MemoryCalendar> mCalendar;
     QTimer mRefreshTimer;
+    int mPeriodLength{7};
 
-    struct Occurrence {
-        QDateTime start;
-        QDateTime end;
-        QSharedPointer<KCalCore::Incidence> incidence;
-        QByteArray color;
-        bool allDay;
-    };
-
-    QList<Occurrence> mEvents;
+    QDate mStart;
+    int mLength;
+    QSet<QByteArray> mFilter;
 };

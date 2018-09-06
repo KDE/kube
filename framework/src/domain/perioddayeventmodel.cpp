@@ -49,7 +49,6 @@ PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
 
 void PeriodDayEventModel::updateQuery()
 {
-    qWarning() << "Update query";
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Event::Summary>();

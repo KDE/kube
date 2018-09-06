@@ -50,8 +50,10 @@ EventModel::EventModel(QObject *parent)
 
 void EventModel::updateQuery(const QDate &start, const QDate &end, const QSet<QByteArray> &calendarFilter)
 {
-    qWarning() << "Update query";
+    qWarning() << "Update query" << start << end << calendarFilter;
     mCalendarFilter = calendarFilter;
+    mStart = start;
+    mEnd = end;
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Event::Summary>();
