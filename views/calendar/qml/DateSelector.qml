@@ -100,7 +100,7 @@ Column {
                     bottom: parent.bottom
                 }
                 width: Kube.Units.gridUnit
-                height: 1
+                height: 3
                 color: Kube.Colors.plasmaBlue
                 opacity: 0.6
                 visible: model.day === root.selectedDate.getDate() && model.month === root.selectedDate.getMonth()
