@@ -96,6 +96,7 @@ Kube.View {
                         eventPopup.open()
                     }
                 }
+                /*
                 DateView {
                     anchors {
                         left: parent.left
@@ -105,6 +106,20 @@ Kube.View {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: dateSelector.selectedDate = root.currentDate
+                    }
+                }
+                */
+
+                DateSelector {
+                    id: dateSelector
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    selectedDate: root.selectedDate
+                    onSelectedDateChanged: {
+                        root.selectedDate = getFirstDayOfWeek(dateSelector.selectedDate)
+                        selectedDate = root.selectedDate
                     }
                 }
             }
@@ -121,19 +136,6 @@ Kube.View {
                 height: Math.min(implicitHeight, parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin)
 
                 spacing: Kube.Units.largeSpacing
-
-                DateSelector {
-                    id: dateSelector
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    selectedDate: root.selectedDate
-                    onSelectedDateChanged: {
-                        root.selectedDate = getFirstDayOfWeek(dateSelector.selectedDate)
-                        selectedDate = root.selectedDate
-                    }
-                }
 
                 Kube.ListView {
                     id: listView
