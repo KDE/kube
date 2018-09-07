@@ -65,6 +65,11 @@ void EventModel::setLength(int length)
     updateQuery();
 }
 
+int EventModel::length() const
+{
+    return mLength;
+}
+
 void EventModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
 {
     mCalendarFilter = calendarFilter;

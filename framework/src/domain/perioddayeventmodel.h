@@ -28,14 +28,13 @@
 #include <QVariant>
 #include <QSet>
 #include <limits>
+#include "eventmodel.h"
 
 class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QVariant start READ periodStart WRITE setPeriodStart)
-    Q_PROPERTY(int length READ periodLength WRITE setPeriodLength)
-    Q_PROPERTY(QSet<QByteArray> calendarFilter READ calendarFilter WRITE setCalendarFilter)
+    Q_PROPERTY(EventModel* model WRITE setModel)
 
 public:
     PeriodDayEventModel(QObject *parent = nullptr);
@@ -51,26 +50,13 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    QDate periodStart() const;
-    void setPeriodStart(const QDate &);
-    void setPeriodStart(const QVariant &);
-    int periodLength() const;
-    void setPeriodLength(int);
-
-    QSet<QByteArray> calendarFilter() const;
-    void setCalendarFilter(const QSet<QByteArray> &);
+    void setModel(EventModel *model);
 
 private:
-    void updateQuery();
-    void refreshView();
     QDateTime getStartTimeOfDay(const QDateTime &dateTime, const QDate &today) const;
     QDateTime getEndTimeOfDay(const QDateTime &dateTime, const QDate &today) const;
 
-    QDate mPeriodStart;
-    int mPeriodLength = 7;
-
-    QSharedPointer<QAbstractItemModel> mSourceModel;
-    QSet<QByteArray> mCalendarFilter;
+    EventModel *mSourceModel{nullptr};
 
     static const constexpr quintptr DAY_ID = std::numeric_limits<quintptr>::max();
 };

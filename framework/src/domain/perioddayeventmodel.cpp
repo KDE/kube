@@ -25,8 +25,6 @@
 #include <sink/query.h>
 #include <sink/store.h>
 
-#include <eventmodel.h>
-
 enum Roles {
     Events = EventModel::LastRole,
     Date
@@ -35,24 +33,16 @@ enum Roles {
 PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    updateQuery();
 }
 
-void PeriodDayEventModel::updateQuery()
+void PeriodDayEventModel::setModel(EventModel *model)
 {
-    qWarning() << "Update query";
     beginResetModel();
-    auto eventModel = QSharedPointer<EventModel>::create();
-    eventModel->setStart(mPeriodStart);
-    eventModel->setLength(mPeriodLength);
-    eventModel->setCalendarFilter(mCalendarFilter);
-    mSourceModel = eventModel;
-
+    mSourceModel = model;
     auto resetModel = [this] {
         beginResetModel();
         endResetModel();
     };
-    auto model = mSourceModel.data();
     QObject::connect(model, &QAbstractItemModel::dataChanged, this, resetModel);
     QObject::connect(model, &QAbstractItemModel::layoutChanged, this, resetModel);
     QObject::connect(model, &QAbstractItemModel::modelReset, this, resetModel);
@@ -70,11 +60,6 @@ QModelIndex PeriodDayEventModel::index(int row, int column, const QModelIndex &p
 
     if (!parent.isValid()) {
         // Asking for a day
-
-        if (!(0 <= row && row < mPeriodLength)) {
-            return {};
-        }
-
         return createIndex(row, column, DAY_ID);
     }
 
@@ -98,8 +83,8 @@ QModelIndex PeriodDayEventModel::parent(const QModelIndex &index) const
 
 int PeriodDayEventModel::rowCount(const QModelIndex &parent) const
 {
-    if (!parent.isValid()) {
-        return mPeriodLength;
+    if (!parent.isValid() && mSourceModel) {
+        return mSourceModel->length();
     }
     return 0;
 }
@@ -127,13 +112,17 @@ QDateTime PeriodDayEventModel::getEndTimeOfDay(const QDateTime &dateTime, const 
 
 QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
 {
+    if (!mSourceModel) {
+        return {};
+    }
     const auto dayOffset = idx.row();
+    const QDate startDate = mSourceModel->start();
+    const auto today = startDate.addDays(dayOffset);
     switch (role) {
         case Date:
-            return mPeriodStart.addDays(dayOffset);
+            return today;
         case Events: {
             auto result = QVariantList{};
-            const auto today = mPeriodStart.addDays(dayOffset);
 
             QMultiMap<QTime, QModelIndex> sorted;
             for (int row = 0; row < mSourceModel->rowCount(); row++) {
@@ -203,47 +192,4 @@ QHash<int, QByteArray> PeriodDayEventModel::roleNames() const
         {Events, "events"},
         {Date, "date"}
     };
-}
-
-QDate PeriodDayEventModel::periodStart() const
-{
-    return mPeriodStart;
-}
-
-void PeriodDayEventModel::setPeriodStart(const QDate &start)
-{
-    if (!start.isValid()) {
-        SinkWarning() << "Passed an invalid starting date in setPeriodStart, ignoring...";
-        return;
-    }
-
-    mPeriodStart = start;
-    updateQuery();
-}
-
-void PeriodDayEventModel::setPeriodStart(const QVariant &start)
-{
-    setPeriodStart(start.toDate());
-}
-
-int PeriodDayEventModel::periodLength() const
-{
-    return mPeriodLength;
-}
-
-void PeriodDayEventModel::setPeriodLength(int length)
-{
-    mPeriodLength = length;
-    updateQuery();
-}
-
-QSet<QByteArray> PeriodDayEventModel::calendarFilter() const
-{
-    return mCalendarFilter;
-}
-
-void PeriodDayEventModel::setCalendarFilter(const QSet<QByteArray> &filter)
-{
-    mCalendarFilter = filter;
-    updateQuery();
 }

@@ -69,13 +69,6 @@ FocusScope {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     }
 
-    Kube.PeriodDayEventModel {
-        id: eventModel
-        start: root.startDate
-        length: root.daysToShow
-        calendarFilter: root.calendarFilter
-    }
-
     Item {
         anchors {
             top: parent.top
@@ -178,12 +171,15 @@ FocusScope {
                 //END time labels
 
                 Repeater {
-                    model: eventModel
+                    model: Kube.PeriodDayEventModel {
+                        model: Kube.EventModel {
+                            start: root.startDate
+                            length: root.daysToShow
+                            calendarFilter: root.calendarFilter
+                        }
+                    }
                     delegate: Rectangle {
                         id: dayDelegate
-
-                        property var events: model.events
-                        property var date: model.date
 
                         width: root.dayWidth
                         height: root.hourHeight * 24
@@ -192,8 +188,8 @@ FocusScope {
 
                         color: Kube.Colors.viewBackgroundColor
 
-                        property bool isInPast: roundToDay(root.currentDate) > roundToDay(dayDelegate.date)
-                        property bool isToday: roundToDay(root.currentDate).getTime() == roundToDay(dayDelegate.date).getTime()
+                        property bool isInPast: roundToDay(root.currentDate) > roundToDay(date)
+                        property bool isToday: roundToDay(root.currentDate).getTime() == roundToDay(date).getTime()
 
                         //Dimm days in the past
                         Rectangle {
@@ -219,7 +215,7 @@ FocusScope {
                         }
 
                         Repeater {
-                            model: parent.events
+                            model: events
 
                             delegate: Rectangle {
                                 id: eventDelegate

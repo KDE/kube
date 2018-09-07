@@ -63,6 +63,6 @@ public:
 
     void setModel(EventModel *model);
 private:
-    EventModel *mSourceModel;
+    EventModel *mSourceModel{nullptr};
     int mPeriodLength{7};
 };
