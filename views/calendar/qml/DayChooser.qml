@@ -44,12 +44,13 @@ Item {
 
             x: button.x
             y: button.y + button.height
-            width: 100 + Kube.Units.largeSpacing * 2
-            height: 100 + Kube.Units.largeSpacing * 2
+            width: selector.implicitWidth + Kube.Units.largeSpacing * 2
+            height: selector.implicitHeight + Kube.Units.largeSpacing * 2
             modal: true
             focus: true
 
             DateSelector {
+                id: selector
                 anchors.fill: parent
                 selectedDate: new Date()
                 backgroundColor: Kube.Colors.backgroundColor

@@ -21,97 +21,106 @@ import Qt.labs.calendar 1.0
 
 import org.kube.framework 1.0 as Kube
 
-Column {
+Item {
     id: root
     property date selectedDate
     property color backgroundColor: Kube.Colors.darkBackgroundColor
     property color textColor: Kube.Colors.highlightedTextColor
     property bool invertIcons: true
 
-    spacing: Kube.Units.smallSpacing
-    Item {
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-        height: Kube.Units.gridUnit
-        Kube.IconButton {
+    implicitWidth: Math.max(grid.implicitWidth, dateLabel.implicitWidth + 2 * Kube.Units.gridUnit)
+    implicitHeight: column.implicitHeight
+
+    Column {
+        id: column
+        anchors.fill: parent
+        spacing: Kube.Units.smallSpacing
+        Item {
             anchors {
-                verticalCenter: parent.verticalCenter
                 left: parent.left
-            }
-            height: parent.height
-            width: parent.height
-            color: root.backgroundColor
-            iconName: Kube.Icons.iconName(Kube.Icons.goBack, root.invertIcons)
-            onClicked: {
-                var dateOffset = (24*60*60*1000) * 7; //7 days
-                var myDate = root.selectedDate;
-                myDate.setTime(myDate.getTime() - dateOffset);
-                root.selectedDate = myDate
-            }
-        }
-        Kube.Label {
-            anchors {
-                verticalCenter: parent.verticalCenter
-                horizontalCenter: parent.horizontalCenter
-            }
-            color: root.textColor
-            font.bold: true
-            text: root.selectedDate.toLocaleString(Qt.locale(), "MMMM yyyy")
-        }
-        Kube.IconButton {
-            anchors {
-                verticalCenter: parent.verticalCenter
                 right: parent.right
             }
-            height: parent.height
-            width: parent.height
-            color: root.backgroundColor
-            iconName: Kube.Icons.iconName(Kube.Icons.goNext, root.invertIcons)
-            onClicked: {
-                var dateOffset = (24*60*60*1000) * 7; //7 days
-                var myDate = root.selectedDate;
-                myDate.setTime(myDate.getTime() + dateOffset);
-                root.selectedDate = myDate
-            }
-        }
-    }
-
-    MonthGrid {
-        id: grid
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-
-        month: root.selectedDate.getMonth()
-        year: root.selectedDate.getFullYear()
-        locale: Qt.locale()
-
-        delegate: Text {
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            opacity: model.month === grid.month ? 1 : 0.5
-            text: model.day
-            font: grid.font
-            color: root.textColor
-            Rectangle {
+            height: Kube.Units.gridUnit
+            Kube.IconButton {
                 anchors {
+                    verticalCenter: parent.verticalCenter
                     left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
                 }
-                width: Kube.Units.gridUnit
-                height: 3
-                color: Kube.Colors.plasmaBlue
-                opacity: 0.6
-                visible: model.day === root.selectedDate.getDate() && model.month === root.selectedDate.getMonth()
+                height: parent.height
+                width: parent.height
+                color: root.backgroundColor
+                iconName: Kube.Icons.iconName(Kube.Icons.goBack, root.invertIcons)
+                onClicked: {
+                    var dateOffset = (24*60*60*1000) * 7; //7 days
+                    var myDate = root.selectedDate;
+                    myDate.setTime(myDate.getTime() - dateOffset);
+                    root.selectedDate = myDate
+                }
+            }
+            Kube.Label {
+                id: dateLabel
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    horizontalCenter: parent.horizontalCenter
+                }
+                color: root.textColor
+                font.bold: true
+                text: root.selectedDate.toLocaleString(Qt.locale(), "MMMM yyyy")
+            }
+            Kube.IconButton {
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    right: parent.right
+                }
+                height: parent.height
+                width: parent.height
+                color: root.backgroundColor
+                iconName: Kube.Icons.iconName(Kube.Icons.goNext, root.invertIcons)
+                onClicked: {
+                    var dateOffset = (24*60*60*1000) * 7; //7 days
+                    var myDate = root.selectedDate;
+                    myDate.setTime(myDate.getTime() + dateOffset);
+                    root.selectedDate = myDate
+                }
             }
         }
 
-        onClicked: {
-            root.selectedDate = date
+        MonthGrid {
+            id: grid
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+
+            month: root.selectedDate.getMonth()
+            year: root.selectedDate.getFullYear()
+            locale: Qt.locale()
+
+            delegate: Text {
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                opacity: model.month === grid.month ? 1 : 0.5
+                text: model.day
+                font: grid.font
+                color: root.textColor
+                Rectangle {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+                    width: Kube.Units.gridUnit
+                    height: 3
+                    color: Kube.Colors.plasmaBlue
+                    opacity: 0.6
+                    visible: model.day === root.selectedDate.getDate() && model.month === root.selectedDate.getMonth()
+                }
+            }
+
+            onClicked: {
+                root.selectedDate = date
+            }
         }
     }
 }
