@@ -78,7 +78,6 @@ Rectangle {
                 id: linesRepeater
                 model: events
                 onCountChanged: {
-                    console.warn("eventcount ", count)
                     root.numberOfLinesShown = count
                 }
                 Item {
