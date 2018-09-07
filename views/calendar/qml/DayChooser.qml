@@ -50,7 +50,7 @@ Item {
             focus: true
 
             DateSelector {
-
+                anchors.fill: parent
             }
         }
     }

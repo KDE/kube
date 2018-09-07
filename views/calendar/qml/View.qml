@@ -223,7 +223,7 @@ Kube.View {
         }
     }
 
-    EventPopup {
+    EventEditor {
         id: eventPopup
 
         x: root.width * 0.15
