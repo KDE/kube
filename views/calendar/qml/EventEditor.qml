@@ -30,8 +30,6 @@ Kube.Popup {
         states: [
         State {
             name: "edit"
-            PropertyChanges { target: eventDisplay; visible: false }
-            PropertyChanges { target: eventEditor; visible: true }
             PropertyChanges { target: deleteButton; visible: true }
             PropertyChanges { target: abortButton; visible: false }
             PropertyChanges { target: saveButton; visible: true }
@@ -40,8 +38,6 @@ Kube.Popup {
         },
         State {
             name: "new"
-            PropertyChanges { target: eventDisplay; visible: false }
-            PropertyChanges { target: eventEditor; visible: true }
             PropertyChanges { target: deleteButton; visible: false }
             PropertyChanges { target: abortButton; visible: true }
             PropertyChanges { target: saveButton; visible: false }
