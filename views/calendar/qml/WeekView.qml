@@ -114,6 +114,7 @@ FocusScope {
             currentDate: root.currentDate
             startDate: root.startDate
             calendarFilter: root.calendarFilter
+            filter: {"allDay": true}
         }
 
         Flickable {

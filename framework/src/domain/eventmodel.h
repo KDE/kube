@@ -41,6 +41,7 @@ class KUBE_EXPORT EventModel : public QAbstractItemModel
     Q_PROPERTY(QDate start READ start WRITE setStart)
     Q_PROPERTY(int length READ length WRITE setLength)
     Q_PROPERTY(QSet<QByteArray> calendarFilter WRITE setCalendarFilter)
+    Q_PROPERTY(QVariantMap filter WRITE setFilter)
 
 public:
     enum Roles {
@@ -71,6 +72,7 @@ public:
     void setLength(int);
     int length() const;
     void setCalendarFilter(const QSet<QByteArray> &);
+    void setFilter(const QVariantMap &);
 
 private:
     void updateQuery();
@@ -98,4 +100,5 @@ private:
     };
 
     QList<Occurrence> mEvents;
+    QVariantMap mFilter;
 };

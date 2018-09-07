@@ -26,6 +26,7 @@ Row {
     property date startDate
     property int dayWidth
     property int daysToShow
+    property bool showDate: true
 
     height: childrenRect.height
     width: dayWidth * daysToShow
@@ -51,6 +52,7 @@ Row {
                 }
                 Kube.Label {
                     anchors.horizontalCenter: parent.horizontalCenter
+                    visible: root.showDate
                     text: day.toLocaleString(Qt.locale(), "d")
                     color: Kube.Colors.disabledTextColor
                     font.pointSize: Kube.Units.tinyFontSize

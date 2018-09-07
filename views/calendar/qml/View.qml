@@ -96,6 +96,28 @@ Kube.View {
                         eventPopup.open()
                     }
                 }
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: Kube.Units.smallSpacing
+                    ButtonGroup {
+                        id: viewButtonGroup
+                    }
+                    Kube.TextButton {
+                        id: weekViewButton
+                        text: qsTr("Week")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: true
+                        ButtonGroup.group: viewButtonGroup
+                    }
+                    Kube.TextButton {
+                        id: monthViewButton
+                        text: qsTr("Month")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        ButtonGroup.group: viewButtonGroup
+                    }
+                }
                 /*
                 DateView {
                     anchors {
@@ -215,6 +237,16 @@ Kube.View {
         }
 
         WeekView {
+            visible: weekViewButton.checked
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            currentDate: root.currentDate
+            startDate: root.selectedDate
+            calendarFilter: calendarModel.checkedEntities
+        }
+
+        MonthView {
+            visible: monthViewButton.checked
             Layout.fillHeight: true
             Layout.fillWidth: true
             currentDate: root.currentDate

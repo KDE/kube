@@ -26,22 +26,29 @@ import org.kube.framework 1.0 as Kube
 Rectangle {
     id: root
     property int daysToShow
+    property int daysPerRow: daysToShow
     property var dayWidth
     property date currentDate
     property date startDate
     property var calendarFilter
+    property bool paintGrid: false
+    property var filter
 
     //Internal
     property int numberOfLinesShown: 0
+    property int numberOfRows: (daysToShow / daysPerRow)
+    property var dayHeight: height / numberOfRows
 
-    width: root.dayWidth * root.daysToShow
+    width: root.dayWidth * root.daysPerRow
     color: Kube.Colors.viewBackgroundColor
     border.width: 1
     border.color: Kube.Colors.buttonColor
 
     //+2 to compensate for borders
-    height: numberOfLinesShown * Kube.Units.gridUnit + 2
-    visible: numberOfLinesShown
+    implicitHeight: numberOfRows > 1 ? Kube.Units.gridUnit * 10 * numberOfRows: numberOfLinesShown * Kube.Units.gridUnit + 2
+
+    height: implicitHeight
+    visible: numberOfRows > 1 || numberOfLinesShown
 
     //Dimm days in the past
     Rectangle {
@@ -55,16 +62,15 @@ Rectangle {
         color: Kube.Colors.buttonColor
         opacity: 0.2
         //Avoid showing at all in the future (the width calculation will not work either)
-        visible: roundToDay(root.currentDate) >= roundToDay(root.startDate)
+        visible: roundToDay(root.currentDate) >= roundToDay(root.startDate) && !root.paintGrid
     }
 
     Column {
-        id: fullDayListView
         anchors {
             fill: parent
             margins: 1
         }
-        //Lines
+        //Weeks
         Repeater {
             id: daysRepeater
             model: Kube.MultiDayEventModel {
@@ -72,42 +78,83 @@ Rectangle {
                     start: root.startDate
                     length: root.daysToShow
                     calendarFilter: root.calendarFilter
+                    filter: root.filter
                 }
+                // daysPerRow: root.daysPerRow //Hardcoded to 7
             }
-            Repeater {
-                id: linesRepeater
-                model: events
-                onCountChanged: {
-                    root.numberOfLinesShown = count
-                }
-                Item {
-                    id: line
-                    height: Kube.Units.gridUnit
-                    width: parent.width
-                    //Events
+
+            Item {
+                height: root.dayHeight
+                width: parent.width
+                Row {
+                    height: parent.height
+                    visible: root.paintGrid
                     Repeater {
-                        id: eventsRepeater
-                        model: modelData
+                        id: gridRepeater
+                        model: root.daysPerRow
                         Rectangle {
-                            x: root.dayWidth * modelData.starts
-                            y: 0
-                            width: root.dayWidth * modelData.duration
                             height: parent.height
-
-                            color: modelData.color
-                            radius: 2
+                            width: root.dayWidth
+                            color: "transparent"
                             border.width: 1
-                            border.color: Kube.Colors.viewBackgroundColor
-
-                            Kube.Label {
+                            border.color: Kube.Colors.lightgrey
+                            Label {
                                 anchors {
-                                    fill: parent
+                                    top: parent.top
+                                    left: parent.left
+                                    topMargin: Kube.Units.smallSpacing
                                     leftMargin: Kube.Units.smallSpacing
-                                    rightMargin: Kube.Units.smallSpacing
                                 }
-                                color: Kube.Colors.highlightedTextColor
-                                text: modelData.text
-                                elide: Text.ElideRight
+                                text: modelData
+                                font.bold: true
+                            }
+                        }
+                    }
+                }
+
+                Column {
+                    anchors {
+                        fill: parent
+                        //Offset for date
+                        topMargin: root.paintGrid ? Kube.Units.gridUnit + Kube.Units.smallSpacing : 0
+                    }
+                    Repeater {
+                        id: linesRepeater
+                        model: events
+                        onCountChanged: {
+                            root.numberOfLinesShown = count
+                        }
+                        Item {
+                            id: line
+                            height: Kube.Units.gridUnit
+                            width: parent.width
+
+                            //Events
+                            Repeater {
+                                id: eventsRepeater
+                                model: modelData
+                                Rectangle {
+                                    x: root.dayWidth * modelData.starts
+                                    y: 0
+                                    width: root.dayWidth * modelData.duration
+                                    height: parent.height
+
+                                    color: modelData.color
+                                    radius: 2
+                                    border.width: 1
+                                    border.color: Kube.Colors.viewBackgroundColor
+
+                                    Kube.Label {
+                                        anchors {
+                                            fill: parent
+                                            leftMargin: Kube.Units.smallSpacing
+                                            rightMargin: Kube.Units.smallSpacing
+                                        }
+                                        color: Kube.Colors.highlightedTextColor
+                                        text: modelData.text
+                                        elide: Text.ElideRight
+                                    }
+                                }
                             }
                         }
                     }

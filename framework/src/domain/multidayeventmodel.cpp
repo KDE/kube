@@ -56,8 +56,8 @@ QModelIndex MultiDayEventModel::parent(const QModelIndex &) const
 int MultiDayEventModel::rowCount(const QModelIndex &parent) const
 {
     //Number of weeks
-    if (!parent.isValid()) {
-        return 1;
+    if (!parent.isValid() && mSourceModel) {
+        return qMax(mSourceModel->length() / 7, 1);
     }
     return 0;
 }
@@ -77,8 +77,8 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
             if (!mSourceModel) {
                 return {};
             }
-            //FIXME set start date of this row
-            QDate rowStart = mSourceModel->start();
+            const auto rowStart = mSourceModel->start().addDays(idx.row() * 7 + 1);
+            const auto rowEnd = rowStart.addDays(7);
             auto getStart = [&] (const QDate &start) {
                 return qMax(rowStart.daysTo(start), 0ll);
             };
@@ -91,11 +91,14 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
             //Sort by duration
             for (int row = 0; row < mSourceModel->rowCount(); row++) {
                 const auto srcIdx = mSourceModel->index(row, 0, {});
-                //Filter for allday only
-                if (!srcIdx.data(EventModel::AllDay).toBool()) {
+                const auto start = srcIdx.data(EventModel::StartTime).toDateTime().date();
+                const auto end = srcIdx.data(EventModel::EndTime).toDateTime().date();
+                //Filter if not within this row
+                //FIXME: avoid iterating over all events for every week
+                if (end < rowStart || start > rowEnd) {
                     continue;
                 }
-                sorted.insert(getDuration(srcIdx.data(EventModel::StartTime).toDateTime().date(), srcIdx.data(EventModel::EndTime).toDateTime().date()), srcIdx);
+                sorted.insert(getDuration(start, end), srcIdx);
             }
 
             auto result = QVariantList{};

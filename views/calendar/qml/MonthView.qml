@@ -26,8 +26,9 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
 
-    property int daysToShow: 7
-    property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / root.daysToShow
+    property int daysPerRow: 7
+    property int daysToShow: daysPerRow * 5
+    property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / root.daysPerRow
     property var hourHeight: Kube.Units.gridUnit * 2
     property date currentDate
     property date startDate: currentDate
@@ -69,83 +70,54 @@ FocusScope {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     }
 
-    Kube.PeriodDayEventModel {
-        id: eventModel
-        start: root.startDate
-        length: root.daysToShow
-        calendarFilter: root.calendarFilter
-    }
-
     Item {
         anchors {
-            top: parent.top
-            right: parent.right
+            fill: parent
             rightMargin: Kube.Units.largeSpacing
         }
 
-        width: root.width
-        height: root.height
+        //FIXME weeknumber per row
+        // Repeater {
+        //     model: root.daysToShow / root.daysPerRow
+        //     Item {
+        //         id: weekNumber
+        //         anchors {
+        //             left: parent.left
+        //         }
+        //         y: index * root.dayHeight
+        //         width: Kube.Units.gridUnit * 2
+        //         height: Kube.Units.gridUnit * 2
+        //         Label {
+        //             anchors.centerIn: parent
+        //             text: getWeek(startDate, 1)
+        //             font.bold: true
+        //         }
+        //     }
+        // }
 
-        Flickable {
-            id: mainWeekViewer
+        DayLabels {
+            id: dayLabels
+            anchors.top: parent.top
+            anchors.right: parent.right
+            startDate: root.startDate
+            dayWidth: root.dayWidth
+            daysToShow: root.daysPerRow
+            showDate: false
+        }
 
+        MultiDayView {
             anchors {
-                top: daylong.bottom
+                top: dayLabels.bottom
+                right: parent.right
+                bottom: parent.bottom
             }
-
-            Layout.fillWidth: true
-            height: root.height - daylong.height - dayLabels.height - Kube.Units.largeSpacing
-            width: root.dayWidth * root.daysToShow + Kube.Units.gridUnit * 2
-
-            contentHeight: root.hourHeight * 24
-            contentWidth: width
-
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
-
-            ScrollBar.vertical: Kube.ScrollBar {}
-
-            Kube.ScrollHelper {
-                id: scrollHelper
-                flickable: mainWeekViewer
-                anchors.fill: parent
-            }
-
-            GridLayout {
-
-                columns: 2
-
-                DayOfWeekRow {
-                    locale: grid.locale
-
-                    Layout.column: 1
-                    Layout.fillWidth: true
-                }
-
-                WeekNumberColumn {
-                    month: grid.month
-                    year: grid.year
-                    locale: grid.locale
-
-                    Layout.fillHeight: true
-                }
-
-                MonthGrid {
-                    id: grid
-                    month: popup.month
-                    year: popup.year
-                    locale: Qt.locale("en_GB") //FIXME
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    delegate: Kube.AbstractButton {
-                        text: model.day
-
-                        width: Kube.Units.gridUnit * 3
-                    }
-                }
-            }
+            dayWidth: root.dayWidth
+            daysToShow: root.daysToShow
+            daysPerRow: root.daysPerRow
+            currentDate: root.currentDate
+            startDate: root.startDate
+            calendarFilter: root.calendarFilter
+            paintGrid: true
         }
     }
 }
