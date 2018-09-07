@@ -102,6 +102,8 @@ private slots:
                 }
             }
 
+            model.setCalendarFilter({});
+            QTRY_COMPARE(model.rowCount({}), 0);
         }
     }
 };

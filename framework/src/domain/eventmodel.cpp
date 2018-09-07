@@ -79,6 +79,9 @@ void EventModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
 void EventModel::updateQuery()
 {
     if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
+        if (rowCount()) {
+            refreshView();
+        }
         return;
     }
     mEnd = mStart.addDays(mLength);
