@@ -154,6 +154,8 @@ void MultiDayEventModel::setModel(EventModel *model)
     QObject::connect(model, &QAbstractItemModel::layoutChanged, this, resetModel);
     QObject::connect(model, &QAbstractItemModel::modelReset, this, resetModel);
     QObject::connect(model, &QAbstractItemModel::rowsInserted, this, resetModel);
+    QObject::connect(model, &QAbstractItemModel::rowsMoved, this, resetModel);
+    QObject::connect(model, &QAbstractItemModel::rowsRemoved, this, resetModel);
     endResetModel();
 }
 

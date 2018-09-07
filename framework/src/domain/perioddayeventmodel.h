@@ -21,69 +21,14 @@
 
 #pragma once
 #include "kube_export.h"
-#include <sink/applicationdomaintype.h>
 
 #include <QAbstractItemModel>
-#include <QList>
 #include <QSharedPointer>
-#include <QVector>
-#include <QTimer>
-
+#include <QDate>
+#include <QVariant>
+#include <QSet>
 #include <limits>
 
-// Facility used to get a restricted period into a Sink model comprised of
-// events, partitioned according to the day the events take place.
-//
-// Day-long events are filtered out.
-//
-// Model Format
-// ============
-//
-// Day 0
-//  |--- Event 0 starting at `periodStart + 0d`
-//  |--- Event 1 starting at `periodStart + 0d`
-//  '--- Event 2 starting at `periodStart + 0d`
-// Day 1
-//  '--- Event 0 starting at `periodStart + 1d`
-// Day 2
-// Day 3
-//  |--- Event 0 starting at `periodStart + 3d`
-//  '--- Event 1 starting at `periodStart + 3d`
-// Day 4
-//   ⋮
-//
-// Implementation notes
-// ====================
-//
-// On the model side
-// -----------------
-//
-// Columns are never used.
-//
-// Top-level items just contains the ".events" attribute, and their rows
-// correspond to their offset compared to the start of the period (in number of
-// days). In that case the internalId contains DAY_ID.
-//
-// Direct children are events, and their rows corresponds to their index in
-// their partition. In that case no internalId / internalPointer is used.
-//
-// Internally:
-// -----------
-//
-// On construction and on dataChanged, all events are processed and partitioned
-// in partitionedEvents:
-//
-// QVector< QList<QSharedPointer<Event> >
-// ~~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//    |                |
-//    |                '--- List of event pointers for that day
-//    '--- Partition / day
-//
-namespace KCalCore {
-    class MemoryCalendar;
-}
-
-class EntityCacheInterface;
 class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -91,24 +36,8 @@ class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
     Q_PROPERTY(QVariant start READ periodStart WRITE setPeriodStart)
     Q_PROPERTY(int length READ periodLength WRITE setPeriodLength)
     Q_PROPERTY(QSet<QByteArray> calendarFilter READ calendarFilter WRITE setCalendarFilter)
-    Q_PROPERTY(QVariantList daylongEvents READ daylongEvents NOTIFY daylongEventsChanged)
 
 public:
-    using Event = Sink::ApplicationDomain::Event;
-    using Calendar = Sink::ApplicationDomain::Calendar;
-
-    enum Roles
-    {
-        Events = Qt::UserRole + 1,
-        Date,
-        Summary,
-        Description,
-        StartTime,
-        EndTime,
-        Duration,
-        Color
-    };
-    Q_ENUM(Roles);
     PeriodDayEventModel(QObject *parent = nullptr);
     ~PeriodDayEventModel() = default;
 
@@ -131,32 +60,17 @@ public:
     QSet<QByteArray> calendarFilter() const;
     void setCalendarFilter(const QSet<QByteArray> &);
 
-    QVariantList daylongEvents();
-
-Q_SIGNALS:
-    void daylongEventsChanged();
-
 private:
     void updateQuery();
-    void partitionData();
     void refreshView();
-    QByteArray getColor(const QByteArray &calendar) const;
-    QDateTime getStartTimeOfDay(const QDateTime &dateTime, int day) const;
-    QDateTime getEndTimeOfDay(const QDateTime &dateTime, int day) const;
-
-    int bucketOf(const QDate &candidate) const;
+    QDateTime getStartTimeOfDay(const QDateTime &dateTime, const QDate &today) const;
+    QDateTime getEndTimeOfDay(const QDateTime &dateTime, const QDate &today) const;
 
     QDate mPeriodStart;
     int mPeriodLength = 7;
 
-    QSharedPointer<QAbstractItemModel> eventModel;
-    QVector<QList<QSharedPointer<Event>>> partitionedEvents;
-    QList<QSharedPointer<Event>> mAllDayEvents;
-    QSharedPointer<EntityCacheInterface> mCalendarCache;
+    QSharedPointer<QAbstractItemModel> mSourceModel;
     QSet<QByteArray> mCalendarFilter;
-
-    QSharedPointer<KCalCore::MemoryCalendar> mCalendar;
-    QTimer mRefreshTimer;
 
     static const constexpr quintptr DAY_ID = std::numeric_limits<quintptr>::max();
 };
