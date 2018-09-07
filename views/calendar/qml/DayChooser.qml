@@ -51,6 +51,10 @@ Item {
 
             DateSelector {
                 anchors.fill: parent
+                selectedDate: new Date()
+                backgroundColor: Kube.Colors.backgroundColor
+                textColor: Kube.Colors.textColor
+                invertIcons: false
             }
         }
     }

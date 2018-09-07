@@ -22,6 +22,13 @@ pragma Singleton
 import QtQuick 2.7
 
 Item {
+    function iconName(name, invert) {
+        if (invert) {
+            return name + "-inverted"
+        }
+        return name
+    }
+
     property string error: "error"
     property string info_inverted: "documentinfo-inverted"
     property string error_inverted: "error-inverted"

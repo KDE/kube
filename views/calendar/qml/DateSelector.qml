@@ -24,8 +24,11 @@ import org.kube.framework 1.0 as Kube
 Column {
     id: root
     property date selectedDate
-    spacing: Kube.Units.smallSpacing
+    property color backgroundColor: Kube.Colors.darkBackgroundColor
+    property color textColor: Kube.Colors.highlightedTextColor
+    property bool invertIcons: true
 
+    spacing: Kube.Units.smallSpacing
     Item {
         anchors {
             left: parent.left
@@ -39,8 +42,8 @@ Column {
             }
             height: parent.height
             width: parent.height
-            color: Kube.Colors.darkBackgroundColor
-            iconName: Kube.Icons.goBack_inverted
+            color: root.backgroundColor
+            iconName: Kube.Icons.iconName(Kube.Icons.goBack, root.invertIcons)
             onClicked: {
                 var dateOffset = (24*60*60*1000) * 7; //7 days
                 var myDate = root.selectedDate;
@@ -53,7 +56,7 @@ Column {
                 verticalCenter: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
             }
-            color: Kube.Colors.highlightedTextColor
+            color: root.textColor
             font.bold: true
             text: root.selectedDate.toLocaleString(Qt.locale(), "MMMM yyyy")
         }
@@ -64,8 +67,8 @@ Column {
             }
             height: parent.height
             width: parent.height
-            color: Kube.Colors.darkBackgroundColor
-            iconName: Kube.Icons.goNext_inverted
+            color: root.backgroundColor
+            iconName: Kube.Icons.iconName(Kube.Icons.goNext, root.invertIcons)
             onClicked: {
                 var dateOffset = (24*60*60*1000) * 7; //7 days
                 var myDate = root.selectedDate;
@@ -92,7 +95,7 @@ Column {
             opacity: model.month === grid.month ? 1 : 0.5
             text: model.day
             font: grid.font
-            color: Kube.Colors.highlightedTextColor
+            color: root.textColor
             Rectangle {
                 anchors {
                     left: parent.left
