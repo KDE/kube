@@ -76,6 +76,12 @@ void EventModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
     updateQuery();
 }
 
+void EventModel::setFilter(const QVariantMap &filter)
+{
+    mFilter = filter;
+    updateQuery();
+}
+
 void EventModel::updateQuery()
 {
     if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
@@ -126,7 +132,18 @@ void EventModel::updateFromSource()
 
     for (int i = 0; i < mSourceModel->rowCount(); ++i) {
         auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<Event::Ptr>();
-        if (!mCalendarFilter.contains(event->getCalendar())) {
+        const bool skip = [&] {
+            if (!mCalendarFilter.contains(event->getCalendar())) {
+                return true;
+            }
+            for (auto it = mFilter.constBegin(); it!= mFilter.constEnd(); it++) {
+                if (event->getProperty(it.key().toLatin1()) != it.value()) {
+                    return true;
+                }
+            }
+            return false;
+        }();
+        if (skip) {
             continue;
         }
 

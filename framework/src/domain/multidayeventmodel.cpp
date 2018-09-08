@@ -28,7 +28,8 @@
 #include <eventmodel.h>
 
 enum Roles {
-    Events = EventModel::LastRole
+    Events = EventModel::LastRole,
+    WeekStartDate
 };
 
 MultiDayEventModel::MultiDayEventModel(QObject *parent)
@@ -72,12 +73,14 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
     if (!hasIndex(idx.row(), idx.column())) {
         return {};
     }
+    if (!mSourceModel) {
+        return {};
+    }
+    const auto rowStart = mSourceModel->start().addDays(idx.row() * 7);
     switch (role) {
+        case WeekStartDate:
+            return rowStart;
         case Events: {
-            if (!mSourceModel) {
-                return {};
-            }
-            const auto rowStart = mSourceModel->start().addDays(idx.row() * 7 + 1);
             const auto rowEnd = rowStart.addDays(7);
             auto getStart = [&] (const QDate &start) {
                 return qMax(rowStart.daysTo(start), 0ll);
@@ -88,7 +91,9 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
             };
 
             QMultiMap<int, QModelIndex> sorted;
-            //Sort by duration
+            //TODO:
+            //All-day first, sorted by duration
+            //then sort by start time
             for (int row = 0; row < mSourceModel->rowCount(); row++) {
                 const auto srcIdx = mSourceModel->index(row, 0, {});
                 const auto start = srcIdx.data(EventModel::StartTime).toDateTime().date();
@@ -165,6 +170,7 @@ void MultiDayEventModel::setModel(EventModel *model)
 QHash<int, QByteArray> MultiDayEventModel::roleNames() const
 {
     return {
-        {Events, "events"}
+        {Events, "events"},
+        {WeekStartDate, "weekStartDate"}
     };
 }

@@ -22,6 +22,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.2
 
 import org.kube.framework 1.0 as Kube
+import "dateutils.js" as DateUtils
 
 Rectangle {
     id: root
@@ -58,11 +59,11 @@ Rectangle {
             bottom: parent.bottom
         }
         //if more than 7 days in past, set to 7, otherwise actual number of days in the past
-        width: (new Date(root.startDate.getFullYear(), root.startDate.getMonth(), root.startDate.getDate() + 7) < roundToDay(root.currentDate) ? 7 : root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
+        width: (new Date(root.startDate.getFullYear(), root.startDate.getMonth(), root.startDate.getDate() + 7) < DateUtils.roundToDay(root.currentDate) ? 7 : root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
         color: Kube.Colors.buttonColor
         opacity: 0.2
         //Avoid showing at all in the future (the width calculation will not work either)
-        visible: roundToDay(root.currentDate) >= roundToDay(root.startDate) && !root.paintGrid
+        visible: DateUtils.roundToDay(root.currentDate) >= DateUtils.roundToDay(root.startDate) && !root.paintGrid
     }
 
     Column {
@@ -72,7 +73,6 @@ Rectangle {
         }
         //Weeks
         Repeater {
-            id: daysRepeater
             model: Kube.MultiDayEventModel {
                 model: Kube.EventModel {
                     start: root.startDate
@@ -83,9 +83,12 @@ Rectangle {
                 // daysPerRow: root.daysPerRow //Hardcoded to 7
             }
 
+            //One row => one week
             Item {
                 height: root.dayHeight
                 width: parent.width
+                property var startDate: weekStartDate
+                //Grid
                 Row {
                     height: parent.height
                     visible: root.paintGrid
@@ -105,7 +108,12 @@ Rectangle {
                                     topMargin: Kube.Units.smallSpacing
                                     leftMargin: Kube.Units.smallSpacing
                                 }
-                                text: modelData
+                                function addDaysToDate(date, days) {
+                                    var date = new Date(date);
+                                    date.setDate(date.getDate() + days);
+                                    return date;
+                                }
+                                text: addDaysToDate(startDate, modelData).getDate()
                                 font.bold: true
                             }
                         }
