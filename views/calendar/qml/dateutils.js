@@ -35,3 +35,8 @@ function roundToDay(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate())
 }
 
+function addDaysToDate(date, days) {
+    var date = new Date(date);
+    date.setDate(date.getDate() + days);
+    return date;
+}

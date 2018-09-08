@@ -24,7 +24,7 @@ import QtQuick.Controls 2.2
 import org.kube.framework 1.0 as Kube
 import "dateutils.js" as DateUtils
 
-Rectangle {
+Item {
     id: root
     property int daysToShow
     property int daysPerRow: daysToShow
@@ -33,7 +33,10 @@ Rectangle {
     property date startDate
     property var calendarFilter
     property bool paintGrid: false
+    property bool showDayIndicator: false
     property var filter
+    property alias dayHeaderDelegate: dayLabels.delegate
+    property Component weekHeaderDelegate
 
     //Internal
     property int numberOfLinesShown: 0
@@ -41,36 +44,24 @@ Rectangle {
     property var dayHeight: height / numberOfRows
 
     width: root.dayWidth * root.daysPerRow
-    color: Kube.Colors.viewBackgroundColor
-    border.width: 1
-    border.color: Kube.Colors.buttonColor
 
-    //+2 to compensate for borders
-    implicitHeight: numberOfRows > 1 ? Kube.Units.gridUnit * 10 * numberOfRows: numberOfLinesShown * Kube.Units.gridUnit + 2
+    implicitHeight: (numberOfRows > 1 ? Kube.Units.gridUnit * 10 * numberOfRows: numberOfLinesShown * Kube.Units.gridUnit) + dayLabels.height
 
     height: implicitHeight
     visible: numberOfRows > 1 || numberOfLinesShown
 
-    //Dimm days in the past
-    Rectangle {
-        anchors {
-            left: parent.left
-            top: parent.top
-            bottom: parent.bottom
-        }
-        //if more than 7 days in past, set to 7, otherwise actual number of days in the past
-        width: (new Date(root.startDate.getFullYear(), root.startDate.getMonth(), root.startDate.getDate() + 7) < DateUtils.roundToDay(root.currentDate) ? 7 : root.currentDate.getDate() - root.startDate.getDate()) * root.dayWidth
-        color: Kube.Colors.buttonColor
-        opacity: 0.2
-        //Avoid showing at all in the future (the width calculation will not work either)
-        visible: DateUtils.roundToDay(root.currentDate) >= DateUtils.roundToDay(root.startDate) && !root.paintGrid
-    }
-
     Column {
         anchors {
             fill: parent
-            margins: 1
         }
+
+        DayLabels {
+            id: dayLabels
+            startDate: root.startDate
+            dayWidth: root.dayWidth
+            daysToShow: root.daysPerRow
+        }
+
         //Weeks
         Repeater {
             model: Kube.MultiDayEventModel {
@@ -78,89 +69,112 @@ Rectangle {
                     start: root.startDate
                     length: root.daysToShow
                     calendarFilter: root.calendarFilter
-                    filter: root.filter
+                    filter: root.filter ? root.filter : {}
                 }
                 // daysPerRow: root.daysPerRow //Hardcoded to 7
             }
-
             //One row => one week
-            Item {
-                height: root.dayHeight
+            Row {
                 width: parent.width
-                property var startDate: weekStartDate
-                //Grid
-                Row {
-                    height: parent.height
-                    visible: root.paintGrid
-                    Repeater {
-                        id: gridRepeater
-                        model: root.daysPerRow
-                        Rectangle {
-                            height: parent.height
-                            width: root.dayWidth
-                            color: "transparent"
-                            border.width: 1
-                            border.color: Kube.Colors.lightgrey
-                            Label {
-                                anchors {
-                                    top: parent.top
-                                    left: parent.left
-                                    topMargin: Kube.Units.smallSpacing
-                                    leftMargin: Kube.Units.smallSpacing
+                Loader {
+                    id: weekHeader
+                    height: root.dayHeight
+                    sourceComponent: root.weekHeaderDelegate
+                    property var startDate: weekStartDate
+                }
+                Item {
+                    id: dayDelegate
+                    height: root.dayHeight
+                    width: parent.width - weekHeader.width
+                    property var startDate: weekStartDate
+                    //Grid
+                    Row {
+                        height: parent.height
+                        Repeater {
+                            id: gridRepeater
+                            model: root.daysPerRow
+                            Item {
+                                height: parent.height
+                                width: root.dayWidth
+                                property var date: DateUtils.addDaysToDate(dayDelegate.startDate, modelData)
+                                property bool isInPast: DateUtils.roundToDay(root.currentDate) >= DateUtils.roundToDay(date)
+
+                                //Dimm days in the past
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: Kube.Colors.buttonColor
+                                    opacity: 0.2
+                                    visible: isInPast
                                 }
-                                function addDaysToDate(date, days) {
-                                    var date = new Date(date);
-                                    date.setDate(date.getDate() + days);
-                                    return date;
+
+                                //Grid
+                                Rectangle {
+                                    anchors.fill: parent
+                                    visible: root.paintGrid
+                                    color: "transparent"
+                                    border.width: 1
+                                    border.color: Kube.Colors.lightgrey
+
                                 }
-                                text: addDaysToDate(startDate, modelData).getDate()
-                                font.bold: true
+
+                                //Day number
+                                Label {
+                                    visible: root.showDayIndicator
+                                    anchors {
+                                        top: parent.top
+                                        left: parent.left
+                                        topMargin: Kube.Units.smallSpacing
+                                        leftMargin: Kube.Units.smallSpacing
+                                    }
+                                    text: date.getDate()
+                                    font.bold: true
+                                }
                             }
                         }
                     }
-                }
 
-                Column {
-                    anchors {
-                        fill: parent
-                        //Offset for date
-                        topMargin: root.paintGrid ? Kube.Units.gridUnit + Kube.Units.smallSpacing : 0
-                    }
-                    Repeater {
-                        id: linesRepeater
-                        model: events
-                        onCountChanged: {
-                            root.numberOfLinesShown = count
+                    Column {
+                        anchors {
+                            fill: parent
+                            //Offset for date
+                            topMargin: root.showDayIndicator ? Kube.Units.gridUnit + Kube.Units.smallSpacing : 0
                         }
-                        Item {
-                            id: line
-                            height: Kube.Units.gridUnit
-                            width: parent.width
+                        Repeater {
+                            id: linesRepeater
+                            model: events
+                            onCountChanged: {
+                                root.numberOfLinesShown = count
+                            }
+                            Item {
+                                id: line
+                                height: Kube.Units.gridUnit
+                                width: parent.width
 
-                            //Events
-                            Repeater {
-                                id: eventsRepeater
-                                model: modelData
-                                Rectangle {
-                                    x: root.dayWidth * modelData.starts
-                                    y: 0
-                                    width: root.dayWidth * modelData.duration
-                                    height: parent.height
+                                //Events
+                                Repeater {
+                                    id: eventsRepeater
+                                    model: modelData
+                                    Rectangle {
+                                        x: root.dayWidth * modelData.starts
+                                        y: 0
+                                        width: root.dayWidth * modelData.duration
+                                        height: parent.height
 
-                                    color: modelData.color
-                                    radius: 2
-                                    border.width: 1
-                                    border.color: Kube.Colors.viewBackgroundColor
+                                        color: modelData.color
+                                        radius: 2
+                                        border.width: 1
+                                        border.color: Kube.Colors.viewBackgroundColor
 
-                                    Kube.Label {
-                                        anchors {
-                                            fill: parent
-                                            leftMargin: Kube.Units.smallSpacing
-                                            rightMargin: Kube.Units.smallSpacing
+                                        Kube.Label {
+                                            anchors {
+                                                fill: parent
+                                                leftMargin: Kube.Units.smallSpacing
+                                                rightMargin: Kube.Units.smallSpacing
+                                            }
+                                            color: Kube.Colors.highlightedTextColor
+                                            text: modelData.text
+                                            elide: Text.ElideRight
                                         }
-                                        color: Kube.Colors.highlightedTextColor
-                                        text: modelData.text
-                                        elide: Text.ElideRight
                                     }
                                 }
                             }

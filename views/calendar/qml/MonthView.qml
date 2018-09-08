@@ -43,40 +43,9 @@ FocusScope {
             rightMargin: Kube.Units.largeSpacing
         }
 
-        //FIXME weeknumber per row
-        // Repeater {
-        //     model: root.daysToShow / root.daysPerRow
-        //     Item {
-        //         id: weekNumber
-        //         anchors {
-        //             left: parent.left
-        //         }
-        //         y: index * root.dayHeight
-        //         width: Kube.Units.gridUnit * 2
-        //         height: Kube.Units.gridUnit * 2
-        //         Label {
-        //             anchors.centerIn: parent
-        //             text: DateUtils.getWeek(startDate, Qt.locale().firstDayOfWeek)
-        //             font.bold: true
-        //         }
-        //     }
-        // }
-
-        DayLabels {
-            id: dayLabels
-            anchors.top: parent.top
-            anchors.right: parent.right
-            startDate: root.startDate
-            dayWidth: root.dayWidth
-            daysToShow: root.daysPerRow
-            showDate: false
-        }
-
         MultiDayView {
             anchors {
-                top: dayLabels.bottom
-                right: parent.right
-                bottom: parent.bottom
+                fill: parent
             }
             dayWidth: root.dayWidth
             daysToShow: root.daysToShow
@@ -85,6 +54,26 @@ FocusScope {
             startDate: root.startDate
             calendarFilter: root.calendarFilter
             paintGrid: true
+            showDayIndicator: true
+            dayHeaderDelegate: Item {
+                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
+                Column {
+                    anchors.centerIn: parent
+                    Kube.Label {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        font.bold: true
+                        text: day.toLocaleString(Qt.locale(), "dddd")
+                    }
+                }
+            }
+            weekHeaderDelegate: Item {
+                width: Kube.Units.gridUnit
+                Kube.Label {
+                    anchors.centerIn: parent
+                    font.bold: true
+                    text: DateUtils.getWeek(startDate, Qt.locale().firstDayOfWeek)
+                }
+            }
         }
     }
 }

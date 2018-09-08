@@ -20,13 +20,14 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.2
 
 import org.kube.framework 1.0 as Kube
+import "dateutils.js" as DateUtils
 
 Row {
     id: root
     property date startDate
     property int dayWidth
     property int daysToShow
-    property bool showDate: true
+    property Component delegate
 
     height: childrenRect.height
     width: dayWidth * daysToShow
@@ -34,30 +35,10 @@ Row {
     spacing: 0
     Repeater {
         model: root.daysToShow
-        delegate: Item {
+        delegate: Loader {
             width: root.dayWidth
-            height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
-            function addDaysToDate(date, days) {
-                var date = new Date(date);
-                date.setDate(date.getDate() + days);
-                return date;
-            }
-            property date day: addDaysToDate(root.startDate, modelData)
-            Column {
-                anchors.centerIn: parent
-                Kube.Label {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    font.bold: true
-                    text: day.toLocaleString(Qt.locale(), "dddd")
-                }
-                Kube.Label {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    visible: root.showDate
-                    text: day.toLocaleString(Qt.locale(), "d")
-                    color: Kube.Colors.disabledTextColor
-                    font.pointSize: Kube.Units.tinyFontSize
-                }
-            }
+            property date day: DateUtils.addDaysToDate(root.startDate, modelData)
+            sourceComponent: root.delegate
         }
     }
 }

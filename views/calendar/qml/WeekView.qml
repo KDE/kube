@@ -59,19 +59,10 @@ FocusScope {
             }
         }
 
-        DayLabels {
-            id: dayLabels
-            anchors.top: parent.top
-            anchors.right: parent.right
-            startDate: root.startDate
-            dayWidth: root.dayWidth
-            daysToShow: root.daysToShow
-        }
-
         MultiDayView {
             id: daylong
             anchors {
-                top: dayLabels.bottom
+                top: parent.top
                 right: parent.right
             }
             dayWidth: root.dayWidth
@@ -80,6 +71,25 @@ FocusScope {
             startDate: root.startDate
             calendarFilter: root.calendarFilter
             filter: {"allDay": true}
+            paintGrid: true
+            showDayIndicator: false
+            dayHeaderDelegate: Item {
+                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
+                Column {
+                    anchors.centerIn: parent
+                    Kube.Label {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        font.bold: true
+                        text: day.toLocaleString(Qt.locale(), "dddd")
+                    }
+                    Kube.Label {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: day.toLocaleString(Qt.locale(), "d")
+                        color: Kube.Colors.disabledTextColor
+                        font.pointSize: Kube.Units.tinyFontSize
+                    }
+                }
+            }
         }
 
         Flickable {
@@ -90,7 +100,7 @@ FocusScope {
             }
 
             Layout.fillWidth: true
-            height: root.height - daylong.height - dayLabels.height - Kube.Units.largeSpacing
+            height: root.height - daylong.height - Kube.Units.largeSpacing
             width: root.dayWidth * root.daysToShow + Kube.Units.gridUnit * 2
 
             contentHeight: root.hourHeight * 24
