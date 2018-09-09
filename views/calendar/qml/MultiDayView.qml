@@ -97,7 +97,8 @@ Item {
                                 height: parent.height
                                 width: root.dayWidth
                                 property var date: DateUtils.addDaysToDate(dayDelegate.startDate, modelData)
-                                property bool isInPast: DateUtils.roundToDay(root.currentDate) >= DateUtils.roundToDay(date)
+                                property bool isInPast: DateUtils.roundToDay(date) < DateUtils.roundToDay(root.currentDate)
+                                property bool isToday: DateUtils.sameDay(root.currentDate, date)
 
                                 //Dimm days in the past
                                 Rectangle {
@@ -128,6 +129,19 @@ Item {
                                     }
                                     text: date.getDate()
                                     font.bold: true
+                                    color: isInPast ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
+                                    Rectangle {
+                                        anchors {
+                                            left: parent.left
+                                            right: parent.right
+                                            bottom: parent.bottom
+                                        }
+                                        width: Kube.Units.gridUnit
+                                        height: 3
+                                        color: Kube.Colors.plasmaBlue
+                                        opacity: 0.6
+                                        visible: isToday
+                                    }
                                 }
                             }
                         }
