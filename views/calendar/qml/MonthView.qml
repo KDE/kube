@@ -30,6 +30,7 @@ FocusScope {
     property alias startDate: dayView.startDate
     property alias currentDate: dayView.currentDate
     property alias calendarFilter: dayView.calendarFilter
+    property alias month: dayView.month
 
     MultiDayView {
         id: dayView

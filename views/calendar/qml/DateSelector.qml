@@ -90,7 +90,6 @@ Item {
                 right: parent.right
             }
 
-
             month: root.selectedDate.getMonth()
             year: root.selectedDate.getFullYear()
             locale: Qt.locale()

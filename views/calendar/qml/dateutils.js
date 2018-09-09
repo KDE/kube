@@ -10,14 +10,13 @@ function getWeek(date, dowOffset) {
     var newYear = new Date(date.getFullYear(),0,1);
     var day = newYear.getDay() - dowOffset; //the day of week the year begins on
     day = (day >= 0 ? day : day + 7);
-    var daynum = Math.floor((date.getTime() - newYear.getTime() - 
-    (date.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
+    var daynum = Math.floor((date.getTime() - newYear.getTime() - (date.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
     var weeknum;
     //if the year starts before the middle of a week
     if(day < 4) {
         weeknum = Math.floor((daynum+day-1)/7) + 1;
         if(weeknum > 52) {
-            nYear = new Date(date.getFullYear() + 1,0,1);
+            var nYear = new Date(date.getFullYear() + 1,0,1);
             nday = nYear.getDay() - dowOffset;
             nday = nday >= 0 ? nday : nday + 7;
             /*if the next year starts before the middle of
@@ -44,3 +43,32 @@ function addDaysToDate(date, days) {
 function sameDay(date1, date2) {
     return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
 }
+
+function sameMonth(date1, date2) {
+    return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth()
+}
+
+function nextWeek(date) {
+    var d = date
+    d.setTime(date.getTime() + (24*60*60*1000) * 7);
+    return d
+}
+
+function previousWeek(date) {
+    var d = date
+    d.setTime(date.getTime() - (24*60*60*1000) * 7);
+    return d
+}
+
+function nextMonth(date) {
+    var d = date
+    d.setMonth(date.getMonth() + 1);
+    return d
+}
+
+function previousMonth(date) {
+    var d = date
+    d.setMonth(date.getMonth() - 1);
+    return d
+}
+

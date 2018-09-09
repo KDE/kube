@@ -38,6 +38,7 @@ Item {
     property var filter
     property alias dayHeaderDelegate: dayLabels.delegate
     property Component weekHeaderDelegate
+    property int month
 
     //Internal
     property int numberOfLinesShown: 0
@@ -104,6 +105,7 @@ Item {
                                     property var date: DateUtils.addDaysToDate(dayDelegate.startDate, modelData)
                                     property bool isInPast: DateUtils.roundToDay(date) < DateUtils.roundToDay(root.currentDate)
                                     property bool isToday: DateUtils.sameDay(root.currentDate, date)
+                                    property bool isCurrentMonth: date.getMonth() == root.month
 
                                     //Dimm days in the past
                                     Rectangle {
@@ -134,7 +136,7 @@ Item {
                                         }
                                         text: date.getDate()
                                         font.bold: true
-                                        color: isInPast ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
+                                        color: !isCurrentMonth ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
                                         Rectangle {
                                             anchors {
                                                 left: parent.left

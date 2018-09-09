@@ -21,6 +21,7 @@ import QtQuick.Controls 2
 import QtQuick.Layouts 1.2
 
 import org.kube.framework 1.0 as Kube
+import "dateutils.js" as DateUtils
 
 
 Kube.View {
@@ -56,6 +57,11 @@ Kube.View {
         return date
     }
 
+    function getFirstDayOfMonth(date) {
+        var d = date
+        d.setDate(1)
+        return d
+    }
 
     RowLayout {
 
@@ -109,6 +115,11 @@ Kube.View {
                         checkable: true
                         checked: true
                         ButtonGroup.group: viewButtonGroup
+                        onCheckedChanged: {
+                            if (checked) {
+                                root.selectedDate = getFirstDayOfWeek(root.selectedDate)
+                            }
+                        }
                     }
                     Kube.TextButton {
                         id: monthViewButton
@@ -116,6 +127,11 @@ Kube.View {
                         textColor: Kube.Colors.highlightedTextColor
                         checkable: true
                         ButtonGroup.group: viewButtonGroup
+                        onCheckedChanged: {
+                            if (checked) {
+                                root.selectedDate = getFirstDayOfMonth(root.selectedDate)
+                            }
+                        }
                     }
                 }
                 /*
@@ -142,20 +158,22 @@ Kube.View {
                     onSelected: {
                         if (weekViewButton.checked) {
                             root.selectedDate = getFirstDayOfWeek(date)
+                        } else {
+                            root.selectedDate = getFirstDayOfMonth(date)
                         }
                     }
                     onNext: {
                         if (weekViewButton.checked) {
-                            var date = root.selectedDate;
-                            date.setTime(date.getTime() + (24*60*60*1000) * 7);
-                            root.selectedDate = getFirstDayOfWeek(date)
+                            root.selectedDate = DateUtils.nextWeek(root.selectedDate)
+                        } else {
+                            root.selectedDate = DateUtils.nextMonth(root.selectedDate)
                         }
                     }
                     onPrevious: {
                         if (weekViewButton.checked) {
-                            var date = root.selectedDate;
-                            date.setTime(date.getTime() - (24*60*60*1000) * 7);
-                            root.selectedDate = getFirstDayOfWeek(date)
+                            root.selectedDate = DateUtils.previousWeek(root.selectedDate)
+                        } else {
+                            root.selectedDate = DateUtils.previousMonth(root.selectedDate)
                         }
                     }
                 }
@@ -265,7 +283,8 @@ Kube.View {
             Layout.fillHeight: true
             Layout.fillWidth: true
             currentDate: root.currentDate
-            startDate: root.selectedDate
+            startDate: getFirstDayOfWeek(getFirstDayOfMonth(root.selectedDate))
+            month: root.selectedDate.getMonth()
             calendarFilter: calendarModel.checkedEntities
         }
     }
