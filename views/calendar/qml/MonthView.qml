@@ -27,52 +27,41 @@ import "dateutils.js" as DateUtils
 FocusScope {
     id: root
 
-    property int daysPerRow: 7
-    property int daysToShow: daysPerRow * 6
-    property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / root.daysPerRow
-    property var hourHeight: Kube.Units.gridUnit * 2
-    property date currentDate
-    property date startDate: currentDate
-    property var calendarFilter
+    property alias startDate: dayView.startDate
+    property alias currentDate: dayView.currentDate
+    property alias calendarFilter: dayView.calendarFilter
 
-
-
-    Item {
+    MultiDayView {
+        id: dayView
         anchors {
             fill: parent
-            rightMargin: Kube.Units.largeSpacing
+            rightMargin: Kube.Units.gridUnit
         }
-
-        MultiDayView {
-            anchors {
-                fill: parent
-            }
-            dayWidth: root.dayWidth
-            daysToShow: root.daysToShow
-            daysPerRow: root.daysPerRow
-            currentDate: root.currentDate
-            startDate: root.startDate
-            calendarFilter: root.calendarFilter
-            paintGrid: true
-            showDayIndicator: true
-            dayHeaderDelegate: Item {
-                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
-                Column {
-                    anchors.centerIn: parent
-                    Kube.Label {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        font.bold: true
-                        text: day.toLocaleString(Qt.locale(), "dddd")
-                    }
-                }
-            }
-            weekHeaderDelegate: Item {
-                width: Kube.Units.gridUnit
+        daysToShow: daysPerRow * 6
+        daysPerRow: 7
+        currentDate: root.currentDate
+        startDate: root.startDate
+        calendarFilter: root.calendarFilter
+        paintGrid: true
+        showDayIndicator: true
+        dayHeaderDelegate: Item {
+            height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 3
+            Column {
+                anchors.centerIn: parent
                 Kube.Label {
-                    anchors.centerIn: parent
+                    anchors.horizontalCenter: parent.horizontalCenter
                     font.bold: true
-                    text: DateUtils.getWeek(startDate, Qt.locale().firstDayOfWeek)
+                    text: day.toLocaleString(Qt.locale(), "dddd")
                 }
+            }
+        }
+        weekHeaderDelegate: Item {
+            width: Kube.Units.gridUnit
+            Kube.Label {
+                anchors.centerIn: parent
+                font.bold: true
+                text: DateUtils.getWeek(startDate, Qt.locale().firstDayOfWeek)
+                color: Kube.Colors.disabledTextColor
             }
         }
     }

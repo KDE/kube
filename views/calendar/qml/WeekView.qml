@@ -64,7 +64,10 @@ FocusScope {
             anchors {
                 top: parent.top
                 right: parent.right
+                left: parent.left
+                leftMargin: Kube.Units.gridUnit * 2
             }
+
             dayWidth: root.dayWidth
             daysToShow: root.daysToShow
             currentDate: root.currentDate
@@ -165,7 +168,7 @@ FocusScope {
                         color: Kube.Colors.viewBackgroundColor
 
                         property bool isInPast: DateUtils.roundToDay(root.currentDate) > DateUtils.roundToDay(date)
-                        property bool isToday: DateUtils.roundToDay(root.currentDate).getTime() == DateUtils.roundToDay(date).getTime()
+                        property bool isToday: DateUtils.sameDay(root.currentDate, date)
 
                         //Dimm days in the past
                         Rectangle {

@@ -28,7 +28,8 @@ Item {
     id: root
     property int daysToShow
     property int daysPerRow: daysToShow
-    property var dayWidth
+    property double weekHeaderWidth: 0
+    property double dayWidth: (width - weekHeaderWidth) / daysPerRow
     property date currentDate
     property date startDate
     property var calendarFilter
@@ -43,7 +44,6 @@ Item {
     property int numberOfRows: (daysToShow / daysPerRow)
     property var dayHeight: height / numberOfRows
 
-    width: root.dayWidth * root.daysPerRow
 
     implicitHeight: (numberOfRows > 1 ? Kube.Units.gridUnit * 10 * numberOfRows: numberOfLinesShown * Kube.Units.gridUnit) + dayLabels.height
 
@@ -81,6 +81,7 @@ Item {
                     height: root.dayHeight
                     sourceComponent: root.weekHeaderDelegate
                     property var startDate: weekStartDate
+                    onStatusChanged: if (weekHeader.status == Loader.Ready) root.weekHeaderWidth = item.width
                 }
                 Item {
                     id: dayDelegate
