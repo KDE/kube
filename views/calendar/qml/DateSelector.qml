@@ -28,6 +28,10 @@ Item {
     property color textColor: Kube.Colors.highlightedTextColor
     property bool invertIcons: true
 
+    signal next()
+    signal previous()
+    signal selected(date date)
+
     implicitWidth: Math.max(grid.implicitWidth, dateLabel.implicitWidth + 2 * Kube.Units.gridUnit)
     implicitHeight: column.implicitHeight
 
@@ -51,10 +55,7 @@ Item {
                 color: root.backgroundColor
                 iconName: Kube.Icons.iconName(Kube.Icons.goBack, root.invertIcons)
                 onClicked: {
-                    var dateOffset = (24*60*60*1000) * 7; //7 days
-                    var myDate = root.selectedDate;
-                    myDate.setTime(myDate.getTime() - dateOffset);
-                    root.selectedDate = myDate
+                    root.previous()
                 }
             }
             Kube.Label {
@@ -77,10 +78,7 @@ Item {
                 color: root.backgroundColor
                 iconName: Kube.Icons.iconName(Kube.Icons.goNext, root.invertIcons)
                 onClicked: {
-                    var dateOffset = (24*60*60*1000) * 7; //7 days
-                    var myDate = root.selectedDate;
-                    myDate.setTime(myDate.getTime() + dateOffset);
-                    root.selectedDate = myDate
+                    root.next()
                 }
             }
         }
@@ -119,7 +117,7 @@ Item {
             }
 
             onClicked: {
-                root.selectedDate = date
+                root.selected(date)
             }
         }
     }

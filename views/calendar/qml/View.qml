@@ -139,9 +139,24 @@ Kube.View {
                         right: parent.right
                     }
                     selectedDate: root.selectedDate
-                    onSelectedDateChanged: {
-                        root.selectedDate = getFirstDayOfWeek(dateSelector.selectedDate)
-                        selectedDate = root.selectedDate
+                    onSelected: {
+                        if (weekViewButton.checked) {
+                            root.selectedDate = getFirstDayOfWeek(date)
+                        }
+                    }
+                    onNext: {
+                        if (weekViewButton.checked) {
+                            var date = root.selectedDate;
+                            date.setTime(date.getTime() + (24*60*60*1000) * 7);
+                            root.selectedDate = getFirstDayOfWeek(date)
+                        }
+                    }
+                    onPrevious: {
+                        if (weekViewButton.checked) {
+                            var date = root.selectedDate;
+                            date.setTime(date.getTime() - (24*60*60*1000) * 7);
+                            root.selectedDate = getFirstDayOfWeek(date)
+                        }
                     }
                 }
             }
