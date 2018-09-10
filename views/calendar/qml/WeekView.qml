@@ -252,17 +252,17 @@ FocusScope {
                                     drag.target: parent
 
                                     onReleased: eventDelegate.Drag.drop()
-                                    onClicked:  {
-                                        eventDetails.open()
-                                    }
+                                    onClicked:  eventDetails.open()
                                     Kube.Popup {
                                         id: eventDetails
-                                        width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
-                                        height: Kube.Units.gridUnit * 27
-                                        x: 0
-                                        y: 0
+                                        parent: ApplicationWindow.overlay
+                                        x: Math.round((parent.width - width) / 2)
+                                        y: Math.round((parent.height - height) / 2)
+                                        width: eventView.width
+                                        height: eventView.height
+                                        padding: 0
                                         EventView {
-                                            anchors.fill: parent
+                                            id: eventView
                                             controller: Kube.EventController {
                                                 event: model.modelData.event
                                             }

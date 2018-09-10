@@ -19,7 +19,6 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.3
-import Qt.labs.calendar 1.0
 
 import org.kube.framework 1.0 as Kube
 
@@ -57,7 +56,7 @@ FocusScope {
                 DayChooser { }
 
                 TimeChooser {
-                    visible: !root.daylong
+                    visible: !controller.allDay
                 }
 
                 Kube.Label {
@@ -67,8 +66,7 @@ FocusScope {
                 DayChooser { }
 
                 TimeChooser {
-                   visible: !root.daylong
-
+                   visible: !controller.allDay
                 }
             }
 
@@ -79,7 +77,6 @@ FocusScope {
                     Layout.fillHeight: true
                     Kube.CheckBox {
                         checked: controller.allDay
-
                         onClicked: {
                             controller.allDay = !controller.allDay
                         }
@@ -91,8 +88,7 @@ FocusScope {
                 }
 
                 Kube.ComboBox {
-                    model: ["once", "dayly", "weekly"]
-
+                    model: ["once", "daily", "weekly"]
                 }
             }
 
