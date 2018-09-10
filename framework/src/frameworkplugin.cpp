@@ -31,6 +31,7 @@
 #include "domain/outboxmodel.h"
 #include "domain/mouseproxy.h"
 #include "domain/contactcontroller.h"
+#include "domain/eventcontroller.h"
 #include "domain/peoplemodel.h"
 #include "domain/textdocumenthandler.h"
 #include "accounts/accountsmodel.h"
@@ -165,6 +166,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<PeriodDayEventModel>(uri, 1, 0, "PeriodDayEventModel");
     qmlRegisterType<MultiDayEventModel>(uri, 1, 0, "MultiDayEventModel");
     qmlRegisterType<EventModel>(uri, 1, 0, "EventModel");
+    qmlRegisterType<EventController>(uri, 1, 0, "EventController");
     qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");
     qmlRegisterType<Kube::ControllerAction>(uri, 1, 0, "ControllerAction");
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");

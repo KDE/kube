@@ -24,9 +24,8 @@
 #include <sink/log.h>
 #include <sink/query.h>
 #include <sink/store.h>
+#include <sink/applicationdomaintype.h>
 
-#include <QJsonArray>
-#include <QJsonObject>
 #include <QMetaEnum>
 
 #include <KCalCore/ICalFormat>
@@ -35,13 +34,11 @@
 
 #include <entitycache.h>
 
-using Event = Sink::ApplicationDomain::Event;
-using Calendar = Sink::ApplicationDomain::Calendar;
-
+using namespace Sink;
 
 EventModel::EventModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mCalendarCache{EntityCache<Calendar, Calendar::Color>::Ptr::create()},
+    mCalendarCache{EntityCache<ApplicationDomain::Calendar, ApplicationDomain::Calendar::Color>::Ptr::create()},
     mCalendar{new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()}}
 {
     mRefreshTimer.setSingleShot(true);
@@ -84,6 +81,7 @@ void EventModel::setFilter(const QVariantMap &filter)
 
 void EventModel::updateQuery()
 {
+    using namespace Sink::ApplicationDomain;
     if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
         if (rowCount()) {
             refreshView();
@@ -91,6 +89,7 @@ void EventModel::updateQuery()
         return;
     }
     mEnd = mStart.addDays(mLength);
+
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Event::Summary>();
@@ -103,7 +102,7 @@ void EventModel::updateQuery()
 
     query.filter<Event::StartTime, Event::EndTime>(Sink::Query::Comparator(QVariantList{mStart, mEnd}, Sink::Query::Comparator::Overlap));
 
-    mSourceModel = Sink::Store::loadModel<Event>(query);
+    mSourceModel = Store::loadModel<ApplicationDomain::Event>(query);
 
     QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &EventModel::refreshView);
     QObject::connect(mSourceModel.data(), &QAbstractItemModel::layoutChanged, this, &EventModel::refreshView);
@@ -131,7 +130,7 @@ void EventModel::updateFromSource()
     mEvents.clear();
 
     for (int i = 0; i < mSourceModel->rowCount(); ++i) {
-        auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<Event::Ptr>();
+        auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Event::Ptr>();
         const bool skip = [&] {
             if (!mCalendarFilter.contains(event->getCalendar())) {
                 return true;
@@ -162,12 +161,12 @@ void EventModel::updateFromSource()
                 const auto start = occurrenceIterator.occurrenceStartDate();
                 const auto end = start.addSecs(duration);
                 if (start.date() < mEnd && end.date() >= mStart) {
-                    mEvents.append({start, end, occurrenceIterator.incidence(), getColor(event->getCalendar()), event->getAllDay()});
+                    mEvents.append({start, end, occurrenceIterator.incidence(), getColor(event->getCalendar()), event->getAllDay(), event});
                 }
             }
         } else {
             if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
-                mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay()});
+                mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
             }
         }
     }
@@ -250,6 +249,8 @@ QVariant EventModel::data(const QModelIndex &idx, int role) const
             return event.color;
         case AllDay:
             return event.allDay;
+        case Event:
+            return QVariant::fromValue(event.domainObject);
         default:
             SinkWarning() << "Unknown role for event:" << QMetaEnum::fromType<Roles>().valueToKey(role);
             return {};

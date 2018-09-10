@@ -25,8 +25,8 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
+    property var controller
 
-    property bool daylong
     width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
     height: Kube.Units.gridUnit * 27
 
@@ -34,7 +34,6 @@ FocusScope {
         anchors {
             fill: parent
         }
-
 
         color: Kube.Colors.viewBackgroundColor
 
@@ -50,6 +49,7 @@ FocusScope {
             Kube.TextField {
                 width: parent.width
                 placeholderText: "Title"
+                text: controller.summary
             }
             RowLayout {
                 spacing: Kube.Units.smallSpacing
@@ -61,7 +61,7 @@ FocusScope {
                 }
 
                 Kube.Label {
-                    text: " " + qsTr("till") + " "
+                    text: " " + qsTr("until") + " "
                 }
 
                 DayChooser { }
@@ -78,15 +78,15 @@ FocusScope {
                 RowLayout {
                     Layout.fillHeight: true
                     Kube.CheckBox {
-                        checked: root.daylong
+                        checked: controller.allDay
 
                         onClicked: {
-                            root.daylong = !root.daylong
+                            controller.allDay = !controller.allDay
                         }
                     }
 
                     Kube.Label {
-                        text: "daylong"
+                        text: "All day"
                     }
                 }
 
@@ -99,6 +99,7 @@ FocusScope {
             Kube.TextEditor {
                 width: parent.width
                 height: 200
+                text: controller.description
             }
         }
     }

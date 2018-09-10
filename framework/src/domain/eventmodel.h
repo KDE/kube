@@ -33,6 +33,11 @@ namespace KCalCore {
     class MemoryCalendar;
     class Incidence;
 }
+namespace Sink {
+    namespace ApplicationDomain {
+        struct Event;
+    }
+}
 class EntityCacheInterface;
 
 class KUBE_EXPORT EventModel : public QAbstractItemModel
@@ -51,6 +56,7 @@ public:
         EndTime,
         Color,
         AllDay,
+        Event,
         LastRole
     };
     Q_ENUM(Roles);
@@ -97,6 +103,7 @@ private:
         QSharedPointer<KCalCore::Incidence> incidence;
         QByteArray color;
         bool allDay;
+        QSharedPointer<Sink::ApplicationDomain::Event> domainObject;
     };
 
     QList<Occurrence> mEvents;

@@ -263,6 +263,9 @@ FocusScope {
                                         y: 0
                                         EventView {
                                             anchors.fill: parent
+                                            controller: Kube.EventController {
+                                                event: model.modelData.event
+                                            }
                                         }
                                     }
                                 }
