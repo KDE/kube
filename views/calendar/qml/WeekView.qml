@@ -252,6 +252,19 @@ FocusScope {
                                     drag.target: parent
 
                                     onReleased: eventDelegate.Drag.drop()
+                                    onClicked:  {
+                                        eventDetails.open()
+                                    }
+                                    Kube.Popup {
+                                        id: eventDetails
+                                        width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
+                                        height: Kube.Units.gridUnit * 27
+                                        x: 0
+                                        y: 0
+                                        EventView {
+                                            anchors.fill: parent
+                                        }
+                                    }
                                 }
                             }
                         }

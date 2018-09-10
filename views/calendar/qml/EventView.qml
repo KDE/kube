@@ -27,16 +27,14 @@ FocusScope {
     id: root
 
     property bool daylong
+    width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
+    height: Kube.Units.gridUnit * 27
 
     Rectangle {
         anchors {
-            top: parent.top
-            topMargin: Kube.Units.largeSpacing
-            horizontalCenter: parent.horizontalCenter
+            fill: parent
         }
 
-        width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
-        height: Kube.Units.gridUnit * 27
 
         color: Kube.Colors.viewBackgroundColor
 
