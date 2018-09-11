@@ -17,6 +17,7 @@
  */
 
 import QtQuick 2.7
+import Qt.labs.settings 1.0
 import org.kube.framework 1.0 as Kube
 import org.kube.extensionapi 1.0
 
@@ -32,27 +33,40 @@ Item {
     }
 
     function loadSecret(accountId) {
-        ExtensionApi.loadSecret(accountId)
+        if (settings.enabled) {
+            ExtensionApi.loadSecret(accountId)
+        }
     }
 
     function storeSecret(accountId, keyLookupName, secret) {
-        ExtensionApi.storeSecret(accountId, keyLookupName, secret)
+        if (settings.enabled) {
+            ExtensionApi.storeSecret(accountId, keyLookupName, secret)
+        }
     }
+
     Connections {
         target: ExtensionApi
         onSecretAvailable: {
             root.secret = secret
         }
     }
+
     Row {
         anchors.fill: parent
         spacing: Kube.Units.smallSpacing
         Kube.CheckBox {
+            id: checkBox
             activeFocusOnTab: false
             checked: false
         }
         Kube.Label {
             text: qsTr("Enable GPG Keyring")
+        }
+
+        Settings {
+            id: settings
+            category: "extension.gpg"
+            property alias enabled: checkBox.checked
         }
     }
 
