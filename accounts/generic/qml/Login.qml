@@ -35,6 +35,9 @@ Item {
 
     function login(){
         settings.login({accountSecret: pwField.text})
+        if (!!extensionPoint.item) {
+            extensionPoint.item.storeSecret(accountId, settings.emailAddress, {accountSecret: pwField.text})
+        }
     }
 
     GridLayout {
@@ -55,6 +58,15 @@ Item {
             Layout.fillWidth: true
             focus: true
             placeholderText: qsTr("Password of your account")
+            text: !!extensionPoint.item ? extensionPoint.item.secret.accountSecret : ""
+        }
+        Row {
+            Layout.columnSpan: 2
+            Kube.ExtensionPoint {
+                id: extensionPoint
+                extensionPoint: "extensions/login"
+                context: {"accountId": settings.accountIdentifier}
+            }
         }
     }
 }
