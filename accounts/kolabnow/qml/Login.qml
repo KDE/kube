@@ -34,8 +34,10 @@ Item {
     }
 
     function login(){
-        extensionPoint.item.storeSecret(accountId, settings.emailAddress, {accountSecret: pwField.text})
         settings.login({accountSecret: pwField.text})
+        if (!!extensionPoint.item) {
+            extensionPoint.item.storeSecret(accountId, settings.emailAddress, {accountSecret: pwField.text})
+        }
     }
 
     GridLayout {
