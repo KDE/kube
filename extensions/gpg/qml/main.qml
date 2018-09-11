@@ -21,12 +21,9 @@ import Qt.labs.settings 1.0
 import org.kube.framework 1.0 as Kube
 import org.kube.extensionapi 1.0
 
-Item {
+Row {
     id: root
     property variant secret: null
-
-    width: Kube.Units.gridUnit * 4
-    height: Kube.Units.gridUnit
 
     Component.onCompleted: {
         loadSecret(context.accountId)
@@ -51,23 +48,20 @@ Item {
         }
     }
 
-    Row {
-        anchors.fill: parent
-        spacing: Kube.Units.smallSpacing
-        Kube.CheckBox {
-            id: checkBox
-            activeFocusOnTab: false
-            checked: false
-        }
-        Kube.Label {
-            text: qsTr("Enable GPG Keyring")
-        }
-
-        Settings {
-            id: settings
-            category: "extension.gpg"
-            property alias enabled: checkBox.checked
-        }
+    spacing: Kube.Units.smallSpacing
+    Kube.CheckBox {
+        id: checkBox
+        activeFocusOnTab: false
+        checked: false
+    }
+    Kube.Label {
+        text: qsTr("Enable GPG Keyring Integration")
+        color: Kube.Colors.disabledTextColor
     }
 
+    Settings {
+        id: settings
+        category: "extension.gpg"
+        property alias enabled: checkBox.checked
+    }
 }

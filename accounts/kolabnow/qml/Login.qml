@@ -63,11 +63,8 @@ Item {
         }
         Row {
             Layout.columnSpan: 2
-            Layout.rowSpan: 1
             Kube.ExtensionPoint {
                 id: extensionPoint
-                height: Kube.Units.gridUnit
-                width: Kube.Units.gridUnit
                 extensionPoint: "extensions/login"
                 context: {"accountId": settings.accountIdentifier}
             }
