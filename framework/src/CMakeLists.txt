@@ -15,6 +15,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED 14)
 
 include_directories(. domain/mime/mimetreeparser domain/ domain/mime)
 
+add_library(crypto STATIC
+    crypto.cpp
+)
+target_link_libraries(crypto
+    PUBLIC
+    Qt5::Core
+    Gpgme::Gpgme
+)
 add_library(kubeframework SHARED
     settings/settings.cpp
     domain/maillistmodel.cpp
@@ -67,6 +75,7 @@ target_link_libraries(kubeframework
     sink
     kube_otp
     mailcrypto
+    crypto
     Qt5::Core
     Qt5::Quick
     Qt5::Qml

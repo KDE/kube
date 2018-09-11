@@ -270,6 +270,9 @@ static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const c
     result.error = {GPG_ERR_NO_ERROR};
     if (patterns.size() > 1) {
         qWarning() << "Listing multiple patterns";
+        for (const auto p: patterns) {
+            qWarning() << " " << p;
+        }
         if (auto err = gpgme_op_keylist_ext_start(ctx, const_cast<const char **>(patterns.data()), int(secretOnly), 0)) {
             qWarning() << "Error while listing keys";
             result.error = {err};
@@ -338,6 +341,8 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
     if (!context) {
         return makeUnexpected(Error{context.error});
     }
+
+    qWarning() << "Encrypting to " << encryptionKeys.size();
 
     for (const auto &signingKey : signingKeys) {
         //TODO do we have to free those again?
