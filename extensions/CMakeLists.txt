@@ -5,3 +5,4 @@ endmacro()
 
 add_subdirectory(api)
 install_extension(fileasexpense mailview)
+install_extension(gpg login)

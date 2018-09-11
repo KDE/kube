@@ -25,8 +25,8 @@
 class KUBE_EXPORT AccountSettings : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier)
     Q_PROPERTY(QByteArray accountType READ accountType WRITE setAccountType)
+    Q_PROPERTY(QByteArray accountIdentifier READ accountIdentifier WRITE setAccountIdentifier NOTIFY changed)
     Q_PROPERTY(QString icon MEMBER mIcon NOTIFY changed)
     Q_PROPERTY(QString accountName MEMBER mName NOTIFY changed)
 

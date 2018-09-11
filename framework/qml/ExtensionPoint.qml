@@ -24,14 +24,16 @@ Repeater {
     id: root
     property alias extensionPoint: extensionModel.extensionPoint
     property variant context: {}
+    property Item item: null
 
     model: Kube.ExtensionModel {
         id: extensionModel
     }
     Loader {
         source: root.model.findSource(model.name, "main.qml")
+        property variant context: root.context
         onLoaded: {
-            item.context = root.context
+            root.item = item
         }
     }
 }

@@ -20,12 +20,40 @@ import QtQuick 2.7
 import org.kube.framework 1.0 as Kube
 import org.kube.extensionapi 1.0
 
-Kube.Button {
-    visible: true
-    activeFocusOnTab: false
+Item {
+    id: root
+    property variant secret: null
 
-    text: qsTr("File as Expense")
-    onClicked: {
-        ExtensionApi.forwardMail({mail: context.mail, to: ["test1@kolab.org"], subject: "Expense: " + context.subject, accountId: context.accountId})
+    width: Kube.Units.gridUnit * 4
+    height: Kube.Units.gridUnit
+
+    Component.onCompleted: {
+        loadSecret(context.accountId)
     }
+
+    function loadSecret(accountId) {
+        ExtensionApi.loadSecret(accountId)
+    }
+
+    function storeSecret(accountId, secret) {
+        ExtensionApi.storeSecret(accountId, secret)
+    }
+    Connections {
+        target: ExtensionApi
+        onSecretAvailable: {
+            root.secret = secret
+        }
+    }
+    Row {
+        anchors.fill: parent
+        spacing: Kube.Units.smallSpacing
+        Kube.CheckBox {
+            activeFocusOnTab: false
+            checked: false
+        }
+        Kube.Label {
+            text: qsTr("Enable GPG Keyring")
+        }
+    }
+
 }

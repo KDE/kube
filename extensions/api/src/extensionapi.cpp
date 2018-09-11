@@ -22,6 +22,8 @@
 #include <KMime/KMimeMessage>
 #include <sink/store.h>
 #include <sink/log.h>
+#include <QStandardPaths>
+#include <QSettings>
 
 #include <QDebug>
 
@@ -86,4 +88,16 @@ Q_INVOKABLE void ExtensionApi::forwardMail(const QVariantMap &map)
         msg->assemble();
         send(msg->encodedContent(true), map.value("accountId").toByteArray());
     });
+}
+
+void ExtensionApi::storeSecret(const QByteArray &accountId, const QVariantMap &secret)
+{
+    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
+    settings.setValue(accountId, secret);
+}
+
+void ExtensionApi::loadSecret(const QByteArray &accountId)
+{
+    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
+    emit secretAvailable(accountId, settings.value(accountId).value<QVariantMap>());
 }

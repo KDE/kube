@@ -27,4 +27,9 @@ class ExtensionApi : public QObject
 
 public:
     Q_INVOKABLE void forwardMail(const QVariantMap &map);
+    Q_INVOKABLE void storeSecret(const QByteArray &accountId, const QVariantMap &secret);
+    Q_INVOKABLE void loadSecret(const QByteArray &accountId);
+
+signals:
+    void secretAvailable(const QByteArray &accountId,const QVariantMap &secret);
 };

@@ -34,6 +34,7 @@ Item {
     }
 
     function login(){
+        extensionPoint.item.storeSecret(accountId, {accountSecret: pwField.text})
         settings.login({accountSecret: pwField.text})
     }
 
@@ -56,6 +57,18 @@ Item {
             focus: true
 
             placeholderText: qsTr("Password of your Kolab Now account")
+            text: !!extensionPoint.item ? extensionPoint.item.secret.accountSecret : ""
+        }
+        Row {
+            Layout.columnSpan: 2
+            Layout.rowSpan: 1
+            Kube.ExtensionPoint {
+                id: extensionPoint
+                height: Kube.Units.gridUnit
+                width: Kube.Units.gridUnit
+                extensionPoint: "extensions/login"
+                context: {"accountId": settings.accountIdentifier, "accountName": settings.accountName}
+            }
         }
     }
 }
