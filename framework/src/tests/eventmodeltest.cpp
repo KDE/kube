@@ -56,7 +56,6 @@ private slots:
             calcoreEvent->setUid("event2");
             calcoreEvent->setSummary("summary2");
             calcoreEvent->setDescription("description");
-            const QDateTime start{{2018, 04, 17}, {6, 0, 0}};
             calcoreEvent->setDtStart(start.addDays(1));
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
@@ -80,8 +79,8 @@ private slots:
                 MultiDayEventModel multiDayModel;
                 multiDayModel.setModel(&model);
                 QTRY_COMPARE(multiDayModel.rowCount({}), 1);
-                const auto events = multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
-                QCOMPARE(events.size(), 0);
+                //All except the first from the recurring event
+                QTRY_COMPARE(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>().size(), 6);
             }
 
             {
