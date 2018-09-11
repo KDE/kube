@@ -35,8 +35,8 @@ Item {
         ExtensionApi.loadSecret(accountId)
     }
 
-    function storeSecret(accountId, secret) {
-        ExtensionApi.storeSecret(accountId, secret)
+    function storeSecret(accountId, keyLookupName, secret) {
+        ExtensionApi.storeSecret(accountId, keyLookupName, secret)
     }
     Connections {
         target: ExtensionApi

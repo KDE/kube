@@ -34,7 +34,7 @@ Item {
     }
 
     function login(){
-        extensionPoint.item.storeSecret(accountId, {accountSecret: pwField.text})
+        extensionPoint.item.storeSecret(accountId, settings.emailAddress, {accountSecret: pwField.text})
         settings.login({accountSecret: pwField.text})
     }
 
@@ -67,7 +67,7 @@ Item {
                 height: Kube.Units.gridUnit
                 width: Kube.Units.gridUnit
                 extensionPoint: "extensions/login"
-                context: {"accountId": settings.accountIdentifier, "accountName": settings.accountName}
+                context: {"accountId": settings.accountIdentifier}
             }
         }
     }

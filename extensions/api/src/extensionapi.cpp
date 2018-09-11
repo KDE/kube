@@ -18,14 +18,19 @@
 */
 #include "extensionapi.h"
 
-#include <mailtemplates.h>
 #include <KMime/KMimeMessage>
+#include <QStandardPaths>
+#include <QDataStream>
+#include <QSettings>
+#include <QVariantMap>
+#include <QVariant>
+#include <QMap>
+
 #include <sink/store.h>
 #include <sink/log.h>
-#include <QStandardPaths>
-#include <QSettings>
 
-#include <QDebug>
+#include <mailtemplates.h>
+#include <crypto.h>
 
 static void send(const QByteArray &message, const QByteArray &accountId)
 {
@@ -90,14 +95,30 @@ Q_INVOKABLE void ExtensionApi::forwardMail(const QVariantMap &map)
     });
 }
 
-void ExtensionApi::storeSecret(const QByteArray &accountId, const QVariantMap &secret)
+void ExtensionApi::storeSecret(const QByteArray &accountId, const QByteArray &keyId, const QVariantMap &secret)
 {
-    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
-    settings.setValue(accountId, secret);
+    QByteArray secretBA;
+    QDataStream stream(&secretBA, QIODevice::WriteOnly);
+    stream << secret;
+    auto result = Crypto::signAndEncrypt(secretBA, Crypto::findKeys({{keyId}}, true), {});
+    if (result) {
+        QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
+        settings.setValue(accountId, result.value());
+    } else {
+        SinkWarning() << "Failed to encrypt account secret " << accountId << keyId;
+    }
 }
 
 void ExtensionApi::loadSecret(const QByteArray &accountId)
 {
     QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
-    emit secretAvailable(accountId, settings.value(accountId).value<QVariantMap>());
+
+    QByteArray secretBA;
+    decryptAndVerify(Crypto::OpenPGP, settings.value(accountId).value<QByteArray>(), secretBA);
+
+    QVariantMap map;
+    QDataStream stream(&secretBA, QIODevice::ReadOnly);
+    stream >> map;
+
+    emit secretAvailable(accountId, map);
 }
