@@ -38,12 +38,6 @@ Controls2.ApplicationWindow {
     font.family: Kube.Font.fontFamily
 
     //Application context
-    property variant currentFolder
-    onCurrentFolderChanged: {
-        if (!!currentFolder) {
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": currentFolder})
-        }
-    }
     property variant currentAccount
     onCurrentAccountChanged: {
         if (!!currentAccount) {
@@ -56,11 +50,12 @@ Controls2.ApplicationWindow {
         id: intervalSync
         //5min
         interval: 300000
-        running: !!app.currentFolder
+        running: true
         repeat: true
         onTriggered: {
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": app.currentFolder})
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": app.currentAccount, "type": "folder"})
+            if (kubeViews.currentItem && kubeViews.currentItem.refresh) {
+                kubeViews.currentItem.refresh()
+            }
         }
     }
 
@@ -79,7 +74,8 @@ Controls2.ApplicationWindow {
 
     Kube.Listener {
         filter: Kube.Messages.folderSelection
-        onMessageReceived: app.currentFolder = message.folder
+        onMessageReceived: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": currentFolder})
+
     }
 
     Kube.Listener {
