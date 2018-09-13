@@ -101,7 +101,7 @@ void EventController::remove()
     }
 }
 
-QVariant EventController::event() const
+QVariant EventController::getEvent() const
 {
     return mEvent;
 }

@@ -33,7 +33,7 @@ class KUBE_EXPORT EventController : public Kube::Controller
     Q_OBJECT
 
     // Input properties
-    Q_PROPERTY(QVariant event READ event WRITE loadEvent)
+    Q_PROPERTY(QVariant event READ getEvent WRITE loadEvent)
 
     //Interface properties
     KUBE_CONTROLLER_PROPERTY(QByteArray, AccountId, accountId)
@@ -52,7 +52,7 @@ public:
     Q_INVOKABLE void loadEvent(const QVariant &event);
     Q_INVOKABLE void remove();
 
-    QVariant event() const;
+    QVariant getEvent() const;
 
 private slots:
     void updateSaveAction();
