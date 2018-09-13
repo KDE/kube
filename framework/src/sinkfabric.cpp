@@ -78,6 +78,15 @@ public:
                 Store::synchronize(scope).exec();
             }
         }
+        if (id == "abortSynchronization"/*Kube::Messages::abortSynchronization*/) {
+            const auto accountId = message["accountId"].value<QString>();
+            SyncScope scope;
+            if (!accountId.isEmpty()) {
+                //FIXME this should work with either string or bytearray, but is apparently very picky
+                scope.resourceFilter<SinkResource::Account>(accountId.toLatin1());
+            }
+            Store::abortSynchronization(scope).exec();
+        }
         if (id == "sendOutbox"/*Kube::Messages::synchronize*/) {
             Query query;
             query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
