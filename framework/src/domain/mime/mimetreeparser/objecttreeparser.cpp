@@ -307,6 +307,11 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectAttachmentParts()
 
 void ObjectTreeParser::decryptParts()
 {
+    decryptAndVerify();
+}
+
+void ObjectTreeParser::decrypt()
+{
     ::collect(mParsedPart,
         [] (const MessagePartPtr &) { return true; },
         [] (const MessagePartPtr &part) {
@@ -315,6 +320,10 @@ void ObjectTreeParser::decryptParts()
             }
             return false;
         });
+}
+
+void ObjectTreeParser::verifySignatures()
+{
     ::collect(mParsedPart,
         [] (const MessagePartPtr &) { return true; },
         [] (const MessagePartPtr &part) {
@@ -323,6 +332,13 @@ void ObjectTreeParser::decryptParts()
             }
             return false;
         });
+
+}
+
+void ObjectTreeParser::decryptAndVerify()
+{
+    decrypt();
+    verifySignatures();
 }
 
 void ObjectTreeParser::importCertificates()

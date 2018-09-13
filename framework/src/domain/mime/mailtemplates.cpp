@@ -807,7 +807,7 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
 
     MimeTreeParser::ObjectTreeParser otp;
     otp.parseObjectTree(origMsg.data());
-    otp.decryptParts();
+    otp.decrypt();
     const auto plainTextContent = otp.plainTextContent();
     const auto htmlContent = otp.htmlContent();
 
@@ -866,7 +866,7 @@ void MailTemplates::forward(const KMime::Message::Ptr &origMsg,
         qDebug() << "Original message was encrypted, decrypting it";
         MimeTreeParser::ObjectTreeParser otp;
         otp.parseObjectTree(origMsg.data());
-        otp.decryptParts();
+        otp.decrypt();
 
         auto htmlContent = otp.htmlContent();
 
