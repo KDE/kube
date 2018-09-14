@@ -81,6 +81,7 @@ Item {
     property string listRemove: "list-remove"
     property string remove: "kube-list-remove-inverted"
     property string folder: "folder"
+    property string save: "document-save"
     property string save_inverted: "document-save-inverted"
 
     property string bold: "format-text-bold-symbolic"

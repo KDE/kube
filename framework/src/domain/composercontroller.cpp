@@ -114,11 +114,11 @@ public:
     bool mFoundAllKeys = true;
 
     QSet<QByteArray> mMissingKeys;
-    AddresseeController() : Kube::ListPropertyController{{"name", "keyFound", "key"}}
+    AddresseeController() : Kube::ListPropertyController{{"name", "keyFound", "key", "fetching"}}
     {
         QObject::connect(
             this, &Kube::ListPropertyController::added, this, [this](const QByteArray &id, const QVariantMap &map) {
-                findKey(id, map.value("name").toString());
+                findKey(id, map.value("name").toString(), false);
             });
 
         QObject::connect(this, &Kube::ListPropertyController::removed, this, [this] (const QByteArray &id) {
@@ -138,19 +138,23 @@ public:
         emit foundAllKeysChanged();
     }
 
-    void findKey(const QByteArray &id, const QString &addressee)
+    void findKey(const QByteArray &id, const QString &addressee, bool fetchRemote)
     {
         mMissingKeys << id;
-        setFoundAllKeys(mMissingKeys.isEmpty());
+        setFoundAllKeys(false);
         KMime::Types::Mailbox mb;
         mb.fromUnicodeString(addressee);
 
         SinkLog() << "Searching key for: " << mb.address();
+
+        setValue(id, "fetching", fetchRemote);
+
         asyncRun<std::vector<Crypto::Key>>(this,
-            [mb] {
-                return Crypto::findKeys(QStringList{} << mb.address(), false, false);
+            [=] {
+                return Crypto::findKeys({mb.address()}, false, fetchRemote);
             },
             [this, addressee, id](const std::vector<Crypto::Key> &keys) {
+                setValue(id, "fetching", false);
                 if (!keys.empty()) {
                     if (keys.size() > 1) {
                         SinkWarning() << "Found more than one key, encrypting to all of them.";
@@ -164,6 +168,11 @@ public:
                     SinkWarning() << "Failed to find key for recipient.";
                 }
             });
+    }
+
+    Q_INVOKABLE void fetchKeys(const QByteArray &id, const QString &addressee)
+    {
+        findKey(id, addressee, true);
     }
 
     void set(const QStringList &list)
@@ -241,7 +250,7 @@ void ComposerController::findPersonalKey()
     auto identity = getIdentity();
     SinkLog() << "Looking for personal key for: " << identity.address();
     asyncRun<std::vector<Crypto::Key>>(this, [=] {
-            return Crypto::findKeys(QStringList{} << identity.address(), true);
+            return Crypto::findKeys({identity.address()}, true);
         },
         [this](const std::vector<Crypto::Key> &keys) {
             if (keys.empty()) {

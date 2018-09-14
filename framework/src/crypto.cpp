@@ -41,7 +41,7 @@ QDebug operator<< (QDebug d, const Key &key)
 
 QDebug operator<< (QDebug d, const Error &error)
 {
-    d << error.errorCode();
+    d << error.errorCode() << gpgme_strerror(error.errorCode());
     return d;
 }
 
@@ -268,33 +268,35 @@ static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const c
 
     KeyListResult result;
     result.error = {GPG_ERR_NO_ERROR};
+    auto zeroTerminatedPatterns = patterns;
+    zeroTerminatedPatterns.push_back(0);
     if (patterns.size() > 1) {
-        qWarning() << "Listing multiple patterns";
-        for (const auto p: patterns) {
-            qWarning() << " " << p;
-        }
-        if (auto err = gpgme_op_keylist_ext_start(ctx, const_cast<const char **>(patterns.data()), int(secretOnly), 0)) {
-            qWarning() << "Error while listing keys";
+        if (auto err = gpgme_op_keylist_ext_start(ctx, const_cast<const char **>(zeroTerminatedPatterns.data()), int(secretOnly), 0)) {
             result.error = {err};
+            qWarning() << "Error while listing keys:" << result.error;
         }
     } else if (patterns.size() == 1) {
-        qWarning() << "Listing one patterns " << patterns.data()[0];
-        if (auto err = gpgme_op_keylist_start(ctx, patterns.data()[0], int(secretOnly))) {
-            qWarning() << "Error while listing keys";
+        if (auto err = gpgme_op_keylist_start(ctx, zeroTerminatedPatterns.data()[0], int(secretOnly))) {
             result.error = {err};
+            qWarning() << "Error while listing keys:" << result.error;
         }
     } else {
         qWarning() << "Listing all";
         if (auto err = gpgme_op_keylist_start(ctx, 0, int(secretOnly))) {
-            qWarning() << "Error while listing keys";
             result.error = {err};
+            qWarning() << "Error while listing keys:" << result.error;
         }
     }
 
 
     while (true) {
         gpgme_key_t key;
-        if (gpgme_op_keylist_next(ctx, &key)) {
+        if (auto err = gpgme_op_keylist_next(ctx, &key)) {
+            Error error{err};
+            if (error.errorCode() != GPG_ERR_EOF) {
+                result.error = error;
+                qWarning() << "Error after listing keys" << result.error;
+            }
             break;
         }
         Key k;
@@ -437,7 +439,6 @@ std::vector<Key> Crypto::findKeys(const QStringList &patterns, bool findPrivate,
     std::transform(patterns.constBegin(), patterns.constEnd(), std::back_inserter(list), [] (const QString &s) { return s.toUtf8(); });
     std::vector<char const *> pattern;
     std::transform(list.constBegin(), list.constEnd(), std::back_inserter(pattern), [] (const QByteArray &s) { return s.constData(); });
-    pattern.push_back(0);
 
     const KeyListResult res = listKeys(OpenPGP, pattern, findPrivate, remote ? GPGME_KEYLIST_MODE_EXTERN : GPGME_KEYLIST_MODE_LOCAL);
     if (res.error) {

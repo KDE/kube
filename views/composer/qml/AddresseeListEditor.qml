@@ -69,7 +69,7 @@ FocusScope {
                     ToolTip.visible: mouseArea.containsMouse
                     ToolTip.text: text
                 }
-                Kube.Icon {
+                Kube.IconButton {
                     id: keyIcon
                     anchors {
                         verticalCenter: parent.verticalCenter
@@ -77,8 +77,21 @@ FocusScope {
                     }
                     height: Kube.Units.gridUnit
                     width: visible ? height : 0
-                    visible: root.encrypt
-                    iconName: model.keyFound ? Kube.Icons.secure: Kube.Icons.insecure
+                    padding: 0
+                    visible: root.encrypt && !model.fetching
+                    iconName: model.keyFound ? Kube.Icons.secure: (hovered ? Kube.Icons.save : Kube.Icons.insecure)
+                    enabled: !model.keyFound
+                    tooltip: qsTr("Lookup keys")
+                    onClicked: root.controller.fetchKeys(model.id, model.name)
+                }
+                Kube.Icon {
+                    visible: model.fetching
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        right: removeButton.left
+                    }
+                    height: Kube.Units.gridUnit
+                    iconName: Kube.Icons.busy
                 }
                 Kube.IconButton {
                     id: removeButton
