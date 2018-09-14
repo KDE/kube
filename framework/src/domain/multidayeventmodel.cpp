@@ -81,67 +81,115 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
         case WeekStartDate:
             return rowStart;
         case Events: {
+            /*
+             * Layout the lines:
+             * We first sort all occurences so we get all-day first (sorted by duration),
+             * and then the rest sorted by start-date.
+             *
+             * The line grouping algorithm then always picks the first event,
+             * and tries to add more to the same line.
+             *
+             * We never mix all-day and non-all day, and otherwise try to fit as much as possible
+             * on the same line. Same day time-order should be preserved because of the sorting.
+             */
             const auto rowEnd = rowStart.addDays(7);
-            auto getStart = [&] (const QDate &start) {
+            auto getStart = [&rowStart] (const QDate &start) {
                 return qMax(rowStart.daysTo(start), 0ll);
             };
 
-            auto getDuration = [&] (const QDate &start, const QDate &end) {
+            auto getDuration = [] (const QDate &start, const QDate &end) {
                 return qMax(start.daysTo(end), 1ll);
             };
 
-            QMultiMap<int, QModelIndex> sorted;
-            //TODO:
-            //All-day first, sorted by duration
-            //then sort by start time
+            QList<QModelIndex> sorted;
+            sorted.reserve(mSourceModel->rowCount());
             for (int row = 0; row < mSourceModel->rowCount(); row++) {
                 const auto srcIdx = mSourceModel->index(row, 0, {});
                 const auto start = srcIdx.data(EventModel::StartTime).toDateTime().date();
                 const auto end = srcIdx.data(EventModel::EndTime).toDateTime().date();
-                //Filter if not within this row
-                //FIXME: avoid iterating over all events for every week
+                //Skip events not part of the week
                 if (end < rowStart || start > rowEnd) {
                     continue;
                 }
-                sorted.insert(getDuration(start, end), srcIdx);
+                sorted.append(srcIdx);
             }
+            qSort(sorted.begin(), sorted.end(), [&] (const QModelIndex &left, const QModelIndex &right) {
+                //All-day first, sorted by duration (in the hope that we can fit multiple on the same line)
+                const auto leftAllDay = left.data(EventModel::AllDay).toBool();
+                const auto rightAllDay = right.data(EventModel::AllDay).toBool();
+                if (leftAllDay && !rightAllDay) {
+                    return true;
+                }
+                if (!leftAllDay && rightAllDay) {
+                    return false;
+                }
+                if (leftAllDay && rightAllDay) {
+                    const auto leftDuration = getDuration(left.data(EventModel::StartTime).toDateTime().date(), left.data(EventModel::EndTime).toDateTime().date());
+                    const auto rightDuration = getDuration(right.data(EventModel::StartTime).toDateTime().date(), right.data(EventModel::EndTime).toDateTime().date());
+                    return leftDuration < rightDuration;
+                }
+                //The rest sorted by start date
+                return left.data(EventModel::StartTime).toDateTime() < right.data(EventModel::StartTime).toDateTime();
+            });
 
             auto result = QVariantList{};
-            auto currentLine = QVariantList{};
-            int lastStart = -1;
-            int lastDuration = 0;
-            for (const auto &srcIdx : sorted) {
+            while (!sorted.isEmpty()) {
+                const auto srcIdx = sorted.takeFirst();
                 const auto start = getStart(srcIdx.data(EventModel::StartTime).toDateTime().date());
                 const auto duration = qMin(getDuration(srcIdx.data(EventModel::StartTime).toDateTime().date(), srcIdx.data(EventModel::EndTime).toDateTime().date()), mPeriodLength - start);
                 const auto end = start + duration;
-                currentLine.append(QVariantMap{
-                    {"text", srcIdx.data(EventModel::Summary)},
-                    {"description", srcIdx.data(EventModel::Description)},
-                    {"starts", start},
-                    {"duration", duration},
-                    {"color", srcIdx.data(EventModel::Color)},
-                });
+                qWarning() << "start " << srcIdx.data(EventModel::StartTime).toDateTime() << duration;
+                auto currentLine = QVariantList{};
 
-                if (lastStart >= 0) {
+                auto addToLine = [&currentLine] (const QModelIndex &idx, int start, int duration) {
+                    currentLine.append(QVariantMap{
+                        {"text", idx.data(EventModel::Summary)},
+                        {"description", idx.data(EventModel::Description)},
+                        {"starts", start},
+                        {"duration", duration},
+                        {"color", idx.data(EventModel::Color)},
+                    });
+                };
+
+                //Add first event of line
+                addToLine(srcIdx, start, duration);
+                const bool allDayLine = srcIdx.data(EventModel::AllDay).toBool();
+
+                //Fill line with events that fit
+                int lastStart = 0;
+                int lastDuration = 0;
+                auto doesIntersect = [&] (int start, int end) {
                     const auto lastEnd = lastStart + lastDuration;
-
-                    //Does intersect
-                    if (((start >= lastStart) && (start <= lastEnd)) ||
-                        ((end >= lastStart) && (end <= lastStart)) ||
-                        ((start <= lastStart) && (end >= lastEnd))) {
-                        result.append(QVariant::fromValue(currentLine));
-                        // qDebug() << "Found intersection " << currentLine;
-                        currentLine = {};
+                    if (((start <= lastStart) && (end >= lastStart)) ||
+                        ((start < lastEnd) && (end > lastStart))) {
+                        // qWarning() << "Found intersection " << start << end;
+                        return true;
                     }
+                    return false;
+                };
+
+
+                for (auto it = sorted.begin(); it != sorted.end();) {
+                    const auto idx = *it;
+                    const auto start = getStart(idx.data(EventModel::StartTime).toDateTime().date());
+                    const auto duration = qMin(getDuration(idx.data(EventModel::StartTime).toDateTime().date(), idx.data(EventModel::EndTime).toDateTime().date()), mPeriodLength - start);
+                    const auto end = start + duration;
+                    //Avoid mixing all-day and other events
+                    if (allDayLine && !idx.data(EventModel::AllDay).toBool()) {
+                        break;
+                    }
+                    if (doesIntersect(start, end)) {
+                        it++;
+                        continue;
+                    }
+                    addToLine(idx, start, duration);
+                    lastStart = start;
+                    lastDuration = duration;
+                    it = sorted.erase(it);
                 }
-                lastStart = start;
-                lastDuration = duration;
-            }
-            if (!currentLine.isEmpty()) {
+                // qWarning() << "Appending line " << currentLine;
                 result.append(QVariant::fromValue(currentLine));
             }
-
-            // qDebug() << "Found events " << result;
             return result;
         }
         default:

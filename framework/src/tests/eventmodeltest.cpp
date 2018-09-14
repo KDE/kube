@@ -64,37 +64,70 @@ private slots:
             event2.setCalendar(calendar1);
             Sink::Store::create(event2).exec().waitForFinished();
         }
+        {
+            auto event3 = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event3");
+            calcoreEvent->setSummary("summary3");
+            calcoreEvent->setDtStart(start.addDays(1));
+            calcoreEvent->setDuration(3600);
+            calcoreEvent->setAllDay(false);
+            event3.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event3.setCalendar(calendar1);
+            Sink::Store::create(event3).exec().waitForFinished();
+        }
+        {
+            auto event4 = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event3");
+            calcoreEvent->setSummary("summary3");
+            calcoreEvent->setDtStart(start.addDays(2));
+            calcoreEvent->setAllDay(true);
+            event4.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event4.setCalendar(calendar1);
+            Sink::Store::create(event4).exec().waitForFinished();
+        }
 
         Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
 
         {
+            const int expectedNumberOfOccurreces = 9;
+            const int numberOfDays = 7;
             EventModel model;
             model.setStart(start.date());
-            model.setLength(7);
+            model.setLength(numberOfDays);
             model.setCalendarFilter({calendar1.identifier()});
-            QTRY_COMPARE(model.rowCount({}), 7);
+            QTRY_COMPARE(model.rowCount({}), expectedNumberOfOccurreces);
+
+            auto countEvents = [&] (const QVariantList &lines) {
+                int count = 0;
+                for (const auto &line : lines) {
+                    count += line.toList().size();
+                }
+                return count;
+            };
 
             //Check the multidayevent model
             {
                 MultiDayEventModel multiDayModel;
                 multiDayModel.setModel(&model);
                 QTRY_COMPARE(multiDayModel.rowCount({}), 1);
-                //All except the first from the recurring event
-                //FIXME This test fails sometimes
-                // QTRY_COMPARE(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>().size(), 6);
+                QTRY_COMPARE(countEvents(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>()), expectedNumberOfOccurreces);
+                //Count lines
+                QTRY_COMPARE(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>().size(), 3);
             }
 
             {
                 PeriodDayEventModel multiDayModel;
                 multiDayModel.setModel(&model);
-                QTRY_COMPARE(multiDayModel.rowCount({}), 7);
+                QTRY_COMPARE(multiDayModel.rowCount({}), numberOfDays);
                 {
                     const auto events = multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
                     QCOMPARE(events.size(), 1);
                 }
                 {
                     const auto events = multiDayModel.index(1, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
-                    QCOMPARE(events.size(), 1);
+                    QCOMPARE(events.size(), 2);
                 }
                 {
                     const auto events = multiDayModel.index(2, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
