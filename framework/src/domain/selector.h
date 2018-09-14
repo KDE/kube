@@ -26,7 +26,7 @@
  */
 class Selector : public QObject {
     Q_OBJECT
-    Q_PROPERTY (int currentIndex READ currentIndex WRITE setCurrentIndex)
+    Q_PROPERTY (int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY (QAbstractItemModel* model READ model CONSTANT)
 
 public:
@@ -35,6 +35,9 @@ public:
     virtual QAbstractItemModel *model() { return mModel; }
 
     void setCurrentIndex(int i) {
+        if (i == mCurrentIndex) {
+            return;
+        }
         mCurrentIndex = i;
         Q_ASSERT(mModel);
         if (i >= 0) {
@@ -42,6 +45,7 @@ public:
         } else {
             setCurrent(QModelIndex());
         }
+        emit currentIndexChanged();
     }
 
     void reapplyCurrentIndex();
@@ -49,6 +53,10 @@ public:
     int currentIndex() { return mCurrentIndex; }
 
     virtual void setCurrent(const QModelIndex &) = 0;
+
+signals:
+    void currentIndexChanged();
+
 private:
     QAbstractItemModel *mModel = nullptr;
     int mCurrentIndex = 0;

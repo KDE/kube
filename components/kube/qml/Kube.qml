@@ -240,22 +240,22 @@ Controls2.ApplicationWindow {
 
             Kube.Listener {
                 filter: Kube.Messages.reply
-                onMessageReceived: kubeViews.replaceView("composer", {message: message.mail, loadType: Kube.ComposerController.Reply})
+                onMessageReceived: kubeViews.replaceView("composer", {message: message.mail, loadType: Kube.ComposerController.Reply, accountId: app.currentAccount})
             }
 
             Kube.Listener {
                 filter: Kube.Messages.forward
-                onMessageReceived: kubeViews.replaceView("composer", {message: message.mail, loadType: Kube.ComposerController.Forward})
+                onMessageReceived: kubeViews.replaceView("composer", {message: message.mail, loadType: Kube.ComposerController.Forward, accountId: app.currentAccount})
             }
 
             Kube.Listener {
                 filter: Kube.Messages.edit
-                onMessageReceived: kubeViews.replaceView("composer", {message: message.mail, loadType: Kube.ComposerController.Draft})
+                onMessageReceived: kubeViews.replaceView("composer", {message: message.mail, loadType: Kube.ComposerController.Draft, accountId: app.currentAccount})
             }
 
             Kube.Listener {
                 filter: Kube.Messages.compose
-                onMessageReceived: kubeViews.replaceView("composer", {newMessage: true, recipients: message.recipients})
+                onMessageReceived: kubeViews.replaceView("composer", {newMessage: true, recipients: message.recipients, accountId: app.currentAccount})
             }
 
             Kube.Listener {

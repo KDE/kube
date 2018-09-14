@@ -43,6 +43,9 @@ std::vector<Crypto::Key> &operator+=(std::vector<Crypto::Key> &list, const std::
 }
 
 class IdentitySelector : public Selector {
+    Q_OBJECT
+    Q_PROPERTY (QString currentAccountId WRITE setCurrentAccountId)
+
 public:
     IdentitySelector(ComposerController &controller) : Selector(new IdentitiesModel), mController(controller)
     {
@@ -66,6 +69,16 @@ public:
             mController.clearAccountId();
         }
 
+    }
+
+    void setCurrentAccountId(const QString &accountId)
+    {
+        for (int i = 0; i < model()->rowCount(); i++) {
+            if (model()->index(i, 0).data(IdentitiesModel::AccountId).toString() == accountId) {
+                setCurrentIndex(i);
+                return;
+            }
+        }
     }
 
     QVector<QByteArray> getAllAddresses()

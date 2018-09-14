@@ -33,6 +33,7 @@ Kube.View {
     property int loadType: Kube.ComposerController.Draft
     property variant message: {}
     property variant recipients: []
+    property variant accountId: {}
 
     resources: [
         Kube.ComposerController {
@@ -52,6 +53,7 @@ Kube.View {
 
     onSetup: {
         loadMessage(root.message, root.loadType)
+        composerController.identitySelector.currentAccountId = root.accountId
     }
 
     onRefresh: {
@@ -536,6 +538,7 @@ Kube.View {
                     model: composerController.identitySelector.model
                     textRole: "address"
                     Layout.fillWidth: true
+                    currentIndex: composerController.identitySelector.currentIndex
                     onCurrentIndexChanged: {
                         composerController.identitySelector.currentIndex = currentIndex
                     }
