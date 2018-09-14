@@ -360,7 +360,8 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
         //TODO do we have to free those again?
         gpgme_key_t key;
         if (auto e = gpgme_get_key(context.context, signingKey.fingerprint, &key, /*secret*/ false)) {
-            qWarning() << "Failed to retrive signing key " << signingKey.fingerprint << e;
+            qWarning() << "Failed to retrieve signing key " << signingKey.fingerprint << Error{e};
+            return makeUnexpected(Error{e});
         } else {
             gpgme_signers_add(context.context, key);
         }
@@ -371,7 +372,8 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
     for (const auto &k : encryptionKeys) {
         gpgme_key_t key;
         if (auto e = gpgme_get_key(context.context, k.fingerprint, &key, /*secret*/ false)) {
-            qWarning() << "Failed to retrive key " << k.fingerprint << e;
+            qWarning() << "Failed to retrieve key " << k.fingerprint << Error{e};
+            return makeUnexpected(Error{e});
         } else {
             *keys_it++ = key;
         }
@@ -406,7 +408,8 @@ Crypto::sign(const QByteArray &content, const std::vector<Key> &signingKeys)
         //TODO do we have to free those again?
         gpgme_key_t key;
         if (auto e = gpgme_get_key(context.context, signingKey.fingerprint, &key, /*secret*/ false)) {
-            qWarning() << "Failed to retrive signing key " << signingKey.fingerprint << e;
+            qWarning() << "Failed to retrieve signing key " << signingKey.fingerprint << Error{e};
+            return makeUnexpected(Error{e});
         } else {
             gpgme_signers_add(context.context, key);
         }
