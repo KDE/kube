@@ -222,8 +222,7 @@ bool AttachmentModel::importPublicKey(const QModelIndex &index)
     Q_ASSERT(index.internalPointer());
     const auto part = static_cast<MimeTreeParser::MessagePart *>(index.internalPointer());
     Q_ASSERT(part);
-    auto pkey = part->node()->decodedContent();
-    auto result = Crypto::importKey(pkey);
+    auto result = Crypto::importKey(Crypto::OpenPGP, part->node()->decodedContent());
 
     bool success = true;
     QString message;

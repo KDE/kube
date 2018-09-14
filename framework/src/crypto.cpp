@@ -237,7 +237,7 @@ std::pair<DecryptionResult,VerificationResult> Crypto::decryptAndVerify(CryptoPr
     return std::make_pair(decryptionResult, verificationResult);
 }
 
-ImportResult Crypto::importKeys(CryptoProtocol protocol, const QByteArray &certData)
+ImportResult Crypto::importKey(CryptoProtocol protocol, const QByteArray &certData)
 {
     Context context{protocol};
     if (!context) {
@@ -255,7 +255,7 @@ ImportResult Crypto::importKeys(CryptoProtocol protocol, const QByteArray &certD
     }
 }
 
-static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const char*> &patterns, bool secretOnly, int keyListMode)
+static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const char*> &patterns, bool secretOnly, int keyListMode, bool importKeys)
 {
     Context context{protocol};
     if (!context) {
@@ -276,12 +276,11 @@ static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const c
             qWarning() << "Error while listing keys:" << result.error;
         }
     } else if (patterns.size() == 1) {
-        if (auto err = gpgme_op_keylist_start(ctx, zeroTerminatedPatterns.data()[0], int(secretOnly))) {
+        if (auto err = gpgme_op_keylist_start(ctx, zeroTerminatedPatterns[0], int(secretOnly))) {
             result.error = {err};
             qWarning() << "Error while listing keys:" << result.error;
         }
     } else {
-        qWarning() << "Listing all";
         if (auto err = gpgme_op_keylist_start(ctx, 0, int(secretOnly))) {
             result.error = {err};
             qWarning() << "Error while listing keys:" << result.error;
@@ -289,6 +288,7 @@ static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const c
     }
 
 
+    std::vector<gpgme_key_t> listedKeys;
     while (true) {
         gpgme_key_t key;
         if (auto err = gpgme_op_keylist_next(ctx, &key)) {
@@ -299,6 +299,9 @@ static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const c
             }
             break;
         }
+
+        listedKeys.push_back(key);
+
         Key k;
         if (key->subkeys) {
             k.keyId = QByteArray{key->subkeys->keyid};
@@ -312,6 +315,13 @@ static KeyListResult listKeys(CryptoProtocol protocol, const std::vector<const c
         result.keys.push_back(k);
     }
     gpgme_op_keylist_end(ctx);
+
+    if (importKeys && !listedKeys.empty()) {
+        listedKeys.push_back(0);
+        if (auto err = gpgme_op_import_keys(ctx, const_cast<gpgme_key_t*>(listedKeys.data()))) {
+            qWarning() << "Error while importing keys" << Error{err};
+        }
+    }
     return result;
 }
 
@@ -428,11 +438,6 @@ Crypto::sign(const QByteArray &content, const std::vector<Key> &signingKeys)
     return std::pair<QByteArray, QString>{toBA(out), micAlg};
 }
 
-ImportResult Crypto::importKey(const QByteArray &pkey)
-{
-    return importKeys(OpenPGP, pkey);
-}
-
 std::vector<Key> Crypto::findKeys(const QStringList &patterns, bool findPrivate, bool remote)
 {
     QByteArrayList list;
@@ -440,7 +445,7 @@ std::vector<Key> Crypto::findKeys(const QStringList &patterns, bool findPrivate,
     std::vector<char const *> pattern;
     std::transform(list.constBegin(), list.constEnd(), std::back_inserter(pattern), [] (const QByteArray &s) { return s.constData(); });
 
-    const KeyListResult res = listKeys(OpenPGP, pattern, findPrivate, remote ? GPGME_KEYLIST_MODE_EXTERN : GPGME_KEYLIST_MODE_LOCAL);
+    const KeyListResult res = listKeys(OpenPGP, pattern, findPrivate, remote ? GPGME_KEYLIST_MODE_EXTERN : GPGME_KEYLIST_MODE_LOCAL, remote);
     if (res.error) {
         qWarning() << "Failed to lookup keys: " << res.error;
         return {};

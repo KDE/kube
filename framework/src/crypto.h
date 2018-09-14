@@ -104,8 +104,8 @@ struct KUBE_EXPORT ImportResult {
     int imported;
     int unchanged;
 };
-ImportResult KUBE_EXPORT importKeys(CryptoProtocol protocol, const QByteArray &certData);
-ImportResult KUBE_EXPORT importKey(const QByteArray &key);
+ImportResult KUBE_EXPORT importKey(CryptoProtocol protocol, const QByteArray &certData);
+ImportResult KUBE_EXPORT importKey(CryptoProtocol protocol, const Key &key);
 
 /**
  * Sign the given content and returns the signing data and the algorithm used

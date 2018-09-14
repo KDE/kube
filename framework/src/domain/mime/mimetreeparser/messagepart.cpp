@@ -647,8 +647,7 @@ CertMessagePart::~CertMessagePart()
 
 void CertMessagePart::import()
 {
-    const QByteArray certData = mNode->decodedContent();
-    importKeys(mProtocol, certData);
+    importKey(mProtocol, mNode->decodedContent());
 }
 
 QString CertMessagePart::text() const
