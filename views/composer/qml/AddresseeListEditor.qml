@@ -81,7 +81,7 @@ FocusScope {
                     visible: root.encrypt && !model.fetching
                     iconName: model.keyFound ? Kube.Icons.secure: (hovered ? Kube.Icons.save : Kube.Icons.insecure)
                     enabled: !model.keyFound
-                    tooltip: qsTr("Lookup keys")
+                    tooltip: qsTr("Fetch key from keyserver")
                     onClicked: root.controller.fetchKeys(model.id, model.name)
                 }
                 Kube.Icon {
