@@ -391,12 +391,12 @@ private slots:
         QVERIFY(signedMessage->contentType()->isMimeType("multipart/mixed"));
         const auto contents = signedMessage->contents();
         QCOMPARE(contents.size(), 2);
-        QCOMPARE(contents[0]->contentType()->mimeType(), QString{"text/plain"});
-        QCOMPARE(contents[1]->contentType()->mimeType(), QString{"application/pgp-keys"});
+        QCOMPARE(contents[0]->contentType()->mimeType(), QByteArray{"text/plain"});
+        QCOMPARE(contents[1]->contentType()->mimeType(), QByteArray{"application/pgp-keys"});
         QCOMPARE(contents[1]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
 
         auto signature = result->contents()[1];
-        QCOMPARE(signature->contentDisposition()->filename(), QByteArray{"signature.asc"});
+        QCOMPARE(signature->contentDisposition()->filename(), {"signature.asc"});
         QVERIFY(signature->contentType()->isMimeType("application/pgp-signature"));
     }
 
@@ -434,10 +434,10 @@ private slots:
         QVERIFY(signedMessage->contentType()->isMimeType("multipart/mixed"));
         const auto contents = signedMessage->contents();
         QCOMPARE(contents.size(), 4);
-        QCOMPARE(contents[0]->contentType()->mimeType(), QString{"text/plain"});
+        QCOMPARE(contents[0]->contentType()->mimeType(), QByteArray{"text/plain"});
         QCOMPARE(contents[1]->contentDisposition()->filename(), {"filename1"});
         QCOMPARE(contents[2]->contentDisposition()->filename(), {"filename2"});
-        QCOMPARE(contents[3]->contentType()->mimeType(), QString{"application/pgp-keys"});
+        QCOMPARE(contents[3]->contentType()->mimeType(), QByteArray{"application/pgp-keys"});
         QCOMPARE(contents[3]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
     }
 };
