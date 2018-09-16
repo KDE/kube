@@ -382,25 +382,22 @@ private slots:
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->date(false)->dateTime().isValid());
 
-        QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/mixed"});
-        auto resultAttachments = result->attachments();
-        QCOMPARE(resultAttachments.size(), 1);
-        QCOMPARE(resultAttachments[0]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
+        QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/signed"});
+        QCOMPARE(result->attachments().size(), 1);
+        QCOMPARE(result->attachments()[0]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
+        QCOMPARE(result->contents().size(), 2);
 
         auto signedMessage = result->contents()[0];
-
-        QVERIFY(signedMessage->contentType()->isMimeType("multipart/signed"));
-
+        QVERIFY(signedMessage->contentType()->isMimeType("multipart/mixed"));
         const auto contents = signedMessage->contents();
         QCOMPARE(contents.size(), 2);
-        {
-            auto c = contents.at(0);
-            QVERIFY(c->contentType()->isMimeType("text/plain"));
-        }
-        {
-            auto c = contents.at(1);
-            QVERIFY(c->contentType()->isMimeType("application/pgp-signature"));
-        }
+        QCOMPARE(contents[0]->contentType()->mimeType(), QByteArray{"text/plain"});
+        QCOMPARE(contents[1]->contentType()->mimeType(), QByteArray{"application/pgp-keys"});
+        QCOMPARE(contents[1]->contentDisposition()->filename(), QByteArray{"0x8F246DE6.asc"});
+
+        auto signature = result->contents()[1];
+        QCOMPARE(signature->contentDisposition()->filename(), QByteArray{"signature.asc"});
+        QVERIFY(signature->contentType()->isMimeType("application/pgp-signature"));
     }
 
     void testCreatePlainMailWithAttachmentsSigned()
@@ -412,38 +409,36 @@ private slots:
         from.fromUnicodeString("from@example.org");
         QString subject = "subject";
         QString body = "body";
-        QList<Attachment> attachments = {{"name", "filename", "mimetype", true, "inlineAttachment"}, {"name", "filename", "mimetype", false, "nonInlineAttachment"}};
+        QList<Attachment> attachments = {{"name", "filename1", "mimetype1", true, "inlineAttachment"}, {"name", "filename2", "mimetype2", false, "nonInlineAttachment"}};
 
-        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, Crypto::findKeys({}, true, false));
+        auto signingKeys = Crypto::findKeys({}, true, false);
+        auto result = MailTemplates::createMessage({}, to, cc, bcc, from, subject, body, false, attachments, signingKeys, {}, signingKeys[0]);
 
         QVERIFY(result);
         QVERIFY(validate(result));
+        qWarning() << "---------------------------------";
+        qWarning().noquote() << result->encodedContent();
+        qWarning() << "---------------------------------";
         QCOMPARE(result->subject()->asUnicodeString(), subject);
         QVERIFY(result->date(false)->dateTime().isValid());
 
-        QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/mixed"});
-        auto resultAttachments = result->attachments();
-        QCOMPARE(resultAttachments.size(), 3);
-        // It seems KMime searches for the attachments using depth-first
-        // search, so the public key is last
-        QCOMPARE(resultAttachments[2]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
+        QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/signed"});
+        QCOMPARE(result->attachments().size(), 3);
+        QCOMPARE(result->attachments()[0]->contentDisposition()->filename(), {"filename1"});
+        QCOMPARE(result->attachments()[1]->contentDisposition()->filename(), {"filename2"});
+        QCOMPARE(result->attachments()[2]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
+
+        QCOMPARE(result->contents().size(), 2);
 
         auto signedMessage = result->contents()[0];
-
-        QVERIFY(signedMessage->contentType()->isMimeType("multipart/signed"));
-
+        QVERIFY(signedMessage->contentType()->isMimeType("multipart/mixed"));
         const auto contents = signedMessage->contents();
-        QCOMPARE(contents.size(), 2);
-        {
-            auto c = contents.at(0);
-            QVERIFY(c->contentType()->isMimeType("multipart/mixed"));
-            //1 text + 2 attachments
-            QCOMPARE(c->contents().size(), 3);
-        }
-        {
-            auto c = contents.at(1);
-            QVERIFY(c->contentType()->isMimeType("application/pgp-signature"));
-        }
+        QCOMPARE(contents.size(), 4);
+        QCOMPARE(contents[0]->contentType()->mimeType(), QByteArray{"text/plain"});
+        QCOMPARE(contents[1]->contentDisposition()->filename(), QByteArray{"filename1"});
+        QCOMPARE(contents[2]->contentDisposition()->filename(), QByteArray{"filename2"});
+        QCOMPARE(contents[3]->contentType()->mimeType(), QByteArray{"application/pgp-keys"});
+        QCOMPARE(contents[3]->contentDisposition()->filename(), QByteArray{"0x8F246DE6.asc"});
     }
 };
 

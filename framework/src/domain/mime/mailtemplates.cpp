@@ -946,7 +946,7 @@ QString MailTemplates::body(const KMime::Message::Ptr &msg, bool &isHtml)
     return html;
 }
 
-static KMime::Content *createAttachmentPart(const QByteArray &content, const QString &filename, bool isInline, const QByteArray &mimeType, const QString &name)
+static KMime::Content *createAttachmentPart(const QByteArray &content, const QString &filename, bool isInline, const QByteArray &mimeType, const QString &name, bool base64Encode = true)
 {
 
     KMime::Content *part = new KMime::Content;
@@ -958,10 +958,10 @@ static KMime::Content *createAttachmentPart(const QByteArray &content, const QSt
     }
 
     part->contentType(true)->setMimeType(mimeType);
-    part->contentType(true)->setName(name, "utf-8");
-    // Just always encode attachments base64 so it's safe for binary data,
-    // except when it's another message
-    if(mimeType != "message/rfc822") {
+    if (!name.isEmpty()) {
+        part->contentType(true)->setName(name, "utf-8");
+    }
+    if(base64Encode) {
         part->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEbase64);
     }
     part->setBody(content);
@@ -1031,16 +1031,42 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     }
     mail->assemble();
 
+    const bool encryptionRequired = !signingKeys.empty() || !encryptionKeys.empty();
+    //We always attach the key when encryption is enabled.
+    const bool attachingPersonalKey = encryptionRequired;
+
+    auto allAttachments = attachments;
+    if (attachingPersonalKey) {
+        const auto publicKeyExportResult = Crypto::exportPublicKey(attachedKey);
+        if (!publicKeyExportResult) {
+            qWarning() << "Failed to export public key" << publicKeyExportResult.error();
+            return {};
+        }
+        const auto publicKeyData = publicKeyExportResult.value();
+        allAttachments << Attachment{
+            {},
+            QString("0x%1.asc").arg(QString{attachedKey.shortKeyId}),
+            "application/pgp-keys",
+            false,
+            publicKeyData
+        };
+    }
+
     std::unique_ptr<KMime::Content> bodyPart{[&] {
-        if (!attachments.isEmpty()) {
+        if (!allAttachments.isEmpty()) {
             auto bodyPart = new KMime::Content;
             bodyPart->contentType(true)->setMimeType("multipart/mixed");
             bodyPart->contentType()->setBoundary(KMime::multiPartBoundary());
             bodyPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
             bodyPart->setPreamble("This is a multi-part message in MIME format.\n");
             bodyPart->addContent(createBodyPart(body, htmlBody));
-            for (const auto &attachment : attachments) {
-                bodyPart->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name));
+            for (const auto &attachment : allAttachments) {
+
+                // Just always encode attachments base64 so it's safe for binary data,
+                // except when it's another message or an ascii armored key
+                static QSet<QString> noEncodingRequired{{"message/rfc822"}, {"application/pgp-keys"}};
+                const bool base64Encode = !noEncodingRequired.contains(attachment.mimeType);
+                bodyPart->addContent(createAttachmentPart(attachment.data, attachment.filename, attachment.isInline, attachment.mimeType, attachment.name, base64Encode));
             }
             return bodyPart;
         } else {
@@ -1049,20 +1075,25 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     }()};
     bodyPart->assemble();
 
-    QByteArray bodyData;
-    if (!signingKeys.empty() || !encryptionKeys.empty()) {
-        auto result = MailCrypto::processCrypto(std::move(bodyPart), signingKeys, encryptionKeys, attachedKey);
-        if (!result) {
-            qWarning() << "Crypto failed";
-            return {};
+    const QByteArray bodyData = [&] {
+        if (encryptionRequired) {
+            auto result = MailCrypto::processCrypto(std::move(bodyPart), signingKeys, encryptionKeys);
+            if (!result) {
+                qWarning() << "Crypto failed" << result.error();
+                return QByteArray{};
+            }
+            result.value()->assemble();
+            return result.value()->encodedContent();
+        } else {
+            if (!bodyPart->contentType(false)) {
+                bodyPart->contentType(true)->setMimeType("text/plain");
+                bodyPart->assemble();
+            }
+            return bodyPart->encodedContent();
         }
-        bodyData = result.value()->encodedContent();
-    } else {
-        if (!bodyPart->contentType(false)) {
-            bodyPart->contentType(true)->setMimeType("text/plain");
-            bodyPart->assemble();
-        }
-        bodyData = bodyPart->encodedContent();
+    }();
+    if (bodyData.isEmpty()) {
+        return {};
     }
 
     KMime::Message::Ptr resultMessage(new KMime::Message);

@@ -28,7 +28,7 @@
 
 namespace MailCrypto {
 
-Expected<Crypto::Error, std::unique_ptr<KMime::Content>> processCrypto(std::unique_ptr<KMime::Content> content, const std::vector<Crypto::Key> &signingKeys, const std::vector<Crypto::Key> &encryptionKeys, const Crypto::Key &attachedKey);
+Expected<Crypto::Error, std::unique_ptr<KMime::Content>> processCrypto(std::unique_ptr<KMime::Content> content, const std::vector<Crypto::Key> &signingKeys, const std::vector<Crypto::Key> &encryptionKeys);
 
 };
 
