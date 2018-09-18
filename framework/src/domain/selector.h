@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 Christian Mollekofp <mollekopf@kolabsys.com>
+    Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,7 +19,6 @@
 #pragma once
 
 #include <QAbstractItemModel>
-#include <QString>
 
 /**
  * Exposes a model and maintains a current index selection.
@@ -59,6 +58,6 @@ signals:
 
 private:
     QAbstractItemModel *mModel = nullptr;
-    int mCurrentIndex = 0;
+    int mCurrentIndex = -1;
 };
 

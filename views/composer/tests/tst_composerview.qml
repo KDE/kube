@@ -180,4 +180,31 @@ ViewTestCase {
         verify(textEditor)
         tryVerify(function(){ return textEditor.htmlEnabled == true })
     }
+
+    function test_5loadAccount() {
+        var initialState = {
+            accounts: [{
+                    id: "account1",
+                    id: "account2",
+                }],
+            identities: [{
+                    account: "account2",
+                    name: "Test Identity",
+                    address: "identity@example.org"
+                }],
+            resources: [{
+                    id: "resource1",
+                    account: "account2",
+                    type: "dummy"
+                }]
+        }
+        TestStore.setup(initialState)
+
+        var composer = createTemporaryObject(composerComponent, testCase, {accountId: "account2"})
+        composer.setup()
+
+        var controller = findChild(composer, "composerController");
+        verify(controller)
+        tryVerify(function(){ return controller.accountId == "account2" })
+    }
 }

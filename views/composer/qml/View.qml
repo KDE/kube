@@ -38,6 +38,7 @@ Kube.View {
     resources: [
         Kube.ComposerController {
             id: composerController
+            objectName: "composerController"
             sign: signCheckbox.checked
             encrypt: encryptCheckbox.checked
             onDone: root.done()
