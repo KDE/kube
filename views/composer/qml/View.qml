@@ -479,7 +479,7 @@ Kube.View {
                 enabled: composerController.foundPersonalKeys
                 Kube.CheckBox {
                     id: encryptCheckbox
-                    checked: false
+                    checked: composerController.encrypt
                 }
                 Kube.Label {
                     text: qsTr("encrypt")
@@ -490,7 +490,7 @@ Kube.View {
                 enabled: composerController.foundPersonalKeys
                 Kube.CheckBox {
                     id: signCheckbox
-                    checked: false
+                    checked: composerController.sign
                 }
                 Kube.Label {
                     text: qsTr("sign")

@@ -380,35 +380,40 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 
 void ComposerController::loadDraft(const QVariant &message) {
     loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
-                mRemoveDraft = true;
-                setMessage(mail);
-            });
+        setEncrypt(KMime::isEncrypted(mail.data()));
+        setSign(KMime::isSigned(mail.data()));
+        mRemoveDraft = true;
+        setMessage(mail);
+    });
 }
 
 void ComposerController::loadReply(const QVariant &message) {
     loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
-                //Find all personal email addresses to exclude from reply
-                KMime::Types::AddrSpecList me;
-                auto list = static_cast<IdentitySelector*>(mIdentitySelector.data())->getAllAddresses();
-                for (const auto &a : list) {
-                    KMime::Types::Mailbox mb;
-                    mb.setAddress(a);
-                    me << mb.addrSpec();
-                }
+        //Find all personal email addresses to exclude from reply
+        KMime::Types::AddrSpecList me;
+        auto list = static_cast<IdentitySelector*>(mIdentitySelector.data())->getAllAddresses();
+        for (const auto &a : list) {
+            KMime::Types::Mailbox mb;
+            mb.setAddress(a);
+            me << mb.addrSpec();
+        }
 
-                MailTemplates::reply(mail, [this] (const KMime::Message::Ptr &reply) {
-                            //We assume reply
-                            setMessage(reply);
-                        }, me);
-            });
+        setEncrypt(KMime::isEncrypted(mail.data()));
+        setSign(KMime::isSigned(mail.data()));
+        MailTemplates::reply(mail, [this] (const auto &msg) {
+            setMessage(msg);
+        }, me);
+    });
 }
 
 void ComposerController::loadForward(const QVariant &message) {
     loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
-                MailTemplates::forward(mail, [this] (const KMime::Message::Ptr &fwdMessage) {
-                            setMessage(fwdMessage);
-                        });
-            });
+        setEncrypt(KMime::isEncrypted(mail.data()));
+        setSign(KMime::isSigned(mail.data()));
+        MailTemplates::forward(mail, [this] (const auto &msg) {
+            setMessage(msg);
+        });
+    });
 }
 
 void ComposerController::loadMessage(const QVariant &message, std::function<void(const KMime::Message::Ptr&)> callback)
