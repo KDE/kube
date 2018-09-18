@@ -54,7 +54,9 @@ Kube.View {
 
     onSetup: {
         loadMessage(root.message, root.loadType)
-        composerController.identitySelector.currentAccountId = root.accountId
+        if (root.accountId) {
+            composerController.identitySelector.currentAccountId = root.accountId
+        }
     }
 
     onRefresh: {
