@@ -533,13 +533,15 @@ Kube.View {
 
                 Kube.ComboBox {
                     id: identityCombo
+                    objectName: "identityCombo"
 
                     width: parent.width - Kube.Units.largeSpacing * 2
 
                     model: composerController.identitySelector.model
                     textRole: "address"
                     Layout.fillWidth: true
-                    currentIndex: composerController.identitySelector.currentIndex
+                    //A regular binding is not enough in this case, we have to use the Binding element
+                    Binding { target: identityCombo; property: "currentIndex"; value: composerController.identitySelector.currentIndex }
                     onCurrentIndexChanged: {
                         composerController.identitySelector.currentIndex = currentIndex
                     }

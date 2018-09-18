@@ -187,11 +187,18 @@ ViewTestCase {
                     id: "account1",
                     id: "account2",
                 }],
-            identities: [{
+            identities: [
+                {
+                    account: "account1",
+                    name: "Test Identity1",
+                    address: "identity@example.org"
+                },
+                {
                     account: "account2",
                     name: "Test Identity",
                     address: "identity@example.org"
-                }],
+                }
+            ],
             resources: [{
                     id: "resource1",
                     account: "account2",
@@ -206,5 +213,9 @@ ViewTestCase {
         var controller = findChild(composer, "composerController");
         verify(controller)
         tryVerify(function(){ return controller.accountId == "account2" })
+
+        var identityCombo = findChild(composer, "identityCombo");
+        verify(identityCombo)
+        compare(identityCombo.currentIndex, controller.identitySelector.currentIndex)
     }
 }
