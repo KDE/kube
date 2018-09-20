@@ -220,6 +220,7 @@ void FolderListModel::setFolderId(const QVariant &folderId)
     query.request<Folder::Name>()
          .request<Folder::Icon>()
          .request<Folder::Parent>()
+         .request<Folder::Enabled>()
          .request<Folder::SpecialPurpose>();
     query.setId("folder" + folder);
     runQuery(query);
