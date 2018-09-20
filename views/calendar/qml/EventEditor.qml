@@ -24,6 +24,9 @@ import org.kube.framework 1.0 as Kube
 Kube.Popup {
     id: popup
 
+    property var controller
+    property bool editMode: false
+
     Item {
         id: root
 
@@ -46,7 +49,7 @@ Kube.Popup {
         }
         ]
 
-        state: "new"
+        state: editMode ? "edit" : "new"
 
         anchors.fill: parent
 
@@ -72,6 +75,7 @@ Kube.Popup {
                     id: titleEdit
                     Layout.fillWidth: true
                     placeholderText: "Event Title"
+                    text: controller.summary
                 }
 
                 ColumnLayout {
@@ -89,7 +93,7 @@ Kube.Popup {
                         PropertyChanges {target: tillTime; visible: false}
                     }
                     ]
-                    state: "regular"
+                    state: controller.allDay ? "daylong" : "regular"
 
                     spacing: Kube.Units.smallSpacing
 
@@ -121,7 +125,10 @@ Kube.Popup {
                         spacing: Kube.Units.smallSpacing
                         Kube.CheckBox {
                             onClicked: {
-                                checked ? dateAndTimeChooser.state = "daylong" :  dateAndTimeChooser.state = "regular"
+                                checked: controller.allDay
+                                onClicked: {
+                                    controller.allDay = !controller.allDay
+                                }
                             }
                         }
                         Kube.Label {
@@ -142,6 +149,7 @@ Kube.Popup {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         //TODO placeholderText: "Description"
+                        text: controller.description
                     }
                 }
             }
