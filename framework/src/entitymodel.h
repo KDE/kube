@@ -33,6 +33,8 @@ class KUBE_EXPORT EntityModel : public QSortFilterProxyModel
     Q_OBJECT
 
     Q_PROPERTY (QString accountId READ accountId WRITE setAccountId)
+    Q_PROPERTY (QString resourceId READ resourceId WRITE setResourceId)
+    Q_PROPERTY (QString entityId READ entityId WRITE setEntityId)
     Q_PROPERTY (QString type READ type WRITE setType)
     Q_PROPERTY (QStringList roles READ roles WRITE setRoles)
     Q_PROPERTY (QString sortRole READ sortRole WRITE setSortRole)
@@ -57,6 +59,12 @@ public:
     void setAccountId(const QString &);
     QString accountId() const;
 
+    void setResourceId(const QString &);
+    QString resourceId() const;
+
+    void setEntityId(const QString &);
+    QString entityId() const;
+
     void setType(const QString &);
     QString type() const;
 
@@ -74,15 +82,27 @@ public:
 protected:
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
 
+    virtual void updateQuery();
+    QHash<int, QByteArray> mRoleNames;
+
 private:
     void runQuery(const Sink::Query &query);
-    void updateQuery();
     QSharedPointer<QAbstractItemModel> mModel;
-    QHash<int, QByteArray> mRoleNames;
     QHash<QByteArray, int> mRoles;
     QString mAccountId;
+    QString mResourceId;
+    QString mEntityId;
     QString mType;
     QString mSortRole;
+};
+
+class KUBE_EXPORT EntityLoader : public EntityModel {
+    Q_OBJECT
+public:
+    EntityLoader(QObject *parent = Q_NULLPTR);
+    virtual ~EntityLoader();
+protected:
+    void updateQuery() override;
 };
 
 class KUBE_EXPORT CheckedEntities : public QObject {

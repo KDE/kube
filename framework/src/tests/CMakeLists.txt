@@ -31,3 +31,12 @@ target_link_libraries(eventmodeltest
     Qt5::Gui
     kubeframework
 )
+
+add_executable(entitymodeltest entitymodeltest.cpp)
+add_test(entitymodeltest entitymodeltest)
+target_link_libraries(entitymodeltest
+    Qt5::Core
+    Qt5::Test
+    Qt5::Gui
+    kubeframework
+)

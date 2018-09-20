@@ -22,17 +22,18 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property string accountId: ""
-    property string currentFolderName: ""
+    property string currentFolderName: entityLoader.name
     property string currentFolderId: ""
     property string errorText: ""
     visible: false
 
-    onCurrentFolderIdChanged: root.currentFolderName = ""
-    Kube.FolderListModel {
-        id: folderModel
-        folderId: root.currentFolderId
-        onRowsInserted: root.currentFolderName = folderModel.data(folderModel.index(0, 0), Kube.FolderListModel.Name)
-        onRowsRemoved: root.currentFolderName = ""
+    Kube.EntityLoader {
+        id: entityLoader
+        type: "folder"
+        roles: ["name"]
+        accountId: root.accountId
+        entityId: root.currentFolderId
+        property variant name
     }
 
     Repeater {

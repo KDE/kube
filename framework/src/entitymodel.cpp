@@ -78,6 +78,8 @@ void EntityModel::runQuery(const Query &query)
         mModel = Store::loadModel<Calendar>(query);
     } else if (mType == "addressbook") {
         mModel = Store::loadModel<Addressbook>(query);
+    } else if (mType == "folder") {
+        mModel = Store::loadModel<Folder>(query);
     } else {
         qWarning() << "Type not supported " << mType;
         Q_ASSERT(false);
@@ -95,6 +97,12 @@ void EntityModel::updateQuery()
     if (!mAccountId.isEmpty()) {
         query.resourceFilter<SinkResource::Account>(mAccountId.toUtf8());
     }
+    if (!mResourceId.isEmpty()) {
+        query.resourceFilter(mResourceId.toUtf8());
+    }
+    if (!mEntityId.isEmpty()) {
+        query.filter(mEntityId.toUtf8());
+    }
     query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
 
     for (const auto &property: mRoles.keys()) {
@@ -103,17 +111,43 @@ void EntityModel::updateQuery()
     runQuery(query);
 }
 
-void EntityModel::setAccountId(const QString &accountId)
+void EntityModel::setAccountId(const QString &id)
 {
-
-    //Get all folders of an account
-    mAccountId = accountId;
-    updateQuery();
+    if (mAccountId != id) {
+        mAccountId = id;
+        updateQuery();
+    }
 }
 
 QString EntityModel::accountId() const
 {
-    return {};
+    return mAccountId;
+}
+
+void EntityModel::setResourceId(const QString &id)
+{
+    if (mResourceId != id) {
+        mResourceId = id;
+        updateQuery();
+    }
+}
+
+QString EntityModel::resourceId() const
+{
+    return mResourceId;
+}
+
+void EntityModel::setEntityId(const QString &id)
+{
+    if (mEntityId != id) {
+        mEntityId = id;
+        updateQuery();
+    }
+}
+
+QString EntityModel::entityId() const
+{
+    return mEntityId;
 }
 
 void EntityModel::setType(const QString &type)
@@ -195,6 +229,33 @@ bool EntityModel::setData(const QModelIndex &index, const QVariant &value, int r
         Sink::Store::modify(modifiedEntity).exec();
     }
     return true;
+}
+
+EntityLoader::EntityLoader(QObject *parent) : EntityModel(parent)
+{
+    QObject::connect(this, &QAbstractItemModel::rowsInserted, this, [this] (const QModelIndex &parent, int first, int last) {
+        for (int row = first; row <= last; row++) {
+            auto idx = index(row, 0, parent);
+            for (const auto &r : mRoleNames.keys()) {
+                setProperty(mRoleNames.value(r), data(idx, r));
+            }
+            //We only ever use the first index (we're not expecting any more either)
+            break;
+        }
+    });
+}
+
+EntityLoader::~EntityLoader()
+{
+
+}
+
+void EntityLoader::updateQuery()
+{
+    if (entityId().isEmpty()) {
+        return;
+    }
+    EntityModel::updateQuery();
 }
 
 
