@@ -31,6 +31,10 @@ Kube.View {
     property date selectedDate: getFirstDayOfWeek(currentDate)
     property bool autoUpdateDate: true
 
+    Kube.CheckedEntities {
+        id: calendarFilterCollector
+    }
+
     onSelectedDateChanged: {
         console.log("Selected date changed", selectedDate)
     }
@@ -179,7 +183,7 @@ Kube.View {
                 }
             }
 
-            ColumnLayout {
+            Kube.InlineAccountSwitcher {
                 //Grow from the button but don't go over topLayout
                 anchors {
                     bottom: parent.bottom
@@ -188,25 +192,19 @@ Kube.View {
                     bottomMargin: Kube.Units.largeSpacing
                     rightMargin: Kube.Units.largeSpacing
                 }
-                height: Math.min(implicitHeight, parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin)
+                height: parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin
 
-                spacing: Kube.Units.largeSpacing
 
-                Kube.ListView {
+                delegate: Kube.ListView {
                     id: listView
-                    Layout.fillHeight: true
-                    Layout.preferredHeight: contentHeight
-                    Layout.minimumHeight: Kube.Units.gridUnit
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
                     spacing: Kube.Units.smallSpacing
                     model: Kube.CheckableEntityModel {
                         id: calendarModel
                         type: "calendar"
                         roles: ["name", "color", "enabled"]
                         sortRole: "name"
+                        accountId: listView.parent.accountId
+                        checkedEntities: calendarFilterCollector
                     }
                     delegate: Kube.ListDelegate {
                         id: delegate
@@ -275,7 +273,7 @@ Kube.View {
             Layout.fillWidth: true
             currentDate: root.currentDate
             startDate: root.selectedDate
-            calendarFilter: calendarModel.checkedEntities
+            calendarFilter: calendarFilterCollector.checkedEntities
         }
 
         MonthView {
@@ -285,7 +283,7 @@ Kube.View {
             currentDate: root.currentDate
             startDate: getFirstDayOfWeek(getFirstDayOfMonth(root.selectedDate))
             month: root.selectedDate.getMonth()
-            calendarFilter: calendarModel.checkedEntities
+            calendarFilter: calendarFilterCollector.checkedEntities
         }
     }
 

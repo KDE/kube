@@ -85,12 +85,26 @@ private:
     QString mSortRole;
 };
 
+class KUBE_EXPORT CheckedEntities : public QObject {
+    Q_OBJECT
+    Q_PROPERTY (QSet<QByteArray> checkedEntities READ checkedEntities NOTIFY checkedEntitiesChanged)
+public:
+    bool contains(const QByteArray &) const;
+    void insert(const QByteArray &);
+    void remove(const QByteArray &);
+    QSet<QByteArray> checkedEntities() const;
+
+signals:
+    void checkedEntitiesChanged();
+
+private:
+    QSet<QByteArray> mCheckedEntities;
+};
 
 class KUBE_EXPORT CheckableEntityModel : public EntityModel {
 
     Q_OBJECT
-
-    Q_PROPERTY (QSet<QByteArray> checkedEntities READ checkedEntities NOTIFY checkedEntitiesChanged)
+    Q_PROPERTY (CheckedEntities* checkedEntities READ checkedEntities WRITE setCheckedEntities CONSTANT)
 public:
     CheckableEntityModel(QObject *parent = Q_NULLPTR);
     virtual ~CheckableEntityModel();
@@ -99,11 +113,9 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-    QSet<QByteArray> checkedEntities() const;
-
-signals:
-    void checkedEntitiesChanged();
+    CheckedEntities *checkedEntities() const;
+    void setCheckedEntities(CheckedEntities *);
 
 private:
-    QSet<QByteArray> mCheckedEntities;
+    CheckedEntities *mCheckedEntities = nullptr;
 };

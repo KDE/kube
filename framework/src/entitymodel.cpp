@@ -216,28 +216,55 @@ QHash<int, QByteArray > CheckableEntityModel::roleNames() const
 
 QVariant CheckableEntityModel::data(const QModelIndex &index, int role) const
 {
-    if (role == Qt::CheckStateRole) {
-        return mCheckedEntities.contains(EntityModel::data(index, IdRole).toByteArray());
+    if (mCheckedEntities && role == Qt::CheckStateRole) {
+        return mCheckedEntities->contains(EntityModel::data(index, IdRole).toByteArray());
     }
     return EntityModel::data(index, role);
 }
 
 bool CheckableEntityModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role == Qt::CheckStateRole) {
+    if (mCheckedEntities && role == Qt::CheckStateRole) {
         auto identifier = EntityModel::data(index, IdRole).toByteArray();
         if (value.toBool()) {
-            mCheckedEntities.insert(identifier);
+            mCheckedEntities->insert(identifier);
         } else {
-            mCheckedEntities.remove(identifier);
+            mCheckedEntities->remove(identifier);
         }
-        emit checkedEntitiesChanged();
         return true;
     }
     return EntityModel::setData(index, value, role);
 }
 
-QSet<QByteArray> CheckableEntityModel::checkedEntities() const
+CheckedEntities *CheckableEntityModel::checkedEntities() const
+{
+    return mCheckedEntities;
+}
+
+void CheckableEntityModel::setCheckedEntities(CheckedEntities *checkedEntities)
+{
+    mCheckedEntities = checkedEntities;
+}
+
+
+void CheckedEntities::insert(const QByteArray &id)
+{
+    mCheckedEntities.insert(id);
+    emit checkedEntitiesChanged();
+}
+
+void CheckedEntities::remove(const QByteArray &id)
+{
+    mCheckedEntities.remove(id);
+    emit checkedEntitiesChanged();
+}
+
+bool CheckedEntities::contains(const QByteArray &id) const
+{
+    return mCheckedEntities.contains(id);
+}
+
+QSet<QByteArray> CheckedEntities::checkedEntities() const
 {
     return mCheckedEntities;
 }

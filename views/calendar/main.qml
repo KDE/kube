@@ -31,20 +31,33 @@ ApplicationWindow {
 
     Component.onCompleted: {
         var initialState = {
-            accounts: [{
-                id: "account1",
-                name: "Test Account"
-            }],
+            accounts: [
+                {
+                    id: "account1",
+                    name: "Test Account"
+                },
+                {
+                    id: "account2",
+                    name: "Test Account2"
+                },
+            ],
             identities: [{
                 account: "account1",
                 name: "Test Identity",
                 address: "identity@example.org"
             }],
-            resources: [{
-                id: "caldavresource",
-                account: "account1",
-                type: "caldav",
-            }],
+            resources: [
+                {
+                    id: "caldavresource",
+                    account: "account1",
+                    type: "caldav",
+                },
+                {
+                    id: "caldavresource2",
+                    account: "account2",
+                    type: "caldav",
+                }
+            ],
             calendars: [{
                 id: "calendar1",
                 resource: "caldavresource",
@@ -247,6 +260,12 @@ ApplicationWindow {
                 id: "calendar16",
                 resource: "caldavresource",
                 name: "Test Calendar16",
+                color: "#f67400"
+            },
+            {
+                id: "account2calendar",
+                resource: "caldavresource2",
+                name: "Account2Calendar",
                 color: "#f67400"
             }],
         }
