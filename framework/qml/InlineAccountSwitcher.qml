@@ -27,7 +27,7 @@ FocusScope {
         Kube.Fabric.postMessage(Kube.Messages.accountSelection, {accountId: currentAccount});
     }
 
-    property var currentFolder
+    property Component delegate: null
 
     ColumnLayout {
         id: layout
@@ -72,8 +72,7 @@ FocusScope {
                     padding: 0
                 }
 
-                Kube.FolderListView {
-                    objectName: "folderListView"
+                Loader {
                     anchors {
                         top: accountButton.bottom
                         left: parent.left
@@ -82,22 +81,9 @@ FocusScope {
                     }
                     focus: isCurrent
                     activeFocusOnTab: true
-
-                    accountId: currentData.accountId
                     visible: isCurrent
-                    onVisibleChanged: {
-                        if (visible) {
-                            selectRootIndex()
-                        }
-                    }
-
-                    onActivated: {
-                        if (visible) {
-                            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
-                                                                                    "trash": model.data(index, Kube.FolderListModel.Trash)})
-                            root.currentFolder = model.data(index, Kube.FolderListModel.DomainObject)
-                        }
-                    }
+                    sourceComponent: root.delegate
+                    property variant accountId: currentData.accountId
                 }
             }
         }

@@ -28,7 +28,7 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
     id: root
     property alias currentAccount: accountFolderview.currentAccount
-    property alias currentFolder: accountFolderview.currentFolder
+    property variant currentFolder: null
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
@@ -142,6 +142,23 @@ Kube.View {
                     bottom: statusBarContainer.top
                     left: newMailButton.left
                     right: parent.right
+                }
+                delegate: Kube.FolderListView {
+                    objectName: "folderListView"
+                    accountId: parent.accountId
+                    onVisibleChanged: {
+                        if (visible) {
+                            selectRootIndex()
+                        }
+                    }
+
+                    onActivated: {
+                        if (visible) {
+                            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
+                                                                                    "trash": model.data(index, Kube.FolderListModel.Trash)})
+                            root.currentFolder = model.data(index, Kube.FolderListModel.DomainObject)
+                        }
+                    }
                 }
             }
 
