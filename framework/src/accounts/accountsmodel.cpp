@@ -39,14 +39,12 @@ AccountsModel::~AccountsModel()
 
 QHash< int, QByteArray > AccountsModel::roleNames() const
 {
-    QHash<int, QByteArray> roles;
-
-    roles[Name] = "name";
-    roles[Icon] = "icon";
-    roles[AccountId] = "accountId";
-    roles[Status] = "status";
-
-    return roles;
+    return {
+        {Name, "name"},
+        {Icon, "icon"},
+        {AccountId, "accountId"},
+        {Status, "status"}
+    };
 }
 
 QVariant AccountsModel::data(const QModelIndex &idx, int role) const
