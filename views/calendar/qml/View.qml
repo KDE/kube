@@ -184,6 +184,7 @@ Kube.View {
             }
 
             Kube.InlineAccountSwitcher {
+                id: accountSwitcher
                 //Grow from the button but don't go over topLayout
                 anchors {
                     bottom: statusBarContainer.top
@@ -290,7 +291,7 @@ Kube.View {
                 }
                 Kube.StatusBar {
                     id: statusBar
-                    accountId: accountFolderview.currentAccount
+                    accountId: accountSwitcher.currentAccount
                     height: Kube.Units.gridUnit * 2
                     anchors {
                         top: border.bottom
