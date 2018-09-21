@@ -186,13 +186,13 @@ Kube.View {
             Kube.InlineAccountSwitcher {
                 //Grow from the button but don't go over topLayout
                 anchors {
-                    bottom: parent.bottom
+                    bottom: statusBarContainer.top
                     left: topLayout.left
                     right: parent.right
                     bottomMargin: Kube.Units.largeSpacing
                     rightMargin: Kube.Units.largeSpacing
                 }
-                height: parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin
+                height: parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin - statusBarContainer.height
 
 
                 delegate: Kube.ListView {
@@ -262,6 +262,40 @@ Kube.View {
                                 text: label.text
                             }
                         }
+                    }
+                }
+            }
+
+            Item {
+                id: statusBarContainer
+                anchors {
+                    topMargin: Kube.Units.smallSpacing
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                }
+                height: childrenRect.height
+
+                Rectangle {
+                    id: border
+                    visible: statusBar.visible
+                    anchors {
+                        right: parent.right
+                        left: parent.left
+                        margins: Kube.Units.smallSpacing
+                    }
+                    height: 1
+                    color: Kube.Colors.viewBackgroundColor
+                    opacity: 0.3
+                }
+                Kube.StatusBar {
+                    id: statusBar
+                    accountId: accountFolderview.currentAccount
+                    height: Kube.Units.gridUnit * 2
+                    anchors {
+                        top: border.bottom
+                        left: statusBarContainer.left
+                        right: statusBarContainer.right
                     }
                 }
             }
