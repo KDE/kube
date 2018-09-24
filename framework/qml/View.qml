@@ -69,8 +69,8 @@ FocusScope {
 
     //This signal will be emitted once all initial properties have been set and the view is ready to load
     signal setup()
+
     StackView.onActivated: {
-        root.setup()
         root.refresh()
     }
 
@@ -93,7 +93,10 @@ FocusScope {
     }
 
     onCurrentIndexChanged: showRelevantSplits()
-    Component.onCompleted: showRelevantSplits()
+    Component.onCompleted: {
+        root.setup()
+        showRelevantSplits()
+    }
 
     function incrementCurrentIndex() {
         if (currentIndex < count) {
