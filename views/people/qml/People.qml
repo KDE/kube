@@ -247,8 +247,6 @@ FocusScope {
                     margins: Kube.Units.largeSpacing
                 }
                 text: qsTr("Edit")
-                //FIXME implement modifications first
-                visible: false
 
                 onClicked: {
                     stack.push(personComposer, {contact: root.currentContact})

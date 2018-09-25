@@ -76,27 +76,55 @@ void ContactController::save()
     const auto addressbook = getAddressbook();
     if (!addressbook) {
         qWarning() << "No addressbook selected";
+        return;
     }
 
-    KContacts::Addressee addressee;
-    addressee.setGivenName(getFirstName());
-    addressee.setFamilyName(getLastName());
-    addressee.setFormattedName(getFirstName() + " " + getLastName());
-    KContacts::VCardConverter converter;
 
-    Contact contact(addressbook->resourceInstanceIdentifier());
-    contact.setVcard(converter.createVCard(addressee, KContacts::VCardConverter::v3_0));
-    contact.setAddressbook(*addressbook);
+    if (auto c = mContact.value<Sink::ApplicationDomain::Contact::Ptr>()) {
+        Contact contact = *c;
 
-    auto job = Store::create(contact)
-        .then([&] (const KAsync::Error &error) {
-            if (error) {
-                SinkWarning() << "Failed to save the contact: " << error;
-            }
-            emit done();
-        });
+        //Apply the changed properties on top of what's existing
+        KContacts::Addressee addressee = KContacts::VCardConverter{}.parseVCard(contact.getVcard());
 
-    run(job);
+        addressee.setGivenName(getFirstName());
+        addressee.setFamilyName(getLastName());
+        addressee.setFormattedName(getFirstName() + " " + getLastName());
+
+        contact.setVcard(KContacts::VCardConverter{}.createVCard(addressee, KContacts::VCardConverter::v3_0));
+        contact.setAddressbook(*addressbook);
+
+        auto job = Store::modify(contact)
+            .then([&] (const KAsync::Error &error) {
+                if (error) {
+                    SinkWarning() << "Failed to save the contact: " << error;
+                }
+                emit done();
+            });
+
+        run(job);
+
+    } else {
+        Contact contact(addressbook->resourceInstanceIdentifier());
+
+        KContacts::Addressee addressee;
+
+        addressee.setGivenName(getFirstName());
+        addressee.setFamilyName(getLastName());
+        addressee.setFormattedName(getFirstName() + " " + getLastName());
+
+        contact.setVcard(KContacts::VCardConverter{}.createVCard(addressee, KContacts::VCardConverter::v3_0));
+        contact.setAddressbook(*addressbook);
+
+        auto job = Store::create(contact)
+            .then([&] (const KAsync::Error &error) {
+                if (error) {
+                    SinkWarning() << "Failed to save the contact: " << error;
+                }
+                emit done();
+            });
+
+        run(job);
+    }
 }
 
 void ContactController::updateSaveAction()
