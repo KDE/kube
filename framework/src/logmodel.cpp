@@ -72,5 +72,6 @@ void LogModel::insert(const QVariantMap &message)
     addProperty("resource");
     addProperty("entities");
     insertRow(0, item);
+    emit entryAdded(message);
 }
 

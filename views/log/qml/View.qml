@@ -82,6 +82,9 @@ Controls1.SplitView {
             model: Kube.LogModel {
                 id: logModel
                 objectName: "logModel"
+                onEntryAdded: {
+                    Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
+                }
             }
 
             onCurrentItemChanged: {

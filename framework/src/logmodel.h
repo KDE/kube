@@ -35,7 +35,9 @@ public:
 
     Q_INVOKABLE void insert(const QVariantMap &);
 
+signals:
+    void entryAdded(const QVariantMap &message);
+
 private:
-    // QSharedPointer<Kube::Fabric::Listener> mListener;
     QHash<QByteArray, int> mRoles;
 };

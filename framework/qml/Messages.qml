@@ -39,6 +39,7 @@ Item {
     property string requestAccountsConfiguration: "requestAccountsConfiguration"
 
     property string notification: "notification"
+    property string displayNotification: "displayNotification"
     property string progressNotification: "progressNotification"
     property string errorNotification: "errorNotification"
     property string search: "search"
