@@ -106,14 +106,18 @@ Kube.View {
                         eventPopup.open()
                     }
                 }
-                Row {
-                    anchors.horizontalCenter: parent.horizontalCenter
+                RowLayout {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
                     spacing: Kube.Units.smallSpacing
                     ButtonGroup {
                         id: viewButtonGroup
                     }
                     Kube.TextButton {
                         id: weekViewButton
+                        Layout.fillWidth: true
                         text: qsTr("Week")
                         textColor: Kube.Colors.highlightedTextColor
                         checkable: true
@@ -127,6 +131,7 @@ Kube.View {
                     }
                     Kube.TextButton {
                         id: monthViewButton
+                        Layout.fillWidth: true
                         text: qsTr("Month")
                         textColor: Kube.Colors.highlightedTextColor
                         checkable: true
