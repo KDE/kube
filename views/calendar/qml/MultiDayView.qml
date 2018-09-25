@@ -48,7 +48,6 @@ Item {
     implicitHeight: (numberOfRows > 1 ? Kube.Units.gridUnit * 10 * numberOfRows: numberOfLinesShown * Kube.Units.gridUnit) + dayLabels.height
 
     height: implicitHeight
-    visible: numberOfRows > 1 || numberOfLinesShown
 
     Column {
         anchors {
