@@ -22,7 +22,7 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property string accountId: ""
-    property string currentFolderName: entityLoader.name
+    property string currentFolderName: entityLoader.name ? entityLoader.name : ""
     property string currentFolderId: ""
     property string errorText: ""
     visible: false
