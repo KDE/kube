@@ -26,76 +26,58 @@ FocusScope {
     id: root
     property var controller
 
-    width: Kube.Units.gridUnit * 7 * 7 + Kube.Units.gridUnit * 2
-    height: Kube.Units.gridUnit * 27
+    width: contentLayout.implicitWidth + 2 * Kube.Units.smallSpacing
+    height: contentLayout.implicitHeight + 2 * Kube.Units.smallSpacing
 
     Rectangle {
         anchors {
             fill: parent
         }
-
         color: Kube.Colors.viewBackgroundColor
 
-        Column {
-
+        ColumnLayout {
+            id: contentLayout
             anchors {
-                fill: parent
-                margins: Kube.Units.smallSpacing
+                centerIn: parent
             }
 
             spacing: Kube.Units.largeSpacing
 
-            Kube.TextField {
+            Kube.Label {
                 width: parent.width
-                placeholderText: "Title"
                 text: controller.summary
-            }
-            RowLayout {
-                spacing: Kube.Units.smallSpacing
-
-                DayChooser { }
-
-                TimeChooser {
-                    visible: !controller.allDay
-                }
-
-                Kube.Label {
-                    text: " " + qsTr("until") + " "
-                }
-
-                DayChooser { }
-
-                TimeChooser {
-                   visible: !controller.allDay
-                }
+                font.bold: true
             }
 
-            RowLayout {
-                spacing: Kube.Units.largeSpacing
-
-                RowLayout {
-                    Layout.fillHeight: true
-                    Kube.CheckBox {
-                        checked: controller.allDay
-                        onClicked: {
-                            controller.allDay = !controller.allDay
-                        }
-                    }
-
-                    Kube.Label {
-                        text: "All day"
-                    }
-                }
-
-                Kube.ComboBox {
-                    model: ["once", "daily", "weekly"]
-                }
+            Kube.Label {
+                visible: controller.allDay
+                text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM")
+            }
+            Kube.Label {
+                visible: !controller.allDay
+                text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm")
             }
 
-            Kube.TextEditor {
-                width: parent.width
-                height: 200
+            Kube.Label {
                 text: controller.description
+            }
+            RowLayout {
+                Kube.Button {
+                    text: qsTr("Remove")
+                    onClicked: {
+                        root.controller.remove()
+                    }
+                }
+                Item {
+                    Layout.fillWidth: true
+                }
+                Kube.Button {
+                    text: qsTr("Edit")
+                    onClicked: {
+                        //TODO
+                    }
+                }
+
             }
         }
     }
