@@ -252,21 +252,20 @@ FocusScope {
                                     drag.target: parent
 
                                     onReleased: eventDelegate.Drag.drop()
-                                    onClicked: eventEditor.open()
-
-
-                                    EventEditor {
-                                        id: eventEditor
-                                        parent: root
-                                        width: parent.width * 0.7
-                                        height: parent.height * 0.7
-                                        x: parent.width * 0.15
-                                        y: parent.height * 0.15
-
-                                        editMode: true
-
-                                        controller: Kube.EventController {
-                                            event: model.modelData.event
+                                    onClicked:  eventDetails.open()
+                                    Kube.Popup {
+                                        id: eventDetails
+                                        parent: ApplicationWindow.overlay
+                                        x: Math.round((parent.width - width) / 2)
+                                        y: Math.round((parent.height - height) / 2)
+                                        width: eventView.width
+                                        height: eventView.height
+                                        padding: 0
+                                        EventView {
+                                            id: eventView
+                                            controller: Kube.EventController {
+                                                event: model.modelData.event
+                                            }
                                         }
                                     }
                                 }
