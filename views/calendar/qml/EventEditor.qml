@@ -191,7 +191,7 @@ Kube.Popup {
                     id: discardButton
                     text: "Discard Changes"
                     onClicked: {
-                        root.state =  "display"
+                        popup.close()
                     }
                 }
 
@@ -199,7 +199,8 @@ Kube.Popup {
                     id: saveButton
                     text: "Save Changes"
                     onClicked: {
-                        root.state = "display"
+                        //controller.saveAction.execute()
+                        popup.close()
                     }
                 }
 
