@@ -26,8 +26,8 @@ FocusScope {
     id: root
     property var controller
 
-    width: contentLayout.implicitWidth + 2 * Kube.Units.smallSpacing
-    height: contentLayout.implicitHeight + 2 * Kube.Units.smallSpacing
+    width: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
+    height: contentLayout.implicitHeight + 2 * Kube.Units.largeSpacing
 
     Rectangle {
         anchors {
@@ -41,12 +41,11 @@ FocusScope {
                 centerIn: parent
             }
 
-            spacing: Kube.Units.largeSpacing
+            spacing: Kube.Units.smallSpacing
 
-            Kube.Label {
+            Kube.Heading {
                 width: parent.width
                 text: controller.summary
-                font.bold: true
             }
 
             Kube.Label {
@@ -61,6 +60,12 @@ FocusScope {
             Kube.Label {
                 text: controller.description
             }
+
+            Item {
+                width: 1
+                height: Kube.Units.largeSpacing
+            }
+
             RowLayout {
                 Kube.Button {
                     text: qsTr("Remove")
