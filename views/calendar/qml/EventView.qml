@@ -79,11 +79,22 @@ FocusScope {
                 Kube.Button {
                     text: qsTr("Edit")
                     onClicked: {
-                        //TODO
+                        editor.open()
                     }
                 }
 
             }
         }
+    }
+
+    EventEditor {
+        id: editor
+
+        //FIXME placing and hight
+        width:  800
+        height: 300
+
+        controller: root.controller
+        editMode: true
     }
 }
