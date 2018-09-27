@@ -164,6 +164,8 @@ Kube.Popup {
                     id: deleteButton
                     text: "Delete"
                     onClicked: {
+                        controller.remove()
+                        popup.close()
                     }
                 }
                 Kube.Button {
