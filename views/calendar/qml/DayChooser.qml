@@ -30,7 +30,7 @@ Item {
     Kube.Button {
         id: button
 
-        text: "Choose Date"
+        text: selector.selectedDate.toLocaleDateString() //"Choose Date"
 
         onClicked: {
             popup.open()
