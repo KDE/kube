@@ -24,7 +24,7 @@ import org.kube.framework 1.0 as Kube
 Kube.Popup {
     id: popup
 
-    property var controller
+    property var controller: Kube.EventController {}
     property bool editMode: false
 
     Item {
