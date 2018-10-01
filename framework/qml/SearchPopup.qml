@@ -32,6 +32,7 @@ Item {
     property real backgroundOpacity: 0
     property real searchAreaOpacity: backgroundOpacity / 4
     property bool movedSearchBox: false
+    property real borderWidth: 3
 
     NumberAnimation on backgroundOpacity {
         id: fadeIn
@@ -108,7 +109,7 @@ Item {
         height: searchArea.height
         color: "transparent"
         border {
-            width: 3
+            width: root.borderWidth
             color: Kube.Colors.highlightColor
         }
         Rectangle {
@@ -128,17 +129,16 @@ Item {
             horizontalCenter: parent.horizontalCenter
         }
         y: parent.height / 3
-        height: Kube.Units.gridUnit * 2
+        height: textField.height
         width: Kube.Units.gridUnit * 30
-        radius: Kube.Units.smallSpacing
 
         color: Kube.Colors.darkBackgroundColor
 
         states: [
             State {
                 name: "searchInProgress"
-                when: find.text.length != 0
-                PropertyChanges {target: filterField; restoreEntryValues: false; y: Kube.Units.gridUnit}
+                when: textField.text.length != 0
+                PropertyChanges {target: filterField; restoreEntryValues: false; y: root.borderWidth}
                 PropertyChanges {target: root; restoreEntryValues: false; searchAreaOpacity: 0}
             }
         ]
@@ -148,7 +148,7 @@ Item {
         }
 
         function clearSearch() {
-            find.text = ""
+            textField.text = ""
             root.close()
         }
 
@@ -162,7 +162,7 @@ Item {
                 verticalCenter: parent.verticalCenter
             }
 
-            width: parent.width - Kube.Units.smallSpacing
+            width: parent.width
             spacing: 0
 
             Kube.IconButton {
@@ -172,7 +172,7 @@ Item {
             }
 
             Kube.TextField {
-                id: find
+                id: textField
                 Layout.fillWidth: true
                 placeholderText: qsTr("Filter...")
                 onTextChanged: root.filter = text
