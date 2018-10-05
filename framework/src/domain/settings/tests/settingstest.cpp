@@ -26,6 +26,7 @@ public:
         loadMailtransportResource();
         loadMaildirResource();
         loadCardDavResource();
+        loadCalDavResource();
         loadIdentity();
     }
 
@@ -36,6 +37,7 @@ public:
         saveMailtransportResource();
         saveMaildirResource();
         saveCardDavResource();
+        saveCalDavResource();
         saveIdentity();
     }
 
@@ -45,6 +47,7 @@ public:
         removeResource(mImapIdentifier);
         removeResource(mMaildirIdentifier);
         removeResource(mCardDavIdentifier);
+        removeResource(mCalDavIdentifier);
         removeIdentity();
         removeAccount();
     }
@@ -72,6 +75,8 @@ private slots:
         auto accountName = QString("accountName");
         auto carddavServer = QString("carddavServer");
         auto carddavUsername = QString("carddavUsername");
+        auto caldavServer = QString("caldavServer");
+        auto caldavUsername = QString("caldavUsername");
 
         TestSettings settings;
         settings.setProperty("accountType", "test");
@@ -82,6 +87,8 @@ private slots:
         settings.setProperty("smtpUsername", smtpUsername);
         settings.setProperty("carddavServer", carddavServer);
         settings.setProperty("carddavUsername", carddavUsername);
+        settings.setProperty("caldavServer", caldavServer);
+        settings.setProperty("caldavUsername", caldavUsername);
         settings.setProperty("path", path);
         settings.setProperty("userName", username);
         settings.setProperty("emailAddress", emailAddress);
@@ -90,7 +97,7 @@ private slots:
         auto accountId = settings.accountIdentifier();
 
         Sink::Store::fetchAll<Sink::ApplicationDomain::SinkResource>(Sink::Query()).then([](const QList<Sink::ApplicationDomain::SinkResource::Ptr> &resources) {
-            QCOMPARE(resources.size(), 4);
+            QCOMPARE(resources.size(), 5);
         })
         .exec().waitForFinished();
 
@@ -102,6 +109,7 @@ private slots:
             QSignalSpy spy2(&readSettings, &TestSettings::cardDavResourceChanged);
             QSignalSpy spy3(&readSettings, &TestSettings::changed);
             QSignalSpy spy4(&readSettings, &TestSettings::pathChanged);
+            QSignalSpy spy5(&readSettings, &TestSettings::calDavResourceChanged);
             readSettings.setAccountIdentifier(accountId);
             //Once for clear and once for the new setting
             QTRY_COMPARE(spy.count(), 2);
@@ -109,6 +117,7 @@ private slots:
             QTRY_COMPARE(spy2.count(), 2);
             QTRY_COMPARE(spy3.count(), 2);
             QTRY_COMPARE(spy4.count(), 2);
+            QTRY_COMPARE(spy5.count(), 2);
             QVERIFY(!readSettings.accountIdentifier().isEmpty());
             QCOMPARE(readSettings.property("accountName").toString(), accountName);
             QCOMPARE(readSettings.property("imapServer").toString(), imapServer);
@@ -117,6 +126,8 @@ private slots:
             QCOMPARE(readSettings.property("smtpUsername").toString(), smtpUsername);
             QCOMPARE(readSettings.property("carddavServer").toString(), carddavServer);
             QCOMPARE(readSettings.property("carddavUsername").toString(), carddavUsername);
+            QCOMPARE(readSettings.property("caldavServer").toString(), caldavServer);
+            QCOMPARE(readSettings.property("caldavUsername").toString(), caldavUsername);
             QCOMPARE(readSettings.property("path").toString(), path);
             QCOMPARE(readSettings.property("userName").toString(), username);
             QCOMPARE(readSettings.property("emailAddress").toString(), emailAddress);
@@ -131,6 +142,8 @@ private slots:
             settings.setProperty("smtpUsername", smtpUsername + "mod");
             settings.setProperty("carddavServer", carddavServer + "mod");
             settings.setProperty("carddavUsername", carddavUsername + "mod");
+            settings.setProperty("caldavServer", caldavServer + "mod");
+            settings.setProperty("caldavUsername", caldavUsername + "mod");
             settings.setProperty("path", path + "mod");
             settings.setProperty("userName", username + "mod");
             settings.setProperty("emailAddress", emailAddress + "mod");
@@ -145,6 +158,7 @@ private slots:
             QSignalSpy spy2(&readSettings, &TestSettings::cardDavResourceChanged);
             QSignalSpy spy3(&readSettings, &TestSettings::changed);
             QSignalSpy spy4(&readSettings, &TestSettings::pathChanged);
+            QSignalSpy spy5(&readSettings, &TestSettings::calDavResourceChanged);
             readSettings.setAccountIdentifier(accountId);
             //Once for clear and once for the new setting
             QTRY_COMPARE(spy.count(), 2);
@@ -152,6 +166,7 @@ private slots:
             QTRY_COMPARE(spy2.count(), 2);
             QTRY_COMPARE(spy3.count(), 2);
             QTRY_COMPARE(spy4.count(), 2);
+            QTRY_COMPARE(spy5.count(), 2);
             QVERIFY(!readSettings.accountIdentifier().isEmpty());
             QCOMPARE(readSettings.property("accountName").toString(), accountName + "mod");
             QCOMPARE(readSettings.property("imapServer").toString(), imapServer + "mod");
@@ -160,6 +175,8 @@ private slots:
             QCOMPARE(readSettings.property("smtpUsername").toString(), smtpUsername + "mod");
             QCOMPARE(readSettings.property("carddavServer").toString(), carddavServer + "mod");
             QCOMPARE(readSettings.property("carddavUsername").toString(), carddavUsername + "mod");
+            QCOMPARE(readSettings.property("caldavServer").toString(), caldavServer + "mod");
+            QCOMPARE(readSettings.property("caldavUsername").toString(), caldavUsername + "mod");
             QCOMPARE(readSettings.property("path").toString(), path + "mod");
             QCOMPARE(readSettings.property("userName").toString(), username + "mod");
             QCOMPARE(readSettings.property("emailAddress").toString(), emailAddress + "mod");

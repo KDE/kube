@@ -67,6 +67,7 @@ void AccountSettings::setAccountIdentifier(const QByteArray &id)
     emit imapResourceChanged();
     emit smtpResourceChanged();
     emit cardDavResourceChanged();
+    emit calDavResourceChanged();
     emit pathChanged();
 
     load();
@@ -257,12 +258,12 @@ void AccountSettings::loadCardDavResource()
 
 void AccountSettings::loadCalDavResource()
 {
-    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).filter<SinkResource::ResourceType>("sink.carddav"))
+    Store::fetchOne<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier).filter<SinkResource::ResourceType>("sink.caldav"))
         .then([this](const SinkResource &resource) {
             mCalDavIdentifier = resource.identifier();
             mCalDavServer = resource.getProperty("server").toString();
             mCalDavUsername = resource.getProperty("username").toString();
-            emit cardDavResourceChanged();
+            emit calDavResourceChanged();
         }).onError([](const KAsync::Error &error) {
             qWarning() << "Failed to load the CalDAV resource: " << error.errorMessage;
         }).exec().waitForFinished();
