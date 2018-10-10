@@ -1,6 +1,5 @@
 [Icon Theme]
 Name=Kube
-Name[ast]=Kube
 Name[ca]=Kube
 Name[ca@valencia]=Kube
 Name[cs]=Kube
@@ -14,7 +13,6 @@ Name[uk]=Kube
 Name[x-test]=xxKubexx
 
 Comment=Kube Theme
-Comment[ast]=Tema de Kube
 Comment[ca]=Tema del Kube
 Comment[ca@valencia]=Tema del Kube
 Comment[cs]=Motiv Kube
