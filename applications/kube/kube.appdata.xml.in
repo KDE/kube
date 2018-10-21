@@ -11,6 +11,7 @@
   <name xml:lang="it">Kube</name>
   <name xml:lang="nl">Kube</name>
   <name xml:lang="pt">Kube</name>
+  <name xml:lang="ru">Kube</name>
   <name xml:lang="sk">Kube</name>
   <name xml:lang="sv">Kube</name>
   <name xml:lang="uk">Kube</name>
@@ -23,6 +24,7 @@
   <summary xml:lang="it">Client di posta elettronica</summary>
   <summary xml:lang="nl">E-mailclient</summary>
   <summary xml:lang="pt">Cliente de e-mail</summary>
+  <summary xml:lang="ru">Почтовый клиент</summary>
   <summary xml:lang="sk">E-mailový klient</summary>
   <summary xml:lang="sv">E-postklient</summary>
   <summary xml:lang="uk">Поштовий клієнт</summary>
