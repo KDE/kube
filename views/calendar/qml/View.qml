@@ -231,8 +231,8 @@ Kube.View {
                                 }
 
                                 indicator: Rectangle {
-                                    width: Kube.Units.gridUnit
-                                    height: Kube.Units.gridUnit
+                                    width: Kube.Units.gridUnit * 0.8
+                                    height: Kube.Units.gridUnit * 0.8
 
                                     color: model.color
 
