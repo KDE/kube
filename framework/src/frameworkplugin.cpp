@@ -168,6 +168,9 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<EventModel>(uri, 1, 0, "EventModel");
     qmlRegisterType<EventController>(uri, 1, 0, "EventController");
     qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");
+    qmlRegisterUncreatableType<Kube::ListPropertyController>(uri, 1, 0, "ListPropertyController", "abstract");
+    qmlRegisterUncreatableType<Selector>(uri, 1, 0, "Selector", "abstract");
+    qmlRegisterUncreatableType<Completer>(uri, 1, 0, "Completer", "abstract");
     qmlRegisterType<Kube::ControllerAction>(uri, 1, 0, "ControllerAction");
     qmlRegisterType<MessageParser>(uri, 1, 0, "MessageParser");
     qmlRegisterType<Retriever>(uri, 1, 0, "Retriever");
