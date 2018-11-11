@@ -108,14 +108,9 @@ Kube.View {
 
     //Drafts
     Rectangle {
-
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-        }
-
         width: Kube.Units.gridUnit * 15
         Layout.minimumWidth: Kube.Units.gridUnit * 5
+        Layout.fillHeight: true
 
         color: Kube.Colors.darkBackgroundColor
 
@@ -152,11 +147,7 @@ Kube.View {
                 id: listView
                 activeFocusOnTab: true
 
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-
+                Layout.fillWidth: true
                 Layout.fillHeight: true
                 clip: true
                 currentIndex: -1
@@ -255,10 +246,7 @@ Kube.View {
     Rectangle {
         Layout.fillWidth: true
         Layout.minimumWidth: Kube.Units.gridUnit * 5
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-        }
+        Layout.fillHeight: true
         color: Kube.Colors.backgroundColor
 
         ColumnLayout {
@@ -398,10 +386,7 @@ Kube.View {
     //Recepients
     FocusScope {
         id: recipients
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-        }
+        Layout.fillHeight: true
         width: Kube.Units.gridUnit * 15
         activeFocusOnTab: true
 

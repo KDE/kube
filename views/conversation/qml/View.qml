@@ -112,7 +112,8 @@ Kube.View {
 
 
     Controls1.SplitView {
-        anchors.fill: parent
+        Layout.fillWidth: true
+        Layout.fillHeight: true
         Rectangle {
             width: Kube.Units.gridUnit * 10
             Layout.fillHeight: parent.height

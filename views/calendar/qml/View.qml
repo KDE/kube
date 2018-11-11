@@ -76,10 +76,7 @@ Kube.View {
         }
 
         Rectangle {
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-            }
+            Layout.fillHeight: true
             width: Kube.Units.gridUnit * 10
             color: Kube.Colors.darkBackgroundColor
 

@@ -123,11 +123,7 @@ Controls2.ApplicationWindow {
 
         Rectangle {
             id: sideBar
-
-            anchors {
-                top: mainContent.top
-                bottom: mainContent.bottom
-            }
+            Layout.fillHeight: true
             width: app.sidebarWidth
             color: Kube.Colors.darkBackgroundColor
 
@@ -220,10 +216,7 @@ Controls2.ApplicationWindow {
         }
         ViewManager {
             id: kubeViews
-            anchors {
-                top: mainContent.top
-                bottom: mainContent.bottom
-            }
+            Layout.fillHeight: true
             Layout.fillWidth: true
 
             extensionModel: extensionModel

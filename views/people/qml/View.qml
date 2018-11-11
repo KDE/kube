@@ -31,9 +31,8 @@ Kube.View {
 
     People {
         id: people
-        anchors {
-            fill: parent
-            margins: Kube.Units.smallSpacing
-        }
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        Layout.margins: Kube.Units.smallSpacing
     }
 }
