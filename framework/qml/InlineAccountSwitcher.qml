@@ -47,7 +47,7 @@ FocusScope {
                 property variant currentData: model
                 property bool isCurrent: (model.accountId == root.currentAccount)
 
-                height: Kube.Units.gridUnit
+                Layout.minimumHeight: Kube.Units.gridUnit
                 Layout.fillHeight: isCurrent
                 Layout.fillWidth: true
 
