@@ -53,9 +53,11 @@ Item {
             console.debug("Link hovered ", hoveredUrl)
         }
         onNavigationRequested: {
-            console.debug("Nav request ", request, request.url)
-            Qt.openUrlExternally(request.url)
-            request.action = WebEngineNavigationRequest.IgnoreRequest
+            console.debug("Nav request ", request.navigationType, request.url)
+            if (request.navigationType == WebEngineNavigationRequest.LinkClickedNavigation) {
+                Qt.openUrlExternally(request.url)
+                request.action = WebEngineNavigationRequest.IgnoreRequest
+            }
         }
         onNewViewRequested: {
             console.debug("New view request ", request, request.requestedUrl)
