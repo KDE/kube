@@ -27,6 +27,12 @@ Item {
     property string errorText: ""
     visible: false
 
+    onVisibleChanged: {
+        if (!visible) {
+            currentFolderId = ""
+        }
+    }
+
     Kube.EntityLoader {
         id: entityLoader
         type: "folder"

@@ -253,6 +253,9 @@ EntityLoader::~EntityLoader()
 void EntityLoader::updateQuery()
 {
     if (entityId().isEmpty()) {
+        for (const auto &r : mRoleNames.keys()) {
+            setProperty(mRoleNames.value(r), {});
+        }
         return;
     }
     EntityModel::updateQuery();
