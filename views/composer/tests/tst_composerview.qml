@@ -257,4 +257,28 @@ ViewTestCase {
         verify(controller)
         tryVerify(function(){ return controller.accountId != "" })
     }
+
+    function test_7noActionWithoutAccount() {
+        var initialState = {
+        }
+        TestStore.setup(initialState)
+
+        var composer = createTemporaryObject(composerComponent, testCase)
+        composer.setup()
+
+        var controller = findChild(composer, "composerController");
+
+        //Without account we shouldn't be able to send or save as draft
+        controller.accountId = ""
+        verify(!controller.sendAction.enabled)
+        controller.subject = "subject"
+        controller.to.add({name: "test@example.org"})
+        verify(!controller.sendAction.enabled)
+        verify(!controller.saveAsDraftAction.enabled)
+
+        //With account it should work though
+        controller.accountId = "account1"
+        verify(controller.sendAction.enabled)
+        verify(controller.saveAsDraftAction.enabled)
+    }
 }
