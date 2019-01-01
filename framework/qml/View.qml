@@ -27,9 +27,9 @@ FocusScope {
     id: root
 
     //Use overlayArea to position an overlay window, parented to ApplicationWindow.window, over just the view-section without the sidebar.
-    property int sidebarWidth: ApplicationWindow.window.sidebarWidth ? ApplicationWindow.window.sidebarWidth : 0
-    property int windowWidth: ApplicationWindow.window.width ? ApplicationWindow.window.width : width
-    property int windowHeight: ApplicationWindow.window.height ? ApplicationWindow.window.height : height
+    property int sidebarWidth: ApplicationWindow.window && ApplicationWindow.window.sidebarWidth ? ApplicationWindow.window.sidebarWidth : 0
+    property int windowWidth: ApplicationWindow.window && ApplicationWindow.window.width ? ApplicationWindow.window.width : width
+    property int windowHeight: ApplicationWindow.window && ApplicationWindow.window.height ? ApplicationWindow.window.height : height
     property rect overlayArea: Qt.rect(sidebarWidth, 0, windowWidth - sidebarWidth, windowHeight)
 
     //Search
