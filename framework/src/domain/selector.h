@@ -33,8 +33,8 @@ public:
 
     virtual QAbstractItemModel *model() { return mModel; }
 
-    void setCurrentIndex(int i) {
-        if (i == mCurrentIndex) {
+    void setCurrentIndex(int i, bool setAlways = false) {
+        if (i == mCurrentIndex && !setAlways) {
             return;
         }
         mCurrentIndex = i;

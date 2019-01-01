@@ -521,11 +521,15 @@ void ComposerController::send()
     }
 
     auto accountId = getAccountId();
+    Q_ASSERT(!accountId.isEmpty());
+    if (accountId.isEmpty()) {
+        SinkWarning() << "No account id.";
+        return;
+    }
     //SinkLog() << "Sending a mail: " << *this;
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
 
-    Q_ASSERT(!accountId.isEmpty());
     Query query;
     query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
     query.filter<SinkResource::Account>(accountId);
@@ -561,6 +565,11 @@ void ComposerController::saveAsDraft()
 {
     SinkLog() << "Save as draft";
     const auto accountId = getAccountId();
+    Q_ASSERT(!accountId.isEmpty());
+    if (accountId.isEmpty()) {
+        SinkWarning() << "No account id.";
+        return;
+    }
     auto existingMail = getExistingMail();
 
     auto message = assembleMessage();

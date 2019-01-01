@@ -83,6 +83,11 @@ ViewTestCase {
         var createdMail = TestStore.load("mail", {resource: "resource1"})
 
         composer.loadMessage(createdMail, Kube.ComposerController.Draft)
+
+        var controller = findChild(composer, "composerController");
+        verify(controller)
+        tryVerify(function(){ return controller.accountId == "account1" })
+
         var sendMailButton = findChild(composer, "sendButton")
         verify(sendMailButton)
         tryVerify(function(){ return sendMailButton.enabled })
@@ -217,5 +222,39 @@ ViewTestCase {
         var identityCombo = findChild(composer, "identityCombo");
         verify(identityCombo)
         compare(identityCombo.currentIndex, controller.identitySelector.currentIndex)
+    }
+
+    function test_6loadAccountNewMessage() {
+        var initialState = {
+            accounts: [{
+                    id: "account1",
+                    id: "account2",
+                }],
+            identities: [
+                {
+                    account: "account1",
+                    name: "Test Identity1",
+                    address: "identity@example.org"
+                },
+                {
+                    account: "account2",
+                    name: "Test Identity",
+                    address: "identity@example.org"
+                }
+            ],
+            resources: [{
+                    id: "resource1",
+                    account: "account2",
+                    type: "dummy"
+                }]
+        }
+        TestStore.setup(initialState)
+
+        var composer = createTemporaryObject(composerComponent, testCase, {accountId: "account2", newMessage: true})
+        composer.setup()
+
+        var controller = findChild(composer, "composerController");
+        verify(controller)
+        tryVerify(function(){ return controller.accountId != "" })
     }
 }

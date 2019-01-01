@@ -27,5 +27,5 @@ Selector::Selector(QAbstractItemModel *model) : mModel{model}
 
 void Selector::reapplyCurrentIndex()
 {
-    setCurrentIndex(currentIndex());
+    setCurrentIndex(currentIndex(), true);
 }
