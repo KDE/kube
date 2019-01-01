@@ -27,6 +27,7 @@
 #include <QUrlQuery>
 #include <QFileInfo>
 #include <QFile>
+#include <QTemporaryFile>
 #include <sink/store.h>
 #include <sink/log.h>
 
@@ -554,8 +555,19 @@ void ComposerController::send()
             SinkWarning() << "Failed to find a mailtransport resource";
             return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
         })
-        .then([&] (const KAsync::Error &) {
-            SinkLog() << "Message was sent: ";
+        .then([&] (const KAsync::Error &error) {
+            if (error) {
+                QTemporaryFile tmp;
+                tmp.setAutoRemove(false);
+                if (tmp.open()) {
+                    tmp.write(message->encodedContent(true));
+                    tmp.close();
+                    SinkWarning() << "Saved your message contents to: " << tmp.fileName();
+                }
+                SinkError() << "Failed to send the message: " << error;
+            } else {
+                SinkLog() << "Message was sent.";
+            }
             emit done();
         });
     run(job);
