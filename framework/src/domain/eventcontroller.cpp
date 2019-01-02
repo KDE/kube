@@ -91,6 +91,7 @@ void EventController::loadEvent(const QVariant &variant)
         setDescription(icalEvent->description());
         setStart(icalEvent->dtStart());
         setEnd(icalEvent->dtEnd());
+        setAllDay(icalEvent->allDay());
     }
 }
 
