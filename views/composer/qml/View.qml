@@ -44,12 +44,12 @@ Kube.View {
 
             property bool foundAllKeys: composerController.to.foundAllKeys && composerController.cc.foundAllKeys && composerController.bcc.foundAllKeys
 
-            sendAction.enabled: (composerController.accountId && composerController.accountId != "") &&
+            sendAction.enabled: composerController.accountId &&
                                 composerController.subject &&
                                 (!composerController.encrypt || composerController.foundAllKeys) &&
                                 (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys) &&
                                 !composerController.to.empty
-            saveAsDraftAction.enabled: composerController.accountId && composerController.accountId != ""
+            saveAsDraftAction.enabled: composerController.accountId
             onMessageLoaded: { textEditor.initialText = body }
             onCleared: { textEditor.initialText = "" }
         }

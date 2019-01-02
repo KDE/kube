@@ -59,7 +59,7 @@ class KUBE_EXPORT ComposerController : public Kube::Controller
 
     //Set by identitySelector
     KUBE_CONTROLLER_PROPERTY(KMime::Types::Mailbox, Identity, identity)
-    KUBE_CONTROLLER_PROPERTY(QByteArray, AccountId, accountId)
+    KUBE_CONTROLLER_PROPERTY(QString, AccountId, accountId)
 
     //Set by loadMessage
     KUBE_CONTROLLER_PROPERTY(KMime::Message::Ptr, ExistingMessage, existingMessage)

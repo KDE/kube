@@ -533,7 +533,7 @@ void ComposerController::send()
 
     Query query;
     query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
-    query.filter<SinkResource::Account>(accountId);
+    query.filter<SinkResource::Account>(accountId.toLatin1());
     auto job = Store::fetchAll<SinkResource>(query)
         .then([=](const QList<SinkResource::Ptr> &resources) {
             if (!resources.isEmpty()) {
@@ -598,7 +598,7 @@ void ComposerController::saveAsDraft()
             SinkLog() << "Creating a new draft" << existingMail.identifier();
             Query query;
             query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::drafts);
-            query.filter<SinkResource::Account>(accountId);
+            query.filter<SinkResource::Account>(accountId.toLatin1());
             return Store::fetchOne<SinkResource>(query)
                 .then([=](const SinkResource &resource) {
                     Mail mail(resource.identifier());
