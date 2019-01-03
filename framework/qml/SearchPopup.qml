@@ -65,6 +65,23 @@ Item {
     anchors.fill: parent
     enabled: false
 
+    property string internalFilter: ""
+    Timer {
+        id: publishTimer
+        interval: 200
+        onTriggered: root.filter = root.internalFilter
+    }
+
+    function updateFilter(text) {
+        if (text.length >= 2) {
+            root.internalFilter = text
+            publishTimer.restart()
+        } else {
+            root.internalFilter = text
+            publishTimer.restart()
+        }
+    }
+
     //left
     Rectangle {
         x: 0
@@ -175,7 +192,7 @@ Item {
                 id: textField
                 Layout.fillWidth: true
                 placeholderText: qsTr("Filter...")
-                onTextChanged: root.filter = text
+                onTextChanged: updateFilter(text)
                 activeFocusOnTab: visible
                 focus: visible
                 Keys.onEscapePressed: filterField.clearSearch()
