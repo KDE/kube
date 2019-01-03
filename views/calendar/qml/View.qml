@@ -140,7 +140,6 @@ Kube.View {
                         }
                     }
                 }
-                /*
                 DateView {
                     anchors {
                         left: parent.left
@@ -149,10 +148,9 @@ Kube.View {
                     date: root.currentDate
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: dateSelector.selectedDate = root.currentDate
+                        onClicked: root.selectedDate = root.currentDate
                     }
                 }
-                */
 
                 DateSelector {
                     id: dateSelector
