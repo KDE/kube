@@ -45,7 +45,9 @@ Rectangle {
     property alias searchString: mailViewer.searchString
     property alias autoLoadImages: mailViewer.autoLoadImages
 
-    implicitHeight: header.height + attachments.height + body.height + incompleteBody.height + footer.height + Kube.Units.largeSpacing
+    property bool collapsed: draft || sent
+
+    implicitHeight: mainLayout.height + 2 * Kube.Units.largeSpacing
 
     Shortcut {
         sequence: "V"
@@ -64,361 +66,399 @@ Rectangle {
         message: root.message
     }
 
-    //BEGIN header
-    Item {
-        id: header
+    states: [
+        State {
+            name: "full"
+        },
+        State {
+            name: "incomplete"; when: root.incomplete
+            PropertyChanges { target: attachments; visible: false}
+            PropertyChanges { target: body; visible: false}
+            PropertyChanges { target: footer; visible: false}
+            PropertyChanges { target: incompleteBody; visible: true}
+        },
+        State {
+            name: "collapsed"; when: root.collapsed
+            PropertyChanges { target: attachments; visible: false}
+            PropertyChanges { target: body; visible: false}
+            PropertyChanges { target: footer; visible: false}
+            PropertyChanges { target: collapsedBody; visible: true}
+        }
+    ]
+    state: "full"
 
+    Column {
+        id: mainLayout
         anchors {
             top: parent.top
             left: parent.left
             right: parent.right
             margins: Kube.Units.largeSpacing
         }
+        height: childrenRect.height
 
-        height: headerContent.height + Kube.Units.smallSpacing
+        spacing: Kube.Units.smallSpacing
 
-        states: [
-            State {
-                name: "small"
-                PropertyChanges { target: subject; wrapMode: Text.NoWrap}
-                PropertyChanges { target: recipients; visible: true}
-                PropertyChanges { target: to; visible: false}
-                PropertyChanges { target: cc; visible: false}
-                PropertyChanges { target: bcc; visible: false}
-            },
-            State {
-                name: "details"
-                PropertyChanges { target: subject; wrapMode: Text.WrapAnywhere}
-                PropertyChanges { target: recipients; visible: false}
-                PropertyChanges { target: to; visible: true}
-                PropertyChanges { target: cc; visible: root.cc}
-                PropertyChanges { target: bcc; visible: root.bcc}
-            }
-        ]
+        //BEGIN header
+        Item {
+            id: header
 
-        state: "small"
-
-        Kube.Label {
-            id: date_label
-
+            Layout.fillWidth: true
             anchors {
-                right: seperator.right
-                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+            height: headerContent.height + Kube.Units.smallSpacing
+
+            states: [
+                State {
+                    name: "small"
+                    PropertyChanges { target: subject; wrapMode: Text.NoWrap}
+                    PropertyChanges { target: recipients; visible: true}
+                    PropertyChanges { target: to; visible: false}
+                    PropertyChanges { target: cc; visible: false}
+                    PropertyChanges { target: bcc; visible: false}
+                },
+                State {
+                    name: "details"
+                    PropertyChanges { target: subject; wrapMode: Text.WrapAnywhere}
+                    PropertyChanges { target: recipients; visible: false}
+                    PropertyChanges { target: to; visible: true}
+                    PropertyChanges { target: cc; visible: root.cc}
+                    PropertyChanges { target: bcc; visible: root.bcc}
+                }
+            ]
+
+            state: "small"
+
+            Kube.Label {
+                id: date_label
+
+                anchors {
+                    right: seperator.right
+                    top: parent.top
+                }
+
+                text: Qt.formatDateTime(root.date, "dd MMM yyyy hh:mm")
+
+                font.pointSize: Kube.Units.tinyFontSize
+                opacity: 0.75
             }
 
-            text: Qt.formatDateTime(root.date, "dd MMM yyyy hh:mm")
+            Column {
+                id: headerContent
 
-            font.pointSize: Kube.Units.tinyFontSize
-            opacity: 0.75
-        }
+                anchors {
+                    //left: to_l.right
+                    horizontalCenter: parent.horizontalCenter
+                }
 
-        Column {
-            id: headerContent
-
-            anchors {
-                //left: to_l.right
-                horizontalCenter: parent.horizontalCenter
-            }
-
-            //spacing: Kube.Units.smallSpacing
-
-            width: parent.width
-
-            Row{
-                id: from
+                //spacing: Kube.Units.smallSpacing
 
                 width: parent.width
 
-                spacing: Kube.Units.smallSpacing
-                clip: true
+                Row{
+                    id: from
 
-                Kube.SelectableLabel {
-                    id: senderName
+                    width: parent.width
 
-                    text: root.senderName
-                    font.weight: Font.DemiBold
-                    opacity: 0.75
-                }
-
-                Kube.SelectableLabel {
-                    width: parent.width - senderName.width - date_label.width - Kube.Units.largeSpacing
-
-                    text: root.sender
-                    elide: Text.ElideRight
-                    opacity: 0.75
+                    spacing: Kube.Units.smallSpacing
                     clip: true
 
-                    Kube.TextButton {
-                        text: qsTr("Send mail to")
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {"recipients": [root.sender]})
+                    Kube.SelectableLabel {
+                        id: senderName
+
+                        text: root.senderName
+                        font.weight: Font.DemiBold
+                        opacity: 0.75
+                    }
+
+                    Kube.SelectableLabel {
+                        width: parent.width - senderName.width - date_label.width - Kube.Units.largeSpacing
+
+                        text: root.sender
+                        elide: Text.ElideRight
+                        opacity: 0.75
+                        clip: true
+
+                        Kube.TextButton {
+                            text: qsTr("Send mail to")
+                            onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {"recipients": [root.sender]})
+                        }
+                    }
+                }
+
+                Kube.SelectableLabel {
+                    id: subject
+
+                    width: to.width
+
+                    text: root.subject
+                    elide: Text.ElideRight
+                    opacity: 0.75
+                    font.italic: true
+                    states: [
+                        State {
+                            name: "trash"; when: root.trash
+                            PropertyChanges { target: subject; text: qsTr("Trash: %1").arg(root.subject) }
+                        },
+                        State {
+                            name: "draft"; when: root.draft
+                            PropertyChanges { target: subject; text: qsTr("Draft: %1").arg(root.subject) }
+                        },
+                        State {
+                            name: "sent"; when: root.sent
+                            PropertyChanges { target: subject; text: qsTr("Sent: %1").arg(root.subject) }
+                        }
+                    ]
+                }
+
+                Kube.SelectableLabel {
+                    id: recipients
+
+                    width: parent.width - goDown.width - Kube.Units.smallSpacing
+
+                    text:"to: "+ root.to + " "  + root.cc + " " +  root.bcc
+                    elide: Text.ElideRight
+                    opacity: 0.75
+                }
+
+                Kube.SelectableLabel {
+                    id: to
+
+                    width: parent.width - goDown.width - Kube.Units.smallSpacing
+
+                    text:"to: " + root.to
+                    wrapMode: Text.WordWrap
+                    opacity: 0.75
+                }
+
+                Kube.SelectableLabel {
+                    id: cc
+
+                    width: parent.width - goDown.width - Kube.Units.smallSpacing
+
+                    text:"cc: " + root.cc
+                    wrapMode: Text.WordWrap
+                    opacity: 0.75
+                }
+
+                Kube.SelectableLabel {
+                    id: bcc
+
+                    width: parent.width - goDown.width - Kube.Units.smallSpacing
+
+                    text:"bcc: " + root.bcc
+                    wrapMode: Text.WordWrap
+                    opacity: 0.75
+                }
+
+            }
+
+            Rectangle {
+                id: goDown
+                anchors {
+                    bottom: seperator.top
+                    right: seperator.right
+                }
+
+                //Only show the expand button if there is something to expand
+                visible: recipients.truncated || root.cc || root.bcc
+
+                height: Kube.Units.gridUnit
+                width: height
+
+                color: Kube.Colors.backgroundColor
+
+                Kube.IconButton {
+                    anchors.fill: parent
+                    activeFocusOnTab: false
+
+                    iconName: header.state === "details" ? Kube.Icons.goUp : Kube.Icons.goDown
+
+                    onClicked: {
+                        header.state === "details" ? header.state = "small" : header.state = "details"
                     }
                 }
             }
 
-            Kube.SelectableLabel {
-                id: subject
+            Rectangle {
+                id: seperator
 
-                width: to.width
-
-                text: root.subject
-                elide: Text.ElideRight
-                opacity: 0.75
-                font.italic: true
-                states: [
-                    State {
-                        name: "trash"; when: root.trash
-                        PropertyChanges { target: subject; text: qsTr("Trash: %1").arg(root.subject) }
-                    },
-                    State {
-                        name: "draft"; when: root.draft
-                        PropertyChanges { target: subject; text: qsTr("Draft: %1").arg(root.subject) }
-                    },
-                    State {
-                        name: "sent"; when: root.sent
-                        PropertyChanges { target: subject; text: qsTr("Sent: %1").arg(root.subject) }
-                    }
-                ]
-            }
-
-            Kube.SelectableLabel {
-                id: recipients
-
-                width: parent.width - goDown.width - Kube.Units.smallSpacing
-
-                text:"to: "+ root.to + " "  + root.cc + " " +  root.bcc
-                elide: Text.ElideRight
-                opacity: 0.75
-            }
-
-            Kube.SelectableLabel {
-                id: to
-
-                width: parent.width - goDown.width - Kube.Units.smallSpacing
-
-                text:"to: " + root.to
-                wrapMode: Text.WordWrap
-                opacity: 0.75
-            }
-
-            Kube.SelectableLabel {
-                id: cc
-
-                width: parent.width - goDown.width - Kube.Units.smallSpacing
-
-                text:"cc: " + root.cc
-                wrapMode: Text.WordWrap
-                opacity: 0.75
-            }
-
-            Kube.SelectableLabel {
-                id: bcc
-
-                width: parent.width - goDown.width - Kube.Units.smallSpacing
-
-                text:"bcc: " + root.bcc
-                wrapMode: Text.WordWrap
-                opacity: 0.75
-            }
-
-        }
-
-        Rectangle {
-            id: goDown
-            anchors {
-                bottom: seperator.top
-                right: seperator.right
-            }
-
-            //Only show the expand button if there is something to expand
-            visible: recipients.truncated || root.cc || root.bcc
-
-            height: Kube.Units.gridUnit
-            width: height
-
-            color: Kube.Colors.backgroundColor
-
-            Kube.IconButton {
-                anchors.fill: parent
-                activeFocusOnTab: false
-
-                iconName: header.state === "details" ? Kube.Icons.goUp : Kube.Icons.goDown
-
-                onClicked: {
-                    header.state === "details" ? header.state = "small" : header.state = "details"
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
                 }
+
+                height: 1
+
+                color: Kube.Colors.textColor
+                opacity: 0.5
             }
         }
+        //END header
 
-        Rectangle {
-            id: seperator
+        Flow {
+            id: attachments
 
             anchors {
                 left: parent.left
                 right: parent.right
-                bottom: parent.bottom
             }
 
-            height: 1
+            visible: !root.incomplete && !root.collapsed
+            width: header.width - Kube.Units.largeSpacing
+            height: visible ? implicitHeight : 0
 
-            color: Kube.Colors.textColor
-            opacity: 0.5
-        }
-    }
-    //END header
-
-    Flow {
-        id: attachments
-
-        anchors {
-            top: header.bottom
-            topMargin: Kube.Units.smallSpacing
-            right: header.right
-        }
-
-        width: header.width - Kube.Units.largeSpacing
-
-        layoutDirection: Qt.RightToLeft
-        spacing: Kube.Units.smallSpacing
-        clip: true
-
-        Repeater {
-            model: messageParser.attachments
-
-            delegate: AttachmentDelegate {
-                name: model.name
-                type: model.type
-                icon: model.iconName
-
-                clip: true
-
-                actionIcon: Kube.Icons.save_inverted
-                actionTooltip: qsTr("Save attachment")
-                onExecute: messageParser.attachments.saveAttachmentToDisk(messageParser.attachments.index(index, 0))
-                onClicked: messageParser.attachments.openAttachment(messageParser.attachments.index(index, 0))
-                onPublicKeyImport: messageParser.attachments.importPublicKey(messageParser.attachments.index(index, 0))
-            }
-        }
-    }
-
-    Item {
-        id: body
-
-        visible: !root.incomplete
-        anchors {
-            top: header.bottom
-            left: header.left
-            right: header.right
-            leftMargin: Kube.Units.largeSpacing
-            rightMargin: Kube.Units.largeSpacing
-            topMargin: Math.max(attachments.height + Kube.Units.smallSpacing, Kube.Units.largeSpacing)
-        }
-        height: mailViewer.height + 20
-
-
-        MV.MailViewer {
-            id: mailViewer
-            anchors.top: body.top
-            anchors.left: body.left
-            anchors.right: body.right
-            model: messageParser.parts
-        }
-
-    }
-
-    Kube.Label {
-        id: incompleteBody
-        anchors {
-            top: header.bottom
-            left: header.left
-            right: header.right
-            leftMargin: Kube.Units.largeSpacing
-            rightMargin: Kube.Units.largeSpacing
-            topMargin: Math.max(attachments.height, Kube.Units.largeSpacing)
-        }
-        visible: root.incomplete
-        text: qsTr("Incomplete body...")
-        color: Kube.Colors.textColor
-        enabled: false
-        states: [
-            State {
-                name: "inprogress"; when: model.status == Kube.MailListModel.InProgressStatus
-                PropertyChanges { target: incompleteBody; text: qsTr("Downloading message...") }
-            },
-            State {
-                name: "error"; when: model.status == Kube.MailListModel.ErrorStatus
-                PropertyChanges { target: incompleteBody; text: qsTr("Failed to download message...") }
-            }
-        ]
-    }
-    Item {
-        id: footer
-        property var mail: model.mail
-        property string subject: model.subject
-
-        anchors.bottom: parent.bottom
-
-        height: Kube.Units.gridUnit * 2 + Kube.Units.largeSpacing
-        width: parent.width
-
-        Kube.TextButton {
-            anchors{
-                verticalCenter: parent.verticalCenter
-                left: parent.left
-                leftMargin: Kube.Units.largeSpacing
-            }
-            activeFocusOnTab: false
-
-            text: model.trash ? qsTr("Delete Mail") : qsTr("Move to trash")
-            opacity: 0.5
-            onClicked: {
-                if (model.trash) {
-                    Kube.Fabric.postMessage(Kube.Messages.remove, {"mail": model.mail})
-                } else {
-                    Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
-                }
-            }
-        }
-
-        Row {
-            anchors {
-                verticalCenter: parent.verticalCenter
-                right: parent.right
-                rightMargin: Kube.Units.largeSpacing
-            }
+            layoutDirection: Qt.RightToLeft
             spacing: Kube.Units.smallSpacing
+            clip: true
 
-            Kube.Button {
-                visible: !model.trash && !model.draft
-                activeFocusOnTab: false
+            Repeater {
+                model: messageParser.attachments
 
-                text: qsTr("Share")
-                onClicked: {
-                    Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
-                }
-            }
+                delegate: AttachmentDelegate {
+                    name: model.name
+                    type: model.type
+                    icon: model.iconName
 
-            Kube.Button {
-                visible: !model.trash
-                activeFocusOnTab: false
+                    clip: true
 
-                text: model.draft ? qsTr("Edit") : qsTr("Reply")
-                onClicked: {
-                    if (model.draft) {
-                        Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail})
-                    } else {
-                        Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail})
-                    }
-                }
-            }
-            Row {
-                Kube.ExtensionPoint {
-                    extensionPoint: "extensions/mailview"
-                    context: {"mail": footer.mail, "subject": footer.subject, "accountId": currentAccount}
+                    actionIcon: Kube.Icons.save_inverted
+                    actionTooltip: qsTr("Save attachment")
+                    onExecute: messageParser.attachments.saveAttachmentToDisk(messageParser.attachments.index(index, 0))
+                    onClicked: messageParser.attachments.openAttachment(messageParser.attachments.index(index, 0))
+                    onPublicKeyImport: messageParser.attachments.importPublicKey(messageParser.attachments.index(index, 0))
                 }
             }
         }
-    }
 
+        Item {
+            id: body
+
+            visible: true
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            height: visible ? mailViewer.height + 20 : 0
+
+            MV.MailViewer {
+                id: mailViewer
+                anchors.top: body.top
+                anchors.left: body.left
+                anchors.right: body.right
+                model: messageParser.parts
+            }
+
+        }
+
+        Kube.Label {
+            id: incompleteBody
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            visible: root.incomplete
+            height: visible ? implicitHeight : 0
+            text: qsTr("Incomplete body...")
+            color: Kube.Colors.textColor
+            enabled: false
+            states: [
+                State {
+                    name: "inprogress"; when: model.status == Kube.MailListModel.InProgressStatus
+                    PropertyChanges { target: incompleteBody; text: qsTr("Downloading message...") }
+                },
+                State {
+                    name: "error"; when: model.status == Kube.MailListModel.ErrorStatus
+                    PropertyChanges { target: incompleteBody; text: qsTr("Failed to download message...") }
+                }
+            ]
+        }
+        Kube.Button {
+            id: collapsedBody
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            visible: false
+            text: qsTr("Show")
+            onClicked: root.collapsed = false
+        }
+        Item {
+            id: footer
+            property var mail: model.mail
+            property string subject: model.subject
+
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            visible: true
+            height: visible ? Kube.Units.gridUnit : 0
+            width: parent.width
+
+            Kube.TextButton {
+                anchors{
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                }
+                activeFocusOnTab: false
+
+                text: model.trash ? qsTr("Delete Mail") : model.draft ? qsTr("Discard") : qsTr("Move to trash")
+                opacity: 0.5
+                onClicked: {
+                    if (model.trash) {
+                        Kube.Fabric.postMessage(Kube.Messages.remove, {"mail": model.mail})
+                    } else {
+                        Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
+                    }
+                }
+            }
+
+            Row {
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    right: parent.right
+                }
+                spacing: Kube.Units.smallSpacing
+
+                Kube.Button {
+                    visible: !model.trash && !model.draft
+                    activeFocusOnTab: false
+
+                    text: qsTr("Share")
+                    onClicked: {
+                        Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
+                    }
+                }
+
+                Kube.Button {
+                    visible: !model.trash
+                    activeFocusOnTab: false
+
+                    text: model.draft ? qsTr("Edit") : qsTr("Reply")
+                    onClicked: {
+                        if (model.draft) {
+                            Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail})
+                        } else {
+                            Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail})
+                        }
+                    }
+                }
+                Row {
+                    Kube.ExtensionPoint {
+                        extensionPoint: "extensions/mailview"
+                        context: {"mail": footer.mail, "subject": footer.subject, "accountId": currentAccount}
+                    }
+                }
+            }
+        }
+    } //ColumnLayout
+
+    //Dimm unread messages
     Rectangle {
         anchors.fill: parent
         color: Kube.Colors.buttonColor
