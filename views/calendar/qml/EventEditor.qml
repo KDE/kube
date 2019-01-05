@@ -85,12 +85,12 @@ Kube.Popup {
                     State {
                         name: "regular"
                         PropertyChanges {target: fromTime; visible: true}
-                        PropertyChanges {target: tillTime; visible: true}
+                        PropertyChanges {target: toTime; visible: true}
                     },
                     State {
                         name: "daylong"
                         PropertyChanges {target: fromTime; visible: false}
-                        PropertyChanges {target: tillTime; visible: false}
+                        PropertyChanges {target: toTime; visible: false}
                     }
                     ]
                     state: controller.allDay ? "daylong" : "regular"
@@ -109,14 +109,14 @@ Kube.Popup {
                             }
                         }
                         Kube.Label {
-                            text: "till"
+                            text: qsTr("until")
                         }
                         RowLayout {
                             spacing: Kube.Units.smallSpacing
 
                             DayChooser {}
                             TimeChooser {
-                                id: tillTime
+                                id: toTime
                             }
                         }
                     }
@@ -132,7 +132,7 @@ Kube.Popup {
                             }
                         }
                         Kube.Label {
-                            text: "daylong"
+                            text: qsTr("All day")
                         }
                     }
                 }
@@ -142,7 +142,7 @@ Kube.Popup {
                     Layout.fillWidth: true
                     Kube.TextField {
                         Layout.fillWidth: true
-                        placeholderText: "Location"
+                        placeholderText: qsTr("Location")
                     }
 
                     Kube.TextEditor {
@@ -162,7 +162,7 @@ Kube.Popup {
 
                 Kube.Button {
                     id: deleteButton
-                    text: "Delete"
+                    text: qsTr("Delete")
                     onClicked: {
                         controller.remove()
                         popup.close()
@@ -170,7 +170,7 @@ Kube.Popup {
                 }
                 Kube.Button {
                     id: abortButton
-                    text: "Abort"
+                    text: qsTr("Abort")
                     onClicked: {
                         popup.close()
                     }
@@ -189,7 +189,7 @@ Kube.Popup {
 
                 Kube.Button {
                     id: discardButton
-                    text: "Discard Changes"
+                    text: qsTr("Discard Changes")
                     onClicked: {
                         popup.close()
                     }
@@ -197,7 +197,7 @@ Kube.Popup {
 
                 Kube.PositiveButton {
                     id: saveButton
-                    text: "Save Changes"
+                    text: qsTr("Save Changes")
                     onClicked: {
                         //controller.saveAction.execute()
                         popup.close()
@@ -206,7 +206,7 @@ Kube.Popup {
 
                 Kube.PositiveButton {
                     id: createButton
-                    text: "Create Event"
+                    text: qsTr("Create Event")
                     onClicked: {
                         popup.close()
                     }
