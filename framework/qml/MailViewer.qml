@@ -171,6 +171,16 @@ Rectangle {
                         text: root.senderName
                         font.weight: Font.DemiBold
                         opacity: 0.75
+                        states: [
+                            State {
+                                name: "sent"; when: root.sent
+                                PropertyChanges { target: senderName; text: qsTr("Sent from") }
+                            },
+                            State {
+                                name: "draft"; when: root.draft
+                                PropertyChanges { target: senderName; text: qsTr("Draft from") }
+                            }
+                        ]
                     }
 
                     Kube.SelectableLabel {
@@ -201,14 +211,6 @@ Rectangle {
                         State {
                             name: "trash"; when: root.trash
                             PropertyChanges { target: subject; text: qsTr("Trash: %1").arg(root.subject) }
-                        },
-                        State {
-                            name: "draft"; when: root.draft
-                            PropertyChanges { target: subject; text: qsTr("Draft: %1").arg(root.subject) }
-                        },
-                        State {
-                            name: "sent"; when: root.sent
-                            PropertyChanges { target: subject; text: qsTr("Sent: %1").arg(root.subject) }
                         }
                     ]
                 }
