@@ -23,7 +23,7 @@ import org.kube.test 1.0
 import "../qml"
 
 ViewTestCase {
-    name: "Todo"
+    name: "Calendar"
 
     View {
         id: view

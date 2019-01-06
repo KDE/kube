@@ -34,10 +34,23 @@ function roundToDay(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate())
 }
 
+function roundToMinutes(date, delta) {
+    var totalMinutes = date.getHours() * 60 +  date.getMinutes()
+    //Round to nearest delta
+    totalMinutes = Math.round(totalMinutes / delta) * delta
+    var minutes = totalMinutes % 60
+    var hours = (totalMinutes - minutes) / 60
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, 0)
+}
+
 function addDaysToDate(date, days) {
     var date = new Date(date);
     date.setDate(date.getDate() + days);
     return date;
+}
+
+function addMinutesToDate(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
 }
 
 function sameDay(date1, date2) {

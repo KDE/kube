@@ -22,13 +22,16 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 Kube.Popup {
-    id: popup
+    id: root
 
     property var controller: Kube.EventController {}
     property bool editMode: false
+    property date start: new Date()
+
+    width: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
+    height: contentLayout.implicitHeight + 2 * Kube.Units.largeSpacing
 
     Item {
-        id: root
 
         states: [
         State {
@@ -38,6 +41,7 @@ Kube.Popup {
             PropertyChanges { target: saveButton; visible: true }
             PropertyChanges { target: discardButton; visible: true }
             PropertyChanges { target: createButton; visible: false }
+            PropertyChanges { target: calendarSelector; visible: false }
         },
         State {
             name: "new"
@@ -46,6 +50,7 @@ Kube.Popup {
             PropertyChanges { target: saveButton; visible: false }
             PropertyChanges { target: discardButton; visible: false }
             PropertyChanges { target: createButton; visible: true }
+            PropertyChanges { target: calendarSelector; visible: true }
         }
         ]
 
@@ -74,50 +79,36 @@ Kube.Popup {
                 Kube.TextField {
                     id: titleEdit
                     Layout.fillWidth: true
-                    placeholderText: "Event Title"
+                    placeholderText: qsTr("Event Title")
                     text: controller.summary
+                    onTextChanged: controller.summary = text
                 }
 
                 ColumnLayout {
                     id: dateAndTimeChooser
-
-                    states: [
-                    State {
-                        name: "regular"
-                        PropertyChanges {target: fromTime; visible: true}
-                        PropertyChanges {target: toTime; visible: true}
-                    },
-                    State {
-                        name: "daylong"
-                        PropertyChanges {target: fromTime; visible: false}
-                        PropertyChanges {target: toTime; visible: false}
-                    }
-                    ]
-                    state: controller.allDay ? "daylong" : "regular"
 
                     spacing: Kube.Units.smallSpacing
 
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: Kube.Units.largeSpacing
-                        RowLayout {
-                            spacing: Kube.Units.smallSpacing
-
-                            DayChooser {}
-                            TimeChooser {
-                                id: fromTime
-                            }
+                        DateTimeChooser {
+                            id: startDate
+                            objectName: "startDate"
+                            enableTime: !controller.allDay
+                            initialValue: root.editMode ? controller.start : root.start
+                            onDateTimeChanged: controller.start = dateTime
                         }
                         Kube.Label {
                             text: qsTr("until")
                         }
-                        RowLayout {
-                            spacing: Kube.Units.smallSpacing
-
-                            DayChooser {}
-                            TimeChooser {
-                                id: toTime
-                            }
+                        DateTimeChooser {
+                            id: endDate
+                            objectName: "endDate"
+                            enableTime: !controller.allDay
+                            notBefore: startDate.dateTime
+                            initialValue: root.editMode ? controller.end : startDate.dateTime
+                            onDateTimeChanged: controller.end = dateTime
                         }
                     }
 
@@ -140,16 +131,35 @@ Kube.Popup {
                 ColumnLayout {
                     spacing: Kube.Units.smallSpacing
                     Layout.fillWidth: true
-                    Kube.TextField {
-                        Layout.fillWidth: true
-                        placeholderText: qsTr("Location")
-                    }
+                    //FIXME location doesn't exist yet
+                    // Kube.TextField {
+                    //     Layout.fillWidth: true
+                    //     placeholderText: qsTr("Location")
+                    //     text: controller.location
+                    //     onTextChanged: controller.location = text
+                    // }
 
                     Kube.TextEditor {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         //TODO placeholderText: "Description"
                         text: controller.description
+                        onTextChanged: controller.description = text
+                    }
+
+                    Kube.ComboBox {
+                        id: calendarSelector
+                        Layout.fillWidth: true
+
+                        model: Kube.EntityModel {
+                            id: calendarModel
+                            type: "calendar"
+                            roles: ["name"]
+                        }
+                        textRole: "name"
+                        onActivated: {
+                            controller.calendar = calendarModel.data(index).object
+                        }
                     }
                 }
             }
@@ -165,14 +175,14 @@ Kube.Popup {
                     text: qsTr("Delete")
                     onClicked: {
                         controller.remove()
-                        popup.close()
+                        root.close()
                     }
                 }
                 Kube.Button {
                     id: abortButton
                     text: qsTr("Abort")
                     onClicked: {
-                        popup.close()
+                        root.close()
                     }
                 }
             }
@@ -191,7 +201,7 @@ Kube.Popup {
                     id: discardButton
                     text: qsTr("Discard Changes")
                     onClicked: {
-                        popup.close()
+                        root.close()
                     }
                 }
 
@@ -199,8 +209,8 @@ Kube.Popup {
                     id: saveButton
                     text: qsTr("Save Changes")
                     onClicked: {
-                        //controller.saveAction.execute()
-                        popup.close()
+                        controller.saveAction.execute()
+                        root.close()
                     }
                 }
 
@@ -208,7 +218,8 @@ Kube.Popup {
                     id: createButton
                     text: qsTr("Create Event")
                     onClicked: {
-                        popup.close()
+                        controller.saveAction.execute()
+                        root.close()
                     }
                 }
             }

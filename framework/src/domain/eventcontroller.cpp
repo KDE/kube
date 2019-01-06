@@ -44,29 +44,62 @@ void EventController::save()
     const auto calendar = getCalendar();
     if (!calendar) {
         qWarning() << "No calendar selected";
+        return;
     }
 
-    auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
-    calcoreEvent->setUid(QUuid::createUuid().toString());
-    calcoreEvent->setSummary(getSummary());
-    calcoreEvent->setDescription(getDescription());
-    calcoreEvent->setDtStart(getStart());
-    calcoreEvent->setDtEnd(getEnd());
-    calcoreEvent->setAllDay(getAllDay());
+    if (auto e = mEvent.value<Sink::ApplicationDomain::Event::Ptr>()) {
+        Event event = *e;
 
-    Event event(calendar->resourceInstanceIdentifier());
-    event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
-    event.setCalendar(*calendar);
+        //Apply the changed properties on top of what's existing
+        auto calcoreEvent = KCalCore::ICalFormat().readIncidence(event.getIcal()).dynamicCast<KCalCore::Event>();
+        if(!calcoreEvent) {
+            SinkWarning() << "Invalid ICal to process, ignoring...";
+            return;
+        }
 
-    auto job = Store::create(event)
-        .then([&] (const KAsync::Error &error) {
-            if (error) {
-                SinkWarning() << "Failed to save the event: " << error;
-            }
-            emit done();
-        });
+        calcoreEvent->setUid(QUuid::createUuid().toString());
+        calcoreEvent->setSummary(getSummary());
+        calcoreEvent->setDescription(getDescription());
+        calcoreEvent->setDtStart(getStart());
+        calcoreEvent->setDtEnd(getEnd());
+        calcoreEvent->setAllDay(getAllDay());
 
-    run(job);
+        event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+        event.setCalendar(*calendar);
+
+        auto job = Store::modify(event)
+            .then([&] (const KAsync::Error &error) {
+                if (error) {
+                    SinkWarning() << "Failed to save the event: " << error;
+                }
+                emit done();
+            });
+
+        run(job);
+    } else {
+        Event event(calendar->resourceInstanceIdentifier());
+
+        auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+        calcoreEvent->setUid(QUuid::createUuid().toString());
+        calcoreEvent->setSummary(getSummary());
+        calcoreEvent->setDescription(getDescription());
+        calcoreEvent->setDtStart(getStart());
+        calcoreEvent->setDtEnd(getEnd());
+        calcoreEvent->setAllDay(getAllDay());
+
+        event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+        event.setCalendar(*calendar);
+
+        auto job = Store::create(event)
+            .then([&] (const KAsync::Error &error) {
+                if (error) {
+                    SinkWarning() << "Failed to save the event: " << error;
+                }
+                emit done();
+            });
+
+        run(job);
+    }
 }
 
 void EventController::updateSaveAction()

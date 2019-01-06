@@ -330,5 +330,7 @@ Kube.View {
 
         width: root.width * 0.7
         height: root.height * 0.7
+
+        start: root.selectedDate
     }
 }

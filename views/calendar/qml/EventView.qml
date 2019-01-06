@@ -90,9 +90,9 @@ FocusScope {
     EventEditor {
         id: editor
 
-        //FIXME placing and hight
-        width:  800
-        height: 300
+        parent: ApplicationWindow.overlay
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
 
         controller: root.controller
         editMode: true
