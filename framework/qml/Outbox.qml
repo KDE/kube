@@ -58,118 +58,121 @@ Kube.IconButton {
         font.pointSize: Kube.Units.smallFontSize
     }
 
-    onClicked: dialog.open()
+    onClicked: dialogComponent.createObject(root, {}).open()
 
-    Kube.Popup {
-        id: dialog
+    Component {
+        id: dialogComponent
+        Kube.Popup {
+            id: dialog
 
-        height: content.height + Kube.Units.smallSpacing * 2
-        width: content.width + Kube.Units.smallSpacing * 2
+            height: content.height + Kube.Units.smallSpacing * 2
+            width: content.width + Kube.Units.smallSpacing * 2
 
-        y: - dialog.height + root.height
-        x: root.width
+            y: - dialog.height + root.height
+            x: root.width
 
-        Item  {
-            id: content
+            Item  {
+                id: content
 
-            anchors.centerIn: parent
-
-            width: Kube.Units.gridUnit * 17
-            height: listView.count * Kube.Units.gridUnit * 3 + sendNowButton.height + Kube.Units.smallSpacing
-
-            ListView {
-                id: listView
-
-                width: parent.width
-                height: count * Kube.Units.gridUnit * 3
-
-                model: outboxModel
-
-                delegate: Rectangle {
-                    id: delegateRoot
-
-                    height: Kube.Units.gridUnit * 3
-                    width: listView.width
-
-                    color: Kube.Colors.viewBackgroundColor
-                    border.color: Kube.Colors.backgroundColor
-                    border.width: 1
-
-                    Kube.Label {
-                        id: subjectLabel
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-                            left: parent.left
-                            leftMargin: Kube.Units.largeSpacing
-                        }
-                        text: model.subject
-
-                        color: Kube.Colors.textColor
-                        opacity: 1
-                        states: [
-                            State {
-                                name: "inprogress"; when: model.status == Kube.OutboxModel.InProgressStatus
-                                PropertyChanges { target: subjectLabel; text: qsTr("Sending: %1").arg(model.subject) }
-                            },
-                            State {
-                                name: "error"; when: model.status == Kube.OutboxModel.ErrorStatus
-                                PropertyChanges { target: subjectLabel; color: Kube.Colors.warningColor }
-                            }
-                        ]
-                    }
-
-                    Row {
-                        anchors {
-                            right: parent.right
-                            rightMargin: Kube.Units.smallSpacing
-                            verticalCenter: parent.verticalCenter
-                        }
-
-                        spacing: Kube.Units.smallSpacing
-
-                        Kube.IconButton {
-                            iconName: Kube.Icons.moveToTrash
-                            onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.domainObject})
-                        }
-
-                        Kube.IconButton {
-                            iconName: Kube.Icons.edit
-                            onClicked: {
-                                Kube.Fabric.postMessage(Kube.Messages.moveToDrafts, {"mail": model.domainObject})
-                                //TODO stage upon completion
-                                //Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.domainObject})
-                            }
-                        }
-                    }
-                }
-
-                clip: true
-            }
-
-            Kube.Button {
-                id: sendNowButton
-
-                anchors {
-                    top: listView.bottom
-                    topMargin: Kube.Units.smallSpacing
-                    horizontalCenter: parent.horizontalCenter
-                }
-
-                visible: listView.count != 0
-
-                text: qsTr("Send now")
-                onClicked: {
-                    Kube.Fabric.postMessage(Kube.Messages.sendOutbox, {})
-                    dialog.close()
-                }
-            }
-
-            Kube.Label {
                 anchors.centerIn: parent
 
-                visible: listView.count == 0
+                width: Kube.Units.gridUnit * 17
+                height: listView.count * Kube.Units.gridUnit * 3 + sendNowButton.height + Kube.Units.smallSpacing
 
-                text: qsTr("No pending messages")
+                ListView {
+                    id: listView
+
+                    width: parent.width
+                    height: count * Kube.Units.gridUnit * 3
+
+                    model: outboxModel
+
+                    delegate: Rectangle {
+                        id: delegateRoot
+
+                        height: Kube.Units.gridUnit * 3
+                        width: listView.width
+
+                        color: Kube.Colors.viewBackgroundColor
+                        border.color: Kube.Colors.backgroundColor
+                        border.width: 1
+
+                        Kube.Label {
+                            id: subjectLabel
+                            anchors {
+                                verticalCenter: parent.verticalCenter
+                                left: parent.left
+                                leftMargin: Kube.Units.largeSpacing
+                            }
+                            text: model.subject
+
+                            color: Kube.Colors.textColor
+                            opacity: 1
+                            states: [
+                                State {
+                                    name: "inprogress"; when: model.status == Kube.OutboxModel.InProgressStatus
+                                    PropertyChanges { target: subjectLabel; text: qsTr("Sending: %1").arg(model.subject) }
+                                },
+                                State {
+                                    name: "error"; when: model.status == Kube.OutboxModel.ErrorStatus
+                                    PropertyChanges { target: subjectLabel; color: Kube.Colors.warningColor }
+                                }
+                            ]
+                        }
+
+                        Row {
+                            anchors {
+                                right: parent.right
+                                rightMargin: Kube.Units.smallSpacing
+                                verticalCenter: parent.verticalCenter
+                            }
+
+                            spacing: Kube.Units.smallSpacing
+
+                            Kube.IconButton {
+                                iconName: Kube.Icons.moveToTrash
+                                onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.domainObject})
+                            }
+
+                            Kube.IconButton {
+                                iconName: Kube.Icons.edit
+                                onClicked: {
+                                    Kube.Fabric.postMessage(Kube.Messages.moveToDrafts, {"mail": model.domainObject})
+                                    //TODO stage upon completion
+                                    //Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.domainObject})
+                                }
+                            }
+                        }
+                    }
+
+                    clip: true
+                }
+
+                Kube.Button {
+                    id: sendNowButton
+
+                    anchors {
+                        top: listView.bottom
+                        topMargin: Kube.Units.smallSpacing
+                        horizontalCenter: parent.horizontalCenter
+                    }
+
+                    visible: listView.count != 0
+
+                    text: qsTr("Send now")
+                    onClicked: {
+                        Kube.Fabric.postMessage(Kube.Messages.sendOutbox, {})
+                        dialog.close()
+                    }
+                }
+
+                Kube.Label {
+                    anchors.centerIn: parent
+
+                    visible: listView.count == 0
+
+                    text: qsTr("No pending messages")
+                }
             }
         }
     }
