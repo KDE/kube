@@ -99,9 +99,7 @@ Kube.View {
                     }
                     focus: true
                     text: qsTr("New Event")
-                    onClicked: {
-                        eventPopup.open()
-                    }
+                    onClicked: eventPopup.createObject(root, {}).open()
                 }
                 RowLayout {
                     anchors {
@@ -322,15 +320,16 @@ Kube.View {
         }
     }
 
-    EventEditor {
+    Component {
         id: eventPopup
+        EventEditor {
+            x: root.width * 0.15
+            y: root.height * 0.15
 
-        x: root.width * 0.15
-        y: root.height * 0.15
+            width: root.width * 0.7
+            height: root.height * 0.7
 
-        width: root.width * 0.7
-        height: root.height * 0.7
-
-        start: root.selectedDate
+            start: root.selectedDate
+        }
     }
 }

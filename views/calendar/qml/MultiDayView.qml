@@ -200,19 +200,21 @@ Item {
                                                 id: mouseArea
                                                 anchors.fill: parent
                                                 hoverEnabled: true
-                                                onClicked:  eventDetails.open()
-                                                Kube.Popup {
+                                                onClicked: eventDetails.createObject(root, {}).open()
+                                                Component {
                                                     id: eventDetails
-                                                    parent: ApplicationWindow.overlay
-                                                    x: Math.round((parent.width - width) / 2)
-                                                    y: Math.round((parent.height - height) / 2)
-                                                    width: eventView.width
-                                                    height: eventView.height
-                                                    padding: 0
-                                                    EventView {
-                                                        id: eventView
-                                                        controller: Kube.EventController {
-                                                            event: modelData.event
+                                                    Kube.Popup {
+                                                        parent: ApplicationWindow.overlay
+                                                        x: Math.round((parent.width - width) / 2)
+                                                        y: Math.round((parent.height - height) / 2)
+                                                        width: eventView.width
+                                                        height: eventView.height
+                                                        padding: 0
+                                                        EventView {
+                                                            id: eventView
+                                                            controller: Kube.EventController {
+                                                                event: modelData.event
+                                                            }
                                                         }
                                                     }
                                                 }
