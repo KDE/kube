@@ -79,7 +79,7 @@ FocusScope {
                 Kube.Button {
                     text: qsTr("Edit")
                     onClicked: {
-                        editor.open()
+                        editor.createObject(root, {}).open()
                     }
                 }
 
@@ -87,14 +87,20 @@ FocusScope {
         }
     }
 
-    EventEditor {
+    Component {
         id: editor
 
-        parent: ApplicationWindow.overlay
-        x: Math.round((parent.width - width) / 2)
-        y: Math.round((parent.height - height) / 2)
+        EventEditor {
 
-        controller: root.controller
-        editMode: true
+            width: 800
+            height: 400
+
+            parent: ApplicationWindow.overlay
+            x: Math.round((parent.width - width) / 2)
+            y: Math.round((parent.height - height) / 2)
+
+            controller: root.controller
+            editMode: true
+        }
     }
 }
