@@ -95,7 +95,8 @@ T.ComboBox {
             anchors.fill: parent
 
             onClicked: {
-                root.currentIndex = model.index
+                root.currentIndex = root.highlightedIndex
+                root.activated(root.highlightedIndex)
                 popup.close()
             }
         }
