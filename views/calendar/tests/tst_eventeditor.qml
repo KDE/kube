@@ -84,4 +84,51 @@ ViewTestCase {
         var endDate = findChild(editor, "endDate");
         compare(endDate.dateTime, endRounded)
     }
+
+    function test_5endFollowsStartDate() {
+        var start = new Date(2018, 1, 1, 11, 30, 0)
+        var editor = createTemporaryObject(editorComponent, testCase, {editMode: false, start: start})
+        verify(editor)
+        var startDate = findChild(editor, "startDate");
+        compare(startDate.dateTime, start)
+
+        var endDate = findChild(editor, "endDate");
+        compare(endDate.dateTime, start)
+
+        //Follows forward
+        var newStart = new Date(2018, 1, 1, 12, 30, 0)
+        endDate.notBefore = newStart
+        compare(endDate.dateTime, newStart)
+
+        //Doesn't follow back
+        endDate.notBefore = start
+        compare(endDate.dateTime, newStart)
+    }
+
+    Component {
+        id: dateTimeChooserComponent
+        DateTimeChooser {
+
+        }
+    }
+
+    function test_6datePicker() {
+        var midnight = new Date(2018, 1, 1, 0, 0, 0)
+        var start = new Date(2018, 1, 1, 11, 33, 0)
+        var startRounded = new Date(2018, 1, 1, 11, 30, 0)
+        var end = new Date(2018, 1, 1, 11, 58, 0)
+        var endRounded = new Date(2018, 1, 1, 12, 0, 0)
+
+        var chooser = createTemporaryObject(dateTimeChooserComponent, testCase, {notBefore: midnight, initialValue: start, enableTime: true})
+        compare(chooser.dateTime, startRounded)
+
+        //Follow notBefore
+        chooser.notBefore = end
+        compare(chooser.dateTime, endRounded)
+
+        //Don't follow back
+        chooser.notBefore = start
+        compare(chooser.dateTime, endRounded)
+    }
+
 }

@@ -28,7 +28,7 @@ RowLayout {
     id: root
     property bool enableTime: true
     property var notBefore: new Date(1980, 1, 1, 0, 0, 0)
-    property var notBeforeRounded: DateUtils.roundToMinutes(notBefore)
+    property var notBeforeRounded: DateUtils.roundToMinutes(notBefore, delta)
     property var initialValue: null
     property int delta: 15
 
@@ -40,6 +40,10 @@ RowLayout {
         if (root.initialValue) {
             root.dateTime = root.initialValue
         }
+    }
+
+    onNotBeforeRoundedChanged: {
+        timeEdit.setNotBefore(notBeforeRounded)
     }
 
     Kube.Button {
@@ -68,7 +72,9 @@ RowLayout {
                 anchors.fill: parent
                 //TODO add earliest date, prevent selection before
                 selectedDate: root.dateTime
-                onSelected: root.dateTime = date
+                onSelected: {
+                    root.dateTime = date
+                }
 
                 backgroundColor: Kube.Colors.backgroundColor
                 textColor: Kube.Colors.textColor
@@ -80,6 +86,8 @@ RowLayout {
     }
 
     Kube.ComboBox {
+        id: timeEdit
+
         visible: enableTime
 
         Layout.preferredWidth: Kube.Units.gridUnit * 4
@@ -94,6 +102,18 @@ RowLayout {
             return list
         }
 
+        function setNotBefore(notBefore) {
+            availableTimes = generateTimes(DateUtils.sameDay(notBefore, root.dateTime) ? notBefore : new Date(2000, 1, 1, 0, 0, 0), root.delta)
+            model = availableTimes
+            currentIndex = findCurrentIndex(root.dateTime, root.delta)
+            if (currentIndex >= 0) {
+                setTimeFromIndex(currentIndex)
+            } else {
+                currentIndex = 0
+                setTimeFromIndex(currentIndex)
+            }
+        }
+
         property var availableTimes: null
 
         function dateToString(date) {
@@ -101,7 +121,10 @@ RowLayout {
         }
 
         function findCurrentIndex(date, delta) {
-            return find(dateToString(DateUtils.roundToMinutes(date, delta)))
+            var s = dateToString(DateUtils.roundToMinutes(date, delta))
+            //Find does not reliably work if we just reset the model
+            return availableTimes.indexOf(s)
+            // return find(s)
         }
 
         function setTimeFromIndex(index) {
@@ -113,11 +136,7 @@ RowLayout {
         }
 
         Component.onCompleted: {
-            availableTimes = generateTimes(DateUtils.sameDay(root.notBeforeRounded, root.dateTime) ? root.notBeforeRounded : new Date(2000, 1, 1, 0, 0, 0), root.delta)
-            currentIndex = findCurrentIndex(root.initialValue, root.delta)
-            if (currentIndex >= 0) {
-                setTimeFromIndex(currentIndex)
-            }
+            setNotBefore(root.notBeforeRounded)
         }
 
         onActivated: {
