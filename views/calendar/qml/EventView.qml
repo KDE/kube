@@ -91,7 +91,7 @@ FocusScope {
                     Kube.Button {
                         text: qsTr("Edit")
                         onClicked: {
-                            stackView.push(editor)
+                            stackView.push(editor, StackView.Immediate)
                         }
                     }
 
