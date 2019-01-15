@@ -169,6 +169,7 @@ FocusScope {
 
                         property bool isInPast: DateUtils.roundToDay(root.currentDate) > DateUtils.roundToDay(date)
                         property bool isToday: DateUtils.sameDay(root.currentDate, date)
+                        property var todaysDate: date
 
                         //Dimm days in the past
                         Rectangle {
@@ -189,6 +190,38 @@ FocusScope {
                                     color: "transparent"
                                     border.width: 1
                                     border.color: Kube.Colors.lightgrey
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            var d = dayDelegate.todaysDate
+                                            var hours = index * 2
+                                            var minuteOffset = 120 / parent.height * mouse.y
+                                            var minutes = minuteOffset % 60
+                                            hours += (minuteOffset - minutes) / 60
+                                            d.setHours(hours)
+                                            d.setMinutes(minutes)
+                                            eventPopup.createObject(root, {start: d}).open()
+                                        }
+                                        Component {
+                                            id: eventPopup
+                                            Kube.Popup {
+                                                id: popup
+                                                property alias start: editor.start
+                                                x: root.width * 0.15
+                                                y: root.height * 0.15
+
+                                                width: root.width * 0.7
+                                                height: root.height * 0.7
+                                                padding: 0
+                                                EventEditor {
+                                                    id: editor
+                                                    anchors.fill: parent
+                                                    // start: //TODO calculate time from click
+                                                    onDone: popup.close()
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
