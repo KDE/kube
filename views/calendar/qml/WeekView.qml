@@ -257,6 +257,7 @@ FocusScope {
                                     Component {
                                         id: eventDetails
                                         Kube.Popup {
+                                            id: popup
                                             parent: ApplicationWindow.overlay
                                             x: Math.round((parent.width - width) / 2)
                                             y: Math.round((parent.height - height) / 2)
@@ -268,6 +269,7 @@ FocusScope {
                                                 controller: Kube.EventController {
                                                     event: model.modelData.event
                                                 }
+                                                onDone: popup.close()
                                             }
                                         }
                                     }

@@ -21,206 +21,194 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-Kube.Popup {
+Item {
     id: root
 
     property var controller: Kube.EventController {}
     property bool editMode: false
     property date start: new Date()
 
-    width: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
-    height: contentLayout.implicitHeight + 2 * Kube.Units.largeSpacing
+    signal done()
 
-    Item {
+    implicitWidth: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
+    implicitHeight: contentLayout.implicitHeight + buttons.implicitHeight + 2 * Kube.Units.largeSpacing
 
-        states: [
-        State {
-            name: "edit"
-            PropertyChanges { target: deleteButton; visible: true }
-            PropertyChanges { target: abortButton; visible: false }
-            PropertyChanges { target: saveButton; visible: true }
-            PropertyChanges { target: discardButton; visible: true }
-            PropertyChanges { target: createButton; visible: false }
-            PropertyChanges { target: calendarSelector; visible: false }
-        },
-        State {
-            name: "new"
-            PropertyChanges { target: deleteButton; visible: false }
-            PropertyChanges { target: abortButton; visible: true }
-            PropertyChanges { target: saveButton; visible: false }
-            PropertyChanges { target: discardButton; visible: false }
-            PropertyChanges { target: createButton; visible: true }
-            PropertyChanges { target: calendarSelector; visible: true }
+    states: [
+    State {
+        name: "edit"
+        PropertyChanges { target: deleteButton; visible: true }
+        PropertyChanges { target: abortButton; visible: false }
+        PropertyChanges { target: saveButton; visible: true }
+        PropertyChanges { target: discardButton; visible: true }
+        PropertyChanges { target: createButton; visible: false }
+        PropertyChanges { target: calendarSelector; visible: false }
+    },
+    State {
+        name: "new"
+        PropertyChanges { target: deleteButton; visible: false }
+        PropertyChanges { target: abortButton; visible: true }
+        PropertyChanges { target: saveButton; visible: false }
+        PropertyChanges { target: discardButton; visible: false }
+        PropertyChanges { target: createButton; visible: true }
+        PropertyChanges { target: calendarSelector; visible: true }
+    }
+    ]
+
+    state: editMode ? "edit" : "new"
+
+    ColumnLayout {
+        id: contentLayout
+
+        anchors {
+            fill: parent
+            margins: Kube.Units.largeSpacing
         }
-        ]
 
-        state: editMode ? "edit" : "new"
+        spacing: Kube.Units.largeSpacing
 
-        anchors.fill: parent
+        ColumnLayout {
 
-        Item {
-            id: eventEditor
+            spacing: Kube.Units.largeSpacing
 
-            anchors.fill: parent
+            Kube.TextField {
+                id: titleEdit
+                Layout.fillWidth: true
+                placeholderText: qsTr("Event Title")
+                text: controller.summary
+                onTextChanged: controller.summary = text
+            }
 
             ColumnLayout {
-
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    bottom: buttons.top
-                    bottomMargin: Kube.Units.largeSpacing
-                }
-
-                spacing: Kube.Units.largeSpacing
-
-
-                Kube.TextField {
-                    id: titleEdit
-                    Layout.fillWidth: true
-                    placeholderText: qsTr("Event Title")
-                    text: controller.summary
-                    onTextChanged: controller.summary = text
-                }
-
-                ColumnLayout {
-                    id: dateAndTimeChooser
-
-                    spacing: Kube.Units.smallSpacing
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: Kube.Units.largeSpacing
-                        DateTimeChooser {
-                            id: startDate
-                            objectName: "startDate"
-                            enableTime: !controller.allDay
-                            initialValue: root.editMode ? controller.start : root.start
-                            onDateTimeChanged: controller.start = dateTime
-                        }
-                        Kube.Label {
-                            text: qsTr("until")
-                        }
-                        DateTimeChooser {
-                            id: endDate
-                            objectName: "endDate"
-                            enableTime: !controller.allDay
-                            notBefore: startDate.dateTime
-                            initialValue: root.editMode ? controller.end : startDate.dateTime
-                            onDateTimeChanged: controller.end = dateTime
-                        }
-                    }
-
-                    RowLayout {
-                        spacing: Kube.Units.smallSpacing
-                        Kube.CheckBox {
-                            onClicked: {
-                                checked: controller.allDay
-                                onClicked: {
-                                    controller.allDay = !controller.allDay
-                                }
-                            }
-                        }
-                        Kube.Label {
-                            text: qsTr("All day")
-                        }
-                    }
-                }
-
-                ColumnLayout {
-                    spacing: Kube.Units.smallSpacing
-                    Layout.fillWidth: true
-                    //FIXME location doesn't exist yet
-                    // Kube.TextField {
-                    //     Layout.fillWidth: true
-                    //     placeholderText: qsTr("Location")
-                    //     text: controller.location
-                    //     onTextChanged: controller.location = text
-                    // }
-
-                    Kube.TextEditor {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        //TODO placeholderText: "Description"
-                        text: controller.description
-                        onTextChanged: controller.description = text
-                    }
-
-                    Kube.ComboBox {
-                        id: calendarSelector
-                        Layout.fillWidth: true
-
-                        model: Kube.EntityModel {
-                            id: calendarModel
-                            type: "calendar"
-                            roles: ["name"]
-                        }
-                        textRole: "name"
-                        onActivated: {
-                            controller.calendar = calendarModel.data(index).object
-                        }
-                    }
-                }
-            }
-
-            RowLayout {
-                anchors {
-                    bottom: parent.bottom
-                    left: parent.left
-                }
-
-                Kube.Button {
-                    id: deleteButton
-                    text: qsTr("Delete")
-                    onClicked: {
-                        controller.remove()
-                        root.close()
-                    }
-                }
-                Kube.Button {
-                    id: abortButton
-                    text: qsTr("Abort")
-                    onClicked: {
-                        root.close()
-                    }
-                }
-            }
-
-            RowLayout {
-                id: buttons
-
-                anchors {
-                    bottom: parent.bottom
-                    right: parent.right
-                }
+                id: dateAndTimeChooser
 
                 spacing: Kube.Units.smallSpacing
 
-                Kube.Button {
-                    id: discardButton
-                    text: qsTr("Discard Changes")
-                    onClicked: {
-                        root.close()
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Kube.Units.largeSpacing
+                    DateTimeChooser {
+                        id: startDate
+                        objectName: "startDate"
+                        enableTime: !controller.allDay
+                        initialValue: root.editMode ? controller.start : root.start
+                        onDateTimeChanged: controller.start = dateTime
+                    }
+                    Kube.Label {
+                        text: qsTr("until")
+                    }
+                    DateTimeChooser {
+                        id: endDate
+                        objectName: "endDate"
+                        enableTime: !controller.allDay
+                        notBefore: startDate.dateTime
+                        initialValue: root.editMode ? controller.end : startDate.dateTime
+                        onDateTimeChanged: controller.end = dateTime
                     }
                 }
 
-                Kube.PositiveButton {
-                    id: saveButton
-                    text: qsTr("Save Changes")
-                    onClicked: {
-                        controller.saveAction.execute()
-                        root.close()
+                RowLayout {
+                    spacing: Kube.Units.smallSpacing
+                    Kube.CheckBox {
+                        onClicked: {
+                            checked: controller.allDay
+                            onClicked: {
+                                controller.allDay = !controller.allDay
+                            }
+                        }
+                    }
+                    Kube.Label {
+                        text: qsTr("All day")
                     }
                 }
+            }
 
-                Kube.PositiveButton {
-                    id: createButton
-                    text: qsTr("Create Event")
-                    onClicked: {
-                        controller.saveAction.execute()
-                        root.close()
+            ColumnLayout {
+                spacing: Kube.Units.smallSpacing
+                Layout.fillWidth: true
+                //FIXME location doesn't exist yet
+                // Kube.TextField {
+                //     Layout.fillWidth: true
+                //     placeholderText: qsTr("Location")
+                //     text: controller.location
+                //     onTextChanged: controller.location = text
+                // }
+
+                Kube.TextEditor {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: Kube.Units.gridUnit * 4
+
+                    //TODO placeholderText: "Description"
+                    text: controller.description
+                    onTextChanged: controller.description = text
+                }
+
+                Kube.ComboBox {
+                    id: calendarSelector
+                    Layout.fillWidth: true
+
+                    model: Kube.EntityModel {
+                        id: calendarModel
+                        type: "calendar"
+                        roles: ["name"]
                     }
+                    textRole: "name"
+                    onActivated: {
+                        controller.calendar = calendarModel.data(index).object
+                    }
+                }
+            }
+        }
+
+        RowLayout {
+            id: buttons
+
+            spacing: Kube.Units.smallSpacing
+
+            Kube.Button {
+                id: deleteButton
+                text: qsTr("Delete")
+                onClicked: {
+                    controller.remove()
+                    root.done()
+                }
+            }
+
+            Kube.Button {
+                id: abortButton
+                text: qsTr("Abort")
+                onClicked: {
+                    root.done()
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Kube.Button {
+                id: discardButton
+                text: qsTr("Discard Changes")
+                onClicked: {
+                    root.done()
+                }
+            }
+
+            Kube.PositiveButton {
+                id: saveButton
+                text: qsTr("Save Changes")
+                onClicked: {
+                    controller.saveAction.execute()
+                    root.done()
+                }
+            }
+
+            Kube.PositiveButton {
+                id: createButton
+                text: qsTr("Create Event")
+                onClicked: {
+                    controller.saveAction.execute()
+                    root.done()
                 }
             }
         }

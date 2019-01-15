@@ -204,6 +204,7 @@ Item {
                                                 Component {
                                                     id: eventDetails
                                                     Kube.Popup {
+                                                        id: popup
                                                         parent: ApplicationWindow.overlay
                                                         x: Math.round((parent.width - width) / 2)
                                                         y: Math.round((parent.height - height) / 2)
@@ -215,6 +216,7 @@ Item {
                                                             controller: Kube.EventController {
                                                                 event: modelData.event
                                                             }
+                                                            onDone: popup.close()
                                                         }
                                                     }
                                                 }

@@ -322,14 +322,19 @@ Kube.View {
 
     Component {
         id: eventPopup
-        EventEditor {
+        Kube.Popup {
+            id: popup
             x: root.width * 0.15
             y: root.height * 0.15
 
             width: root.width * 0.7
             height: root.height * 0.7
-
-            start: root.selectedDate
+            padding: 0
+            EventEditor {
+                anchors.fill: parent
+                start: root.selectedDate
+                onDone: popup.close()
+            }
         }
     }
 }

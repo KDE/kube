@@ -26,81 +26,86 @@ FocusScope {
     id: root
     property var controller
 
-    width: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
-    height: contentLayout.implicitHeight + 2 * Kube.Units.largeSpacing
+    width: stackView.width
+    height: stackView.height
 
-    Rectangle {
-        anchors {
-            fill: parent
-        }
-        color: Kube.Colors.viewBackgroundColor
+    signal done()
 
-        ColumnLayout {
-            id: contentLayout
-            anchors {
-                centerIn: parent
-            }
+    StackView {
+        id: stackView
+        anchors.centerIn: parent
+        width: stackView.currentItem.implicitWidth
+        height: stackView.currentItem.implicitHeight
+        initialItem: eventDetails
+        clip: true
+    }
 
-            spacing: Kube.Units.smallSpacing
+    Component {
+        id: eventDetails
+        Rectangle {
+            implicitWidth: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
+            implicitHeight: contentLayout.implicitHeight + 2 * Kube.Units.largeSpacing
+            color: Kube.Colors.viewBackgroundColor
 
-            Kube.Heading {
-                width: parent.width
-                text: controller.summary
-            }
-
-            Kube.Label {
-                visible: controller.allDay
-                text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM")
-            }
-            Kube.Label {
-                visible: !controller.allDay
-                text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm")
-            }
-
-            Kube.Label {
-                text: controller.description
-            }
-
-            Item {
-                width: 1
-                height: Kube.Units.largeSpacing
-            }
-
-            RowLayout {
-                Kube.Button {
-                    text: qsTr("Remove")
-                    onClicked: {
-                        root.controller.remove()
-                    }
+            ColumnLayout {
+                id: contentLayout
+                anchors {
+                    centerIn: parent
                 }
+
+                spacing: Kube.Units.smallSpacing
+
+                Kube.Heading {
+                    width: parent.width
+                    text: controller.summary
+                }
+
+                Kube.Label {
+                    visible: controller.allDay
+                    text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM")
+                }
+                Kube.Label {
+                    visible: !controller.allDay
+                    text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm")
+                }
+
+                Kube.Label {
+                    text: controller.description
+                }
+
                 Item {
-                    Layout.fillWidth: true
-                }
-                Kube.Button {
-                    text: qsTr("Edit")
-                    onClicked: {
-                        editor.createObject(root, {}).open()
-                    }
+                    width: 1
+                    height: Kube.Units.largeSpacing
                 }
 
+                RowLayout {
+                    Kube.Button {
+                        text: qsTr("Remove")
+                        onClicked: {
+                            root.controller.remove()
+                        }
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    Kube.Button {
+                        text: qsTr("Edit")
+                        onClicked: {
+                            stackView.push(editor)
+                        }
+                    }
+
+                }
             }
         }
     }
 
     Component {
         id: editor
-
         EventEditor {
-
-            width: 800
-            height: 400
-
-            parent: ApplicationWindow.overlay
-            x: Math.round((parent.width - width) / 2)
-            y: Math.round((parent.height - height) / 2)
-
             controller: root.controller
             editMode: true
+            onDone: root.done()
         }
     }
 }
