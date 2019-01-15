@@ -332,7 +332,7 @@ Kube.View {
             padding: 0
             EventEditor {
                 anchors.fill: parent
-                start: root.selectedDate
+                start: DateUtils.sameDay(root.currentDate, root.selectedDate) ? root.currentDate : root.selectedDate
                 onDone: popup.close()
             }
         }
