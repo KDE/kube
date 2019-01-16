@@ -39,6 +39,7 @@ class KUBE_EXPORT EventController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(QByteArray, AccountId, accountId)
     KUBE_CONTROLLER_PROPERTY(QString, Summary, summary)
     KUBE_CONTROLLER_PROPERTY(QString, Description, description)
+    KUBE_CONTROLLER_PROPERTY(QString, Location, location)
     KUBE_CONTROLLER_PROPERTY(QDateTime, Start, start)
     KUBE_CONTROLLER_PROPERTY(QDateTime, End, end)
     KUBE_CONTROLLER_PROPERTY(bool, AllDay, allDay)

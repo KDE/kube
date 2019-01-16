@@ -83,6 +83,7 @@ void EventController::save()
         calcoreEvent->setUid(QUuid::createUuid().toString());
         calcoreEvent->setSummary(getSummary());
         calcoreEvent->setDescription(getDescription());
+        calcoreEvent->setLocation(getLocation());
         calcoreEvent->setDtStart(getStart());
         calcoreEvent->setDtEnd(getEnd());
         calcoreEvent->setAllDay(getAllDay());
@@ -122,6 +123,7 @@ void EventController::loadEvent(const QVariant &variant)
         }
         setSummary(icalEvent->summary());
         setDescription(icalEvent->description());
+        setLocation(icalEvent->location());
         setStart(icalEvent->dtStart());
         setEnd(icalEvent->dtEnd());
         setAllDay(icalEvent->allDay());
