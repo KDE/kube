@@ -21,6 +21,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.3
 
 import org.kube.framework 1.0 as Kube
+import "dateutils.js" as DateUtils
 
 FocusScope {
     id: root
@@ -62,11 +63,12 @@ FocusScope {
 
                 Kube.SelectableLabel {
                     visible: controller.allDay
-                    text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM")
+                    text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + (DateUtils.sameDay(controller.start, controller.end) ? "" : " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM"))
                 }
+
                 Kube.SelectableLabel {
                     visible: !controller.allDay
-                    text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm")
+                    text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + (DateUtils.sameDay(controller.start, controller.end) ? controller.end.toLocaleString(Qt.locale(), "hh:mm") : controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))
                 }
 
                 Kube.SelectableLabel {
