@@ -110,7 +110,11 @@ Item {
                     spacing: Kube.Units.smallSpacing
                     Kube.CheckBox {
                         checked: controller.allDay
-                        onCheckedChanged: controller.allDay = checked
+                        onCheckedChanged: {
+                            if (controller.allDay != checked) {
+                                controller.allDay = checked
+                            }
+                        }
                     }
                     Kube.Label {
                         text: qsTr("All day")
