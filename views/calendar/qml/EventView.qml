@@ -60,21 +60,26 @@ FocusScope {
                     text: controller.summary
                 }
 
-                Kube.Label {
+                Kube.SelectableLabel {
                     visible: controller.allDay
                     text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM")
                 }
-                Kube.Label {
+                Kube.SelectableLabel {
                     visible: !controller.allDay
                     text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm")
+                }
 
                 Kube.SelectableLabel {
                     text: "@" + controller.location
                     visible: controller.location
                 }
 
-                Kube.Label {
+                TextEdit {
                     text: controller.description
+                    readOnly: true
+                    selectByMouse: true
+                    color: Kube.Colors.textColor
+                    font.family: Kube.Font.fontFamily
                 }
 
                 Item {
