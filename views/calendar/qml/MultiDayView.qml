@@ -124,6 +124,29 @@ Item {
 
                                     }
 
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: eventPopup.createObject(root, {start: date, allDay: false}).open()
+                                        Component {
+                                            id: eventPopup
+                                            Kube.Popup {
+                                                id: popup
+                                                property alias start: editor.start
+                                                x: root.width * 0.15
+                                                y: root.height * 0.15
+
+                                                width: root.width * 0.7
+                                                height: root.height * 0.7
+                                                padding: 0
+                                                EventEditor {
+                                                    id: editor
+                                                    anchors.fill: parent
+                                                    onDone: popup.close()
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     //Day number
                                     Label {
                                         visible: root.showDayIndicator
