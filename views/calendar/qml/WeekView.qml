@@ -200,26 +200,7 @@ FocusScope {
                                             hours += (minuteOffset - minutes) / 60
                                             d.setHours(hours)
                                             d.setMinutes(minutes)
-                                            eventPopup.createObject(root, {start: d}).open()
-                                        }
-                                        Component {
-                                            id: eventPopup
-                                            Kube.Popup {
-                                                id: popup
-                                                property alias start: editor.start
-                                                x: root.width * 0.15
-                                                y: root.height * 0.15
-
-                                                width: root.width * 0.7
-                                                height: root.height * 0.7
-                                                padding: 0
-                                                EventEditor {
-                                                    id: editor
-                                                    anchors.fill: parent
-                                                    // start: //TODO calculate time from click
-                                                    onDone: popup.close()
-                                                }
-                                            }
+                                            Kube.Fabric.postMessage(Kube.Messages.eventEditor, {start: d})
                                         }
                                     }
                                 }

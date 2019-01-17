@@ -64,5 +64,7 @@ Item {
     property string selectPreviousFolder: "selectPreviousFolder"
     property string scrollConversationDown: "scrollConversationDown"
     property string scrollConversationUp: "scrollConversationUp"
+
+    property string eventEditor: "eventEditor"
 }
 
