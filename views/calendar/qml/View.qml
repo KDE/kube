@@ -146,7 +146,13 @@ Kube.View {
                     date: root.currentDate
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.selectedDate = root.currentDate
+                        onClicked: {
+                            if (weekViewButton.checked) {
+                                root.selectedDate = getFirstDayOfWeek(root.currentDate)
+                            } else {
+                                root.selectedDate = getFirstDayOfMonth(root.currentDate)
+                            }
+                        }
                     }
                 }
 
