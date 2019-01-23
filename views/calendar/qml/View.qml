@@ -99,7 +99,7 @@ Kube.View {
                     }
                     focus: true
                     text: qsTr("New Event")
-                    onClicked: eventPopup.createObject(root, {}).open()
+                    onClicked: eventPopup.createObject(root, {start: DateUtils.sameDay(root.currentDate, root.selectedDate) ? root.currentDate : root.selectedDate}).open()
                 }
                 RowLayout {
                     anchors {
@@ -335,6 +335,10 @@ Kube.View {
         id: eventPopup
         Kube.Popup {
             id: popup
+
+            property alias start: editor.start
+            property alias allDay: editor.allDay
+
             x: root.width * 0.15
             y: root.height * 0.15
 
@@ -342,8 +346,8 @@ Kube.View {
             height: root.height * 0.7
             padding: 0
             EventEditor {
+                id: editor
                 anchors.fill: parent
-                start: DateUtils.sameDay(root.currentDate, root.selectedDate) ? root.currentDate : root.selectedDate
                 onDone: popup.close()
             }
         }

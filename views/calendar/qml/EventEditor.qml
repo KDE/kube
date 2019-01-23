@@ -24,10 +24,10 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
 
-    property var controller: Kube.EventController { allDay: allDay }
     property bool editMode: false
     property date start: new Date()
     property bool allDay: false
+    property var controller: Kube.EventController { allDay: root.allDay }
 
     signal done()
 

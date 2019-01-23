@@ -126,7 +126,7 @@ Item {
 
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: Kube.Fabric.postMessage(Kube.Messages.eventEditor, {start: date, allDay: false})
+                                        onClicked: Kube.Fabric.postMessage(Kube.Messages.eventEditor, {"start": date, "allDay": true})
                                     }
 
                                     //Day number

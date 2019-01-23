@@ -200,7 +200,7 @@ FocusScope {
                                             hours += (minuteOffset - minutes) / 60
                                             d.setHours(hours)
                                             d.setMinutes(minutes)
-                                            Kube.Fabric.postMessage(Kube.Messages.eventEditor, {start: d})
+                                            Kube.Fabric.postMessage(Kube.Messages.eventEditor, {"start": d, "allDay": false})
                                         }
                                     }
                                 }
