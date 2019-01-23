@@ -68,8 +68,6 @@ Item {
         }
         ColumnLayout {
             id: menuLayout
-            width: childrenRect.width
-            height: childrenRect.height
         }
     }
 }
