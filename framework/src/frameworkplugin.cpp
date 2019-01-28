@@ -25,6 +25,7 @@
 #include "domain/perioddayeventmodel.h"
 #include "domain/multidayeventmodel.h"
 #include "domain/eventmodel.h"
+#include "domain/todomodel.h"
 #include "domain/composercontroller.h"
 #include "domain/mime/messageparser.h"
 #include "domain/retriever.h"
@@ -32,6 +33,7 @@
 #include "domain/mouseproxy.h"
 #include "domain/contactcontroller.h"
 #include "domain/eventcontroller.h"
+#include "domain/todocontroller.h"
 #include "domain/peoplemodel.h"
 #include "domain/textdocumenthandler.h"
 #include "accounts/accountsmodel.h"
@@ -167,6 +169,8 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<MultiDayEventModel>(uri, 1, 0, "MultiDayEventModel");
     qmlRegisterType<EventModel>(uri, 1, 0, "EventModel");
     qmlRegisterType<EventController>(uri, 1, 0, "EventController");
+    qmlRegisterType<TodoModel>(uri, 1, 0, "TodoModel");
+    qmlRegisterType<TodoController>(uri, 1, 0, "TodoController");
     qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");
     qmlRegisterUncreatableType<Kube::ListPropertyController>(uri, 1, 0, "ListPropertyController", "abstract");
     qmlRegisterUncreatableType<Selector>(uri, 1, 0, "Selector", "abstract");

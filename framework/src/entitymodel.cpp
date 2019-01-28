@@ -80,6 +80,8 @@ void EntityModel::runQuery(const Query &query)
         mModel = Store::loadModel<Addressbook>(query);
     } else if (mType == "folder") {
         mModel = Store::loadModel<Folder>(query);
+    } else if (mType == "todo") {
+        mModel = Store::loadModel<Todo>(query);
     } else {
         qWarning() << "Type not supported " << mType;
         Q_ASSERT(false);

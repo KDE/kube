@@ -31,57 +31,67 @@ ApplicationWindow {
 
     Component.onCompleted: {
         var initialState = {
-            accounts: [{
+            accounts: [
+                {
                     id: "account1",
                     name: "Test Account"
-                }],
-            identities: [{
-                    account: "account1",
-                    name: "Test Identity",
-                    address: "identity@example.org"
-                }],
-            resources: [{
-                    id: "resource1",
-                    account: "account1",
-                    type: "dummy"
                 },
                 {
-                    id: "resource2",
+                    id: "account2",
+                    name: "Test Account2"
+                },
+            ],
+            identities: [{
+                account: "account1",
+                name: "Test Identity",
+                address: "identity@example.org"
+            }],
+            resources: [
+                {
+                    id: "caldavresource",
                     account: "account1",
-                    type: "mailtransport"
-                }],
-            folders: [{
-                    id: "folder1",
-                    resource: "resource1",
-                    name: "Folder 1",
-                    specialpurpose: ["inbox"],
-                    mails: [{
-                            resource: "resource1",
-                            messageId: "<msg1@test.com>",
-                            date: "2017-07-24T15:46:29",
-                            subject: "subject1",
-                            body: "body",
-                            to: ["to@example.org"],
-                            cc: ["cc@example.org"],
-                            bcc: ["bcc@example.org"],
-                        },
-                        {
-                            resource: "resource1",
-                            inReplyTo: "<msg1@test.com>",
-                            date: "2017-07-24T16:46:29",
-                            subject: "subject2",
-                            body: "body2",
-                            to: ["to@example.org"],
-                        },
-                        {
-                            resource: "resource1",
-                            date: "2017-07-24T18:46:29",
-                            subject: "subject4",
-                            body: "body4",
-                            to: ["to@example.org"],
-                        },
-                    ]
-                }],
+                    type: "caldav",
+                },
+                {
+                    id: "caldavresource2",
+                    account: "account2",
+                    type: "caldav",
+                }
+            ],
+            calendars: [{
+                id: "calendar1",
+                resource: "caldavresource",
+                name: "Test Calendar",
+                color: "#af1a6a",
+                todos: [
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo start",
+                        starts: "2018-04-09T14:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo due",
+                        due: "2018-04-09T14:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo"
+                    },
+                ],
+            },
+            {
+                id: "calendar16",
+                resource: "caldavresource",
+                name: "Test Calendar16",
+                color: "#f67400"
+            },
+            {
+                id: "account2calendar",
+                resource: "caldavresource2",
+                name: "Account2Calendar",
+                color: "#f67400"
+            }],
         }
         TestStore.setup(initialState)
     }
