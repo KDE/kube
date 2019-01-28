@@ -25,6 +25,7 @@
 #include <kmime/kmime_message.h>
 
 #include <KCalCore/Event>
+#include <KCalCore/Todo>
 #include <KCalCore/ICalFormat>
 #include <KContacts/VCardConverter>
 
@@ -173,6 +174,40 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId 
     Sink::Store::create(sinkEvent).exec().waitForFinished();
 }
 
+static void createTodo(const QVariantMap &object, const QByteArray &calendarId = {})
+{
+    using Sink::ApplicationDomain::ApplicationDomainType;
+    using Sink::ApplicationDomain::Todo;
+
+    auto sinkEvent = ApplicationDomainType::createEntity<Todo>(object["resource"].toByteArray());
+
+    auto calcoreEvent = QSharedPointer<KCalCore::Todo>::create();
+
+    QString uid;
+    if (object.contains("uid")) {
+        uid = object["uid"].toString();
+    } else {
+        uid = QUuid::createUuid().toString();
+    }
+    calcoreEvent->setUid(uid);
+
+    auto summary = object["summary"].toString();
+    calcoreEvent->setSummary(summary);
+
+    if (object.contains("description")) {
+        calcoreEvent->setDescription(object["description"].toString());
+    }
+
+    calcoreEvent->setDtStart(object["starts"].toDateTime());
+    calcoreEvent->setDtDue(object["due"].toDateTime());
+
+    sinkEvent.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+
+    sinkEvent.setCalendar(calendarId);
+
+    Sink::Store::create(sinkEvent).exec().waitForFinished();
+}
+
 static void createCalendar(const QVariantMap &object)
 {
     using Sink::ApplicationDomain::Calendar;
@@ -186,6 +221,8 @@ static void createCalendar(const QVariantMap &object)
     auto calendarId = calendar.identifier();
     iterateOverObjects(object.value("events").toList(),
         [calendarId](const QVariantMap &object) { createEvent(object, calendarId); });
+    iterateOverObjects(object.value("todos").toList(),
+        [calendarId](const QVariantMap &object) { createTodo(object, calendarId); });
 }
 
 static void createContact(const QVariantMap &object, const QByteArray &addressbookId = {})
