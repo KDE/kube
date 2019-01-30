@@ -38,8 +38,8 @@ Kube.View {
         Kube.ComposerController {
             id: composerController
             objectName: "composerController"
-            sign: signCheckbox.checked
-            encrypt: encryptCheckbox.checked
+            sign: signCheckbox.enabled && signCheckbox.checked
+            encrypt: encryptCheckbox.enabled && encryptCheckbox.checked
             onDone: root.done()
 
             property bool foundAllKeys: composerController.to.foundAllKeys && composerController.cc.foundAllKeys && composerController.bcc.foundAllKeys
