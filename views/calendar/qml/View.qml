@@ -53,8 +53,14 @@ Kube.View {
 
         while (true) {
             if (date.getDay() === firstDay) {
-                return date
+                break
             }
+            //If we get to the beginning of the month we have to search forward for the start day instead
+            //so we don't end up in the previous month.
+            if (day == 1) {
+                return getFirstDayOfWeek(new Date(year, month, 8))
+            }
+
             day = day - 1
             date = new Date(year, month, day)
         }
