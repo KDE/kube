@@ -118,7 +118,7 @@ Flickable {
 
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
-                    placeholderText: qsTr("First Name")
+                    placeholderText: qsTr("First name")
                     backgroundColor: "white"
                     text: contactController.firstName
                     onTextChanged: contactController.firstName = text
@@ -126,7 +126,7 @@ Flickable {
 
                 Kube.TextField {
                     width: Kube.Units.gridUnit * 15
-                    placeholderText: qsTr("Last Name")
+                    placeholderText: qsTr("Last name")
                     backgroundColor: "white"
                     text: contactController.lastName
                     onTextChanged: contactController.lastName = text

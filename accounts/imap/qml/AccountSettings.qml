@@ -26,7 +26,7 @@ Item {
 
     property string accountId
     property string heading: qsTr("Connect your IMAP account")
-    property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP address, which authentification and port to be used, please contact your email provider.")
+    property string subheadline: qsTr("To let Kube access your account, fill in email address, username, password and give the account a title that will be displayed inside Kube. For information about which SMTP, IMAP address, which authentication and port to be used, please contact your email provider.")
     property bool valid: true
     implicitHeight: grid.implicitHeight
 
@@ -110,7 +110,7 @@ Item {
         }
 
         Kube.Label {
-            text: qsTr("Smtp address")
+            text: qsTr("SMTP address")
             Layout.alignment: Qt.AlignRight
         }
         Kube.RequiredTextField {

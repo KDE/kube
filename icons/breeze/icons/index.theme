@@ -1,7 +1,39 @@
 [Icon Theme]
 Name=Kube
+Name[ca]=Kube
+Name[ca@valencia]=Kube
+Name[cs]=Kube
+Name[de]=Kube
+Name[es]=Kube
+Name[fr]=Kube
+Name[gl]=Kube
+Name[it]=Kube
+Name[nl]=Kube
+Name[pl]=Kube
+Name[pt]=Kube
+Name[ru]=Kube
+Name[sk]=Kube
+Name[sv]=Kube
+Name[uk]=Kube
+Name[x-test]=xxKubexx
 
 Comment=Kube Theme
+Comment[ca]=Tema del Kube
+Comment[ca@valencia]=Tema del Kube
+Comment[cs]=Motiv Kube
+Comment[de]=Kube-Design
+Comment[es]=Tema de Kube
+Comment[fr]=Thème Kube
+Comment[gl]=Tema de Kube
+Comment[it]=Tema di Kube
+Comment[nl]=Kube-thema
+Comment[pl]=Wygląd Kube
+Comment[pt]=Tema do Kube
+Comment[ru]=Оформление Kube
+Comment[sk]=Téma Kube
+Comment[sv]=Kube tema
+Comment[uk]=Тема Kube
+Comment[x-test]=xxKube Themexx
 
 DisplayDepth=32
 

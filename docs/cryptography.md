@@ -50,7 +50,7 @@ All testmails can be found in the folder [github:cmollekopf/docker](https://gith
 To be able to also test gpg errors, we created some test mails, that triggers known issues:
 
 * `openpgp-keymissing.mbox` this key is missing in the test environment, so gpg returns a KeyMissing error.
-* `openpgp-wrong_passphrase.mbox`, here a pinentry popups and if you press three time `Cancel` in a row, a Passphrase error is returnd. If you enter the correct passphrase `test` you the the content of the mail. But than you need wither restart the testenvironment, kill `gpg-agent` or simply wait 1h before you see the passphrase error again.
+* `openpgp-wrong_passphrase.mbox`, here a pinentry popups and if you press three time `Cancel` in a row, a Passphrase error is returned. If you enter the correct passphrase `test` you the content of the mail. But than you need wither restart the testenvironment, kill `gpg-agent` or simply wait 1h before you see the passphrase error again.
 * you can unistall the `gnupg-smime` package, or delete `/usr/bin/gpgsm` by hand to trigger a UnknownError for smime encrypted messages. If delete all `gnupgp2` related pacakges the application may react with segfaults.
 
 We also have a unittest for gnupg errors in a lower level [kde:kube/framework/domain/mimetreeparser/tests/gpgerrortest.cpp](https://cgit.kde.org/kube.git/tree/framework/domain/mimetreeparser/tests/gpgerrortest.cpp?h=develop).

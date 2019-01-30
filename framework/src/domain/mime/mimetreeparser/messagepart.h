@@ -317,7 +317,7 @@ public:
 
 private:
     /** Handles the dectyptioon of a given content
-     * returns true if the decryption was successfull
+     * returns true if the decryption was successful
      * if used in async mode, check if mMetaData.inProgress is true, it inicates a running decryption process.
      */
     bool okDecryptMIME(KMime::Content &data);

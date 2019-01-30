@@ -37,7 +37,7 @@ Controls2.ApplicationWindow {
         }
         spacing: 0
         Kube.Heading {
-            text: !upgradeComplete ? qsTr("Please wait while Kube is upgrading...") : qsTr("Kube has upgraded the storage layer.")
+            text: !upgradeComplete ? qsTr("Please wait while Kube is upgrading...") : qsTr("Kube upgraded the storage layer.")
             color: Kube.Colors.highlightColor
         }
         Kube.Label {

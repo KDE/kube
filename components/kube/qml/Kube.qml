@@ -199,7 +199,7 @@ Controls2.ApplicationWindow {
                     }
                     checked: kubeViews.currentViewName == "log"
                     Controls2.ButtonGroup.group: viewButtonGroup
-                    tooltip: qsTr("Notification View")
+                    tooltip: qsTr("Notification view")
                 }
 
                 Kube.IconButton {

@@ -269,7 +269,7 @@ Kube.View {
                 activeFocusOnTab: true
                 font.bold: true
 
-                placeholderText: qsTr("Enter Subject...")
+                placeholderText: qsTr("Enter subject...")
                 text: composerController.subject
                 onTextChanged: composerController.subject = text;
                 onActiveFocusChanged: {
@@ -386,7 +386,7 @@ Kube.View {
         }
     }
 
-    //Recepients
+    //Recipients
     FocusScope {
         id: recipients
         Layout.fillHeight: true
@@ -419,7 +419,7 @@ Kube.View {
                 Layout.fillHeight: true
 
                 Kube.Label {
-                    text: qsTr("Sending Email to:")
+                    text: qsTr("Sending email to:")
                 }
 
                 AddresseeListEditor {
@@ -433,7 +433,7 @@ Kube.View {
                 }
 
                 Kube.Label {
-                    text: qsTr("Sending Copy to (CC):")
+                    text: qsTr("Sending copy to (Cc):")
                 }
                 AddresseeListEditor {
                     id: cc
@@ -446,7 +446,7 @@ Kube.View {
                 }
 
                 Kube.Label {
-                    text: qsTr("Sending Secret Copy to (Bcc):")
+                    text: qsTr("Sending secret copy to (Bcc):")
                 }
                 AddresseeListEditor {
                     id: bcc
