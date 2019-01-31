@@ -106,22 +106,22 @@ Item {
                                     property bool isToday: DateUtils.sameDay(root.currentDate, date)
                                     property bool isCurrentMonth: date.getMonth() == root.month
 
-                                    //Dimm days in the past
-                                    Rectangle {
-                                        anchors.fill: parent
-                                        color: Kube.Colors.buttonColor
-                                        opacity: 0.2
-                                        visible: isInPast
-                                    }
-
                                     //Grid
                                     Rectangle {
                                         anchors.fill: parent
                                         visible: root.paintGrid
-                                        color: "transparent"
+                                        color: Kube.Colors.viewBackgroundColor
                                         border.width: 1
                                         border.color: Kube.Colors.lightgrey
 
+                                        //Dimm days in the past
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            anchors.margins: 1
+                                            color: Kube.Colors.buttonColor
+                                            opacity: 0.2
+                                            visible: isInPast
+                                        }
                                     }
 
                                     MouseArea {
