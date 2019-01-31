@@ -83,9 +83,7 @@ void EventModel::updateQuery()
 {
     using namespace Sink::ApplicationDomain;
     if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
-        if (rowCount()) {
-            refreshView();
-        }
+        refreshView();
         return;
     }
     mEnd = mStart.addDays(mLength);
@@ -129,44 +127,46 @@ void EventModel::updateFromSource()
 
     mEvents.clear();
 
-    for (int i = 0; i < mSourceModel->rowCount(); ++i) {
-        auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Event::Ptr>();
-        const bool skip = [&] {
-            if (!mCalendarFilter.contains(event->getCalendar())) {
-                return true;
-            }
-            for (auto it = mFilter.constBegin(); it!= mFilter.constEnd(); it++) {
-                if (event->getProperty(it.key().toLatin1()) != it.value()) {
+    if (mSourceModel) {
+        for (int i = 0; i < mSourceModel->rowCount(); ++i) {
+            auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Event::Ptr>();
+            const bool skip = [&] {
+                if (!mCalendarFilter.contains(event->getCalendar())) {
                     return true;
                 }
-            }
-            return false;
-        }();
-        if (skip) {
-            continue;
-        }
-
-        //Parse the event
-        auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
-        if(!icalEvent) {
-            SinkWarning() << "Invalid ICal to process, ignoring...";
-            continue;
-        }
-
-        if (icalEvent->recurs()) {
-            const auto duration = icalEvent->hasDuration() ? icalEvent->duration().asSeconds() : 0;
-            KCalCore::OccurrenceIterator occurrenceIterator{*mCalendar, icalEvent, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
-            while (occurrenceIterator.hasNext()) {
-                occurrenceIterator.next();
-                const auto start = occurrenceIterator.occurrenceStartDate();
-                const auto end = start.addSecs(duration);
-                if (start.date() < mEnd && end.date() >= mStart) {
-                    mEvents.append({start, end, occurrenceIterator.incidence(), getColor(event->getCalendar()), event->getAllDay(), event});
+                for (auto it = mFilter.constBegin(); it!= mFilter.constEnd(); it++) {
+                    if (event->getProperty(it.key().toLatin1()) != it.value()) {
+                        return true;
+                    }
                 }
+                return false;
+            }();
+            if (skip) {
+                continue;
             }
-        } else {
-            if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
-                mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
+
+            //Parse the event
+            auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
+            if(!icalEvent) {
+                SinkWarning() << "Invalid ICal to process, ignoring...";
+                continue;
+            }
+
+            if (icalEvent->recurs()) {
+                const auto duration = icalEvent->hasDuration() ? icalEvent->duration().asSeconds() : 0;
+                KCalCore::OccurrenceIterator occurrenceIterator{*mCalendar, icalEvent, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
+                while (occurrenceIterator.hasNext()) {
+                    occurrenceIterator.next();
+                    const auto start = occurrenceIterator.occurrenceStartDate();
+                    const auto end = start.addSecs(duration);
+                    if (start.date() < mEnd && end.date() >= mStart) {
+                        mEvents.append({start, end, occurrenceIterator.incidence(), getColor(event->getCalendar()), event->getAllDay(), event});
+                    }
+                }
+            } else {
+                if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
+                    mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
+                }
             }
         }
     }
