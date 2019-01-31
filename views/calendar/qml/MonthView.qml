@@ -40,9 +40,6 @@ FocusScope {
         }
         daysToShow: daysPerRow * 6
         daysPerRow: 7
-        currentDate: root.currentDate
-        startDate: root.startDate
-        calendarFilter: root.calendarFilter
         paintGrid: true
         showDayIndicator: true
         dayHeaderDelegate: Item {
