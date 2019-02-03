@@ -28,7 +28,7 @@ Kube.View {
     id: root
 
     property date currentDate: new Date()
-    property date selectedDate: getFirstDayOfWeek(currentDate)
+    property date selectedDate: getFirstDayOfWeek(currentDate, false)
     property bool autoUpdateDate: true
 
     Kube.CheckedEntities {
@@ -44,7 +44,7 @@ Kube.View {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
     }
 
-    function getFirstDayOfWeek(date) {
+    function getFirstDayOfWeek(date, stayWithinMonth) {
         var firstDay = Qt.locale().firstDayOfWeek
         var year = date.getFullYear()
         var month = date.getMonth()
@@ -57,8 +57,8 @@ Kube.View {
             }
             //If we get to the beginning of the month we have to search forward for the start day instead
             //so we don't end up in the previous month.
-            if (day == 1) {
-                return getFirstDayOfWeek(new Date(year, month, 8))
+            if (day == 1 && stayWithinMonth) {
+                return getFirstDayOfWeek(new Date(year, month, 8), true)
             }
 
             day = day - 1
@@ -126,7 +126,7 @@ Kube.View {
                         ButtonGroup.group: viewButtonGroup
                         onCheckedChanged: {
                             if (checked) {
-                                root.selectedDate = getFirstDayOfWeek(root.selectedDate)
+                                root.selectedDate = getFirstDayOfWeek(root.selectedDate, true)
                             }
                         }
                     }
@@ -154,7 +154,7 @@ Kube.View {
                         anchors.fill: parent
                         onClicked: {
                             if (weekViewButton.checked) {
-                                root.selectedDate = getFirstDayOfWeek(root.currentDate)
+                                root.selectedDate = getFirstDayOfWeek(root.currentDate, false)
                             } else {
                                 root.selectedDate = getFirstDayOfMonth(root.currentDate)
                             }
@@ -171,7 +171,7 @@ Kube.View {
                     selectedDate: root.selectedDate
                     onSelected: {
                         if (weekViewButton.checked) {
-                            root.selectedDate = getFirstDayOfWeek(date)
+                            root.selectedDate = getFirstDayOfWeek(date, false)
                         } else {
                             root.selectedDate = getFirstDayOfMonth(date)
                         }
@@ -326,7 +326,7 @@ Kube.View {
             Layout.fillHeight: true
             Layout.fillWidth: true
             currentDate: root.currentDate
-            startDate: getFirstDayOfWeek(getFirstDayOfMonth(root.selectedDate))
+            startDate: getFirstDayOfWeek(getFirstDayOfMonth(root.selectedDate), true)
             month: root.selectedDate.getMonth()
             calendarFilter: calendarFilterCollector.checkedEntities
         }
