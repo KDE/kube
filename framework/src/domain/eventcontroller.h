@@ -20,10 +20,10 @@
 
 #pragma once
 #include "kube_export.h"
-#include <QObject>
+
 #include <QString>
-#include <QStringList>
-#include <QStandardItemModel>
+#include <QDateTime>
+
 #include <sink/applicationdomaintype.h>
 
 #include "controller.h"
