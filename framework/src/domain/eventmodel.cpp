@@ -47,8 +47,10 @@ EventModel::EventModel(QObject *parent)
 
 void EventModel::setStart(const QDate &start)
 {
-    mStart = start;
-    updateQuery();
+    if (start != mStart) {
+        mStart = start;
+        updateQuery();
+    }
 }
 
 QDate EventModel::start() const
