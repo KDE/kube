@@ -57,7 +57,6 @@ void EventController::save()
             return;
         }
 
-        calcoreEvent->setUid(QUuid::createUuid().toString());
         calcoreEvent->setSummary(getSummary());
         calcoreEvent->setDescription(getDescription());
         calcoreEvent->setDtStart(getStart());
