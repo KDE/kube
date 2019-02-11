@@ -186,7 +186,6 @@ QVariant TodoSourceModel::data(const QModelIndex &idx, int role) const
         case DueDate:
             return todo.due;
         case Date:
-            qWarning() << todo.status << todo.due << todo.due.isValid() << todo.start;
             if (todo.status == "COMPLETED") {
                 return todo.completed;
             }
