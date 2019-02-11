@@ -294,6 +294,7 @@ Kube.View {
                                 text: model.summary
                                 color: delegateRoot.textColor
                                 font.strikeout: model.complete
+                                font.bold: model.doing
                                 maximumLineCount: 2
                                 wrapMode: Text.WordWrap
                                 elide: Text.ElideRight
