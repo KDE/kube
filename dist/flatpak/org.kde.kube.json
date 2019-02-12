@@ -2,7 +2,7 @@
     "id": "org.kde.kube",
     "branch": "master",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.9",
+    "runtime-version": "5.12",
     "sdk": "org.kde.Sdk",
     "command": "kubewrapper.sh",
     "rename-icon": "kube_icon",
@@ -24,12 +24,6 @@
         "boost.json",
         "gpgme.json",
         {
-            "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
-            "name": "flatbuffers",
-            "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://github.com/google/flatbuffers.git", "branch": "v1.6.0" } ]
-        },
-        {
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib",
                             "-DCMAKE_C_COMPILER=/usr/bin/clang", "-DCMAKE_CXX_COMPILER=/usr/bin/clang++", "-DWITH_KJOB=OFF"],
             "name": "kasync",
@@ -40,7 +34,7 @@
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "name": "kmime",
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kmime.git", "branch": "cd6220e" } ]
+            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kmime.git", "branch": "Applications/18.12" } ]
         },
         {
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
@@ -52,19 +46,19 @@
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "name": "kcontacts",
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kcontacts.git", "branch": "Applications/17.04" } ]
+            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kcontacts.git", "branch": "Applications/18.12" } ]
         },
         {
             "config-opts": [ "-DCMAKE_INSTALL_LIBDIR=lib" ],
             "name": "libical",
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://github.com/libical/libical.git", "branch": "v2.0.0" } ]
+            "sources": [ { "type": "git", "url": "https://github.com/libical/libical.git", "branch": "v3.0.4" } ]
         },
         {
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "name": "kcalcore",
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kcalcore.git", "branch": "v17.12.2" } ]
+            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kcalcore.git", "branch": "v18.12.1" } ]
         },
         {
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
@@ -77,9 +71,9 @@
             "buildsystem": "cmake-ninja",
             "sources": [
                 {
-                    "type": "archive",
-                    "url": "https://github.com/libgit2/libgit2/archive/v0.24.1.tar.gz",
-                    "sha256": "60198cbb34066b9b5c1613d15c0479f6cd25f4aef42f7ec515cd1cc13a77fede"
+                    "type": "git",
+                    "url": "https://github.com/libgit2/libgit2.git",
+                    "branch": "v0.27.8"
                 }
             ]
         },
@@ -115,7 +109,17 @@
                             "-DCMAKE_C_COMPILER=/usr/bin/clang", "-DCMAKE_CXX_COMPILER=/usr/bin/clang++"],
             "name": "sink",
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "git://anongit.kde.org/sink.git", "branch": "develop" } ]
+            "sources": [
+                { "type": "git", "url": "git://anongit.kde.org/sink.git", "branch": "develop" }
+            ],
+            "modules": [
+                {
+                    "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib", "-DFLATBUFFERS_BUILD_SHAREDLIB=ON", "-DFLATBUFFERS_BUILD_FLATC=ON", "-DFLATBUFFERS_INSTALL=ON", "-DCMAKE_BUILD_TYPE=Release"],
+                    "name": "flatbuffers",
+                    "buildsystem": "cmake-ninja",
+                    "sources": [ { "type": "git", "url": "https://github.com/google/flatbuffers.git", "branch": "v1.10.0" } ]
+                }
+            ]
         },
         {
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
