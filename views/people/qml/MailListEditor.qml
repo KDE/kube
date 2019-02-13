@@ -23,40 +23,95 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-Column {
+Item {
     id: root
 
     property variant controller
+    implicitHeight: listView.height + lineEdit.height
+    height: implicitHeight
 
-    spacing: Kube.Units.smallSpacing
+    Column {
+        anchors.fill: parent
+        spacing: Kube.Units.smallSpacing
 
-    ListView {
-        id: emails
+        ListView {
+            id: listView
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            height: contentHeight
 
-        width: personComposerRoot.width - Kube.Units.largeSpacing
-        height: contentHeight
+            model: controller.model
 
-        model: controller.model
-
-        delegate: Row {
-            height: textField.height + Kube.Units.smallSpacing
-            spacing: Kube.Units.smallSpacing
-            Kube.Label { text: qsTr("(main)") }
-            Kube.TextField {id: textField; width: Kube.Units.gridUnit * 15; text: model.email; backgroundColor: "white" }
-            Kube.IconButton {
-                id: removeButton
-                iconName: Kube.Icons.listRemove
-                onClicked: root.controller.remove(model.id)
+            delegate: Row {
+                height: Kube.Units.gridUnit
+                spacing: Kube.Units.smallSpacing
+                Kube.Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: model.isMain
+                    text: qsTr("(main)")
+                }
+                Kube.SelectableLabel {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: model.email
+                }
+                Kube.IconButton {
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: Kube.Units.gridUnit
+                    width: height
+                    padding: 0
+                    iconName: Kube.Icons.listRemove
+                    onClicked: root.controller.remove(model.id)
+                }
             }
         }
-    }
 
-    Kube.Button {
-        id: button
-        text: qsTr("Add")
-        focus: true
-        onClicked: {
-            root.controller.add({email: ""});
+        FocusScope {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            height: Kube.Units.gridUnit
+            focus: true
+
+            Kube.TextButton {
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                }
+                id: button
+                text: "+ " + qsTr("Add email")
+                textColor: Kube.Colors.highlightColor
+                focus: true
+                onClicked: {
+                    lineEdit.visible = true
+                    lineEdit.forceActiveFocus()
+                }
+            }
+
+            Kube.TextField {
+                id: lineEdit
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                    right: parent.right
+                }
+                visible: false
+
+                placeholderText: "+ " + qsTr("Add email")
+                onAccepted: {
+                    root.controller.add({"email": text, "isMain": false});
+                    clear()
+                    visible = false
+                    button.forceActiveFocus(Qt.TabFocusReason)
+                }
+                // onAborted: {
+                //     clear()
+                //     visible = false
+                //     button.forceActiveFocus(Qt.TabFocusReason)
+                // }
+            }
         }
     }
 }

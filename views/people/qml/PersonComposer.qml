@@ -167,74 +167,74 @@ Flickable {
             }
         }
 
-
         Column {
-            width: root.width - Kube.Units.largeSpacing
+            Layout.preferredWidth: Kube.Units.gridUnit * 20
             spacing: Kube.Units.smallSpacing
 
             Kube.Label {
                 text: qsTr("Email")
             }
             MailListEditor {
+                width: parent.width
                 controller: contactController.mails
             }
         }
 
-        Column {
-            width: root.width - Kube.Units.largeSpacing
-            spacing: Kube.Units.smallSpacing
+        // Column {
+        //     width: root.width - Kube.Units.largeSpacing
+        //     spacing: Kube.Units.smallSpacing
 
-            Kube.Label {
-                text: qsTr("Phone")
-            }
+        //     Kube.Label {
+        //         text: qsTr("Phone")
+        //     }
 
-            PhoneListEditor {
-                controller: contactController.phones
-            }
-        }
+        //     PhoneListEditor {
+        //         controller: contactController.phones
+        //     }
+        // }
 
-        Column {
-            id: address
+        // Column {
+        //     id: address
 
-            width: root.width - Kube.Units.largeSpacing
-            spacing: Kube.Units.smallSpacing
+        //     width: root.width - Kube.Units.largeSpacing
+        //     spacing: Kube.Units.smallSpacing
 
-            Kube.Label {
-                text: "Address"
-            }
+        //     Kube.Label {
+        //         text: "Address"
+        //     }
 
-            Kube.TextField {
-                width: Kube.Units.gridUnit * 20
-                text: contactController.street
-                onTextChanged: contactController.stree = text
-                placeholderText: qsTr("Street")
-                backgroundColor: "white"
-            }
-            Kube.TextField {
-                width: Kube.Units.gridUnit * 20
-                text: contactController.city
-                onTextChanged: contactController.city = text
-                placeholderText: qsTr("City")
-                backgroundColor: "white"
-            }
-            Kube.TextField {
-                width: Kube.Units.gridUnit * 20
-                text: contactController.country
-                onTextChanged: contactController.country = text
-                placeholderText: qsTr("Country")
-                backgroundColor: "white"
-            }
-        }
+        //     Kube.TextField {
+        //         width: Kube.Units.gridUnit * 20
+        //         text: contactController.street
+        //         onTextChanged: contactController.stree = text
+        //         placeholderText: qsTr("Street")
+        //         backgroundColor: "white"
+        //     }
+        //     Kube.TextField {
+        //         width: Kube.Units.gridUnit * 20
+        //         text: contactController.city
+        //         onTextChanged: contactController.city = text
+        //         placeholderText: qsTr("City")
+        //         backgroundColor: "white"
+        //     }
+        //     Kube.TextField {
+        //         width: Kube.Units.gridUnit * 20
+        //         text: contactController.country
+        //         onTextChanged: contactController.country = text
+        //         placeholderText: qsTr("Country")
+        //         backgroundColor: "white"
+        //     }
+        // }
 
         Column{
-            width: root.width - Kube.Units.largeSpacing
+            Layout.preferredWidth: Kube.Units.gridUnit * 20
             spacing: Kube.Units.smallSpacing
 
             Kube.Label {
                 text: "Addressbook"
             }
             Kube.ComboBox {
-                width: Kube.Units.gridUnit * 20
+                width: parent.width
 
                 model: Kube.EntityModel {
                     id: addressbookModel
@@ -242,9 +242,10 @@ Flickable {
                     roles: ["name"]
                 }
                 textRole: "name"
-                Layout.fillWidth: true
                 onCurrentIndexChanged: {
-                    contactController.addressbook = addressbookModel.data(currentIndex).object
+                    if (currentIndex >= 0) {
+                        contactController.addressbook = addressbookModel.data(currentIndex).object
+                    }
                 }
             }
         }

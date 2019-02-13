@@ -243,6 +243,8 @@ static void createContact(const QVariantMap &object, const QByteArray &addressbo
     addressee.setUid(uid);
     addressee.setGivenName(object["givenname"].toString());
     addressee.setFamilyName(object["familyname"].toString());
+    addressee.setFormattedName(object["givenname"].toString() + " " + object["familyname"].toString());
+    addressee.setEmails(object["email"].toStringList());
 
     KContacts::VCardConverter converter;
 

@@ -20,6 +20,7 @@
 #include "kube_export.h"
 #include <QObject>
 #include <QVariant>
+#include <QAbstractItemModel>
 #include <KAsync/Async>
 
 #define KUBE_CONTROLLER_PROPERTY(TYPE, NAME, LOWERCASENAME) \

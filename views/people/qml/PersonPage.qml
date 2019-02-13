@@ -153,39 +153,39 @@ Flickable {
 
                 delegate: Row {
                     spacing: Kube.Units.smallSpacing
-                    Kube.Label { text: qsTr("(main)") }
+                    Kube.Label { text: qsTr("(main)"); visible: model.isMain }
                     Kube.Label { text: model.email ; color: Kube.Colors.highlightColor }
                     Item { width: Kube.Units.smallSpacing; height: 1 }
                 }
             }
         }
 
-        Flow {
-            id: phone
+        // Flow {
+        //     id: phone
 
-            width: personPageRoot.width - Kube.Units.largeSpacing
-            spacing: Kube.Units.smallSpacing
+        //     width: personPageRoot.width - Kube.Units.largeSpacing
+        //     spacing: Kube.Units.smallSpacing
 
-            Repeater {
-                model: contactController.phones.model
-                Row {
-                    spacing: Kube.Units.smallSpacing
-                    Kube.Label { text: qsTr("(main)") }
-                    Kube.Label { text: model.number ; opacity: 0.6 }
-                    Item { width: Kube.Units.smallSpacing; height: 1 }
-                }
-            }
-        }
+        //     Repeater {
+        //         model: contactController.phones.model
+        //         Row {
+        //             spacing: Kube.Units.smallSpacing
+        //             Kube.Label { text: qsTr("(main)") }
+        //             Kube.Label { text: model.number ; opacity: 0.6 }
+        //             Item { width: Kube.Units.smallSpacing; height: 1 }
+        //         }
+        //     }
+        // }
 
-        Column {
-            id: address
+        // Column {
+        //     id: address
 
-            width: personPageRoot.width - Kube.Units.largeSpacing
+        //     width: personPageRoot.width - Kube.Units.largeSpacing
 
-            Kube.Label { text: contactController.street }
-            Kube.Label { text: contactController.city }
-            Kube.Label { text: contactController.country }
-        }
+        //     Kube.Label { text: contactController.street }
+        //     Kube.Label { text: contactController.city }
+        //     Kube.Label { text: contactController.country }
+        // }
         Item {
             width: parent.width
             height: Kube.Units.largeSpacing

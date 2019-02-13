@@ -30,15 +30,20 @@ class MailsController : public Kube::ListPropertyController
 public:
 
     MailsController()
-        : Kube::ListPropertyController{{"email"}}
+        : Kube::ListPropertyController{{"email", "isMain"}}
     {
     }
 
     void set(const QStringList &list)
     {
         for (const auto &email: list) {
-            add({{"email", email}});
+            add({{"email", email}, {"isMain", false}});
         }
+    }
+
+    QList<QString> get()
+    {
+        return getList<QString>("email");
     }
 };
 
@@ -56,6 +61,11 @@ public:
         for (const auto &number: list) {
             add({{"number", number}});
         }
+    }
+
+    QList<QString> get()
+    {
+        return getList<QString>("number");
     }
 };
 
@@ -79,16 +89,20 @@ void ContactController::save()
         return;
     }
 
+    auto populateAddressee = [this] (KContacts::Addressee &addressee) {
+        addressee.setGivenName(getFirstName());
+        addressee.setFamilyName(getLastName());
+        addressee.setFormattedName(getFirstName() + " " + getLastName());
+        addressee.setEmails(static_cast<MailsController*>(mailsController())->get());
+        //TODO phone numbers, addresses, ...
+    };
 
     if (auto c = mContact.value<Sink::ApplicationDomain::Contact::Ptr>()) {
         Contact contact = *c;
 
         //Apply the changed properties on top of what's existing
         KContacts::Addressee addressee = KContacts::VCardConverter{}.parseVCard(contact.getVcard());
-
-        addressee.setGivenName(getFirstName());
-        addressee.setFamilyName(getLastName());
-        addressee.setFormattedName(getFirstName() + " " + getLastName());
+        populateAddressee(addressee);
 
         contact.setVcard(KContacts::VCardConverter{}.createVCard(addressee, KContacts::VCardConverter::v3_0));
         contact.setAddressbook(*addressbook);
@@ -107,10 +121,7 @@ void ContactController::save()
         Contact contact(addressbook->resourceInstanceIdentifier());
 
         KContacts::Addressee addressee;
-
-        addressee.setGivenName(getFirstName());
-        addressee.setFamilyName(getLastName());
-        addressee.setFormattedName(getFirstName() + " " + getLastName());
+        populateAddressee(addressee);
 
         contact.setVcard(KContacts::VCardConverter{}.createVCard(addressee, KContacts::VCardConverter::v3_0));
         contact.setAddressbook(*addressbook);
@@ -140,9 +151,7 @@ void ContactController::loadContact(const QVariant &variant)
     if (auto c = variant.value<ApplicationDomain::Contact::Ptr>()) {
 
         setAddressbook(ApplicationDomainType::Ptr::create(ApplicationDomainType::createEntity<ApplicationDomain::Addressbook>(c->resourceInstanceIdentifier(), c->getAddressbook())));
-        const auto &vcard = c->getVcard();
-        KContacts::VCardConverter converter;
-        const auto addressee = converter.parseVCard(vcard);
+        const auto addressee = KContacts::VCardConverter{}.parseVCard(c->getVcard());
 
         setName(c->getFn());
         setFirstName(addressee.givenName());

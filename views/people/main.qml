@@ -58,7 +58,8 @@ ApplicationWindow {
                     resource: "carddavresource",
                     uid: "uid1",
                     givenname: "John",
-                    familyname: "Doe"
+                    familyname: "Doe",
+                    email: ["doe@example.org"],
                 }],
             }],
         }
