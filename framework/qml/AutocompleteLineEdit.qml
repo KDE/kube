@@ -104,59 +104,45 @@ Kube.TextField {
         y: root.height
         padding: 0
         width: root.width
-        contentHeight: rect.height
+        contentHeight: listView.height
 
-        Rectangle {
-            id: rect
+        ListView {
+            id: listView
+            height: contentHeight
+            width: parent.width
+            interactive: true
+            model: root.model
+            delegate: Kube.ListDelegate {
+                id: listDelegate
 
-            anchors.top: popup.top
-            anchors.left: popup.left
+                height: root.height
+                padding: Kube.Units.smallSpacing
 
-            height: listView.contentHeight
-            width: popup.width
+                text: model.text
 
-            border.color: Kube.Colors.textColor
-            color: Kube.Colors.backgroundColor
-
-            radius: 5
-            ListView {
-                id: listView
-                height: contentHeight
-                width: parent.width
-                interactive: true
-                model: root.model
-                delegate: Kube.ListDelegate {
-                    id: listDelegate
-
-                    height: root.height
-                    padding: Kube.Units.smallSpacing
-
-                    text: model.text
-
-                    contentItem: Item {
-                        width: parent.width - padding * 2
-                        height: parent.height - padding * 2
-                        MouseArea {
-                            id: mouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: {
-                                listView.currentIndex = index
-                                accept()
-                            }
+                contentItem: Item {
+                    width: parent.width - padding * 2
+                    height: parent.height - padding * 2
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {
+                            listView.currentIndex = index
+                            accept()
                         }
-                        Kube.Label{
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                left: parent.left
-                                right: parent.right
-                            }
-                            text: model.text
-                            color: listDelegate.textColor
-                            elide: Text.ElideRight
-                            ToolTip.visible: mouseArea.containsMouse
-                            ToolTip.text: text
+                    }
+                    Kube.Label{
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            right: parent.right
                         }
+                        text: model.text
+                        color: listDelegate.textColor
+                        elide: Text.ElideRight
+                        ToolTip.visible: mouseArea.containsMouse
+                        ToolTip.text: text
                     }
                 }
             }
