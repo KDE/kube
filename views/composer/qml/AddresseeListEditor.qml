@@ -110,7 +110,7 @@ FocusScope {
         }
 
         FocusScope {
-            height: Kube.Units.gridUnit * Kube.Units.smallSpacing * 2
+            height: Kube.Units.gridUnit +  Kube.Units.smallSpacing * 2
             width: parent.width
             focus: true
 
