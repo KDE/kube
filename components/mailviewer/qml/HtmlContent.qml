@@ -18,6 +18,7 @@
 
 import QtQuick 2.4
 import QtWebEngine 1.4
+import QtQuick.Controls 2.2
 
 import org.kube.framework 1.0 as Kube
 
@@ -33,62 +34,75 @@ Item {
         htmlView.findText(searchString)
     }
 
-    WebEngineView {
-        id: htmlView
+    Flickable {
         anchors.fill: parent
-        Component.onCompleted: loadHtml(content, "file:///")
-        onContentsSizeChanged: {
-            //Resizing pixel by pixel causes some mails to grow indefinitely
-            if (contentsSize.height >= root.contentHeight + 5) {
-                root.contentHeight = contentsSize.height
+
+        contentHeight: htmlView.height
+        contentWidth: htmlView.width
+
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
+
+        ScrollBar.horizontal: Kube.ScrollBar {  }
+
+        WebEngineView {
+            id: htmlView
+            width: Math.max(contentsSize.width, 10)
+            height: root.contentHeight
+            Component.onCompleted: loadHtml(content, "file:///")
+            onContentsSizeChanged: {
+                //Resizing pixel by pixel causes some mails to grow indefinitely
+                if (contentsSize.height >= root.contentHeight + 5) {
+                    root.contentHeight = contentsSize.height
+                }
             }
-        }
-        onLoadingChanged: {
-            if (loadRequest.status == WebEngineLoadRequest.LoadFailedStatus) {
-                console.warn("Failed to load html content.")
-                console.warn("Error is ", loadRequest.errorString)
+            onLoadingChanged: {
+                if (loadRequest.status == WebEngineLoadRequest.LoadFailedStatus) {
+                    console.warn("Failed to load html content.")
+                    console.warn("Error is ", loadRequest.errorString)
+                }
             }
-        }
-        onLinkHovered: {
-            console.debug("Link hovered ", hoveredUrl)
-        }
-        onNavigationRequested: {
-            console.debug("Nav request ", request.navigationType, request.url)
-            if (request.navigationType == WebEngineNavigationRequest.LinkClickedNavigation) {
-                Qt.openUrlExternally(request.url)
-                request.action = WebEngineNavigationRequest.IgnoreRequest
+            onLinkHovered: {
+                console.debug("Link hovered ", hoveredUrl)
             }
-        }
-        onNewViewRequested: {
-            console.debug("New view request ", request, request.requestedUrl)
-            //We ignore requests for new views and open a browser instead
-            Qt.openUrlExternally(request.requestedUrl)
-        }
-        settings {
-            webGLEnabled: false
-            touchIconsEnabled: false
-            spatialNavigationEnabled: false
-            screenCaptureEnabled: false
-            pluginsEnabled: false
-            localStorageEnabled: false
-            localContentCanAccessRemoteUrls: false
-            localContentCanAccessFileUrls: false
-            linksIncludedInFocusChain: false
-            javascriptEnabled: false
-            javascriptCanOpenWindows: false
-            javascriptCanAccessClipboard: false
-            hyperlinkAuditingEnabled: false
-            fullScreenSupportEnabled: false
-            errorPageEnabled: false
-            //defaultTextEncoding: ???
-            autoLoadImages: root.autoLoadImages
-            autoLoadIconsForPage: false
-            accelerated2dCanvasEnabled: false
-            //The webview should not steal focus
-            focusOnNavigationEnabled: false
-        }
-        onContextMenuRequested: function(request) {
-            request.accepted = true
+            onNavigationRequested: {
+                console.debug("Nav request ", request.navigationType, request.url)
+                if (request.navigationType == WebEngineNavigationRequest.LinkClickedNavigation) {
+                    Qt.openUrlExternally(request.url)
+                    request.action = WebEngineNavigationRequest.IgnoreRequest
+                }
+            }
+            onNewViewRequested: {
+                console.debug("New view request ", request, request.requestedUrl)
+                //We ignore requests for new views and open a browser instead
+                Qt.openUrlExternally(request.requestedUrl)
+            }
+            settings {
+                webGLEnabled: false
+                touchIconsEnabled: false
+                spatialNavigationEnabled: false
+                screenCaptureEnabled: false
+                pluginsEnabled: false
+                localStorageEnabled: false
+                localContentCanAccessRemoteUrls: false
+                localContentCanAccessFileUrls: false
+                linksIncludedInFocusChain: false
+                javascriptEnabled: false
+                javascriptCanOpenWindows: false
+                javascriptCanAccessClipboard: false
+                hyperlinkAuditingEnabled: false
+                fullScreenSupportEnabled: false
+                errorPageEnabled: false
+                //defaultTextEncoding: ???
+                autoLoadImages: root.autoLoadImages
+                autoLoadIconsForPage: false
+                accelerated2dCanvasEnabled: false
+                //The webview should not steal focus
+                focusOnNavigationEnabled: false
+            }
+            onContextMenuRequested: function(request) {
+                request.accepted = true
+            }
         }
     }
     onContentChanged: {

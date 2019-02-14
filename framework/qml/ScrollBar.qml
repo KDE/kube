@@ -29,7 +29,7 @@ T.ScrollBar {
     implicitWidth: contentItem.implicitWidth
     implicitHeight: contentItem.implicitHeight
 
-    visible: contentItem.height < background.height
+    visible: orientation == Qt.Vertical ? contentItem.height < background.height : contentItem.width < background.width
 
     contentItem: Rectangle {
         implicitWidth: Kube.Units.gridUnit / 3
