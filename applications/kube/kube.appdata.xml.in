@@ -21,6 +21,7 @@
   <name xml:lang="sv">Kube</name>
   <name xml:lang="uk">Kube</name>
   <name xml:lang="x-test">xxKubexx</name>
+  <name xml:lang="zh-TW">Kube</name>
   <summary>E-mail client</summary>
   <summary xml:lang="ca">Client per a correu electrònic</summary>
   <summary xml:lang="ca-valencia">Client per a correu electrònic</summary>
@@ -39,6 +40,7 @@
   <summary xml:lang="sv">E-postklient</summary>
   <summary xml:lang="uk">Поштовий клієнт</summary>
   <summary xml:lang="x-test">xxE-mail clientxx</summary>
+  <summary xml:lang="zh-TW">E-Mail 客戶端</summary>
   <description>
     <p>Kube is a modern communication and collaboration client built with QtQuick on top of a high performance, low resource usage core. It provides online and offline access to all your mail, contacts, calendars, notes, todo's and more. With a strong focus on usability, the team works with designers and UX experts from the ground up, to build a product that is not only visually appealing but also a joy to use.</p>
     <p xml:lang="ca">El Kube és un modern client per a la comunicació i col·laboració construït amb el QtQuick sobre un nucli amb alt rendiment i que empra baixos recursos. Proporciona accés en línia i fora de línia a tots els vostres correus, contactes, calendaris, notes, pendents i més. Amb un fort enfocament en la usabilitat, l'equip ha treballat amb dissenyadors i experts d'UX des del començament, per a construir un producte que no només és visualment atractiu, sinó també agradable.</p>
