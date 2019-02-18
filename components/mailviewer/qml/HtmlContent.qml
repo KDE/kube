@@ -35,6 +35,7 @@ Item {
     }
 
     Flickable {
+        id: flickable
         anchors.fill: parent
 
         contentHeight: htmlView.height
@@ -47,7 +48,21 @@ Item {
 
         WebEngineView {
             id: htmlView
-            width: Math.max(contentsSize.width, 10)
+
+            function calculateWidth(contentWidth) {
+                if (contentWidth <= 0) {
+                    //Get the content to expand
+                    return 10
+                }
+                //Use the available space
+                if (flickable.width >= contentWidth) {
+                    return flickable.width
+                }
+                //Grow beyond if necessary to get a scrollbar
+                return contentWidth
+            }
+
+            width: calculateWidth(contentsSize.width)
             height: root.contentHeight
             Component.onCompleted: loadHtml(content, "file:///")
             onContentsSizeChanged: {

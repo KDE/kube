@@ -123,7 +123,7 @@ ApplicationWindow {
                         {
                             resource: "resource1",
                             date: "2017-07-20T17:46:29",
-                            subject: "HTMLLongLine",
+                            subject: "HTMLLongLine preformatted",
                             body: "<pre>Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<pre>",
                             bodyIsHtml: true,
                             to: ["to@example.org"],
@@ -132,9 +132,28 @@ ApplicationWindow {
                         {
                             resource: "resource1",
                             date: "2017-07-20T17:46:29",
-                            subject: "ComplexHTMLLongLine",
+                            subject: "HTMLLongLine not preformatted",
+                            body: "<div>Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<div>",
+                            bodyIsHtml: true,
+                            to: ["to@example.org"],
+                            unread: true
+                        },
+                        {
+                            resource: "resource1",
+                            date: "2017-07-20T17:46:29",
+                            subject: "ComplexHTMLLongLine preformatted",
                             //We assume that @media trigger the complex html view
                             body: "<pre>Hi Mélanie,\n\nI'm sorry @media to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<pre>",
+                            bodyIsHtml: true,
+                            to: ["to@example.org"],
+                            unread: true
+                        },
+                        {
+                            resource: "resource1",
+                            date: "2017-07-20T17:46:29",
+                            subject: "ComplexHTMLLongLine not preformatted",
+                            //We assume that @media trigger the complex html view
+                            body: "<div>Hi Mélanie,\n\nI'm sorry @media to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<div>",
                             bodyIsHtml: true,
                             to: ["to@example.org"],
                             unread: true
