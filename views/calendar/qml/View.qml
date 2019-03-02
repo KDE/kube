@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2018 Michael Bohlender, <bohlender@kolabsys.com>
+ *  Copyright (C) 2019 Christian Mollekopf, <mollekopf@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,10 +31,6 @@ Kube.View {
     property date currentDate: new Date()
     property date selectedDate: currentDate
     property bool autoUpdateDate: true
-
-    Kube.CheckedEntities {
-        id: calendarFilterCollector
-    }
 
     onSelectedDateChanged: {
         console.log("Selected date changed", selectedDate)
@@ -175,8 +172,9 @@ Kube.View {
                 }
             }
 
-            Kube.InlineAccountSwitcher {
+            CalendarSelector {
                 id: accountSwitcher
+
                 //Grow from the button but don't go over topLayout
                 anchors {
                     bottom: statusBarContainer.top
@@ -185,78 +183,8 @@ Kube.View {
                     bottomMargin: Kube.Units.largeSpacing
                     rightMargin: Kube.Units.largeSpacing
                 }
+
                 height: parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin - statusBarContainer.height
-
-
-                delegate: Kube.ListView {
-                    id: listView
-                    spacing: Kube.Units.smallSpacing
-                    model: Kube.CheckableEntityModel {
-                        id: calendarModel
-                        type: "calendar"
-                        roles: ["name", "color", "enabled"]
-                        sortRole: "name"
-                        accountId: listView.parent.accountId
-                        checkedEntities: calendarFilterCollector
-                    }
-                    delegate: Kube.ListDelegate {
-                        id: delegate
-                        width: listView.availableWidth
-                        height: Kube.Units.gridUnit
-                        hoverEnabled: true
-                        background: Item {}
-                        RowLayout {
-                            anchors.fill: parent
-                            spacing: Kube.Units.smallSpacing
-                            Kube.CheckBox {
-                                id: checkBox
-                                opacity: 0.9
-                                checked: model.checked || model.enabled
-                                onCheckedChanged: {
-                                    model.checked = checked
-                                    model.enabled = checked
-                                }
-
-                                indicator: Rectangle {
-                                    width: Kube.Units.gridUnit * 0.8
-                                    height: Kube.Units.gridUnit * 0.8
-
-                                    color: model.color
-
-                                    Rectangle {
-                                        id: highlight
-                                        anchors.fill: parent
-                                        visible: checkBox.hovered || checkBox.visualFocus
-                                        color: Kube.Colors.highlightColor
-                                        opacity: 0.4
-                                    }
-
-                                    Kube.Icon {
-                                        anchors.centerIn: parent
-                                        height: Kube.Units.gridUnit
-                                        width: Kube.Units.gridUnit
-                                        visible: checkBox.checked
-                                        iconName: Kube.Icons.checkbox_inverted
-                                    }
-                                }
-
-                            }
-                            Kube.Label {
-                                id: label
-                                Layout.fillWidth: true
-                                text: model.name
-                                color: Kube.Colors.highlightedTextColor
-                                elide: Text.ElideLeft
-                                clip: true
-                            }
-                            ToolTip {
-                                id: toolTipItem
-                                visible: delegate.hovered && label.truncated
-                                text: label.text
-                            }
-                        }
-                    }
-                }
             }
 
             Item {
@@ -300,7 +228,7 @@ Kube.View {
             Layout.fillWidth: true
             currentDate: root.currentDate
             startDate: getFirstDayOfWeek(root.selectedDate, false)
-            calendarFilter: calendarFilterCollector.checkedEntities
+            calendarFilter: accountSwitcher.enabledCalendars
         }
 
         MonthView {
@@ -310,7 +238,7 @@ Kube.View {
             currentDate: root.currentDate
             startDate: getFirstDayOfWeek(getFirstDayOfMonth(root.selectedDate), true)
             month: root.selectedDate.getMonth()
-            calendarFilter: calendarFilterCollector.checkedEntities
+            calendarFilter: accountSwitcher.enabledCalendars
         }
     }
 
