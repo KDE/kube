@@ -28,6 +28,7 @@ Item {
     property date start: new Date()
     property bool allDay: false
     property var controller: Kube.EventController { allDay: root.allDay }
+    property var accountId: null
 
     signal done()
 
@@ -152,6 +153,7 @@ Item {
                         id: calendarModel
                         type: "calendar"
                         roles: ["name"]
+                        accountId: root.accountId
                     }
                     textRole: "name"
                     onActivated: {

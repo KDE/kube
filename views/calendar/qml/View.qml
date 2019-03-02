@@ -337,6 +337,7 @@ Kube.View {
                 id: editor
                 anchors.fill: parent
                 onDone: popup.close()
+                accountId: accountSwitcher.currentAccount
             }
         }
     }
