@@ -152,13 +152,47 @@ Item {
                     model: Kube.EntityModel {
                         id: calendarModel
                         type: "calendar"
-                        roles: ["name"]
+                        roles: ["name", "color"]
                         sortRole: "name"
                         accountId: root.accountId
                     }
                     textRole: "name"
                     onActivated: {
                         controller.calendar = calendarModel.data(index).object
+                    }
+
+                    delegate: Kube.ListDelegate {
+                        width: calendarSelector.popup.width
+                        height: Kube.Units.gridUnit * 1.5
+
+                        contentItem: Row {
+                            Item {
+                                width: Kube.Units.smallSpacing
+                                height: parent.height
+                            }
+                            Rectangle {
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: Kube.Units.gridUnit
+                                height: Kube.Units.gridUnit
+                                radius: Kube.Units.gridUnit / 2
+                                color: model.color
+                            }
+                            Kube.Label {
+                                padding: Kube.Units.smallSpacing
+                                text: calendarSelector.textRole ? (Array.isArray(calendarSelector.model) ? modelData[calendarSelector.textRole] : model[calendarSelector.textRole]) : modelData
+                                color:  calendarSelector.highlightedIndex === index ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                calendarSelector.currentIndex = calendarSelector.highlightedIndex
+                                calendarSelector.activated(calendarSelector.highlightedIndex)
+                                calendarSelector.popup.close()
+                            }
+                        }
                     }
                 }
             }
