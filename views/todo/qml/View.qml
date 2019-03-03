@@ -268,7 +268,7 @@ Kube.View {
                         Kube.IconButton {
                             iconName: model.doing ? Kube.Icons.listRemove : Kube.Icons.addNew
                             activeFocusOnTab: false
-                            tooltip: qsTr("Pick")
+                            tooltip: model.doing ? qsTr("Unpick") : qsTr("Pick")
                             onClicked: {
                                 var controller = controllerComponent.createObject(parent, {"todo": model.domainObject});
                                 if (controller.complete) {
@@ -280,8 +280,8 @@ Kube.View {
                         }
 
                         Kube.IconButton {
-                            iconName: model.complete ? Kube.Icons.checkbox_inverted : Kube.Icons.checkbox
-                            color: model.complete ? Kube.Colors.positiveColor : color
+                            iconName: Kube.Icons.checkbox
+                            checked: model.complete
                             activeFocusOnTab: false
                             tooltip: qsTr("Done!")
                             onClicked: {
