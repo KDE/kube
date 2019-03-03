@@ -70,8 +70,7 @@ T.ComboBox {
             implicitHeight: contentHeight
             model: root.popup.visible ? root.delegateModel : null
             currentIndex: root.highlightedIndex
-            //FIXME use Kube.Scrollbar once available
-            T.ScrollIndicator.vertical: ScrollIndicator { }
+            ScrollBar.vertical: Kube.ScrollBar {}
         }
 
         background: Rectangle {
