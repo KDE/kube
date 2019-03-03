@@ -176,25 +176,25 @@ ApplicationWindow {
                 id: "calendar2",
                 resource: "caldavresource",
                 name: "Test Calendar2",
-                color: "#f67400"
+                color: "#00cc4b"
             },
             {
                 id: "calendar3",
                 resource: "caldavresource",
                 name: "Test Calendar3 Loooooooooooooooooooooooooooooong Name",
-                color: "#f67400"
+                color: "#00cc4b"
             },
             {
                 id: "calendar4",
                 resource: "caldavresource",
                 name: "Test Calendar4",
-                color: "#f67400"
+                color: "#cc0000"
             },
             {
                 id: "calendar5",
                 resource: "caldavresource",
                 name: "Test Calendar5",
-                color: "#f67400"
+                color: "#cc0000"
             },
             {
                 id: "calendar6",
