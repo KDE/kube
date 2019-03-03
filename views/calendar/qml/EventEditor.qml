@@ -153,6 +153,7 @@ Item {
                         id: calendarModel
                         type: "calendar"
                         roles: ["name"]
+                        sortRole: "name"
                         accountId: root.accountId
                     }
                     textRole: "name"
