@@ -117,11 +117,7 @@ Kube.View {
                 onClicked: editorPopup.createObject(root, {}).open()
             }
 
-            Kube.CheckedEntities {
-                id: calendarFilterCollector
-            }
-
-            Kube.InlineAccountSwitcher {
+            Kube.CalendarSelector {
                 id: accountSwitcher
                 activeFocusOnTab: true
                 anchors {
@@ -130,75 +126,6 @@ Kube.View {
                     bottom: statusBarContainer.top
                     left: newMailButton.left
                     right: parent.right
-                }
-                delegate: Kube.ListView {
-                    id: listView
-                    spacing: Kube.Units.smallSpacing
-                    model: Kube.CheckableEntityModel {
-                        id: calendarModel
-                        type: "calendar"
-                        roles: ["name", "color", "enabled"]
-                        sortRole: "name"
-                        accountId: accountSwitcher.accountId
-                        checkedEntities: calendarFilterCollector
-                    }
-                    delegate: Kube.ListDelegate {
-                        id: delegate
-                        width: listView.availableWidth
-                        height: Kube.Units.gridUnit
-                        hoverEnabled: true
-                        background: Item {}
-                        RowLayout {
-                            anchors.fill: parent
-                            spacing: Kube.Units.smallSpacing
-                            Kube.CheckBox {
-                                id: checkBox
-                                opacity: 0.9
-                                checked: model.checked || model.enabled
-                                onCheckedChanged: {
-                                    model.checked = checked
-                                    model.enabled = checked
-                                }
-
-                                indicator: Rectangle {
-                                    width: Kube.Units.gridUnit * 0.8
-                                    height: Kube.Units.gridUnit * 0.8
-
-                                    color: model.color
-
-                                    Rectangle {
-                                        id: highlight
-                                        anchors.fill: parent
-                                        visible: checkBox.hovered || checkBox.visualFocus
-                                        color: Kube.Colors.highlightColor
-                                        opacity: 0.4
-                                    }
-
-                                    Kube.Icon {
-                                        anchors.centerIn: parent
-                                        height: Kube.Units.gridUnit
-                                        width: Kube.Units.gridUnit
-                                        visible: checkBox.checked
-                                        iconName: Kube.Icons.checkbox_inverted
-                                    }
-                                }
-
-                            }
-                            Kube.Label {
-                                id: label
-                                Layout.fillWidth: true
-                                text: model.name
-                                color: Kube.Colors.highlightedTextColor
-                                elide: Text.ElideLeft
-                                clip: true
-                            }
-                            ToolTip {
-                                id: toolTipItem
-                                visible: delegate.hovered && label.truncated
-                                text: label.text
-                            }
-                        }
-                    }
                 }
             }
 
@@ -258,7 +185,7 @@ Kube.View {
                 }
 
                 model: Kube.TodoModel {
-                    calendarFilter: calendarFilterCollector.checkedEntities
+                    calendarFilter: accountSwitcher.enabledCalendars
                 }
                 delegate: Kube.ListDelegate {
                     id: delegateRoot

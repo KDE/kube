@@ -172,7 +172,7 @@ Kube.View {
                 }
             }
 
-            CalendarSelector {
+            Kube.CalendarSelector {
                 id: accountSwitcher
 
                 //Grow from the button but don't go over topLayout
