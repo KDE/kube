@@ -65,16 +65,13 @@ Item {
             width: calculateWidth(contentsSize.width)
             height: root.contentHeight
             Component.onCompleted: loadHtml(content, "file:///")
-            onContentsSizeChanged: {
-                //Resizing pixel by pixel causes some mails to grow indefinitely
-                if (contentsSize.height >= root.contentHeight + 5) {
-                    root.contentHeight = contentsSize.height
-                }
-            }
             onLoadingChanged: {
                 if (loadRequest.status == WebEngineLoadRequest.LoadFailedStatus) {
                     console.warn("Failed to load html content.")
                     console.warn("Error is ", loadRequest.errorString)
+                }
+                if (loadRequest.status == WebEngineLoadRequest.LoadSucceededStatus) {
+                    root.contentHeight = contentsSize.height
                 }
             }
             onLinkHovered: {
