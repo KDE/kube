@@ -65,6 +65,12 @@ Item {
             width: calculateWidth(contentsSize.width)
             height: root.contentHeight
             Component.onCompleted: loadHtml(content, "file:///")
+            onContentsSizeChanged: {
+                //Some pages apparently don't have a size when loading has finished.
+                if (root.contentHeight == 0) {
+                    root.contentHeight = contentsSize.height
+                }
+            }
             onLoadingChanged: {
                 if (loadRequest.status == WebEngineLoadRequest.LoadFailedStatus) {
                     console.warn("Failed to load html content.")
