@@ -112,6 +112,11 @@ Item {
                 //The webview should not steal focus
                 focusOnNavigationEnabled: false
             }
+            profile {
+                offTheRecord: true
+                httpCacheType: WebEngineProfile.NoCache
+                persistentCookiesPolicy: WebEngineProfile.NoPersistentCookies
+            }
             onContextMenuRequested: function(request) {
                 request.accepted = true
             }
