@@ -317,6 +317,7 @@ Rectangle {
                 }
                 opacity: 0.5
                 visible: root.partModel ? root.partModel.containsHtml : false
+                height: visible ? height : 0
                 text: root.partModel ? (root.partModel.showHtml ? "Plain" : "Html") : ""
                 onClicked: {
                     root.partModel.showHtml = !root.partModel.showHtml
