@@ -56,6 +56,7 @@ Item {
     }
 
     function close() {
+        root.filter = ""
         fadeOut.start()
     }
 
