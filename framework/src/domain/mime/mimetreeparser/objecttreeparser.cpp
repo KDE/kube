@@ -270,8 +270,8 @@ QVector<MessagePart::Ptr> ObjectTreeParser::collectContentParts(MessagePart::Ptr
                 return true;
             } else if (dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(part.data())) {
                 return true;
-            } else if (dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
-                return true;
+            // } else if (dynamic_cast<MimeTreeParser::HtmlMessagePart*>(part.data())) {
+            //     return true;
             } else if (dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(part.data())) {
                 if (start.data() == part.data()) {
                     return false;
