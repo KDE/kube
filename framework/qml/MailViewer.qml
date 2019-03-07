@@ -65,6 +65,8 @@ Rectangle {
         id: messageParser
         message: root.message
     }
+    property var partModel: messageParser.parts
+    property var attachmentModel: messageParser.attachments
 
     states: [
         State {
@@ -301,37 +303,58 @@ Rectangle {
         }
         //END header
 
-        Flow {
-            id: attachments
-
+        Item {
             anchors {
                 left: parent.left
                 right: parent.right
             }
+            height: Math.max(attachments.height, htmlButton.height)
+            Kube.TextButton {
+                id: htmlButton
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                }
+                opacity: 0.5
+                visible: root.partModel ? root.partModel.containsHtml : false
+                text: root.partModel ? (root.partModel.showHtml ? "Plain" : "Html") : ""
+                onClicked: {
+                    root.partModel.showHtml = !root.partModel.showHtml
+                }
+            }
 
-            visible: !root.incomplete && !root.collapsed
-            width: header.width - Kube.Units.largeSpacing
-            height: visible ? implicitHeight : 0
+            Flow {
+                id: attachments
 
-            layoutDirection: Qt.RightToLeft
-            spacing: Kube.Units.smallSpacing
-            clip: true
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
 
-            Repeater {
-                model: messageParser.attachments
+                visible: !root.incomplete && !root.collapsed
+                width: header.width - Kube.Units.largeSpacing
+                height: visible ? implicitHeight : 0
 
-                delegate: AttachmentDelegate {
-                    name: model.name
-                    type: model.type
-                    icon: model.iconName
+                layoutDirection: Qt.RightToLeft
+                spacing: Kube.Units.smallSpacing
+                clip: true
 
-                    clip: true
+                Repeater {
+                    model: root.attachmentModel
 
-                    actionIcon: Kube.Icons.save_inverted
-                    actionTooltip: qsTr("Save attachment")
-                    onExecute: messageParser.attachments.saveAttachmentToDisk(messageParser.attachments.index(index, 0))
-                    onClicked: messageParser.attachments.openAttachment(messageParser.attachments.index(index, 0))
-                    onPublicKeyImport: messageParser.attachments.importPublicKey(messageParser.attachments.index(index, 0))
+                    delegate: AttachmentDelegate {
+                        name: model.name
+                        type: model.type
+                        icon: model.iconName
+
+                        clip: true
+
+                        actionIcon: Kube.Icons.save_inverted
+                        actionTooltip: qsTr("Save attachment")
+                        onExecute: root.attachmentModel.saveAttachmentToDisk(root.attachmentModel.index(index, 0))
+                        onClicked: root.attachmentModel.openAttachment(root.attachmentModel.index(index, 0))
+                        onPublicKeyImport: root.attachmentModel.importPublicKey(root.attachmentModel.index(index, 0))
+                    }
                 }
             }
         }
@@ -345,13 +368,12 @@ Rectangle {
                 right: parent.right
             }
             height: visible ? mailViewer.height + 20 : 0
-
             MV.MailViewer {
                 id: mailViewer
                 anchors.top: body.top
                 anchors.left: body.left
                 anchors.right: body.right
-                model: messageParser.parts
+                model: root.partModel
             }
 
         }

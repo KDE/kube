@@ -37,6 +37,8 @@ public:
     QHash<MimeTreeParser::MessagePart*, QVector<MimeTreeParser::MessagePartPtr>> mEncapsulatedParts;
     QHash<MimeTreeParser::MessagePart*, MimeTreeParser::MessagePart*> mParents;
     std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
+    bool showHtml{false};
+    bool containsHtml{false};
 };
 
 PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser)
@@ -45,6 +47,9 @@ PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeT
 {
     mParts = mParser->collectContentParts();
     for (auto p : mParts) {
+        if (p->isHtml()) {
+            containsHtml = true;
+        }
         if (auto e = p.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
             findEncapsulated(e);
         }
@@ -56,6 +61,9 @@ void PartModelPrivate::findEncapsulated(const MimeTreeParser::EncapsulatedRfc822
 {
     mEncapsulatedParts[e.data()] = mParser->collectContentParts(e);
     for (auto subPart : mEncapsulatedParts[e.data()]) {
+        if (subPart->isHtml()) {
+            containsHtml = true;
+        }
         mParents[subPart.data()] = e.data();
         if (auto encapsulatedSub = subPart.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
             findEncapsulated(encapsulatedSub);
@@ -74,6 +82,26 @@ PartModel::PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser)
 
 PartModel::~PartModel()
 {
+}
+
+void PartModel::setShowHtml(bool html)
+{
+    if (d->showHtml != html) {
+        beginResetModel();
+        d->showHtml = html;
+        endResetModel();
+        emit showHtmlChanged();
+    }
+}
+
+bool PartModel::showHtml() const
+{
+    return d->showHtml;
+}
+
+bool PartModel::containsHtml() const
+{
+    return d->containsHtml;
 }
 
 QHash<int, QByteArray> PartModel::roleNames() const
@@ -208,6 +236,9 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 if (dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(messagePart)) {
                     return "encapsulated";
                 }
+                if (!d->showHtml) {
+                    return "plain";
+                }
                 //For simple html we don't need a browser
                 auto complexHtml = [&] {
                     if (messagePart->isHtml()) {
@@ -246,6 +277,9 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             case IsErrorRole:
                 return messagePart->error();
             case ContentRole: {
+                if (!d->showHtml) {
+                    return HtmlUtils::linkify(Qt::convertFromPlainText(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text()));
+                }
                 const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
                 if (messagePart->isHtml()) {
                     return addCss(d->mParser->resolveCidLinks(text));

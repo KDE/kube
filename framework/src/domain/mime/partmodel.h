@@ -32,6 +32,8 @@ class PartModelPrivate;
 
 class PartModel : public QAbstractItemModel {
     Q_OBJECT
+    Q_PROPERTY(bool showHtml READ showHtml WRITE setShowHtml NOTIFY showHtmlChanged)
+    Q_PROPERTY(bool containsHtml READ containsHtml CONSTANT)
 public:
     PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser);
     ~PartModel();
@@ -61,6 +63,13 @@ public:
     QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+
+    void setShowHtml(bool html);
+    bool showHtml() const;
+    bool containsHtml() const;
+
+signals:
+    void showHtmlChanged();
 
 private:
     std::unique_ptr<PartModelPrivate> d;
