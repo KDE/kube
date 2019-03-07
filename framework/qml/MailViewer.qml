@@ -308,6 +308,7 @@ Rectangle {
                 left: parent.left
                 right: parent.right
             }
+            visible: attachments.visible || htmlButton.visible
             height: Math.max(attachments.height, htmlButton.height)
             Kube.TextButton {
                 id: htmlButton
@@ -317,7 +318,6 @@ Rectangle {
                 }
                 opacity: 0.5
                 visible: root.partModel ? root.partModel.containsHtml : false
-                height: visible ? height : 0
                 text: root.partModel ? (root.partModel.showHtml ? "Plain" : "Html") : ""
                 onClicked: {
                     root.partModel.showHtml = !root.partModel.showHtml
