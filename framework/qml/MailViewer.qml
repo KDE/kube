@@ -400,16 +400,18 @@ Rectangle {
                 }
             ]
         }
-        Kube.Button {
+
+        Kube.IconButton {
             id: collapsedBody
             anchors {
                 left: parent.left
                 right: parent.right
             }
             visible: false
-            text: qsTr("Show")
-            onClicked: root.collapsed = false
+            enabled: false
+            iconName: Kube.Icons.goDown
         }
+
         Item {
             id: footer
             property var mail: model.mail
@@ -488,6 +490,22 @@ Rectangle {
         color: Kube.Colors.buttonColor
         opacity: 0.4
         visible: root.unread
+    }
+
+    MouseArea {
+        enabled: root.collapsed
+        hoverEnabled: root.collapsed
+        anchors.fill: parent
+        onClicked: {
+            root.collapsed = !root.collapsed
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: Kube.Colors.highlightColor
+            opacity: 0.4
+            visible: root.collapsed && parent.containsMouse
+        }
     }
 
     Component {
