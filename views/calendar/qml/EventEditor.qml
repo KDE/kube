@@ -154,6 +154,7 @@ Item {
                         type: "calendar"
                         roles: ["name", "color"]
                         sortRole: "name"
+                        filter: {"enabled": true}
                         accountId: root.accountId
                     }
                     textRole: "name"

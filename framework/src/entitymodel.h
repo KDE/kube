@@ -94,6 +94,7 @@ private:
     QString mEntityId;
     QString mType;
     QString mSortRole;
+    QVariantMap mFilter;
 };
 
 class KUBE_EXPORT EntityLoader : public EntityModel {

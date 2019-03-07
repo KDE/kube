@@ -110,6 +110,11 @@ void EntityModel::updateQuery()
     for (const auto &property: mRoles.keys()) {
         query.requestedProperties << property;
     }
+
+    for (const auto &property: mFilter.keys()) {
+        query.filter(property.toUtf8(), {mFilter.value(property)});
+    }
+
     runQuery(query);
 }
 
@@ -185,9 +190,10 @@ QStringList EntityModel::roles() const
     return {};
 }
 
-void EntityModel::setFilter(const QVariantMap &)
+void EntityModel::setFilter(const QVariantMap &filter)
 {
-    //TODO
+    mFilter = filter;
+    updateQuery();
 }
 
 QVariantMap EntityModel::filter() const
