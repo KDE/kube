@@ -137,21 +137,12 @@ Item {
                     onTextChanged: controller.description = text
                 }
 
-                Kube.ComboBox {
+                Kube.CalendarComboBox {
                     id: calendarSelector
                     Layout.fillWidth: true
-
-                    model: Kube.EntityModel {
-                        id: calendarModel
-                        type: "calendar"
-                        roles: ["name"]
-                    }
-                    textRole: "name"
-
-                    onCurrentIndexChanged: {
-                        if (currentIndex >= 0) {
-                            controller.calendar = calendarModel.data(currentIndex).object
-                        }
+                    accountId: root.accountId
+                    onSelected: {
+                        controller.calendar = calendar
                     }
                 }
             }

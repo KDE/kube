@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2018 Michael Bohlender, <bohlender@kolabsys.com>
+ *  Copyright (C) 2019 Christian Mollekopf, <mollekopf@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -145,57 +146,15 @@ Item {
                     onTextChanged: controller.description = text
                 }
 
-                Kube.ComboBox {
+                Kube.CalendarComboBox {
                     id: calendarSelector
                     Layout.fillWidth: true
-
-                    model: Kube.EntityModel {
-                        id: calendarModel
-                        type: "calendar"
-                        roles: ["name", "color"]
-                        sortRole: "name"
-                        filter: {"enabled": true}
-                        accountId: root.accountId
-                    }
-                    textRole: "name"
-                    onActivated: {
-                        controller.calendar = calendarModel.data(index).object
-                    }
-
-                    delegate: Kube.ListDelegate {
-                        width: calendarSelector.popup.width
-                        height: Kube.Units.gridUnit * 1.5
-
-                        contentItem: Row {
-                            Item {
-                                width: Kube.Units.smallSpacing
-                                height: parent.height
-                            }
-                            Rectangle {
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: Kube.Units.gridUnit
-                                height: Kube.Units.gridUnit
-                                radius: Kube.Units.gridUnit / 2
-                                color: model.color
-                            }
-                            Kube.Label {
-                                padding: Kube.Units.smallSpacing
-                                text: calendarSelector.textRole ? (Array.isArray(calendarSelector.model) ? modelData[calendarSelector.textRole] : model[calendarSelector.textRole]) : modelData
-                                color:  calendarSelector.highlightedIndex === index ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
-                            }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-
-                            onClicked: {
-                                calendarSelector.currentIndex = calendarSelector.highlightedIndex
-                                calendarSelector.activated(calendarSelector.highlightedIndex)
-                                calendarSelector.popup.close()
-                            }
-                        }
+                    accountId: root.accountId
+                    onSelected: {
+                        controller.calendar = calendar
                     }
                 }
+
             }
         }
 
