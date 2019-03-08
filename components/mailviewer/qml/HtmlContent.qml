@@ -77,9 +77,7 @@ Item {
                     console.warn("Failed to load html content.")
                     console.warn("Error is ", loadRequest.errorString)
                 }
-                if (loadRequest.status == WebEngineLoadRequest.LoadSucceededStatus) {
-                    root.contentHeight = contentsSize.height
-                }
+                root.contentHeight = contentsSize.height
             }
             onLinkHovered: {
                 console.debug("Link hovered ", hoveredUrl)
