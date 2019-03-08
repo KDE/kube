@@ -29,16 +29,35 @@ class PartModelPrivate
 {
 public:
     PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser);
-    ~PartModelPrivate();
+    ~PartModelPrivate() = default;
 
-    void findEncapsulated(const MimeTreeParser::EncapsulatedRfc822MessagePart::Ptr &e);
+    void checkPart(const MimeTreeParser::MessagePart::Ptr part) {
+        //Has to contain html, and be an alternative part (so it's not only html)
+        if (part->isHtml() && part.dynamicCast<MimeTreeParser::AlternativeMessagePart>()) {
+            containsHtmlAndPlain = true;
+            emit q->containsHtmlChanged();
+        }
+    }
+
+    //Recursively find encapsulated messages
+    void findEncapsulated(const MimeTreeParser::EncapsulatedRfc822MessagePart::Ptr &e) {
+        mEncapsulatedParts[e.data()] = mParser->collectContentParts(e);
+        for (auto subPart : mEncapsulatedParts[e.data()]) {
+            checkPart(subPart);
+            mParents[subPart.data()] = e.data();
+            if (auto encapsulatedSub = subPart.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
+                findEncapsulated(encapsulatedSub);
+            }
+        }
+    }
+
     PartModel *q;
     QVector<MimeTreeParser::MessagePartPtr> mParts;
     QHash<MimeTreeParser::MessagePart*, QVector<MimeTreeParser::MessagePartPtr>> mEncapsulatedParts;
     QHash<MimeTreeParser::MessagePart*, MimeTreeParser::MessagePart*> mParents;
     std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
     bool showHtml{false};
-    bool containsHtml{false};
+    bool containsHtmlAndPlain{false};
 };
 
 PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser)
@@ -47,34 +66,11 @@ PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeT
 {
     mParts = mParser->collectContentParts();
     for (auto p : mParts) {
-        if (p->isHtml()) {
-            containsHtml = true;
-            emit q->containsHtmlChanged();
-        }
+        checkPart(p);
         if (auto e = p.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
             findEncapsulated(e);
         }
     }
-}
-
-//Recursively find encapsulated messages
-void PartModelPrivate::findEncapsulated(const MimeTreeParser::EncapsulatedRfc822MessagePart::Ptr &e)
-{
-    mEncapsulatedParts[e.data()] = mParser->collectContentParts(e);
-    for (auto subPart : mEncapsulatedParts[e.data()]) {
-        if (subPart->isHtml()) {
-            containsHtml = true;
-            emit q->containsHtmlChanged();
-        }
-        mParents[subPart.data()] = e.data();
-        if (auto encapsulatedSub = subPart.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
-            findEncapsulated(encapsulatedSub);
-        }
-    }
-};
-
-PartModelPrivate::~PartModelPrivate()
-{
 }
 
 PartModel::PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser)
@@ -103,7 +99,7 @@ bool PartModel::showHtml() const
 
 bool PartModel::containsHtml() const
 {
-    return d->containsHtml;
+    return d->containsHtmlAndPlain;
 }
 
 QHash<int, QByteArray> PartModel::roleNames() const
@@ -238,7 +234,7 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 if (dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(messagePart)) {
                     return "encapsulated";
                 }
-                if (!d->showHtml) {
+                if (!d->showHtml && d->containsHtmlAndPlain) {
                     return "plain";
                 }
                 //For simple html we don't need a browser
@@ -279,7 +275,7 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             case IsErrorRole:
                 return messagePart->error();
             case ContentRole: {
-                if (!d->showHtml) {
+                if (!d->showHtml && d->containsHtmlAndPlain) {
                     return HtmlUtils::linkify(Qt::convertFromPlainText(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text()));
                 }
                 const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
