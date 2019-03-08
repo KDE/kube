@@ -26,7 +26,8 @@ Item {
     id: root
     property string content
     //We have to give it a minimum size so the html content starts to expand
-    property int contentHeight: 10;
+    property int initialHeight: 10
+    property int contentHeight: initialHeight
     property string searchString
     property bool autoLoadImages: false
 
@@ -67,7 +68,7 @@ Item {
             Component.onCompleted: loadHtml(content, "file:///")
             onContentsSizeChanged: {
                 //Some pages apparently don't have a size when loading has finished.
-                if (root.contentHeight == 0) {
+                if (root.contentHeight <= root.initialHeight) {
                     root.contentHeight = contentsSize.height
                 }
             }
