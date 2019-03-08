@@ -33,7 +33,7 @@ class PartModelPrivate;
 class PartModel : public QAbstractItemModel {
     Q_OBJECT
     Q_PROPERTY(bool showHtml READ showHtml WRITE setShowHtml NOTIFY showHtmlChanged)
-    Q_PROPERTY(bool containsHtml READ containsHtml CONSTANT)
+    Q_PROPERTY(bool containsHtml READ containsHtml NOTIFY containsHtmlChanged)
 public:
     PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser);
     ~PartModel();
@@ -70,6 +70,7 @@ public:
 
 signals:
     void showHtmlChanged();
+    void containsHtmlChanged();
 
 private:
     std::unique_ptr<PartModelPrivate> d;

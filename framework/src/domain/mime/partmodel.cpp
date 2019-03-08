@@ -49,6 +49,7 @@ PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeT
     for (auto p : mParts) {
         if (p->isHtml()) {
             containsHtml = true;
+            emit q->containsHtmlChanged();
         }
         if (auto e = p.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
             findEncapsulated(e);
@@ -63,6 +64,7 @@ void PartModelPrivate::findEncapsulated(const MimeTreeParser::EncapsulatedRfc822
     for (auto subPart : mEncapsulatedParts[e.data()]) {
         if (subPart->isHtml()) {
             containsHtml = true;
+            emit q->containsHtmlChanged();
         }
         mParents[subPart.data()] = e.data();
         if (auto encapsulatedSub = subPart.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
