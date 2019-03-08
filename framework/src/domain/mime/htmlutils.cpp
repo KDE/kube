@@ -244,7 +244,7 @@ QString HtmlUtils::linkify(const QString &in)
 			href = href.toHtmlEscaped();
 			href = linkify_htmlsafe(href);
 			//printf("link: [%s], href=[%s]\n", link.latin1(), href.latin1());
-			linked = QString("<a href=\"%1\">").arg(href) + link.toHtmlEscaped() + "</a>" + pre.mid(cutoff).toHtmlEscaped();
+			linked = QString("<a href=\"%1\">").arg(href) + QUrl{link}.toDisplayString(QUrl::RemoveQuery) + "</a>" + pre.mid(cutoff).toHtmlEscaped();
 			out.replace(x1, len, linked);
 			n = x1 + linked.length() - 1;
 		} else if(isAtStyle) {
