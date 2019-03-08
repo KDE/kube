@@ -54,11 +54,11 @@ MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(Interface::BodyPar
     /*
     ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
     */
-    KMime::Content *data = findTypeInDirectChilds(node, "application/octet-stream");
+    KMime::Content *data = findTypeInDirectChildren(node, "application/octet-stream");
     if (data) {
         useThisCryptProto = OpenPGP;
     } else {
-        data = findTypeInDirectChilds(node, "application/pkcs7-mime");
+        data = findTypeInDirectChildren(node, "application/pkcs7-mime");
         if (data) {
             useThisCryptProto = CMS;
         }

@@ -34,7 +34,7 @@ namespace MimeTreeParser
 */
 MimeMessagePart::Ptr createAndParseTempNode(Interface::BodyPart &part, const char *content, const char *cntDesc);
 
-KMime::Content *findTypeInDirectChilds(KMime::Content *content, const QByteArray &mimeType);
+KMime::Content *findTypeInDirectChildren(KMime::Content *content, const QByteArray &mimeType);
 
 MessagePart::Ptr toplevelTextNode(MessagePart::Ptr messageTree);
 }

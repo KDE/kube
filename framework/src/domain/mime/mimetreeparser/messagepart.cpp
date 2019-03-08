@@ -558,15 +558,15 @@ QString MimeMessagePart::htmlContent() const
 AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Content *node)
     : MessagePart(otp, QString(), node)
 {
-    if (auto dataIcal = findTypeInDirectChilds(mNode, "text/calendar")) {
+    if (auto dataIcal = findTypeInDirectChildren(mNode, "text/calendar")) {
         mChildParts[Util::MultipartIcal] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataIcal, true));
     }
 
-    if (auto dataText = findTypeInDirectChilds(mNode, "text/plain")) {
+    if (auto dataText = findTypeInDirectChildren(mNode, "text/plain")) {
         mChildParts[Util::MultipartPlain] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataText, true));
     }
 
-    if (auto dataHtml = findTypeInDirectChilds(mNode, "text/html")) {
+    if (auto dataHtml = findTypeInDirectChildren(mNode, "text/html")) {
         mChildParts[Util::MultipartHtml] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, dataHtml, true));
     } else {
         // If we didn't find the HTML part as the first child of the multipart/alternative, it might

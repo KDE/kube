@@ -37,13 +37,9 @@ MimeMessagePart::Ptr MimeTreeParser::createAndParseTempNode(Interface::BodyPart 
     return mp;
 }
 
-KMime::Content *MimeTreeParser::findTypeInDirectChilds(KMime::Content *content, const QByteArray &mimeType)
+KMime::Content *MimeTreeParser::findTypeInDirectChildren(KMime::Content *content, const QByteArray &mimeType)
 {
-    if (mimeType.isEmpty()) {
-        return content;
-    }
-
-    foreach (auto child, content->contents()) {
+    for (const auto child : content->contents()) {
         if ((!child->contentType()->isEmpty())
                 && (mimeType == child->contentType()->mimeType())) {
             return child;

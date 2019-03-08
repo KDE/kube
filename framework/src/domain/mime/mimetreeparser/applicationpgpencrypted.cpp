@@ -52,7 +52,7 @@ MessagePart::Ptr ApplicationPGPEncryptedBodyPartFormatter::process(Interface::Bo
         return MessagePart::Ptr();
     }
 
-    KMime::Content *data = findTypeInDirectChilds(part.content()->parent(), "application/octet-stream");
+    KMime::Content *data = findTypeInDirectChildren(part.content()->parent(), "application/octet-stream");
 
     if (!data) {
         return MessagePart::Ptr(); //new MimeMessagePart(part.objectTreeParser(), node));
