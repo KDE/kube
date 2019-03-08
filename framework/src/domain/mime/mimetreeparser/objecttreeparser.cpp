@@ -48,11 +48,9 @@
 #include "bodypartformatter.h"
 #include "util.h"
 
-#include <KMime/Headers>
 #include <KMime/Message>
 
 #include <QByteArray>
-#include <QTextCodec>
 #include <QUrl>
 #include <QMimeDatabase>
 #include <QTextStream>
@@ -416,6 +414,11 @@ MessagePartPtr ObjectTreeParser::parsedPart() const
     return mParsedPart;
 }
 
+/*
+ * This will lookup suitable formatters based on the type,
+ * and let them generate a list of parts.
+ * If the formatter generated a list of parts, then those are taken, otherwise we move on to the next match.
+ */
 QVector<MessagePartPtr> ObjectTreeParser::processType(KMime::Content *node, const QByteArray &mediaType, const QByteArray &subType)
 {
     static MimeTreeParser::BodyPartFormatterBaseFactory factory;
