@@ -245,7 +245,7 @@ public:
 
     QList<Util::HtmlMode> availableModes();
 private:
-    QMap<Util::HtmlMode, MimeMessagePart::Ptr> mChildParts;
+    QMap<Util::HtmlMode, MessagePart::Ptr> mChildParts;
 
     friend class DefaultRendererPrivate;
     friend class ObjectTreeParser;

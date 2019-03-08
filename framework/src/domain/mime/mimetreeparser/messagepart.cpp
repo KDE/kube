@@ -573,20 +573,28 @@ AlternativeMessagePart::AlternativeMessagePart(ObjectTreeParser *otp, KMime::Con
         // be that this is a HTML message with images, and text/plain and multipart/related are the
         // immediate children of this multipart/alternative node.
         // In this case, the HTML node is a child of multipart/related.
-        if (auto data = findTypeInDirectChilds(mNode, "multipart/related")) {
+        // In the case of multipart/related we don't expect multiple html parts, it is usually used to group attachments
+        // with html content.
+        //
+        // In any case, this is not a complete implementation of MIME, but an approximation for the kind of mails we actually see in the wild.
+        auto data  = [&] {
+            if (auto d = findTypeInDirectChildren(mNode, "multipart/related")) {
+                return d;
+            }
+            return findTypeInDirectChildren(mNode, "multipart/mixed");
+        }();
+        if (data) {
+            QString htmlContent;
             const auto parts = data->contents();
-            for (int i = 0; i < parts.size(); i++) {
-                const auto p = parts.at(i);
-                if (i == 0 ) {
-                    mChildParts[Util::MultipartHtml] = MimeMessagePart::Ptr(new MimeMessagePart(mOtp, p, true));
+            for (auto p : data->contents()) {
+                if ((!p->contentType()->isEmpty())
+                    && (p->contentType()->mimeType() == "text/html")) {
+                    htmlContent += MimeMessagePart(mOtp, p, true).text();
                 } else if (KMime::isAttachment(p)) {
                     appendSubPart(MimeMessagePart::Ptr(new MimeMessagePart(otp, p, true)));
                 }
             }
-        //Same for multipart/mixed
-        } else if (auto data  = findTypeInDirectChilds(mNode, "multipart/mixed")) {
-            //FIXME: This doesn't populate mChildParts but instead attaches subparts. That way we at least process all parts as we should.
-            parseInternal(data);
+            mChildParts[Util::MultipartHtml] = MessagePart::Ptr(new MessagePart(mOtp, htmlContent, nullptr));
         }
     }
 }
