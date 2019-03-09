@@ -36,6 +36,7 @@
 #include <QJsonObject>
 #include <QFileInfo>
 #include <QFont>
+#include <QFontInfo>
 #include <QDebug>
 #include <QTimer>
 #include <QQmlContext>
@@ -127,8 +128,12 @@ int main(int argc, char *argv[])
         fontSize = 11;
     }
 #endif
-    qWarning() << "Font size:" << fontSize;
     app.setFont(QFont{"Noto Sans", fontSize, QFont::Normal});
+
+    //Get info about actually used font
+    const QFontInfo fontInfo{app.font()};
+    qInfo() << "Font name:" << fontInfo.family();
+    qInfo() << "Font size:" << fontInfo.pointSize();
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A communication and collaboration client.");
