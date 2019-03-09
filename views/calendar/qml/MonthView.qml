@@ -34,10 +34,7 @@ FocusScope {
 
     MultiDayView {
         id: dayView
-        anchors {
-            fill: parent
-            rightMargin: Kube.Units.gridUnit
-        }
+        anchors.fill: parent
         daysToShow: daysPerRow * 6
         daysPerRow: 7
         paintGrid: true

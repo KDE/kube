@@ -28,7 +28,7 @@ FocusScope {
     id: root
 
     property int daysToShow: 7
-    property var dayWidth: (root.width - Kube.Units.gridUnit  - Kube.Units.largeSpacing * 2) / root.daysToShow
+    property var dayWidth: (root.width - Kube.Units.gridUnit - Kube.Units.largeSpacing) / root.daysToShow
     property var hourHeight: Kube.Units.gridUnit * 2
     property date currentDate
     property date startDate: currentDate
@@ -38,7 +38,6 @@ FocusScope {
         anchors {
             top: parent.top
             right: parent.right
-            rightMargin: Kube.Units.largeSpacing
         }
 
         width: root.dayWidth * root.daysToShow + Kube.Units.gridUnit * 2
