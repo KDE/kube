@@ -138,7 +138,8 @@ Item {
                                             topMargin: Kube.Units.smallSpacing
                                             leftMargin: Kube.Units.smallSpacing
                                         }
-                                        text: date.getDate()
+                                        //We add the month abbrevation to the first of each month
+                                        text: date.toLocaleDateString(Qt.locale(), date.getDate() == 1 ? "d MMM" : "d")
                                         font.bold: true
                                         color: !isCurrentMonth ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
                                         Rectangle {
