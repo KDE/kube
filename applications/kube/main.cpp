@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(QString("%1 Branch: %2 Commit: %3").arg(kube_VERSION_STRING).arg(kube_BRANCH).arg(kube_COMMIT));
     auto fontSize = app.font().pointSize();
 #if defined(Q_OS_UNIX)  && (!defined(Q_OS_MAC))
-    if (qgetenv("QT_QPA_PLATFORMTHEME").isEmpty()) {
+    if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORMTHEME")) {
         //The hardcoded default in qgenericunixthemes.cpp of 9 is tiny, so we default to something larger.
         fontSize = 11;
     }
