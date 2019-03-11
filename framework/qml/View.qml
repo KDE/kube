@@ -150,6 +150,7 @@ FocusScope {
     RowLayout {
         id: content
         anchors.fill: parent
+        spacing: 0
     }
 
     Component {
