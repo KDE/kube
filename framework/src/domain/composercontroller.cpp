@@ -594,8 +594,8 @@ void ComposerController::saveAsDraft()
     using namespace Sink::ApplicationDomain;
 
     auto job = [&] {
-        if (existingMail.identifier().isEmpty()) {
-            SinkLog() << "Creating a new draft" << existingMail.identifier();
+        if (existingMail.identifier().isEmpty() || !existingMail.getDraft()) {
+            SinkLog() << "Creating a new draft" << existingMail.identifier() << "in account" << accountId;
             Query query;
             query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::drafts);
             query.filter<SinkResource::Account>(accountId.toLatin1());

@@ -281,4 +281,77 @@ ViewTestCase {
         verify(controller.sendAction.enabled)
         verify(controller.saveAsDraftAction.enabled)
     }
+
+    function test_8saveReplyAsDraft() {
+        var initialState = {
+            accounts: [{
+                    id: "account1",
+                }],
+            identities: [{
+                    account: "account1",
+                    name: "Test Identity",
+                    address: "identity@example.org"
+                }],
+            resources: [{
+                    id: "resource1",
+                    account: "account1",
+                    type: "dummy"
+                },
+                {
+                    id: "resource2",
+                    account: "account1",
+                    type: "mailtransport"
+                }],
+            folders: [{
+                    id: "folder1",
+                    resource: "resource1",
+                    name: "Folder 1",
+                    specialpurpose: ["inbox"],
+                    mails: [{
+                            resource: "resource1",
+                            subject: "subject1",
+                            body: "body",
+                            to: ["to@example.org"],
+                            draft: false
+                        }
+                    ],
+                },
+                {
+                    id: "folder2",
+                    resource: "resource1",
+                    name: "Folder 2",
+                    specialpurpose: ["drafts"],
+                },
+            ],
+        }
+        TestStore.setup(initialState)
+
+        var createdMail = TestStore.load("mail", {resource: "resource1"})
+        var composer = createTemporaryObject(composerComponent, testCase, {message: createdMail, loadType: Kube.ComposerController.Reply})
+        composer.setup()
+
+        tryVerify(function(){ return findChild(composer, "subject").text == "RE: subject1" })
+
+        var textEditor = findChild(composer, "textEditor");
+        verify(textEditor)
+        tryVerify(function(){ return textEditor.text.match("body") })
+
+        var controller = findChild(composer, "composerController");
+        verify(controller)
+        verify(controller.saveAsDraftAction.enabled)
+        controller.saveAsDraftAction.execute()
+
+        //Ensure draft message was created
+        tryVerify(function(){ return TestStore.load("mail", {resource: "resource1", "draft": true}) })
+        var draftMessage = TestStore.read(TestStore.load("mail", {resource: "resource1", "draft": true}))
+        compare(draftMessage.subject, "RE: subject1")
+        compare(draftMessage.draft, true)
+
+        //Verify the original message is intact
+        var m = TestStore.load("mail", {resource: "resource1", "draft": false})
+        verify(m)
+        var originalMail = TestStore.read(TestStore.load("mail", {resource: "resource1", "draft": false}))
+        compare(originalMail.subject, "subject1")
+        compare(originalMail.draft, false)
+    }
 }
