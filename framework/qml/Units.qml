@@ -28,6 +28,7 @@ Item {
     property int smallSpacing: gridUnit/4
     property int largeSpacing: gridUnit
 
+    property int largeFontSize: fontMetrics.font.pointSize * 1.2
     property int defaultFontSize: fontMetrics.font.pointSize
     property int smallFontSize: fontMetrics.font.pointSize * 0.9
     property int tinyFontSize: fontMetrics.font.pointSize * 0.8
