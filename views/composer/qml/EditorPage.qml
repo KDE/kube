@@ -32,34 +32,20 @@ Rectangle {
     signal done()
     signal focusChange()
 
-    color: Kube.Colors.backgroundColor
+    color: Kube.Colors.paperWhite
 
     ColumnLayout {
         anchors {
-            fill: parent
+            top: parent.top
+            bottom: parent.bottom
             margins: Kube.Units.largeSpacing
-            leftMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
-            rightMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
+            horizontalCenter: parent.horizontalCenter
         }
+        property var preferredWidth: Kube.Units.gridUnit * 24
+        property var minimumWidth: root.width - (Kube.Units.largeSpacing + Kube.Units.gridUnit * 2) * 2
+        width: Math.min(minimumWidth, preferredWidth)
 
         spacing: Kube.Units.smallSpacing
-
-        Kube.TextField {
-            id: subject
-            objectName: "subject"
-            Layout.fillWidth: true
-            activeFocusOnTab: true
-            font.bold: true
-
-            placeholderText: qsTr("Enter subject...")
-            text: composerController.subject
-            onTextChanged: composerController.subject = text;
-            onActiveFocusChanged: {
-                if (activeFocus) {
-                    root.focusChange()
-                }
-            }
-        }
 
         Flow {
             id: attachments
@@ -95,6 +81,7 @@ Rectangle {
                     onClicked: textEditor.bold = !textEditor.bold
                     focusPolicy: Qt.TabFocus
                     focus: false
+                    opacity: activeFocus || hovered ? 1 : 0.6
                 }
                 Kube.IconButton {
                     iconName: Kube.Icons.italic
@@ -103,6 +90,7 @@ Rectangle {
                     onClicked: textEditor.italic = !textEditor.italic
                     focusPolicy: Qt.TabFocus
                     focus: false
+                    opacity: activeFocus || hovered ? 1 : 0.6
                 }
                 Kube.IconButton {
                     iconName: Kube.Icons.underline
@@ -111,12 +99,14 @@ Rectangle {
                     onClicked: textEditor.underline = !textEditor.underline
                     focusPolicy: Qt.TabFocus
                     focus: false
+                    opacity: activeFocus || hovered ? 1 : 0.6
                 }
                 Kube.TextButton {
                     id: deleteButton
                     text: qsTr("Remove Formatting")
                     visible: textEditor.htmlEnabled
                     onClicked: textEditor.clearFormatting()
+                    opacity: activeFocus || hovered ? 1 : 0.6
                 }
             }
 
@@ -131,6 +121,7 @@ Rectangle {
                 onClicked: {
                     fileDialog.open()
                 }
+                opacity: activeFocus || hovered ? 1 : 0.6
 
                 Dialogs.FileDialog {
                     id: fileDialog
@@ -148,6 +139,40 @@ Rectangle {
             }
         }
 
+        Kube.TextField {
+            id: subject
+            objectName: "subject"
+            Layout.fillWidth: true
+            activeFocusOnTab: true
+            font.bold: true
+            font.pointSize: Kube.Units.largeFontSize
+
+            placeholderText: qsTr("Subject")
+            text: composerController.subject
+            onTextChanged: composerController.subject = text;
+            onActiveFocusChanged: {
+                if (activeFocus) {
+                    root.focusChange()
+                }
+            }
+            onAccepted: textEditor.forceActiveFocus(Qt.TabFocusReason)
+            background: Rectangle {
+                id: background
+                color: Kube.Colors.viewBackgroundColor
+                // border.width: 1
+                // border.color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+                Rectangle {
+                    anchors {
+                        bottom: parent.bottom
+                        left: parent.left
+                        right: parent.right
+                    }
+                    height: 1
+                    color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+                }
+            }
+        }
+
         Kube.TextEditor {
             id: textEditor
             objectName: "textEditor"
@@ -155,6 +180,10 @@ Rectangle {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            border.width: 0
+            font.pointSize: Kube.Units.largeFontSize
+
             onHtmlEnabledChanged: {
                 composerController.htmlBody = htmlEnabled;
             }

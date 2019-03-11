@@ -30,7 +30,9 @@ FocusScope {
     property alias bold: document.bold
     property alias italic: document.italic
     property alias underline: document.underline
+    property alias border: rect.border
 
+    property alias font: edit.font
     property string initialText
     onInitialTextChanged: {
         edit.text = initialText
@@ -49,6 +51,7 @@ FocusScope {
     }
 
     Rectangle {
+        id: rect
         anchors.fill: parent
         border.width: 1
         border.color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
