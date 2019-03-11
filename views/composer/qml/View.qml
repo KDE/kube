@@ -50,8 +50,8 @@ Kube.View {
                                 (!composerController.sign && !composerController.encrypt || composerController.foundPersonalKeys) &&
                                 !composerController.to.empty
             saveAsDraftAction.enabled: composerController.accountId
-            onMessageLoaded: { textEditor.initialText = body }
-            onCleared: { textEditor.initialText = "" }
+            onMessageLoaded: { editorPage.initialText = body }
+            onCleared: { editorPage.initialText = "" }
         }
     ]
 
@@ -246,144 +246,14 @@ Kube.View {
     }
 
     //Content
-    Rectangle {
+    EditorPage {
+        id: editorPage
         Layout.fillWidth: true
         Layout.minimumWidth: Kube.Units.gridUnit * 5
         Layout.fillHeight: true
-        color: Kube.Colors.backgroundColor
 
-        ColumnLayout {
-            anchors {
-                fill: parent
-                margins: Kube.Units.largeSpacing
-                leftMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
-                rightMargin: Kube.Units.largeSpacing + Kube.Units.gridUnit * 2
-            }
-
-            spacing: Kube.Units.smallSpacing
-
-            Kube.TextField {
-                id: subject
-                objectName: "subject"
-                Layout.fillWidth: true
-                activeFocusOnTab: true
-                font.bold: true
-
-                placeholderText: qsTr("Enter subject...")
-                text: composerController.subject
-                onTextChanged: composerController.subject = text;
-                onActiveFocusChanged: {
-                    if (activeFocus) {
-                        closeFirstSplitIfNecessary()
-                    }
-                }
-            }
-
-            Flow {
-                id: attachments
-
-                Layout.fillWidth: true
-                layoutDirection: Qt.RightToLeft
-                spacing: Kube.Units.smallSpacing
-                clip: true
-
-                Repeater {
-                    model: composerController.attachments.model
-                    delegate: Kube.AttachmentDelegate {
-                        name: model.filename ? model.filename : ""
-                        icon: model.iconname ? model.iconname : ""
-                        clip: true
-                        actionIcon: Kube.Icons.remove
-                        onExecute: composerController.attachments.remove(model.id)
-                    }
-                }
-            }
-
-            RowLayout {
-
-                spacing: Kube.Units.largeSpacing
-
-                Row {
-                    spacing: 1
-
-                    Kube.IconButton {
-                        iconName: Kube.Icons.bold
-                        checkable: true
-                        checked: textEditor.bold
-                        onClicked: textEditor.bold = !textEditor.bold
-                        focusPolicy: Qt.TabFocus
-                        focus: false
-                    }
-                    Kube.IconButton {
-                        iconName: Kube.Icons.italic
-                        checkable: true
-                        checked: textEditor.italic
-                        onClicked: textEditor.italic = !textEditor.italic
-                        focusPolicy: Qt.TabFocus
-                        focus: false
-                    }
-                    Kube.IconButton {
-                        iconName: Kube.Icons.underline
-                        checkable: true
-                        checked: textEditor.underline
-                        onClicked: textEditor.underline = !textEditor.underline
-                        focusPolicy: Qt.TabFocus
-                        focus: false
-                    }
-                    Kube.TextButton {
-                        id: deleteButton
-                        text: qsTr("Remove Formatting")
-                        visible: textEditor.htmlEnabled
-                        onClicked: textEditor.clearFormatting()
-                    }
-                }
-
-                Item {
-                    height: 1
-                    Layout.fillWidth: true
-                }
-
-                Kube.Button {
-                    text: qsTr("Attach file")
-
-                    onClicked: {
-                        fileDialog.open()
-                    }
-
-                    Dialogs.FileDialog {
-                        id: fileDialog
-                        title: qsTr("Choose a file to attach")
-                        folder: shortcuts.home
-                        selectFolder: false
-                        selectExisting: true
-                        selectMultiple: true
-                        onAccepted: {
-                            for (var i = 0; i < fileDialog.fileUrls.length; ++i) {
-                                composerController.attachments.add({url: fileDialog.fileUrls[i]})
-                            }
-                        }
-                    }
-                }
-            }
-
-            Kube.TextEditor {
-                id: textEditor
-                objectName: "textEditor"
-                activeFocusOnTab: true
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                onHtmlEnabledChanged: {
-                    composerController.htmlBody = htmlEnabled;
-                }
-
-                onActiveFocusChanged: closeFirstSplitIfNecessary()
-                Keys.onEscapePressed: recipients.forceActiveFocus(Qt.TabFocusReason)
-                onTextChanged: {
-                    composerController.body = text;
-                }
-            }
-        }
+        onDone: recipients.forceActiveFocus(Qt.TabFocusReason)
+        onFocusChange: closeFirstSplitIfNecessary()
     }
 
     //Recipients
