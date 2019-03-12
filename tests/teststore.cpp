@@ -360,22 +360,17 @@ QVariantList toVariantList(const QList<T> &list)
     return result;
 }
 
-QVariantList TestStore::loadList(const QByteArray &type, const QVariantMap &filter)
+QVariantList TestStore::loadList(const QByteArray &type, const QVariantMap &_filter)
 {
+    auto filter = _filter;
     using namespace Sink::ApplicationDomain;
     Sink::Query query;
     if (filter.contains("resource")) {
-        query.resourceFilter(filter.value("resource").toByteArray());
+        query.resourceFilter(filter.take("resource").toByteArray());
     }
 
-    for (QVariantMap::const_iterator it = filter.begin(); it != filter.end(); ++it) {
-        if (it.key() == "messageId") {
-            query.filter<Mail::MessageId>(it.value());
-        } else if (it.key() == "draft") {
-            query.filter<Mail::Draft>(it.value());
-        } else if (it.key() == "subject") {
-            query.filter<Mail::Subject>(it.value());
-        }
+    for (auto it = filter.begin(); it != filter.end(); ++it) {
+        query.filter(it.key().toUtf8(), {it.value()});
     }
 
     if (type == "mail") {
