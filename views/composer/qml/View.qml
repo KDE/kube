@@ -83,11 +83,11 @@ Kube.View {
                     break;
                 case Kube.ComposerController.Reply:
                     composerController.loadReply(message)
-                    subject.forceActiveFocus()
+                    editorPage.forceActiveFocus()
                     break;
                 case Kube.ComposerController.Forward:
                     composerController.loadForward(message)
-                    subject.forceActiveFocus()
+                    editorPage.forceActiveFocus()
                     break;
             }
 
@@ -98,7 +98,7 @@ Kube.View {
                     composerController.to.add({name: root.recipients[i]})
                 }
             }
-            subject.forceActiveFocus()
+            editorPage.forceActiveFocus()
         }
     }
 
@@ -136,7 +136,7 @@ Kube.View {
                 onClicked: {
                     listView.currentIndex = -1
                     composerController.clear()
-                    subject.forceActiveFocus()
+                    editorPage.forceActiveFocus()
                 }
             }
 
@@ -252,6 +252,7 @@ Kube.View {
         Layout.minimumWidth: Kube.Units.gridUnit * 5
         Layout.fillHeight: true
 
+        controller: composerController
         onDone: recipients.forceActiveFocus(Qt.TabFocusReason)
         onFocusChange: closeFirstSplitIfNecessary()
     }
