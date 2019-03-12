@@ -37,6 +37,7 @@ class KUBE_EXPORT MailListModel : public QSortFilterProxyModel
     Q_PROPERTY (QString entityId READ entityId WRITE setEntityId)
 
     Q_PROPERTY (QString filter READ filter WRITE setFilter)
+    Q_PROPERTY (bool threaded MEMBER mIsThreaded)
 
 public:
     enum Status {
@@ -106,6 +107,7 @@ private:
 
     QSharedPointer<QAbstractItemModel> m_model;
     bool mFetchMails = false;
+    bool mIsThreaded = true;
     QSet<QByteArray> mFetchedMails;
     QByteArray mCurrentQueryItem;
     Sink::Query mQuery;

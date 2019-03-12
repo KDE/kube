@@ -26,12 +26,9 @@ FocusScope {
     id: root
     //Private properties
     property variant parentFolder: null
-    property bool isDraft : false
-    property bool isImportant : false
-    property bool isTrash : false
-    property bool isUnread : false
     property variant currentMail: null
     property alias filter: mailListModel.filter
+    property alias threaded: mailListModel.threaded
 
     onParentFolderChanged: {
         currentMail = null
@@ -101,10 +98,6 @@ FocusScope {
                 if (currentItem) {
                     var currentData = currentItem.currentData;
                     root.currentMail = currentData.mail;
-                    root.isDraft = currentData.draft;
-                    root.isTrash = currentData.trash;
-                    root.isImportant = currentData.important;
-                    root.isUnread = currentData.unread;
 
                     if (currentData.mail && currentData.unread) {
                         Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentData.mail})

@@ -237,7 +237,11 @@ Kube.View {
             Kube.Listener {
                 filter: Kube.Messages.mailSelection
                 onMessageReceived: {
-                    mailViewModel.mail = message.mail
+                    if (!mailListView.threaded) {
+                        mailViewModel.singleMail = message.mail
+                    } else {
+                        mailViewModel.mail = message.mail
+                    }
                 }
             }
 

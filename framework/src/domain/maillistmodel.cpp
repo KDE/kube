@@ -236,14 +236,12 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
         return;
     }
     mCurrentQueryItem = folder->identifier();
-    bool isThreaded = true;
-    if (folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::drafts) ||
-        folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::sent)) {
-        isThreaded = false;
-    }
+    const auto specialPurpose = folder->getSpecialPurpose();
+    mIsThreaded = !(specialPurpose.contains(SpecialPurpose::Mail::drafts) ||
+                              specialPurpose.contains(SpecialPurpose::Mail::sent));
 
     Sink::Query query = [&] {
-        if (isThreaded) {
+        if (mIsThreaded) {
             return Sink::StandardQueries::threadLeaders(*folder);
         } else {
             Sink::Query query;
