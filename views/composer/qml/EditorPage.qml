@@ -170,7 +170,7 @@ FocusScope {
                             right: parent.right
                         }
                         height: 1
-                        color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
+                        color: subject.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
                     }
                 }
             }
