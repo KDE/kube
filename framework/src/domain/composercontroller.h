@@ -64,6 +64,7 @@ class KUBE_EXPORT ComposerController : public Kube::Controller
     //Set by loadMessage
     KUBE_CONTROLLER_PROPERTY(KMime::Message::Ptr, ExistingMessage, existingMessage)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::Mail, ExistingMail, existingMail)
+    KUBE_CONTROLLER_PROPERTY(bool, Loading, loading)
 
     KUBE_CONTROLLER_PROPERTY(/*std::vector<Crypto::Key>*/QVariant, PersonalKeys, personalKeys)
     KUBE_CONTROLLER_PROPERTY(bool, FoundPersonalKeys, foundPersonalKeys)

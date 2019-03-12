@@ -354,4 +354,52 @@ ViewTestCase {
         compare(originalMail.subject, "subject1")
         compare(originalMail.draft, false)
     }
+
+    function test_9editDraft() {
+        var initialState = {
+            accounts: [{
+                    id: "account1",
+                }],
+            identities: [{
+                    account: "account1",
+                    name: "Test Identity",
+                    address: "identity@example.org"
+                }],
+            resources: [{
+                    id: "resource1",
+                    account: "account1",
+                    type: "dummy"
+                },
+                {
+                    id: "resource2",
+                    account: "account1",
+                    type: "mailtransport"
+                }],
+                mails:[{
+                    resource: "resource1",
+                    subject: "subject",
+                    body: "body",
+                    draft: true
+                }]
+        }
+        TestStore.setup(initialState)
+
+        var createdMail = TestStore.load("mail", {resource: "resource1"})
+        var composer = createTemporaryObject(composerComponent, testCase, {message: createdMail, loadType: Kube.ComposerController.Draft})
+        composer.setup()
+
+        //Edit message and save again
+        var controller = findChild(composer, "composerController");
+        verify(controller)
+        tryVerify(function(){ return !controller.loading })
+
+        findChild(composer, "subject").text = "subject2"
+
+        verify(controller.saveAsDraftAction.enabled)
+        controller.saveAsDraftAction.execute()
+
+        //Ensure draft message was edited
+        tryVerify(function(){ return TestStore.load("mail", {resource: "resource1", "subject": "subject2"}) })
+        compare(TestStore.loadList("mail", {resource: "resource1"}).length, 1)
+    }
 }

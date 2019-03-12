@@ -426,8 +426,11 @@ void ComposerController::loadMessage(const QVariant &message, std::function<void
     Q_ASSERT(msg);
     Query query(*msg);
     query.request<Mail::MimeMessage>();
+    query.request<Mail::Draft>();
+    setLoading(true);
     Store::fetchOne<Mail>(query).then([this, callback](const Mail &mail) {
         setExistingMail(mail);
+        setLoading(false);
 
         const auto mailData = KMime::CRLFtoLF(mail.getMimeMessage());
         if (!mailData.isEmpty()) {
