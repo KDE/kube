@@ -71,7 +71,7 @@ ViewTestCase {
                     resource: "resource1",
                     subject: "subject",
                     body: "body",
-                    to: ["to@example.org"],
+                    to: ["\"Quoted, Name\" <to@example.org>"],
                     cc: ["cc@example.org"],
                     bcc: ["bcc@example.org"],
                     draft: true

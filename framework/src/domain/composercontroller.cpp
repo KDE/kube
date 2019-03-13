@@ -303,16 +303,12 @@ static void applyAddresses(const QStringList &list, std::function<void(const QBy
     applyAddresses(mailboxes, callback);
 }
 
-static QStringList getStringListFromAddresses(const KMime::Types::Mailbox::List &s)
+static QStringList getStringListFromAddresses(const KMime::Types::Mailbox::List &mailboxes)
 {
     QStringList list;
-    applyAddresses(s, [&](const QByteArray &addrSpec, const QByteArray &displayName) {
-        if (displayName.isEmpty()) {
-            list << QString{addrSpec};
-        } else {
-            list << QString("%1 <%2>").arg(QString{displayName}).arg(QString{addrSpec});
-        }
-    });
+    for (const auto &mb : mailboxes) {
+        list << mb.prettyAddress(KMime::Types::Mailbox::QuoteWhenNecessary);
+    }
     return list;
 }
 

@@ -981,7 +981,12 @@ static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list
     for (const auto &s : list) {
         KMime::Types::Mailbox mb;
         mb.fromUnicodeString(s);
-        mailboxes << mb;
+        if (mb.hasAddress()) {
+            mailboxes << mb;
+        } else {
+            qWarning() << "Got an invalid address: " << s;
+            Q_ASSERT(false);
+        }
     }
     return mailboxes;
 }

@@ -62,8 +62,8 @@ ApplicationWindow {
                             subject: "subject1",
                             body: "body",
                             to: ["to@example.org"],
-                            cc: ["cc@example.org"],
-                            bcc: ["bcc@example.org"],
+                            cc: ["No Quoting <cc@example.org>"],
+                            bcc: ["\"Needs, Quoting\" <bcc@example.org>"],
                             draft: true
                         },
                         {
