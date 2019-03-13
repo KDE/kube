@@ -97,6 +97,7 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
             attachments,
             {},
             {});
+    Q_ASSERT(msg);
     if (object.contains("messageId")) {
         msg->messageID(true)->from7BitString(object["messageId"].toByteArray());
     }
