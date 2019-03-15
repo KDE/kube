@@ -485,12 +485,12 @@ Rectangle {
         }
     } //ColumnLayout
 
-    //Dimm unread messages
+    //Dimm unread messages (but never treat messages as unread that we have sent ourselves)
     Rectangle {
         anchors.fill: parent
         color: Kube.Colors.buttonColor
         opacity: 0.4
-        visible: root.unread
+        visible: root.unread && !root.sent
     }
 
     MouseArea {
