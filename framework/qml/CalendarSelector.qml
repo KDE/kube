@@ -27,19 +27,31 @@ Kube.InlineAccountSwitcher {
     id: root
 
     property alias enabledCalendars: calendarFilterCollector.checkedEntities
+    property bool editMode: false
 
     Kube.CheckedEntities {
         id: calendarFilterCollector
     }
 
+    buttonDelegate: Kube.IconButton {
+        height: Kube.Units.gridUnit
+        padding: 0
+        iconName: Kube.Icons.overflowMenu_inverted
+        onClicked: root.editMode = !root.editMode;
+    }
+
     delegate: Kube.ListView {
         id: listView
+        Layout.fillWidth: true
+        Layout.maximumHeight: Math.min(contentHeight, parent.height - Kube.Units.gridUnit)
+        Layout.preferredHeight: contentHeight
         spacing: Kube.Units.smallSpacing
         model: Kube.CheckableEntityModel {
             id: calendarModel
             type: "calendar"
             roles: ["name", "color", "enabled"]
             sortRole: "name"
+            filter: root.editMode ? {} : {enabled: true}
             accountId: listView.parent.accountId
             checkedEntities: calendarFilterCollector
         }
@@ -55,6 +67,7 @@ Kube.InlineAccountSwitcher {
                 Kube.CheckBox {
                     id: checkBox
                     opacity: 0.9
+                    visible: root.editMode
                     checked: model.checked || model.enabled
                     onCheckedChanged: {
                         model.checked = checked
@@ -92,6 +105,13 @@ Kube.InlineAccountSwitcher {
                     color: Kube.Colors.highlightedTextColor
                     elide: Text.ElideLeft
                     clip: true
+                }
+                Rectangle {
+                    visible: !root.editMode
+                    width: Kube.Units.gridUnit * 0.8
+                    height: Kube.Units.gridUnit * 0.8
+                    radius: width / 2
+                    color: model.color
                 }
                 ToolTip {
                     id: toolTipItem

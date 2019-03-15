@@ -56,6 +56,7 @@ Item {
     property string copy: "edit-copy"
 
     property string menu_inverted: "application-menu-inverted"
+    property string overflowMenu_inverted: "overflow-menu-inverted"
     property string group: "group"
     property string user: "im-user"
     property string user_inverted: "im-user-inverted"
@@ -68,6 +69,7 @@ Item {
     property string goDown: "go-down"
     property string goDown_inverted: "go-down-inverted"
     property string goUp: "go-up"
+    property string goUp_inverted: "go-up-inverted"
     property string checkbox: "checkbox"
     property string checkbox_inverted: "checkbox-inverted"
     property string password_show: "password-show-on"

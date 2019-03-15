@@ -23,11 +23,13 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
     property string currentAccount
+
+    property Component delegate: null
+    property Component buttonDelegate: null
+
     onCurrentAccountChanged: {
         Kube.Fabric.postMessage(Kube.Messages.accountSelection, {accountId: currentAccount});
     }
-
-    property Component delegate: null
 
     ColumnLayout {
         id: layout
@@ -42,7 +44,7 @@ FocusScope {
                 }
             }
 
-            delegate: Item {
+            delegate: ColumnLayout {
                 id: accountDelegate
                 property variant currentData: model
                 property bool isCurrent: (model.accountId == root.currentAccount)
@@ -51,34 +53,41 @@ FocusScope {
                 Layout.fillHeight: isCurrent
                 Layout.fillWidth: true
 
-                Kube.TextButton {
-                    id: accountButton
-                    anchors {
-                        top: parent.top
-                        left: parent.left
-                        right: parent.right
-                        rightMargin: Kube.Units.smallSpacing
-                    }
-                    height: Kube.Units.gridUnit
+                Item {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: Kube.Units.gridUnit
+                    Kube.TextButton {
+                        anchors {
+                            left: parent.left
+                            top: parent.top
+                        }
+                        height: Kube.Units.gridUnit
 
-                    textColor: Kube.Colors.highlightedTextColor
-                    activeFocusOnTab: !isCurrent
-                    hoverEnabled: !isCurrent
-                    onClicked: root.currentAccount = model.accountId
-                    text: model.name
-                    font.weight: Font.Bold
-                    font.family: Kube.Font.fontFamily
-                    horizontalAlignment: Text.AlignHLeft
-                    padding: 0
+                        textColor: Kube.Colors.highlightedTextColor
+                        activeFocusOnTab: !isCurrent
+                        hoverEnabled: !isCurrent
+                        onClicked: root.currentAccount = model.accountId
+                        text: model.name
+                        font.weight: Font.Bold
+                        font.family: Kube.Font.fontFamily
+                        horizontalAlignment: Text.AlignHLeft
+                        padding: 0
+                    }
+                    Loader {
+                        anchors {
+                            right: parent.right
+                            top: parent.top
+                        }
+                        focus: isCurrent
+                        activeFocusOnTab: true
+                        visible: isCurrent
+                        sourceComponent: root.buttonDelegate
+                    }
                 }
 
                 Loader {
-                    anchors {
-                        top: accountButton.bottom
-                        left: parent.left
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     focus: isCurrent
                     activeFocusOnTab: true
                     visible: isCurrent
