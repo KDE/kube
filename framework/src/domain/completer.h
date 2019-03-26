@@ -18,11 +18,12 @@
 */
 #pragma once
 
+#include "kube_export.h"
 #include <QAbstractItemModel>
 #include <QString>
 #include <QQmlEngine>
 
-class Completer : public QObject {
+class KUBE_EXPORT Completer : public QObject {
     Q_OBJECT
     Q_PROPERTY (QAbstractItemModel* model READ model CONSTANT)
     Q_PROPERTY (QString searchString WRITE setSearchString READ searchString)

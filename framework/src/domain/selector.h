@@ -18,12 +18,13 @@
 */
 #pragma once
 
+#include "kube_export.h"
 #include <QAbstractItemModel>
 
 /**
  * Exposes a model and maintains a current index selection.
  */
-class Selector : public QObject {
+class KUBE_EXPORT Selector : public QObject {
     Q_OBJECT
     Q_PROPERTY (int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY (QAbstractItemModel* model READ model CONSTANT)

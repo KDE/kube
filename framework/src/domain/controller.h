@@ -21,6 +21,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QAbstractItemModel>
+#include <QStandardItemModel>
 #include <KAsync/Async>
 
 #define KUBE_CONTROLLER_PROPERTY(TYPE, NAME, LOWERCASENAME) \
@@ -48,9 +49,6 @@
     private: QScopedPointer<Kube::ListPropertyController> controller_##NAME; \
     public: Kube::ListPropertyController* NAME##Controller() const { Q_ASSERT(controller_##NAME); return controller_##NAME.data(); } \
 
-
-class QAbstractItemModel;
-class QStandardItemModel;
 
 namespace Kube {
 
@@ -107,7 +105,7 @@ protected:
     void run(const KAsync::Job<void> &job);
 };
 
-class ListPropertyController : public QObject
+class KUBE_EXPORT ListPropertyController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel* model READ model CONSTANT)
