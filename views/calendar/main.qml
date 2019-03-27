@@ -38,7 +38,7 @@ ApplicationWindow {
                 },
                 {
                     id: "account2",
-                    name: "Test Account2"
+                    name: "Test Account2 With A Very Long Name"
                 },
             ],
             identities: [{

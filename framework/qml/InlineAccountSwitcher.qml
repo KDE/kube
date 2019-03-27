@@ -62,6 +62,7 @@ FocusScope {
                             top: parent.top
                         }
                         height: Kube.Units.gridUnit
+                        width: parent.width - Kube.Units.gridUnit
 
                         textColor: Kube.Colors.highlightedTextColor
                         activeFocusOnTab: !isCurrent
@@ -79,7 +80,7 @@ FocusScope {
                             top: parent.top
                         }
                         focus: isCurrent
-                        activeFocusOnTab: true
+                        activeFocusOnTab: isCurrent
                         visible: isCurrent
                         sourceComponent: root.buttonDelegate
                     }
