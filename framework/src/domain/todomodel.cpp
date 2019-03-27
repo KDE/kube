@@ -283,7 +283,7 @@ bool TodoModel::lessThan(const QModelIndex &left, const QModelIndex &right) cons
     return leftScore < rightScore;
 }
 
-bool TodoModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+bool TodoModel::filterAcceptsRow(int /*sourceRow*/, const QModelIndex &/*sourceParent*/) const
 {
     return true;
 }
