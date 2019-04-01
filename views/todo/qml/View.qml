@@ -336,6 +336,7 @@ Kube.View {
             TodoEditor {
                 id: editor
                 anchors.fill: parent
+                accountId: root.currentAccount
                 onDone: popup.close()
             }
         }

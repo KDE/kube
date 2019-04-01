@@ -29,6 +29,7 @@ Item {
         complete: false
         doing: false
     }
+    property var accountId: null
 
     signal done()
 
