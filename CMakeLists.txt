@@ -50,6 +50,9 @@ configure_file(kube_version.h.in ${CMAKE_BINARY_DIR}/kube_version.h)
 
 enable_testing()
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(framework)
 add_subdirectory(components)

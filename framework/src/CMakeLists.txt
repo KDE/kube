@@ -11,8 +11,6 @@ find_package(KF5Contacts CONFIG REQUIRED)
 include(GenerateExportHeader)
 
 set(CMAKE_CXX_VISIBILITY_PRESET default)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(. domain/mime/mimetreeparser domain/ domain/mime)
 
