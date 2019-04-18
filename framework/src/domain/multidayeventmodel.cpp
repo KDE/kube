@@ -135,8 +135,9 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
             auto result = QVariantList{};
             while (!sorted.isEmpty()) {
                 const auto srcIdx = sorted.takeFirst();
-                const auto start = getStart(srcIdx.data(EventModel::StartTime).toDateTime().date());
-                const auto duration = qMin(getDuration(srcIdx.data(EventModel::StartTime).toDateTime().date(), srcIdx.data(EventModel::EndTime).toDateTime().date()), mPeriodLength - start);
+                const auto startDate = srcIdx.data(EventModel::StartTime).toDateTime();
+                const auto start = getStart(startDate.date());
+                const auto duration = qMin(getDuration(startDate.date(), srcIdx.data(EventModel::EndTime).toDateTime().date()), mPeriodLength - start);
                 // qWarning() << "start " << srcIdx.data(EventModel::StartTime).toDateTime() << duration;
                 auto currentLine = QVariantList{};
 
