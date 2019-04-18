@@ -96,7 +96,7 @@ int PeriodDayEventModel::columnCount(const QModelIndex &) const
 
 QDateTime PeriodDayEventModel::getStartTimeOfDay(const QDateTime &dateTime, const QDate &today) const
 {
-    if (dateTime.date() < today) {
+    if (dateTime.date() != today) {
         return QDateTime{today, QTime{0,0}};
     }
     return dateTime;
@@ -104,7 +104,7 @@ QDateTime PeriodDayEventModel::getStartTimeOfDay(const QDateTime &dateTime, cons
 
 QDateTime PeriodDayEventModel::getEndTimeOfDay(const QDateTime &dateTime, const QDate &today) const
 {
-    if (dateTime.date() > today) {
+    if (dateTime.date() != today) {
         return QDateTime{today, QTime{23, 59, 59}};
     }
     return dateTime;
@@ -142,14 +142,17 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
             for (auto it = sorted.begin(); it != sorted.end(); it++) {
                 // auto eventid = index(it.value(), 0, idx);
                 const auto srcIdx = it.value();
-                SinkTrace() << "Appending event:" << srcIdx.data(EventModel::Summary);
 
-                const auto startTime = srcIdx.data(EventModel::StartTime).toDateTime().time();
-                auto endTime = srcIdx.data(EventModel::EndTime).toDateTime().time();
+                const auto start = getStartTimeOfDay(srcIdx.data(EventModel::StartTime).toDateTime(), today);
+                const auto startTime = start.time();
+                const auto end = getEndTimeOfDay(srcIdx.data(EventModel::EndTime).toDateTime(), today);
+                auto endTime = end.time();
                 if (!endTime.isValid()) {
                     //Even without duration we still take some space visually
                     endTime = startTime.addSecs(60 * 20);
                 }
+                const auto duration = qRound(startTime.secsTo(endTime) / 3600.0);
+                SinkTrace() << "Appending event:" << srcIdx.data(EventModel::Summary) << start << end;
 
                 //Remove all dates before startTime
                 for (auto it = indentationStack.begin(); it != indentationStack.end();) {
@@ -162,11 +165,6 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
                 const int indentation = indentationStack.size();
                 indentationStack.insert(endTime, 0);
 
-                const auto duration = [&] {
-                    const auto start = getStartTimeOfDay(srcIdx.data(EventModel::StartTime).toDateTime(), today);
-                    const auto end = getEndTimeOfDay(srcIdx.data(EventModel::EndTime).toDateTime(), today);
-                    return qRound(start.secsTo(end) / 3600.0);
-                }();
 
                 result.append(QVariantMap{
                     {"text", srcIdx.data(EventModel::Summary)},
