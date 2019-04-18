@@ -215,22 +215,6 @@ QByteArray EventModel::getColor(const QByteArray &calendar) const
     return color;
 }
 
-// QDateTime EventModel::getStartTimeOfDay(const QDateTime &dateTime, int day) const
-// {
-//     if (bucketOf(dateTime.date()) < day) {
-//         return QDateTime{mPeriodStart.addDays(day), QTime{0,0}};
-//     }
-//     return dateTime;
-// }
-
-// QDateTime EventModel::getEndTimeOfDay(const QDateTime &dateTime, int day) const
-// {
-//     if (bucketOf(dateTime.date()) > day) {
-//         return QDateTime{mPeriodStart.addDays(day), QTime{23, 59, 59}};
-//     }
-//     return dateTime;
-// }
-
 QVariant EventModel::data(const QModelIndex &idx, int role) const
 {
     if (!hasIndex(idx.row(), idx.column())) {
