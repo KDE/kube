@@ -69,6 +69,9 @@ bool EntityModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sou
     auto right = sourceRight.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
     const auto leftProperty =  left->getProperty(mSortRole.toUtf8()).toString();
     const auto rightProperty =  right->getProperty(mSortRole.toUtf8()).toString();
+    if (leftProperty == rightProperty) {
+        return left->identifier() < right->identifier();
+    }
     return leftProperty < rightProperty;
 }
 
