@@ -75,6 +75,14 @@ Item {
                             PropertyChanges { target: root; visible: true }
                             PropertyChanges { target: statusText; text: root.errorText; visible: true }
                             PropertyChanges { target: descriptionText; visible: true }
+                        },
+                        State {
+                            name: "connected"; when: model.status == Kube.AccountsModel.ConnectedStatus
+                            PropertyChanges { target: root; currentFolderId: "" }
+                        },
+                        State {
+                            name: "nostatus"; when: model.status == Kube.AccountsModel.NoStatus
+                            PropertyChanges { target: root; currentFolderId: "" }
                         }
                     ]
                 }
@@ -102,6 +110,20 @@ Item {
 
                     Kube.Listener {
                         filter: Kube.Messages.progressNotification
+                        onMessageReceived: {
+                            progressBar.indeterminate = false
+                            progressBar.from = 0
+                            progressBar.to = message.total
+                            progressBar.value = message.progress
+                            if (message.folderId) {
+                                root.currentFolderId = message.folderId
+                            } else {
+                                root.currentFolderId = ""
+                            }
+                        }
+                    }
+                    Kube.Listener {
+                        filter: Kube.Messages.infoNotification
                         onMessageReceived: {
                             progressBar.indeterminate = false
                             progressBar.from = 0

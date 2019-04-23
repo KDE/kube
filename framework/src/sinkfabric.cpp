@@ -208,6 +208,16 @@ public:
                     if (!notification.entities.isEmpty()) {
                         message["folderId"] = notification.entities.first();
                     }
+                } else if (notification.code == Sink::ApplicationDomain::SyncInProgress) {
+                    message["type"] = "progress";
+                    message["progress"] = 0;
+                    message["total"] = 1;
+                    if (!notification.entities.isEmpty()) {
+                        message["folderId"] = notification.entities.first();
+                    }
+                    message["resourceId"] = notification.resource;
+                    Fabric::Fabric{}.postMessage("progressNotification", message);
+                    return;
                 } else {
                     return;
                 }
