@@ -79,6 +79,9 @@ public:
 
     Q_INVOKABLE QVariantMap data(int row) const;
 
+signals:
+    void initialItemsLoaded();
+
 protected:
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
 

@@ -86,6 +86,11 @@ void EntityModel::runQuery(const Query &query)
         qWarning() << "Type not supported " << mType;
         Q_ASSERT(false);
     }
+    QObject::connect(mModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &start, const QModelIndex &end, const QVector<int> &roles) {
+        if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+            emit initialItemsLoaded();
+        }
+    });
     setSourceModel(mModel.data());
 }
 

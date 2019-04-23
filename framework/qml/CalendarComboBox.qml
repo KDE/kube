@@ -34,11 +34,22 @@ Kube.ComboBox {
         roles: ["name", "color"]
         sortRole: "name"
         filter: {"enabled": true}
+        //Set initial selection.
+        //onCurrentIndexChanged will not work because the as more items are added the currentIndex changes,
+        //but depending on the sorting it will point to a different item (Which is really a bug of the model or ComboBox).
+        onInitialItemsLoaded: {
+            if (currentIndex >= 0) {
+                root.selected(calendarModel.data(currentIndex).object)
+            }
+        }
     }
 
     textRole: "name"
-    onActivated: {
-        root.selected(calendarModel.data(index).object)
+
+    onCurrentIndexChanged: {
+        if (currentIndex >= 0) {
+            root.selected(calendarModel.data(currentIndex).object)
+        }
     }
 
     delegate: Kube.ListDelegate {
@@ -69,7 +80,6 @@ Kube.ComboBox {
 
             onClicked: {
                 root.currentIndex = calendarSelector.highlightedIndex
-                root.activated(calendarSelector.highlightedIndex)
                 root.popup.close()
             }
         }
