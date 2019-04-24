@@ -123,20 +123,6 @@ Item {
                         }
                     }
                     Kube.Listener {
-                        filter: Kube.Messages.infoNotification
-                        onMessageReceived: {
-                            progressBar.indeterminate = false
-                            progressBar.from = 0
-                            progressBar.to = message.total
-                            progressBar.value = message.progress
-                            if (message.folderId) {
-                                root.currentFolderId = message.folderId
-                            } else {
-                                root.currentFolderId = ""
-                            }
-                        }
-                    }
-                    Kube.Listener {
                         filter: Kube.Messages.errorNotification
                         onMessageReceived: {
                             root.errorText = message.message
