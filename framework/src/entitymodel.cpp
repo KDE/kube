@@ -51,16 +51,18 @@ QHash<int, QByteArray> EntityModel::roleNames() const
 QVariant EntityModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
-    auto entity = srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
-
-    const auto roleName = mRoleNames.value(role);
-    if (roleName == "identifier") {
-        return entity->identifier();
-    } else if (roleName == "object") {
-        return QVariant::fromValue(entity);
-    } else {
-        return entity->getProperty(roleName);
+    if (auto entity = srcIdx.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()) {
+        const auto roleName = mRoleNames.value(role);
+        if (roleName == "identifier") {
+            return entity->identifier();
+        } else if (roleName == "object") {
+            return QVariant::fromValue(entity);
+        } else {
+            return entity->getProperty(roleName);
+        }
     }
+    //We can run into this when passing in an invalid index
+    return {}:
 }
 
 bool EntityModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
