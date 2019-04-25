@@ -62,7 +62,7 @@ QVariant EntityModel::data(const QModelIndex &idx, int role) const
         }
     }
     //We can run into this when passing in an invalid index
-    return {}:
+    return {};
 }
 
 bool EntityModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
@@ -91,7 +91,7 @@ void EntityModel::runQuery(const Query &query)
         qWarning() << "Type not supported " << mType;
         Q_ASSERT(false);
     }
-    QObject::connect(mModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &start, const QModelIndex &end, const QVector<int> &roles) {
+    QObject::connect(mModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
         if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
             emit initialItemsLoaded();
         }
