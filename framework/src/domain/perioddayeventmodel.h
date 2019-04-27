@@ -30,6 +30,10 @@
 #include <limits>
 #include "eventmodel.h"
 
+/**
+ * Each row represents a day.
+ * For each day a date and a set of event occurences matching that day are exposed.
+ */
 class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT

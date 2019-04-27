@@ -40,6 +40,9 @@ namespace Sink {
 }
 class EntityCacheInterface;
 
+/*
+ * Loads events within the given period and matching the given filter and exposes the corresponding occurrences (with recurrences expanded)
+ */
 class KUBE_EXPORT EventModel : public QAbstractItemModel
 {
     Q_OBJECT
