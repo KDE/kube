@@ -22,6 +22,7 @@
 #include <QVariant>
 #include <QAbstractItemModel>
 #include <QStandardItemModel>
+#include <QQmlParserStatus>
 #include <KAsync/Async>
 
 #define KUBE_CONTROLLER_PROPERTY(TYPE, NAME, LOWERCASENAME) \
@@ -87,11 +88,18 @@ signals:
     void triggered();
 };
 
-class Controller : public QObject {
+class Controller : public QObject, public QQmlParserStatus {
     Q_OBJECT
+    Q_INTERFACES(QQmlParserStatus)
+
 public:
     Controller() = default;
     virtual ~Controller() = default;
+
+    virtual void init();
+
+    void classBegin() override;
+    void componentComplete() override;
 
 public slots:
     virtual void clear();

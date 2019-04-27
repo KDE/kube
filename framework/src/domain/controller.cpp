@@ -43,6 +43,19 @@ void ControllerAction::execute()
     emit triggered();
 }
 
+void Controller::classBegin()
+{
+}
+
+void Controller::componentComplete()
+{
+    init();
+}
+
+void Controller::init()
+{
+}
+
 void Controller::clear()
 {
     auto meta = metaObject();
