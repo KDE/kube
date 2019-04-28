@@ -154,7 +154,7 @@ FocusScope {
 
                 Repeater {
                     model: Kube.PeriodDayEventModel {
-                        model: Kube.EventModel {
+                        model: Kube.EventOccurrenceModel {
                             start: root.startDate
                             length: root.daysToShow
                             calendarFilter: root.calendarFilter

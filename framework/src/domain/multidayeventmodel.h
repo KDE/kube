@@ -28,7 +28,7 @@
 #include <QSharedPointer>
 #include <QTimer>
 #include <QDateTime>
-#include "eventmodel.h"
+#include "eventoccurrencemodel.h"
 
 namespace KCalCore {
     class MemoryCalendar;
@@ -45,7 +45,7 @@ class KUBE_EXPORT MultiDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(EventModel* model WRITE setModel)
+    Q_PROPERTY(EventOccurrenceModel* model WRITE setModel)
 
 public:
     MultiDayEventModel(QObject *parent = nullptr);
@@ -61,8 +61,8 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void setModel(EventModel *model);
+    void setModel(EventOccurrenceModel *model);
 private:
-    EventModel *mSourceModel{nullptr};
+    EventOccurrenceModel *mSourceModel{nullptr};
     int mPeriodLength{7};
 };

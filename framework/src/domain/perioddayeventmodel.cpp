@@ -24,7 +24,7 @@
 #include <sink/log.h>
 
 enum Roles {
-    Events = EventModel::LastRole,
+    Events = EventOccurrenceModel::LastRole,
     Date
 };
 
@@ -33,7 +33,7 @@ PeriodDayEventModel::PeriodDayEventModel(QObject *parent)
 {
 }
 
-void PeriodDayEventModel::setModel(EventModel *model)
+void PeriodDayEventModel::setModel(EventOccurrenceModel *model)
 {
     beginResetModel();
     mSourceModel = model;
@@ -125,15 +125,15 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
             QMultiMap<QTime, QModelIndex> sorted;
             for (int row = 0; row < mSourceModel->rowCount(); row++) {
                 const auto srcIdx = mSourceModel->index(row, 0, {});
-                if (srcIdx.data(EventModel::AllDay).toBool()) {
+                if (srcIdx.data(EventOccurrenceModel::AllDay).toBool()) {
                     continue;
                 }
-                const auto start = srcIdx.data(EventModel::StartTime).toDateTime();
-                const auto end = srcIdx.data(EventModel::EndTime).toDateTime();
+                const auto start = srcIdx.data(EventOccurrenceModel::StartTime).toDateTime();
+                const auto end = srcIdx.data(EventOccurrenceModel::EndTime).toDateTime();
                 if (end.date() < today || start.date() > today) {
                     continue;
                 }
-                sorted.insert(srcIdx.data(EventModel::StartTime).toDateTime().time(), srcIdx);
+                sorted.insert(srcIdx.data(EventOccurrenceModel::StartTime).toDateTime().time(), srcIdx);
             }
 
             QMap<QTime, int> indentationStack;
@@ -141,16 +141,16 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
                 // auto eventid = index(it.value(), 0, idx);
                 const auto srcIdx = it.value();
 
-                const auto start = getStartTimeOfDay(srcIdx.data(EventModel::StartTime).toDateTime(), today);
+                const auto start = getStartTimeOfDay(srcIdx.data(EventOccurrenceModel::StartTime).toDateTime(), today);
                 const auto startTime = start.time();
-                const auto end = getEndTimeOfDay(srcIdx.data(EventModel::EndTime).toDateTime(), today);
+                const auto end = getEndTimeOfDay(srcIdx.data(EventOccurrenceModel::EndTime).toDateTime(), today);
                 auto endTime = end.time();
                 if (!endTime.isValid()) {
                     //Even without duration we still take some space visually
                     endTime = startTime.addSecs(60 * 20);
                 }
                 const auto duration = qRound(startTime.secsTo(endTime) / 3600.0);
-                SinkTrace() << "Appending event:" << srcIdx.data(EventModel::Summary) << start << end;
+                SinkTrace() << "Appending event:" << srcIdx.data(EventOccurrenceModel::Summary) << start << end;
 
                 //Remove all dates before startTime
                 for (auto it = indentationStack.begin(); it != indentationStack.end();) {
@@ -165,14 +165,14 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
 
 
                 result.append(QVariantMap{
-                    {"text", srcIdx.data(EventModel::Summary)},
-                    {"description", srcIdx.data(EventModel::Description)},
+                    {"text", srcIdx.data(EventOccurrenceModel::Summary)},
+                    {"description", srcIdx.data(EventOccurrenceModel::Description)},
                     {"starts", startTime.hour() + startTime.minute() / 60.},
                     {"duration", duration},
-                    {"color", srcIdx.data(EventModel::Color)},
+                    {"color", srcIdx.data(EventOccurrenceModel::Color)},
                     {"indentation", indentation},
-                    {"occurrenceDate", srcIdx.data(EventModel::StartTime)},
-                    {"event", srcIdx.data(EventModel::Event)}
+                    {"occurrenceDate", srcIdx.data(EventOccurrenceModel::StartTime)},
+                    {"event", srcIdx.data(EventOccurrenceModel::Event)}
                 });
             }
 

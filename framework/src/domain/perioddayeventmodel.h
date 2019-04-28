@@ -28,7 +28,7 @@
 #include <QVariant>
 #include <QSet>
 #include <limits>
-#include "eventmodel.h"
+#include "eventoccurrencemodel.h"
 
 /**
  * Each row represents a day.
@@ -38,7 +38,7 @@ class KUBE_EXPORT PeriodDayEventModel : public QAbstractItemModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(EventModel* model WRITE setModel)
+    Q_PROPERTY(EventOccurrenceModel* model WRITE setModel)
 
 public:
     PeriodDayEventModel(QObject *parent = nullptr);
@@ -54,13 +54,13 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void setModel(EventModel *model);
+    void setModel(EventOccurrenceModel *model);
 
 private:
     QDateTime getStartTimeOfDay(const QDateTime &dateTime, const QDate &today) const;
     QDateTime getEndTimeOfDay(const QDateTime &dateTime, const QDate &today) const;
 
-    EventModel *mSourceModel{nullptr};
+    EventOccurrenceModel *mSourceModel{nullptr};
 
     static const constexpr quintptr DAY_ID = std::numeric_limits<quintptr>::max();
 };

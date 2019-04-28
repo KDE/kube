@@ -24,7 +24,7 @@
 #include "domain/folderlistmodel.h"
 #include "domain/perioddayeventmodel.h"
 #include "domain/multidayeventmodel.h"
-#include "domain/eventmodel.h"
+#include "domain/eventoccurrencemodel.h"
 #include "domain/todomodel.h"
 #include "domain/composercontroller.h"
 #include "domain/mime/messageparser.h"
@@ -167,7 +167,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<MailListModel>(uri, 1, 0, "MailListModel");
     qmlRegisterType<PeriodDayEventModel>(uri, 1, 0, "PeriodDayEventModel");
     qmlRegisterType<MultiDayEventModel>(uri, 1, 0, "MultiDayEventModel");
-    qmlRegisterType<EventModel>(uri, 1, 0, "EventModel");
+    qmlRegisterType<EventOccurrenceModel>(uri, 1, 0, "EventOccurrenceModel");
     qmlRegisterType<EventController>(uri, 1, 0, "EventController");
     qmlRegisterType<TodoModel>(uri, 1, 0, "TodoModel");
     qmlRegisterType<TodoController>(uri, 1, 0, "TodoController");

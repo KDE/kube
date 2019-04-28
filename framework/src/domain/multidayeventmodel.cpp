@@ -25,10 +25,10 @@
 #include <sink/query.h>
 #include <sink/store.h>
 
-#include <eventmodel.h>
+#include <eventoccurrencemodel.h>
 
 enum Roles {
-    Events = EventModel::LastRole,
+    Events = EventOccurrenceModel::LastRole,
     WeekStartDate
 };
 
@@ -105,8 +105,8 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
             sorted.reserve(mSourceModel->rowCount());
             for (int row = 0; row < mSourceModel->rowCount(); row++) {
                 const auto srcIdx = mSourceModel->index(row, 0, {});
-                const auto start = srcIdx.data(EventModel::StartTime).toDateTime().date();
-                const auto end = srcIdx.data(EventModel::EndTime).toDateTime().date();
+                const auto start = srcIdx.data(EventOccurrenceModel::StartTime).toDateTime().date();
+                const auto end = srcIdx.data(EventOccurrenceModel::EndTime).toDateTime().date();
                 //Skip events not part of the week
                 if (end < rowStart || start > rowEnd) {
                     continue;
@@ -115,8 +115,8 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
             }
             qSort(sorted.begin(), sorted.end(), [&] (const QModelIndex &left, const QModelIndex &right) {
                 //All-day first, sorted by duration (in the hope that we can fit multiple on the same line)
-                const auto leftAllDay = left.data(EventModel::AllDay).toBool();
-                const auto rightAllDay = right.data(EventModel::AllDay).toBool();
+                const auto leftAllDay = left.data(EventOccurrenceModel::AllDay).toBool();
+                const auto rightAllDay = right.data(EventOccurrenceModel::AllDay).toBool();
                 if (leftAllDay && !rightAllDay) {
                     return true;
                 }
@@ -124,37 +124,37 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
                     return false;
                 }
                 if (leftAllDay && rightAllDay) {
-                    const auto leftDuration = getDuration(left.data(EventModel::StartTime).toDateTime().date(), left.data(EventModel::EndTime).toDateTime().date());
-                    const auto rightDuration = getDuration(right.data(EventModel::StartTime).toDateTime().date(), right.data(EventModel::EndTime).toDateTime().date());
+                    const auto leftDuration = getDuration(left.data(EventOccurrenceModel::StartTime).toDateTime().date(), left.data(EventOccurrenceModel::EndTime).toDateTime().date());
+                    const auto rightDuration = getDuration(right.data(EventOccurrenceModel::StartTime).toDateTime().date(), right.data(EventOccurrenceModel::EndTime).toDateTime().date());
                     return leftDuration < rightDuration;
                 }
                 //The rest sorted by start date
-                return left.data(EventModel::StartTime).toDateTime() < right.data(EventModel::StartTime).toDateTime();
+                return left.data(EventOccurrenceModel::StartTime).toDateTime() < right.data(EventOccurrenceModel::StartTime).toDateTime();
             });
 
             auto result = QVariantList{};
             while (!sorted.isEmpty()) {
                 const auto srcIdx = sorted.takeFirst();
-                const auto startDate = srcIdx.data(EventModel::StartTime).toDateTime();
+                const auto startDate = srcIdx.data(EventOccurrenceModel::StartTime).toDateTime();
                 const auto start = getStart(startDate.date());
-                const auto duration = qMin(getDuration(startDate.date(), srcIdx.data(EventModel::EndTime).toDateTime().date()), mPeriodLength - start);
-                // qWarning() << "start " << srcIdx.data(EventModel::StartTime).toDateTime() << duration;
+                const auto duration = qMin(getDuration(startDate.date(), srcIdx.data(EventOccurrenceModel::EndTime).toDateTime().date()), mPeriodLength - start);
+                // qWarning() << "start " << srcIdx.data(EventOccurrenceModel::StartTime).toDateTime() << duration;
                 auto currentLine = QVariantList{};
 
                 auto addToLine = [&currentLine] (const QModelIndex &idx, int start, int duration) {
                     currentLine.append(QVariantMap{
-                        {"text", idx.data(EventModel::Summary)},
-                        {"description", idx.data(EventModel::Description)},
+                        {"text", idx.data(EventOccurrenceModel::Summary)},
+                        {"description", idx.data(EventOccurrenceModel::Description)},
                         {"starts", start},
                         {"duration", duration},
-                        {"color", idx.data(EventModel::Color)},
-                        {"event", idx.data(EventModel::Event)}
+                        {"color", idx.data(EventOccurrenceModel::Color)},
+                        {"event", idx.data(EventOccurrenceModel::Event)}
                     });
                 };
 
                 //Add first event of line
                 addToLine(srcIdx, start, duration);
-                const bool allDayLine = srcIdx.data(EventModel::AllDay).toBool();
+                const bool allDayLine = srcIdx.data(EventOccurrenceModel::AllDay).toBool();
 
                 //Fill line with events that fit
                 int lastStart = 0;
@@ -172,11 +172,11 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
 
                 for (auto it = sorted.begin(); it != sorted.end();) {
                     const auto idx = *it;
-                    const auto start = getStart(idx.data(EventModel::StartTime).toDateTime().date());
-                    const auto duration = qMin(getDuration(idx.data(EventModel::StartTime).toDateTime().date(), idx.data(EventModel::EndTime).toDateTime().date()), mPeriodLength - start);
+                    const auto start = getStart(idx.data(EventOccurrenceModel::StartTime).toDateTime().date());
+                    const auto duration = qMin(getDuration(idx.data(EventOccurrenceModel::StartTime).toDateTime().date(), idx.data(EventOccurrenceModel::EndTime).toDateTime().date()), mPeriodLength - start);
                     const auto end = start + duration;
                     //Avoid mixing all-day and other events
-                    if (allDayLine && !idx.data(EventModel::AllDay).toBool()) {
+                    if (allDayLine && !idx.data(EventOccurrenceModel::AllDay).toBool()) {
                         break;
                     }
                     if (doesIntersect(start, end)) {
@@ -199,7 +199,7 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
     }
 }
 
-void MultiDayEventModel::setModel(EventModel *model)
+void MultiDayEventModel::setModel(EventOccurrenceModel *model)
 {
     beginResetModel();
     mSourceModel = model;

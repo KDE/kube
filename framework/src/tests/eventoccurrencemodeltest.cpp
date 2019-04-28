@@ -8,11 +8,11 @@
 #include <KCalCore/Event>
 #include <KCalCore/ICalFormat>
 
-#include "eventmodel.h"
+#include "eventoccurrencemodel.h"
 #include "multidayeventmodel.h"
 #include "perioddayeventmodel.h"
 
-class EventModelTest : public QObject
+class EventOccurrenceModelTest : public QObject
 {
     Q_OBJECT
 private slots:
@@ -22,7 +22,7 @@ private slots:
         Sink::Test::initTest();
     }
 
-    void testEventModel()
+    void testEventOccurrenceModel()
     {
         Sink::ApplicationDomain::DummyResource::create("account1");
 
@@ -93,7 +93,7 @@ private slots:
         {
             const int expectedNumberOfOccurreces = 9;
             const int numberOfDays = 7;
-            EventModel model;
+            EventOccurrenceModel model;
             model.setStart(start.date());
             model.setLength(numberOfDays);
             model.setCalendarFilter({calendar1.identifier()});
@@ -141,5 +141,5 @@ private slots:
     }
 };
 
-QTEST_MAIN(EventModelTest)
-#include "eventmodeltest.moc"
+QTEST_MAIN(EventOccurrenceModelTest)
+#include "eventoccurrencemodeltest.moc"

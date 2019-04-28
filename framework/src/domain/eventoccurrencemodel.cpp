@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include "eventmodel.h"
+#include "eventoccurrencemodel.h"
 
 #include <sink/log.h>
 #include <sink/query.h>
@@ -36,16 +36,16 @@
 
 using namespace Sink;
 
-EventModel::EventModel(QObject *parent)
+EventOccurrenceModel::EventOccurrenceModel(QObject *parent)
     : QAbstractItemModel(parent),
     mCalendarCache{EntityCache<ApplicationDomain::Calendar, ApplicationDomain::Calendar::Color>::Ptr::create()},
     mCalendar{new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()}}
 {
     mRefreshTimer.setSingleShot(true);
-    QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &EventModel::updateFromSource);
+    QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &EventOccurrenceModel::updateFromSource);
 }
 
-void EventModel::setStart(const QDate &start)
+void EventOccurrenceModel::setStart(const QDate &start)
 {
     if (start != mStart) {
         mStart = start;
@@ -53,35 +53,35 @@ void EventModel::setStart(const QDate &start)
     }
 }
 
-QDate EventModel::start() const
+QDate EventOccurrenceModel::start() const
 {
     return mStart;
 }
 
-void EventModel::setLength(int length)
+void EventOccurrenceModel::setLength(int length)
 {
     mLength = length;
     updateQuery();
 }
 
-int EventModel::length() const
+int EventOccurrenceModel::length() const
 {
     return mLength;
 }
 
-void EventModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
+void EventOccurrenceModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
 {
     mCalendarFilter = calendarFilter;
     updateQuery();
 }
 
-void EventModel::setFilter(const QVariantMap &filter)
+void EventOccurrenceModel::setFilter(const QVariantMap &filter)
 {
     mFilter = filter;
     updateQuery();
 }
 
-void EventModel::updateQuery()
+void EventOccurrenceModel::updateQuery()
 {
     using namespace Sink::ApplicationDomain;
     if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
@@ -104,17 +104,17 @@ void EventModel::updateQuery()
 
     mSourceModel = Store::loadModel<ApplicationDomain::Event>(query);
 
-    QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &EventModel::refreshView);
-    QObject::connect(mSourceModel.data(), &QAbstractItemModel::layoutChanged, this, &EventModel::refreshView);
-    QObject::connect(mSourceModel.data(), &QAbstractItemModel::modelReset, this, &EventModel::refreshView);
-    QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &EventModel::refreshView);
-    QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsMoved, this, &EventModel::refreshView);
-    QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &EventModel::refreshView);
+    QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &EventOccurrenceModel::refreshView);
+    QObject::connect(mSourceModel.data(), &QAbstractItemModel::layoutChanged, this, &EventOccurrenceModel::refreshView);
+    QObject::connect(mSourceModel.data(), &QAbstractItemModel::modelReset, this, &EventOccurrenceModel::refreshView);
+    QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &EventOccurrenceModel::refreshView);
+    QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsMoved, this, &EventOccurrenceModel::refreshView);
+    QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &EventOccurrenceModel::refreshView);
 
     refreshView();
 }
 
-void EventModel::refreshView()
+void EventOccurrenceModel::refreshView()
 {
     if (!mRefreshTimer.isActive()) {
         //Instant update, but then only refresh every 50ms max.
@@ -123,7 +123,7 @@ void EventModel::refreshView()
     }
 }
 
-void EventModel::updateFromSource()
+void EventOccurrenceModel::updateFromSource()
 {
     beginResetModel();
 
@@ -176,7 +176,7 @@ void EventModel::updateFromSource()
     endResetModel();
 }
 
-QModelIndex EventModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex EventOccurrenceModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent)) {
         return {};
@@ -188,12 +188,12 @@ QModelIndex EventModel::index(int row, int column, const QModelIndex &parent) co
     return {};
 }
 
-QModelIndex EventModel::parent(const QModelIndex &) const
+QModelIndex EventOccurrenceModel::parent(const QModelIndex &) const
 {
     return {};
 }
 
-int EventModel::rowCount(const QModelIndex &parent) const
+int EventOccurrenceModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
         return mEvents.size();
@@ -201,12 +201,12 @@ int EventModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int EventModel::columnCount(const QModelIndex &) const
+int EventOccurrenceModel::columnCount(const QModelIndex &) const
 {
     return 1;
 }
 
-QByteArray EventModel::getColor(const QByteArray &calendar) const
+QByteArray EventOccurrenceModel::getColor(const QByteArray &calendar) const
 {
     const auto color = mCalendarCache->getProperty(calendar, "color").toByteArray();
     if (color.isEmpty()) {
@@ -215,7 +215,7 @@ QByteArray EventModel::getColor(const QByteArray &calendar) const
     return color;
 }
 
-QVariant EventModel::data(const QModelIndex &idx, int role) const
+QVariant EventOccurrenceModel::data(const QModelIndex &idx, int role) const
 {
     if (!hasIndex(idx.row(), idx.column())) {
         return {};

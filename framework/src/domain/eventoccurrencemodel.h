@@ -40,10 +40,12 @@ namespace Sink {
 }
 class EntityCacheInterface;
 
-/*
- * Loads events within the given period and matching the given filter and exposes the corresponding occurrences (with recurrences expanded)
+/**
+ * Loads all event occurrences within the given period and matching the given filter.
+ *
+ * Recurrences are expanded
  */
-class KUBE_EXPORT EventModel : public QAbstractItemModel
+class KUBE_EXPORT EventOccurrenceModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(QDate start READ start WRITE setStart)
@@ -63,8 +65,8 @@ public:
         LastRole
     };
     Q_ENUM(Roles);
-    EventModel(QObject *parent = nullptr);
-    ~EventModel() = default;
+    EventOccurrenceModel(QObject *parent = nullptr);
+    ~EventOccurrenceModel() = default;
 
     QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
     QModelIndex parent(const QModelIndex &index) const override;
@@ -83,6 +85,16 @@ public:
     void setCalendarFilter(const QSet<QByteArray> &);
     void setFilter(const QVariantMap &);
 
+    struct Occurrence {
+        QDateTime start;
+        QDateTime end;
+        QSharedPointer<KCalCore::Incidence> incidence;
+        QByteArray color;
+        bool allDay;
+        QSharedPointer<Sink::ApplicationDomain::Event> domainObject;
+    };
+
+
 private:
     void updateQuery();
 
@@ -99,15 +111,6 @@ private:
 
     QSharedPointer<KCalCore::MemoryCalendar> mCalendar;
     QTimer mRefreshTimer;
-
-    struct Occurrence {
-        QDateTime start;
-        QDateTime end;
-        QSharedPointer<KCalCore::Incidence> incidence;
-        QByteArray color;
-        bool allDay;
-        QSharedPointer<Sink::ApplicationDomain::Event> domainObject;
-    };
 
     QList<Occurrence> mEvents;
     QVariantMap mFilter;

@@ -27,7 +27,7 @@ add_library(kubeframework SHARED
     domain/maillistmodel.cpp
     domain/folderlistmodel.cpp
     domain/perioddayeventmodel.cpp
-    domain/eventmodel.cpp
+    domain/eventoccurrencemodel.cpp
     domain/eventcontroller.cpp
     domain/todomodel.cpp
     domain/todocontroller.cpp
