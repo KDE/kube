@@ -285,6 +285,7 @@ FocusScope {
                                                 id: eventView
                                                 controller: Kube.EventController {
                                                     event: model.modelData.event
+                                                    occurrenceStart: model.modelData.occurrenceDate
                                                 }
                                                 onDone: popup.close()
                                             }

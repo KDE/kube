@@ -22,8 +22,6 @@
 #include "perioddayeventmodel.h"
 
 #include <sink/log.h>
-#include <sink/query.h>
-#include <sink/store.h>
 
 enum Roles {
     Events = EventModel::LastRole,
@@ -173,6 +171,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
                     {"duration", duration},
                     {"color", srcIdx.data(EventModel::Color)},
                     {"indentation", indentation},
+                    {"occurrenceDate", srcIdx.data(EventModel::StartTime)},
                     {"event", srcIdx.data(EventModel::Event)}
                 });
             }

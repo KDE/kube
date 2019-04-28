@@ -47,8 +47,8 @@ void EventController::save()
         return;
     }
 
-    if (auto e = mEvent.value<Sink::ApplicationDomain::Event::Ptr>()) {
-        Event event = *e;
+    if (auto e = getEvent().value<Sink::ApplicationDomain::Event::Ptr>()) {
+        Sink::ApplicationDomain::Event event = *e;
 
         //Apply the changed properties on top of what's existing
         auto calcoreEvent = KCalCore::ICalFormat().readIncidence(event.getIcal()).dynamicCast<KCalCore::Event>();
@@ -76,7 +76,7 @@ void EventController::save()
 
         run(job);
     } else {
-        Event event(calendar->resourceInstanceIdentifier());
+        Sink::ApplicationDomain::Event event(calendar->resourceInstanceIdentifier());
 
         auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
         calcoreEvent->setUid(QUuid::createUuid().toString());
@@ -107,12 +107,11 @@ void EventController::updateSaveAction()
     saveAction()->setEnabled(!getSummary().isEmpty());
 }
 
-void EventController::loadEvent(const QVariant &variant)
+void EventController::init()
 {
     using namespace Sink;
 
-    mEvent = variant;
-    if (auto event = variant.value<ApplicationDomain::Event::Ptr>()) {
+    if (auto event = getEvent().value<ApplicationDomain::Event::Ptr>()) {
         setCalendar(ApplicationDomainType::Ptr::create(ApplicationDomainType::createEntity<ApplicationDomain::Calendar>(event->resourceInstanceIdentifier(), event->getCalendar())));
 
         auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
@@ -123,20 +122,28 @@ void EventController::loadEvent(const QVariant &variant)
         setSummary(icalEvent->summary());
         setDescription(icalEvent->description());
         setLocation(icalEvent->location());
-        setStart(icalEvent->dtStart());
-        setEnd(icalEvent->dtEnd());
+
+        setRecurring(icalEvent->recurs());
+        //TODO translate recurrence to string (e.g. weekly)
+        setRecurrenceString("");
+        auto occurrenceStart = getOccurrenceStart();
+        if (occurrenceStart.isValid()) {
+            setStart(occurrenceStart);
+            if (icalEvent->dtEnd().isValid()) {
+                setEnd(icalEvent->endDateForStart(occurrenceStart));
+            }
+        } else {
+            setStart(icalEvent->dtStart());
+            setEnd(icalEvent->dtEnd());
+        }
+
         setAllDay(icalEvent->allDay());
     }
 }
 
 void EventController::remove()
 {
-    if (auto c = mEvent.value<Sink::ApplicationDomain::Event::Ptr>()) {
+    if (auto c = getEvent().value<Sink::ApplicationDomain::Event::Ptr>()) {
         run(Sink::Store::remove(*c));
     }
-}
-
-QVariant EventController::getEvent() const
-{
-    return mEvent;
 }

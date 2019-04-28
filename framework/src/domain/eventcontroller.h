@@ -33,7 +33,8 @@ class KUBE_EXPORT EventController : public Kube::Controller
     Q_OBJECT
 
     // Input properties
-    Q_PROPERTY(QVariant event READ getEvent WRITE loadEvent)
+    KUBE_CONTROLLER_PROPERTY(QVariant, Event, event)
+    KUBE_CONTROLLER_PROPERTY(QDateTime, OccurrenceStart, occurrenceStart)
 
     //Interface properties
     KUBE_CONTROLLER_PROPERTY(QByteArray, AccountId, accountId)
@@ -42,7 +43,9 @@ class KUBE_EXPORT EventController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(QString, Location, location)
     KUBE_CONTROLLER_PROPERTY(QDateTime, Start, start)
     KUBE_CONTROLLER_PROPERTY(QDateTime, End, end)
+    KUBE_CONTROLLER_PROPERTY(QString, RecurrenceString, recurrenceString)
     KUBE_CONTROLLER_PROPERTY(bool, AllDay, allDay)
+    KUBE_CONTROLLER_PROPERTY(bool, Recurring, recurring)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::ApplicationDomainType::Ptr, Calendar, calendar)
 
     KUBE_CONTROLLER_ACTION(save)
@@ -50,14 +53,9 @@ class KUBE_EXPORT EventController : public Kube::Controller
 public:
     explicit EventController();
 
-    Q_INVOKABLE void loadEvent(const QVariant &event);
+    void init() override;
     Q_INVOKABLE void remove();
-
-    QVariant getEvent() const;
 
 private slots:
     void updateSaveAction();
-
-private:
-    QVariant mEvent;
 };

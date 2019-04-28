@@ -72,6 +72,11 @@ FocusScope {
                 }
 
                 Kube.SelectableLabel {
+                    visible: controller.recurring
+                    text: qsTr("repeats %s").arg(controller.recurrenceString)
+                }
+
+                Kube.SelectableLabel {
                     text: "@" + controller.location
                     visible: controller.location
                 }
