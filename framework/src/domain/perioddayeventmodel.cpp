@@ -123,22 +123,24 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
             auto result = QVariantList{};
 
             QMultiMap<QTime, QModelIndex> sorted;
+            //Sort events of teh day sorted by starting date
             for (int row = 0; row < mSourceModel->rowCount(); row++) {
                 const auto srcIdx = mSourceModel->index(row, 0, {});
+                //filter all-day events (we don't display them here)
                 if (srcIdx.data(EventOccurrenceModel::AllDay).toBool()) {
                     continue;
                 }
                 const auto start = srcIdx.data(EventOccurrenceModel::StartTime).toDateTime();
                 const auto end = srcIdx.data(EventOccurrenceModel::EndTime).toDateTime();
+                //not today
                 if (end.date() < today || start.date() > today) {
                     continue;
                 }
-                sorted.insert(srcIdx.data(EventOccurrenceModel::StartTime).toDateTime().time(), srcIdx);
+                sorted.insert(start.time(), srcIdx);
             }
 
             QMap<QTime, int> indentationStack;
             for (auto it = sorted.begin(); it != sorted.end(); it++) {
-                // auto eventid = index(it.value(), 0, idx);
                 const auto srcIdx = it.value();
 
                 const auto start = getStartTimeOfDay(srcIdx.data(EventOccurrenceModel::StartTime).toDateTime(), today);
