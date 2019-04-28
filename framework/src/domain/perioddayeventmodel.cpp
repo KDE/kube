@@ -143,9 +143,9 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
             for (auto it = sorted.begin(); it != sorted.end(); it++) {
                 const auto srcIdx = it.value();
 
-                const auto start = getStartTimeOfDay(srcIdx.data(EventOccurrenceModel::StartTime).toDateTime(), today);
+                const auto start = getStartTimeOfDay(srcIdx.data(EventOccurrenceModel::StartTime).toDateTime().toLocalTime(), today);
                 const auto startTime = start.time();
-                const auto end = getEndTimeOfDay(srcIdx.data(EventOccurrenceModel::EndTime).toDateTime(), today);
+                const auto end = getEndTimeOfDay(srcIdx.data(EventOccurrenceModel::EndTime).toDateTime().toLocalTime(), today);
                 auto endTime = end.time();
                 if (!endTime.isValid()) {
                     //Even without duration we still take some space visually
