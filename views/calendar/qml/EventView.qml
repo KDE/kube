@@ -73,7 +73,7 @@ FocusScope {
 
                 Kube.SelectableLabel {
                     visible: controller.recurring
-                    text: qsTr("repeats %s").arg(controller.recurrenceString)
+                    text: qsTr("repeats %1").arg(controller.recurrenceString)
                 }
 
                 Kube.SelectableLabel {
