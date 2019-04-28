@@ -137,17 +137,8 @@ void EventController::init()
         setRecurring(icalEvent->recurs());
         //TODO translate recurrence to string (e.g. weekly)
         setRecurrenceString("");
-        const auto occurrenceStart = occurrence.start;
-        if (occurrenceStart.isValid()) {
-            setStart(occurrenceStart);
-            if (icalEvent->dtEnd().isValid()) {
-                setEnd(icalEvent->endDateForStart(occurrenceStart));
-            }
-        } else {
-            setStart(icalEvent->dtStart());
-            setEnd(icalEvent->dtEnd());
-        }
-
+        setStart(occurrence.start);
+        setEnd(occurrence.end);
         setAllDay(icalEvent->allDay());
     }
 }
