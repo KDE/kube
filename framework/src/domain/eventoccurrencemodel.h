@@ -62,6 +62,7 @@ public:
         Color,
         AllDay,
         Event,
+        EventOccurrence,
         LastRole
     };
     Q_ENUM(Roles);
@@ -115,3 +116,5 @@ private:
     QList<Occurrence> mEvents;
     QVariantMap mFilter;
 };
+
+Q_DECLARE_METATYPE(EventOccurrenceModel::Occurrence);

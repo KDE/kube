@@ -220,7 +220,7 @@ Item {
                                                         EventView {
                                                             id: eventView
                                                             controller: Kube.EventController {
-                                                                event: modelData.event
+                                                                eventOccurrence: model.modelData.eventOccurrence
                                                             }
                                                             onDone: popup.close()
                                                         }

@@ -171,8 +171,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
                     {"duration", duration},
                     {"color", srcIdx.data(EventOccurrenceModel::Color)},
                     {"indentation", indentation},
-                    {"occurrenceDate", srcIdx.data(EventOccurrenceModel::StartTime)},
-                    {"event", srcIdx.data(EventOccurrenceModel::Event)}
+                    {"eventOccurrence", srcIdx.data(EventOccurrenceModel::EventOccurrence)}
                 });
             }
 

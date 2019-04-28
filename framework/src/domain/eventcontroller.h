@@ -33,8 +33,7 @@ class KUBE_EXPORT EventController : public Kube::Controller
     Q_OBJECT
 
     // Input properties
-    KUBE_CONTROLLER_PROPERTY(QVariant, Event, event)
-    KUBE_CONTROLLER_PROPERTY(QDateTime, OccurrenceStart, occurrenceStart)
+    KUBE_CONTROLLER_PROPERTY(QVariant, EventOccurrence, eventOccurrence)
 
     //Interface properties
     KUBE_CONTROLLER_PROPERTY(QByteArray, AccountId, accountId)

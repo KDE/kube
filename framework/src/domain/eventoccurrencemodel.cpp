@@ -237,6 +237,8 @@ QVariant EventOccurrenceModel::data(const QModelIndex &idx, int role) const
             return event.allDay;
         case Event:
             return QVariant::fromValue(event.domainObject);
+        case EventOccurrence:
+            return QVariant::fromValue(event);
         default:
             SinkWarning() << "Unknown role for event:" << QMetaEnum::fromType<Roles>().valueToKey(role);
             return {};

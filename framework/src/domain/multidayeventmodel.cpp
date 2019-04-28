@@ -148,7 +148,7 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
                         {"starts", start},
                         {"duration", duration},
                         {"color", idx.data(EventOccurrenceModel::Color)},
-                        {"event", idx.data(EventOccurrenceModel::Event)}
+                        {"eventOccurrence", idx.data(EventOccurrenceModel::EventOccurrence)}
                     });
                 };
 
