@@ -38,6 +38,8 @@ Kube.InlineAccountSwitcher {
         padding: 0
         iconName: Kube.Icons.overflowMenu_inverted
         onClicked: root.editMode = !root.editMode;
+        checkable: true
+        checked: root.editMode
     }
 
     delegate: Kube.ListView {
@@ -54,6 +56,13 @@ Kube.InlineAccountSwitcher {
             filter: root.editMode ? {} : {enabled: true}
             accountId: listView.parent.accountId
             checkedEntities: calendarFilterCollector
+            onInitialItemsLoaded: {
+                //Automatically enable edit mode if no calendars are enabled
+                if (rowCount() == 0) {
+                    root.editMode = true;
+                }
+            }
+
         }
         delegate: Kube.ListDelegate {
             id: delegate
