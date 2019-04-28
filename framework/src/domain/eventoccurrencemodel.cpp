@@ -155,12 +155,11 @@ void EventOccurrenceModel::updateFromSource()
             }
 
             if (icalEvent->recurs()) {
-                const auto duration = icalEvent->hasDuration() ? icalEvent->duration().asSeconds() : 0;
                 KCalCore::OccurrenceIterator occurrenceIterator{*mCalendar, icalEvent, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
                 while (occurrenceIterator.hasNext()) {
                     occurrenceIterator.next();
                     const auto start = occurrenceIterator.occurrenceStartDate();
-                    const auto end = start.addSecs(duration);
+                    const auto end = icalEvent->endDateForStart(start);
                     if (start.date() < mEnd && end.date() >= mStart) {
                         mEvents.append({start, end, occurrenceIterator.incidence(), getColor(event->getCalendar()), event->getAllDay(), event});
                     }
