@@ -24,7 +24,6 @@ import QtQuick.Layouts 1.2
 import org.kube.framework 1.0 as Kube
 import "dateutils.js" as DateUtils
 
-
 Kube.View {
     id: root
 
@@ -39,35 +38,6 @@ Kube.View {
     onRefresh: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "calendar"})
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
-    }
-
-    function getFirstDayOfWeek(date, stayWithinMonth) {
-        var firstDay = Qt.locale().firstDayOfWeek
-        var year = date.getFullYear()
-        var month = date.getMonth()
-        //Jup, getDate returns the day of the month
-        var day = date.getDate()
-
-        while (true) {
-            if (date.getDay() === firstDay) {
-                break
-            }
-            //If we get to the beginning of the month we have to search forward for the start day instead
-            //so we don't end up in the previous month.
-            if (day == 1 && stayWithinMonth) {
-                return getFirstDayOfWeek(new Date(year, month, 8), true)
-            }
-
-            day = day - 1
-            date = new Date(year, month, day)
-        }
-        return date
-    }
-
-    function getFirstDayOfMonth(date) {
-        var d = date
-        d.setDate(1)
-        return d
     }
 
     RowLayout {
@@ -227,7 +197,7 @@ Kube.View {
             Layout.fillHeight: true
             Layout.fillWidth: true
             currentDate: root.currentDate
-            startDate: getFirstDayOfWeek(root.selectedDate, false)
+            startDate: DateUtils.getFirstDayOfWeek(root.selectedDate)
             calendarFilter: accountSwitcher.enabledCalendars
         }
 
@@ -236,7 +206,7 @@ Kube.View {
             Layout.fillHeight: true
             Layout.fillWidth: true
             currentDate: root.currentDate
-            startDate: getFirstDayOfWeek(getFirstDayOfMonth(root.selectedDate), true)
+            startDate: DateUtils.getFirstDayOfWeek(DateUtils.getFirstDayOfMonth(root.selectedDate))
             month: root.selectedDate.getMonth()
             calendarFilter: accountSwitcher.enabledCalendars
         }

@@ -86,3 +86,28 @@ function previousMonth(date) {
     return d
 }
 
+function getFirstDayOfWeek(date) {
+    var firstDay = Qt.locale().firstDayOfWeek
+    var year = date.getFullYear()
+    var month = date.getMonth()
+    //Jup, getDate returns the day of the month
+    var day = date.getDate()
+    var d = date
+
+    while (true) {
+        if (d.getDay() === firstDay) {
+            break
+        }
+        day = day - 1
+        //This works with negative days to get to the previous month
+        d = new Date(year, month, day)
+    }
+    return d
+}
+
+function getFirstDayOfMonth(date) {
+    var d = date
+    d.setDate(1)
+    return d
+}
+
