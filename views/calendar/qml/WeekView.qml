@@ -166,7 +166,6 @@ FocusScope {
                         width: root.dayWidth
                         height: root.hourHeight * 24
 
-                        clip: true
 
                         color: Kube.Colors.viewBackgroundColor
 
@@ -331,6 +330,18 @@ FocusScope {
                             color: Kube.Colors.plasmaBlue
                             visible: isToday
                             opacity: 0.8
+                            Rectangle {
+                                anchors {
+                                    verticalCenter: parent.verticalCenter
+                                    left: parent.left
+                                    leftMargin: -(width / 2)
+                                }
+                                width: Kube.Units.gridUnit / 2
+                                height: width
+                                radius: width / 2
+                                color: Kube.Colors.plasmaBlue
+                                opacity: 1
+                            }
                         }
 
 
