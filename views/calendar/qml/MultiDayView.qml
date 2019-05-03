@@ -186,10 +186,16 @@ Item {
                                             width: root.dayWidth * modelData.duration
                                             height: parent.height
 
-                                            color: modelData.color
                                             radius: 2
-                                            border.width: 1
-                                            border.color: Kube.Colors.viewBackgroundColor
+
+                                            Rectangle {
+                                                anchors.fill: parent
+                                                color: modelData.color
+                                                radius: 2
+                                                border.width: 1
+                                                border.color: Kube.Colors.viewBackgroundColor
+                                                opacity: 0.6
+                                            }
 
                                             Kube.Label {
                                                 anchors {
@@ -197,7 +203,7 @@ Item {
                                                     leftMargin: Kube.Units.smallSpacing
                                                     rightMargin: Kube.Units.smallSpacing
                                                 }
-                                                color: Kube.Colors.highlightedTextColor
+                                                color: Kube.Colors.textColor
                                                 text: modelData.text
                                                 elide: Text.ElideRight
                                             }

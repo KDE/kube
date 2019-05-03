@@ -240,20 +240,35 @@ FocusScope {
                                 y: root.hourHeight * model.modelData.starts
                                 x: Kube.Units.gridUnit * model.modelData.indentation
 
-                                color: model.modelData.color
-                                border.width: 1
-                                border.color: Kube.Colors.viewBackgroundColor
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: model.modelData.color
+                                    opacity: 0.6
+                                    border.width: 1
+                                    border.color: Kube.Colors.viewBackgroundColor
+                                    radius: 2
+                                }
 
-                                Kube.Label {
+                                Column {
                                     anchors {
-                                        fill: parent
+                                        top: parent.top
+                                        left: parent.left
+                                        right: parent.right
+                                        bottom: parent.bottom
                                         leftMargin: Kube.Units.smallSpacing
                                         rightMargin: Kube.Units.smallSpacing
                                     }
-                                    text: model.modelData.text
-                                    color: Kube.Colors.highlightedTextColor
-                                    wrapMode: Text.Wrap
-                                    elide: Text.ElideRight
+                                    Kube.Label {
+                                        anchors {
+                                            left: parent.left
+                                            right: parent.right
+                                        }
+                                        text: model.modelData.text
+                                        color: Kube.Colors.textColor
+                                        wrapMode: Text.Wrap
+                                        elide: Text.ElideRight
+                                        maximumLineCount: model.modelData.duration >= 1.0 ? 2 : 1
+                                    }
                                 }
 
                                 Drag.active: mouseArea.drag.active
