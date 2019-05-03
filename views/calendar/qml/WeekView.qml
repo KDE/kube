@@ -269,6 +269,17 @@ FocusScope {
                                         elide: Text.ElideRight
                                         maximumLineCount: model.modelData.duration >= 1.0 ? 2 : 1
                                     }
+                                    Kube.Label {
+                                        anchors {
+                                            left: parent.left
+                                            right: parent.right
+                                        }
+                                        visible: model.modelData.duration >= 1.0
+                                        text: model.modelData.startDate.toLocaleString(Qt.locale(), "hh:mm")
+                                        font.pointSize: Kube.Units.smallFontSize
+                                        color: Kube.Colors.textColor
+                                        elide: Text.ElideRight
+                                    }
                                 }
 
                                 Drag.active: mouseArea.drag.active

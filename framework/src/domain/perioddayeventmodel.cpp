@@ -168,6 +168,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
 
                 result.append(QVariantMap{
                     {"text", srcIdx.data(EventOccurrenceModel::Summary)},
+                    {"startDate", srcIdx.data(EventOccurrenceModel::StartTime)},
                     {"description", srcIdx.data(EventOccurrenceModel::Description)},
                     {"starts", startTime.hour() + startTime.minute() / 60.},
                     {"duration", duration},
