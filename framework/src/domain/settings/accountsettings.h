@@ -66,9 +66,9 @@ public:
     virtual QValidator *smtpServerValidator() const;
     virtual QValidator *pathValidator() const;
 
-    Q_INVOKABLE virtual void load() = 0;
-    Q_INVOKABLE virtual void save() = 0;
-    Q_INVOKABLE virtual void remove() = 0;
+    Q_INVOKABLE virtual void load();
+    Q_INVOKABLE virtual void save();
+    Q_INVOKABLE virtual void remove();
     Q_INVOKABLE void login(const QVariantMap &secrets);
 
 signals:

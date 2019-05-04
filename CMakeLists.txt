@@ -13,7 +13,7 @@ cmake_policy(SET CMP0063 NEW)
 option(EXPERIMENTAL_VIEWS "Install experimental views" OFF)
 #Do not enable this unless you actually distribute a custom extension.
 option(ENABLE_EXTENSIONS "Enable custom kube extensions" OFF)
-set(AVAILABLE_ACCOUNT_PLUGINS "kolabnow" "gmail" "generic" CACHE STRING "List of enabled account plugins (provide as semicolon separated string)" )
+set(AVAILABLE_ACCOUNT_PLUGINS "kolabnow" "fastmail" "gmail" "generic" CACHE STRING "List of enabled account plugins (provide as semicolon separated string)" )
 
 include(CPack)
 include(FeatureSummary)

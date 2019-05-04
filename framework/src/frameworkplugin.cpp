@@ -36,6 +36,7 @@
 #include "domain/todocontroller.h"
 #include "domain/peoplemodel.h"
 #include "domain/textdocumenthandler.h"
+#include "domain/settings/accountsettings.h"
 #include "accounts/accountsmodel.h"
 #include "accounts/accountfactory.h"
 #include "settings/settings.h"
@@ -191,6 +192,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
+    qmlRegisterType<AccountSettings>(uri, 1, 0, "AccountSettings");
     qmlRegisterType<Kube::ExtensionModel>(uri, 1, 0, "ExtensionModel");
     qmlRegisterType<Kube::File>(uri, 1, 0, "File");
 

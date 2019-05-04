@@ -418,3 +418,33 @@ void AccountSettings::removeIdentity()
     }
 }
 
+void AccountSettings::load()
+{
+    loadAccount();
+    loadImapResource();
+    loadMailtransportResource();
+    loadCardDavResource();
+    loadCalDavResource();
+    loadIdentity();
+}
+
+void AccountSettings::save()
+{
+    saveAccount();
+    saveImapResource();
+    saveMailtransportResource();
+    saveCardDavResource();
+    saveCalDavResource();
+    saveIdentity();
+}
+
+void AccountSettings::remove()
+{
+    removeResource(mMailtransportIdentifier);
+    removeResource(mImapIdentifier);
+    removeResource(mCardDavIdentifier);
+    removeResource(mCalDavIdentifier);
+    removeIdentity();
+    removeAccount();
+}
+
