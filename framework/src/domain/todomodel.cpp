@@ -107,7 +107,7 @@ void TodoSourceModel::updateFromSource()
                 if (!mCalendarFilter.contains(todo->getCalendar())) {
                     return true;
                 }
-                for (auto it = mFilter.constBegin(); it!= mFilter.constEnd(); it++) {
+                for (auto it = mFilter.constBegin(); it != mFilter.constEnd(); it++) {
                     if (todo->getProperty(it.key().toLatin1()) != it.value()) {
                         return true;
                     }
@@ -268,8 +268,14 @@ void TodoModel::setCalendarFilter(const QSet<QByteArray> &filter)
     static_cast<TodoSourceModel*>(sourceModel())->setCalendarFilter(filter);
 }
 
-void TodoModel::setFilter(const QVariantMap &filter)
+void TodoModel::setFilter(const QVariantMap &f)
 {
+    auto filter = f;
+    if (filter.contains("doing")) {
+        if (filter.take("doing").toBool()) {
+            filter.insert("status", "INPROCESS");
+        }
+    }
     static_cast<TodoSourceModel*>(sourceModel())->setFilter(filter);
 }
 

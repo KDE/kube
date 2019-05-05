@@ -93,6 +93,7 @@ Kube.View {
         onActivated: root.showHelp()
     }
 
+    ButtonGroup { id: viewButtonGroup }
 
     Controls1.SplitView {
         Layout.fillWidth: true
@@ -102,29 +103,72 @@ Kube.View {
             Layout.fillHeight: parent.height
             color: Kube.Colors.darkBackgroundColor
 
-            Kube.PositiveButton {
-                id: newMailButton
-                objectName: "newMailButton"
-
+            Column {
+                id: topLayout
                 anchors {
                     top: parent.top
                     left: parent.left
                     right: parent.right
                     margins: Kube.Units.largeSpacing
                 }
-                focus: true
-                text: qsTr("New Todo")
-                onClicked: editorPopup.createObject(root, {}).open()
+
+                Kube.PositiveButton {
+                    id: newMailButton
+                    objectName: "newMailButton"
+
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    focus: true
+                    text: qsTr("New Todo")
+                    onClicked: editorPopup.createObject(root, {}).open()
+                }
+
+                Item {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    height: Kube.Units.gridUnit
+                }
+
+                Kube.TextButton {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    text: qsTr("Today")
+                    textColor: Kube.Colors.highlightedTextColor
+                    checkable: true
+                    checked: true
+                    horizontalAlignment: Text.AlignHLeft
+                    ButtonGroup.group: viewButtonGroup
+                    onClicked: todoModel.filter = {"doing": true}
+                }
+                Kube.TextButton {
+                    id: allViewButton
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    text: qsTr("All")
+                    textColor: Kube.Colors.highlightedTextColor
+                    checkable: true
+                    horizontalAlignment: Text.AlignHLeft
+                    ButtonGroup.group: viewButtonGroup
+                    onClicked: todoModel.filter = {}
+                }
             }
 
             Kube.CalendarSelector {
                 id: accountSwitcher
                 activeFocusOnTab: true
                 anchors {
-                    top: newMailButton.bottom
+                    top: topLayout.bottom
                     topMargin: Kube.Units.largeSpacing
                     bottom: statusBarContainer.top
-                    left: newMailButton.left
+                    left: topLayout.left
                     right: parent.right
                 }
             }
@@ -185,7 +229,9 @@ Kube.View {
                 }
 
                 model: Kube.TodoModel {
+                    id: todoModel
                     calendarFilter: accountSwitcher.enabledCalendars
+                    filter: {}
                 }
                 delegate: Kube.ListDelegate {
                     id: delegateRoot
@@ -221,7 +267,7 @@ Kube.View {
                                 text: model.summary
                                 color: delegateRoot.textColor
                                 font.strikeout: model.complete
-                                font.bold: model.doing
+                                font.bold: model.doing && allViewButton.checked
                                 maximumLineCount: 2
                                 wrapMode: Text.WordWrap
                                 elide: Text.ElideRight
