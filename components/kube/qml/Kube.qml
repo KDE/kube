@@ -21,11 +21,11 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
+import QtQuick.Controls 2.0
 
-import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
-Controls2.ApplicationWindow {
+ApplicationWindow {
     id: app
 
     property int sidebarWidth: Kube.Units.gridUnit + Kube.Units.largeSpacing
@@ -135,7 +135,7 @@ Controls2.ApplicationWindow {
                 opacity: 0.3
             }
 
-            Controls2.ButtonGroup { id: viewButtonGroup }
+            ButtonGroup { id: viewButtonGroup }
 
             Column {
                 anchors {
@@ -158,7 +158,7 @@ Controls2.ApplicationWindow {
                         onClicked: kubeViews.showView(model.name)
                         activeFocusOnTab: true
                         checkable: true
-                        Controls2.ButtonGroup.group: viewButtonGroup
+                        ButtonGroup.group: viewButtonGroup
                         tooltip: model.tooltip
                         checked: kubeViews.currentViewName == model.name
                     }
@@ -198,7 +198,7 @@ Controls2.ApplicationWindow {
                         onMessageReceived: logButton.visible = true
                     }
                     checked: kubeViews.currentViewName == "log"
-                    Controls2.ButtonGroup.group: viewButtonGroup
+                    ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("Notification view")
                 }
 
@@ -209,7 +209,7 @@ Controls2.ApplicationWindow {
                     activeFocusOnTab: true
                     checkable: true
                     checked: kubeViews.currentViewName == "accounts"
-                    Controls2.ButtonGroup.group: viewButtonGroup
+                    ButtonGroup.group: viewButtonGroup
                     tooltip: qsTr("Settings")
                 }
             }
@@ -277,13 +277,13 @@ Controls2.ApplicationWindow {
                     id: popup
                     property alias accountId: login.accountId
                     visible: true
-                    parent: Controls2.ApplicationWindow.overlay
+                    parent: ApplicationWindow.overlay
                     height: app.height
                     width: app.width - app.sidebarWidth
                     x: app.sidebarWidth
                     y: 0
                     modal: true
-                    closePolicy: Controls2.Popup.NoAutoClose
+                    closePolicy: Popup.NoAutoClose
                     Kube.LoginAccount {
                         id: login
                         anchors {
