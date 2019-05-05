@@ -19,7 +19,7 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.4 as Controls1
-import QtQuick.Controls 2 as Controls2
+import QtQuick.Controls 2
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
@@ -68,7 +68,7 @@ FocusScope {
 
         anchors.fill: parent
 
-        Controls2.ScrollBar.vertical: Kube.ScrollBar { invertedColors: true }
+        ScrollBar.vertical: Kube.ScrollBar { invertedColors: true }
         clip: true
         contentWidth: root.width
         contentHeight: treeView.implicitHeight
@@ -145,7 +145,7 @@ FocusScope {
             headerVisible: false
 
             style: TreeViewStyle {
-                rowDelegate: Controls2.Control {
+                rowDelegate: Control {
                     id: delegateRoot
                     property bool isActive: root.activeIndex === indexFromRow(styleData.row)
                     height: Kube.Units.gridUnit * 1.5

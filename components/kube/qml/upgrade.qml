@@ -17,14 +17,12 @@
  */
 
 import QtQuick 2.7
-import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 
-import QtQuick.Controls 2.0 as Controls2
 import org.kube.framework 1.0 as Kube
 
-Controls2.ApplicationWindow {
+ApplicationWindow {
     id: app
     height: Screen.desktopAvailableHeight * 0.4
     width: Screen.desktopAvailableWidth * 0.4

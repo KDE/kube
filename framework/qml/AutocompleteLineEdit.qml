@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0 as Controls2
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Templates 2.0 as T
 
@@ -98,7 +98,7 @@ Kube.TextField {
         root.aborted()
     }
 
-    Controls2.Popup {
+    Popup {
         id: popup
         x: 0
         y: root.height

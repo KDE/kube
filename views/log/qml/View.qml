@@ -20,7 +20,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.3 as Controls1
-import QtQuick.Controls 2.2 as Controls2
+import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
 Controls1.SplitView {
@@ -35,7 +35,7 @@ Controls1.SplitView {
         Kube.Fabric.postMessage(Kube.Messages.notificationPending, {notificationPending: pendingNotification})
     }
 
-    Controls2.StackView.onActivated: {
+    StackView.onActivated: {
         root.pendingError = false;
         root.pendingNotification = false;
         //Always select the latest notification
@@ -55,7 +55,7 @@ Controls1.SplitView {
                     return
                 }
                 //Avoid highlighting the iconbutton again if we're already looking at this view.
-                if (root.Controls2.StackView.status != Controls2.StackView.Active) {
+                if (root.StackView.status != StackView.Active) {
                     if (message.type == Kube.Notifications.error) {
                         root.pendingError = true
                     }
