@@ -266,14 +266,16 @@ FocusScope {
                                         color: Kube.Colors.textColor
                                         wrapMode: Text.Wrap
                                         elide: Text.ElideRight
-                                        maximumLineCount: model.modelData.duration >= 1.0 ? 2 : 1
+                                        //Only show two lines if we have either space for three or there is no dateLabel
+                                        maximumLineCount: model.modelData.duration >= (dateLabel.visible ? 2.0 : 1.0) ? 2 : 1
                                     }
                                     Kube.Label {
+                                        id: dateLabel
                                         anchors {
                                             left: parent.left
                                             right: parent.right
                                         }
-                                        visible: model.modelData.duration >= 1.0
+                                        visible: model.modelData.duration >= 1.0 && model.modelData.startDate
                                         text: model.modelData.startDate.toLocaleString(Qt.locale(), "hh:mm")
                                         font.pointSize: Kube.Units.smallFontSize
                                         color: Kube.Colors.textColor
