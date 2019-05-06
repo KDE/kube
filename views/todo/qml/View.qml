@@ -231,7 +231,7 @@ Kube.View {
                 model: Kube.TodoModel {
                     id: todoModel
                     calendarFilter: accountSwitcher.enabledCalendars
-                    filter: {}
+                    filter: {"doing": true}
                 }
                 delegate: Kube.ListDelegate {
                     id: delegateRoot
