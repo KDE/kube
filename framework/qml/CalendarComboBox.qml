@@ -25,6 +25,7 @@ Kube.ComboBox {
     id: root
 
     property alias accountId: calendarModel.accountId
+    property string contentType: "event"
 
     signal selected(var calendar)
 
@@ -33,7 +34,7 @@ Kube.ComboBox {
         type: "calendar"
         roles: ["name", "color"]
         sortRole: "name"
-        filter: {"enabled": true}
+        filter: {"contentTypes": contentType, enabled: true}
         //Set initial selection.
         //onCurrentIndexChanged will not work because the as more items are added the currentIndex changes,
         //but depending on the sorting it will point to a different item (Which is really a bug of the model or ComboBox).

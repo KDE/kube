@@ -25,9 +25,10 @@ Item {
     id: root
 
     property bool editMode: false
+    property bool doing: false
     property var controller: Kube.TodoController {
         complete: false
-        doing: false
+        doing: root.doing
     }
     property var accountId: null
 
@@ -75,54 +76,33 @@ Item {
 
             Kube.TextField {
                 id: titleEdit
+                focus: true
                 Layout.fillWidth: true
                 placeholderText: qsTr("Todo Title")
                 text: controller.summary
                 onTextChanged: controller.summary = text
+                Keys.onReturnPressed: {
+                    controller.saveAction.execute()
+                    root.done()
+                }
             }
 
-            // ColumnLayout {
-            //     id: dateAndTimeChooser
-
-            //     spacing: Kube.Units.smallSpacing
-
-                // RowLayout {
-                //     Layout.fillWidth: true
-                //     spacing: Kube.Units.largeSpacing
-                //     Kube.CheckBox {
-                //         checked: !isNaN(controller.due)
-                //         // onCheckedChanged: {
-                //         //     if (controller.important != checked) {
-                //         //         controller.important = checked
-                //         //     }
-                //         // }
-                //     }
-                //     Kube.Label {
-                //         text: qsTr("Due")
-                //     }
-                //     DateTimeChooser {
-                //         enableTime: false
-                //         // notBefore: startDate.dateTime
-                //         // initialValue: root.editMode ? controller.end : startDate.dateTime
-                //         onDateTimeChanged: controller.dudue dateTime
-                //     }
-                // }
-
-                // RowLayout {
-                //     spacing: Kube.Units.smallSpacing
-                //     Kube.CheckBox {
-                //         checked: controller.important
-                //         onCheckedChanged: {
-                //             if (controller.important != checked) {
-                //                 controller.important = checked
-                //             }
-                //         }
-                //     }
-                //     Kube.Label {
-                //         text: qsTr("Important")
-                //     }
-                // }
-            // }
+            ColumnLayout {
+                RowLayout {
+                    spacing: Kube.Units.smallSpacing
+                    Kube.CheckBox {
+                        checked: controller.doing
+                        onCheckedChanged: {
+                            if (controller.doing != checked) {
+                                controller.doing = checked
+                            }
+                        }
+                    }
+                    Kube.Label {
+                        text: qsTr("Doing")
+                    }
+                }
+            }
 
             ColumnLayout {
                 spacing: Kube.Units.smallSpacing
@@ -142,6 +122,7 @@ Item {
                     id: calendarSelector
                     Layout.fillWidth: true
                     accountId: root.accountId
+                    contentType: "todo"
                     onSelected: {
                         controller.calendar = calendar
                     }

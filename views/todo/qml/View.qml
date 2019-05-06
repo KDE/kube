@@ -53,42 +53,27 @@ Kube.View {
 
     helpViewComponent: Kube.HelpPopup {
         ListModel {
-            ListElement { description: qsTr("Jump to next thread:"); shortcut: "j" }
-            ListElement { description: qsTr("Jump to previous thread:"); shortcut: "k" }
-            ListElement { description: qsTr("Jump to next message:"); shortcut: "n" }
-            ListElement { description: qsTr("Jump to previous message:"); shortcut: "p" }
-            ListElement { description: qsTr("Jump to next folder:"); shortcut: "f,n" }
-            ListElement { description: qsTr("Jump to previous previous folder:"); shortcut: "f,p" }
-            ListElement { description: qsTr("Compose new message:"); shortcut: "c" }
-            ListElement { description: qsTr("Reply to the currently focused message:"); shortcut: "r" }
-            ListElement { description: qsTr("Delete the currently focused message:"); shortcut: "d" }
-            ListElement { description: qsTr("Mark the currently focused message as important:"); shortcut: "i" }
-            ListElement { description: qsTr("Mark the currently focused message as unread:"); shortcut: "u" }
+            ListElement { description: qsTr("Go to next todo:"); shortcut: "j" }
+            ListElement { description: qsTr("Go to previous todo:"); shortcut: "k" }
+            ListElement { description: qsTr("Create new todo:"); shortcut: "c" }
             ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
         }
     }
 
     Shortcut {
         sequences: ['j']
-        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextConversation, {})
+        onActivated: todoView.incrementCurrentIndex()
     }
     Shortcut {
         sequences: ['k']
-        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousConversation, {})
-    }
-    Shortcut {
-        sequences: ['f,n']
-        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextFolder, {})
-    }
-    Shortcut {
-        sequences: ['f,p']
-        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousFolder, {})
+        onActivated: todoView.decrementCurrentIndex()
     }
     Shortcut {
         sequences: ['c']
-        onActivated: Kube.Fabric.postMessage(Kube.Messages.compose, {})
+        onActivated: editorPopup.createObject(root, {}).open()
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequence: "?"
         onActivated: root.showHelp()
     }
@@ -134,11 +119,12 @@ Kube.View {
                 }
 
                 Kube.TextButton {
+                    id: doingViewButton
                     anchors {
                         left: parent.left
                         right: parent.right
                     }
-                    text: qsTr("Today")
+                    text: qsTr("Doing")
                     textColor: Kube.Colors.highlightedTextColor
                     checkable: true
                     checked: true
@@ -226,6 +212,27 @@ Kube.View {
                     if (currentItem) {
                         var currentData = currentItem.currentData;
                         todoDetails.controller = controllerComponent.createObject(parent, {"todo": currentData.domainObject})
+                    }
+                }
+
+                Column {
+                    anchors.centerIn: parent
+                    visible: todoView.count === 0
+                    Kube.Label {
+                        text: qsTr("Nothing here yet...")
+                    }
+                    Kube.PositiveButton {
+                        visible: doingViewButton.checked
+                        text: qsTr("Pick some tasks")
+                        onClicked: {
+                            allViewButton.checked = true
+                            allViewButton.clicked()
+                        }
+                    }
+                    Kube.PositiveButton {
+                        visible: allViewButton.checked
+                        text: qsTr("Add a new task")
+                        onClicked: editorPopup.createObject(root, {}).open()
                     }
                 }
 
@@ -384,6 +391,7 @@ Kube.View {
                 id: editor
                 anchors.fill: parent
                 accountId: root.currentAccount
+                doing: doingViewButton.checked
                 onDone: popup.close()
             }
         }

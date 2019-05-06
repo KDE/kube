@@ -106,7 +106,7 @@ FocusScope {
         TodoEditor {
             controller: root.controller
             editMode: true
-            onDone: root.done()
+            onDone: stackView.pop(StackView.Immediate)
         }
     }
 }

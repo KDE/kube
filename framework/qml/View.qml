@@ -63,6 +63,7 @@ FocusScope {
     default property alias contentItems: content.data
 
     property bool __aborted: false
+    property bool isCurrentView: true
 
     //This signal will be emitted to refresh the views contents. Fetch data in here.
     signal refresh()
@@ -71,10 +72,12 @@ FocusScope {
     signal setup()
 
     StackView.onActivated: {
+        root.isCurrentView = true
         root.refresh()
     }
 
     StackView.onDeactivated: {
+        root.isCurrentView = false
         clearSearch()
     }
 

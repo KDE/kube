@@ -150,6 +150,7 @@ Item {
                     id: calendarSelector
                     Layout.fillWidth: true
                     accountId: root.accountId
+                    contentType: "event"
                     onSelected: {
                         controller.calendar = calendar
                     }

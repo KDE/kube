@@ -70,18 +70,22 @@ Kube.View {
     }
 
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['j']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextConversation, {})
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['k']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousConversation, {})
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['Shift+J']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.scrollConversationDown, {})
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['Shift+K']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.scrollConversationUp, {})
     }
@@ -90,22 +94,27 @@ Kube.View {
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextMessage, {})
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['p']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousMessage, {})
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['f,n']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextFolder, {})
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['f,p']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousFolder, {})
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['c']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.compose, {})
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequence: "?"
         onActivated: root.showHelp()
     }
