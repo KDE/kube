@@ -28,6 +28,7 @@ Kube.InlineAccountSwitcher {
 
     property alias enabledCalendars: calendarFilterCollector.checkedEntities
     property bool editMode: false
+    property string contentType: "event"
 
     Kube.CheckedEntities {
         id: calendarFilterCollector
@@ -53,7 +54,7 @@ Kube.InlineAccountSwitcher {
             type: "calendar"
             roles: ["name", "color", "enabled"]
             sortRole: "name"
-            filter: root.editMode ? {} : {enabled: true}
+            filter: root.editMode ? {"contentTypes": contentType} : {"contentTypes": contentType, enabled: true}
             accountId: listView.parent.accountId
             checkedEntities: calendarFilterCollector
             onInitialItemsLoaded: {

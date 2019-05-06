@@ -155,6 +155,7 @@ Kube.View {
                 }
 
                 height: parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin - statusBarContainer.height
+                contentType: "event"
             }
 
             Item {

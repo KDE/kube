@@ -122,7 +122,12 @@ void EntityModel::updateQuery()
     }
 
     for (const auto &property: mFilter.keys()) {
-        query.filter(property.toUtf8(), {mFilter.value(property)});
+        //FIXME we lack a way to select a filter type
+        if (property == "contentTypes") {
+            query.filter(property.toUtf8(), Sink::Query::Comparator(mFilter.value(property), Sink::Query::Comparator::Contains));
+        } else {
+            query.filter(property.toUtf8(), {mFilter.value(property)});
+        }
     }
 
     runQuery(query);

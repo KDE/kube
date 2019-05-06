@@ -171,6 +171,7 @@ Kube.View {
                     left: topLayout.left
                     right: parent.right
                 }
+                contentType: "todo"
             }
 
             Item {
