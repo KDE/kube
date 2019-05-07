@@ -21,7 +21,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.3
 
 import org.kube.framework 1.0 as Kube
-// import "dateutils.js" as DateUtils
 
 FocusScope {
     id: root
@@ -29,10 +28,16 @@ FocusScope {
 
     signal done()
 
+    onControllerChanged: {
+        //Wait for a controller to be set before we add a todo-view
+        if (controller) {
+            stackView.push(eventDetails, StackView.Immediate)
+        }
+    }
+
     StackView {
         id: stackView
         anchors.fill: parent
-        initialItem: eventDetails
         clip: true
         visible: controller
     }

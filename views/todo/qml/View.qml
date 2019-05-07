@@ -156,6 +156,7 @@ Kube.View {
                     bottom: statusBarContainer.top
                     left: topLayout.left
                     right: parent.right
+                    rightMargin: Kube.Units.largeSpacing
                 }
                 contentType: "todo"
             }
