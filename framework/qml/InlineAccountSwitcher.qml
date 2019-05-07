@@ -25,7 +25,6 @@ FocusScope {
     property string currentAccount
 
     property Component delegate: null
-    property Component buttonDelegate: null
 
     onCurrentAccountChanged: {
         Kube.Fabric.postMessage(Kube.Messages.accountSelection, {accountId: currentAccount});
@@ -82,11 +81,12 @@ FocusScope {
                         focus: isCurrent
                         activeFocusOnTab: isCurrent
                         visible: isCurrent
-                        sourceComponent: root.buttonDelegate
+                        sourceComponent: delegateLoader.item.buttonDelegate
                     }
                 }
 
                 Loader {
+                    id: delegateLoader
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     focus: isCurrent

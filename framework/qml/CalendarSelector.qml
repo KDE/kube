@@ -27,40 +27,42 @@ Kube.InlineAccountSwitcher {
     id: root
 
     property alias enabledCalendars: calendarFilterCollector.checkedEntities
-    property bool editMode: false
     property string contentType: "event"
 
     Kube.CheckedEntities {
         id: calendarFilterCollector
     }
 
-    buttonDelegate: Kube.IconButton {
-        height: Kube.Units.gridUnit
-        padding: 0
-        iconName: Kube.Icons.overflowMenu_inverted
-        onClicked: root.editMode = !root.editMode;
-        checkable: true
-        checked: root.editMode
-    }
-
     delegate: Kube.ListView {
         id: listView
+
+        property bool editMode: false
+        property Component buttonDelegate: Kube.IconButton {
+            height: Kube.Units.gridUnit
+            padding: 0
+            iconName: Kube.Icons.overflowMenu_inverted
+            onClicked: listView.editMode = !listView.editMode;
+            checkable: true
+            checked: listView.editMode
+        }
+
         Layout.fillWidth: true
         Layout.maximumHeight: Math.min(contentHeight, parent.height - Kube.Units.gridUnit)
         Layout.preferredHeight: contentHeight
         spacing: Kube.Units.smallSpacing
+
         model: Kube.CheckableEntityModel {
             id: calendarModel
             type: "calendar"
             roles: ["name", "color", "enabled"]
             sortRole: "name"
-            filter: root.editMode ? {"contentTypes": contentType} : {"contentTypes": contentType, enabled: true}
+            filter: listView.editMode ? {"contentTypes": contentType} : {"contentTypes": contentType, enabled: true}
             accountId: listView.parent.accountId
             checkedEntities: calendarFilterCollector
             onInitialItemsLoaded: {
                 //Automatically enable edit mode if no calendars are enabled
                 if (rowCount() == 0) {
-                    root.editMode = true;
+                    listView.editMode = true;
                 }
             }
 
@@ -77,7 +79,7 @@ Kube.InlineAccountSwitcher {
                 Kube.CheckBox {
                     id: checkBox
                     opacity: 0.9
-                    visible: root.editMode
+                    visible: listView.editMode
                     checked: model.checked || model.enabled
                     onCheckedChanged: {
                         model.checked = checked
@@ -117,7 +119,7 @@ Kube.InlineAccountSwitcher {
                     clip: true
                 }
                 Rectangle {
-                    visible: !root.editMode
+                    visible: !listView.editMode
                     width: Kube.Units.gridUnit * 0.8
                     height: Kube.Units.gridUnit * 0.8
                     radius: width / 2
