@@ -218,6 +218,7 @@ static void createCalendar(const QVariantMap &object)
     auto calendar = ApplicationDomainType::createEntity<Calendar>(object["resource"].toByteArray());
     calendar.setName(object["name"].toString());
     calendar.setColor(object["color"].toByteArray());
+    calendar.setContentTypes({"event", "todo"});
     Sink::Store::create(calendar).exec().waitForFinished();
 
     auto calendarId = calendar.identifier();
