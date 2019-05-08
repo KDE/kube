@@ -72,15 +72,9 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void updateQuery(const QDate &start, const QDate &end, const QSet<QByteArray> &calendarFilter);
-
-    void setCalendarFilter(const QSet<QByteArray> &);
     void setFilter(const QVariantMap &);
 
-
 private:
-    void updateQuery();
-
     void refreshView();
     void updateFromSource();
     QByteArray getColor(const QByteArray &calendar) const;
@@ -103,14 +97,11 @@ private:
     };
 
     QList<Occurrence> mTodos;
-    QVariantMap mFilter;
-    QByteArray mAccount;
 };
 
 class KUBE_EXPORT TodoModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(QSet<QByteArray> calendarFilter WRITE setCalendarFilter)
     Q_PROPERTY(QVariantMap filter WRITE setFilter)
 
 public:
@@ -119,7 +110,6 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void setCalendarFilter(const QSet<QByteArray> &);
     void setFilter(const QVariantMap &);
 
 protected:

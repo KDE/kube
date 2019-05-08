@@ -40,28 +40,26 @@ TodoSourceModel::TodoSourceModel(QObject *parent)
     QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &TodoSourceModel::updateFromSource);
 }
 
-void TodoSourceModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
-{
-    mCalendarFilter = calendarFilter;
-    updateQuery();
-}
-
 void TodoSourceModel::setFilter(const QVariantMap &filter)
 {
-    mFilter = filter;
-    updateQuery();
-}
-
-void TodoSourceModel::updateQuery()
-{
+    const auto account = filter.value("account").toByteArray();
+    const auto calendarFilter = filter.value("calendars").value<QSet<QByteArray>>().toList();
     using namespace Sink::ApplicationDomain;
-    if (mCalendarFilter.isEmpty()) {
+    if (calendarFilter.isEmpty()) {
         refreshView();
         return;
     }
 
     Sink::Query query;
-    // query.resourceFilter<SinkResource::Account>(mAccount);
+    if (!account.isEmpty()) {
+        query.resourceFilter<SinkResource::Account>(account);
+    }
+    query.filter<Todo::Calendar>(QueryBase::Comparator(QVariant::fromValue(calendarFilter), QueryBase::Comparator::In));
+
+    if (filter.value("doing").toBool()) {
+        query.filter<Todo::Status>("INPROCESS");
+    }
+
     query.setFlags(Sink::Query::LiveQuery);
     query.request<Todo::Summary>();
     query.request<Todo::Description>();
@@ -103,21 +101,6 @@ void TodoSourceModel::updateFromSource()
     if (mSourceModel) {
         for (int i = 0; i < mSourceModel->rowCount(); ++i) {
             auto todo = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Todo::Ptr>();
-            const bool skip = [&] {
-                if (!mCalendarFilter.contains(todo->getCalendar())) {
-                    return true;
-                }
-                for (auto it = mFilter.constBegin(); it != mFilter.constEnd(); it++) {
-                    if (todo->getProperty(it.key().toLatin1()) != it.value()) {
-                        return true;
-                    }
-                }
-                return false;
-            }();
-            if (skip) {
-                continue;
-            }
-
             //Parse the todo
             if(auto icalTodo = KCalCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalCore::Todo>()) {
                 mTodos.append({icalTodo->dtStart(), icalTodo->dtDue(), icalTodo->completed(), icalTodo, getColor(todo->getCalendar()), todo->getStatus(), todo, todo->getPriority()});
@@ -263,20 +246,9 @@ QHash<int, QByteArray> TodoModel::roleNames() const
     return sourceModel()->roleNames();
 }
 
-void TodoModel::setCalendarFilter(const QSet<QByteArray> &filter)
-{
-    static_cast<TodoSourceModel*>(sourceModel())->setCalendarFilter(filter);
-}
-
 void TodoModel::setFilter(const QVariantMap &f)
 {
-    auto filter = f;
-    if (filter.contains("doing")) {
-        if (filter.take("doing").toBool()) {
-            filter.insert("status", "INPROCESS");
-        }
-    }
-    static_cast<TodoSourceModel*>(sourceModel())->setFilter(filter);
+    static_cast<TodoSourceModel*>(sourceModel())->setFilter(f);
 }
 
 bool TodoModel::lessThan(const QModelIndex &left, const QModelIndex &right) const

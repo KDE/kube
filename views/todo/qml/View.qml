@@ -29,6 +29,7 @@ Kube.View {
     id: root
     property alias currentAccount: accountSwitcher.currentAccount
     // property variant currentFolder: null
+    property bool doing: true
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
     // searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
@@ -127,10 +128,10 @@ Kube.View {
                     text: qsTr("Doing")
                     textColor: Kube.Colors.highlightedTextColor
                     checkable: true
-                    checked: true
+                    checked: root.doing
                     horizontalAlignment: Text.AlignHLeft
                     ButtonGroup.group: viewButtonGroup
-                    onClicked: todoModel.filter = {"doing": true}
+                    onClicked: root.doing = true
                 }
                 Kube.TextButton {
                     id: allViewButton
@@ -143,7 +144,7 @@ Kube.View {
                     checkable: true
                     horizontalAlignment: Text.AlignHLeft
                     ButtonGroup.group: viewButtonGroup
-                    onClicked: todoModel.filter = {}
+                    onClicked: root.doing = false
                 }
             }
 
@@ -239,8 +240,11 @@ Kube.View {
 
                 model: Kube.TodoModel {
                     id: todoModel
-                    calendarFilter: accountSwitcher.enabledCalendars
-                    filter: {"doing": true}
+                    filter: {
+                        "account": accountSwitcher.currentAccount,
+                        "calendars": accountSwitcher.enabledCalendars,
+                        "doing": root.doing,
+                    }
                 }
                 delegate: Kube.ListDelegate {
                     id: delegateRoot
