@@ -34,6 +34,7 @@
 #include <QVariant>
 
 #include "framework/src/domain/mime/mailtemplates.h"
+#include "framework/src/keyring.h"
 
 using namespace Kube;
 
@@ -63,7 +64,7 @@ static QByteArrayList toByteArrayList(const QVariantList &list)
     return s;
 }
 
-static void createMail(const QVariantMap &object, const QByteArray &folder = {})
+static void createMail(const QVariantMap &object, const QByteArray &folder = {}, const QByteArray &resourceId = {})
 {
     using namespace Sink::ApplicationDomain;
 
@@ -84,13 +85,17 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
         }
     }
 
-    KMime::Types::Mailbox mb;
-    mb.fromUnicodeString("identity@example.org");
+    KMime::Types::Mailbox from;
+    if (object.contains("from")) {
+        from.fromUnicodeString(object["from"].toString());
+    } else {
+        from.fromUnicodeString("identity@example.org");
+    }
     auto msg = MailTemplates::createMessage({},
             toAddresses,
             ccAddresses,
             bccAddresses,
-            mb,
+            from,
             object["subject"].toString(),
             object["body"].toString(),
             object["bodyIsHtml"].toBool(),
@@ -110,7 +115,11 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
 
     msg->assemble();
 
-    auto mail = ApplicationDomainType::createEntity<Mail>(object["resource"].toByteArray());
+    auto res = resourceId;
+    if (res.isEmpty()) {
+        res = object["resource"].toByteArray();
+    }
+    auto mail = ApplicationDomainType::createEntity<Mail>(res);
     mail.setMimeMessage(msg->encodedContent(true));
     mail.setUnread(object["unread"].toBool());
     mail.setDraft(object["draft"].toBool());
@@ -123,22 +132,23 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {})
 static void createFolder(const QVariantMap &object)
 {
     using namespace Sink::ApplicationDomain;
-    auto folder = ApplicationDomainType::createEntity<Folder>(object["resource"].toByteArray());
+    auto resourceId = object["resource"].toByteArray();
+    auto folder = ApplicationDomainType::createEntity<Folder>(resourceId);
     folder.setName(object["name"].toString());
     folder.setSpecialPurpose(toByteArrayList(object["specialpurpose"].toList()));
     Sink::Store::create(folder).exec().waitForFinished();
 
     iterateOverObjects(object.value("mails").toList(), [=](const QVariantMap &object) {
-        createMail(object, folder.identifier());
+        createMail(object, folder.identifier(), resourceId);
     });
 }
 
-static void createEvent(const QVariantMap &object, const QByteArray &calendarId = {})
+static void createEvent(const QVariantMap &object, const QByteArray &calendarId, const QByteArray &resourceId)
 {
     using Sink::ApplicationDomain::ApplicationDomainType;
     using Sink::ApplicationDomain::Event;
 
-    auto sinkEvent = ApplicationDomainType::createEntity<Event>(object["resource"].toByteArray());
+    auto sinkEvent = ApplicationDomainType::createEntity<Event>(resourceId);
 
     auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
 
@@ -176,12 +186,12 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId 
     Sink::Store::create(sinkEvent).exec().waitForFinished();
 }
 
-static void createTodo(const QVariantMap &object, const QByteArray &calendarId = {})
+static void createTodo(const QVariantMap &object, const QByteArray &calendarId, const QByteArray &resourceId)
 {
     using Sink::ApplicationDomain::ApplicationDomainType;
     using Sink::ApplicationDomain::Todo;
 
-    auto sinkEvent = ApplicationDomainType::createEntity<Todo>(object["resource"].toByteArray());
+    auto sinkEvent = ApplicationDomainType::createEntity<Todo>(resourceId);
 
     auto calcoreEvent = QSharedPointer<KCalCore::Todo>::create();
 
@@ -215,7 +225,8 @@ static void createCalendar(const QVariantMap &object)
     using Sink::ApplicationDomain::Calendar;
     using Sink::ApplicationDomain::ApplicationDomainType;
 
-    auto calendar = ApplicationDomainType::createEntity<Calendar>(object["resource"].toByteArray());
+    auto resourceId = object["resource"].toByteArray();
+    auto calendar = ApplicationDomainType::createEntity<Calendar>(resourceId);
     calendar.setName(object["name"].toString());
     calendar.setColor(object["color"].toByteArray());
     calendar.setContentTypes({"event", "todo"});
@@ -223,9 +234,9 @@ static void createCalendar(const QVariantMap &object)
 
     auto calendarId = calendar.identifier();
     iterateOverObjects(object.value("events").toList(),
-        [calendarId](const QVariantMap &object) { createEvent(object, calendarId); });
+        [calendarId, resourceId](const QVariantMap &object) { createEvent(object, calendarId, resourceId); });
     iterateOverObjects(object.value("todos").toList(),
-        [calendarId](const QVariantMap &object) { createTodo(object, calendarId); });
+        [calendarId, resourceId](const QVariantMap &object) { createTodo(object, calendarId, resourceId); });
 }
 
 static void createContact(const QVariantMap &object, const QByteArray &addressbookId = {})
@@ -283,6 +294,7 @@ void TestStore::setup(const QVariantMap &map)
     iterateOverObjects(map.value("accounts").toList(), [&] (const QVariantMap &object) {
         auto account = ApplicationDomainType::createEntity<SinkAccount>("", object["id"].toByteArray());
         account.setName(object["name"].toString());
+        Kube::Keyring::instance()->unlock(account.identifier());
         Sink::Store::create(account).exec().waitForFinished();
     });
     QByteArrayList resources;
