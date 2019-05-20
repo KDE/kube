@@ -153,14 +153,14 @@ KubeComponent.Kube {
                             date: addDays(now, -4),
                             subject: "Tennis tomorrow?",
                             to: ["öüä@example.org"],
-                            from: "\"Anna Cole\"<jane@example.org>",
+                            from: "\"Anna Cole\"<anna@example.org>",
                             unread: false
                         },
                         {
                             date: addDays(now, -4),
                             subject: "Project report",
                             to: ["öüä@example.org"],
-                            from: "\"Phil Barry\"<jane@example.org>",
+                            from: "\"Phil Barry\"<phil@example.org>",
                             unread: false
                         },
                         {
@@ -220,11 +220,50 @@ KubeComponent.Kube {
                     name: "Spam"
                 }
             ],
+            addressbooks: [{
+                id: "addressbook1",
+                resource: "resource1",
+                name: "Personal Addressbook",
+                contacts: [
+                    {
+                        uid: "uid1",
+                        givenname: "John",
+                        familyname: "Doe",
+                        email: ["doe@example.org"],
+                    },
+                    {
+                        uid: "uid2",
+                        givenname: "Andrea",
+                        familyname: "Mueller",
+                        email: ["andrea@example.org"],
+                    },
+                    {
+                        uid: "uid3",
+                        givenname: "Anna",
+                        familyname: "Cole",
+                        email: ["anna@example.org"],
+                    },
+                    {
+                        uid: "uid4",
+                        givenname: "Jane",
+                        familyname: "Doe",
+                        email: ["jane@example.org"],
+                    },
+                    {
+                        uid: "uid5",
+                        givenname: "Phil",
+                        familyname: "Barry",
+                        email: ["phil@example.org"],
+                    }
+
+                ],
+            }],
             calendars: [{
                 id: "calendar1",
                 resource: "resource1",
                 name: "Calendar",
                 color: "#af1a6a",
+                contentTypes: ["event"],
                 events: [
                     {
                         summary: "Monday morning standup",
@@ -276,6 +315,7 @@ KubeComponent.Kube {
                 resource: "resource1",
                 name: "Vacations",
                 color: "#00cc4b",
+                contentTypes: ["event"],
                 events: [
                     {
                         summary: "Sandra is off",
@@ -297,6 +337,32 @@ KubeComponent.Kube {
                         ends: setHour(dayOfWeek(now, Qt.locale().firstDayOfWeek + 5), 24),
                     },
                 ]
+            },
+            {
+                id: "calendar3",
+                resource: "resource1",
+                name: "Tasks",
+                color: "#af1a6a",
+                contentTypes: ["todo"],
+                todos: [
+                    {
+                        summary: "Prepare meeting",
+                        starts: "2018-04-09T14:03:00",
+                    },
+                    {
+                        summary: "Release Kube",
+                        due: "2018-04-09T14:03:00",
+                    },
+                    {
+                        summary: "Blog about latest improvements"
+                    },
+                    {
+                        summary: "Pay bills"
+                    },
+                    {
+                        summary: "Get a gift for Pam"
+                    },
+                ],
             },
             {
                 id: "account2calendar",
