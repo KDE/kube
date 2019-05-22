@@ -21,6 +21,7 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
+import "dateutils.js" as DateUtils
 
 Item {
     id: root
@@ -104,7 +105,7 @@ Item {
                         objectName: "endDate"
                         enableTime: !controller.allDay
                         notBefore: startDate.dateTime
-                        initialValue: root.editMode ? controller.end : startDate.dateTime
+                        initialValue: root.editMode ? controller.end : DateUtils.addMinutesToDate(startDate.dateTime, 30)
                         onDateTimeChanged: controller.end = dateTime
                     }
                 }
