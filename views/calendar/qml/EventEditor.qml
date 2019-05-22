@@ -152,7 +152,9 @@ Item {
                     accountId: root.accountId
                     contentType: "event"
                     onSelected: {
-                        controller.calendar = calendar
+                        if (!root.editMode) {
+                            controller.calendar = calendar
+                        }
                     }
                 }
 

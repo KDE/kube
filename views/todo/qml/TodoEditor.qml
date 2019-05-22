@@ -124,7 +124,9 @@ Item {
                     accountId: root.accountId
                     contentType: "todo"
                     onSelected: {
-                        controller.calendar = calendar
+                        if (!root.editMode) {
+                            controller.calendar = calendar
+                        }
                     }
                 }
             }
