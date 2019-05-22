@@ -142,7 +142,7 @@ Item {
                     Layout.minimumHeight: Kube.Units.gridUnit * 4
 
                     //TODO placeholderText: "Description"
-                    text: controller.description
+                    initialText: controller.description
                     onTextChanged: controller.description = text
                 }
 

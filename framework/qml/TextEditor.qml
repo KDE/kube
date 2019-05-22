@@ -24,7 +24,7 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
-    property string text: document.text
+    readonly property string text: document.text
     property bool htmlEnabled: document.containsFormatting
 
     property alias bold: document.bold
