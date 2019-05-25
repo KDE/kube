@@ -34,6 +34,7 @@ FocusScope {
 
     property alias font: edit.font
     property string initialText
+    property string placeholderText
     onInitialTextChanged: {
         edit.text = initialText
     }
@@ -106,6 +107,19 @@ FocusScope {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
                     cursorShape: Qt.IBeamCursor
+                }
+                Label {
+                    anchors {
+                        top: parent.top
+                        topMargin: parent.topPadding
+                        left: parent.left
+                        leftMargin: parent.leftPadding
+                    }
+                    visible: !root.text
+                    text: root.placeholderText
+                    font.family: Kube.Font.fontFamily
+                    font.pointSize: Kube.Units.largeFontSize
+                    color: Kube.Colors.disabledTextColor
                 }
             }
         }

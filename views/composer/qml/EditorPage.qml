@@ -164,6 +164,7 @@ FocusScope {
                 id: textEditor
                 objectName: "textEditor"
                 activeFocusOnTab: true
+                placeholderText: qsTr("Body")
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
