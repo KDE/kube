@@ -74,7 +74,7 @@ Item {
 
             spacing: Kube.Units.largeSpacing
 
-            Kube.TextField {
+            Kube.HeaderField {
                 id: titleEdit
                 focus: true
                 Layout.fillWidth: true

@@ -358,9 +358,7 @@ Kube.View {
             Layout.fillHeight: parent.height
             Layout.fillWidth: true
 
-            color: "transparent"
-            border.width: 1
-            border.color: Kube.Colors.buttonColor
+            color: Kube.Colors.paperWhite
 
             TodoView {
                 id: todoDetails

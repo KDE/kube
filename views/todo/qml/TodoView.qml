@@ -45,7 +45,7 @@ FocusScope {
     Component {
         id: eventDetails
         Rectangle {
-            color: Kube.Colors.viewBackgroundColor
+            color: Kube.Colors.paperWhite
 
             ColumnLayout {
                 id: contentLayout
