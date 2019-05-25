@@ -74,7 +74,7 @@ Item {
 
             spacing: Kube.Units.largeSpacing
 
-            Kube.TextField {
+            Kube.HeaderField {
                 id: titleEdit
                 Layout.fillWidth: true
                 placeholderText: qsTr("Event Title")
@@ -142,7 +142,7 @@ Item {
                     Layout.fillHeight: true
                     Layout.minimumHeight: Kube.Units.gridUnit * 4
 
-                    //TODO placeholderText: "Description"
+                    placeholderText: "Description"
                     initialText: controller.description
                     onTextChanged: controller.description = text
                 }
