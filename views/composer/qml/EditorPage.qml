@@ -142,14 +142,12 @@ FocusScope {
                 }
             }
 
-            Kube.TextField {
+            Kube.HeaderField {
                 id: subject
                 objectName: "subject"
                 Layout.fillWidth: true
                 activeFocusOnTab: true
                 focus: true
-                font.bold: true
-                font.pointSize: Kube.Units.largeFontSize
 
                 placeholderText: qsTr("Subject")
                 text: controller.subject
@@ -160,19 +158,6 @@ FocusScope {
                     }
                 }
                 onAccepted: textEditor.forceActiveFocus(Qt.TabFocusReason)
-                background: Rectangle {
-                    id: background
-                    color: Kube.Colors.viewBackgroundColor
-                    Rectangle {
-                        anchors {
-                            bottom: parent.bottom
-                            left: parent.left
-                            right: parent.right
-                        }
-                        height: 1
-                        color: subject.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
-                    }
-                }
             }
 
             Kube.TextEditor {
@@ -184,7 +169,6 @@ FocusScope {
                 Layout.fillHeight: true
 
                 border.width: 0
-                font.pointSize: Kube.Units.largeFontSize
 
                 onHtmlEnabledChanged: {
                     controller.htmlBody = htmlEnabled;

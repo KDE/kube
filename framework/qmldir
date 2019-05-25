@@ -31,6 +31,7 @@ TextField 1.0 TextField.qml
 RequiredTextField 1.0 RequiredTextField.qml
 PasswordField 1.0 PasswordField.qml
 TextEditor 1.0 TextEditor.qml
+HeaderField 1.0 HeaderField.qml
 ToolTip 1.0 ToolTip.qml
 Label 1.0 Label.qml
 ScrollBar 1.0 ScrollBar.qml
