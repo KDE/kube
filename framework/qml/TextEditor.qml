@@ -69,7 +69,9 @@ FocusScope {
                 flickable: flickableItem
             }
 
-            contentWidth: Math.max(edit.contentWidth, width)
+            //Fixed size content width
+            contentWidth: width
+            //Grow with the content, but at least height
             contentHeight: Math.max(edit.implicitHeight, height)
 
             function ensureVisible(r) {
