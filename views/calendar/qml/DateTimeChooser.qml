@@ -71,16 +71,13 @@ RowLayout {
                 id: selector
                 anchors.fill: parent
                 //TODO add earliest date, prevent selection before
-                selectedDate: root.dateTime
-                onSelected: {
-                    root.dateTime = date
-                }
-
                 backgroundColor: Kube.Colors.backgroundColor
                 textColor: Kube.Colors.textColor
                 invertIcons: false
-                onNext: selectedDate = DateUtils.nextMonth(selectedDate)
-                onPrevious: selectedDate = DateUtils.previousMonth(selectedDate)
+                selectedDate: root.dateTime
+                onSelected: root.dateTime = date
+                onNext: root.dateTime = DateUtils.nextMonth(selectedDate)
+                onPrevious: root.dateTime = DateUtils.previousMonth(selectedDate)
             }
         }
     }
