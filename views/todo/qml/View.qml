@@ -374,11 +374,6 @@ Kube.View {
 
     }
 
-    Kube.Listener {
-        filter: Kube.Messages.eventEditor
-        onMessageReceived: eventPopup.createObject(root, message).open()
-    }
-
     Component {
         id: editorPopup
         Kube.Popup {
