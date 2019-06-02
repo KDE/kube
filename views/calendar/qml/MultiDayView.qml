@@ -141,19 +141,7 @@ Item {
                                         //We add the month abbrevation to the first of each month
                                         text: date.toLocaleDateString(Qt.locale(), date.getDate() == 1 ? "d MMM" : "d")
                                         font.bold: true
-                                        color: !isCurrentMonth ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
-                                        Rectangle {
-                                            anchors {
-                                                left: parent.left
-                                                right: parent.right
-                                                bottom: parent.bottom
-                                            }
-                                            width: Kube.Units.gridUnit
-                                            height: 3
-                                            color: Kube.Colors.plasmaBlue
-                                            opacity: 0.6
-                                            visible: isToday
-                                        }
+                                        color: !isCurrentMonth ? Kube.Colors.disabledTextColor : (isToday ? Kube.Colors.highlightColor : Kube.Colors.textColor)
                                     }
                                 }
                             }
