@@ -87,27 +87,13 @@ Item {
 
                 spacing: Kube.Units.smallSpacing
 
-                RowLayout {
+                DateRangeChooser {
                     Layout.fillWidth: true
-                    spacing: Kube.Units.largeSpacing
-                    DateTimeChooser {
-                        id: startDate
-                        objectName: "startDate"
-                        enableTime: !controller.allDay
-                        initialValue: root.editMode ? controller.start : root.start
-                        onDateTimeChanged: controller.start = dateTime
-                    }
-                    Kube.Label {
-                        text: qsTr("until")
-                    }
-                    DateTimeChooser {
-                        id: endDate
-                        objectName: "endDate"
-                        enableTime: !controller.allDay
-                        notBefore: startDate.dateTime
-                        initialValue: root.editMode ? controller.end : DateUtils.addMinutesToDate(startDate.dateTime, 30)
-                        onDateTimeChanged: controller.end = dateTime
-                    }
+                    enableTime: !controller.allDay
+                    initialStart: root.editMode ? controller.start : root.start
+                    initialEnd: root.editMode ? controller.end : DateUtils.addMinutesToDate(root.start, 30)
+                    onStartChanged: controller.start = start
+                    onEndChanged: controller.end = end
                 }
 
                 RowLayout {
