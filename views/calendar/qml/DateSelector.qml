@@ -24,6 +24,7 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property date selectedDate
+    property date notBefore: new Date(1980, 1, 1, 0, 0, 0)
     property color backgroundColor: Kube.Colors.darkBackgroundColor
     property color textColor: Kube.Colors.highlightedTextColor
     property bool invertIcons: true
@@ -34,6 +35,12 @@ Item {
 
     implicitWidth: Math.max(grid.implicitWidth, dateLabel.implicitWidth + 2 * Kube.Units.gridUnit)
     implicitHeight: column.implicitHeight
+
+    onNotBeforeChanged: {
+        if (notBefore.getTime() > selectedDate.getTime()) {
+            root.selected(notBefore)
+        }
+    }
 
     Column {
         id: column
@@ -54,6 +61,7 @@ Item {
                 width: parent.height
                 color: root.backgroundColor
                 iconName: Kube.Icons.iconName(Kube.Icons.goBack, root.invertIcons)
+                visible: root.notBefore.getTime() < (new Date(root.selectedDate.getFullYear(), root.selectedDate.getMonth(), root.selectedDate.getDate())).getTime()
                 onClicked: {
                     root.previous()
                 }
@@ -97,10 +105,11 @@ Item {
             delegate: Text {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                opacity: model.month === grid.month ? 1 : 0.5
+                opacity: (model.month === grid.month && model.date.getTime() >= root.notBefore.getTime()) ? 1 : 0.5
                 text: model.day
                 font: grid.font
                 color: root.textColor
+
                 Rectangle {
                     anchors {
                         left: parent.left
@@ -116,7 +125,9 @@ Item {
             }
 
             onClicked: {
-                root.selected(date)
+                if (date.getTime() >= root.notBefore.getTime()) {
+                    root.selected(date)
+                }
             }
         }
     }

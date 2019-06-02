@@ -70,7 +70,7 @@ RowLayout {
             DateSelector {
                 id: selector
                 anchors.fill: parent
-                //TODO add earliest date, prevent selection before
+                notBefore: root.notBefore
                 backgroundColor: Kube.Colors.backgroundColor
                 textColor: Kube.Colors.textColor
                 invertIcons: false
