@@ -99,6 +99,7 @@ FocusScope {
                         text: qsTr("Remove")
                         onClicked: {
                             root.controller.remove()
+                            root.done()
                         }
                     }
                     Item {
