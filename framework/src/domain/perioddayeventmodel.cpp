@@ -156,7 +156,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
 
                 //Remove all dates before startTime
                 for (auto it = indentationStack.begin(); it != indentationStack.end();) {
-                    if (it.key() < startTime) {
+                    if (it.key() <= startTime) {
                         it = indentationStack.erase(it);
                     } else {
                         ++it;
