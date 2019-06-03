@@ -123,15 +123,15 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
             auto result = QVariantList{};
 
             QMultiMap<QTime, QModelIndex> sorted;
-            //Sort events of teh day sorted by starting date
+            //Sort events of the day by starting date
             for (int row = 0; row < mSourceModel->rowCount(); row++) {
                 const auto srcIdx = mSourceModel->index(row, 0, {});
                 //filter all-day events (we don't display them here)
                 if (srcIdx.data(EventOccurrenceModel::AllDay).toBool()) {
                     continue;
                 }
-                const auto start = srcIdx.data(EventOccurrenceModel::StartTime).toDateTime();
-                const auto end = srcIdx.data(EventOccurrenceModel::EndTime).toDateTime();
+                const auto start = srcIdx.data(EventOccurrenceModel::StartTime).toDateTime().toLocalTime();
+                const auto end = srcIdx.data(EventOccurrenceModel::EndTime).toDateTime().toLocalTime();
                 //not today
                 if (end.date() < today || start.date() > today) {
                     continue;
