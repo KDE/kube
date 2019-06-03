@@ -151,8 +151,8 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
                     //Even without duration we still take some space visually
                     endTime = startTime.addSecs(60 * 20);
                 }
-                const auto duration = qRound(startTime.secsTo(endTime) / 3600.0);
-                SinkTrace() << "Appending event:" << srcIdx.data(EventOccurrenceModel::Summary) << start << end;
+                const auto duration = startTime.secsTo(endTime) / 3600.0;
+                SinkTrace() << "Appending event:" << srcIdx.data(EventOccurrenceModel::Summary) << start << end << duration;
 
                 //Remove all dates before startTime
                 for (auto it = indentationStack.begin(); it != indentationStack.end();) {
