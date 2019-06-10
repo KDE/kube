@@ -3,6 +3,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET default)
 find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine Gui)
 find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
 find_package(Sink 0.6.0 CONFIG REQUIRED)
+find_package(KAsync CONFIG REQUIRED)
 
 include_directories(../../../framework/src/domain/mime ${KMIME_INCLUDES})
 
@@ -11,6 +12,7 @@ target_link_libraries(extensionapiplugin
     kubeframework
     KF5::Mime
     sink
+    KAsync
     Qt5::Core
     Qt5::Quick
     Qt5::Qml
