@@ -128,7 +128,11 @@ QVariant MailListModel::data(const QModelIndex &idx, int role) const
     auto mail = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
     switch (role) {
         case Subject:
-            return mail->getSubject();
+            if (mail->isAggregate()) {
+                return mail->getProperty(QByteArray{Sink::ApplicationDomain::Mail::Subject::name} + QByteArray{"Selected"});
+            } else {
+                return mail->getSubject();
+            }
         case Sender:
             return mail->getSender().emailAddress;
         case SenderName:
