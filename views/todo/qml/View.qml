@@ -62,14 +62,17 @@ Kube.View {
     }
 
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['j']
         onActivated: todoView.incrementCurrentIndex()
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['k']
         onActivated: todoView.decrementCurrentIndex()
     }
     Shortcut {
+        enabled: root.isCurrentView
         sequences: ['c']
         onActivated: editorPopup.createObject(root, {}).open()
     }
