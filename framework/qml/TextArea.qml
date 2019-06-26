@@ -33,7 +33,7 @@ T.TextArea {
     selectByMouse: true
 
     wrapMode: TextEdit.Wrap
-    textFormat: Text.RichText
+    textFormat: Text.AutoText
 
     font.family: Kube.Font.fontFamily
     color: Kube.Colors.textColor
