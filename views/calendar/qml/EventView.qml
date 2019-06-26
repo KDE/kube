@@ -57,7 +57,7 @@ FocusScope {
                 spacing: Kube.Units.smallSpacing
 
                 Kube.Heading {
-                    width: parent.width
+                    Layout.fillWidth: true
                     text: controller.summary
                 }
 
@@ -81,12 +81,9 @@ FocusScope {
                     visible: controller.location
                 }
 
-                TextEdit {
+                Kube.TextArea {
+                    Layout.fillWidth: true
                     text: controller.description
-                    readOnly: true
-                    selectByMouse: true
-                    color: Kube.Colors.textColor
-                    font.family: Kube.Font.fontFamily
                 }
 
                 Item {

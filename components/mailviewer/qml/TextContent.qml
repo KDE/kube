@@ -18,7 +18,6 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 2
-import QtQuick.Templates 2.0 as T
 
 import org.kube.framework 1.0 as Kube
 
@@ -38,7 +37,7 @@ Item {
         textEdit.text = root.content
     }
 
-    T.TextArea {
+    Kube.TextArea {
         id: textEdit
 
         anchors {
@@ -47,26 +46,13 @@ Item {
             right: parent.right
         }
 
-        implicitWidth: contentWidth
-        implicitHeight: contentHeight
-
         selectionColor: Kube.Colors.highlightColor
         readOnly: true
         selectByMouse: true
 
         text: content.substring(0, 100000) //The TextEdit deals poorly with messages that are too large.
-        wrapMode: TextEdit.Wrap
-        textFormat: Text.RichText
-
-        font.family: Kube.Font.fontFamily
         color: embedded ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
-        onLinkActivated: Qt.openUrlExternally(link)
 
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
-            cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
-        }
         Kube.ViewHighlighter {
             textDocument: textEdit.textDocument
             searchString: root.searchString

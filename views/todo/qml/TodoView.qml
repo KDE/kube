@@ -57,7 +57,7 @@ FocusScope {
                 spacing: Kube.Units.smallSpacing
 
                 Kube.Heading {
-                    width: parent.width
+                    Layout.fillWidth: true
                     text: controller.summary
                 }
 
@@ -71,12 +71,9 @@ FocusScope {
                     text: "Start on: " + controller.start.toLocaleString(Qt.locale(), "dd. MMMM")
                 }
 
-                TextEdit {
+                Kube.TextArea {
+                    Layout.fillWidth: true
                     text: controller.description
-                    readOnly: true
-                    selectByMouse: true
-                    color: Kube.Colors.textColor
-                    font.family: Kube.Font.fontFamily
                 }
 
                 Item {
@@ -85,6 +82,7 @@ FocusScope {
                 }
 
                 RowLayout {
+                    width: parent.width
                     Kube.Button {
                         text: qsTr("Remove")
                         onClicked: {
