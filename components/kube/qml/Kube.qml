@@ -39,7 +39,21 @@ ApplicationWindow {
 
     //Application context
     property string currentAccount: Kube.Context.currentAccountId
+
+    Kube.AccountFactory {
+        id: accountFactory
+    }
+
     onCurrentAccountChanged: {
+        accountFactory.accountId = currentAccount
+        if (!Kube.Keyring.isUnlocked(currentAccount)) {
+            if (accountFactory.requiresKeyring) {
+                Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": currentAccount})
+            } else {
+                Kube.Keyring.unlock(currentAccount)
+            }
+        }
+
         if (!!currentAccount) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})
         }
@@ -63,15 +77,7 @@ ApplicationWindow {
         id: startupCheck
     }
 
-    Accounts {
-    }
-
     //Listener
-    Kube.Listener {
-        filter: Kube.Messages.accountSelection
-        onMessageReceived: app.currentAccount = message.accountId
-    }
-
     Kube.Listener {
         filter: Kube.Messages.folderSelection
         onMessageReceived: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": message.folder})
