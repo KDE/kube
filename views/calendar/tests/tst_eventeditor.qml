@@ -46,13 +46,14 @@ ViewTestCase {
 
     function test_2loadStartDate() {
         var start = new Date(2018, 1, 1, 11, 30, 0)
+        var end = new Date(2018, 1, 1, 12, 00, 0)
         var editor = createTemporaryObject(editorComponent, testCase, {editMode: false, start: start})
         verify(editor)
         var startDate = findChild(editor, "startDate");
         compare(startDate.dateTime, start)
 
         var endDate = findChild(editor, "endDate");
-        compare(endDate.dateTime, start)
+        compare(endDate.dateTime, end)
     }
 
     function test_3loadControllerDates() {
@@ -87,16 +88,18 @@ ViewTestCase {
 
     function test_5endFollowsStartDate() {
         var start = new Date(2018, 1, 1, 11, 30, 0)
+        var end = new Date(2018, 1, 1, 12, 00, 0)
         var editor = createTemporaryObject(editorComponent, testCase, {editMode: false, start: start})
         verify(editor)
         var startDate = findChild(editor, "startDate");
         compare(startDate.dateTime, start)
 
         var endDate = findChild(editor, "endDate");
-        compare(endDate.dateTime, start)
+        compare(endDate.dateTime, end)
 
         //Follows forward
         var newStart = new Date(2018, 1, 1, 12, 30, 0)
+        var newEnd = new Date(2018, 1, 1, 13, 00, 0)
         endDate.notBefore = newStart
         compare(endDate.dateTime, newStart)
 
