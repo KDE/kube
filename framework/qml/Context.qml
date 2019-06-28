@@ -19,14 +19,23 @@
 pragma Singleton
 
 import QtQuick 2.7
+import Qt.labs.settings 1.0
 
 import org.kube.framework 1.0 as Kube
 
 Item {
+    id:root
+
     property string currentAccountId
+
     Kube.Listener {
         filter: Kube.Messages.accountSelection
         onMessageReceived: currentAccount = message.accountId
+    }
+
+    //Persist current account selection
+    Settings {
+        property alias currentAccountId: root.currentAccountId
     }
 }
 
