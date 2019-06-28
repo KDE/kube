@@ -118,9 +118,13 @@ int main(int argc, char *argv[])
 
     //Instead of QtWebEngine::initialize();
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+    QCoreApplication::setApplicationVersion(QString("%1 Branch: %2 Commit: %3").arg(kube_VERSION_STRING).arg(kube_BRANCH).arg(kube_COMMIT));
+    QCoreApplication::setOrganizationName("kube");
+    QCoreApplication::setOrganizationDomain("kube-project.com");
+    QCoreApplication::setApplicationName("kube");
+
+
     QApplication app(argc, argv);
-    app.setApplicationName("kube");
-    app.setApplicationVersion(QString("%1 Branch: %2 Commit: %3").arg(kube_VERSION_STRING).arg(kube_BRANCH).arg(kube_COMMIT));
     auto fontSize = app.font().pointSize();
 #if defined(Q_OS_UNIX)  && (!defined(Q_OS_MAC))
     if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORMTHEME")) {
