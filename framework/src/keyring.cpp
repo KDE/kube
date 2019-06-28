@@ -19,7 +19,6 @@
 #include "keyring.h"
 
 #include <sink/secretstore.h>
-#include <QSettings>
 #include <QtGlobal>
 
 using namespace Kube;
