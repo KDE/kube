@@ -23,11 +23,12 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
     property string currentAccount
+    property string _currentAccount: Kube.Context.currentAccountId
 
     property Component delegate: null
 
     onCurrentAccountChanged: {
-        Kube.Fabric.postMessage(Kube.Messages.accountSelection, {accountId: currentAccount});
+        Kube.Context.currentAccountId = currentAccount
     }
 
     ColumnLayout {
@@ -38,7 +39,7 @@ FocusScope {
             model: Kube.AccountsModel {}
             onItemAdded: {
                 //Autoselect the first account to appear
-                if (!currentAccount) {
+                if (!_currentAccount) {
                     root.currentAccount = item.currentData.accountId
                 }
             }
@@ -46,7 +47,7 @@ FocusScope {
             delegate: ColumnLayout {
                 id: accountDelegate
                 property variant currentData: model
-                property bool isCurrent: (model.accountId == root.currentAccount)
+                property bool isCurrent: (model.accountId == root._currentAccount)
 
                 Layout.minimumHeight: Kube.Units.gridUnit
                 Layout.fillHeight: isCurrent

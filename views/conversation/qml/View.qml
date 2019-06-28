@@ -27,7 +27,6 @@ import org.kube.framework 1.0 as Kube
 
 Kube.View {
     id: root
-    property alias currentAccount: accountFolderview.currentAccount
     property variant currentFolder: null
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
@@ -41,9 +40,9 @@ Kube.View {
     onRefresh: {
         if (!!root.currentFolder) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": root.currentAccount, "type": "folder"})
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": Kube.Context.currentAccountId, "type": "folder"})
         } else {
-            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": root.currentAccount})
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": Kube.Context.currentAccountId})
         }
     }
 
@@ -196,7 +195,7 @@ Kube.View {
                 }
                 Kube.StatusBar {
                     id: statusBar
-                    accountId: accountFolderview.currentAccount
+                    accountId: Kube.Context.currentAccountId
                     height: Kube.Units.gridUnit * 2
                     anchors {
                         top: border.bottom

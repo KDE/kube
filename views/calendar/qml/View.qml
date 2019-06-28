@@ -182,7 +182,7 @@ Kube.View {
                 }
                 Kube.StatusBar {
                     id: statusBar
-                    accountId: accountSwitcher.currentAccount
+                    accountId: Kube.Context.currentAccountId
                     height: Kube.Units.gridUnit * 2
                     anchors {
                         top: border.bottom
@@ -236,7 +236,7 @@ Kube.View {
                 id: editor
                 anchors.fill: parent
                 onDone: popup.close()
-                accountId: accountSwitcher.currentAccount
+                accountId: Kube.Context.currentAccountId
             }
         }
     }

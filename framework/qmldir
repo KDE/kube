@@ -54,6 +54,7 @@ ExtensionPoint 1.0 ExtensionPoint.qml
 singleton Messages 1.0 Messages.qml
 singleton Notifications 1.0 Notifications.qml
 singleton Colors 1.0 Colors.qml
+singleton Context 1.0 Context.qml
 singleton Icons 1.0 Icons.qml
 singleton Units 1.0 Units.qml
 singleton Font 1.0 Font.qml

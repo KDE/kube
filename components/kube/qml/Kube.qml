@@ -38,7 +38,7 @@ ApplicationWindow {
     font.family: Kube.Font.fontFamily
 
     //Application context
-    property variant currentAccount
+    property string currentAccount: Kube.Context.currentAccountId
     onCurrentAccountChanged: {
         if (!!currentAccount) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})

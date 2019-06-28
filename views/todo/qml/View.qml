@@ -27,7 +27,7 @@ import org.kube.framework 1.0 as Kube
 
 Kube.View {
     id: root
-    property alias currentAccount: accountSwitcher.currentAccount
+    property string currentAccount: Kube.Context.currentAccountId
     // property variant currentFolder: null
     property bool doing: true
 
