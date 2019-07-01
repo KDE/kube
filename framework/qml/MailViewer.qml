@@ -478,7 +478,7 @@ Rectangle {
                 Row {
                     Kube.ExtensionPoint {
                         extensionPoint: "extensions/mailview"
-                        context: {"mail": footer.mail, "subject": footer.subject, "accountId": currentAccount}
+                        context: {"mail": footer.mail, "subject": footer.subject, "accountId": Kube.Context.currentAccountId}
                     }
                 }
             }
