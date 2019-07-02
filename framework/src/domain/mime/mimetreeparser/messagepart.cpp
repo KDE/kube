@@ -636,6 +636,14 @@ QString AlternativeMessagePart::htmlContent() const
     }
 }
 
+QString AlternativeMessagePart::icalContent() const
+{
+    if (mChildParts.contains(Util::MultipartIcal)) {
+        return mChildParts[Util::MultipartIcal]->text();
+    }
+    return {};
+}
+
 //-----CertMessageBlock----------------------
 
 CertMessagePart::CertMessagePart(ObjectTreeParser *otp, KMime::Content *node, const CryptoProtocol cryptoProto)

@@ -242,6 +242,7 @@ public:
 
     QString plaintextContent() const Q_DECL_OVERRIDE;
     QString htmlContent() const Q_DECL_OVERRIDE;
+    QString icalContent() const;
 
     QList<Util::HtmlMode> availableModes();
 private:

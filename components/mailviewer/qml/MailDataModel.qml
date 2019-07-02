@@ -169,6 +169,10 @@ DelegateModel {
                                         "date": model.date
                                         })
                     break;
+                case "ical":
+                    partLoader.setSource("ICalPart.qml",
+                                        {"content": model.content})
+                    break;
             }
         }
     }

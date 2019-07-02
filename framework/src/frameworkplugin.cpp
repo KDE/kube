@@ -33,6 +33,7 @@
 #include "domain/mouseproxy.h"
 #include "domain/contactcontroller.h"
 #include "domain/eventcontroller.h"
+#include "domain/invitationcontroller.h"
 #include "domain/todocontroller.h"
 #include "domain/peoplemodel.h"
 #include "domain/textdocumenthandler.h"
@@ -171,6 +172,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<MultiDayEventModel>(uri, 1, 0, "MultiDayEventModel");
     qmlRegisterType<EventOccurrenceModel>(uri, 1, 0, "EventOccurrenceModel");
     qmlRegisterType<EventController>(uri, 1, 0, "EventController");
+    qmlRegisterType<InvitationController>(uri, 1, 0, "InvitationController");
     qmlRegisterType<TodoModel>(uri, 1, 0, "TodoModel");
     qmlRegisterType<TodoController>(uri, 1, 0, "TodoController");
     qmlRegisterType<ComposerController>(uri, 1, 0, "ComposerController");

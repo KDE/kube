@@ -29,6 +29,7 @@ add_library(kubeframework SHARED
     domain/perioddayeventmodel.cpp
     domain/eventoccurrencemodel.cpp
     domain/eventcontroller.cpp
+    domain/invitationcontroller.cpp
     domain/todomodel.cpp
     domain/todocontroller.cpp
     domain/multidayeventmodel.cpp
