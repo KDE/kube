@@ -63,7 +63,6 @@ ApplicationWindow {
                 }
             ],
             folders: [{
-                    id: "folder1",
                     resource: "resource1",
                     name: "Folder 1",
                     mails: [{
@@ -236,9 +235,24 @@ Bvr+rojxTJ3X+pzb2LJQwJnALL/VdIF3yHtGu2//Yfu4oxGGA0M90KiW
                     ]
                 },
                 {
-                    id: "folder2",
                     resource: "resource1",
-                    name: "Folder 2"
+                    name: "Folder 2",
+                    folders: [
+                        {
+                            resource: "resource1",
+                            name: "SubFolder 2",
+                            folders: [
+                                {
+                                    resource: "resource1",
+                                    name: "SubSubFolder 2"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    resource: "resource1",
+                    name: "Folder 3"
                 }
             ],
         }
