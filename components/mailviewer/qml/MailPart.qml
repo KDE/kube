@@ -51,7 +51,7 @@ Item {
             right: parent.right
         }
 
-        text: qsTr("sent by %1 on %2").arg(root.sender).arg(root.date)
+        text: qsTr("sent by %1 on %2").arg(root.sender).arg(Qt.formatDateTime(root.date, "dd MMM yyyy hh:mm"))
         color: "grey"
         clip: true
     }
