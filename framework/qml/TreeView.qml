@@ -17,162 +17,92 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-import QtQuick 2.4
-import QtQuick.Controls 1.4 as Controls1
+import QtQuick 2
 import QtQuick.Controls 2
-import QtQuick.Controls.Styles 1.4
-import QtQuick.Layouts 1.1
-import QtQml.Models 2.2
+import QtQuick.Layouts 1
 
 import org.kube.framework 1.0 as Kube
+
 FocusScope {
     id: root
-    default property alias __columns: treeView.__columns
-    property alias model: treeView.model
-    property alias currentIndex: treeView.currentIndex
-    /*
-     * Because active focus is useless in list/treeviews we use the concept of an activeIndex.
-     * The current selection represents the focused index. The activeIndex represents the selected index.
-     * FIXME: This is what QItemSelectionModel selection vs current selection are for. Try to use that instead.
-     */
-    property var activeIndex: null
-    signal activated(var index)
-    onActivated: {
-        activeIndex = index
-    }
-
-    function indexFromRow(row) {
-        //FIXME Uses internal API to get to the model index
-        return treeView.__model.mapRowToModelIndex(row)
-    }
+    property var model: null
+    readonly property var currentIndex: modelAdaptor.mapRowToModelIndex(listView.currentIndex)
 
     function selectNext() {
-        treeView.__listView.incrementCurrentIndexBlocking()
-        treeView.__mouseArea.keySelect(Qt.NoModifier)
-        activated(treeView.selection.currentIndex)
+        listView.incrementCurrentIndex()
     }
 
     function selectPrevious() {
-        treeView.__listView.decrementCurrentIndexBlocking()
-        treeView.__mouseArea.keySelect(Qt.NoModifier)
-        activated(treeView.selection.currentIndex)
+        listView.decrementCurrent()
     }
 
-    function selectRootIndex() {
-        treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
-        activated(treeView.selection.currentIndex)
-    }
-
-    Flickable {
-        id: flickableItem
+    Kube.ListView {
+        id: listView
 
         anchors.fill: parent
+        focus: true
 
-        ScrollBar.vertical: Kube.ScrollBar { invertedColors: true }
-        clip: true
-        contentWidth: root.width
-        contentHeight: treeView.implicitHeight
-        Kube.ScrollHelper {
-            id: scrollHelper
-            flickable: flickableItem
+        model: Kube.TreeModelAdaptor {
+            id: modelAdaptor
+            model: root.model
         }
 
-        Controls1.TreeView {
-            id: treeView
+        ScrollBar.vertical: Kube.ScrollBar { invertedColors: true }
 
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            implicitHeight: __listView.contentItem.height + 2
-            height: implicitHeight
-            focus: true
+        delegate: Kube.ListDelegate {
+            id: delegate
+            width: listView.availableWidth
+            height: Kube.Units.gridUnit * 1.5
+            hoverEnabled: true
+            property bool isActive: listView.currentIndex === index
 
-            verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-
-            Kube.MouseProxy {
+            background: Kube.DelegateBackground {
                 anchors.fill: parent
-                target: scrollHelper
-                forwardWheelEvents: true
+                color: Kube.Colors.textColor
+                focused: delegate.activeFocus || delegate.hovered
+                selected: isActive
             }
 
-            flickableItem.boundsBehavior: Flickable.StopAtBounds
-
-            selection: ItemSelectionModel {
-                model: treeView.model
-                //TODO once we don't loose focus to the next view
-                // onCurrentChanged: {
-                //     treeView.activated(selection.currentIndex)
-                // }
-                //TODO scroll view so the current index is always visible
-            }
-
-
-            onActiveFocusChanged: {
-                //Set an initially focused item when the list view receives focus
-                if (activeFocus) {
-                    //If there is a selected index, reset to selected index.
-                    if (root.activeIndex) {
-                        treeView.selection.setCurrentIndex(root.activeIndex, ItemSelectionModel.Current)
-                    } else {
-                        treeView.selection.setCurrentIndex(model.index(0, 0), ItemSelectionModel.ClearAndSelect)
-                    }
+            function toggleExpanded() {
+                var idx = model._q_TreeView_ModelIndex
+                if (modelAdaptor.isExpanded(idx)) {
+                    modelAdaptor.collapse(idx)
                 } else {
-                    selection.clearCurrentIndex()
+                    modelAdaptor.expand(idx)
                 }
             }
 
-            Keys.onReturnPressed: treeView.activated(selection.currentIndex)
-            Keys.onSpacePressed: treeView.isExpanded(selection.currentIndex) ? treeView.collapse(selection.currentIndex) : treeView.expand(selection.currentIndex)
+            Keys.onSpacePressed: toggleExpanded()
 
-            //Forward the signal because on a desktopsystem activated is only triggerd by double clicks
-            onClicked: treeView.activated(index)
-
-            onActivated: root.activated(index)
-
-            //Select the initial index when the folder list is loaded
-            Connections {
-                target: treeView.__listView
-                onCountChanged: {
-                    root.selectRootIndex()
-                    //Only do this initially
-                    enabled = false
+            RowLayout {
+                anchors {
+                    fill: parent
+                    leftMargin: 2 + (model._q_TreeView_ItemDepth + 1) * Kube.Units.largeSpacing
                 }
-            }
+                spacing: Kube.Units.smallSpacing
+                Kube.Label {
+                    id: label
+                    Layout.fillWidth: true
+                    text: model.name
+                    color: Kube.Colors.highlightedTextColor
+                    elide: Text.ElideLeft
+                    clip: false
 
-            alternatingRowColors: false
-            headerVisible: false
-
-            style: TreeViewStyle {
-                rowDelegate: Control {
-                    id: delegateRoot
-                    property bool isActive: root.activeIndex === indexFromRow(styleData.row)
-                    height: Kube.Units.gridUnit * 1.5
-                    //FIXME This is the only way I could find to get the correct width. parent.width is way to wide
-                    width: parent.parent.parent ? parent.parent.parent.width : 0
-                    focus: false
-                    hoverEnabled: true
-                    Kube.DelegateBackground {
-                        anchors.fill: parent
-                        color: Kube.Colors.textColor
-                        focused: styleData.selected || delegateRoot.hovered
-                        selected: isActive
+                    Kube.IconButton {
+                        anchors {
+                            right: label.left
+                            verticalCenter: label.verticalCenter
+                        }
+                        visible: model._q_TreeView_HasChildren
+                        iconName: model._q_TreeView_ItemExpanded ? Kube.Icons.goDown_inverted : Kube.Icons.goNext_inverted
+                        padding: 0
+                        width: Kube.Units.gridUnit
+                        height: Kube.Units.gridUnit
+                        onClicked: toggleExpanded()
+                        activeFocusOnTab: false
+                        hoverEnabled: false
                     }
                 }
-
-                frame: Rectangle {
-                    color: Kube.Colors.textColor
-                }
-
-                branchDelegate: Kube.Label {
-                    anchors.centerIn: parent
-                    color: Kube.Colors.viewBackgroundColor
-                    text: styleData.isExpanded ? "-" : "+"
-                }
-
-                backgroundColor: Kube.Colors.darkBackgroundColor
-                highlightedTextColor: Kube.Colors.highlightedTextColor
             }
         }
     }

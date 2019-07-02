@@ -19,7 +19,6 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 2
-import QtQuick.Controls 1 as Controls1
 
 import org.kube.framework 1.0 as Kube
 
@@ -37,43 +36,8 @@ Kube.TreeView {
         onMessageReceived: root.selectPrevious()
     }
 
-    Controls1.TableViewColumn {
-        title: "Name"
-        role: "name"
-        delegate: Item {
-            id: delegateRoot
-            property bool isActive: root.activeIndex === root.indexFromRow(styleData.row)
-            DropArea {
-                anchors.fill: parent
-                Rectangle {
-                    anchors.fill: parent
-                    color: Kube.Colors.viewBackgroundColor
-                    opacity: 0.3
-                    visible: parent.containsDrag
-                }
-                onDropped: {
-                    Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": model.domainObject})
-                    drop.accept(Qt.MoveAction)
-                    drop.source.visible = false
-                }
-            }
-
-            Kube.Label {
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                    right: parent.right
-                }
-                text: styleData.value
-                elide: Qt.ElideRight
-                color: (model.hasNewData && !delegateRoot.isActive) ? Kube.Colors.highlightColor : Kube.Colors.viewBackgroundColor
-            }
-        }
-    }
-
     model: Kube.FolderListModel {
         id: folderListModel
         accountId: root.accountId
     }
-
 }

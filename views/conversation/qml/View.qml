@@ -155,17 +155,12 @@ Kube.View {
                 delegate: Kube.FolderListView {
                     objectName: "folderListView"
                     accountId: parent.accountId
-                    onVisibleChanged: {
-                        if (visible) {
-                            selectRootIndex()
-                        }
-                    }
 
-                    onActivated: {
+                    onCurrentIndexChanged: {
                         if (visible) {
-                            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(index, Kube.FolderListModel.DomainObject),
-                                                                                    "trash": model.data(index, Kube.FolderListModel.Trash)})
-                            root.currentFolder = model.data(index, Kube.FolderListModel.DomainObject)
+                            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(currentIndex, Kube.FolderListModel.DomainObject),
+                                                                                    "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
+                            root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
                         }
                     }
                 }
