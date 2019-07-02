@@ -33,7 +33,7 @@ FocusScope {
     }
 
     function selectPrevious() {
-        listView.decrementCurrent()
+        listView.decrementCurrentIndex()
     }
 
     Kube.ListView {
