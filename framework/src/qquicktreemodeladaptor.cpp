@@ -739,13 +739,13 @@ void QQuickTreeModelAdaptor1::modelRowsAboutToBeMoved(const QModelIndex & source
         int bufferCopyOffset;
         if (destIndex > endIndex) {
             for (int i = endIndex + 1; i < destIndex; i++) {
-                m_items.swapItemsAt(i, i - totalMovedCount); // Fast move from 1st to 2nd position
+                m_items.swap(i, i - totalMovedCount); // Fast move from 1st to 2nd position
             }
             bufferCopyOffset = destIndex - totalMovedCount;
         } else {
             // NOTE: we will not enter this loop if startIndex == destIndex
             for (int i = startIndex - 1; i >= destIndex; i--) {
-                m_items.swapItemsAt(i, i + totalMovedCount); // Fast move from 1st to 2nd position
+                m_items.swap(i, i + totalMovedCount); // Fast move from 1st to 2nd position
             }
             bufferCopyOffset = destIndex;
         }
