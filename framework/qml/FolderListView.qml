@@ -18,7 +18,6 @@
 */
 
 import QtQuick 2.4
-import QtQuick.Controls 2
 
 import org.kube.framework 1.0 as Kube
 
