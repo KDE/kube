@@ -68,6 +68,10 @@ public:
 
     void setFolderId(const QVariant &folderId);
     QVariant folderId() const;
+
+signals:
+    void initialItemsLoaded();
+
 protected:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
     bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;

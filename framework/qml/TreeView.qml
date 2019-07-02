@@ -28,6 +28,10 @@ FocusScope {
     property var model: null
     readonly property var currentIndex: modelAdaptor.mapRowToModelIndex(listView.currentIndex)
 
+    function selectRootIndex() {
+        listView.currentIndex = 0
+    }
+
     function selectNext() {
         listView.incrementCurrentIndex()
     }

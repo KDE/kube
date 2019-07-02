@@ -42,6 +42,11 @@ FolderListModel::FolderListModel(QObject *parent) : KRecursiveFilterProxyModel(p
                     sourceModel()->fetchMore(idx);
                 }
             });
+            QObject::connect(sourceModel(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+                if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+                    emit initialItemsLoaded();
+                }
+            });
         }
     });
 }

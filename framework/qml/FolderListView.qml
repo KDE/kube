@@ -38,5 +38,8 @@ Kube.TreeView {
     model: Kube.FolderListModel {
         id: folderListModel
         accountId: root.accountId
+        onInitialItemsLoaded: {
+            root.selectRootIndex()
+        }
     }
 }
