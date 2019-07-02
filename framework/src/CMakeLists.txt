@@ -58,6 +58,7 @@ add_library(kubeframework SHARED
     kubeimage.cpp
     clipboardproxy.cpp
     krecursivefilterproxymodel.cpp
+    qquicktreemodeladaptor.cpp
     startupcheck.cpp
     keyring.cpp
     domainobjectcontroller.cpp

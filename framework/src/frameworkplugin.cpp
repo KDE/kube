@@ -52,6 +52,7 @@
 #include "file.h"
 #include "logmodel.h"
 #include "entitymodel.h"
+#include "qquicktreemodeladaptor.h"
 
 #include <QtQml>
 #include <QQuickImageProvider>
@@ -189,6 +190,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<EntityLoader>(uri, 1, 0, "EntityLoader");
     qmlRegisterType<CheckedEntities>(uri, 1, 0, "CheckedEntities");
     qmlRegisterType<CheckableEntityModel>(uri, 1, 0, "CheckableEntityModel");
+    qmlRegisterType<QQuickTreeModelAdaptor1>(uri, 1, 0, "TreeModelAdaptor");
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");
