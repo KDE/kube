@@ -419,7 +419,7 @@ private slots:
         QCOMPARE(otp.plainTextContent(), QString::fromUtf8("test\n\n-- \nThis is a HTML signature.\n"));
 
         auto signaturePart = part->signatures().first();
-        QCOMPARE(signaturePart->partMetaData()->keyId, QByteArray{"2E3B7787B1B75920"});
+        QVERIFY(signaturePart->partMetaData()->keyId.endsWith(QByteArray{"2E3B7787B1B75920"}));
         //We lack the public key for this message
         QCOMPARE(signaturePart->partMetaData()->isGoodSignature, false);
         QCOMPARE(signaturePart->partMetaData()->keyMissing, true);
