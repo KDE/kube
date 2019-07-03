@@ -81,6 +81,13 @@ class KUBE_EXPORT ComposerController : public Kube::Controller
     KUBE_CONTROLLER_ACTION(saveAsDraft)
 
 public:
+    enum LoadType {
+        Draft,
+        Reply,
+        Forward,
+    };
+    Q_ENUMS(LoadType);
+
     explicit ComposerController();
 
     Completer *recipientCompleter() const;
