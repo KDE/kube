@@ -575,12 +575,12 @@ static KMime::Types::Mailbox::List getMailingListAddresses(const KMime::Message:
     return mailingListAddresses;
 }
 
-struct Recipients {
+struct RecipientMailboxes {
     KMime::Types::Mailbox::List to;
     KMime::Types::Mailbox::List cc;
 };
 
-static Recipients getRecipients(const KMime::Message::Ptr &origMsg, const KMime::Types::AddrSpecList &me)
+static RecipientMailboxes getRecipients(const KMime::Message::Ptr &origMsg, const KMime::Types::AddrSpecList &me)
 {
     const KMime::Types::Mailbox::List replyToList = origMsg->replyTo()->mailboxes();
     const KMime::Types::Mailbox::List mailingListAddresses = getMailingListAddresses(origMsg);
@@ -991,6 +991,24 @@ static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list
     return mailboxes;
 }
 
+
+static void setRecipients(KMime::Message &message, const Recipients &recipients)
+{
+    message.to(true)->clear();
+    for (const auto &mb : stringListToMailboxes(recipients.to)) {
+        message.to()->addAddress(mb);
+    }
+    message.cc(true)->clear();
+    for (const auto &mb : stringListToMailboxes(recipients.cc)) {
+        message.cc()->addAddress(mb);
+    }
+    message.bcc(true)->clear();
+    for (const auto &mb : stringListToMailboxes(recipients.bcc)) {
+        message.bcc()->addAddress(mb);
+    }
+}
+
+
 KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMessage,
     const QStringList &to, const QStringList &cc, const QStringList &bcc,
     const KMime::Types::Mailbox &from, const QString &subject, const QString &body, bool htmlBody,
@@ -1009,18 +1027,7 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     mail->date()->setDateTime(QDateTime::currentDateTime());
     mail->userAgent()->fromUnicodeString(QString("%1/%2(%3)").arg(QString::fromLocal8Bit("Kube")).arg("0.1").arg(QSysInfo::prettyProductName()), "utf-8");
 
-    mail->to(true)->clear();
-    for (const auto &mb : stringListToMailboxes(to)) {
-        mail->to()->addAddress(mb);
-    }
-    mail->cc(true)->clear();
-    for (const auto &mb : stringListToMailboxes(cc)) {
-        mail->cc()->addAddress(mb);
-    }
-    mail->bcc(true)->clear();
-    for (const auto &mb : stringListToMailboxes(bcc)) {
-        mail->bcc()->addAddress(mb);
-    }
+    setRecipients(*mail, {to, cc, bcc});
 
     mail->from(true)->clear();
     mail->from(true)->addAddress(from);
@@ -1105,4 +1112,50 @@ KMime::Message::Ptr MailTemplates::createMessage(KMime::Message::Ptr existingMes
     resultMessage->setContent(mail->head() + bodyData);
     resultMessage->parse(); // Not strictly necessary.
     return resultMessage;
+}
+
+
+KMime::Message::Ptr MailTemplates::createIMipMessage(
+    const QString &from,
+    const Recipients &recipients,
+    const QString &subject,
+    const QString &body,
+    const QString &attachment)
+{
+    KMime::Message::Ptr message = KMime::Message::Ptr( new KMime::Message );
+    message->contentTransferEncoding()->clear();  // 7Bit, decoded.
+
+    // Set the headers
+    message->userAgent()->fromUnicodeString(QString("%1/%2(%3)").arg(QString::fromLocal8Bit("Kube")).arg("0.1").arg(QSysInfo::prettyProductName()), "utf-8");
+    message->from()->fromUnicodeString(from, "utf-8");
+
+    setRecipients(*message, recipients);
+
+    message->date()->setDateTime(QDateTime::currentDateTime());
+    message->subject()->fromUnicodeString(subject, "utf-8");
+    message->contentType()->setMimeType("multipart/alternative");
+    message->contentType()->setBoundary(KMime::multiPartBoundary());
+
+    // Set the first multipart, the body message.
+    KMime::Content *bodyMessage = new KMime::Content{message.data()};
+    bodyMessage->contentType()->setMimeType("text/plain");
+    bodyMessage->contentType()->setCharset("utf-8");
+    bodyMessage->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
+    bodyMessage->setBody(KMime::CRLFtoLF(body.toUtf8()));
+    message->addContent( bodyMessage );
+
+    // Set the second multipart, the attachment.
+    KMime::Content *attachMessage = new KMime::Content{message.data()};
+    attachMessage->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
+    attachMessage->contentType()->setMimeType("text/calendar");
+    attachMessage->contentType()->setCharset("utf-8");
+    attachMessage->contentType()->setName(QLatin1String("event.ics"), "utf-8");
+    attachMessage->contentType()->setParameter(QLatin1String("method"), QLatin1String("REPLY"));
+    attachMessage->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
+    attachMessage->setBody(KMime::CRLFtoLF(attachment.toUtf8()));
+    message->addContent(attachMessage);
+
+    // Job done, attach the both multiparts and assemble the message.
+    message->assemble();
+    return message;
 }

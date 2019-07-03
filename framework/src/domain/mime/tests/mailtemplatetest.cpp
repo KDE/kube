@@ -440,6 +440,35 @@ private slots:
         QCOMPARE(contents[3]->contentType()->mimeType(), QByteArray{"application/pgp-keys"});
         QCOMPARE(contents[3]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
     }
+
+    void testCreateIMipMessage()
+    {
+        QStringList to = {{"to@example.org"}};
+        QStringList cc = {{"cc@example.org"}};
+        QStringList bcc = {{"bcc@example.org"}};
+        QString from = {"from@example.org"};
+        QString subject = "subject";
+        QString body = "body";
+
+        QString ical = "ical";
+
+        auto result = MailTemplates::createIMipMessage(from, {to, cc, bcc}, subject, body, ical);
+
+        QVERIFY(result);
+        QVERIFY(validate(result));
+        qWarning() << "---------------------------------";
+        qWarning().noquote() << result->encodedContent();
+        qWarning() << "---------------------------------";
+
+        QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/alternative"});
+
+        QCOMPARE(result->attachments().size(), 0);
+
+        QCOMPARE(result->contents().size(), 2);
+        QVERIFY(result->contents()[0]->contentType()->isMimeType("text/plain"));
+        QVERIFY(result->contents()[1]->contentType()->isMimeType("text/calendar"));
+        QCOMPARE(result->contents()[1]->contentType()->name(), {"event.ics"});
+    }
 };
 
 QTEST_MAIN(MailTemplateTest)
