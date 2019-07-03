@@ -40,6 +40,39 @@ Kube.View {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
     }
 
+    helpViewComponent: Kube.HelpPopup {
+        ListModel {
+            ListElement { description: qsTr("Jump to next week/month:"); shortcut: "j" }
+            ListElement { description: qsTr("Jump to previous week/month:"); shortcut: "k" }
+        }
+    }
+
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['j', StandardKey.Forward]
+        onActivated: root.goToNext()
+    }
+
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['k', StandardKey.Back]
+        onActivated: root.goToPrevious()
+    }
+
+    function goToNext() {
+        if (weekViewButton.checked) {
+            root.selectedDate = DateUtils.nextWeek(root.selectedDate)
+        } else {
+            root.selectedDate = DateUtils.nextMonth(root.selectedDate)
+        }
+    }
+    function goToPrevious() {
+        if (weekViewButton.checked) {
+            root.selectedDate = DateUtils.previousWeek(root.selectedDate)
+        } else {
+            root.selectedDate = DateUtils.previousMonth(root.selectedDate)
+        }
+    }
     RowLayout {
 
         Timer {
@@ -125,20 +158,8 @@ Kube.View {
                     onSelected: {
                         root.selectedDate = date
                     }
-                    onNext: {
-                        if (weekViewButton.checked) {
-                            root.selectedDate = DateUtils.nextWeek(root.selectedDate)
-                        } else {
-                            root.selectedDate = DateUtils.nextMonth(root.selectedDate)
-                        }
-                    }
-                    onPrevious: {
-                        if (weekViewButton.checked) {
-                            root.selectedDate = DateUtils.previousWeek(root.selectedDate)
-                        } else {
-                            root.selectedDate = DateUtils.previousMonth(root.selectedDate)
-                        }
-                    }
+                    onNext: root.goToNext()
+                    onPrevious: root.goToPrevious()
                 }
             }
 
