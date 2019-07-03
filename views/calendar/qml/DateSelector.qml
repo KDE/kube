@@ -24,7 +24,7 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property date selectedDate
-    property date notBefore: new Date(1980, 1, 1, 0, 0, 0)
+    property date notBefore: new Date(0) //Earliest possible by epoch
     property color backgroundColor: Kube.Colors.darkBackgroundColor
     property color textColor: Kube.Colors.highlightedTextColor
     property bool invertIcons: true
