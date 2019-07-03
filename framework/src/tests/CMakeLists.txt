@@ -5,38 +5,23 @@ include_directories(
 
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Test Gui)
 
-add_executable(folderlistmodeltest folderlistmodeltest.cpp)
-add_test(folderlistmodeltest folderlistmodeltest)
-target_link_libraries(folderlistmodeltest
-    Qt5::Core
-    Qt5::Test
-    Qt5::Gui
-    kubeframework
-)
+macro(auto_tests)
+    foreach(_testname ${ARGN})
+        add_executable(${_testname} ${_testname}.cpp)
+        add_test(${_testname} ${_testname})
+        target_link_libraries(${_testname}
+            Qt5::Core
+            Qt5::Test
+            Qt5::Gui
+            kubeframework
+        )
+    endforeach(_testname)
+endmacro(auto_tests)
 
-add_executable(maillistmodeltest maillistmodeltest.cpp)
-add_test(maillistmodeltest maillistmodeltest)
-target_link_libraries(maillistmodeltest
-    Qt5::Core
-    Qt5::Test
-    Qt5::Gui
-    kubeframework
-)
-
-add_executable(eventoccurrencemodeltest eventoccurrencemodeltest.cpp)
-add_test(eventoccurrencemodeltest eventoccurrencemodeltest)
-target_link_libraries(eventoccurrencemodeltest
-    Qt5::Core
-    Qt5::Test
-    Qt5::Gui
-    kubeframework
-)
-
-add_executable(entitymodeltest entitymodeltest.cpp)
-add_test(entitymodeltest entitymodeltest)
-target_link_libraries(entitymodeltest
-    Qt5::Core
-    Qt5::Test
-    Qt5::Gui
-    kubeframework
+auto_tests(
+    folderlistmodeltest
+    maillistmodeltest
+    eventoccurrencemodeltest
+    entitymodeltest
+    invitationcontrollertest
 )

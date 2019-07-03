@@ -32,7 +32,16 @@ class KUBE_EXPORT InvitationController : public EventController
 {
     Q_OBJECT
 
+public:
+    enum InvitationState {
+        Unknown,
+        Accepted,
+        Declined,
+    };
+    Q_ENUM(InvitationState);
+
     KUBE_CONTROLLER_PROPERTY(QByteArray, Uid, uid)
+    KUBE_CONTROLLER_PROPERTY(InvitationState, State, state)
 
     KUBE_CONTROLLER_ACTION(accept)
     KUBE_CONTROLLER_ACTION(decline)

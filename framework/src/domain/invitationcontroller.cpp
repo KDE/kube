@@ -44,7 +44,9 @@ void InvitationController::loadICal(const QString &ical)
         return;
     }
 
-    setUid(icalEvent->uid());
+    setState(InvitationState::Unknown);
+
+    setUid(icalEvent->uid().toUtf8());
     setSummary(icalEvent->summary());
     setDescription(icalEvent->description());
     setLocation(icalEvent->location());
