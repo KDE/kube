@@ -112,6 +112,17 @@ void EventController::updateSaveAction()
     saveAction()->setEnabled(!getSummary().isEmpty());
 }
 
+void EventController::populateFromEvent(const KCalCore::Event &event)
+{
+    setSummary(event.summary());
+    setDescription(event.description());
+    setLocation(event.location());
+    setRecurring(event.recurs());
+    //TODO translate recurrence to string (e.g. weekly)
+    setRecurrenceString("");
+    setAllDay(event.allDay());
+}
+
 void EventController::init()
 {
     using namespace Sink;
@@ -130,16 +141,9 @@ void EventController::init()
             SinkWarning() << "Invalid ICal to process, ignoring...";
             return;
         }
-        setSummary(icalEvent->summary());
-        setDescription(icalEvent->description());
-        setLocation(icalEvent->location());
-
-        setRecurring(icalEvent->recurs());
-        //TODO translate recurrence to string (e.g. weekly)
-        setRecurrenceString("");
+        populateFromEvent(*icalEvent);
         setStart(occurrence.start);
         setEnd(occurrence.end);
-        setAllDay(icalEvent->allDay());
     }
 }
 

@@ -24,6 +24,7 @@
 #include <sink/log.h>
 
 #include <KCalCore/ICalFormat>
+#include <KCalCore/MemoryCalendar>
 #include <KCalCore/Event>
 #include <QUuid>
 
@@ -38,22 +39,52 @@ InvitationController::InvitationController()
 
 void InvitationController::loadICal(const QString &ical)
 {
-    auto icalEvent = KCalCore::ICalFormat().readIncidence(ical.toUtf8()).dynamicCast<KCalCore::Event>();
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    KCalCore::Calendar::Ptr calendar(new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()});
+    auto msg = KCalCore::ICalFormat{}.parseScheduleMessage(calendar, ical.toUtf8());
+    if (!msg) {
+        SinkWarning() << "Invalid scheudle message to process, ignoring...";
+        return;
+    }
+    auto icalEvent = msg->event().dynamicCast<KCalCore::Event>();
+    if (msg->method() != KCalCore::iTIPRequest) {
+        SinkWarning() << "Invalid method " << msg->method();
+        return;
+    }
+
     if(!icalEvent) {
         SinkWarning() << "Invalid ICal to process, ignoring...";
         return;
     }
 
-    setState(InvitationState::Unknown);
 
-    setUid(icalEvent->uid().toUtf8());
-    setSummary(icalEvent->summary());
-    setDescription(icalEvent->description());
-    setLocation(icalEvent->location());
+    Query query;
+    query.request<Event::Uid>();
+    query.request<Event::Ical>();
+    query.filter<Event::Uid>(icalEvent->uid().toUtf8());
+    Store::fetchAll<Event>(query).then([this, icalEvent](const QList<Event::Ptr> &events) {
+        if (!events.isEmpty()) {
+            setState(InvitationState::Accepted);
 
-    setStart(icalEvent->dtStart());
-    setEnd(icalEvent->dtEnd());
-    setAllDay(icalEvent->allDay());
+            auto icalEvent = KCalCore::ICalFormat().readIncidence(events.first()->getIcal()).dynamicCast<KCalCore::Event>();
+            if(!icalEvent) {
+                SinkWarning() << "Invalid ICal to process, ignoring...";
+                return;
+            }
+            populateFromEvent(*icalEvent);
+            setStart(icalEvent->dtStart());
+            setEnd(icalEvent->dtEnd());
+            setUid(icalEvent->uid().toUtf8());
+        } else {
+            setState(InvitationState::Unknown);
+            populateFromEvent(*icalEvent);
+            setStart(icalEvent->dtStart());
+            setEnd(icalEvent->dtEnd());
+            setUid(icalEvent->uid().toUtf8());
+        }
+    }).exec();
 }
 
 void InvitationController::accept()

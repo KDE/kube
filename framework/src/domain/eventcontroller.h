@@ -28,6 +28,10 @@
 
 #include "controller.h"
 
+namespace KCalCore {
+    class Event;
+};
+
 class KUBE_EXPORT EventController : public Kube::Controller
 {
     Q_OBJECT
@@ -54,6 +58,9 @@ public:
 
     void init() override;
     Q_INVOKABLE void remove();
+
+protected:
+    void populateFromEvent(const KCalCore::Event &event);
 
 private slots:
     void updateSaveAction();

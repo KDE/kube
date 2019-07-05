@@ -35,8 +35,28 @@ Item {
         id: controller
         Component.onCompleted: loadICal(content)
     }
+    ColumnLayout {
+        visible: controller.state == Kube.InvitationController.Accepted
+        Kube.Heading {
+            Layout.fillWidth: true
+            text: qsTr("You have accepted: \"%1\"").arg(controller.summary)
+        }
+
+        Kube.SelectableLabel {
+            visible: controller.allDay
+            text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? "" : " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM"))
+        }
+
+        Kube.SelectableLabel {
+            visible: !controller.allDay
+            text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? controller.end.toLocaleString(Qt.locale(), "hh:mm") : controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))
+        }
+
+    }
 
     ColumnLayout {
+        visible: controller.state == Kube.InvitationController.Unknown
+
         Kube.Heading {
             Layout.fillWidth: true
             text: qsTr("You've been invited to: \"%1\"").arg(controller.summary)
