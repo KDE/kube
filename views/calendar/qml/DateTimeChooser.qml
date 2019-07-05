@@ -27,7 +27,7 @@ import "dateutils.js" as DateUtils
 RowLayout {
     id: root
     property bool enableTime: true
-    property var notBefore: new Date(1980, 1, 1, 0, 0, 0)
+    property var notBefore: new Date(0)
     property var notBeforeRounded: DateUtils.roundToMinutes(notBefore, delta)
     property var initialValue: null
     property int delta: 15
