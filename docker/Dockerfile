@@ -20,8 +20,9 @@ RUN usermod -p `perl -e "print crypt("admin","Q4")"` cyrus
 RUN useradd -p `perl -e "print crypt("doe","Q4")"` doe
 RUN /usr/bin/sscg --package cyrus-imapd --cert-file /etc/pki/cyrus-imapd/cyrus-imapd.pem --cert-key-file /etc/pki/cyrus-imapd/cyrus-imapd-key.pem --ca-file /etc/pki/cyrus-imapd/cyrus-imapd-ca.pem
 RUN saslauthd -a shadow && /usr/libexec/cyrus-imapd/master -d && sleep 1 && echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
-#RUN echo "doe" | saslpasswd2 -p -u example.org doe
-#RUN chown cyrus:root /etc/sasldb2
+
+#Qt 5.12 js Date doesn't play well with the default UTC timezone
+RUN rm /etc/localtime; ln -s /usr/share/zoneinfo/Europe/Zurich /etc/localtime
 
 #DBus For KCacheGrind
 RUN dbus-uuidgen --ensure
