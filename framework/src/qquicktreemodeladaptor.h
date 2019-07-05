@@ -51,6 +51,8 @@
 // We mean it.
 //
 
+#include "kube_export.h"
+
 #include <QSet>
 #include <QPointer>
 #include <QAbstractItemModel>
@@ -58,7 +60,7 @@
 
 class QAbstractItemModel;
 
-class QQuickTreeModelAdaptor1 : public QAbstractListModel
+class KUBE_EXPORT QQuickTreeModelAdaptor1 : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *model READ model WRITE setModel NOTIFY modelChanged)
