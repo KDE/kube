@@ -8,6 +8,7 @@
 #include <KCalCore/ICalFormat>
 #include <KCalCore/ScheduleMessage>
 #include <KCalCore/Event>
+#include <KCalCore/Attendee>
 #include "invitationcontroller.h"
 
 using namespace Sink::ApplicationDomain;
@@ -27,6 +28,8 @@ class InvitationControllerTest : public QObject
         calcoreEvent->setDescription("description");
         calcoreEvent->setLocation("location");
         calcoreEvent->setDtStart(QDateTime::currentDateTime());
+        calcoreEvent->setOrganizer("organizer@test.com");
+        calcoreEvent->addAttendee(KCalCore::Attendee::Ptr::create("John Doe", "attendee1@test.com", true, KCalCore::Attendee::NeedsAction));
 
         return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, KCalCore::iTIPRequest);
     }
@@ -52,8 +55,8 @@ private slots:
         auto calendar = ApplicationDomainType::createEntity<Calendar>(resourceId);
         Sink::Store::create(calendar).exec().waitForFinished();
 
-        QByteArray uid{"uid1"};
-        const QString ical = createInvitation(uid);
+        const QByteArray uid{"uid1"};
+        const auto ical = createInvitation(uid);
 
         {
             InvitationController controller;
@@ -64,19 +67,27 @@ private slots:
             QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
 
             controller.acceptAction()->execute();
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
 
             QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
 
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 1);
+            auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
+            QVERIFY(event);
+            QCOMPARE(event->uid(), uid);
+
+            const auto attendee = event->attendeeByMail("attendee1@test.com");
+            QVERIFY(attendee);
+            QCOMPARE(attendee->status(), KCalCore::Attendee::Accepted);
         }
 
-        // {
-        //     InvitationController controller;
-        //     controller.loadICal(ical);
-        //     QTRY_COMPARE(controller.state(), InvitationController::Accepted);
-        //     QTRY_COMPARE(controller.uid(), eventUid);
-        // }
+        {
+            InvitationController controller;
+            controller.loadICal(ical);
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+            QTRY_COMPARE(controller.getUid(), uid);
+        }
     }
 };
 

@@ -116,6 +116,7 @@ void InvitationController::accept()
             if (error) {
                 SinkWarning() << "Failed to save the event: " << error;
             }
+            setState(InvitationState::Accepted);
             emit done();
         });
 
