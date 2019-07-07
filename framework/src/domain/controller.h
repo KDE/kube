@@ -131,6 +131,8 @@ public:
     void setValues(const QByteArray &id, const QVariantMap &values);
     void traverse(const std::function<void(const QVariantMap &)> &f);
 
+    QByteArray findByProperty(const QByteArray &key, const QVariant &) const;
+
     template<typename T>
     QList<T> getList(const QString &property)
     {

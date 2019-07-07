@@ -31,8 +31,16 @@
 
 using namespace Sink::ApplicationDomain;
 
+class AttendeeController : public Kube::ListPropertyController
+{
+    Q_OBJECT
+public:
+    AttendeeController() : Kube::ListPropertyController{{"name", "email", "status"}}
+    {
+    }
 EventController::EventController()
     : Kube::Controller(),
+    controller_attendees{new AttendeeController},
     action_save{new Kube::ControllerAction{this, &EventController::save}}
 {
     updateSaveAction();
@@ -62,11 +70,7 @@ void EventController::save()
             return;
         }
 
-        calcoreEvent->setSummary(getSummary());
-        calcoreEvent->setDescription(getDescription());
-        calcoreEvent->setDtStart(getStart());
-        calcoreEvent->setDtEnd(getEnd());
-        calcoreEvent->setAllDay(getAllDay());
+        saveToEvent(*calcoreEvent);
 
         event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
         event.setCalendar(*calendar);
@@ -85,12 +89,7 @@ void EventController::save()
 
         auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
         calcoreEvent->setUid(QUuid::createUuid().toString());
-        calcoreEvent->setSummary(getSummary());
-        calcoreEvent->setDescription(getDescription());
-        calcoreEvent->setLocation(getLocation());
-        calcoreEvent->setDtStart(getStart());
-        calcoreEvent->setDtEnd(getEnd());
-        calcoreEvent->setAllDay(getAllDay());
+        saveToEvent(*calcoreEvent);
 
         event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
         event.setCalendar(*calendar);
@@ -112,15 +111,62 @@ void EventController::updateSaveAction()
     saveAction()->setEnabled(!getSummary().isEmpty());
 }
 
+static EventController::ParticipantStatus toStatus(KCalCore::Attendee::PartStat status) {
+    switch(status) {
+        case KCalCore::Attendee::Accepted:
+            return EventController::Accepted;
+        case KCalCore::Attendee::Declined:
+            return EventController::Declined;
+        case KCalCore::Attendee::NeedsAction:
+        default:
+            break;
+    }
+    return EventController::Unknown;
+}
+
+static KCalCore::Attendee::PartStat fromStatus(EventController::ParticipantStatus status) {
+    switch(status) {
+        case EventController::Accepted:
+            return KCalCore::Attendee::Accepted;
+        case EventController::Declined:
+            return KCalCore::Attendee::Declined;
+        case EventController::Unknown:
+            break;
+    }
+    return KCalCore::Attendee::NeedsAction;
+}
+
 void EventController::populateFromEvent(const KCalCore::Event &event)
 {
     setSummary(event.summary());
     setDescription(event.description());
     setLocation(event.location());
     setRecurring(event.recurs());
-    //TODO translate recurrence to string (e.g. weekly)
-    setRecurrenceString("");
     setAllDay(event.allDay());
+
+    for (const auto &attendee : event.attendees()) {
+        attendeesController()->add({{"name", attendee->name()}, {"email", attendee->email()}, {"status", toStatus(attendee->status())}});
+    }
+}
+
+void EventController::saveToEvent(KCalCore::Event &event)
+{
+    event.setSummary(getSummary());
+    event.setDescription(getDescription());
+    event.setLocation(getLocation());
+    event.setDtStart(getStart());
+    event.setDtEnd(getEnd());
+    event.setAllDay(getAllDay());
+
+    event.clearAttendees();
+    KCalCore::Attendee::List attendees;
+    attendeesController()->traverse([&] (const QVariantMap &map) {
+        bool rsvp = true;
+        KCalCore::Attendee::PartStat status = fromStatus(map["status"].value<ParticipantStatus>());
+        KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant;
+
+        event.addAttendee(KCalCore::Attendee::Ptr::create(map["name"].toString(), map["email"].toString(), rsvp, status, role, QString{}));
+    });
 }
 
 void EventController::init()
@@ -156,3 +202,5 @@ void EventController::remove()
         run(Sink::Store::remove(event));
     }
 }
+
+#include "eventcontroller.moc"

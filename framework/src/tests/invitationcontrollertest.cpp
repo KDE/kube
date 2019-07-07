@@ -43,6 +43,13 @@ private slots:
         auto account = ApplicationDomainType::createEntity<SinkAccount>();
         Sink::Store::create(account).exec().waitForFinished();
 
+        auto identity = ApplicationDomainType::createEntity<Identity>();
+        identity.setAccount(account);
+        identity.setAddress("attendee1@test.com");
+        identity.setName("John Doe");
+
+        Sink::Store::create(identity).exec().waitForFinished();
+
         auto resource = DummyResource::create(account.identifier());
         Sink::Store::create(resource).exec().waitForFinished();
         resourceId = resource.identifier();

@@ -59,7 +59,6 @@ void InvitationController::loadICal(const QString &ical)
         return;
     }
 
-
     Query query;
     query.request<Event::Uid>();
     query.request<Event::Ical>();
@@ -98,26 +97,43 @@ void InvitationController::accept()
         return;
     }
 
-    auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
-    calcoreEvent->setUid(getUid());
-    calcoreEvent->setSummary(getSummary());
-    calcoreEvent->setDescription(getDescription());
-    calcoreEvent->setLocation(getLocation());
-    calcoreEvent->setDtStart(getStart());
-    calcoreEvent->setDtEnd(getEnd());
-    calcoreEvent->setAllDay(getAllDay());
-
-    Event event(calendar->resourceInstanceIdentifier());
-    event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
-    event.setCalendar(*calendar);
-
-    auto job = Store::create(event)
-        .then([&] (const KAsync::Error &error) {
-            if (error) {
-                SinkWarning() << "Failed to save the event: " << error;
+    Query query;
+    query.request<ApplicationDomain::Identity::Name>()
+        .request<ApplicationDomain::Identity::Address>()
+        .request<ApplicationDomain::Identity::Account>();
+    auto job = Store::fetchAll<ApplicationDomain::Identity>(query)
+        .then([=] (const QList<Identity::Ptr> &list) {
+            if (list.isEmpty()) {
+                qWarning() << "Failed to find an identity";
             }
-            setState(InvitationState::Accepted);
-            emit done();
+            bool foundMatch = false;
+            for (const auto &identity : list) {
+                const auto id = attendeesController()->findByProperty("email", identity->getAddress());
+                if (!id.isEmpty()) {
+                    attendeesController()->setValue(id, "status", EventController::Accepted);
+                    foundMatch = true;
+                }
+            }
+            if (!foundMatch) {
+                qWarning() << "Failed to find a matching identity";
+                return KAsync::error("Failed to find a matching identity");
+            }
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid(getUid());
+            saveToEvent(*calcoreEvent);
+
+            Event event(calendar->resourceInstanceIdentifier());
+            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setCalendar(*calendar);
+
+            return Store::create(event)
+                .then([&] (const KAsync::Error &error) {
+                    if (error) {
+                        SinkWarning() << "Failed to save the event: " << error;
+                    }
+                    setState(InvitationState::Accepted);
+                    emit done();
+                });
         });
 
     run(job);

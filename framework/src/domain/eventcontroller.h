@@ -51,9 +51,18 @@ class KUBE_EXPORT EventController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(bool, Recurring, recurring)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::ApplicationDomainType::Ptr, Calendar, calendar)
 
+    KUBE_CONTROLLER_LISTCONTROLLER(attendees)
+
     KUBE_CONTROLLER_ACTION(save)
 
 public:
+    enum ParticipantStatus {
+        Unknown,
+        Accepted,
+        Declined,
+    };
+    Q_ENUM(ParticipantStatus);
+
     explicit EventController();
 
     void init() override;
@@ -61,6 +70,7 @@ public:
 
 protected:
     void populateFromEvent(const KCalCore::Event &event);
+    void saveToEvent(KCalCore::Event &event);
 
 private slots:
     void updateSaveAction();
