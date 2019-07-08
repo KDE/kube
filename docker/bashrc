@@ -1,7 +1,8 @@
+export HISTCONTROL=ignoreboth:erasedups
+
 #Disable coredumps
 ulimit -c 0
 
 sudo rsyslogd
 sudo saslauthd -a shadow
 sudo /usr/libexec/cyrus-imapd/master -d
-
