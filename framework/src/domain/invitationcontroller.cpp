@@ -28,6 +28,8 @@
 #include <KCalCore/Event>
 #include <QUuid>
 
+#include "mailtemplates.h"
+
 using namespace Sink::ApplicationDomain;
 
 InvitationController::InvitationController()
@@ -86,6 +88,18 @@ void InvitationController::loadICal(const QString &ical)
     }).exec();
 }
 
+void sendIMipMessage(const QString &from, KCalCore::Event::Ptr event)
+{
+    auto msg = MailTemplates::createIMipMessage(
+            from,
+            {{"to@example.org"}, {}, {}},
+            "Reply to your invitation",
+            "Body of the reply",
+            KCalCore::ICalFormat{}.createScheduleMessage(event, KCalCore::iTIPReply));
+    qWarning() << "Msg " << msg->encodedContent();
+
+}
+
 void InvitationController::accept()
 {
     using namespace Sink;
@@ -106,11 +120,13 @@ void InvitationController::accept()
             if (list.isEmpty()) {
                 qWarning() << "Failed to find an identity";
             }
+            QString fromAddress;
             bool foundMatch = false;
             for (const auto &identity : list) {
                 const auto id = attendeesController()->findByProperty("email", identity->getAddress());
                 if (!id.isEmpty()) {
                     attendeesController()->setValue(id, "status", EventController::Accepted);
+                    fromAddress = identity->getAddress();
                     foundMatch = true;
                 }
             }
@@ -126,6 +142,8 @@ void InvitationController::accept()
             event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event.setCalendar(*calendar);
 
+            sendIMipMessage(fromAddress, calcoreEvent);
+
             return Store::create(event)
                 .then([&] (const KAsync::Error &error) {
                     if (error) {
@@ -138,7 +156,6 @@ void InvitationController::accept()
 
     run(job);
 
-    //TODO sendIMipMessage(calcoreEvent);
 }
 
 void InvitationController::decline()
