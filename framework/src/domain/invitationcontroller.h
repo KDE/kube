@@ -42,6 +42,7 @@ public:
 
     KUBE_CONTROLLER_PROPERTY(QByteArray, Uid, uid)
     KUBE_CONTROLLER_PROPERTY(InvitationState, State, state)
+    KUBE_CONTROLLER_PROPERTY(QString, Organizer, organizer)
 
     KUBE_CONTROLLER_ACTION(accept)
     KUBE_CONTROLLER_ACTION(decline)
@@ -50,4 +51,7 @@ public:
     explicit InvitationController();
 
     Q_INVOKABLE void loadICal(const QString &message);
+
+private:
+    void storeEvent(InvitationState);
 };

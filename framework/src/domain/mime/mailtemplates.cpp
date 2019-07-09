@@ -984,7 +984,7 @@ static KMime::Types::Mailbox::List stringListToMailboxes(const QStringList &list
         if (mb.hasAddress()) {
             mailboxes << mb;
         } else {
-            qWarning() << "Got an invalid address: " << s;
+            qWarning() << "Got an invalid address: " << s << list;
             Q_ASSERT(false);
         }
     }

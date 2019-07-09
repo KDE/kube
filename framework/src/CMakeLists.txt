@@ -47,6 +47,7 @@ add_library(kubeframework SHARED
     domain/controller.cpp
     domain/peoplemodel.cpp
     domain/textdocumenthandler.cpp
+    domain/sinkutils.cpp
     domain/mime/htmlutils.cpp
     domain/mime/messageparser.cpp
     domain/mime/attachmentmodel.cpp

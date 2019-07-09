@@ -29,6 +29,7 @@
 #include <QUuid>
 
 #include "mailtemplates.h"
+#include "sinkutils.h"
 
 using namespace Sink::ApplicationDomain;
 
@@ -61,6 +62,8 @@ void InvitationController::loadICal(const QString &ical)
         return;
     }
 
+    setOrganizer(icalEvent->organizer()->fullName());
+
     Query query;
     query.request<Event::Uid>();
     query.request<Event::Ical>();
@@ -88,19 +91,38 @@ void InvitationController::loadICal(const QString &ical)
     }).exec();
 }
 
-void sendIMipMessage(const QString &from, KCalCore::Event::Ptr event)
+void sendIMipMessage(const QByteArray &accountId, const QString &from, KCalCore::Event::Ptr event)
 {
+    const auto organizerEmail = event->organizer()->fullName();
+
+    if (organizerEmail.isEmpty()) {
+        qWarning() << "Failed to find the organizer to send the reply to " << organizerEmail;
+        return;
+    }
+
+
+    QString body = "The invitation has been accepted";
+
     auto msg = MailTemplates::createIMipMessage(
             from,
-            {{"to@example.org"}, {}, {}},
-            "Reply to your invitation",
-            "Body of the reply",
+            {{organizerEmail}, {}, {}},
+            QString("\"%1\" has been accepted by %2").arg(event->summary()).arg("Meeeee"),
+            body,
             KCalCore::ICalFormat{}.createScheduleMessage(event, KCalCore::iTIPReply));
+
     qWarning() << "Msg " << msg->encodedContent();
+
+    SinkUtils::sendMail(msg->encodedContent(true), accountId)
+        .then([&] (const KAsync::Error &error) {
+            if (error) {
+                SinkWarning() << "Failed to send message " << error;
+            }
+        }).exec();
+
 
 }
 
-void InvitationController::accept()
+void InvitationController::storeEvent(InvitationState status)
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
@@ -121,12 +143,18 @@ void InvitationController::accept()
                 qWarning() << "Failed to find an identity";
             }
             QString fromAddress;
+            QByteArray accountId;
             bool foundMatch = false;
             for (const auto &identity : list) {
                 const auto id = attendeesController()->findByProperty("email", identity->getAddress());
                 if (!id.isEmpty()) {
-                    attendeesController()->setValue(id, "status", EventController::Accepted);
+                    if (status == InvitationController::Accepted) {
+                        attendeesController()->setValue(id, "status", EventController::Accepted);
+                    } else {
+                        attendeesController()->setValue(id, "status", EventController::Declined);
+                    }
                     fromAddress = identity->getAddress();
+                    accountId = identity->getAccount();
                     foundMatch = true;
                 }
             }
@@ -137,29 +165,35 @@ void InvitationController::accept()
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
             calcoreEvent->setUid(getUid());
             saveToEvent(*calcoreEvent);
+            calcoreEvent->setOrganizer(getOrganizer());
+
+            sendIMipMessage(accountId, fromAddress, calcoreEvent);
+
 
             Event event(calendar->resourceInstanceIdentifier());
             event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event.setCalendar(*calendar);
 
-            sendIMipMessage(fromAddress, calcoreEvent);
-
             return Store::create(event)
-                .then([&] (const KAsync::Error &error) {
+                .then([=] (const KAsync::Error &error) {
                     if (error) {
                         SinkWarning() << "Failed to save the event: " << error;
                     }
-                    setState(InvitationState::Accepted);
+                    setState(status);
                     emit done();
                 });
         });
 
     run(job);
+}
 
+void InvitationController::accept()
+{
+    storeEvent(InvitationState::Accepted);
 }
 
 void InvitationController::decline()
 {
-
+    storeEvent(InvitationState::Declined);
 }
 

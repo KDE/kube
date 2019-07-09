@@ -36,6 +36,7 @@
 #include "mime/mailtemplates.h"
 #include "mime/mailcrypto.h"
 #include "async.h"
+#include "sinkutils.h"
 
 std::vector<Crypto::Key> &operator+=(std::vector<Crypto::Key> &list, const std::vector<Crypto::Key> &add)
 {
@@ -527,48 +528,17 @@ void ComposerController::send()
         return;
     }
     //SinkLog() << "Sending a mail: " << *this;
-    using namespace Sink;
-    using namespace Sink::ApplicationDomain;
-
-    Query query;
-    query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
-    query.filter<SinkResource::Account>(accountId.toLatin1());
-    auto job = Store::fetchAll<SinkResource>(query)
-        .then([=](const QList<SinkResource::Ptr> &resources) {
-            if (!resources.isEmpty()) {
-                auto resourceId = resources[0]->identifier();
-                SinkLog() << "Sending message via resource: " << resourceId;
-                Mail mail(resourceId);
-                mail.setMimeMessage(message->encodedContent(true));
-                return Store::create(mail)
-                    .then<void>([=] {
-                        //Trigger a sync, but don't wait for it.
-                        Store::synchronize(Sink::SyncScope{}.resourceFilter(resourceId)).exec();
-                        if (mRemoveDraft) {
-                            SinkLog() << "Removing draft message.";
-                            //Remove draft
-                            Store::remove(getExistingMail()).exec();
-                        }
-                    });
-            }
-            SinkWarning() << "Failed to find a mailtransport resource";
-            return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
-        })
+    auto job = SinkUtils::sendMail(message->encodedContent(true), accountId.toUtf8())
         .then([&] (const KAsync::Error &error) {
-            if (error) {
-                QTemporaryFile tmp;
-                tmp.setAutoRemove(false);
-                if (tmp.open()) {
-                    tmp.write(message->encodedContent(true));
-                    tmp.close();
-                    SinkWarning() << "Saved your message contents to: " << tmp.fileName();
+            if (!error) {
+                if (mRemoveDraft) {
+                    SinkLog() << "Removing draft message.";
+                    Sink::Store::remove(getExistingMail()).exec();
                 }
-                SinkError() << "Failed to send the message: " << error;
-            } else {
-                SinkLog() << "Message was sent.";
             }
             emit done();
         });
+
     run(job);
 }
 
