@@ -81,6 +81,28 @@ FocusScope {
                     visible: controller.location
                 }
 
+                Kube.SelectableLabel {
+                    text: qsTr("Organizer: %1").arg(controller.organizer)
+                    visible: controller.organizer
+                }
+
+                Flow {
+                    visible: attendeeRepeater.count
+                    height: contentHeight
+                    Kube.SelectableLabel {
+                        text: qsTr("Attending:")
+                        visible: controller.organizer
+                    }
+                    Repeater {
+                        id: attendeeRepeater
+                        model: controller.attendees.model
+                        delegate: Kube.Label {
+                            text: qsTr("%1 %2").arg(model.name).arg(model.email) + (index == (attendeeRepeater.count - 1) ? "" : ",")
+                            elide: Text.ElideRight
+                        }
+                    }
+                }
+
                 Kube.TextArea {
                     Layout.fillWidth: true
                     text: controller.description

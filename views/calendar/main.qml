@@ -68,11 +68,15 @@ ApplicationWindow {
                         resource: "caldavresource",
                         summary: "Short event1!",
                         starts: "2018-04-09T14:03:00",
+                        organizer: "organizer@example.org",
+                        attendees: [{email: "attendee1@example.org"}, {email: "identity@example.org"}]
                     },
                     {
                         resource: "caldavresource",
                         summary: "Short event2!",
                         starts: "2018-04-09T14:03:00",
+                        organizer: "organizer@example.org",
+                        attendees: [{email: "attendee1@example.org"}, {email: "identity@example.org"}]
                     },
                     {
                         resource: "caldavresource",

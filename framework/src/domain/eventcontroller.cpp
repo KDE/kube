@@ -146,6 +146,7 @@ void EventController::populateFromEvent(const KCalCore::Event &event)
     setRecurring(event.recurs());
     setAllDay(event.allDay());
 
+    setOrganizer(event.organizer()->fullName());
     for (const auto &attendee : event.attendees()) {
         attendeesController()->add({{"name", attendee->name()}, {"email", attendee->email()}, {"status", toStatus(attendee->status())}});
     }
@@ -159,6 +160,7 @@ void EventController::saveToEvent(KCalCore::Event &event)
     event.setDtStart(getStart());
     event.setDtEnd(getEnd());
     event.setAllDay(getAllDay());
+    event.setOrganizer(getOrganizer());
 
     event.clearAttendees();
     KCalCore::Attendee::List attendees;

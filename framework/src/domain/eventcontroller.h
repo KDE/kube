@@ -51,6 +51,7 @@ class KUBE_EXPORT EventController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(bool, Recurring, recurring)
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::ApplicationDomainType::Ptr, Calendar, calendar)
 
+    KUBE_CONTROLLER_PROPERTY(QString, Organizer, organizer)
     KUBE_CONTROLLER_LISTCONTROLLER(attendees)
 
     KUBE_CONTROLLER_ACTION(save)

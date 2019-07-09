@@ -184,8 +184,17 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
         calcoreEvent->setAllDay(object["allDay"].toBool());
     }
 
-    auto ical = KCalCore::ICalFormat().toICalString(calcoreEvent);
-    sinkEvent.setIcal(ical.toUtf8());
+    if (object.contains("organizer")) {
+        calcoreEvent->setOrganizer(object["organizer"].toString());
+    }
+    if (object.contains("attendees")) {
+        for (const auto &attendee : object["attendees"].toList()) {
+            auto map = attendee.toMap();
+            calcoreEvent->addAttendee(KCalCore::Attendee::Ptr::create(map["name"].toString(), map["email"].toString(), true, KCalCore::Attendee::NeedsAction, KCalCore::Attendee::ReqParticipant, QString{}));
+        }
+    }
+
+    sinkEvent.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
     sinkEvent.setCalendar(calendarId);
 

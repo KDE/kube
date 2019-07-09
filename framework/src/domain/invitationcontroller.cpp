@@ -62,8 +62,6 @@ void InvitationController::loadICal(const QString &ical)
         return;
     }
 
-    setOrganizer(icalEvent->organizer()->fullName());
-
     Query query;
     query.request<Event::Uid>();
     query.request<Event::Ical>();
@@ -165,7 +163,6 @@ void InvitationController::storeEvent(InvitationState status)
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
             calcoreEvent->setUid(getUid());
             saveToEvent(*calcoreEvent);
-            calcoreEvent->setOrganizer(getOrganizer());
 
             sendIMipMessage(accountId, fromAddress, calcoreEvent);
 
