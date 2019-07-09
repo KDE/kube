@@ -38,6 +38,8 @@ public:
     AttendeeController() : Kube::ListPropertyController{{"name", "email", "status"}}
     {
     }
+};
+
 EventController::EventController()
     : Kube::Controller(),
     controller_attendees{new AttendeeController},
