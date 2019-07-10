@@ -79,19 +79,32 @@ private slots:
         {
             auto event4 = ApplicationDomainType::createEntity<Event>(resource.identifier());
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
-            calcoreEvent->setUid("event3");
-            calcoreEvent->setSummary("summary3");
+            calcoreEvent->setUid("event4");
+            calcoreEvent->setSummary("summary4");
             calcoreEvent->setDtStart(start.addDays(2));
             calcoreEvent->setAllDay(true);
             event4.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event4.setCalendar(calendar1);
             Sink::Store::create(event4).exec().waitForFinished();
         }
+        {
+            auto event1 = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event5");
+            calcoreEvent->setSummary("summary5");
+            calcoreEvent->setDescription("description");
+            calcoreEvent->setDtStart(start);
+            calcoreEvent->setDuration(3600);
+            calcoreEvent->setAllDay(false);
+            event1.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event1.setCalendar(calendar1);
+            Sink::Store::create(event1).exec().waitForFinished();
+        }
 
         Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
 
         {
-            const int expectedNumberOfOccurreces = 9;
+            const int expectedNumberOfOccurreces = 10;
             const int numberOfDays = 7;
             EventOccurrenceModel model;
             model.setStart(start.date());
@@ -123,15 +136,20 @@ private slots:
                 QTRY_COMPARE(multiDayModel.rowCount({}), numberOfDays);
                 {
                     const auto events = multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
-                    QCOMPARE(events.size(), 1);
+                    QCOMPARE(events.size(), 2);
+                    QCOMPARE(events[0].toMap()["indentation"].toInt(), 0);
+                    QCOMPARE(events[1].toMap()["indentation"].toInt(), 1);
                 }
                 {
                     const auto events = multiDayModel.index(1, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
                     QCOMPARE(events.size(), 2);
+                    QCOMPARE(events[0].toMap()["indentation"].toInt(), 0);
+                    QCOMPARE(events[1].toMap()["indentation"].toInt(), 1);
                 }
                 {
                     const auto events = multiDayModel.index(2, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
                     QCOMPARE(events.size(), 1);
+                    QCOMPARE(events[0].toMap()["indentation"].toInt(), 0);
                 }
             }
 
