@@ -115,13 +115,49 @@ Item {
             ColumnLayout {
                 spacing: Kube.Units.smallSpacing
                 Layout.fillWidth: true
-                //FIXME location doesn't exist yet
-                // Kube.TextField {
-                //     Layout.fillWidth: true
-                //     placeholderText: qsTr("Location")
-                //     text: controller.location
-                //     onTextChanged: controller.location = text
-                // }
+
+                Kube.TextField {
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("Location")
+                    text: controller.location
+                    onTextChanged: controller.location = text
+                }
+
+                RowLayout {
+                    visible: attendees.count
+                    Layout.maximumWidth: parent.width
+                    Layout.fillWidth: true
+                    Kube.Label {
+                        id: fromLabel
+                        text: qsTr("Organizer:")
+                    }
+
+                    Kube.ComboBox {
+                        id: identityCombo
+                        objectName: "identityCombo"
+
+                        width: parent.width - Kube.Units.largeSpacing * 2
+
+                        model: root.controller.identitySelector.model
+                        textRole: "address"
+                        Layout.fillWidth: true
+                        //A regular binding is not enough in this case, we have to use the Binding element
+                        Binding { target: identityCombo; property: "currentIndex"; value: root.controller.identitySelector.currentIndex }
+                        onCurrentIndexChanged: {
+                            root.controller.identitySelector.currentIndex = currentIndex
+                        }
+                    }
+                }
+
+                AttendeeListEditor {
+                    id: attendees
+                    Layout.preferredHeight: implicitHeight
+                    Layout.preferredWidth: Kube.Units.gridUnit * 12
+                    focus: true
+                    activeFocusOnTab: true
+                    controller: root.controller.attendees
+                    completer: root.controller.attendeeCompleter
+                }
 
                 Kube.TextEditor {
                     Layout.fillWidth: true

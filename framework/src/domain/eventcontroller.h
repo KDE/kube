@@ -27,6 +27,8 @@
 #include <sink/applicationdomaintype.h>
 
 #include "controller.h"
+#include "completer.h"
+#include "selector.h"
 
 namespace KCalCore {
     class Event;
@@ -54,6 +56,9 @@ class KUBE_EXPORT EventController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(QString, Organizer, organizer)
     KUBE_CONTROLLER_LISTCONTROLLER(attendees)
 
+    Q_PROPERTY (Completer* attendeeCompleter READ attendeeCompleter CONSTANT)
+    Q_PROPERTY (Selector* identitySelector READ identitySelector CONSTANT)
+
     KUBE_CONTROLLER_ACTION(save)
 
 public:
@@ -69,10 +74,17 @@ public:
     void init() override;
     Q_INVOKABLE void remove();
 
+    Completer *attendeeCompleter() const;
+    Selector *identitySelector() const;
+
 protected:
     void populateFromEvent(const KCalCore::Event &event);
     void saveToEvent(KCalCore::Event &event);
 
 private slots:
     void updateSaveAction();
+
+private:
+    QScopedPointer<Completer> mAttendeeCompleter;
+    QScopedPointer<Selector> mIdentitySelector;
 };

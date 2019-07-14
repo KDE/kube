@@ -23,13 +23,53 @@
 #include <sink/store.h>
 #include <sink/log.h>
 
+#include <KMime/Message>
 #include <KCalCore/ICalFormat>
 #include <KCalCore/Event>
 #include <QUuid>
 
 #include "eventoccurrencemodel.h"
+#include "recepientautocompletionmodel.h"
+#include "identitiesmodel.h"
 
 using namespace Sink::ApplicationDomain;
+
+class OrganizerSelector : public Selector {
+    Q_OBJECT
+public:
+    OrganizerSelector(EventController &controller) : Selector(new IdentitiesModel), mController(controller)
+    {
+    }
+
+    void setCurrent(const QModelIndex &index) Q_DECL_OVERRIDE
+    {
+        if (index.isValid()) {
+            auto currentAccountId = index.data(IdentitiesModel::AccountId).toByteArray();
+
+            KMime::Types::Mailbox mb;
+            mb.setName(index.data(IdentitiesModel::Username).toString());
+            mb.setAddress(index.data(IdentitiesModel::Address).toString().toUtf8());
+            mController.setOrganizer(mb.prettyAddress());
+        } else {
+            SinkWarning() << "No valid identity for index: " << index;
+            mController.clearOrganizer();
+        }
+    }
+private:
+    EventController &mController;
+};
+
+class AttendeeCompleter : public Completer {
+public:
+    AttendeeCompleter() : Completer(new RecipientAutocompletionModel)
+    {
+    }
+
+    void setSearchString(const QString &s) {
+        static_cast<RecipientAutocompletionModel*>(model())->setFilter(s);
+        Completer::setSearchString(s);
+    }
+};
 
 class AttendeeController : public Kube::ListPropertyController
 {
@@ -43,9 +83,21 @@ public:
 EventController::EventController()
     : Kube::Controller(),
     controller_attendees{new AttendeeController},
-    action_save{new Kube::ControllerAction{this, &EventController::save}}
+    action_save{new Kube::ControllerAction{this, &EventController::save}},
+    mAttendeeCompleter{new AttendeeCompleter},
+    mIdentitySelector{new OrganizerSelector{*this}}
 {
     updateSaveAction();
+}
+
+Completer *EventController::attendeeCompleter() const
+{
+    return mAttendeeCompleter.data();
+}
+
+Selector *EventController::identitySelector() const
+{
+    return mIdentitySelector.data();
 }
 
 void EventController::save()
