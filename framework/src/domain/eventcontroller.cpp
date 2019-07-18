@@ -34,6 +34,19 @@
 
 using namespace Sink::ApplicationDomain;
 
+static QPair<QString, QString> parseEmailAddress(const QString &email) {
+    KMime::Types::Mailbox mb;
+    mb.fromUnicodeString(email);
+    return {mb.name(), mb.address()};
+}
+
+static QString assembleEmailAddress(const QString &name, const QString &email) {
+    KMime::Types::Mailbox mb;
+    mb.setName(name);
+    mb.setAddress(email.toUtf8());
+    return mb.prettyAddress();
+}
+
 class OrganizerSelector : public Selector {
     Q_OBJECT
 public:
@@ -45,11 +58,8 @@ public:
     {
         if (index.isValid()) {
             auto currentAccountId = index.data(IdentitiesModel::AccountId).toByteArray();
-
-            KMime::Types::Mailbox mb;
-            mb.setName(index.data(IdentitiesModel::Username).toString());
-            mb.setAddress(index.data(IdentitiesModel::Address).toString().toUtf8());
-            mController.setOrganizer(mb.prettyAddress());
+            const auto email = assembleEmailAddress(index.data(IdentitiesModel::Username).toString(), index.data(IdentitiesModel::Address).toString().toUtf8());
+            mController.setOrganizer(email);
         } else {
             SinkWarning() << "No valid identity for index: " << index;
             mController.clearOrganizer();
@@ -75,7 +85,7 @@ class AttendeeController : public Kube::ListPropertyController
 {
     Q_OBJECT
 public:
-    AttendeeController() : Kube::ListPropertyController{{"name", "email", "status"}}
+    AttendeeController() : Kube::ListPropertyController{{"name", "status"}}
     {
     }
 };
@@ -200,7 +210,7 @@ void EventController::populateFromEvent(const KCalCore::Event &event)
 
     setOrganizer(event.organizer()->fullName());
     for (const auto &attendee : event.attendees()) {
-        attendeesController()->add({{"name", attendee->name()}, {"email", attendee->email()}, {"status", toStatus(attendee->status())}});
+        attendeesController()->add({{"name", attendee->fullName()}, {"status", toStatus(attendee->status())}});
     }
 }
 
@@ -220,8 +230,8 @@ void EventController::saveToEvent(KCalCore::Event &event)
         bool rsvp = true;
         KCalCore::Attendee::PartStat status = fromStatus(map["status"].value<ParticipantStatus>());
         KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant;
-
-        event.addAttendee(KCalCore::Attendee::Ptr::create(map["name"].toString(), map["email"].toString(), rsvp, status, role, QString{}));
+        const auto [name, email] = parseEmailAddress(map["name"].toString());
+        event.addAttendee(KCalCore::Attendee::Ptr::create(name, email, rsvp, status, role, QString{}));
     });
 }
 

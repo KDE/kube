@@ -89,6 +89,7 @@ FocusScope {
                 Flow {
                     visible: attendeeRepeater.count
                     height: contentHeight
+                    spacing: Kube.Units.smallSpacing
                     Kube.SelectableLabel {
                         text: qsTr("Attending:")
                         visible: controller.organizer
@@ -97,7 +98,7 @@ FocusScope {
                         id: attendeeRepeater
                         model: controller.attendees.model
                         delegate: Kube.Label {
-                            text: qsTr("%1 %2").arg(model.name).arg(model.email) + (index == (attendeeRepeater.count - 1) ? "" : ",")
+                            text: qsTr("%1").arg(model.name) + (index == (attendeeRepeater.count - 1) ? "" : ",")
                             elide: Text.ElideRight
                         }
                     }
