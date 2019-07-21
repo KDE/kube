@@ -90,11 +90,17 @@ FocusScope {
                     id: delegateLoader
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    focus: isCurrent
+                    focus: accountDelegate.isCurrent
                     activeFocusOnTab: true
-                    visible: isCurrent
+                    visible: accountDelegate.isCurrent
                     sourceComponent: root.delegate
                     property variant accountId: currentData.accountId
+                    property bool isCurrent: accountDelegate.isCurrent
+                    onIsCurrentChanged: {
+                        if (item.currentChanged) {
+                            item.currentChanged()
+                        }
+                    }
                 }
             }
         }

@@ -173,4 +173,93 @@ ViewTestCase {
 
         tryCompare(listView, "count", 0)
     }
+
+    function test_5selectFolder() {
+        var initialState = {
+            accounts: [{
+                    id: "account1",
+                    name: "Test Account1"
+                }, {
+                    id: "account2",
+                    name: "Test Account2"
+                }],
+            identities: [{
+                    account: "account1",
+                    name: "Test Identity",
+                    address: "identity@example.org"
+                }],
+            resources: [{
+                    id: "resource1",
+                    account: "account1",
+                    type: "dummy"
+                },
+                {
+                    id: "resource2",
+                    account: "account1",
+                    type: "mailtransport"
+                },
+                {
+                    id: "resource3",
+                    account: "account2",
+                    type: "dummy"
+                }
+            ],
+            folders: [{
+                    id: "folder1",
+                    resource: "resource1",
+                    name: "Folder 1",
+                    specialpurpose: ["inbox"],
+                    mails: [{
+                            resource: "resource1",
+                            subject: "subject1",
+                            body: "body",
+                            to: ["to@example.org"],
+                            cc: ["cc@example.org"],
+                            bcc: ["bcc@example.org"],
+                            draft: true
+                        }
+                    ],
+                },
+                {
+                    id: "folder2",
+                    resource: "resource3",
+                    name: "Folder 2",
+                    specialpurpose: ["inbox"],
+                    mails: [{
+                            resource: "resource3",
+                            subject: "subject2",
+                            body: "body",
+                            to: ["to@example.org"],
+                            cc: ["cc@example.org"],
+                            bcc: ["bcc@example.org"],
+                            draft: true
+                        }
+                    ],
+                }
+            ],
+        }
+        TestStore.setup(initialState)
+        var mailView = createTemporaryObject(mailViewComponent, testCase, {})
+        var folderListView = findChild(mailView, "folderListView")
+        verify(folderListView)
+
+        var mailListView = findChild(mailView, "mailListView");
+        verify(mailListView)
+
+        var folder = TestStore.load("folder", {resource: "resource1"})
+        verify(folder)
+        tryCompare(mailListView, "parentFolder", folder)
+
+        var listView = findChild(mailListView, "listView");
+        verify(listView)
+        tryCompare(listView, "count", 1)
+
+        //Switch to second account
+        Kube.Context.currentAccountId = "account2"
+
+        var folder2 = TestStore.load("folder", {resource: "resource3"})
+        verify(folder2)
+        tryCompare(mailListView, "parentFolder", folder2)
+        tryCompare(listView, "count", 1)
+    }
 }

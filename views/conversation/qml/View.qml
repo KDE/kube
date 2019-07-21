@@ -163,14 +163,14 @@ Kube.View {
                     }
 
                     //Necessary to re-select on account change
-                    onVisibleChanged: {
-                        if (visible) {
+                    function currentChanged() {
+                        if (isCurrent) {
                             indexSelected(currentIndex)
                         }
                     }
 
                     onCurrentIndexChanged: {
-                        if (visible) {
+                        if (isCurrent) {
                             indexSelected(currentIndex)
                         }
                     }
