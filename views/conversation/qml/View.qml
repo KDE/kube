@@ -156,11 +156,22 @@ Kube.View {
                     objectName: "folderListView"
                     accountId: parent.accountId
 
+                    function indexSelected(currentIndex) {
+                        Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(currentIndex, Kube.FolderListModel.DomainObject),
+                                                                                "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
+                        root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
+                    }
+
+                    //Necessary to re-select on account change
+                    onVisibleChanged: {
+                        if (visible) {
+                            indexSelected(currentIndex)
+                        }
+                    }
+
                     onCurrentIndexChanged: {
                         if (visible) {
-                            Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(currentIndex, Kube.FolderListModel.DomainObject),
-                                                                                    "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
-                            root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
+                            indexSelected(currentIndex)
                         }
                     }
                 }
