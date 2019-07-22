@@ -154,10 +154,12 @@ void InvitationController::storeEvent(InvitationState status)
                     fromAddress = identity->getAddress();
                     accountId = identity->getAccount();
                     foundMatch = true;
+                } else {
+                    SinkLog() << "No identity found for " << identity->getAddress();
                 }
             }
             if (!foundMatch) {
-                qWarning() << "Failed to find a matching identity";
+                qWarning() << "Failed to find a matching identity.";
                 return KAsync::error("Failed to find a matching identity");
             }
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();

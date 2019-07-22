@@ -210,7 +210,7 @@ void EventController::populateFromEvent(const KCalCore::Event &event)
 
     setOrganizer(event.organizer()->fullName());
     for (const auto &attendee : event.attendees()) {
-        attendeesController()->add({{"name", attendee->fullName()}, {"status", toStatus(attendee->status())}});
+        attendeesController()->add({{"name", attendee->fullName()}, {"email", attendee->email()}, {"status", toStatus(attendee->status())}});
     }
 }
 
