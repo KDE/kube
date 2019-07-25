@@ -112,16 +112,16 @@ Item {
                 }
             }
 
+            Kube.TextField {
+                Layout.fillWidth: true
+                placeholderText: qsTr("Location")
+                text: controller.location
+                onTextChanged: controller.location = text
+            }
+
             ColumnLayout {
                 spacing: Kube.Units.smallSpacing
                 Layout.fillWidth: true
-
-                Kube.TextField {
-                    Layout.fillWidth: true
-                    placeholderText: qsTr("Location")
-                    text: controller.location
-                    onTextChanged: controller.location = text
-                }
 
                 RowLayout {
                     visible: attendees.count
@@ -158,36 +158,23 @@ Item {
                     controller: root.controller.attendees
                     completer: root.controller.attendeeCompleter
                 }
+            }
 
-                Kube.TextEditor {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.minimumHeight: Kube.Units.gridUnit * 4
+            Kube.TextEditor {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumHeight: Kube.Units.gridUnit * 4
 
-                    placeholderText: "Description"
-                    initialText: controller.description
-                    onTextChanged: controller.description = text
-                }
-
-                Kube.CalendarComboBox {
-                    id: calendarSelector
-                    Layout.fillWidth: true
-                    accountId: root.accountId
-                    contentType: "event"
-                    onSelected: {
-                        if (!root.editMode) {
-                            controller.calendar = calendar
-                        }
-                    }
-                }
-
+                placeholderText: "Description"
+                initialText: controller.description
+                onTextChanged: controller.description = text
             }
         }
 
         RowLayout {
             id: buttons
 
-            spacing: Kube.Units.smallSpacing
+            spacing: Kube.Units.largeSpacing
 
             Kube.Button {
                 id: deleteButton
@@ -208,6 +195,17 @@ Item {
 
             Item {
                 Layout.fillWidth: true
+            }
+
+            Kube.CalendarComboBox {
+                id: calendarSelector
+                accountId: root.accountId
+                contentType: "event"
+                onSelected: {
+                    if (!root.editMode) {
+                        controller.calendar = calendar
+                    }
+                }
             }
 
             Kube.Button {
