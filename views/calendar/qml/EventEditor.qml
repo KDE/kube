@@ -112,16 +112,16 @@ Item {
                 }
             }
 
-            Kube.TextField {
-                Layout.fillWidth: true
-                placeholderText: qsTr("Location")
-                text: controller.location
-                onTextChanged: controller.location = text
-            }
-
             ColumnLayout {
                 spacing: Kube.Units.smallSpacing
                 Layout.fillWidth: true
+
+                Kube.TextField {
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("Location")
+                    text: controller.location
+                    onTextChanged: controller.location = text
+                }
 
                 RowLayout {
                     visible: attendees.count
@@ -158,6 +158,7 @@ Item {
                     controller: root.controller.attendees
                     completer: root.controller.attendeeCompleter
                 }
+
             }
 
             Kube.TextEditor {
