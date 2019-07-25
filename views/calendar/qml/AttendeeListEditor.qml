@@ -116,7 +116,7 @@ FocusScope {
 
             Kube.TextButton {
                 id: button
-                text: "+ " + qsTr("Add recipient")
+                text: "+ " + qsTr("Add attendee")
                 textColor: Kube.Colors.highlightColor
                 focus: true
                 onClicked: {
