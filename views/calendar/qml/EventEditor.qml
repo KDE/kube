@@ -152,7 +152,7 @@ Item {
                 AttendeeListEditor {
                     id: attendees
                     Layout.preferredHeight: implicitHeight
-                    Layout.preferredWidth: Kube.Units.gridUnit * 12
+                    Layout.fillWidth: true
                     focus: true
                     activeFocusOnTab: true
                     controller: root.controller.attendees

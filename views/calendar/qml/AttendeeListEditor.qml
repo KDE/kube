@@ -31,8 +31,7 @@ FocusScope {
 
     property alias count: listView.count
 
-    implicitHeight: listView.height + lineEdit.height
-    implicitWidth: listView.width
+    implicitHeight: flow.height + lineEdit.height
     height: implicitHeight
 
     Column {
@@ -40,60 +39,72 @@ FocusScope {
 
         spacing: Kube.Units.smallSpacing
 
-        ListView {
-            id: listView
+        Flow {
+            id: flow
             anchors {
                 left: parent.left
                 right: parent.right
             }
-            height: contentHeight
             spacing: Kube.Units.smallSpacing
-            model: controller.model
-            delegate: Rectangle {
-                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
-                width: parent.width
-                color: "transparent"
-                Kube.Label {
-                    id: label
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        left: parent.left
-                        right: status.left
-                        margins: Kube.Units.smallSpacing
-                    }
-                    text: model.name
-                    elide: Text.ElideRight
-                    MouseArea {
-                        id: mouseArea
+
+
+            Repeater {
+                id: listView
+
+                model: controller.model
+                delegate: Item {
+                    height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
+                    width: label.width + status.width + Kube.Units.gridUnit + Kube.Units.largeSpacing + Kube.Units.smallSpacing * 3
+
+                    Rectangle {
                         anchors.fill: parent
-                        hoverEnabled: true
+                        color: Kube.Colors.darkBackgroundColor
+                        opacity: 0.7
                     }
-                    ToolTip.visible: mouseArea.containsMouse
-                    ToolTip.text: text
-                }
-                Kube.Label {
-                    id: status
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        right: removeButton.left
-                        rightMargin: Kube.Units.smallSpacing
+
+                    Kube.Label {
+                        id: label
+                        anchors {
+                            left: parent.left
+                            leftMargin: Kube.Units.smallSpacing
+                            verticalCenter: parent.verticalCenter
+                        }
+                        text: model.name
+                        elide: Text.ElideRight
+                        color: Kube.Colors.highlightedTextColor
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                        }
+                        ToolTip.visible: mouseArea.containsMouse
+                        ToolTip.text: text
                     }
-                    text: model.status == Kube.EventController.Accepted ? qsTr("Attending") : qsTr("Invited")
-                    font.italic: true
-                    font.pointSize: Kube.Units.smallFontSize
-                }
-                Kube.IconButton {
-                    id: removeButton
-                    anchors {
-                        right: parent.right
-                        verticalCenter: parent.verticalCenter
-                        margins: Kube.Units.smallSpacing
+
+                    Kube.Label {
+                        id: status
+                        anchors {
+                            left: label.right
+                            leftMargin: Kube.Units.largeSpacing
+                            verticalCenter: parent.verticalCenter
+                        }
+                        text: model.status == Kube.EventController.Accepted ? qsTr("Attending") : qsTr("Invited")
+                        font.italic: true
+                        font.pointSize: Kube.Units.smallFontSize
+                        color: Kube.Colors.highlightedTextColor
                     }
-                    height: Kube.Units.gridUnit
-                    width: height
-                    onClicked: root.controller.remove(model.id)
-                    padding: 0
-                    iconName: Kube.Icons.remove
+                    Kube.IconButton {
+                        anchors {
+                            left: status.right
+                            leftMargin: Kube.Units.smallSpacing
+                            verticalCenter: parent.verticalCenter
+                        }
+                        height: Kube.Units.gridUnit
+                        width: height
+                        onClicked: root.controller.remove(model.id)
+                        padding: 0
+                        iconName: Kube.Icons.remove
+                    }
                 }
             }
         }
