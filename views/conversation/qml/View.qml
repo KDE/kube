@@ -157,9 +157,10 @@ Kube.View {
                     accountId: parent.accountId
 
                     function indexSelected(currentIndex) {
-                        Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(currentIndex, Kube.FolderListModel.DomainObject),
+                        var folder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
+                        Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": folder,
                                                                                 "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
-                        root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
+                        root.currentFolder = folder
                     }
 
                     //Necessary to re-select on account change

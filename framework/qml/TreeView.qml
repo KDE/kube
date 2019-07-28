@@ -26,10 +26,13 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
     property var model: null
-    readonly property var currentIndex: modelAdaptor.mapRowToModelIndex(listView.currentIndex)
+    property var currentIndex: modelAdaptor.mapRowToModelIndex(listView.currentIndex)
+    property alias count: listView.count
 
     function selectRootIndex() {
-        listView.currentIndex = 0
+        if (listView.count >= 1) {
+            listView.currentIndex = 0
+        }
     }
 
     function selectNext() {

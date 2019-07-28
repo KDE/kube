@@ -42,11 +42,6 @@ FolderListModel::FolderListModel(QObject *parent) : KRecursiveFilterProxyModel(p
                     sourceModel()->fetchMore(idx);
                 }
             });
-            QObject::connect(sourceModel(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
-                if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                    emit initialItemsLoaded();
-                }
-            });
         }
     });
 }
@@ -124,7 +119,15 @@ static QModelIndex findRecursive(QAbstractItemModel *model, const QModelIndex &p
 void FolderListModel::runQuery(const Query &query)
 {
     mModel = Store::loadModel<Folder>(query);
+    QObject::connect(mModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+        if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+            emit initialItemsLoaded();
+        }
+    });
     setSourceModel(mModel.data());
+    if (!mModel->canFetchMore({})) {
+        emit initialItemsLoaded();
+    }
 
     Sink::Query resourceQuery;
     resourceQuery.setFilter(query.getResourceFilter());

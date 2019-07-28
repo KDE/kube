@@ -97,7 +97,7 @@ FocusScope {
                     property variant accountId: currentData.accountId
                     property bool isCurrent: accountDelegate.isCurrent
                     onIsCurrentChanged: {
-                        if (item.currentChanged) {
+                        if (!!item && 'currentChanged' in item) {
                             item.currentChanged()
                         }
                     }
