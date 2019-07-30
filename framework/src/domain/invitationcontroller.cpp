@@ -89,26 +89,29 @@ void InvitationController::loadICal(const QString &ical)
     }).exec();
 }
 
-void sendIMipMessage(const QByteArray &accountId, const QString &from, KCalCore::Event::Ptr event)
+static void sendIMipMessage(const QByteArray &accountId, const QString &from, const QString &fromName, KCalCore::Event::Ptr event)
 {
     const auto organizerEmail = event->organizer()->fullName();
 
     if (organizerEmail.isEmpty()) {
-        qWarning() << "Failed to find the organizer to send the reply to " << organizerEmail;
+        SinkWarning() << "Failed to find the organizer to send the reply to " << organizerEmail;
         return;
     }
 
+    QString body;
+    body.append(QObject::tr("%1 has accepted the invitation to the following event").arg(fromName));
+    body.append("\n\n");
+    body.append(EventController::eventToBody(*event));
 
-    QString body = "The invitation has been accepted";
+    const auto msg = MailTemplates::createIMipMessage(
+        from,
+        {{organizerEmail}, {}, {}},
+        QObject::tr("\"%1\" has been accepted by %2").arg(event->summary()).arg(fromName),
+        body,
+        KCalCore::ICalFormat{}.createScheduleMessage(event, KCalCore::iTIPReply)
+    );
 
-    auto msg = MailTemplates::createIMipMessage(
-            from,
-            {{organizerEmail}, {}, {}},
-            QString("\"%1\" has been accepted by %2").arg(event->summary()).arg("Meeeee"),
-            body,
-            KCalCore::ICalFormat{}.createScheduleMessage(event, KCalCore::iTIPReply));
-
-    qWarning() << "Msg " << msg->encodedContent();
+    SinkTrace() << "Msg " << msg->encodedContent();
 
     SinkUtils::sendMail(msg->encodedContent(true), accountId)
         .then([&] (const KAsync::Error &error) {
@@ -116,8 +119,6 @@ void sendIMipMessage(const QByteArray &accountId, const QString &from, KCalCore:
                 SinkWarning() << "Failed to send message " << error;
             }
         }).exec();
-
-
 }
 
 void InvitationController::storeEvent(InvitationState status)
@@ -141,6 +142,7 @@ void InvitationController::storeEvent(InvitationState status)
                 qWarning() << "Failed to find an identity";
             }
             QString fromAddress;
+            QString fromName;
             QByteArray accountId;
             bool foundMatch = false;
             for (const auto &identity : list) {
@@ -152,6 +154,7 @@ void InvitationController::storeEvent(InvitationState status)
                         attendeesController()->setValue(id, "status", EventController::Declined);
                     }
                     fromAddress = identity->getAddress();
+                    fromName = identity->getName();
                     accountId = identity->getAccount();
                     foundMatch = true;
                 } else {
@@ -166,7 +169,7 @@ void InvitationController::storeEvent(InvitationState status)
             calcoreEvent->setUid(getUid());
             saveToEvent(*calcoreEvent);
 
-            sendIMipMessage(accountId, fromAddress, calcoreEvent);
+            sendIMipMessage(accountId, fromAddress, fromName, calcoreEvent);
 
 
             Event event(calendar->resourceInstanceIdentifier());

@@ -31,6 +31,8 @@
 #include "eventoccurrencemodel.h"
 #include "recepientautocompletionmodel.h"
 #include "identitiesmodel.h"
+#include "mailtemplates.h"
+#include "sinkutils.h"
 
 using namespace Sink::ApplicationDomain;
 
@@ -47,6 +49,102 @@ static QString assembleEmailAddress(const QString &name, const QString &email) {
     return mb.prettyAddress();
 }
 
+static QPair<QStringList, QStringList> getRecipients(const QString &organizerEmail, const KCalCore::Attendee::List &attendees)
+{
+    QStringList to;
+    QStringList cc;
+    for (const auto &a : attendees) {
+        const auto email = a->email();
+        if (email.isEmpty()) {
+            SinkTrace() << "Attendee has no email: " << a->fullName();
+            continue;
+        }
+
+        //Don't send ourselves an email if part of attendees
+        if (organizerEmail == email ) {
+            SinkTrace() << "This is us: " << a->fullName();
+            continue;
+        }
+
+        //No updates if the attendee has already declined
+        if (a->status() == KCalCore::Attendee::Declined) {
+            SinkTrace() << "Already declined: " << a->fullName();
+            continue;
+        }
+
+        const auto prettyAddress = assembleEmailAddress(a->name(), email);
+
+        if (a->role() == KCalCore::Attendee::OptParticipant ||
+            a->role() == KCalCore::Attendee::NonParticipant) {
+            cc << prettyAddress;
+        } else {
+            to << prettyAddress;
+        }
+    }
+    return {to, cc};
+}
+
+QString EventController::eventToBody(const KCalCore::Event &event)
+{
+    QString body;
+    body.append(QObject::tr("== %1 ==").arg(event.summary()));
+    body.append("\n\n");
+    body.append(QObject::tr("When: %1").arg(event.dtStart().toString()));
+    // body.append(QObject::tr("Repeats: %1").arg(event->dtStart().toString()));
+    if (!event.location().isEmpty()) {
+        body.append("\n");
+        body.append(QObject::tr("Where: %1").arg(event.location()));
+    }
+    body.append("\n");
+    body.append(QObject::tr("Attendees:"));
+    body.append("\n");
+    for (const auto &attendee : event.attendees()) {
+        body.append("  " + attendee->fullName());
+    }
+    return body;
+}
+
+static void sendInvitation(const QByteArray &accountId, const QString &from, KCalCore::Event::Ptr event)
+{
+    const auto attendees = event->attendees();
+    if (attendees.isEmpty()) {
+        SinkLog() << "No attendees";
+        return;
+    }
+
+    if (from.isEmpty()) {
+        SinkWarning() << "Failed to find the organizer to send the reply from ";
+        return;
+    }
+
+    const auto [to, cc] = getRecipients(from, attendees);
+    if(to.isEmpty() && cc.isEmpty()) {
+        SinkWarning() << "There are really no attendees to e-mail";
+        return;
+    }
+
+    QString body = EventController::eventToBody(*event);
+    body.append("\n\n");
+    body.append(QObject::tr("Please find attached an iCalendar file with all the event details which you can import to your calendar application."));
+
+    auto msg = MailTemplates::createIMipMessage(
+        from,
+        {to, cc, {}},
+        QObject::tr("You've been invited to: \"%1\"").arg(event->summary()),
+        body,
+        KCalCore::ICalFormat{}.createScheduleMessage(event, KCalCore::iTIPRequest)
+    );
+
+    SinkTrace() << "Msg " << msg->encodedContent();
+
+    SinkUtils::sendMail(msg->encodedContent(true), accountId)
+        .then([&] (const KAsync::Error &error) {
+            if (error) {
+                SinkWarning() << "Failed to send message " << error;
+            }
+        }).exec();
+}
+
 class OrganizerSelector : public Selector {
     Q_OBJECT
 public:
@@ -59,10 +157,13 @@ public:
         if (index.isValid()) {
             auto currentAccountId = index.data(IdentitiesModel::AccountId).toByteArray();
             const auto email = assembleEmailAddress(index.data(IdentitiesModel::Username).toString(), index.data(IdentitiesModel::Address).toString().toUtf8());
+            SinkLog() << "Setting current identity: " << email << "Account: " << currentAccountId;
             mController.setOrganizer(email);
+            mController.setAccountId(currentAccountId);
         } else {
             SinkWarning() << "No valid identity for index: " << index;
             mController.clearOrganizer();
+            mController.clearAccountId();
         }
     }
 private:
@@ -157,6 +258,8 @@ void EventController::save()
 
         event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
         event.setCalendar(*calendar);
+
+        sendInvitation(getAccountId(), getOrganizer(), calcoreEvent);
 
         auto job = Store::create(event)
             .then([&] (const KAsync::Error &error) {

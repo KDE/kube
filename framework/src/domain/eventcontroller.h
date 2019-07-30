@@ -77,6 +77,8 @@ public:
     Completer *attendeeCompleter() const;
     Selector *identitySelector() const;
 
+    static QString eventToBody(const KCalCore::Event &event);
+
 protected:
     void populateFromEvent(const KCalCore::Event &event);
     void saveToEvent(KCalCore::Event &event);
