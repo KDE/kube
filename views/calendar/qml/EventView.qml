@@ -126,6 +126,7 @@ FocusScope {
                         Layout.fillWidth: true
                     }
                     Kube.Button {
+                        enabled: controller.ourEvent
                         text: qsTr("Edit")
                         onClicked: {
                             stackView.push(editor, StackView.Immediate)

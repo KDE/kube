@@ -104,7 +104,7 @@ QString EventController::eventToBody(const KCalCore::Event &event)
     return body;
 }
 
-static void sendInvitation(const QByteArray &accountId, const QString &from, KCalCore::Event::Ptr event)
+static void sendInvitation(const QByteArray &accountId, const QString &from, KCalCore::Event::Ptr event, bool isUpdate = false)
 {
     const auto attendees = event->attendees();
     if (attendees.isEmpty()) {
@@ -113,7 +113,7 @@ static void sendInvitation(const QByteArray &accountId, const QString &from, KCa
     }
 
     if (from.isEmpty()) {
-        SinkWarning() << "Failed to find the organizer to send the reply from ";
+        SinkWarning() << "Failed to find the organizer to send the reply from";
         return;
     }
 
@@ -123,6 +123,13 @@ static void sendInvitation(const QByteArray &accountId, const QString &from, KCa
         return;
     }
 
+    QString subject;
+    if (isUpdate) {
+        subject = QObject::tr("\"%1\" has been updated").arg(event->summary());
+    } else {
+        subject = QObject::tr("You've been invited to: \"%1\"").arg(event->summary());
+    }
+
     QString body = EventController::eventToBody(*event);
     body.append("\n\n");
     body.append(QObject::tr("Please find attached an iCalendar file with all the event details which you can import to your calendar application."));
@@ -130,7 +137,7 @@ static void sendInvitation(const QByteArray &accountId, const QString &from, KCa
     auto msg = MailTemplates::createIMipMessage(
         from,
         {to, cc, {}},
-        QObject::tr("You've been invited to: \"%1\"").arg(event->summary()),
+        subject,
         body,
         KCalCore::ICalFormat{}.createScheduleMessage(event, KCalCore::iTIPRequest)
     );
@@ -237,8 +244,14 @@ void EventController::save()
 
         saveToEvent(*calcoreEvent);
 
+        //Bump the sequence number
+        calcoreEvent->setRevision(calcoreEvent->revision() + 1);
+
         event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
         event.setCalendar(*calendar);
+
+        //We ignore the case where we are not the organizer because we turn those read-only via the ourEvent property
+        sendInvitation(getAccountId(), getOrganizer(), calcoreEvent, true);
 
         auto job = Store::modify(event)
             .then([&] (const KAsync::Error &error) {
@@ -310,6 +323,7 @@ void EventController::populateFromEvent(const KCalCore::Event &event)
     setLocation(event.location());
     setRecurring(event.recurs());
     setAllDay(event.allDay());
+    setOurEvent(true);
 
     setOrganizer(event.organizer()->fullName());
     for (const auto &attendee : event.attendees()) {
