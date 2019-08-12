@@ -116,7 +116,7 @@ Item {
                 anchors.right: parent.right
                 text: qsTr("Login")
                 onClicked: login()
-                enabled: loader.item.valid
+                enabled: !!loader.item ? loader.item.valid : false
             }
         }
     }
