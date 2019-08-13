@@ -377,6 +377,7 @@ void ComposerController::setMessage(const KMime::Message::Ptr &msg)
 }
 
 void ComposerController::loadDraft(const QVariant &message) {
+    clear();
     loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
         setEncrypt(KMime::isEncrypted(mail.data()));
         setSign(KMime::isSigned(mail.data()));
@@ -386,6 +387,7 @@ void ComposerController::loadDraft(const QVariant &message) {
 }
 
 void ComposerController::loadReply(const QVariant &message) {
+    clear();
     loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
         //Find all personal email addresses to exclude from reply
         KMime::Types::AddrSpecList me;
@@ -405,6 +407,7 @@ void ComposerController::loadReply(const QVariant &message) {
 }
 
 void ComposerController::loadForward(const QVariant &message) {
+    clear();
     loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
         setEncrypt(KMime::isEncrypted(mail.data()));
         setSign(KMime::isSigned(mail.data()));
