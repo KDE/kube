@@ -46,10 +46,6 @@ Item {
             right: parent.right
         }
 
-        selectionColor: Kube.Colors.highlightColor
-        readOnly: true
-        selectByMouse: true
-
         text: content.substring(0, 100000) //The TextEdit deals poorly with messages that are too large.
         color: embedded ? Kube.Colors.disabledTextColor : Kube.Colors.textColor
 
