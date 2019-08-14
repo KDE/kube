@@ -25,6 +25,7 @@
 #include <QFile>
 
 #include <sink/store.h>
+#include <sink/log.h>
 
 AccountFactory::AccountFactory(QObject *parent)
     : QObject(parent)
@@ -39,6 +40,8 @@ void AccountFactory::setAccountId(const QString &accountId)
             .then([this](const Sink::ApplicationDomain::SinkAccount &account) {
                 mAccountType = account.getProperty("type").toByteArray();
                 loadPackage();
+            }).onError([=](const KAsync::Error &error) {
+                SinkError() << "Failed to load the account: " << accountId << error;
             }).exec();
     }
 }
