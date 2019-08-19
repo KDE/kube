@@ -1,0 +1,82 @@
+Return-Path: <john@doe.ch>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="=_d141ae2d08ab2e576b4155f7053a7d1f"
+From: john doe <john@doe.ch>
+Date: Fri, 02 Aug 2019 21:02:28 +0200
+Message-ID: <dd32f5c736a700b72d3debd747b9a8c3@mailqueue.ch>
+X-Sender: john@doe.ch
+To: test1@kolab.org
+Subject: You've been invited to "test1234"
+
+--=_d141ae2d08ab2e576b4155f7053a7d1f
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+
+*test1234*
+
+When: 2019-08-01 10:00 - 10:30 (Europe/Zurich)
+
+Invitees: john doe <john@doe.ch>,
+  John Doe <doe2@test.ch>,
+  test1@kolab.org
+
+Please find attached an iCalendar file with all the event details which you=
+=20
+can import to your calendar application.
+
+In case your email client doesn't support iTip requests you can use the=20
+following link to either accept or decline this invitation:
+https://kolabnow.com/apps/?_task=3Dcalendar&_action=3Dattend&_t=3D0a896de59=
+2c86b51039f3ff8e127514ab6dbc396.dGVzdDFAa29sYWIub3Jn.d9bc91
+--=_d141ae2d08ab2e576b4155f7053a7d1f
+Content-Transfer-Encoding: 8bit
+Content-Type: text/calendar; charset=UTF-8; method=REQUEST;
+ name=event.ics
+
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Roundcube libcalendaring 1.4-git//Sabre//Sabre VObject 3.5.3//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VTIMEZONE
+TZID:Europe/Zurich
+BEGIN:STANDARD
+DTSTART:20181028T010000
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:20190331T010000
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+END:DAYLIGHT
+BEGIN:STANDARD
+DTSTART:20191027T010000
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:39946D057115AA1B6A273693CF95D35C-24397012EEE1180F
+DTSTAMP:20190802T190228Z
+CREATED:20190802T190228Z
+LAST-MODIFIED:20190802T190228Z
+DTSTART;TZID=Europe/Zurich:20190801T100000
+DTEND;TZID=Europe/Zurich:20190801T103000
+SUMMARY:test1234
+SEQUENCE:0
+TRANSP:OPAQUE
+ATTENDEE;CN=John Doe;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT;CUTYPE=INDI
+ VIDUAL;RSVP=TRUE:mailto:doe2@test.ch
+ATTENDEE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT;CUTYPE=INDIVIDUAL;RSVP=
+ TRUE:mailto:test1@kolab.org
+ORGANIZER;CN=john doe:mailto:john@doe.ch
+END:VEVENT
+END:VCALENDAR
+
+--=_d141ae2d08ab2e576b4155f7053a7d1f--

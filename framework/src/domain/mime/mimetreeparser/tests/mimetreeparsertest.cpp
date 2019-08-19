@@ -463,6 +463,44 @@ private slots:
         auto attachments = otp.collectAttachmentParts();
         QCOMPARE(attachments.size(), 1);
     }
+
+    void testInvitation()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("invitation.mbox"));
+        otp.decryptParts();
+        otp.print();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::AlternativeMessagePart>();
+        QVERIFY(part);
+        QCOMPARE(part->encryptions().size(), 0);
+        QCOMPARE(part->signatures().size(), 0);
+        QVERIFY(!part->isHtml());
+        QVERIFY(part->availableModes().contains(MimeTreeParser::Util::MultipartIcal));
+
+        auto attachments = otp.collectAttachmentParts();
+        QCOMPARE(attachments.size(), 0);
+    }
+
+    void testGmailInvitation()
+    {
+        MimeTreeParser::ObjectTreeParser otp;
+        otp.parseObjectTree(readMailFromFile("gmail-invitation.mbox"));
+        otp.decryptParts();
+        otp.print();
+        auto partList = otp.collectContentParts();
+        QCOMPARE(partList.size(), 1);
+        auto part = partList[0].dynamicCast<MimeTreeParser::AlternativeMessagePart>();
+        QVERIFY(part);
+        QCOMPARE(part->encryptions().size(), 0);
+        QCOMPARE(part->signatures().size(), 0);
+        QVERIFY(part->isHtml());
+        QVERIFY(part->availableModes().contains(MimeTreeParser::Util::MultipartIcal));
+
+        auto attachments = otp.collectAttachmentParts();
+        QCOMPARE(attachments.size(), 1);
+    }
 };
 
 QTEST_GUILESS_MAIN(MimeTreeParserTest)
