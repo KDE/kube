@@ -155,7 +155,7 @@ static void sendInvitation(const QByteArray &accountId, const QString &from, KCa
 class OrganizerSelector : public Selector {
     Q_OBJECT
 public:
-    OrganizerSelector(EventController &controller) : Selector(new IdentitiesModel), mController(controller)
+    explicit OrganizerSelector(EventController &controller) : Selector(new IdentitiesModel), mController(controller)
     {
     }
 

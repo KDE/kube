@@ -145,7 +145,8 @@ void InvitationController::storeEvent(InvitationState status)
         .request<ApplicationDomain::Identity::Address>()
         .request<ApplicationDomain::Identity::Account>();
     auto job = Store::fetchAll<ApplicationDomain::Identity>(query)
-        .then([=] (const QList<Identity::Ptr> &list) {
+        .guard(this)
+        .then([=, this] (const QList<Identity::Ptr> &list) {
             if (list.isEmpty()) {
                 qWarning() << "Failed to find an identity";
             }
