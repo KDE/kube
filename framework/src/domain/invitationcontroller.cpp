@@ -89,7 +89,7 @@ void InvitationController::loadICal(const QString &ical)
     }).exec();
 }
 
-static void sendIMipMessage(const QByteArray &accountId, const QString &from, const QString &fromName, KCalCore::Event::Ptr event)
+static void sendIMipReply(const QByteArray &accountId, const QString &from, const QString &fromName, KCalCore::Event::Ptr event, KCalCore::Attendee::PartStat status)
 {
     const auto organizerEmail = event->organizer()->fullName();
 
@@ -98,17 +98,25 @@ static void sendIMipMessage(const QByteArray &accountId, const QString &from, co
         return;
     }
 
+    auto reply = KCalCore::Event::Ptr::create(*event);
+    reply->clearAttendees();
+    reply->addAttendee(KCalCore::Attendee::Ptr::create(fromName, from, false, status));
+
     QString body;
-    body.append(QObject::tr("%1 has accepted the invitation to the following event").arg(fromName));
+    if (KCalCore::Attendee::Accepted) {
+        body.append(QObject::tr("%1 has accepted the invitation to the following event").arg(fromName));
+    } else {
+        body.append(QObject::tr("%1 has declined the invitation to the following event").arg(fromName));
+    }
     body.append("\n\n");
-    body.append(EventController::eventToBody(*event));
+    body.append(EventController::eventToBody(*reply));
 
     const auto msg = MailTemplates::createIMipMessage(
         from,
         {{organizerEmail}, {}, {}},
         QObject::tr("\"%1\" has been accepted by %2").arg(event->summary()).arg(fromName),
         body,
-        KCalCore::ICalFormat{}.createScheduleMessage(event, KCalCore::iTIPReply)
+        KCalCore::ICalFormat{}.createScheduleMessage(reply, KCalCore::iTIPReply)
     );
 
     SinkTrace() << "Msg " << msg->encodedContent();
@@ -148,11 +156,8 @@ void InvitationController::storeEvent(InvitationState status)
             for (const auto &identity : list) {
                 const auto id = attendeesController()->findByProperty("email", identity->getAddress());
                 if (!id.isEmpty()) {
-                    if (status == InvitationController::Accepted) {
-                        attendeesController()->setValue(id, "status", EventController::Accepted);
-                    } else {
-                        attendeesController()->setValue(id, "status", EventController::Declined);
-                    }
+                    auto participantStatus = status == InvitationController::Accepted ? EventController::Accepted : EventController::Declined;
+                    attendeesController()->setValue(id, "status", participantStatus);
                     fromAddress = identity->getAddress();
                     fromName = identity->getName();
                     accountId = identity->getAccount();
@@ -169,7 +174,7 @@ void InvitationController::storeEvent(InvitationState status)
             calcoreEvent->setUid(getUid());
             saveToEvent(*calcoreEvent);
 
-            sendIMipMessage(accountId, fromAddress, fromName, calcoreEvent);
+            sendIMipReply(accountId, fromAddress, fromName, calcoreEvent, status == InvitationController::Accepted ? KCalCore::Attendee::Accepted : KCalCore::Attendee::Declined);
 
 
             Event event(calendar->resourceInstanceIdentifier());
