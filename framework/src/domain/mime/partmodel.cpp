@@ -234,15 +234,14 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 if (dynamic_cast<MimeTreeParser::EncapsulatedRfc822MessagePart*>(messagePart)) {
                     return "encapsulated";
                 }
+                if (auto alternativePart = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
+                    if (alternativePart->availableModes().contains(MimeTreeParser::Util::MultipartIcal)) {
+                        return "ical";
+                    }
+                }
                 if (!d->showHtml && d->containsHtmlAndPlain) {
                     return "plain";
                 }
-                //FIXME temporarily disabled until invitation handling works
-                // if (auto alternativePart = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
-                //     if (alternativePart->availableModes().contains(MimeTreeParser::Util::MultipartIcal)) {
-                //         return "ical";
-                //     }
-                // }
                 //For simple html we don't need a browser
                 auto complexHtml = [&] {
                     if (messagePart->isHtml()) {
@@ -281,12 +280,11 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
             case IsErrorRole:
                 return messagePart->error();
             case ContentRole: {
-                //FIXME temporarily disabled until invitation handling works
-                // if (auto alternativePart = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
-                //     if (alternativePart->availableModes().contains(MimeTreeParser::Util::MultipartIcal)) {
-                //         return alternativePart->icalContent();
-                //     }
-                // }
+                if (auto alternativePart = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
+                    if (alternativePart->availableModes().contains(MimeTreeParser::Util::MultipartIcal)) {
+                        return alternativePart->icalContent();
+                    }
+                }
                 if (!d->showHtml && d->containsHtmlAndPlain) {
                     return HtmlUtils::linkify(Qt::convertFromPlainText(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text()));
                 }
