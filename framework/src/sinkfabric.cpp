@@ -120,6 +120,12 @@ public:
                 Store::modify(*mail).exec();
             }
         }
+        if (id == "restoreFromTrash") {
+            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
+                mail->setTrash(false);
+                Store::modify(*mail).exec();
+            }
+        }
         if (id == "moveToDrafts"/*Kube::Messages::synchronize*/) {
             if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
                 mail->setDraft(true);
