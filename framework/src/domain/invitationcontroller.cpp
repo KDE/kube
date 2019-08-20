@@ -67,25 +67,47 @@ void InvitationController::loadICal(const QString &ical)
     query.request<Event::Ical>();
     query.filter<Event::Uid>(icalEvent->uid().toUtf8());
     Store::fetchAll<Event>(query).then([this, icalEvent](const QList<Event::Ptr> &events) {
-        if (!events.isEmpty()) {
-            setState(InvitationState::Accepted);
-
-            auto icalEvent = KCalCore::ICalFormat().readIncidence(events.first()->getIcal()).dynamicCast<KCalCore::Event>();
-            if(!icalEvent) {
-                SinkWarning() << "Invalid ICal to process, ignoring...";
-                return;
-            }
-            populateFromEvent(*icalEvent);
-            setStart(icalEvent->dtStart());
-            setEnd(icalEvent->dtEnd());
-            setUid(icalEvent->uid().toUtf8());
-        } else {
+        if (events.isEmpty()) {
             setState(InvitationState::Unknown);
             populateFromEvent(*icalEvent);
             setStart(icalEvent->dtStart());
             setEnd(icalEvent->dtEnd());
             setUid(icalEvent->uid().toUtf8());
+            return KAsync::null();
         }
+
+        auto icalEvent = KCalCore::ICalFormat().readIncidence(events.first()->getIcal()).dynamicCast<KCalCore::Event>();
+        if(!icalEvent) {
+            SinkWarning() << "Invalid ICal to process, ignoring...";
+            return KAsync::null();
+        }
+        populateFromEvent(*icalEvent);
+        setStart(icalEvent->dtStart());
+        setEnd(icalEvent->dtEnd());
+        setUid(icalEvent->uid().toUtf8());
+
+        Query query;
+        query.request<ApplicationDomain::Identity::Name>()
+            .request<ApplicationDomain::Identity::Address>()
+            .request<ApplicationDomain::Identity::Account>();
+        auto job = Store::fetchAll<ApplicationDomain::Identity>(query)
+            .guard(this)
+            .then([this] (const QList<Identity::Ptr> &list) {
+                if (list.isEmpty()) {
+                    qWarning() << "Failed to find an identity";
+                }
+                for (const auto &identity : list) {
+                    const auto id = attendeesController()->findByProperty("email", identity->getAddress());
+                    if (!id.isEmpty()) {
+                        auto status = attendeesController()->value(id, "status").value<EventController::ParticipantStatus>() == EventController::Accepted ? InvitationController::Accepted : InvitationController::Declined;
+                        setState(status);
+                        return;
+                    } else {
+                        SinkLog() << "No identity found for " << identity->getAddress();
+                    }
+                }
+            });
+        return job;
     }).exec();
 }
 
@@ -103,7 +125,7 @@ static void sendIMipReply(const QByteArray &accountId, const QString &from, cons
     reply->addAttendee(KCalCore::Attendee::Ptr::create(fromName, from, false, status));
 
     QString body;
-    if (KCalCore::Attendee::Accepted) {
+    if (status == KCalCore::Attendee::Accepted) {
         body.append(QObject::tr("%1 has accepted the invitation to the following event").arg(fromName));
     } else {
         body.append(QObject::tr("%1 has declined the invitation to the following event").arg(fromName));
@@ -111,10 +133,17 @@ static void sendIMipReply(const QByteArray &accountId, const QString &from, cons
     body.append("\n\n");
     body.append(EventController::eventToBody(*reply));
 
+    QString subject;
+    if (status == KCalCore::Attendee::Accepted) {
+        subject = QObject::tr("\"%1\" has been accepted by %2").arg(event->summary()).arg(fromName);
+    } else {
+        subject = QObject::tr("\"%1\" has been declined by %2").arg(event->summary()).arg(fromName);
+    }
+
     const auto msg = MailTemplates::createIMipMessage(
         from,
         {{organizerEmail}, {}, {}},
-        QObject::tr("\"%1\" has been accepted by %2").arg(event->summary()).arg(fromName),
+        subject,
         body,
         KCalCore::ICalFormat{}.createScheduleMessage(reply, KCalCore::iTIPReply)
     );
@@ -146,7 +175,7 @@ void InvitationController::storeEvent(InvitationState status)
         .request<ApplicationDomain::Identity::Account>();
     auto job = Store::fetchAll<ApplicationDomain::Identity>(query)
         .guard(this)
-        .then([=, this] (const QList<Identity::Ptr> &list) {
+        .then([this, status, calendar] (const QList<Identity::Ptr> &list) {
             if (list.isEmpty()) {
                 qWarning() << "Failed to find an identity";
             }

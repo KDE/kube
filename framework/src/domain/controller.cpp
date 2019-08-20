@@ -164,6 +164,20 @@ void ListPropertyController::setValue(const QByteArray &id, const QString &key, 
     setValues(id, {{key, value}});
 }
 
+QVariant ListPropertyController::value(const QByteArray &id, const QString &key)
+{
+    QVariant result;
+    const auto idRole = mRoles["id"];
+    ::traverse(mModel.data(), [&] (QStandardItem *item) {
+        if (item->data(idRole).toByteArray() == id) {
+            result = item->data(mRoles[key]);
+            return false;
+        }
+        return true;
+    });
+    return result;
+}
+
 QByteArray ListPropertyController::findByProperty(const QByteArray &key, const QVariant &value) const
 {
     QByteArray id;

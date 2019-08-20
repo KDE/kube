@@ -129,6 +129,7 @@ public:
 
     void setValue(const QByteArray &id, const QString &key, const QVariant &);
     void setValues(const QByteArray &id, const QVariantMap &values);
+    QVariant value(const QByteArray &id, const QString &key);
     void traverse(const std::function<void(const QVariantMap &)> &f);
 
     QByteArray findByProperty(const QByteArray &key, const QVariant &) const;

@@ -51,7 +51,24 @@ Item {
             visible: !controller.allDay
             text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? controller.end.toLocaleString(Qt.locale(), "hh:mm") : controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))
         }
+    }
 
+    ColumnLayout {
+        visible: controller.state == Kube.InvitationController.Declined
+        Kube.Heading {
+            Layout.fillWidth: true
+            text: qsTr("You have declined: \"%1\"").arg(controller.summary)
+        }
+
+        Kube.SelectableLabel {
+            visible: controller.allDay
+            text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? "" : " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM"))
+        }
+
+        Kube.SelectableLabel {
+            visible: !controller.allDay
+            text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? controller.end.toLocaleString(Qt.locale(), "hh:mm") : controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))
+        }
     }
 
     ColumnLayout {
@@ -76,7 +93,7 @@ Item {
             Kube.Button {
                 text: qsTr("Decline")
                 onClicked: {
-                    controller.acceptAction.execute()
+                    controller.declineAction.execute()
                 }
             }
             Kube.PositiveButton {
