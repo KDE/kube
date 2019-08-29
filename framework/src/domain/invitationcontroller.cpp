@@ -94,7 +94,7 @@ void InvitationController::loadICal(const QString &ical)
             .guard(this)
             .then([this] (const QList<Identity::Ptr> &list) {
                 if (list.isEmpty()) {
-                    qWarning() << "Failed to find an identity";
+                    SinkWarning() << "Failed to find an identity";
                 }
                 for (const auto &identity : list) {
                     const auto id = attendeesController()->findByProperty("email", identity->getAddress());
@@ -165,7 +165,7 @@ void InvitationController::storeEvent(InvitationState status)
 
     const auto calendar = getCalendar();
     if (!calendar) {
-        qWarning() << "No calendar selected";
+        SinkWarning() << "No calendar selected";
         return;
     }
 
@@ -177,7 +177,7 @@ void InvitationController::storeEvent(InvitationState status)
         .guard(this)
         .then([this, status, calendar] (const QList<Identity::Ptr> &list) {
             if (list.isEmpty()) {
-                qWarning() << "Failed to find an identity";
+                SinkWarning() << "Failed to find an identity";
             }
             QString fromAddress;
             QString fromName;
@@ -197,7 +197,7 @@ void InvitationController::storeEvent(InvitationState status)
                 }
             }
             if (!foundMatch) {
-                qWarning() << "Failed to find a matching identity.";
+                SinkWarning() << "Failed to find a matching identity.";
                 return KAsync::error("Failed to find a matching identity");
             }
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();

@@ -225,7 +225,7 @@ void EventController::save()
 
     const auto calendar = getCalendar();
     if (!calendar) {
-        qWarning() << "No calendar selected";
+        SinkWarning() << "No calendar selected";
         return;
     }
 
