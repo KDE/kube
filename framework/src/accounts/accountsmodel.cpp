@@ -82,7 +82,6 @@ void AccountsModel::runQuery(const Sink::Query &query)
 
 void AccountsModel::setAccountId(const QByteArray &accountId)
 {
-    qWarning() << "Setting account id" << accountId;
     if (accountId.isEmpty()) {
         setSourceModel(nullptr);
         mModel.clear();
@@ -104,7 +103,6 @@ QByteArray AccountsModel::accountId() const
 
 void AccountsModel::setResourceId(const QByteArray &resourceId)
 {
-    qWarning() << "Setting resource id" << resourceId;
     if (resourceId.isEmpty()) {
         setSourceModel(nullptr);
         mModel.clear();

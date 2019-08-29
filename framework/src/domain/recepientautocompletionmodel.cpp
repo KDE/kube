@@ -60,14 +60,12 @@ void RecipientAutocompletionModel::save()
         list << mSourceModel->item(row)->data(Text).toString();
     }
 
-    qWarning() << "Path " <<  getPath();
     QSettings settings(getPath(), QSettings::IniFormat);
     settings.setValue("list", QStringList{list.toList()});
 }
 
 void RecipientAutocompletionModel::load()
 {
-    qWarning() << "Path " <<  getPath();
     QSettings settings(getPath(), QSettings::IniFormat);
     auto list = settings.value("list").toStringList();
     auto add = [] (const QString &n) {
