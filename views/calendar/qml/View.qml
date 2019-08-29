@@ -31,10 +31,6 @@ Kube.View {
     property date selectedDate: currentDate
     property bool autoUpdateDate: true
 
-    onSelectedDateChanged: {
-        console.log("Selected date changed", selectedDate)
-    }
-
     onRefresh: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "calendar"})
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "event"})
