@@ -88,7 +88,7 @@ private slots:
 
             auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
             QVERIFY(event);
-            QCOMPARE(event->uid(), uid);
+            QCOMPARE(event->uid().toUtf8(), uid);
             QCOMPARE(event->organizer()->fullName(), {"organizer@test.com"});
 
             const auto attendee = event->attendeeByMail("attendee1@test.com");
