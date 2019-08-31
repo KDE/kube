@@ -36,7 +36,7 @@
 
 using namespace Sink::ApplicationDomain;
 
-static QPair<QString, QString> parseEmailAddress(const QString &email) {
+static std::pair<QString, QString> parseEmailAddress(const QString &email) {
     KMime::Types::Mailbox mb;
     mb.fromUnicodeString(email);
     return {mb.name(), mb.address()};
@@ -49,7 +49,7 @@ static QString assembleEmailAddress(const QString &name, const QString &email) {
     return mb.prettyAddress();
 }
 
-static QPair<QStringList, QStringList> getRecipients(const QString &organizerEmail, const KCalCore::Attendee::List &attendees)
+static std::pair<QStringList, QStringList> getRecipients(const QString &organizerEmail, const KCalCore::Attendee::List &attendees)
 {
     QStringList to;
     QStringList cc;
