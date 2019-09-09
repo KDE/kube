@@ -22,14 +22,7 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
-    property string currentAccount
-    property string _currentAccount: Kube.Context.currentAccountId
-
     property Component delegate: null
-
-    onCurrentAccountChanged: {
-        Kube.Context.currentAccountId = currentAccount
-    }
 
     ColumnLayout {
         id: layout
@@ -39,15 +32,23 @@ FocusScope {
             model: Kube.AccountsModel {}
             onItemAdded: {
                 //Autoselect the first account to appear
-                if (!_currentAccount) {
-                    root.currentAccount = item.currentData.accountId
+                if (!Kube.Context.currentAccountId) {
+                    Kube.Context.currentAccountId = item.currentData.accountId
                 }
             }
 
             delegate: ColumnLayout {
                 id: accountDelegate
                 property variant currentData: model
-                property bool isCurrent: (model.accountId == root._currentAccount)
+                property bool isCurrent: false
+
+                states: [
+                    State {
+                        name: "current"
+                        when: model.accountId == Kube.Context.currentAccountId
+                        PropertyChanges {target: accountDelegate; isCurrent: true}
+                    }
+                ]
 
                 Layout.minimumHeight: Kube.Units.gridUnit
                 Layout.fillHeight: isCurrent
@@ -67,7 +68,9 @@ FocusScope {
                         textColor: Kube.Colors.highlightedTextColor
                         activeFocusOnTab: !isCurrent
                         hoverEnabled: !isCurrent
-                        onClicked: root.currentAccount = model.accountId
+                        onClicked: {
+                            Kube.Context.currentAccountId = model.accountId
+                        }
                         text: model.name
                         font.weight: Font.Bold
                         font.family: Kube.Font.fontFamily
