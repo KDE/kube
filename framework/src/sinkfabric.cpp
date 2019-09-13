@@ -195,8 +195,8 @@ public:
                         message["message"] = QObject::tr("Configuration error.");
                         break;
                     case Sink::ApplicationDomain::ConnectionLostError:
-                        message["message"] = QObject::tr("Connection lost.");
-                        break;
+                        //Ignore connection lost errors. We don't need them in the log view.
+                        return;
                     case Sink::ApplicationDomain::MissingCredentialsError:
                         message["message"] = QObject::tr("No credentials available.");
                         break;
