@@ -57,7 +57,7 @@ Item {
             focus: true
 
             placeholderText: qsTr("App-specific password for your FastMail account")
-            text: !!extensionPoint.item ? extensionPoint.item.secret.accountSecret : ""
+            text: (!!extensionPoint.item && !!extensionPoint.item.secret) ? extensionPoint.item.secret.accountSecret : ""
         }
         Row {
             Layout.columnSpan: 2
