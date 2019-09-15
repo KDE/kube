@@ -193,6 +193,9 @@ Controls1.SplitView {
                 if (subtype == Kube.Notifications.transmissionError) {
                     return transmissionErrorComponent
                 }
+                if (subtype == Kube.Notifications.messageSent) {
+                    return transmissionSuccessComponent
+                }
                 return detailsComponent
             }
 
@@ -401,6 +404,61 @@ Controls1.SplitView {
                     text: qsTr("Try Again")
                     onClicked: {
                         Kube.Fabric.postMessage(Kube.Messages.sendOutbox, {})
+                    }
+                }
+            }
+        }
+    }
+
+    Component {
+        id: transmissionSuccessComponent
+        Item {
+            id: componentRoot
+            Column {
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                spacing: Kube.Units.largeSpacing
+
+                Kube.Heading {
+                    id: heading
+                    text: qsTr("Succeeded to send the message.")
+                }
+
+                Column {
+                    spacing: Kube.Units.largeSpacing
+
+                    Repeater {
+                        model: Kube.MailListModel {
+                            entityId: componentRoot.parent ? componentRoot.parent.entityId : ""
+                        }
+                        delegate: Column {
+                            id: subHeadline
+
+                            Kube.Label {
+                                text: qsTr("Account: %1").arg(accountName)
+                                color: Kube.Colors.disabledTextColor
+                                wrapMode: Text.Wrap
+                            }
+                            Kube.Label {
+                                text: qsTr("Subject: %1").arg(model.subject)
+                                color: Kube.Colors.disabledTextColor
+                                wrapMode: Text.Wrap
+                            }
+                            Kube.Label {
+                                text: qsTr("To: %1").arg(model.to)
+                                color: Kube.Colors.disabledTextColor
+                                wrapMode: Text.Wrap
+                            }
+                            Kube.Label {
+                                visible: !!model.cc
+                                text: qsTr("Cc: %1").arg(model.cc)
+                                color: Kube.Colors.disabledTextColor
+                                wrapMode: Text.Wrap
+                            }
+                        }
                     }
                 }
             }

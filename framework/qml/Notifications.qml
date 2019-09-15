@@ -29,5 +29,6 @@ Item {
     property string hostNotFoundError: "hostNotFoundError"
     property string connectionError: "connectionError"
     property string transmissionError: "transmissionError"
+    property string messageSent: "messageSent"
 }
 

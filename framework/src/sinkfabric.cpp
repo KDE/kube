@@ -209,6 +209,15 @@ public:
                 if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {
                     message["type"] = "info";
                     message["message"] = QObject::tr("A message has been sent.");
+                    message["subtype"] = "messageSent";
+
+                    QVariantList entities;
+                    for(const auto &entity : notification.entities) {
+                        entities << entity;
+                    }
+                    message["entities"] = entities;
+
+                    message["resource"] = QString{notification.resource};
                 } else if (notification.code == Sink::ApplicationDomain::NewContentAvailable) {
                     message["type"] = "info";
                     if (!notification.entities.isEmpty()) {
