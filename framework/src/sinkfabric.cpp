@@ -149,108 +149,110 @@ public:
 
 class SinkNotifier {
 public:
+
+    static QVariantList toVariantList(const QByteArrayList &list)
+    {
+        QVariantList entities;
+        for(const auto &entity : list) {
+            entities << entity;
+        }
+        return entities;
+    }
+
+    static void sendErrorNotification(const Sink::Notification &notification)
+    {
+        QVariantMap message{
+            {"type", "error"},
+            {"resource", QString{notification.resource}},
+            {"details", notification.message}
+        };
+
+        switch(notification.code) {
+            case Sink::ApplicationDomain::ConnectionError:
+                message["message"] = QObject::tr("Failed to connect to server.");
+                message["subtype"] = "connectionError";
+                break;
+            case Sink::ApplicationDomain::NoServerError:
+                message["message"] = QObject::tr("Host not found.");
+                message["subtype"] = "hostNotFoundError";
+                break;
+            case Sink::ApplicationDomain::LoginError:
+                message["message"] = QObject::tr("Failed to login.");
+                message["subtype"] = "loginError";
+                break;
+            case Sink::ApplicationDomain::ConfigurationError:
+                message["message"] = QObject::tr("Configuration error.");
+                break;
+            case Sink::ApplicationDomain::ConnectionLostError:
+                //Ignore connection lost errors. We don't need them in the log view.
+                return;
+            case Sink::ApplicationDomain::MissingCredentialsError:
+                message["message"] = QObject::tr("No credentials available.");
+                break;
+            default:
+                //Ignore unknown errors, they are not going to help.
+                return;
+        }
+        Fabric::Fabric{}.postMessage("errorNotification", message);
+    }
+
+    static void sendProgressNotification(int progress, int total, const QList<QByteArray> &entities, const QByteArray &resourceId)
+    {
+        QVariantMap message{
+            {"type", "progress"},
+            {"progress", progress},
+            {"total", total},
+            {"resourceId", resourceId}
+        };
+
+        if (!entities.isEmpty()) {
+            message["folderId"] = entities.first();
+        }
+        Fabric::Fabric{}.postMessage("progressNotification", message);
+    }
+
     SinkNotifier()
         : mNotifier{Sink::Query{Sink::Query::LiveQuery}}
     {
         mNotifier.registerHandler([] (const Sink::Notification &notification) {
-            Notification n;
             SinkLog() << "Received notification: " << notification;
-            QVariantMap message;
+
             if (notification.type == Sink::Notification::Warning) {
-                message["type"] = "warning";
-
-                QVariantList entities;
-                for(const auto &entity : notification.entities) {
-                    entities << entity;
-                }
-                message["entities"] = entities;
-
-                message["resource"] = QString{notification.resource};
                 if (notification.code == Sink::ApplicationDomain::TransmissionError) {
-                    message["message"] = QObject::tr("Failed to send message.");
-                    message["subtype"] = "transmissionError";
-                } else {
-                    return;
+                    Fabric::Fabric{}.postMessage("notification", {
+                        {"type", "warning"},
+                        {"message", QObject::tr("Failed to send message.")},
+                        {"subtype", "transmissionError"},
+                        {"entities", toVariantList(notification.entities)},
+                        {"resource", QString{notification.resource}}
+                    });
                 }
             } else if (notification.type == Sink::Notification::Status) {
                 return;
             } else if (notification.type == Sink::Notification::Error) {
-                message["type"] = "error";
-                message["resource"] = QString{notification.resource};
-                message["details"] = notification.message;
-                switch(notification.code) {
-                    case Sink::ApplicationDomain::ConnectionError:
-                        message["message"] = QObject::tr("Failed to connect to server.");
-                        message["subtype"] = "connectionError";
-                        break;
-                    case Sink::ApplicationDomain::NoServerError:
-                        message["message"] = QObject::tr("Host not found.");
-                        message["subtype"] = "hostNotFoundError";
-                        break;
-                    case Sink::ApplicationDomain::LoginError:
-                        message["message"] = QObject::tr("Failed to login.");
-                        message["subtype"] = "loginError";
-                        break;
-                    case Sink::ApplicationDomain::ConfigurationError:
-                        message["message"] = QObject::tr("Configuration error.");
-                        break;
-                    case Sink::ApplicationDomain::ConnectionLostError:
-                        //Ignore connection lost errors. We don't need them in the log view.
-                        return;
-                    case Sink::ApplicationDomain::MissingCredentialsError:
-                        message["message"] = QObject::tr("No credentials available.");
-                        break;
-                    default:
-                        //Ignore unknown errors, they are not going to help.
-                        return;
-                }
-                Fabric::Fabric{}.postMessage("errorNotification", message);
+                sendErrorNotification(notification);
             } else if (notification.type == Sink::Notification::Info) {
                 if (notification.code == Sink::ApplicationDomain::TransmissionSuccess) {
-                    message["type"] = "info";
-                    message["message"] = QObject::tr("A message has been sent.");
-                    message["subtype"] = "messageSent";
-
-                    QVariantList entities;
-                    for(const auto &entity : notification.entities) {
-                        entities << entity;
-                    }
-                    message["entities"] = entities;
-
-                    message["resource"] = QString{notification.resource};
+                    Fabric::Fabric{}.postMessage("notification", {
+                        {"type", "info"},
+                        {"message", QObject::tr("A message has been sent.")},
+                        {"subtype", "messageSent"},
+                        {"entities", toVariantList(notification.entities)},
+                        {"resource", QString{notification.resource}}
+                    });
                 } else if (notification.code == Sink::ApplicationDomain::NewContentAvailable) {
-                    message["type"] = "info";
                     if (!notification.entities.isEmpty()) {
-                        message["folderId"] = notification.entities.first();
+                        Fabric::Fabric{}.postMessage("notification", {
+                            {"type", "info"},
+                            {"folderId", notification.entities.first()},
+                        });
                     }
                 } else if (notification.code == Sink::ApplicationDomain::SyncInProgress) {
-                    message["type"] = "progress";
-                    message["progress"] = 0;
-                    message["total"] = 1;
-                    if (!notification.entities.isEmpty()) {
-                        message["folderId"] = notification.entities.first();
-                    }
-                    message["resourceId"] = notification.resource;
-                    Fabric::Fabric{}.postMessage("progressNotification", message);
-                    return;
-                } else {
-                    return;
+                    sendProgressNotification(0, 1, notification.entities, notification.resource);
                 }
             } else if (notification.type == Sink::Notification::Progress) {
-                message["type"] = "progress";
-                message["progress"] = notification.progress;
-                message["total"] = notification.total;
-                if (!notification.entities.isEmpty()) {
-                    message["folderId"] = notification.entities.first();
-                }
-                message["resourceId"] = notification.resource;
-                Fabric::Fabric{}.postMessage("progressNotification", message);
-                return;
-            } else {
-                return;
+                sendProgressNotification(notification.progress, notification.total, notification.entities, notification.resource);
             }
-            Fabric::Fabric{}.postMessage("notification", message);
-
         });
 
     }
