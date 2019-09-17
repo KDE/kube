@@ -354,9 +354,8 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
         return makeUnexpected(Error{context.error});
     }
 
-    qWarning() << "Encrypting to " << encryptionKeys.size();
-
     for (const auto &signingKey : signingKeys) {
+        qDebug() << "Signing with " << signingKey;
         //TODO do we have to free those again?
         gpgme_key_t key;
         if (auto e = gpgme_get_key(context.context, signingKey.fingerprint, &key, /*secret*/ false)) {
@@ -370,6 +369,7 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
     gpgme_key_t * const keys = new gpgme_key_t[encryptionKeys.size() + 1];
     gpgme_key_t * keys_it = keys;
     for (const auto &k : encryptionKeys) {
+        qDebug() << "Encrypting to " << k;
         gpgme_key_t key;
         if (auto e = gpgme_get_key(context.context, k.fingerprint, &key, /*secret*/ false)) {
             qWarning() << "Failed to retrieve key " << k.fingerprint << Error{e};
@@ -389,8 +389,21 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
         gpgme_op_encrypt(context.context, keys, GPGME_ENCRYPT_ALWAYS_TRUST, Data{content}.data, out);
     delete[] keys;
     if (err) {
-        qWarning() << "Encryption failed:" << Error{err};
-        return makeUnexpected(Error{err});
+        const auto error = Error{err};
+        qWarning() << "Encryption failed:" << error;
+        switch (error.errorCode()) {
+            case GPG_ERR_UNUSABLE_PUBKEY:
+                for (const auto &k : encryptionKeys) {
+                    qWarning() << "Encryption key:" << k;
+                }
+                break;
+            case GPG_ERR_UNUSABLE_SECKEY:
+                for (const auto &k : signingKeys) {
+                    qWarning() << "Signing key:" << k;
+                }
+                break;
+        }
+        return makeUnexpected(error);
     }
 
     return toBA(out);
