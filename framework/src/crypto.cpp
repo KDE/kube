@@ -381,8 +381,10 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
     *keys_it++ = 0;
 
     gpgme_data_t out;
-    const gpgme_error_t e = gpgme_data_new(&out);
-    Q_ASSERT(!e);
+    if (auto e = gpgme_data_new(&out)) {
+        qWarning() << "Failed to allocate output buffer";
+        return makeUnexpected(Error{e});
+    }
 
     gpgme_error_t err = !signingKeys.empty() ?
         gpgme_op_encrypt_sign(context.context, keys, GPGME_ENCRYPT_ALWAYS_TRUST, Data{content}.data, out) :
