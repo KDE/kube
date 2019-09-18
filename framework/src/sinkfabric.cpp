@@ -141,7 +141,7 @@ public:
         }
         if (id == "unlockKeyring") {
             auto accountId = message["accountId"].value<QByteArray>();
-            Kube::AccountKeyring{accountId}.unlock();
+            Kube::AccountKeyring{accountId}.load();
         }
     }
 

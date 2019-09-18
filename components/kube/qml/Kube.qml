@@ -46,6 +46,9 @@ ApplicationWindow {
 
     onCurrentAccountChanged: {
         accountFactory.accountId = currentAccount
+
+        Kube.Keyring.tryUnlock(currentAccount)
+
         if (!Kube.Keyring.isUnlocked(currentAccount)) {
             if (accountFactory.requiresKeyring) {
                 Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": currentAccount})

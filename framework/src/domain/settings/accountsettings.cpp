@@ -25,6 +25,7 @@
 #include <QUrl>
 
 #include "keyring.h"
+#include "crypto.h"
 
 using namespace Sink;
 using namespace Sink::ApplicationDomain;
@@ -340,11 +341,20 @@ void AccountSettings::saveMailtransportResource()
 
 void AccountSettings::login(const QVariantMap &secrets)
 {
-    auto accountSecret = secrets.value("accountSecret").toString();
+    // We'll attempt to store your account secrets using a key matching the email address.
+    const auto accountSecret = secrets.value("accountSecret").toString();
     Store::fetchAll<SinkResource>(Query().filter<SinkResource::Account>(mAccountIdentifier))
         .then([=](const QList<SinkResource::Ptr> &resources) {
+            Kube::AccountKeyring keyring{mAccountIdentifier};
             for (const auto &resource : resources) {
-                Kube::AccountKeyring{mAccountIdentifier}.storePassword(resource->identifier(), accountSecret);
+                keyring.addPassword(resource->identifier(), accountSecret);
+            }
+            const auto keys = Crypto::findKeys({{mEmailAddress}}, true);
+            if (!keys.empty()) {
+                qInfo() << "Storing account secrets.";
+                keyring.save(keys);
+            } else {
+                qInfo() << "Failed to find a GPG key for " << mEmailAddress << ". Not storing account secrets.";
             }
         }).onError([](const KAsync::Error &error) {
             qWarning() << "Failed to load any account resources resource: " << error;

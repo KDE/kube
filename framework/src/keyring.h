@@ -22,6 +22,8 @@
 #include <QObject>
 #include <QSet>
 
+#include "crypto.h"
+
 namespace Kube {
 
 class KUBE_EXPORT Keyring : public QObject {
@@ -31,6 +33,7 @@ public:
     static Keyring *instance();
     Q_INVOKABLE bool isUnlocked(const QByteArray &accountId);
     Q_INVOKABLE void unlock(const QByteArray &accountId);
+    Q_INVOKABLE void tryUnlock(const QByteArray &accountId);
 
 private:
     Q_DISABLE_COPY(Keyring);
@@ -41,13 +44,15 @@ class AccountKeyring : public QObject {
     Q_OBJECT
 public:
     AccountKeyring(const QByteArray &accountId, QObject *parent = nullptr);
-    void storePassword(const QByteArray &resourceId, const QString &password);
-    void unlock();
+    void addPassword(const QByteArray &resourceId, const QString &password);
+    void save(const std::vector<Crypto::Key> &keys);
+    void load();
 
 private:
     Q_DISABLE_COPY(AccountKeyring);
 
     QByteArray mAccountIdentifier;
+    QByteArrayList mAccountResources;
 };
 
 }
