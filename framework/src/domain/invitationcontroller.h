@@ -28,6 +28,7 @@
 
 #include "eventcontroller.h"
 
+#include <KCalCore/Event>
 class KUBE_EXPORT InvitationController : public EventController
 {
     Q_OBJECT
@@ -40,8 +41,16 @@ public:
     };
     Q_ENUM(InvitationState);
 
+    enum InvitationMethod {
+        Reply,
+        Request
+    };
+    Q_ENUM(InvitationMethod);
+
     KUBE_CONTROLLER_PROPERTY(QByteArray, Uid, uid)
     KUBE_CONTROLLER_PROPERTY(InvitationState, State, state)
+    KUBE_CONTROLLER_PROPERTY(InvitationMethod, Method, method)
+    KUBE_CONTROLLER_PROPERTY(QString, Name, name)
 
     KUBE_CONTROLLER_ACTION(accept)
     KUBE_CONTROLLER_ACTION(decline)
@@ -52,5 +61,7 @@ public:
     Q_INVOKABLE void loadICal(const QString &message);
 
 private:
+    void handleRequest(KCalCore::Event::Ptr icalEvent);
+    void handleReply(KCalCore::Event::Ptr icalEvent);
     void storeEvent(InvitationState);
 };

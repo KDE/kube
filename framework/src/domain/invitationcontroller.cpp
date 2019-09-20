@@ -40,27 +40,46 @@ InvitationController::InvitationController()
 {
 }
 
-void InvitationController::loadICal(const QString &ical)
+static QString assembleEmailAddress(const QString &name, const QString &email) {
+    KMime::Types::Mailbox mb;
+    mb.setName(name);
+    mb.setAddress(email.toUtf8());
+    return mb.prettyAddress();
+}
+
+void InvitationController::handleReply(KCalCore::Event::Ptr icalEvent)
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
 
-    KCalCore::Calendar::Ptr calendar(new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()});
-    auto msg = KCalCore::ICalFormat{}.parseScheduleMessage(calendar, ical.toUtf8());
-    if (!msg) {
-        SinkWarning() << "Invalid scheudle message to process, ignoring...";
-        return;
-    }
-    auto icalEvent = msg->event().dynamicCast<KCalCore::Event>();
-    if (msg->method() != KCalCore::iTIPRequest) {
-        SinkWarning() << "Invalid method " << msg->method();
-        return;
+    setMethod(InvitationMethod::Reply);
+
+    auto attendees = icalEvent->attendees();
+
+    if (!attendees.isEmpty()) {
+        auto attendee = attendees.first();
+        if (attendee->status() == KCalCore::Attendee::Declined) {
+            setState(InvitationState::Declined);
+        } else if (attendee->status() == KCalCore::Attendee::Accepted) {
+            setState(InvitationState::Accepted);
+        } else {
+            setState(InvitationState::Unknown);
+        }
+        setName(assembleEmailAddress(attendee->name(), attendee->email()));
     }
 
-    if(!icalEvent) {
-        SinkWarning() << "Invalid ICal to process, ignoring...";
-        return;
-    }
+    populateFromEvent(*icalEvent);
+    setStart(icalEvent->dtStart());
+    setEnd(icalEvent->dtEnd());
+    setUid(icalEvent->uid().toUtf8());
+}
+
+void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    setMethod(InvitationMethod::Request);
 
     Query query;
     query.request<Event::Uid>();
@@ -99,8 +118,14 @@ void InvitationController::loadICal(const QString &ical)
                 for (const auto &identity : list) {
                     const auto id = attendeesController()->findByProperty("email", identity->getAddress());
                     if (!id.isEmpty()) {
-                        auto status = attendeesController()->value(id, "status").value<EventController::ParticipantStatus>() == EventController::Accepted ? InvitationController::Accepted : InvitationController::Declined;
-                        setState(status);
+                        const auto status = attendeesController()->value(id, "status").value<EventController::ParticipantStatus>();
+                        if (status == EventController::Accepted) {
+                            setState(InvitationController::Accepted);
+                        } else if (status == EventController::Declined) {
+                            setState(InvitationController::Declined);
+                        } else {
+                            setState(InvitationController::Unknown);
+                        }
                         return;
                     } else {
                         SinkLog() << "No identity found for " << identity->getAddress();
@@ -109,6 +134,36 @@ void InvitationController::loadICal(const QString &ical)
             });
         return job;
     }).exec();
+}
+
+void InvitationController::loadICal(const QString &ical)
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    KCalCore::Calendar::Ptr calendar(new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()});
+    auto msg = KCalCore::ICalFormat{}.parseScheduleMessage(calendar, ical.toUtf8());
+    if (!msg) {
+        SinkWarning() << "Invalid schedule message to process, ignoring...";
+        return;
+    }
+    auto icalEvent = msg->event().dynamicCast<KCalCore::Event>();
+    if(!icalEvent) {
+        SinkWarning() << "Invalid ICal to process, ignoring...";
+        return;
+    }
+
+    switch (msg->method()) {
+        case KCalCore::iTIPRequest:
+            handleRequest(icalEvent);
+            break;
+        case KCalCore::iTIPReply:
+            handleReply(icalEvent);
+            break;
+        default:
+            SinkWarning() << "Invalid method " << msg->method();
+    }
+
 }
 
 static void sendIMipReply(const QByteArray &accountId, const QString &from, const QString &fromName, KCalCore::Event::Ptr event, KCalCore::Attendee::PartStat status)

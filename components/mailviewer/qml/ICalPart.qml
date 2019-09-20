@@ -35,48 +35,49 @@ Item {
         id: controller
         Component.onCompleted: loadICal(content)
     }
+
+    states: [
+        State {
+            name: "replyAccepted"
+            when: controller.method == Kube.InvitationController.Reply && controller.state == Kube.InvitationController.Accepted
+            PropertyChanges {target: heading; text: qsTr("%1 has accepted: \"%2\"").arg(controller.name).arg(controller.summary)}
+            PropertyChanges {target: buttons; visible: false}
+        },
+        State {
+            name: "replyDeclined"
+            when: controller.method == Kube.InvitationController.Reply && controller.state == Kube.InvitationController.Declined
+            PropertyChanges {target: heading; text: qsTr("%1 has declined: \"%2\"").arg(controller.name).arg(controller.summary)}
+            PropertyChanges {target: buttons; visible: false}
+        },
+        State {
+            name: "replyUnknown"
+            when: controller.method == Kube.InvitationController.Reply && controller.state == Kube.InvitationController.Unknown
+            PropertyChanges {target: heading; text: qsTr("%1 doesn't yet know about: \"%2\"").arg(controller.name).arg(controller.summary)}
+            PropertyChanges {target: buttons; visible: false}
+        },
+        State {
+            name: "accepted"
+            when: controller.method == Kube.InvitationController.Request && controller.state == Kube.InvitationController.Accepted
+            PropertyChanges {target: heading; text: qsTr("You have accepted: \"%1\"").arg(controller.summary)}
+            PropertyChanges {target: buttons; visible: false}
+        },
+        State {
+            name: "declined"
+            when: controller.method == Kube.InvitationController.Request && controller.state == Kube.InvitationController.Declined
+            PropertyChanges {target: heading; text: qsTr("You have declined: \"%1\"").arg(controller.summary)}
+            PropertyChanges {target: buttons; visible: false}
+        },
+        State {
+            name: "invited"
+            when: controller.method == Kube.InvitationController.Request && controller.state == Kube.InvitationController.Unknown
+            PropertyChanges {target: heading; text: qsTr("You've been invited to: \"%1\"").arg(controller.summary)}
+        }
+    ]
+
     ColumnLayout {
-        visible: controller.state == Kube.InvitationController.Accepted
         Kube.Heading {
+            id: heading
             Layout.fillWidth: true
-            text: qsTr("You have accepted: \"%1\"").arg(controller.summary)
-        }
-
-        Kube.SelectableLabel {
-            visible: controller.allDay
-            text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? "" : " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM"))
-        }
-
-        Kube.SelectableLabel {
-            visible: !controller.allDay
-            text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? controller.end.toLocaleString(Qt.locale(), "hh:mm") : controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))
-        }
-    }
-
-    ColumnLayout {
-        visible: controller.state == Kube.InvitationController.Declined
-        Kube.Heading {
-            Layout.fillWidth: true
-            text: qsTr("You have declined: \"%1\"").arg(controller.summary)
-        }
-
-        Kube.SelectableLabel {
-            visible: controller.allDay
-            text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? "" : " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM"))
-        }
-
-        Kube.SelectableLabel {
-            visible: !controller.allDay
-            text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? controller.end.toLocaleString(Qt.locale(), "hh:mm") : controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))
-        }
-    }
-
-    ColumnLayout {
-        visible: controller.state == Kube.InvitationController.Unknown
-
-        Kube.Heading {
-            Layout.fillWidth: true
-            text: qsTr("You've been invited to: \"%1\"").arg(controller.summary)
         }
 
         Kube.SelectableLabel {
@@ -90,6 +91,7 @@ Item {
         }
 
         RowLayout {
+            id: buttons
             Kube.Button {
                 text: qsTr("Decline")
                 onClicked: {
