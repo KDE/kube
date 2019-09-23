@@ -115,6 +115,11 @@ void AccountKeyring::load()
 {
     const auto secrets = loadSecret(mAccountIdentifier);
     for (const auto &resource : secrets.keys()) {
+        //"accountSecret" is a magic value from the gpg extension for a key that is used for all resources of the same account.
+        //We ignore it to avoid pretending the account is unlocked.
+        if (resource == "accountSecret") {
+            continue;
+        }
         auto secret = secrets.value(resource);
         if (secret.isValid()) {
             qWarning() << "Found stored secret for " << resource;
