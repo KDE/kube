@@ -40,10 +40,21 @@ TodoSourceModel::TodoSourceModel(QObject *parent)
     QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &TodoSourceModel::updateFromSource);
 }
 
+static QList<QByteArray> toList(const QVariant &variant) {
+    if (variant.type() == static_cast<QVariant::Type>(QMetaType::QVariantList)) {
+        QList<QByteArray> list;
+        for (const auto &v : variant.toList()) {
+            list.append(v.toByteArray());
+        }
+        return list;
+    }
+    return variant.value<QSet<QByteArray>>().toList();
+}
+
 void TodoSourceModel::setFilter(const QVariantMap &filter)
 {
     const auto account = filter.value("account").toByteArray();
-    const auto calendarFilter = filter.value("calendars").value<QSet<QByteArray>>().toList();
+    const auto calendarFilter = toList(filter.value("calendars"));
     using namespace Sink::ApplicationDomain;
     if (calendarFilter.isEmpty()) {
         refreshView();

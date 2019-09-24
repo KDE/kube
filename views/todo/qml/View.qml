@@ -28,7 +28,7 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
     id: root
     property string currentAccount: Kube.Context.currentAccountId
-    // property variant currentFolder: null
+    property variant currentFolder: null
     property bool doing: true
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
@@ -39,12 +39,12 @@ Kube.View {
     }
 
     onRefresh: {
-        // if (!!root.currentFolder) {
-        //     Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
-        //     Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": root.currentAccount, "type": "folder"})
-        // } else {
+        if (!!root.currentFolder) {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": root.currentAccount, "type": "folder"})
+        } else {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": root.currentAccount})
-        // }
+        }
     }
 
     Kube.Listener {
@@ -134,7 +134,10 @@ Kube.View {
                     checked: root.doing
                     horizontalAlignment: Text.AlignHLeft
                     ButtonGroup.group: viewButtonGroup
-                    onClicked: root.doing = true
+                    onClicked: {
+                        root.doing = true
+                        accountSwitcher.clearSelection()
+                    }
                 }
                 Kube.TextButton {
                     id: allViewButton
@@ -154,6 +157,7 @@ Kube.View {
             Kube.CalendarSelector {
                 id: accountSwitcher
                 activeFocusOnTab: true
+                selectionEnabled: true
                 anchors {
                     top: topLayout.bottom
                     topMargin: Kube.Units.largeSpacing
@@ -163,6 +167,10 @@ Kube.View {
                     rightMargin: Kube.Units.largeSpacing
                 }
                 contentType: "todo"
+                onCurrentCalendarChanged: {
+                    root.currentFolder = currentCalendar
+                    root.doing = false
+                }
             }
 
             Item {
@@ -245,7 +253,7 @@ Kube.View {
                     id: todoModel
                     filter: {
                         "account": accountSwitcher.currentAccount,
-                        "calendars": accountSwitcher.enabledCalendars,
+                        "calendars": root.currentFolder ? [root.currentFolder] : accountSwitcher.enabledCalendars,
                         "doing": root.doing,
                     }
                 }
@@ -283,7 +291,7 @@ Kube.View {
                                 text: model.summary
                                 color: delegateRoot.textColor
                                 font.strikeout: model.complete
-                                font.bold: model.doing && allViewButton.checked
+                                font.bold: model.doing && !root.doing
                                 maximumLineCount: 2
                                 wrapMode: Text.WordWrap
                                 elide: Text.ElideRight

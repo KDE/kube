@@ -26,8 +26,19 @@ import org.kube.framework 1.0 as Kube
 Kube.InlineAccountSwitcher {
     id: root
 
-    property alias enabledCalendars: calendarFilterCollector.checkedEntities
+    property bool selectionEnabled: false
     property string contentType: "event"
+
+    property alias enabledCalendars: calendarFilterCollector.checkedEntities
+    property var currentCalendar: null
+
+    property var currentListView: null
+
+    function clearSelection() {
+        if (root.currentListView) {
+            root.currentListView.currentIndex = -1
+        }
+    }
 
     Kube.CheckedEntities {
         id: calendarFilterCollector
@@ -46,10 +57,19 @@ Kube.InlineAccountSwitcher {
             checked: listView.editMode
         }
 
+        currentIndex: root.selectionEnabled ? 0 : -1
+
         Layout.fillWidth: true
         Layout.maximumHeight: Math.min(contentHeight, parent.height - Kube.Units.gridUnit)
         Layout.preferredHeight: contentHeight
         spacing: Kube.Units.smallSpacing
+
+        onCurrentItemChanged: {
+            root.currentListView = listView
+            if (currentItem) {
+                root.currentCalendar = currentItem.currentData.identifier
+            }
+        }
 
         model: Kube.CheckableEntityModel {
             id: calendarModel
@@ -69,10 +89,21 @@ Kube.InlineAccountSwitcher {
         }
         delegate: Kube.ListDelegate {
             id: delegate
+
+            selectionEnabled: root.selectionEnabled
+
             width: listView.availableWidth
             height: Kube.Units.gridUnit
             hoverEnabled: true
-            background: Item {}
+            property bool isActive: listView.currentIndex === index
+
+            background: Kube.DelegateBackground {
+                anchors.fill: parent
+                color: Kube.Colors.textColor
+                focused: delegate.activeFocus || delegate.hovered
+                selected: isActive
+            }
+
             RowLayout {
                 anchors.fill: parent
                 spacing: Kube.Units.smallSpacing

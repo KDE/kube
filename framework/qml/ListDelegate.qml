@@ -29,6 +29,7 @@ T.ItemDelegate {
     property color textColor: highlighted ? Kube.Colors.highlightedTextColor : Kube.Colors.textColor
     property color disabledTextColor: highlighted ? Kube.Colors.highlightedTextColor : Kube.Colors.disabledTextColor
     property bool focused: root.hovered || root.activeFocus
+    property bool selectionEnabled: true
 
     height: Kube.Units.gridUnit * 3
     width: root.ListView.view.width
@@ -36,8 +37,10 @@ T.ItemDelegate {
     highlighted: ListView.isCurrentItem
 
     onClicked: {
-        ListView.view.currentIndex = index
-        ListView.view.forceActiveFocus()
+        if (selectionEnabled) {
+            ListView.view.currentIndex = index
+            ListView.view.forceActiveFocus()
+        }
     }
 
     background: Kube.DelegateBackground {
