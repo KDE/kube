@@ -57,7 +57,7 @@ Kube.InlineAccountSwitcher {
             checked: listView.editMode
         }
 
-        currentIndex: root.selectionEnabled ? 0 : -1
+        currentIndex: -1
 
         Layout.fillWidth: true
         Layout.maximumHeight: Math.min(contentHeight, parent.height - Kube.Units.gridUnit)

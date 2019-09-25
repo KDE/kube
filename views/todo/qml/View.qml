@@ -136,6 +136,8 @@ Kube.View {
                     ButtonGroup.group: viewButtonGroup
                     onClicked: {
                         root.doing = true
+                        root.all = false
+                        root.currentFolder = null
                         accountSwitcher.clearSelection()
                     }
                 }
@@ -148,9 +150,15 @@ Kube.View {
                     text: qsTr("All")
                     textColor: Kube.Colors.highlightedTextColor
                     checkable: true
+                    checked: root.all
                     horizontalAlignment: Text.AlignHLeft
                     ButtonGroup.group: viewButtonGroup
-                    onClicked: root.doing = false
+                    onClicked: {
+                        root.doing = false
+                        root.all = true
+                        root.currentFolder = null
+                        accountSwitcher.clearSelection()
+                    }
                 }
             }
 
@@ -169,7 +177,10 @@ Kube.View {
                 contentType: "todo"
                 onCurrentCalendarChanged: {
                     root.currentFolder = currentCalendar
-                    root.doing = false
+                    if (currentCalendar) {
+                        root.doing = false
+                        root.all = false
+                    }
                 }
             }
 
