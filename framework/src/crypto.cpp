@@ -404,6 +404,8 @@ Expected<Error, QByteArray> Crypto::signAndEncrypt(const QByteArray &content, co
                     qWarning() << "Signing key:" << k;
                 }
                 break;
+            default:
+                break;
         }
         return makeUnexpected(error);
     }
