@@ -200,8 +200,25 @@ FocusScope {
                             right: parent.right
                             bottom: parent.bottom
                         }
+
+                        function sameDay(date1, date2) {
+                            return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
+                        }
+
+                        function formatDateTime(date) {
+                            const today = new Date()
+                            if (sameDay(date, today)) {
+                                return Qt.formatDateTime(date, "hh:mm")
+                            }
+                            const lastWeekToday = today.getTime() - ((24*60*60*1000) * 7);
+                            if (date.getTime() >= lastWeekToday) {
+                                return Qt.formatDateTime(date, "ddd hh:mm")
+                            }
+                            return Qt.formatDateTime(date, "dd MMM yyyy")
+                        }
+
                         visible: !delegateRoot.buttonsVisible
-                        text: Qt.formatDateTime(model.date, "dd MMM yyyy")
+                        text: formatDateTime(model.date, "dd MMM yyyy")
                         font.italic: true
                         color: delegateRoot.disabledTextColor
                         font.pointSize: Kube.Units.tinyFontSize

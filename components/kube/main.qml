@@ -183,6 +183,16 @@ KubeComponent.Kube {
                             subject: "Dummy",
                             from: "test@example.org",
                         },
+                        {
+                            date: addDays(now, -6),
+                            subject: "Before last week",
+                            from: "test@example.org",
+                        },
+                        {
+                            date: addDays(now, -7),
+                            subject: "Last week",
+                            from: "test@example.org",
+                        },
                     ]
                 },
                 {
