@@ -70,7 +70,7 @@ void AccountFactory::loadPackage()
     mAccountName.clear();
     mRequiresKeyring = false;
     if (pluginPath.isEmpty()) {
-        qWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
+        SinkWarning() << "Failed to load account package: " << "org.kube.accounts." + mAccountType;
     } else {
         mUiPath = QUrl::fromLocalFile(pluginPath + "/AccountSettings.qml");
         mLoginUi = QUrl::fromLocalFile(pluginPath + "/Login.qml");
@@ -81,8 +81,6 @@ void AccountFactory::loadPackage()
             auto json = QJsonDocument::fromJson(file.readAll());
             mRequiresKeyring = json.object().value("RequiresKeyring").toBool(true);
             mAccountName = json.object().value("Name").toString();
-        } else {
-            mRequiresKeyring = true;
         }
     }
     emit accountLoaded();

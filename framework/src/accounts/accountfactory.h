@@ -52,5 +52,5 @@ private:
     QUrl mUiPath;
     QUrl mLoginUi;
     QByteArray mAccountType;
-    bool mRequiresKeyring = true;
+    bool mRequiresKeyring = false;
 };
