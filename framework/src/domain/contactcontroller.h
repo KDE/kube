@@ -33,6 +33,7 @@ class KUBE_EXPORT ContactController : public Kube::Controller
 
     // Input properties
     Q_PROPERTY(QVariant contact READ contact WRITE loadContact)
+    Q_PROPERTY(QString emailAddress READ emailAddress WRITE loadByEmail)
 
     //Interface properties
     KUBE_CONTROLLER_PROPERTY(QByteArray, AccountId, accountId)
@@ -56,9 +57,11 @@ public:
     explicit ContactController();
 
     Q_INVOKABLE void loadContact(const QVariant &contact);
+    Q_INVOKABLE void loadByEmail(const QString &email);
     Q_INVOKABLE void remove();
 
     QVariant contact() const;
+    QString emailAddress() const;
 
 private slots:
     void updateSaveAction();

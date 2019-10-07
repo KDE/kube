@@ -197,6 +197,38 @@ Rectangle {
                             text: qsTr("Send mail to")
                             onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {"recipients": [root.sender]})
                         }
+
+                        Kube.TextButton {
+                            text: qsTr("Add to addressbook")
+                            onClicked: contactPopupComponent.createObject(root, {emailAddress: root.sender}).open()
+                        }
+                    }
+                }
+
+                Component {
+                    id: contactPopupComponent
+
+                    Kube.Popup {
+                        id: popup
+
+                        property var emailAddress: null
+
+                        parent: ApplicationWindow.overlay
+                        x: Math.round((parent.width - width) / 2)
+                        y: Math.round((parent.height - height) / 2)
+                        width: personView.width
+                        height: personView.height
+                        padding: 0
+                        PersonView {
+                            id: personView
+                            controller: Kube.ContactController {
+                                id: contactController
+                                contact: root.contact
+                                // emailAddress: popup.emailAddress
+                            }
+                        }
+                        //TODO this doesn't work
+                        Component.onCompleted: contactController.mails.set([root.sender])
                     }
                 }
 

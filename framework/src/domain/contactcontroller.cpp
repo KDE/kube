@@ -177,6 +177,32 @@ void ContactController::loadContact(const QVariant &variant)
     }
 }
 
+void ContactController::loadByEmail(const QString &email)
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    static_cast<MailsController*>(mailsController())->set({email});
+
+    //TODO query for contact by email address
+    //We probably can't atm., perhaps just load all and filter in memory for the time being?
+    // Query query;
+    // query.request<Contact::Uid>();
+    // query.request<Contact::VCard>();
+    // query.request<Contact::Emails>();
+    // query.filter<Contact::Email>(icalEvent->uid().toUtf8());
+    // Store::fetchAll<Event>(query).then([this](const QList<Contact::Ptr> &contacts) {
+    //     if (events.isEmpty()) {
+    //         setState(InvitationState::Unknown);
+    //         populateFromEvent(*icalEvent);
+    //         setStart(icalEvent->dtStart());
+    //         setEnd(icalEvent->dtEnd());
+    //         setUid(icalEvent->uid().toUtf8());
+    //         return KAsync::null();
+    //     }
+
+}
+
 void ContactController::remove()
 {
     if (auto c = mContact.value<Sink::ApplicationDomain::Contact::Ptr>()) {
@@ -187,4 +213,9 @@ void ContactController::remove()
 QVariant ContactController::contact() const
 {
     return mContact;
+}
+
+QString ContactController::emailAddress() const
+{
+    return {};
 }
