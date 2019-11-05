@@ -29,6 +29,8 @@ set(KDE_SKIP_TEST_SETTINGS true)
 include(KDECMakeSettings NO_POLICY_SCOPE)
 include(ECMSetupVersion)
 
+kde_enable_exceptions()
+
 # Get the current working branch
 execute_process(
   COMMAND git rev-parse --abbrev-ref HEAD
