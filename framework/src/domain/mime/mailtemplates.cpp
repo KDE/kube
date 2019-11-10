@@ -587,17 +587,18 @@ static RecipientMailboxes getRecipients(const KMime::Message::Ptr &origMsg, cons
 
     KMime::Types::Mailbox::List toList;
     KMime::Types::Mailbox::List ccList;
-    toList = origMsg->from()->mailboxes();
-
-    bool listContainsMe = false;
-    for (const auto &m : me) {
-        KMime::Types::Mailbox mailbox;
-        mailbox.setAddress(m);
-        if (toList.contains(mailbox)) {
-            listContainsMe = true;
+    auto listContainsMe = [&] (const KMime::Types::Mailbox::List &list) {
+        for (const auto &m : me) {
+            KMime::Types::Mailbox mailbox;
+            mailbox.setAddress(m);
+            if (list.contains(mailbox)) {
+                return true;
+            }
         }
-    }
-    if (listContainsMe) {
+        return false;
+    };
+
+    if (listContainsMe(origMsg->from()->mailboxes())) {
         // sender seems to be one of our own identities, so we assume that this
         // is a reply to a "sent" mail where the users wants to add additional
         // information for the recipient.
