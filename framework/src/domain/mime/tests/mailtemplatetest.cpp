@@ -184,9 +184,6 @@ private slots:
             result = r;
         }, me);
         QTRY_VERIFY(result);
-        auto content = removeFirstLine(result->body());
-        QVERIFY(!content.isEmpty());
-        QCOMPARE(unquote(content), QLatin1String("test"));
         QCOMPARE(result->to()->addresses(), {{"from@example.org"}});
         auto l = QVector<QByteArray>{{"to2@example.org"}, {"cc1@example.org"}, {"cc2@example.org"}};
         QCOMPARE(result->cc()->addresses(), l);
