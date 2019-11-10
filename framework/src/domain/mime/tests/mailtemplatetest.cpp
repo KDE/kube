@@ -189,6 +189,26 @@ private slots:
         QCOMPARE(result->cc()->addresses(), l);
     }
 
+    void testMultiRecipientReplyOwnMessage()
+    {
+        KMime::Types::AddrSpecList me;
+        KMime::Types::Mailbox mb;
+        mb.setAddress("from@example.org");
+        me << mb.addrSpec();
+
+        auto msg = readMail("multirecipients.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        }, me);
+        QTRY_VERIFY(result);
+
+        auto to = QVector<QByteArray>{{"to1@example.org"}, {"to2@example.org"}};
+        QCOMPARE(result->to()->addresses(), to);
+        auto cc = QVector<QByteArray>{{"cc1@example.org"}, {"cc2@example.org"}};
+        QCOMPARE(result->cc()->addresses(), cc);
+    }
+
     void testForwardAsAttachment()
     {
         auto msg = readMail("plaintext.mbox");
