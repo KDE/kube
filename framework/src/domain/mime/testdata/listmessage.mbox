@@ -1,0 +1,15 @@
+Return-Path: <from@example.org>
+Date: Wed, 8 Jun 2016 20:34:44 -0700
+From: From <from@example.org>
+Reply-To: List <list@example.org>
+To: List <list@example.org>,
+ "To" <to@example.org>
+Cc: CC <cc1@example.org>
+List-Id: List <list@example.org>
+Sender: List <list@example.org>
+Subject: A random subject with alternative contenttype
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+test

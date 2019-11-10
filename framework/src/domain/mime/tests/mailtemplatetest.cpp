@@ -209,6 +209,26 @@ private slots:
         QCOMPARE(result->cc()->addresses(), cc);
     }
 
+    void testReplyList()
+    {
+        KMime::Types::AddrSpecList me;
+        KMime::Types::Mailbox mb;
+        mb.setAddress("me@example.org");
+        me << mb.addrSpec();
+
+        auto msg = readMail("listmessage.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        }, me);
+        QTRY_VERIFY(result);
+
+        auto to = QVector<QByteArray>{{"list@example.org"}};
+        QCOMPARE(result->to()->addresses(), to);
+        auto cc = QVector<QByteArray>{{"to@example.org"}, {"cc1@example.org"}};
+        QCOMPARE(result->cc()->addresses(), cc);
+    }
+
     void testForwardAsAttachment()
     {
         auto msg = readMail("plaintext.mbox");
