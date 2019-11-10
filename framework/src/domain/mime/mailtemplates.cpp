@@ -587,175 +587,86 @@ static RecipientMailboxes getRecipients(const KMime::Message::Ptr &origMsg, cons
 
     KMime::Types::Mailbox::List toList;
     KMime::Types::Mailbox::List ccList;
-    //FIXME
-    const ReplyStrategy replyStrategy = ReplyAll;
-    switch (replyStrategy) {
-    case ReplySmart: {
-        if (auto hdr = origMsg->headerByType("Mail-Followup-To")) {
-            toList << KMime::Types::Mailbox::listFrom7BitString(hdr->as7BitString(false));
-        } else if (!replyToList.isEmpty()) {
-            toList = replyToList;
-        } else if (!mailingListAddresses.isEmpty()) {
-            toList = (KMime::Types::Mailbox::List() << mailingListAddresses.at(0));
-        } else {
-            // doesn't seem to be a mailing list, reply to From: address
-            toList = origMsg->from()->mailboxes();
 
-            bool listContainsMe = false;
-            for (const auto &m : me) {
-                KMime::Types::Mailbox mailbox;
-                mailbox.setAddress(m);
-                if (toList.contains(mailbox)) {
-                    listContainsMe = true;
-                }
-            }
-            if (listContainsMe) {
-                // sender seems to be one of our own identities, so we assume that this
-                // is a reply to a "sent" mail where the users wants to add additional
-                // information for the recipient.
-                toList = origMsg->to()->mailboxes();
-            }
-        }
-        // strip all my addresses from the list of recipients
-        const KMime::Types::Mailbox::List recipients = toList;
+    KMime::Types::Mailbox::List recipients;
+    KMime::Types::Mailbox::List ccRecipients;
 
-        toList = stripMyAddressesFromAddressList(recipients, me);
+    // add addresses from the Reply-To header to the list of recipients
+    if (!replyToList.isEmpty()) {
+        recipients = replyToList;
 
-        // ... unless the list contains only my addresses (reply to self)
-        if (toList.isEmpty() && !recipients.isEmpty()) {
-            toList << recipients.first();
-        }
-    }
-    break;
-    case ReplyList: {
-        if (auto hdr = origMsg->headerByType("Mail-Followup-To")) {
-            KMime::Types::Mailbox mailbox;
-            mailbox.from7BitString(hdr->as7BitString(false));
-            toList << mailbox;
-        } else if (!mailingListAddresses.isEmpty()) {
-            toList << mailingListAddresses[ 0 ];
-        } else if (!replyToList.isEmpty()) {
-            // assume a Reply-To header mangling mailing list
-            toList = replyToList;
-        }
-
-        //FIXME
-        // strip all my addresses from the list of recipients
-        const KMime::Types::Mailbox::List recipients = toList;
-        toList = stripMyAddressesFromAddressList(recipients, me);
-    }
-    break;
-    case ReplyAll: {
-        KMime::Types::Mailbox::List recipients;
-        KMime::Types::Mailbox::List ccRecipients;
-
-        // add addresses from the Reply-To header to the list of recipients
-        if (!replyToList.isEmpty()) {
-            recipients = replyToList;
-
-            // strip all possible mailing list addresses from the list of Reply-To addresses
-            foreach (const KMime::Types::Mailbox &mailbox, mailingListAddresses) {
-                foreach (const KMime::Types::Mailbox &recipient, recipients) {
-                    if (mailbox == recipient) {
-                        recipients.removeAll(recipient);
-                    }
+        // strip all possible mailing list addresses from the list of Reply-To addresses
+        foreach (const KMime::Types::Mailbox &mailbox, mailingListAddresses) {
+            foreach (const KMime::Types::Mailbox &recipient, recipients) {
+                if (mailbox == recipient) {
+                    recipients.removeAll(recipient);
                 }
             }
         }
+    }
 
-        if (!mailingListAddresses.isEmpty()) {
-            // this is a mailing list message
-            if (recipients.isEmpty() && !origMsg->from()->asUnicodeString().isEmpty()) {
-                // The sender didn't set a Reply-to address, so we add the From
-                // address to the list of CC recipients.
-                ccRecipients += origMsg->from()->mailboxes();
-                qDebug() << "Added" << origMsg->from()->asUnicodeString() << "to the list of CC recipients";
-            }
-
-            // if it is a mailing list, add the posting address
-            recipients.prepend(mailingListAddresses[ 0 ]);
-        } else {
-            // this is a normal message
-            if (recipients.isEmpty() && !origMsg->from()->asUnicodeString().isEmpty()) {
-                // in case of replying to a normal message only then add the From
-                // address to the list of recipients if there was no Reply-to address
-                recipients += origMsg->from()->mailboxes();
-                qDebug() << "Added" << origMsg->from()->asUnicodeString() << "to the list of recipients";
-            }
+    if (!mailingListAddresses.isEmpty()) {
+        // this is a mailing list message
+        if (recipients.isEmpty() && !origMsg->from()->asUnicodeString().isEmpty()) {
+            // The sender didn't set a Reply-to address, so we add the From
+            // address to the list of CC recipients.
+            ccRecipients += origMsg->from()->mailboxes();
+            qDebug() << "Added" << origMsg->from()->asUnicodeString() << "to the list of CC recipients";
         }
 
-        // strip all my addresses from the list of recipients
-        toList = stripMyAddressesFromAddressList(recipients, me);
-
-        // merge To header and CC header into a list of CC recipients
-        if (!origMsg->cc()->asUnicodeString().isEmpty() || !origMsg->to()->asUnicodeString().isEmpty()) {
-            KMime::Types::Mailbox::List list;
-            if (!origMsg->to()->asUnicodeString().isEmpty()) {
-                list += origMsg->to()->mailboxes();
-            }
-            if (!origMsg->cc()->asUnicodeString().isEmpty()) {
-                list += origMsg->cc()->mailboxes();
-            }
-
-            foreach (const KMime::Types::Mailbox &mailbox, list) {
-                if (!recipients.contains(mailbox) &&
-                        !ccRecipients.contains(mailbox)) {
-                    ccRecipients += mailbox;
-                    qDebug() << "Added" << mailbox.prettyAddress() << "to the list of CC recipients";
-                }
-            }
-        }
-
-        if (!ccRecipients.isEmpty()) {
-            // strip all my addresses from the list of CC recipients
-            ccRecipients = stripMyAddressesFromAddressList(ccRecipients, me);
-
-            // in case of a reply to self, toList might be empty. if that's the case
-            // then propagate a cc recipient to To: (if there is any).
-            if (toList.isEmpty() && !ccRecipients.isEmpty()) {
-                toList << ccRecipients.at(0);
-                ccRecipients.pop_front();
-            }
-
-            ccList = ccRecipients;
-        }
-
-        if (toList.isEmpty() && !recipients.isEmpty()) {
-            // reply to self without other recipients
-            toList << recipients.at(0);
+        // if it is a mailing list, add the posting address
+        recipients.prepend(mailingListAddresses[ 0 ]);
+    } else {
+        // this is a normal message
+        if (recipients.isEmpty() && !origMsg->from()->asUnicodeString().isEmpty()) {
+            // in case of replying to a normal message only then add the From
+            // address to the list of recipients if there was no Reply-to address
+            recipients += origMsg->from()->mailboxes();
+            qDebug() << "Added" << origMsg->from()->asUnicodeString() << "to the list of recipients";
         }
     }
-    break;
-    case ReplyAuthor: {
-        if (!replyToList.isEmpty()) {
-            KMime::Types::Mailbox::List recipients = replyToList;
 
-            // strip the mailing list post address from the list of Reply-To
-            // addresses since we want to reply in private
-            foreach (const KMime::Types::Mailbox &mailbox, mailingListAddresses) {
-                foreach (const KMime::Types::Mailbox &recipient, recipients) {
-                    if (mailbox == recipient) {
-                        recipients.removeAll(recipient);
-                    }
-                }
-            }
+    // strip all my addresses from the list of recipients
+    toList = stripMyAddressesFromAddressList(recipients, me);
 
-            if (!recipients.isEmpty()) {
-                toList = recipients;
-            } else {
-                // there was only the mailing list post address in the Reply-To header,
-                // so use the From address instead
-                toList = origMsg->from()->mailboxes();
+    // merge To header and CC header into a list of CC recipients
+    if (!origMsg->cc()->asUnicodeString().isEmpty() || !origMsg->to()->asUnicodeString().isEmpty()) {
+        KMime::Types::Mailbox::List list;
+        if (!origMsg->to()->asUnicodeString().isEmpty()) {
+            list += origMsg->to()->mailboxes();
+        }
+        if (!origMsg->cc()->asUnicodeString().isEmpty()) {
+            list += origMsg->cc()->mailboxes();
+        }
+
+        foreach (const KMime::Types::Mailbox &mailbox, list) {
+            if (!recipients.contains(mailbox) &&
+                    !ccRecipients.contains(mailbox)) {
+                ccRecipients += mailbox;
+                qDebug() << "Added" << mailbox.prettyAddress() << "to the list of CC recipients";
             }
-        } else if (!origMsg->from()->asUnicodeString().isEmpty()) {
-            toList = origMsg->from()->mailboxes();
         }
     }
-    break;
-    case ReplyNone:
-        // the addressees will be set by the caller
-        break;
+
+    if (!ccRecipients.isEmpty()) {
+        // strip all my addresses from the list of CC recipients
+        ccRecipients = stripMyAddressesFromAddressList(ccRecipients, me);
+
+        // in case of a reply to self, toList might be empty. if that's the case
+        // then propagate a cc recipient to To: (if there is any).
+        if (toList.isEmpty() && !ccRecipients.isEmpty()) {
+            toList << ccRecipients.at(0);
+            ccRecipients.pop_front();
+        }
+
+        ccList = ccRecipients;
     }
+
+    if (toList.isEmpty() && !recipients.isEmpty()) {
+        // reply to self without other recipients
+        toList << recipients.at(0);
+    }
+
     return {toList, ccList};
 }
 
