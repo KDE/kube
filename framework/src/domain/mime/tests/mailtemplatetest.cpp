@@ -166,8 +166,8 @@ private slots:
         auto content = removeFirstLine(result->body());
         QVERIFY(!content.isEmpty());
         QCOMPARE(unquote(content), QLatin1String("test"));
-        QCOMPARE(result->to()->addresses(), {{"konqi@example.org"}});
-        auto l = QVector<QByteArray>{{"release-team@kde.org"}, {"kde-devel@kde.org"}};
+        QCOMPARE(result->to()->addresses(), {{"from@example.org"}});
+        auto l = QVector<QByteArray>{{"to1@example.org"}, {"to2@example.org"}, {"cc1@example.org"}, {"cc2@example.org"}};
         QCOMPARE(result->cc()->addresses(), l);
     }
 
@@ -175,7 +175,7 @@ private slots:
     {
         KMime::Types::AddrSpecList me;
         KMime::Types::Mailbox mb;
-        mb.setAddress("release-team@kde.org");
+        mb.setAddress("to1@example.org");
         me << mb.addrSpec();
 
         auto msg = readMail("multirecipients.mbox");
@@ -187,8 +187,8 @@ private slots:
         auto content = removeFirstLine(result->body());
         QVERIFY(!content.isEmpty());
         QCOMPARE(unquote(content), QLatin1String("test"));
-        QCOMPARE(result->to()->addresses(), {{"konqi@example.org"}});
-        auto l = QVector<QByteArray>{{"kde-devel@kde.org"}};
+        QCOMPARE(result->to()->addresses(), {{"from@example.org"}});
+        auto l = QVector<QByteArray>{{"to2@example.org"}, {"cc1@example.org"}, {"cc2@example.org"}};
         QCOMPARE(result->cc()->addresses(), l);
     }
 

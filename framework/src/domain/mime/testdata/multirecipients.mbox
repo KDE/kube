@@ -1,8 +1,9 @@
-Return-Path: <konqi@example.org>
+Return-Path: <from@example.org>
 Date: Wed, 8 Jun 2016 20:34:44 -0700
-From: Konqi <konqi@example.org>
-To: KDE release coordination <release-team@kde.org>,
- "Bar, Foo" <kde-devel@kde.org>
+From: From <from@example.org>
+To: To <to1@example.org>,
+ "To, 2" <to2@example.org>
+Cc: CC <cc1@example.org>, CC2 <cc2@example.org>
 Subject: A random subject with alternative contenttype
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
