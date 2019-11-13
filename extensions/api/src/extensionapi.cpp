@@ -55,7 +55,7 @@ static void send(const QByteArray &message, const QByteArray &accountId)
                     });
             }
             SinkWarning() << "Failed to find a mailtransport resource";
-            return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
+            return KAsync::error("Failed to find a MailTransport resource.");
         })
         .then([&] (const KAsync::Error &) {
             SinkLog() << "Message was sent: ";

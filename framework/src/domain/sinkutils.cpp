@@ -44,7 +44,7 @@ KAsync::Job<void> SinkUtils::sendMail(const QByteArray &messageContent, const QB
                     });
             }
             SinkWarning() << "Failed to find a mailtransport resource";
-            return KAsync::error<void>(0, "Failed to find a MailTransport resource.");
+            return KAsync::error("Failed to find a MailTransport resource.");
         })
         .then([&] (const KAsync::Error &error) {
             if (error) {
