@@ -530,7 +530,6 @@ void ComposerController::send()
         SinkWarning() << "No account id.";
         return;
     }
-    //SinkLog() << "Sending a mail: " << *this;
     auto job = SinkUtils::sendMail(message->encodedContent(true), accountId.toUtf8())
         .then([&] (const KAsync::Error &error) {
             if (!error) {

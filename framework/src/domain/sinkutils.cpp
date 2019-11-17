@@ -27,6 +27,7 @@ KAsync::Job<void> SinkUtils::sendMail(const QByteArray &messageContent, const QB
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
 
+    SinkLog() << "Sending message via account: " << accountId;
     Query query;
     query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
     query.filter<SinkResource::Account>(accountId);
