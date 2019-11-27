@@ -112,6 +112,8 @@ private:
     void recordForAutocompletion(const QByteArray &addrSpec, const QByteArray &displayName);
     void setMessage(const QSharedPointer<KMime::Message> &msg);
     void addAttachmentPart(KMime::Content *partToAttach);
+    void selectIdentityFromMailboxes(const KMime::Types::Mailbox::List &mailboxes, const QVector<QString> &meStrings);
+
     KMime::Message::Ptr assembleMessage();
     std::vector<Crypto::Key> getRecipientKeys();
 

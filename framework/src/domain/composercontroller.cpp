@@ -83,6 +83,16 @@ public:
         }
     }
 
+    void setCurrentIdentity(const QString &emailAddress)
+    {
+        for (int i = 0; i < model()->rowCount(); i++) {
+            if (model()->index(i, 0).data(IdentitiesModel::Address).toString() == emailAddress) {
+                setCurrentIndex(i);
+                return;
+            }
+        }
+    }
+
     QVector<QByteArray> getAllAddresses()
     {
         QVector<QByteArray> list;
@@ -386,17 +396,32 @@ void ComposerController::loadDraft(const QVariant &message) {
     });
 }
 
+void ComposerController::selectIdentityFromMailboxes(const KMime::Types::Mailbox::List &mailboxes, const QVector<QString> &meStrings)
+{
+    for (const auto mb : mailboxes) {
+        const auto address = mb.addrSpec().asString();
+        if (meStrings.contains(address)) {
+            static_cast<IdentitySelector*>(mIdentitySelector.data())->setCurrentIdentity(address);
+            return;
+        }
+    }
+}
+
 void ComposerController::loadReply(const QVariant &message) {
     clear();
     loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
         //Find all personal email addresses to exclude from reply
         KMime::Types::AddrSpecList me;
+        QVector<QString> meStrings;
         auto list = static_cast<IdentitySelector*>(mIdentitySelector.data())->getAllAddresses();
         for (const auto &a : list) {
             KMime::Types::Mailbox mb;
             mb.setAddress(a);
             me << mb.addrSpec();
+            meStrings << a;
         }
+
+        selectIdentityFromMailboxes(mail->to()->mailboxes() + mail->cc()->mailboxes() + mail->bcc()->mailboxes(), meStrings);
 
         setEncrypt(KMime::isEncrypted(mail.data()));
         setSign(KMime::isSigned(mail.data()));
