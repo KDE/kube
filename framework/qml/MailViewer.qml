@@ -70,18 +70,15 @@ Rectangle {
 
     states: [
         State {
-            name: "full"
-        },
-        State {
             name: "incomplete"; when: root.incomplete
-            PropertyChanges { target: attachments; visible: false}
+            PropertyChanges { target: buttonContainer; visible: false}
             PropertyChanges { target: body; visible: false}
             PropertyChanges { target: footer; visible: false}
             PropertyChanges { target: incompleteBody; visible: true}
         },
         State {
             name: "collapsed"; when: root.collapsed
-            PropertyChanges { target: attachments; visible: false}
+            PropertyChanges { target: buttonContainer; visible: false}
             PropertyChanges { target: body; visible: false}
             PropertyChanges { target: footer; visible: false}
             PropertyChanges { target: collapsedBody; visible: true}
@@ -308,8 +305,10 @@ Rectangle {
                 left: parent.left
                 right: parent.right
             }
-            visible: attachments.visible || htmlButton.visible
-            height: Math.max(attachments.height, htmlButton.height)
+            id: buttonContainer
+            //We're not setting visible, because setting the parent property (of buttonContainer),
+            //while also depending on the child-property values (htmlButton and attachments) does not work.
+            height: (attachments.visible || htmlButton.visible) ? Math.max(attachments.height, htmlButton.height) : 0
             Kube.TextButton {
                 id: htmlButton
                 anchors {
@@ -332,15 +331,16 @@ Rectangle {
                     right: parent.right
                 }
 
-                visible: !root.incomplete && !root.collapsed
                 width: header.width - Kube.Units.largeSpacing
                 height: visible ? implicitHeight : 0
 
                 layoutDirection: Qt.RightToLeft
                 spacing: Kube.Units.smallSpacing
                 clip: true
+                visible: attachmentRepeater.count
 
                 Repeater {
+                    id: attachmentRepeater
                     model: root.attachmentModel
 
                     delegate: AttachmentDelegate {
