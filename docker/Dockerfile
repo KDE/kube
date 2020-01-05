@@ -19,6 +19,7 @@ ADD imapd.conf /etc/imapd.conf
 RUN usermod -p `perl -e "print crypt("admin","Q4")"` cyrus
 RUN useradd -p `perl -e "print crypt("doe","Q4")"` doe
 RUN /usr/bin/sscg --package cyrus-imapd --cert-file /etc/pki/cyrus-imapd/cyrus-imapd.pem --cert-key-file /etc/pki/cyrus-imapd/cyrus-imapd-key.pem --ca-file /etc/pki/cyrus-imapd/cyrus-imapd-ca.pem
+RUN chmod 644 /etc/pki/cyrus-imapd/cyrus-imapd-key.pem
 # Because the following tends to fail we create the user in the test setup script now.
 # RUN saslauthd -a shadow && /usr/libexec/cyrus-imapd/master -d && sleep 1 && echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
 
