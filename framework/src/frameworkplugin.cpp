@@ -58,6 +58,7 @@
 #include <QtQml>
 #include <QQuickImageProvider>
 #include <QIcon>
+#include <QApplication>
 
 class KubeImageProvider : public QQuickImageProvider
 {
@@ -94,7 +95,8 @@ public:
         }
         const auto icon = QIcon::fromTheme(id);
         const auto expectedSize = selectSize(requestedSize, icon.availableSizes());
-        const auto pixmap = icon.pixmap(expectedSize);
+        static auto devicePixelRatio = static_cast<QApplication*>(QApplication::instance())->devicePixelRatio();
+        auto pixmap = icon.pixmap(expectedSize * devicePixelRatio);
         if (size) {
             *size = pixmap.size();
         }
