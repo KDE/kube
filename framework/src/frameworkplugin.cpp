@@ -67,6 +67,24 @@ public:
     {
     }
 
+    static QSize selectSize(const QSize &requestedSize, const QList<QSize> &availableSizes)
+    {
+        auto expectedSize = requestedSize;
+        //Get the largest size that is still smaller or equal than requested
+        //Except if we only have larger sizes, then just pick the closest one
+        bool first = true;
+        for (const auto &s : availableSizes) {
+            if (first && s.width() > requestedSize.width()) {
+                return s;
+            }
+            first = false;
+            if (s.width() <= requestedSize.width()) {
+                expectedSize = s;
+            }
+        }
+        return expectedSize;
+    }
+
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) Q_DECL_OVERRIDE
     {
         //The platform theme plugin can overwrite our setting again once it gets loaded,
@@ -75,20 +93,7 @@ public:
             QIcon::setThemeName("kube");
         }
         const auto icon = QIcon::fromTheme(id);
-        auto expectedSize = requestedSize;
-        //Get the largest size that is still smaller or equal than requested
-        //Except if we only have larger sizes, then just pick the closest one
-        bool first = true;
-        for (const auto s : icon.availableSizes()) {
-            if (first && s.width() > requestedSize.width()) {
-                expectedSize = s;
-                break;
-            }
-            first = false;
-            if (s.width() <= requestedSize.width()) {
-                expectedSize = s;
-            }
-        }
+        const auto expectedSize = selectSize(requestedSize, icon.availableSizes());
         const auto pixmap = icon.pixmap(expectedSize);
         if (size) {
             *size = pixmap.size();
