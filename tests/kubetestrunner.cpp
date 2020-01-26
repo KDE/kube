@@ -22,8 +22,10 @@
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
+    QApplication app(argc, argv);
+    qInfo() << "Device pixel ratio" << app.devicePixelRatio();
 
     QTEST_ADD_GPU_BLACKLIST_SUPPORT
     QTEST_SET_MAIN_SOURCE_PATH

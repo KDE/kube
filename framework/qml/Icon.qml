@@ -44,6 +44,7 @@ Item {
         sourceSize.height: root.height
         cache: true
         smooth: true
+        objectName: "image"
         fillMode: Image.Pad
     }
 }

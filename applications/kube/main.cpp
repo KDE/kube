@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
 
     //Instead of QtWebEngine::initialize();
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
     QCoreApplication::setApplicationVersion(QString("%1 Branch: %2 Commit: %3").arg(kube_VERSION_STRING).arg(kube_BRANCH).arg(kube_COMMIT));
     QCoreApplication::setOrganizationName("kube");
     QCoreApplication::setOrganizationDomain("kube-project.com");
@@ -138,6 +139,7 @@ int main(int argc, char *argv[])
     const QFontInfo fontInfo{app.font()};
     qInfo() << "Font name:" << fontInfo.family();
     qInfo() << "Font size:" << fontInfo.pointSize();
+    qInfo() << "Device pixel ratio:" << app.devicePixelRatio();
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A communication and collaboration client.");
