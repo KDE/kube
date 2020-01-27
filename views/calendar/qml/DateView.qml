@@ -23,7 +23,7 @@ import org.kube.framework 1.0 as Kube
 
 Item {
     id: root
-    property date date: null
+    property date date
     height: Kube.Units.gridUnit * 2
     Row {
         anchors.fill: parent
