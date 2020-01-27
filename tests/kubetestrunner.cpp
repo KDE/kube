@@ -19,9 +19,13 @@
 #include <QtQuickTest/quicktest.h>
 #include <QQmlEngine>
 #include <QApplication>
+#include <QtGlobal>
 
 int main(int argc, char **argv)
 {
+    //Always test the HighDPI scenario
+    qputenv("QT_SCALE_FACTOR", "2");
+
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
     QApplication app(argc, argv);
