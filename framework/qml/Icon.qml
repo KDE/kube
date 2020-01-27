@@ -37,14 +37,11 @@ Item {
 
     Image {
         id: image
-        anchors.centerIn: parent
-        width: image.implicitWidth
-        height: image.implicitWidth
+        objectName: "image"
+        anchors.fill: parent
+        // The sourceSize is what defines the requestedSize in the image provider
         sourceSize.width: root.width
         sourceSize.height: root.height
-        cache: true
-        smooth: true
-        objectName: "image"
         fillMode: Image.Pad
     }
 }
