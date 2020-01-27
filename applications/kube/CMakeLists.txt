@@ -36,6 +36,7 @@ set(KUBE_APPLICATION_ID "org.kde.kube" CACHE STRING "The application identifier 
 
 set(KUBE_DESKTOPFILE_NAME "Kube" CACHE STRING "desktopfile name property")
 set(KUBE_DESKTOPFILE_GENERICNAME "Mail Client" CACHE STRING "desktopfile genericname property")
+set(KUBE_DESKTOPFILE_EXEC "kube")
 set(KUBE_DESKTOPFILE_COMMENT "Send, receive and manage your mail with Kube" CACHE STRING "desktopfile comment property")
 set(KUBE_DESKTOPFILE_CATEGORIES "Qt;KDE;Office;Network;Email;" CACHE STRING "desktopfile categories property")
 set(KUBE_DESKTOPFILENAME "${KUBE_APPLICATION_ID}.desktop")

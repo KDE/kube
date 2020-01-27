@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=@KUBE_DESKTOPFILE_NAME@
 Type=Application
-Exec=kube
+Exec=@KUBE_DESKTOPFILE_EXEC@
 Icon=kube_icon
 GenericName=@KUBE_DESKTOPFILE_GENERICNAME@
 Comment=@KUBE_DESKTOPFILE_COMMENT@
