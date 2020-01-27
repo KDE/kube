@@ -97,6 +97,7 @@ public:
         const auto expectedSize = selectSize(requestedSize, icon.availableSizes());
         static auto devicePixelRatio = static_cast<QApplication*>(QApplication::instance())->devicePixelRatio();
         auto pixmap = icon.pixmap(expectedSize * devicePixelRatio);
+        pixmap.setDevicePixelRatio(devicePixelRatio);
         if (size) {
             *size = pixmap.size();
         }
