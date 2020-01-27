@@ -88,11 +88,12 @@ def copyFile(rootDir, dir, file):
             ensure_dir(dst)
             copy2(src, dst)
 
+        invertedSrc = src.replace("icons", "icons-dark")
         invertedDst = "./breeze/icons" + path.join(reldir, file.replace(".svg", "-inverted.svg"))
-        if not os.path.exists(invertedDst):
+        if not os.path.exists(invertedDst) and os.path.exists(invertedSrc):
             print("Copying: " + src.replace("icons", "icons-dark") + " to " + invertedDst)
             ensure_dir(invertedDst)
-            copy2(src.replace("icons", "icons-dark"), invertedDst)
+            copy2(invertedSrc, invertedDst)
 
 dir="upstreamBreeze"
 if not os.path.exists(dir):
