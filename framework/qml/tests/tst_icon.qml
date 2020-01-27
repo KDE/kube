@@ -41,4 +41,22 @@ TestCase {
         compare(image.paintedWidth, 22)
         compare(image.paintedHeight, 22)
     }
+
+    function test_2iconSize() {
+        var icon = createTemporaryObject(iconComponent, testCase, {iconName: Kube.Icons.overflowMenu_inverted, width: 24, height: 12})
+        var image = findChild(icon, "image");
+        verify(image)
+        compare(image.status, Image.Ready)
+        compare(image.paintedWidth, 24)
+        compare(image.paintedHeight, 24)
+    }
+
+    function test_3iconSize() {
+        var icon = createTemporaryObject(iconComponent, testCase, {iconName: Kube.Icons.overflowMenu_inverted, width: 48, height: 24})
+        var image = findChild(icon, "image");
+        verify(image)
+        compare(image.status, Image.Ready)
+        compare(image.paintedWidth, 32)
+        compare(image.paintedHeight, 32)
+    }
 }

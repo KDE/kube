@@ -94,8 +94,10 @@ public:
             QIcon::setThemeName("kube");
         }
         const auto icon = QIcon::fromTheme(id);
-        const auto expectedSize = selectSize(requestedSize, icon.availableSizes());
         static auto devicePixelRatio = static_cast<QApplication*>(QApplication::instance())->devicePixelRatio();
+        //availableSizes() does not take the devicePixelRatio into account, so if we divide the request by it first,
+        //we will end up with the correct size after multiplying it later.
+        const auto expectedSize = selectSize(requestedSize / devicePixelRatio, icon.availableSizes());
         auto pixmap = icon.pixmap(expectedSize * devicePixelRatio);
         pixmap.setDevicePixelRatio(devicePixelRatio);
         if (size) {
