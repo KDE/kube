@@ -23,13 +23,15 @@
 
 int main(int argc, char **argv)
 {
-    //Always test the HighDPI scenario
-    qputenv("QT_SCALE_FACTOR", "2");
 
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
     QApplication app(argc, argv);
     qInfo() << "Device pixel ratio" << app.devicePixelRatio();
+    if (app.devicePixelRatio() <= 1) {
+        //Always test the HighDPI scenario
+        qputenv("QT_SCALE_FACTOR", "2");
+    }
 
     QTEST_ADD_GPU_BLACKLIST_SUPPORT
     QTEST_SET_MAIN_SOURCE_PATH
