@@ -29,6 +29,9 @@ AbstractButton {
     height: Units.gridUnit + topPadding + bottomPadding
 
     padding: Units.smallSpacing
+    //Override AbstractButton
+    topPadding: padding
+    bottomPadding: padding
     color: "transparent"
 
     contentItem: Icon {
