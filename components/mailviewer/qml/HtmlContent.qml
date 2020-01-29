@@ -63,8 +63,8 @@ Item {
                 return contentWidth
             }
 
-            width: calculateWidth(contentsSize.width)
-            height: root.contentHeight
+            width: Math.min(calculateWidth(contentsSize.width), 2000)
+            height: Math.min(root.contentHeight, 4000)
             Component.onCompleted: loadHtml(content, "file:///")
             onContentsSizeChanged: {
                 //Some pages apparently don't have a size when loading has finished.
