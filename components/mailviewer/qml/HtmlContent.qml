@@ -19,6 +19,7 @@
 import QtQuick 2.4
 import QtWebEngine 1.4
 import QtQuick.Controls 2.2
+import QtQuick.Window 2
 
 import org.kube.framework 1.0 as Kube
 
@@ -28,6 +29,8 @@ Item {
     //We have to give it a minimum size so the html content starts to expand
     property int initialHeight: 10
     property int contentHeight: initialHeight
+    property int initialWidth: 10
+    property int contentWidth: initialHeight
     property string searchString
     property bool autoLoadImages: false
 
@@ -49,27 +52,20 @@ Item {
 
         WebEngineView {
             id: htmlView
+            objectName: "htmlView"
 
-            function calculateWidth(contentWidth) {
-                if (contentWidth <= 0) {
-                    //Get the content to expand
-                    return 10
-                }
-                //Use the available space
-                if (flickable.width >= contentWidth) {
-                    return flickable.width
-                }
-                //Grow beyond if necessary to get a scrollbar
-                return contentWidth
-            }
-
-            width: Math.min(calculateWidth(contentsSize.width), 2000)
+            width: Math.min(root.contentWidth, 2000)
             height: Math.min(root.contentHeight, 4000)
             Component.onCompleted: loadHtml(content, "file:///")
             onContentsSizeChanged: {
                 //Some pages apparently don't have a size when loading has finished.
-                if (root.contentHeight <= root.initialHeight) {
-                    root.contentHeight = contentsSize.height
+                if (root.contentHeight < root.initialHeight) {
+                    // console.warn("Content height grew", contentsSize.height)
+                    root.contentHeight = contentsSize.height / Screen.devicePixelRatio
+                }
+                if (root.contentWidth < root.initialWidth) {
+                    console.warn("Content width grew", contentsSize.width)
+                    root.contentWidth = contentsSize.width / Screen.devicePixelRatio
                 }
             }
             onLoadingChanged: {
@@ -77,7 +73,8 @@ Item {
                     console.warn("Failed to load html content.")
                     console.warn("Error is ", loadRequest.errorString)
                 }
-                root.contentHeight = contentsSize.height
+                root.contentHeight = contentsSize.height / Screen.devicePixelRatio
+                root.contentWidth = contentsSize.width / Screen.devicePixelRatio
             }
             onLinkHovered: {
                 console.debug("Link hovered ", hoveredUrl)
