@@ -27,10 +27,9 @@ Item {
     id: root
     property string content
     //We have to give it a minimum size so the html content starts to expand
-    property int initialHeight: 10
-    property int contentHeight: initialHeight
-    property int initialWidth: 10
-    property int contentWidth: initialHeight
+    property int minimumSize: 10
+    property int contentHeight: minimumSize
+    property int contentWidth: minimumSize
     property string searchString
     property bool autoLoadImages: false
 
@@ -59,13 +58,11 @@ Item {
             Component.onCompleted: loadHtml(content, "file:///")
             onContentsSizeChanged: {
                 //Some pages apparently don't have a size when loading has finished.
-                if (root.contentHeight < root.initialHeight) {
-                    // console.warn("Content height grew", contentsSize.height)
-                    root.contentHeight = contentsSize.height / Screen.devicePixelRatio
+                if (root.contentHeight < root.minimumSize) {
+                    root.contentHeight = Math.max(contentsSize.height / Screen.devicePixelRatio, root.minimumSize)
                 }
-                if (root.contentWidth < root.initialWidth) {
-                    console.warn("Content width grew", contentsSize.width)
-                    root.contentWidth = contentsSize.width / Screen.devicePixelRatio
+                if (root.contentWidth < root.minimumSize) {
+                    root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, root.minimumSize)
                 }
             }
             onLoadingChanged: {
@@ -73,8 +70,8 @@ Item {
                     console.warn("Failed to load html content.")
                     console.warn("Error is ", loadRequest.errorString)
                 }
-                root.contentHeight = contentsSize.height / Screen.devicePixelRatio
-                root.contentWidth = contentsSize.width / Screen.devicePixelRatio
+                root.contentHeight = Math.max(contentsSize.height / Screen.devicePixelRatio, root.minimumSize)
+                root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, root.minimumSize)
             }
             onLinkHovered: {
                 console.debug("Link hovered ", hoveredUrl)
