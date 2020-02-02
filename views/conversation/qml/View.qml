@@ -58,7 +58,7 @@ Kube.View {
             ListElement { description: qsTr("Jump to next message:"); shortcut: "n" }
             ListElement { description: qsTr("Jump to previous message:"); shortcut: "p" }
             ListElement { description: qsTr("Jump to next folder:"); shortcut: "f,n" }
-            ListElement { description: qsTr("Jump to previous previous folder:"); shortcut: "f,p" }
+            ListElement { description: qsTr("Jump to previous folder:"); shortcut: "f,p" }
             ListElement { description: qsTr("Compose new message:"); shortcut: "c" }
             ListElement { description: qsTr("Reply to the currently focused message:"); shortcut: "r" }
             ListElement { description: qsTr("Delete the currently focused message:"); shortcut: "d" }
