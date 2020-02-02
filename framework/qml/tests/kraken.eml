@@ -1,0 +1,650 @@
+Content-Disposition: inline; filename="Kraken rebranding -- do you like it?.eml"
+Content-Type: message/rfc822; name="Kraken rebranding -- do you like it?.eml"
+
+Return-Path: <bounce+9cd43e.4ab978-test2_1=example.fm@kraken.com>
+Received: from imapb010.mykolab.com ([unix socket])
+	 by imapb010.mykolab.com (Cyrus 2.5.11-41-gd53406f3f-Kolab-2.5.11-15.1.el7.kolab_16) with LMTPA;
+	 Tue, 29 Jan 2019 23:37:36 +0100
+X-Sieve: CMU Sieve 2.4
+Received: from int-mx002.mykolab.com (unknown [10.9.13.2])
+	by imapb010.mykolab.com (Postfix) with ESMTPS id ADE5D216
+	for <test@example.org>; Tue, 29 Jan 2019 23:37:36 +0100 (CET)
+Received: from mx.kolabnow.com (unknown [10.9.4.1])
+	by int-mx002.mykolab.com (Postfix) with ESMTPS id 902B72745
+	for <test@example.org>; Tue, 29 Jan 2019 23:37:36 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mykolab.com
+X-Spam-Flag: NO
+X-Spam-Score: 0.102
+X-Spam-Level:
+X-Spam-Status: No, score=0.102 tagged_above=-999 required=4.5
+	tests=[BAYES_00=-1.9, DKIM_SIGNED=0.1, DKIM_VALID=-0.1, FIN_FREE=2.7,
+	HTML_MESSAGE=0.001, LOTS_OF_MONEY=0.001, RCVD_IN_DNSWL_LOW=-0.7,
+	SPF_FAIL=0.001, SPF_HELO_PASS=-0.001] autolearn=no autolearn_force=no
+Authentication-Results: ext-mx-in001.mykolab.com (amavisd-new);
+	dkim=pass (1024-bit key) header.d=kraken.com
+X-Greylist: delayed 00:09:42 by SQLgrey-1.8.0
+DMARC-Filter: OpenDMARC Filter v1.3.2 ext-mx-in001.mykolab.com 811D111B
+Received: from forward3-smtp.messagingengine.com (forward3-smtp.messagingengine.com [66.111.4.237])
+	by ext-mx-in001.mykolab.com (Postfix) with ESMTPS id 811D111B
+	for <test@example.org>; Tue, 29 Jan 2019 23:37:33 +0100 (CET)
+Received: from mailredirect.nyi.internal (imap2.nyi.internal [10.202.2.52])
+	by mailforward.nyi.internal (Postfix) with ESMTP id 5B411168CB
+	for <test@example.org>; Tue, 29 Jan 2019 17:27:49 -0500 (EST)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	 by sloti2d2t06 (Cyrus 3.1.5-766-ge2be361-fmstable-20190123v1) with LMTPA;
+	 Tue, 29 Jan 2019 17:27:49 -0500
+X-Cyrus-Session-Id: sloti2d2t06-2580565-1548800869-2-587974630472038462
+X-Sieve: CMU Sieve 3.0
+X-Spam-known-sender: no
+X-Orig-Spam-score: 3.3
+X-Spam-hits: DCC_CHECK 1.1, FIN_FREE 2.289, HTML_MESSAGE 0.001, LOTS_OF_MONEY 0.001,
+  ME_ZS_CLEAN -0.01, RCVD_IN_DNSWL_NONE -0.0001, SPF_PASS -0.001,
+  LANGUAGES en, BAYES_USED none, SA_VERSION 3.4.2
+X-Spam-source: IP='198.61.254.5', Host='so254-5.mailgun.net', Country='US',
+  FromHeader='com', MailFrom='com'
+X-Spam-charsets: plain='utf-8', html='utf-8'
+X-Attached: signature.asc
+X-Resolved-to: test2@example.org
+X-Delivered-to: test2@example.org
+X-Mail-from: bounce+9cd43e.4ab978-test2_1=example.fm@kraken.com
+Received: from mx4 ([10.202.2.203])
+  by compute1.internal (LMTPProxy); Tue, 29 Jan 2019 17:27:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; cv=none; d=messagingengine.com; s=fm1; t=
+    1548800868; b=vDIaai0woBhzLtPsS7xhDmtJ0/+fB/OUxCw97QvgugjYGLEvZ9
+    j7DUkGP9zStOVbX1mxFYyLxRdy9efWHhK/D8zqZG0Nq3dtwFebdwtU1VthpT63tY
+    2cd5qDgGhunIRRm5fJ/KsgDl2ovUSKsyVDMYFxw2Pin6o5Tau77zTis36WW42Z7M
+    lG8H6sthKmn6KJR1+E7CoOdsJCgUu+5DOGAsR+UH7Gm1B7zR1xVDZemeTqT8Odlf
+    shRzpNa6dB7KD1Wam4F3qBrzze0TYY0henO2wIxGswqryu3ZVk9n7PnQZtKfk6Vg
+    BY/RsYmKimzjqyoERDe6x5Fhg9b7dd9Ogoww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=
+    messagingengine.com; h=date:sender:message-id:from:mime-version
+    :to:subject:list-unsubscribe:content-type; s=fm1; t=1548800868;
+    bh=sBz5meV2vS8GJGB/WORTox8tS2CG01pUYeSkSjfag9k=; b=FJlRvO1T6HqQ
+    BFcSVWyv5H3YPPZt+Z6YeQAyp+LiriAFskuge3fR/meZLyLRzXkfIbOQ2eZwuW64
+    6T+TE6qXBPGZ/DABPK0kZO1EGSX/YBA3d8zKkplnYdXlcAXtVdrlgwta5Y1uE8KK
+    FNj7pN5l8F556aVBr06QVhHLjsGTlr5SIQ++RUyyD+Fkmw807oA0btfOU7LE3q74
+    psLf5a1ZlUCAHdgxkfdQ656yjXrc3eVoAuFXc5qNU5oi1npVU6TNn5LTlFowBxkW
+    BxScohTf8WTqpZ7lH7D4oAzVMZv2F1OizKaVAzLB/DMSSXidsAlaPIcO0UCp29Bz
+    KuST76kE2w==
+ARC-Authentication-Results: i=1; mx4.messagingengine.com; arc=none (no signatures found);
+    dkim=pass (1024-bit rsa key sha256) header.d=kraken.com
+    header.i=@kraken.com header.b=P0n5OlD0 header.a=rsa-sha256
+    header.s=krs x-bits=1024;
+    dmarc=pass policy.published-domain-policy=reject
+    policy.published-subdomain-policy=reject
+    policy.applied-disposition=none policy.evaluated-disposition=none
+    (p=reject,sp=reject,d=none,d.eval=none) policy.policy-from=sp
+    header.from=email.kraken.com;
+    iprev=pass smtp.remote-ip=198.61.254.5 (so254-5.mailgun.net);
+    spf=pass
+    smtp.mailfrom="bounce+9cd43e.4ab978-test2_1=example.fm@kraken.com"
+    smtp.helo=so254-5.mailgun.net;
+    x-aligned-from=orgdomain_pass (Domain org match);
+    x-ptr=pass smtp.helo=so254-5.mailgun.net policy.ptr=so254-5.mailgun.net;
+    x-return-mx=pass header.domain=email.kraken.com
+    policy.org_domain=kraken.com policy.is_org=no (MX Record found);
+    x-return-mx=pass smtp.domain=kraken.com policy.is_org=yes
+    (MX Record found);
+    x-tls=pass smtp.version=TLSv1.2 smtp.cipher=ECDHE-RSA-AES128-GCM-SHA256
+    smtp.bits=128/128;
+    x-vs=commercial:mce score=17 state=11;
+    x-zs=clean
+Authentication-Results: mx4.messagingengine.com;
+    arc=none (no signatures found);
+    dkim=pass (1024-bit rsa key sha256) header.d=kraken.com
+      header.i=@kraken.com header.b=P0n5OlD0 header.a=rsa-sha256
+      header.s=krs x-bits=1024;
+    dmarc=pass policy.published-domain-policy=reject
+      policy.published-subdomain-policy=reject
+      policy.applied-disposition=none policy.evaluated-disposition=none
+      (p=reject,sp=reject,d=none,d.eval=none) policy.policy-from=sp
+      header.from=email.kraken.com;
+    iprev=pass smtp.remote-ip=198.61.254.5 (so254-5.mailgun.net);
+    spf=pass
+      smtp.mailfrom="bounce+9cd43e.4ab978-test2_1=example.fm@kraken.com"
+      smtp.helo=so254-5.mailgun.net;
+    x-aligned-from=orgdomain_pass (Domain org match);
+    x-ptr=pass smtp.helo=so254-5.mailgun.net policy.ptr=so254-5.mailgun.net;
+    x-return-mx=pass header.domain=email.kraken.com
+      policy.org_domain=kraken.com policy.is_org=no (MX Record found);
+    x-return-mx=pass smtp.domain=kraken.com policy.is_org=yes
+      (MX Record found);
+    x-tls=pass smtp.version=TLSv1.2 smtp.cipher=ECDHE-RSA-AES128-GCM-SHA256
+      smtp.bits=128/128;
+    x-vs=commercial:mce score=17 state=11;
+    x-zs=clean
+X-ME-VSSU: VW5zdWI9aHR0cHM6Ly93d3cua3Jha2VuLmNvbS91bnN1YnNjcmliZT9rZWM9OVdtenVJYV
+    FGLXdWMWM
+X-ME-VSCause: gggruggvucftvghtrhhoucdtuddrgedtledrjedvgdduiedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvnecu
+    uegrihhlohhuthemuceftddtnecundfotefknffkpffiucdludejmdenucfjughrpeffsh
+    fkhfggvffujfhptgesghdtreertddtjeenucfhrhhomhepmfhrrghkvghnuceonhhorhgv
+    phhlhiesvghmrghilhdrkhhrrghkvghnrdgtohhmqeenucffohhmrghinhepthifihhtth
+    gvrhdrtghomhdpkhhrrghkvghnrdgtohhmpdhfrggtvggsohhokhdrtghomhenucfkphep
+    udelkedriedurddvheegrdehnecurfgrrhgrmhepihhnvghtpeduleekrdeiuddrvdehge
+    drhedphhgvlhhopehsohdvheegqdehrdhmrghilhhguhhnrdhnvghtpdhmrghilhhfrhho
+    mhepoegsohhunhgtvgdolegtugegfegvrdegrggsleejkedqtghhrhhighhipgdupehfrg
+    hsthhmrghilhdrfhhmsehkrhgrkhgvnhdrtghomheqnecuvehluhhsthgvrhfuihiivgep
+    td
+X-ME-VSCategory: commercial:mce
+X-ME-ZSResult: clean
+Received-SPF: pass
+    (kraken.com: Sender is authorized to use 'bounce+9cd43e.4ab978-test2_1=example.fm@kraken.com' in 'mfrom' identity (mechanism 'include:mailgun.org' matched))
+    receiver=mx4.messagingengine.com;
+    identity=mailfrom;
+    envelope-from="bounce+9cd43e.4ab978-test2_1=example.fm@kraken.com";
+    helo=so254-5.mailgun.net;
+    client-ip=198.61.254.5
+Received: from so254-5.mailgun.net (so254-5.mailgun.net [198.61.254.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx4.messagingengine.com (Postfix) with ESMTPS
+	for <test2@example.org>; Tue, 29 Jan 2019 17:27:47 -0500 (EST)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=kraken.com; q=dns/txt; s=krs;
+ t=1548800867; h=Content-Type: List-Unsubscribe: Subject: To:
+ MIME-Version: From: Message-Id: Sender: Date;
+ bh=sBz5meV2vS8GJGB/WORTox8tS2CG01pUYeSkSjfag9k=; b=P0n5OlD0qqQjijN0G6rvOC2kfVMh+1epQiNzcCAO7Ly9GrnkW+53JP4KA8aUmf2Jh7DjY7zB
+ 4hGmUVF8PPeNodi5uvIGQ6kVFGQOF/jlSj0EeRsnpOb+9Rqlj3muLPYApm9GIoHQQUNv0Piu
+ 06+AwTU5MuSnep/RZ8L2aHXC9p8=
+X-Mailgun-Sending-Ip: 198.61.254.5
+X-Mailgun-Sid: WyIzNTA5ZSIsICJjaHJpZ2lfMUBmYXN0bWFpbC5mbSIsICI0YWI5NzgiXQ==
+Received: by luna.mailgun.net with HTTP; Tue, 29 Jan 2019 22:27:46 +0000
+Date: Tue, 29 Jan 2019 22:27:46 +0000
+Sender: noreply@email.kraken.com
+Message-Id: <20190129222746.1.710106173075DD53@email.kraken.com>
+From: Kraken <noreply@email.kraken.com>
+MIME-Version: 1.0
+To:  <test2@example.org>
+Subject: Kraken rebranding -- do you like it?
+List-Unsubscribe: <https://www.kraken.com/unsubscribe?kec=9WmzuIaQF-wV1c>
+Precedence: bulk
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="3365B04CC22CB10FDA6EB09F891C0257"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--3365B04CC22CB10FDA6EB09F891C0257
+Content-Type: multipart/alternative;
+ boundary="------------C319DA91346F54C9EAC5C7478751A1E3"
+
+This is a multi-part message in MIME format.
+--------------C319DA91346F54C9EAC5C7478751A1E3
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Greetings,
+
+You know Kraken. We have a genuine passion for crypto and we=E2=80=99re not=
+ afraid to speak our mind or have a unique point of view -- even if it gets=
+ us into trouble sometimes ;) We don=E2=80=99t blindly conform, even when i=
+t=E2=80=99s popular or safe to do so. Like crypto, we=E2=80=99re not afraid=
+ to be different.=20
+
+Our branding should strongly reflect our values and personality.=20
+
+We reveal today (to our more than 4,000,000 clients across nearly 200 count=
+ries) new branding, including a website redesign.=20
+
+Your Guide to Experiencing the New Look of Kraken
+
+- We are Kraken. Don=E2=80=99t worry -- we=E2=80=99re not changing our name=
+ Kraken is two syllables, fun to say, memorable, resonates with you emotio=
+nally, conjures strong mental imagery, doesn=E2=80=99t restrict our future =
+offerings (e.g., no =E2=80=9Cbit=E2=80=9D, =E2=80=9Ccoin=E2=80=9D, =E2=80=
+=9Cblock=E2=80=9D, =E2=80=9Cchain=E2=80=9D, =E2=80=9Ccrypto=E2=80=9D, etc.)=
+, contains an inherent sense of suspense and excitement, and plays on tradi=
+ng themes like liquidity, depth, dark pools, etc.=20
+- Kraken stands out in a sea of boring blue. A lot of companies, especially=
+ tech and financial services, like to use the color blue. It=E2=80=99s a sa=
+fe and popular color, as well as associated with trust, honesty and dependa=
+bility. The problem is that too many companies and brands use this color. A=
+s a result, blue then may as well be a boring beige. Bye-bye blue! Today we=
+ welcome a bolder color that is more unique, better represents our personal=
+ity and is guaranteed to grab your attention. This new main color evokes fe=
+elings of richness and prestige, which is fitting considering Kraken has ha=
+ndled over $140,000,000,000 in trades and is one of the oldest and most res=
+pected crypto exchanges.=20
+- A colorful industry deserves a colorful palette. Something we really like=
+ about the crypto industry is its people. There=E2=80=99s something about t=
+his space that attracts the outspoken, devoted, opinionated, and eccentric.=
+ Our clients and team members are no different -- they are the most bright,=
+ colorful and interesting minds. In addition to the bold crypto community, =
+the industry itself is constantly evolving -- it is alive, vibrant, fresh, =
+and impactful. We have chosen to drape Kraken in a deliciously fitting and =
+bold color scheme.=20
+- Crypto is a rabbit hole, and we are all Alice. Since learning about and e=
+xperiencing crypto you may feel that you=E2=80=99ve been living a much more=
+ exhilarating, suspenseful, dramatic, and purposeful life. I guess that=E2=
+=80=99s what happens when you join a global revolution. Crypto is a grand a=
+dventure that keeps you on the edge of your seat. It beckons the creative, =
+rebellious and determined dreamers to rise and take action. This provocativ=
+e spirit of crypto is brought to life in our new, adventure-themed illustra=
+tions. As you move around our site, allow your eyes to linger and get lost =
+in the beautiful and quirky illustrations.=20
+- Are you ready for us, consumer market? Since 2013, we=E2=80=99ve been one=
+ of the most popular places to buy, sell, or trade crypto. A popular segmen=
+t for us has always been pro traders who wield our advanced trading feature=
+s and charts to turn profits. Our plan has been and will be to always keep =
+our traders top of mind while expanding our appeal to all other segments an=
+d markets. In particular, we have known that our brand, personality and com=
+pany mission have great potential in resonating with the consumer market. W=
+e haven=E2=80=99t been shy about stating our purpose. Kraken is here to pav=
+e the way for mass adoption of crypto and digital assets so that everyone c=
+an have financial freedom and inclusion. You will see our tone of voice, lo=
+ok and feel, products, UX, and interactions become more approachable, strea=
+mlined, easy-to-consume, and more cool and fun. Crypto is really freakin=E2=
+=80=99 cool after all. It=E2=80=99s about time that the world knows this, t=
+oo :)
+- Kraken will continue to evolve. Expect more improvements made and illustr=
+ations added to the website, as well as advancements in trading interfaces =
+and products, like [insert trade.kraken.com link]. Go to our blog to learn =
+more about our rebranding efforts.
+
+Now you=E2=80=99re prepared for your crypto journey. Go to Kraken and get p=
+ulled into the intoxicating adventure that awaits you.=20
+
+Thank you for choosing Kraken, the trusted and secure digital assets exchan=
+ge.
+
+The Kraken Team
+
+--
+
+To unsubscribe and no longer receive important updates from Kraken click he=
+re: https://www.kraken.com/unsubscribe?kec=3D9WmzuIaQF-wV1c
+
+This communication is a commercial message and its contents are intended fo=
+r the recipient only and may contain confidential, non-public and/or privil=
+eged information. If you have received this communication in error, do not =
+read, duplicate or distribute. Kraken does not make recommendations on the =
+suitability of a particular asset class, strategy, or course of action. Any=
+ investment decision you make is solely your responsibility. Please conside=
+r your individual position and financial goals before making an independent=
+ investment decision.
+
+Distributed by: Kraken.com, 237 Kearny St #102, San Francisco, CA 94108.
+
+
+--------------C319DA91346F54C9EAC5C7478751A1E3
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=3D"http://www.w3.org/1999/xhtml">
+<head>
+    <style type=3D"text/css">
+        body {
+            width: 100% !important;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
+            line-height: 100% !important;
+        }
+
+        @media screen and (max-width: 600px) {
+            table[class=3D"container-table"] {
+                width: 100% !important;
+            }
+
+            .h21 {
+                height: 21px !important;
+            }
+
+            .w25 {
+                width: 25px !important;
+            }
+
+            .f13 {
+                font-size: 13px !important;
+            }
+
+            .f19 {
+                font-size: 19px !important;
+            }
+
+            .f28 {
+                font-size: 28px !important;
+            }
+
+            .l20 {
+                line-height: 20px !important;
+            }
+
+            .l21 {
+                line-height: 21px !important;
+            }
+
+            .l31 {
+                line-height: 31px !important;
+            }
+
+            .pr0 {
+                padding-right: 0px !important;
+            }
+
+            .pl0 {
+                padding-left: 0px !important;
+            }
+
+            .pr10 {
+                padding-right: 10px !important;
+            }
+
+            .pl10 {
+                padding-left: 10px !important;
+            }
+
+            .pt25 {
+                padding-top: 25px !important;
+            }
+
+            .pb25 {
+                padding-bottom: 25px !important;
+            }
+
+            .hide {
+                display: none !important;
+            }
+
+            .h15 {
+                height: 15px !important;
+            }
+
+            .full {
+                width: 100% !important;
+            }
+
+            .mcenter {
+                text-align: center !important;
+                margin: 0 auto !important;
+            }
+        }
+    </style>
+</head>
+<body style=3D"">
+<table style=3D"padding: 40px 30px 20px 30px;" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"600px" align=3D"center" class=3D"container-ta=
+ble">
+
+    <tr style=3D"">
+        <td style=3D"" class=3D"header">
+            <table style=3D"">
+                <tr style=3D"">
+                    <td style=3D"padding-top: 0px; padding-right: 40px; pad=
+ding-bottom: 15px; padding-left: 40px;" class=3D"pr0 pl0">
+                        <a href=3D"https://www.kraken.com/?kec=3D9WmzuIaQF-=
+wV1c"><img style=3D"display: block; border: none;" src=3D"https://img.krake=
+n.com/e/kraken-site-2019.png" alt=3D"Kraken"></a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr style=3D"">
+        <td style=3D"" class=3D"body">
+            <table style=3D"">
+                <tr style=3D"">
+                    <td style=3D"">
+                        <table style=3D"padding-top: 0px; padding-right: 40=
+px; padding-bottom: 15px; padding-left: 40px; "
+                               class=3D"pr0 pl0">
+                            <tr style=3D"">
+                                <td style=3D"" class=3D"f19">
+                                    <p style=3D"margin-top: 1em; padding-bo=
+ttom: 10px;color: #484848; font-family:Helvetica, Arial, sans-serif; font-s=
+ize: 21px; line-height: 30px; font-weight: 200;">
+                                        Greetings,
+                                    </p>
+
+                                    <p style=3D"padding-bottom: 10px;color:=
+ #484848; font-family:Helvetica, Arial, sans-serif; font-size: 21px; line-h=
+eight: 30px; font-weight: 200;">
+                                        You know Kraken. We have a genuine =
+passion for crypto and we=E2=80=99re not afraid to speak our mind or have a=
+ unique point of view -- even if it gets us into trouble sometimes ;) We do=
+n=E2=80=99t blindly conform, even when it=E2=80=99s popular or safe to do s=
+o. Like crypto, we=E2=80=99re not afraid to be different.=20
+                                    </p>
+
+                                    <p style=3D"padding-bottom: 10px;color:=
+ #484848; font-family:Helvetica, Arial, sans-serif; font-size: 21px; line-h=
+eight: 30px; font-weight: 200;">
+                                        Our branding should strongly reflec=
+t our values and personality.
+                                    </p>
+
+                                    <p style=3D"padding-bottom: 10px;color:=
+ #484848; font-family:Helvetica, Arial, sans-serif; font-size: 21px; line-h=
+eight: 30px; font-weight: 200;">
+                                        We reveal today (to our more than 4=
+,000,000 clients across nearly 200 countries) new branding, including a web=
+site redesign.=20
+                                    </p>
+
+                                    <p style=3D"padding-bottom: 10px;color:=
+ #484848; font-family:Helvetica, Arial, sans-serif; font-size: 21px; line-h=
+eight: 30px; font-weight: 400;">
+                                        Your Guide to Experiencing the New =
+Look of Kraken
+                                    </p>
+
+                                    <ul style=3D"padding-bottom: 10px;color=
+: #484848; font-family:Helvetica, Arial, sans-serif; font-size: 21px; line-=
+height: 30px; font-weight: 200;">
+                                            <li><span style=3D"font-weight:=
+400;"">We are Kraken.</span> Don=E2=80=99t worry -- we=E2=80=99re not chang=
+ing our name. Kraken is two syllables, fun to say, memorable, resonates wit=
+h you emotionally, conjures strong mental imagery, doesn=E2=80=99t restrict=
+ our future offerings (e.g., no =E2=80=9Cbit=E2=80=9D, =E2=80=9Ccoin=E2=80=
+=9D, =E2=80=9Cblock=E2=80=9D, =E2=80=9Cchain=E2=80=9D, =E2=80=9Ccrypto=E2=
+=80=9D, etc.), contains an inherent sense of suspense and excitement, and p=
+lays on trading themes like liquidity, depth, dark pools, etc.</li>
+                                            <li><span style=3D"font-weight:=
+400;">Kraken stands out in a sea of boring blue.</span> A lot of companies,=
+ especially tech and financial services, like to use the color blue. It=E2=
+=80=99s a safe and popular color, as well as associated with trust, honesty=
+ and dependability. The problem is that too many companies and brands use t=
+his color. As a result, blue then may as well be a boring beige. Bye-bye bl=
+ue! Today we welcome a bolder color that is more unique, better represents =
+our personality and is guaranteed to grab your attention. This new main col=
+or evokes feelings of richness and prestige, which is fitting considering K=
+raken has handled over $140,000,000,000 in trades and is one of the oldest =
+and most respected crypto exchanges. </li>
+                                            <li><span style=3D"font-weight:=
+400;">A colorful industry deserves a colorful palette.</span> Something we =
+really like about the crypto industry is its people. There=E2=80=99s someth=
+ing about this space that attracts the outspoken, devoted, opinionated, and=
+ eccentric. Our clients and team members are no different -- they are the m=
+ost bright, colorful and interesting minds. In addition to the bold crypto =
+community, the industry itself is constantly evolving -- it is alive, vibra=
+nt, fresh, and impactful. We have chosen to drape Kraken in a deliciously f=
+itting and bold color scheme. </li>
+                                            <li><span style=3D"font-weight:=
+400;">Crypto is a rabbit hole, and we are all Alice.</span> Since learning =
+about and experiencing crypto you may feel that you=E2=80=99ve been living =
+a much more exhilarating, suspenseful, dramatic, and purposeful life. I gue=
+ss that=E2=80=99s what happens when you join a global revolution. Crypto is=
+ a grand adventure that keeps you on the edge of your seat. It beckons the =
+creative, rebellious and determined dreamers to rise and take action. This =
+provocative spirit of crypto is brought to life in our new, adventure-theme=
+d illustrations. As you move around our site, allow your eyes to linger and=
+ get lost in the beautiful and quirky illustrations. </li>
+                                            <li><span style=3D"font-weight:=
+400;">Are you ready for us, consumer market?</span> Since 2013, we=E2=80=99=
+ve been one of the most popular places to buy, sell, or trade crypto. A pop=
+ular segment for us has always been pro traders who wield our advanced trad=
+ing features and charts to turn profits. Our plan has been and will be to a=
+lways keep our traders top of mind while expanding our appeal to all other =
+segments and markets. In particular, we have known that our brand, personal=
+ity and company mission have great potential in resonating with the consume=
+r market. We haven=E2=80=99t been shy about <a href=3D"https://www.kraken.c=
+om/why-kraken">stating our purpose.</a> Kraken is here to pave the way for =
+mass adoption of crypto and digital assets so that everyone can have financ=
+ial freedom and inclusion. You will see our tone of voice, look and feel, p=
+roducts, UX, and interactions become more approachable, streamlined, easy-t=
+o-consume, and more cool and fun. Crypto is really freakin=E2=80=99 cool af=
+ter all. It=E2=80=99s about time that the world knows this, too :)</li>
+                                            <li><span style=3D"font-weight:=
+400;">Kraken will continue to evolve.</span> Expect more improvements made =
+and illustrations added to the website, as well as advancements in trading =
+interfaces and products, like [insert trade.kraken.com link]. <a href=3D"ht=
+tps://blog.kraken.com/post/2035/">Go to our blog</a> to learn more about ou=
+r rebranding efforts.</li>
+                                    </ul>
+
+                                    <p style=3D"padding-bottom: 10px;color:=
+ #484848; font-family:Helvetica, Arial, sans-serif; font-size: 21px; line-h=
+eight: 30px; font-weight: 200;">
+                                            Now you=E2=80=99re prepared for=
+ your crypto journey. Go to <a href=3D"https://www.kraken.com/">Kraken</a> =
+and get pulled into the intoxicating adventure that awaits you.=20
+                                    </p>
+
+                                    <p style=3D"padding-bottom: 10px; color=
+: #484848; font-family:Helvetica, Arial, sans-serif; font-size: 21px; line-=
+height: 30px; font-weight: 200;">
+                                        Thank you for choosing Kraken, the =
+trusted and secure digital assets exchange.
+                                    </p>
+
+                                    <p style=3D"padding-bottom: 10px;color:=
+ #484848; font-family:Helvetica, Arial, sans-serif; font-size: 21px; line-h=
+eight: 30px; font-weight: 200;">
+                                        The Kraken Team
+                                    </p>
+                                    <!-- android spacer -->
+                                    <table style=3D"height: 4px;" class=3D"=
+h15">
+                                        <tr style=3D"">
+                                            <td height=3D"1" class=3D"hide"=
+ style=3D"min-width:640px; font-size:0px;line-height:0px;">
+                                                <img height=3D"1" src=3D"ht=
+tps://www.kraken.com/img/kraken_dot.png?kec=3D9WmzuIaQF-wV1c" style=3D"min-=
+width: 640px; text-decoration: none; border: none; -ms-interpolation-mode: =
+bicubic;" alt=3D"">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- Close spacer Gmail Android -->
+                                    <table style=3D"height: 14px;" class=3D=
+"h15">
+                                        <tr style=3D"">
+                                            <td height=3D"1" class=3D"hide"=
+ style=3D"min-width:640px; font-size:0px;line-height:0px;">
+                                                <img height=3D"1" src=3D"ht=
+tps://www.kraken.com/img/kraken_dot.png" style=3D"min-width: 640px; text-de=
+coration: none; border: none; -ms-interpolation-mode: bicubic;" alt=3D"">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr style=3D"">
+        <td>
+            <hr style=3D"padding:0; border:none; margin-bottom:25px; backgr=
+ound-color:#dbdbdb; height:1px;">
+        </td>
+    </tr>
+    <tr>
+        <td style=3D"" class=3D"footer">
+            <table style=3D"">
+                <tr style=3D"">
+                    <td style=3D"" class=3D"smedia">
+                        <table style=3D"">
+                            <tr style=3D"">
+                                <td style=3D"font-family:Helvetica, Arial, =
+sans-serif; font-size: 16px; line-height: 17px; color: #9B9B9B;" class=3D"f=
+19 l21">
+                                    spread the word
+                                </td>
+                                <td style=3D"padding: 0 5px;" class=3D"pr10=
+ pl10">
+                                    <a style=3D"" href=3D"https://twitter.c=
+om/krakenfx"  target=3D"_blank">
+                                        <img src=3D"https://img.kraken.com/=
+e/twitter.png" width=3D"14" height=3D"13" style=3D"display: block; border: =
+none;" alt=3D"Twitter" class=3D"h21 w25">
+                                    </a>
+                                </td>
+                                <td style=3D"padding: 0 5px;" class=3D"pl10=
+">
+                                    <a style=3D"" href=3D"https://www.faceb=
+ook.com/KrakenFX/"  target=3D"_blank">
+                                        <img src=3D"https://img.kraken.com/=
+e/facebook.png" width=3D"14" height=3D"13" style=3D"display: block; border:=
+ none;" alt=3D"Facebook" class=3D"h21 w25">
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr style=3D"">
+                    <td style=3D"padding: 20px 0; font-family:Helvetica, Ar=
+ial, sans-serif; font-size: 11px; line-height: 17px; font-weight: 200;" cla=
+ss=3D"f13 l20">
+                        This communication is a commercial message and its =
+contents are intended for the recipient only and
+                        may contain confidential, non-public and/or privile=
+ged information. If you have received this
+                        communication in error, do not read, duplicate or d=
+istribute. Kraken does not make recommendations
+                        on the suitability of a particular asset class, str=
+ategy, or course of action. Any investment
+                        decision you make is solely your responsibility. Pl=
+ease consider your individual position and
+                        financial goals before making an independent invest=
+ment decision. <br>
+                        Distributed by: Kraken.com, 237 Kearny St #102, San=
+ Francisco, CA 94108.
+                    </td>
+                </tr>
+                <tr style=3D"">
+                    <td style=3D"font-family:Helvetica, Arial, sans-serif; =
+font-size: 13px; line-height: 17px; color: #9B9B9B;">
+                        This email contains important updates from Kraken. =
+<a target=3D"_blank" href=3D"https://www.kraken.com/unsubscribe?kec=3D9Wmzu=
+IaQF-wV1c" style=3D"color: #506D88; text-decoration: underline;">Unsubscrib=
+e</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
+
+
+--------------C319DA91346F54C9EAC5C7478751A1E3--
+
+--3365B04CC22CB10FDA6EB09F891C0257
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAABCAAQBQJcUKfvCRCjgEL2B9Yj2gAAQ1sQAIKg9Vm+weuXg4+TuiumwtQg
+SpUBUSF1RF2vbDaUya1ydO0VCNw02ysUbT8rFyIClZLG0+aDvC7hsAIrFxcqyGHN
+qFBdY0b9tGIme4H8A76D1CvuR/lYgJwZRRCrCPLZ3ImyxBXdMc0aAs/pwBV0GdMV
+5/2Uz+70wnwR++nmmwI5EeSqxg1Vb2UFWJLJi+vSgp9BqpVFP0zfmu1PmHqzBrb/
+eoygn8ZppcF8n8NQbcIa34+4OSf8XB2P8e+p69YahDWARbx5zSIjmgdkS9EEucaP
+L8+OD2UNWof8fm5HFYjHEXSs5wuGlqrqVQMh/FTk7y/7wa7jo7wApnhiXbrRj8uf
+aViniAb8+oPaC/tfOdYAwxJJ3hZzzpjUUp6it/2uQHRRL/ZtTN7vE6oshSEpYXOC
+WRI4/1T5KlsNgFEX87B4ccparYStRY2yXkSG2tEhv/7lHuToszFTbE5Duha/dwUU
+qzPKMITlauavv3cZ/4LAIOa+OzBWU8V6lvZPgainS5csCPKVDdoyF33DCgCTyPjT
+mO8hjs9SwsFdBsTzfdQUyxpyIs8/p/zT/M3rv5qTMrZs4FWPZoxF2UWQNG2OXD0I
+GxHZxJ2iEH6es6XxCSa5n9uQ0imNV35Cm6qWoZ+vMqTD3zHrNXTIpRfN6SOi0iK+
+9U4fHTgkm13u1Mwn/Pb2
+=6XIR
+-----END PGP SIGNATURE-----
+--3365B04CC22CB10FDA6EB09F891C0257--

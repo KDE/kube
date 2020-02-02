@@ -312,6 +312,7 @@ Rectangle {
             height: (attachments.visible || htmlButton.visible) ? Math.max(attachments.height, htmlButton.height) : 0
             Kube.TextButton {
                 id: htmlButton
+                objectName: "htmlButton"
                 anchors {
                     left: parent.left
                     top: parent.top
@@ -372,6 +373,7 @@ Rectangle {
             height: visible ? mailViewer.height + 20 : 0
             MV.MailViewer {
                 id: mailViewer
+                objectName: "mailViewer"
                 anchors.top: body.top
                 anchors.left: body.left
                 anchors.right: body.right
