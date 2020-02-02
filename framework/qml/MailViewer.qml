@@ -28,20 +28,21 @@ import org.kube.framework 1.0 as Kube
 Rectangle {
     id: root
 
-    property variant message;
-    property variant subject;
-    property variant sender;
-    property variant senderName;
-    property variant to;
-    property variant cc;
-    property variant bcc;
-    property variant date;
-    property variant trash;
-    property variant draft;
-    property variant sent;
-    property bool incomplete: false;
-    property bool current: false;
-    property bool unread;
+    property var mail
+    property var message
+    property var subject
+    property var sender
+    property var senderName
+    property var to
+    property var cc
+    property var bcc
+    property var date
+    property bool trash
+    property bool draft
+    property bool sent
+    property bool incomplete: false
+    property bool current: false
+    property bool unread
     property alias searchString: mailViewer.searchString
     property alias autoLoadImages: mailViewer.autoLoadImages
 
@@ -415,8 +416,8 @@ Rectangle {
 
         Item {
             id: footer
-            property var mail: model.mail
-            property string subject: model.subject
+            property var mail: root.mail
+            property string subject: root.subject
 
             anchors {
                 left: parent.left
@@ -434,13 +435,13 @@ Rectangle {
                 }
                 activeFocusOnTab: false
 
-                text: model.trash ? qsTr("Delete Mail") : model.draft ? qsTr("Discard") : qsTr("Move to trash")
+                text: root.trash ? qsTr("Delete Mail") : root.draft ? qsTr("Discard") : qsTr("Move to trash")
                 opacity: 0.5
                 onClicked: {
-                    if (model.trash) {
-                        Kube.Fabric.postMessage(Kube.Messages.remove, {"mail": model.mail})
+                    if (root.trash) {
+                        Kube.Fabric.postMessage(Kube.Messages.remove, {"mail": root.mail})
                     } else {
-                        Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
+                        Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": root.mail})
                     }
                 }
             }
@@ -453,25 +454,25 @@ Rectangle {
                 spacing: Kube.Units.smallSpacing
 
                 Kube.Button {
-                    visible: !model.trash && !model.draft
+                    visible: !root.trash && !root.draft
                     activeFocusOnTab: false
 
                     text: qsTr("Share")
                     onClicked: {
-                        Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": model.mail})
+                        Kube.Fabric.postMessage(Kube.Messages.forward, {"mail": root.mail})
                     }
                 }
 
                 Kube.Button {
-                    visible: !model.trash
+                    visible: !root.trash
                     activeFocusOnTab: false
 
-                    text: model.draft ? qsTr("Edit") : qsTr("Reply")
+                    text: root.draft ? qsTr("Edit") : qsTr("Reply")
                     onClicked: {
-                        if (model.draft) {
-                            Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": model.mail})
+                        if (root.draft) {
+                            Kube.Fabric.postMessage(Kube.Messages.edit, {"mail": root.mail})
                         } else {
-                            Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": model.mail})
+                            Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": root.mail})
                         }
                     }
                 }

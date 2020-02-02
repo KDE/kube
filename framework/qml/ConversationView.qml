@@ -125,6 +125,7 @@ FocusScope {
                     anchors.centerIn: parent
                     width: parent.width - Kube.Units.gridUnit * 2
 
+                    mail: model.mail
                     message: model.mimeMessage
                     subject: model.subject
                     sender: model.sender
