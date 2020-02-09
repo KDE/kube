@@ -11,6 +11,9 @@ RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar make ninja-build clang 
     google-noto-serif-fonts google-noto-sans-fonts \
     xorg-x11-server-Xvfb qt5ct
 
+RUN dnf -y install neovim the_silver_searcher bat clang-tools-extra wl-clipboard python3-pip
+RUN pip3 install pynvim
+
 RUN useradd -d /home/developer -m developer
 
 ADD rsyslog.conf /etc/rsyslog.conf
@@ -70,6 +73,10 @@ ADD public-key /home/developer/public-key
 ADD qt5ct /home/developer/.config/qt5ct
 RUN sudo chown developer:developer /home/developer/*
 RUN sudo chown developer:developer /home/developer/.* -R
+
+ADD nvim /home/developer/.config/nvim
+# For this we need the vimrc and we probably should run it as user
+RUN nvim -c PlugInstall -c UpdateRemotePlugins +q +q
 
 RUN gpg2 --import /home/developer/public-key
 RUN gpg2 --batch --import /home/developer/private-key
