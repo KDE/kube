@@ -58,6 +58,7 @@ Kube.View {
             ListElement { description: qsTr("Go to next todo:"); shortcut: "j" }
             ListElement { description: qsTr("Go to previous todo:"); shortcut: "k" }
             ListElement { description: qsTr("Create new todo:"); shortcut: "c" }
+            ListElement { description: qsTr("Edit todo:"); shortcut: "e" }
             ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
         }
     }
@@ -76,6 +77,11 @@ Kube.View {
         enabled: root.isCurrentView
         sequences: ['c']
         onActivated: editorPopup.createObject(root, {}).open()
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['e']
+        onActivated: todoDetails.edit()
     }
     Shortcut {
         enabled: root.isCurrentView

@@ -16,12 +16,13 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.4
+import QtQuick 2.9
+import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-Item {
+FocusScope {
     id: root
 
     property bool editMode: false
@@ -34,8 +35,19 @@ Item {
 
     signal done()
 
+    function save() {
+        controller.saveAction.execute()
+        root.done()
+    }
+
     implicitWidth: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
     implicitHeight: contentLayout.implicitHeight + buttons.implicitHeight + 2 * Kube.Units.largeSpacing
+    Keys.onEscapePressed: root.done()
+
+    Shortcut {
+        sequences: [StandardKey.Save]
+        onActivated: root.save()
+    }
 
     states: [
     State {
@@ -112,10 +124,13 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.minimumHeight: Kube.Units.gridUnit * 4
+                    activeFocusOnTab: true
 
                     placeholderText: "Description"
                     initialText: controller.description
                     onTextChanged: controller.description = text
+
+                    Keys.onEscapePressed: calendarSelector.forceActiveFocus(Qt.TabFocusReason)
                 }
 
                 Kube.CalendarComboBox {
@@ -169,10 +184,7 @@ Item {
             Kube.PositiveButton {
                 id: saveButton
                 text: qsTr("Save Changes")
-                onClicked: {
-                    controller.saveAction.execute()
-                    root.done()
-                }
+                onClicked: root.save()
             }
 
             Kube.PositiveButton {

@@ -35,6 +35,11 @@ FocusScope {
         }
     }
 
+    function edit() {
+        var item = stackView.push(editor, StackView.Immediate)
+        item.forceActiveFocus()
+    }
+
     StackView {
         id: stackView
         anchors.fill: parent
@@ -94,9 +99,7 @@ FocusScope {
                     }
                     Kube.Button {
                         text: qsTr("Edit")
-                        onClicked: {
-                            stackView.push(editor, StackView.Immediate)
-                        }
+                        onClicked: root.edit()
                     }
 
                 }
@@ -109,7 +112,11 @@ FocusScope {
         TodoEditor {
             controller: root.controller
             editMode: true
-            onDone: stackView.pop(StackView.Immediate)
+            onDone: {
+                //Reload
+                root.controller.todo = root.controller.todo
+                stackView.pop(StackView.Immediate)
+            }
         }
     }
 }
