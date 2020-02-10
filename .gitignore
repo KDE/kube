@@ -8,3 +8,5 @@
 *.jsc
 build/
 site
+.clangd/
+compile_commands.json
