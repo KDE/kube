@@ -56,6 +56,7 @@ Item {
     property string errorPending: "errorPending"
     property string notificationPending: "notificationPending"
 
+    property string selectTopConversation: "selectTopConversation"
     property string selectNextConversation: "selectNextConversation"
     property string selectPreviousConversation: "selectPreviousConversation"
     property string selectNextMessage: "selectNextMessage"

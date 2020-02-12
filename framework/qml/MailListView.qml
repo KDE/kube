@@ -35,6 +35,14 @@ FocusScope {
     }
 
     Kube.Listener {
+        filter: Kube.Messages.selectTopConversation
+        onMessageReceived: {
+            listView.currentIndex = 0
+            listView.forceActiveFocus()
+        }
+    }
+
+    Kube.Listener {
         filter: Kube.Messages.selectNextConversation
         onMessageReceived: {
             listView.incrementCurrentIndex()

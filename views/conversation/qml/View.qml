@@ -53,6 +53,7 @@ Kube.View {
 
     helpViewComponent: Kube.HelpPopup {
         ListModel {
+            ListElement { description: qsTr("Jump to top of threadlist:"); shortcut: "t" }
             ListElement { description: qsTr("Jump to next thread:"); shortcut: "j" }
             ListElement { description: qsTr("Jump to previous thread:"); shortcut: "k" }
             ListElement { description: qsTr("Jump to next message:"); shortcut: "n" }
@@ -77,6 +78,11 @@ Kube.View {
         enabled: root.isCurrentView
         sequences: ['k']
         onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousConversation, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['t']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectTopConversation, {})
     }
     Shortcut {
         enabled: root.isCurrentView
