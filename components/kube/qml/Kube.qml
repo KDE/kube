@@ -18,7 +18,7 @@
  */
 
 
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
@@ -113,6 +113,22 @@ ApplicationWindow {
                 kubeViews.currentItem.refresh()
             }
         }
+    }
+    Shortcut {
+        sequences: ['g,w']
+        onActivated: kubeViews.showView("composer")
+    }
+    Shortcut {
+        sequences: ['g,c']
+        onActivated: kubeViews.showView("conversation")
+    }
+    Shortcut {
+        sequences: ['g,e']
+        onActivated: kubeViews.showView("calendar")
+    }
+    Shortcut {
+        sequences: ['g,t']
+        onActivated: kubeViews.showView("todo")
     }
     //END Shortcuts
 
