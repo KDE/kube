@@ -55,6 +55,8 @@ Kube.View {
 
     helpViewComponent: Kube.HelpPopup {
         ListModel {
+            ListElement { description: qsTr("Go to top of list:"); shortcut: "t" }
+            ListElement { description: qsTr("Go to bottom of list:"); shortcut: "b" }
             ListElement { description: qsTr("Go to next todo:"); shortcut: "j" }
             ListElement { description: qsTr("Go to previous todo:"); shortcut: "k" }
             ListElement { description: qsTr("Create new todo:"); shortcut: "c" }
@@ -62,7 +64,16 @@ Kube.View {
             ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
         }
     }
-
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['t']
+        onActivated: todoView.currentIndex = 0
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['b']
+        onActivated: todoView.currentIndex = todoView.count - 1
+    }
     Shortcut {
         enabled: root.isCurrentView
         sequences: ['j']
