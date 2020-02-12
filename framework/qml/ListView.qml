@@ -28,6 +28,7 @@ ListView {
 
     clip: true
     ScrollBar.vertical: Kube.ScrollBar { id: scrollBar }
+    highlightMoveDuration: 100
 
     Keys.onPressed: {
         if (event.matches(StandardKey.MoveToNextLine)) {
