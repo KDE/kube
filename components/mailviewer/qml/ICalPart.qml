@@ -115,7 +115,9 @@ Item {
                 accountId: Kube.Context.currentAccountId
                 contentType: "event"
                 onSelected: {
-                    controller.calendar = calendar
+                    if (calendar) {
+                        controller.calendar = calendar
+                    }
                 }
             }
 
