@@ -23,8 +23,8 @@
 
 #include <memory>
 
-#include <errors.h>
-#include <crypto.h>
+#include <sink/errors.h>
+#include <sink/crypto.h>
 
 namespace MailCrypto {
 

@@ -14,14 +14,6 @@ set(CMAKE_CXX_VISIBILITY_PRESET default)
 
 include_directories(. domain/mime/mimetreeparser domain/ domain/mime)
 
-add_library(crypto STATIC
-    crypto.cpp
-)
-target_link_libraries(crypto
-    PUBLIC
-    Qt5::Core
-    Gpgme::Gpgme
-)
 add_library(kubeframework SHARED
     settings/settings.cpp
     domain/maillistmodel.cpp
@@ -77,9 +69,7 @@ set_target_properties(kubeframework PROPERTIES
 )
 target_link_libraries(kubeframework
     sink
-    kube_otp
     mailcrypto
-    crypto
     Qt5::Core
     Qt5::Quick
     Qt5::Qml
@@ -105,7 +95,6 @@ set(BUILD_TESTING ON)
 add_subdirectory(tests)
 add_subdirectory(domain/mime)
 add_subdirectory(domain/mime/tests)
-add_subdirectory(domain/mime/mimetreeparser)
 add_subdirectory(domain/settings/tests)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

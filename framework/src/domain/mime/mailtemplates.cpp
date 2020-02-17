@@ -37,7 +37,7 @@
 #include <KCodecs/KCharsets>
 #include <KMime/Types>
 
-#include <mimetreeparser/objecttreeparser.h>
+#include <sink/mimetreeparser/objecttreeparser.h>
 
 #include "mailcrypto.h"
 

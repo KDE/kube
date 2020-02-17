@@ -18,7 +18,7 @@
 */
 #include "messageparser.h"
 
-#include <mimetreeparser/objecttreeparser.h>
+#include <sink/mimetreeparser/objecttreeparser.h>
 #include <QTime>
 #include <sink/log.h>
 

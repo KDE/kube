@@ -7,5 +7,5 @@ target_link_libraries(mailcrypto
     Qt5::Core
     KF5::Mime
     Gpgme::Gpgme
-    crypto
+    sink
 )

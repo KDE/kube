@@ -20,7 +20,7 @@
 
 #include "attachmentmodel.h"
 
-#include <mimetreeparser/objecttreeparser.h>
+#include <sink/mimetreeparser/objecttreeparser.h>
 #include <fabric.h>
 #include <mailcrypto.h>
 

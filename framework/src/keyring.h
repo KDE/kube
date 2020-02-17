@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QSet>
 
-#include "crypto.h"
+#include <sink/crypto.h>
 
 namespace Kube {
 

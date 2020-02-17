@@ -21,9 +21,6 @@
 */
 #include "mailcrypto.h"
 
-#include "framework/src/errors.h"
-#include "crypto.h"
-
 #include <QDebug>
 
 #include <future>

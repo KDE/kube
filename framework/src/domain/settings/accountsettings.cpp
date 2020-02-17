@@ -25,7 +25,7 @@
 #include <QUrl>
 
 #include "keyring.h"
-#include "crypto.h"
+#include <sink/crypto.h>
 
 using namespace Sink;
 using namespace Sink::ApplicationDomain;

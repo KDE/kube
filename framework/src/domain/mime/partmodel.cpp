@@ -19,7 +19,7 @@
 
 #include "partmodel.h"
 
-#include <mimetreeparser/objecttreeparser.h>
+#include <sink/mimetreeparser/objecttreeparser.h>
 #include "htmlutils.h"
 
 #include <QDebug>
@@ -235,7 +235,7 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                     return "encapsulated";
                 }
                 if (auto alternativePart = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
-                    if (alternativePart->availableModes().contains(MimeTreeParser::Util::MultipartIcal)) {
+                    if (alternativePart->availableModes().contains(MimeTreeParser::AlternativeMessagePart::MultipartIcal)) {
                         return "ical";
                     }
                 }
@@ -281,7 +281,7 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 return messagePart->error();
             case ContentRole: {
                 if (auto alternativePart = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
-                    if (alternativePart->availableModes().contains(MimeTreeParser::Util::MultipartIcal)) {
+                    if (alternativePart->availableModes().contains(MimeTreeParser::AlternativeMessagePart::MultipartIcal)) {
                         return alternativePart->icalContent();
                     }
                 }

@@ -28,8 +28,6 @@
 #include <QMap>
 #include <QDebug>
 
-#include <crypto.h>
-
 using namespace Kube;
 
 Q_GLOBAL_STATIC(Keyring, sKeyring);
