@@ -30,7 +30,7 @@
 #include <sink/log.h>
 
 #include <mailtemplates.h>
-#include <crypto.h>
+#include <sink/crypto.h>
 
 static void send(const QByteArray &message, const QByteArray &accountId)
 {
