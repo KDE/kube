@@ -24,7 +24,7 @@ import QtQuick.Layouts 1.1
 
 import org.kube.framework 1.0 as Kube
 
-Item {
+FocusScope {
     id: root
 
     property rect searchArea
@@ -33,6 +33,7 @@ Item {
     property real searchAreaOpacity: backgroundOpacity / 4
     property bool movedSearchBox: false
     property real borderWidth: 3
+    property alias textField: textField
 
     NumberAnimation on backgroundOpacity {
         id: fadeIn

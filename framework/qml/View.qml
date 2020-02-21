@@ -37,8 +37,12 @@ FocusScope {
     property string filter: ""
     property var searchObject: null
     function triggerSearch() {
-        if (!searchObject && StackView.visible) {
-            searchObject = searchComponent.createObject(root)
+        if (StackView.visible) {
+            if (searchObject) {
+                searchObject.textField.forceActiveFocus(Qt.ShortcutFocusReason)
+            } else {
+                searchObject = searchComponent.createObject(root)
+            }
         }
     }
     function clearSearch() {
