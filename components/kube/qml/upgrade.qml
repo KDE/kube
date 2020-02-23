@@ -18,7 +18,8 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
-import QtQuick.Window 2.0
+import QtQuick.Window 2
+import QtQuick.Controls 2
 
 import org.kube.framework 1.0 as Kube
 
