@@ -196,7 +196,7 @@ public:
         Fabric::Fabric{}.postMessage("errorNotification", message);
     }
 
-    static void sendProgressNotification(int progress, int total, const QList<QByteArray> &entities, const QByteArray &resourceId)
+    static void sendProgressNotification(int progress, int total, const QByteArray &entitiesType, const QList<QByteArray> &entities, const QByteArray &resourceId)
     {
         QVariantMap message{
             {"type", "progress"},
@@ -205,7 +205,7 @@ public:
             {"resourceId", resourceId}
         };
 
-        if (!entities.isEmpty()) {
+        if (!entities.isEmpty() && entitiesType == "folder") {
             message["folderId"] = entities.first();
         }
         Fabric::Fabric{}.postMessage("progressNotification", message);
@@ -248,10 +248,10 @@ public:
                         });
                     }
                 } else if (notification.code == Sink::ApplicationDomain::SyncInProgress) {
-                    sendProgressNotification(0, 1, notification.entities, notification.resource);
+                    sendProgressNotification(0, 1, notification.entitiesType, notification.entities, notification.resource);
                 }
             } else if (notification.type == Sink::Notification::Progress) {
-                sendProgressNotification(notification.progress, notification.total, notification.entities, notification.resource);
+                sendProgressNotification(notification.progress, notification.total, notification.entitiesType, notification.entities, notification.resource);
             }
         });
 
