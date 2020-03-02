@@ -305,11 +305,12 @@ FocusScope {
                                             parent: ApplicationWindow.overlay
                                             x: Math.round((parent.width - width) / 2)
                                             y: Math.round((parent.height - height) / 2)
-                                            width: eventView.width
-                                            height: eventView.height
+                                            width: Math.min(eventView.implicitWidth, parent.width - 2 * Kube.Units.gridUnit)
+                                            height: Math.min(eventView.implicitHeight, parent.height - 2 * Kube.Units.gridUnit)
                                             padding: 0
                                             EventView {
                                                 id: eventView
+                                                anchors.fill: parent
                                                 controller: Kube.EventController {
                                                     eventOccurrence: model.modelData.eventOccurrence
                                                 }

@@ -27,16 +27,14 @@ FocusScope {
     id: root
     property var controller
 
-    width: stackView.width
-    height: stackView.height
+    implicitWidth: stackView.currentItem.implicitWidth
+    implicitHeight: stackView.currentItem.implicitHeight
 
     signal done()
 
     StackView {
         id: stackView
-        anchors.centerIn: parent
-        width: stackView.currentItem.implicitWidth
-        height: stackView.currentItem.implicitHeight
+        anchors.fill: parent
         initialItem: eventDetails
         clip: true
     }
@@ -51,7 +49,8 @@ FocusScope {
             ColumnLayout {
                 id: contentLayout
                 anchors {
-                    centerIn: parent
+                    fill: parent
+                    margins: Kube.Units.largeSpacing
                 }
 
                 spacing: Kube.Units.smallSpacing
@@ -59,6 +58,7 @@ FocusScope {
                 Kube.Heading {
                     Layout.fillWidth: true
                     text: controller.summary
+                    elide: Text.ElideRight
                 }
 
                 Kube.SelectableLabel {
