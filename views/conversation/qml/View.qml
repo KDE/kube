@@ -181,6 +181,12 @@ Kube.View {
                             indexSelected(currentIndex)
                         }
                     }
+
+                    onDropped: {
+                        var folder = model.data(index, Kube.FolderListModel.DomainObject)
+                        Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": folder})
+                        drop.accept(Qt.MoveAction)
+                    }
                 }
             }
 

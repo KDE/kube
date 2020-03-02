@@ -29,6 +29,8 @@ FocusScope {
     property var currentIndex: modelAdaptor.mapRowToModelIndex(listView.currentIndex)
     property alias count: listView.count
 
+    signal dropped(var index, var drop)
+
     function selectRootIndex() {
         if (listView.count >= 1) {
             listView.currentIndex = 0
@@ -62,6 +64,19 @@ FocusScope {
             height: Kube.Units.gridUnit * 1.5
             hoverEnabled: true
             property bool isActive: listView.currentIndex === index
+
+            DropArea {
+                anchors.fill: parent
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: Kube.Colors.viewBackgroundColor
+                    opacity: 0.3
+                    visible: parent.containsDrag
+                }
+
+                onDropped: root.dropped(modelAdaptor.mapRowToModelIndex(index), drop)
+            }
 
             background: Kube.DelegateBackground {
                 anchors.fill: parent

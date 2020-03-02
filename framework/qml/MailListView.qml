@@ -153,7 +153,12 @@ FocusScope {
                     id: mouseArea
                     anchors.fill: parent
                     drag.target: parent
-                    onReleased: parent.Drag.drop()
+                    onReleased: {
+                        var dropAction = parent.Drag.drop()
+                        if (dropAction == Qt.MoveAction) {
+                            parent.visible = false
+                        }
+                    }
                     onClicked: delegateRoot.clicked()
                 }
 
