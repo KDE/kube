@@ -68,9 +68,12 @@ int EventOccurrenceModel::length() const
     return mLength;
 }
 
-void EventOccurrenceModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
+void EventOccurrenceModel::setCalendarFilter(const QList<QString> &calendarFilter)
 {
-    mCalendarFilter = calendarFilter;
+    mCalendarFilter.clear();
+    for (const auto &id : calendarFilter) {
+        mCalendarFilter << id.toLatin1();
+    }
     updateQuery();
 }
 

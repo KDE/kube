@@ -50,7 +50,7 @@ class KUBE_EXPORT EventOccurrenceModel : public QAbstractItemModel
     Q_OBJECT
     Q_PROPERTY(QDate start READ start WRITE setStart)
     Q_PROPERTY(int length READ length WRITE setLength)
-    Q_PROPERTY(QSet<QByteArray> calendarFilter WRITE setCalendarFilter)
+    Q_PROPERTY(QList<QString> calendarFilter WRITE setCalendarFilter)
     Q_PROPERTY(QVariantMap filter WRITE setFilter)
 
 public:
@@ -83,7 +83,7 @@ public:
     QDate start() const;
     void setLength(int);
     int length() const;
-    void setCalendarFilter(const QSet<QByteArray> &);
+    void setCalendarFilter(const QList<QString> &);
     void setFilter(const QVariantMap &);
 
     struct Occurrence {
