@@ -63,6 +63,7 @@ ApplicationWindow {
                 resource: "caldavresource",
                 name: "Test Calendar",
                 color: "#af1a6a",
+                enabled: true,
                 events: [
                     {
                         resource: "caldavresource",
@@ -180,96 +181,112 @@ ApplicationWindow {
                 id: "calendar2",
                 resource: "caldavresource",
                 name: "Test Calendar2",
+                enabled: true,
                 color: "#00cc4b"
             },
             {
                 id: "calendar3",
                 resource: "caldavresource",
                 name: "Test Calendar3 Loooooooooooooooooooooooooooooong Name",
+                enabled: true,
                 color: "#00cc4b"
             },
             {
                 id: "calendar4",
                 resource: "caldavresource",
                 name: "Test Calendar4",
+                enabled: true,
                 color: "#cc0000"
             },
             {
                 id: "calendar5",
                 resource: "caldavresource",
                 name: "Test Calendar5",
+                enabled: true,
                 color: "#cc0000"
             },
             {
                 id: "calendar6",
                 resource: "caldavresource",
                 name: "Test Calendar6",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar7",
                 resource: "caldavresource",
                 name: "Test Calendar7",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar8",
                 resource: "caldavresource",
                 name: "Test Calendar8",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar9",
                 resource: "caldavresource",
                 name: "Test Calendar9",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar10",
                 resource: "caldavresource",
                 name: "Test Calendar 10",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar11",
                 resource: "caldavresource",
                 name: "Test Calendar11",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar12",
                 resource: "caldavresource",
                 name: "Test Calendar12",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar13",
                 resource: "caldavresource",
                 name: "Test Calendar13",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar14",
                 resource: "caldavresource",
                 name: "Test Calendar14",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar15",
                 resource: "caldavresource",
                 name: "Test Calendar15",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "calendar16",
                 resource: "caldavresource",
                 name: "Test Calendar16",
+                enabled: true,
                 color: "#f67400"
             },
             {
                 id: "account2calendar",
                 resource: "caldavresource2",
                 name: "Account2Calendar",
+                enabled: false,
                 color: "#f67400"
             }],
         }
