@@ -65,6 +65,7 @@ Item {
         Repeater {
             model: Kube.MultiDayEventModel {
                 model: Kube.EventOccurrenceModel {
+                    objectName: "eventOccurrenceModel"
                     start: root.startDate
                     length: root.daysToShow
                     calendarFilter: root.calendarFilter

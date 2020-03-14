@@ -60,6 +60,7 @@ FocusScope {
 
         MultiDayView {
             id: daylong
+            objectName: "weekView"
             anchors {
                 top: parent.top
                 right: parent.right

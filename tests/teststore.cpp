@@ -244,6 +244,7 @@ static void createCalendar(const QVariantMap &object)
     auto calendar = ApplicationDomainType::createEntity<Calendar>(resourceId);
     calendar.setName(object["name"].toString());
     calendar.setColor(object["color"].toByteArray());
+    calendar.setEnabled(object["enabled"].toBool());
     if (object.contains("contentTypes")) {
         calendar.setContentTypes(toByteArrayList(object["contentTypes"].toList()));
     } else {

@@ -34,6 +34,7 @@ FocusScope {
 
     MultiDayView {
         id: dayView
+        objectName: "monthView"
         anchors.fill: parent
         daysToShow: daysPerRow * 6
         daysPerRow: 7
