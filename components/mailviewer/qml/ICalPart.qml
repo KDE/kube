@@ -75,29 +75,44 @@ Item {
     ]
 
     ColumnLayout {
+        anchors {
+            left: parent.left
+            right: parent.right
+        }
+        spacing: Kube.Units.smallSpacing
+
         Kube.Heading {
             id: heading
+            elide: Text.ElideRight
             Layout.fillWidth: true
         }
 
         Kube.SelectableLabel {
+            Layout.fillWidth: true
             visible: controller.allDay
             text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM") + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? "" : " - " + controller.end.toLocaleString(Qt.locale(), "dd. MMMM"))
+            elide: Text.ElideRight
         }
 
         Kube.SelectableLabel {
+            Layout.fillWidth: true
             visible: !controller.allDay
             text: controller.start.toLocaleString(Qt.locale(), "dd. MMMM hh:mm") + " - " + (/*DateUtils.sameDay(controller.start, controller.end)*/ true ? controller.end.toLocaleString(Qt.locale(), "hh:mm") : controller.end.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))
+            elide: Text.ElideRight
         }
 
         RowLayout {
             id: buttons
+            spacing: Kube.Units.smallSpacing
+            Layout.fillWidth: true
+
             Kube.Button {
                 text: qsTr("Decline")
                 onClicked: {
                     controller.declineAction.execute()
                 }
             }
+
             Kube.PositiveButton {
                 text: qsTr("Accept")
                 onClicked: {

@@ -19,23 +19,86 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import org.kube.framework 1.0 as Kube
+import org.kube.test 1.0
 
 ApplicationWindow {
     id: app
     height: 900
     width: 1500
 
+    Component.onCompleted: {
+        var initialState = {
+            accounts: [
+                {
+                    id: "account1",
+                    name: "Test Account"
+                }
+            ],
+            identities: [{
+                account: "account1",
+                name: "Test Identity",
+                address: "identity@example.org"
+            }],
+            resources: [
+                {
+                    id: "caldavresource",
+                    account: "account1",
+                    type: "caldav",
+                },
+                {
+                    id: "caldavresource2",
+                    account: "account2",
+                    type: "caldav",
+                }
+            ],
+            calendars: [{
+                id: "calendar1",
+                resource: "caldavresource",
+                name: "Test Calendar",
+                color: "#af1a6a",
+                contentTypes: ["event"],
+                enabled: true
+            },
+            {
+                id: "calendar16",
+                resource: "caldavresource",
+                name: "Test Calendar16",
+                color: "#f67400",
+                contentTypes: ["event"],
+                enabled: true
+            },
+            {
+                id: "account2calendar",
+                resource: "caldavresource2",
+                name: "Account2Calendar",
+                color: "#f67400",
+                contentTypes: ["event"],
+                enabled: true
+            }],
+        }
+        TestStore.setup(initialState)
+        Kube.Context.currentAccountId = "account1"
+    }
+
     Kube.File {
         id: file
-        path: "/build/kube/message.mime"
+        path: "/src/kube/framework/src/domain/mime/testdata/gmail-invitation.mbox"
     }
     Kube.MessageParser {
         id: messageParser
         message: file.data
     }
 
-    MailViewer {
-        visible: true
-        model: messageParser.parts
+    Rectangle {
+        width: 800
+        height: 800
+        anchors.centerIn: parent
+        border.color: "blue"
+        border.width: 2
+        MailViewer {
+            anchors.fill: parent
+            visible: true
+            model: messageParser.parts
+        }
     }
 }
