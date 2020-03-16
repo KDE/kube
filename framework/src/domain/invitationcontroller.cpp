@@ -87,23 +87,21 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
     query.filter<Event::Uid>(icalEvent->uid().toUtf8());
     Store::fetchAll<Event>(query).then([this, icalEvent](const QList<Event::Ptr> &events) {
         if (events.isEmpty()) {
-            setState(InvitationState::Unknown);
             populateFromEvent(*icalEvent);
             setStart(icalEvent->dtStart());
             setEnd(icalEvent->dtEnd());
             setUid(icalEvent->uid().toUtf8());
-            return KAsync::null();
+        } else {
+            auto icalEvent = KCalCore::ICalFormat().readIncidence(events.first()->getIcal()).dynamicCast<KCalCore::Event>();
+            if(!icalEvent) {
+                SinkWarning() << "Invalid ICal to process, ignoring...";
+                return KAsync::null();
+            }
+            populateFromEvent(*icalEvent);
+            setStart(icalEvent->dtStart());
+            setEnd(icalEvent->dtEnd());
+            setUid(icalEvent->uid().toUtf8());
         }
-
-        auto icalEvent = KCalCore::ICalFormat().readIncidence(events.first()->getIcal()).dynamicCast<KCalCore::Event>();
-        if(!icalEvent) {
-            SinkWarning() << "Invalid ICal to process, ignoring...";
-            return KAsync::null();
-        }
-        populateFromEvent(*icalEvent);
-        setStart(icalEvent->dtStart());
-        setEnd(icalEvent->dtEnd());
-        setUid(icalEvent->uid().toUtf8());
 
         Query query;
         query.request<ApplicationDomain::Identity::Name>()
@@ -128,9 +126,11 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
                         }
                         return;
                     } else {
-                        SinkLog() << "No identity found for " << identity->getAddress();
+                        SinkLog() << "No attendee found for " << identity->getAddress();
                     }
                 }
+                SinkWarning() << "Failed to find matching identity in list of attendees.";
+                setState(InvitationState::NoMatch);
             });
         return job;
     }).exec();

@@ -38,6 +38,7 @@ public:
         Unknown,
         Accepted,
         Declined,
+        NoMatch
     };
     Q_ENUM(InvitationState);
 

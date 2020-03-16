@@ -71,6 +71,12 @@ Item {
             name: "invited"
             when: controller.method == Kube.InvitationController.Request && controller.state == Kube.InvitationController.Unknown
             PropertyChanges {target: heading; text: qsTr("You've been invited to: \"%1\"").arg(controller.summary)}
+        },
+        State {
+            name: "notinvited"
+            when: controller.method == Kube.InvitationController.Request && controller.state == Kube.InvitationController.NoMatch
+            PropertyChanges {target: heading; text: qsTr("You are not listed as attendee to: \"%1\"").arg(controller.summary)}
+            PropertyChanges {target: buttons; visible: false}
         }
     ]
 
