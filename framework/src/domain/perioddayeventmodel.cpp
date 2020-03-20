@@ -139,7 +139,7 @@ QVariant PeriodDayEventModel::data(const QModelIndex &idx, int role) const
                 sorted.insert(start.time(), srcIdx);
             }
 
-            QMap<QTime, int> indentationStack;
+            QMultiMap<QTime, int> indentationStack;
             for (auto it = sorted.begin(); it != sorted.end(); it++) {
                 const auto srcIdx = it.value();
 
