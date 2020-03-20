@@ -51,6 +51,7 @@ private slots:
             Sink::Store::create(event1).exec().waitForFinished();
         }
         {
+            //1st indent level
             auto event2 = ApplicationDomainType::createEntity<Event>(resource.identifier());
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
             calcoreEvent->setUid("event2");
@@ -65,6 +66,7 @@ private slots:
             Sink::Store::create(event2).exec().waitForFinished();
         }
         {
+            //2rd indent level
             auto event3 = ApplicationDomainType::createEntity<Event>(resource.identifier());
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
             calcoreEvent->setUid("event3");
@@ -101,6 +103,7 @@ private slots:
             Sink::Store::create(event1).exec().waitForFinished();
         }
         {
+            //3rd indent level
             auto event6 = ApplicationDomainType::createEntity<Event>(resource.identifier());
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
             calcoreEvent->setUid("event6");
@@ -112,11 +115,24 @@ private slots:
             event6.setCalendar(calendar1);
             Sink::Store::create(event6).exec().waitForFinished();
         }
+        {
+            //Start matches end of previous event
+            auto event7 = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event7");
+            calcoreEvent->setSummary("summary7");
+            calcoreEvent->setDtStart(start.addDays(1).addSecs(3600));
+            calcoreEvent->setDuration(3600);
+            calcoreEvent->setAllDay(false);
+            event7.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event7.setCalendar(calendar1);
+            Sink::Store::create(event7).exec().waitForFinished();
+        }
 
         Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
 
         {
-            const int expectedNumberOfOccurreces = 11;
+            const int expectedNumberOfOccurreces = 12;
             const int numberOfDays = 7;
             EventOccurrenceModel model;
             model.setStart(start.date());
@@ -154,10 +170,11 @@ private slots:
                 }
                 {
                     const auto events = multiDayModel.index(1, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
-                    QCOMPARE(events.size(), 3);
+                    QCOMPARE(events.size(), 4);
                     QCOMPARE(events[0].toMap()["indentation"].toInt(), 0);
                     QCOMPARE(events[1].toMap()["indentation"].toInt(), 1);
                     QCOMPARE(events[2].toMap()["indentation"].toInt(), 2);
+                    QCOMPARE(events[3].toMap()["indentation"].toInt(), 0);
                 }
                 {
                     const auto events = multiDayModel.index(2, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
