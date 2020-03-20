@@ -239,6 +239,7 @@ FocusScope {
                                 height: Math.max(root.hourHeight * 0.5, root.hourHeight * model.modelData.duration)
                                 y: root.hourHeight * model.modelData.starts
                                 x: Kube.Units.gridUnit * model.modelData.indentation
+                                z: model.modelData.indentation
 
                                 Rectangle {
                                     anchors.fill: parent
