@@ -87,6 +87,7 @@ FocusScope {
                 }
 
                 Flow {
+                    Layout.fillWidth: true
                     visible: attendeeRepeater.count
                     height: contentHeight
                     spacing: Kube.Units.smallSpacing
