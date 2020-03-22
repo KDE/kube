@@ -22,6 +22,7 @@
 #include <QTextCharFormat>
 #include <QTextDocument>
 #include <QDebug>
+#include "spellcheckhighlighter.h"
 
 TextDocumentHandler::TextDocumentHandler(QObject *parent)
     : QObject(parent),
@@ -79,6 +80,7 @@ void TextDocumentHandler::setDocument(QQuickTextDocument *document)
     if (document != mDocument) {
         mDocument = document;
         connect(mDocument->textDocument(), &QTextDocument::contentsChange, this, &TextDocumentHandler::contentsChange);
+        new SpellcheckHighlighter(mDocument->textDocument());
         emit documentChanged();
         emit textChanged();
     }

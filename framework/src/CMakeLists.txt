@@ -7,6 +7,7 @@ find_package(KAsync CONFIG REQUIRED)
 find_package(Gpgme REQUIRED)
 find_package(KF5Codecs CONFIG REQUIRED)
 find_package(KF5Contacts CONFIG REQUIRED)
+find_package(KF5Sonnet CONFIG REQUIRED)
 
 include(GenerateExportHeader)
 
@@ -39,6 +40,7 @@ add_library(kubeframework SHARED
     domain/controller.cpp
     domain/peoplemodel.cpp
     domain/textdocumenthandler.cpp
+    domain/spellcheckhighlighter.cpp
     domain/sinkutils.cpp
     domain/mime/htmlutils.cpp
     domain/mime/messageparser.cpp
@@ -80,6 +82,7 @@ target_link_libraries(kubeframework
     KF5::Codecs
     KF5::Contacts
     KF5::CalendarCore
+    KF5::SonnetCore
     KAsync
 )
 install(TARGETS kubeframework DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
