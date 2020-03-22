@@ -123,6 +123,10 @@ void SpellcheckHighlighter::highlightBlock(const QString &text)
 
         const int offset = sentence.position();
         for (const auto &pos : words(text)) {
+            //Avoid spellchecking words in progress
+            if (offset + pos.start + pos.length >= text.length()) {
+                continue;
+            }
             const QStringRef word(&text, pos.start, pos.length);
             if (isSpellcheckable(word)) {
                 setFormat(word.position() + offset, word.length(), mSpellchecker->isMisspelled(word.toString()) ? mErrorFormat : QTextCharFormat{});
