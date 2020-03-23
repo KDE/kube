@@ -80,7 +80,9 @@ void TextDocumentHandler::setDocument(QQuickTextDocument *document)
     if (document != mDocument) {
         mDocument = document;
         connect(mDocument->textDocument(), &QTextDocument::contentsChange, this, &TextDocumentHandler::contentsChange);
+#ifdef KUBE_EXPERIMENTAL
         new SpellcheckHighlighter(mDocument->textDocument());
+#endif
         emit documentChanged();
         emit textChanged();
     }
