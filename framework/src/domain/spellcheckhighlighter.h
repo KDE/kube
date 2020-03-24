@@ -21,6 +21,7 @@
 #include <QTextDocument>
 #include <QSyntaxHighlighter>
 #include <Sonnet/Speller>
+#include <Sonnet/GuessLanguage>
 
 class SpellcheckHighlighter: public QSyntaxHighlighter
 {
@@ -31,7 +32,8 @@ protected:
     void highlightBlock(const QString &text);
 
 private:
-    void autodetectLanguage(const QStringRef &sentence);
+    void autodetectLanguage(const QString &sentence);
     QTextCharFormat mErrorFormat;
     QScopedPointer<Sonnet::Speller> mSpellchecker;
+    QScopedPointer<Sonnet::GuessLanguage> mLanguageGuesser;
 };

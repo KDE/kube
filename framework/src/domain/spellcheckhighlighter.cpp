@@ -20,82 +20,43 @@
 
 #include <QDebug>
 #include <QTextBoundaryFinder>
-#include <Sonnet/GuessLanguage>
 
 SpellcheckHighlighter::SpellcheckHighlighter(QTextDocument *parent)
     : QSyntaxHighlighter(parent),
-    mSpellchecker{new Sonnet::Speller()}
+    mSpellchecker{new Sonnet::Speller()},
+    mLanguageGuesser{new Sonnet::GuessLanguage()}
 {
     mErrorFormat.setForeground(Qt::red);
 
     if (!mSpellchecker->isValid()) {
         qWarning() << "Spellchecker is invalid";
     }
-    qDebug() << mSpellchecker->availableDictionaries();
-
+    qDebug() << "Available dictionaries: " << mSpellchecker->availableDictionaries();
 }
 
-struct Position {
-    int start, length;
-};
-
-static QList<Position> sentences(const QString &text)
+static QVector<QStringRef> split(QTextBoundaryFinder::BoundaryType boundary, const QString &text)
 {
-    QList<Position> breaks;
-    QTextBoundaryFinder boundaryFinder(QTextBoundaryFinder::Sentence, text);
+    QVector<QStringRef> parts;
+    QTextBoundaryFinder boundaryFinder(boundary, text);
 
     while (boundaryFinder.position() < text.length()) {
-        Position pos;
-        pos.start = boundaryFinder.position();
-        int end = boundaryFinder.toNextBoundary();
+        const int start = boundaryFinder.position();
+        const int end = boundaryFinder.toNextBoundary();
         if (end == -1) {
             break;
         }
-        pos.length = end - pos.start;
-        if (pos.length < 1) {
+        const int length = end - start;
+        if (length < 1) {
             continue;
         }
-        breaks.append(pos);
+        parts << QStringRef{&text, start, length};
     }
-    return breaks;
+    return parts;
 }
 
-static QList<Position> words(const QString &text)
+void SpellcheckHighlighter::autodetectLanguage(const QString &sentence)
 {
-    QList<Position> breaks;
-    QTextBoundaryFinder boundaryFinder(QTextBoundaryFinder::Word, text);
-
-    while (boundaryFinder.position() < text.length()) {
-        if (!(boundaryFinder.boundaryReasons().testFlag(QTextBoundaryFinder::StartOfItem))) {
-            if (boundaryFinder.toNextBoundary() == -1) {
-                break;
-            }
-            continue;
-        }
-
-        Position pos;
-        pos.start = boundaryFinder.position();
-        int end = boundaryFinder.toNextBoundary();
-        if (end == -1) {
-            break;
-        }
-        pos.length = end - pos.start;
-        if (pos.length < 1) {
-            continue;
-        }
-        breaks.append(pos);
-
-        if (boundaryFinder.toNextBoundary() == -1) {
-            break;
-        }
-    }
-    return breaks;
-}
-
-void SpellcheckHighlighter::autodetectLanguage(const QStringRef &sentence)
-{
-    Sonnet::GuessLanguage gl;
-    const auto lang = gl.identify(sentence.toString(), mSpellchecker->availableLanguages());
+    const auto lang = mLanguageGuesser->identify(sentence, mSpellchecker->availableLanguages());
     if (lang.isEmpty()) {
         return;
     }
@@ -116,20 +77,27 @@ static bool isSpellcheckable(const QStringRef &token)
 
 void SpellcheckHighlighter::highlightBlock(const QString &text)
 {
-    for (const auto &pos : sentences(text)) {
-        const QStringRef sentence(&text, pos.start, pos.length);
+    for (const auto &sentenceRef : split(QTextBoundaryFinder::Sentence, text)) {
+        //Avoid spellchecking quotes
+        if (sentenceRef.isEmpty() || sentenceRef.at(0) == QChar{'>'}) {
+            continue;
+        }
+
+        const auto sentence = QString::fromRawData(sentenceRef.data(), sentenceRef.length());
 
         autodetectLanguage(sentence);
 
-        const int offset = sentence.position();
-        for (const auto &pos : words(text)) {
+        const int offset = sentenceRef.position();
+        for (const auto &wordRef : split(QTextBoundaryFinder::Word, sentence)) {
             //Avoid spellchecking words in progress
-            if (offset + pos.start + pos.length >= text.length()) {
+            //FIXME this will also prevent spellchecking a single word on a line.
+            if (offset + wordRef.position() + wordRef.length() >= text.length()) {
                 continue;
             }
-            const QStringRef word(&text, pos.start, pos.length);
-            if (isSpellcheckable(word)) {
-                setFormat(word.position() + offset, word.length(), mSpellchecker->isMisspelled(word.toString()) ? mErrorFormat : QTextCharFormat{});
+            if (isSpellcheckable(wordRef)) {
+                const auto word = QString::fromRawData(wordRef.data(), wordRef.length());
+                const auto format = mSpellchecker->isMisspelled(word) ? mErrorFormat : QTextCharFormat{};
+                setFormat(offset + wordRef.position(), wordRef.length(), format);
             }
         }
     }
