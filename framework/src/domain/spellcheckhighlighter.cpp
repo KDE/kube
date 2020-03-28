@@ -82,7 +82,6 @@ void SpellcheckHighlighter::highlightBlock(const QString &text)
     //Avoid spellchecking quotes
     if (text.isEmpty() || text.at(0) == QChar{'>'}) {
         setFormat(0, text.length(), mQuoteFormat);
-        setCurrentBlockState(0);
         return;
     }
     for (const auto &sentenceRef : split(QTextBoundaryFinder::Sentence, text)) {
@@ -109,5 +108,4 @@ void SpellcheckHighlighter::highlightBlock(const QString &text)
             }
         }
     }
-    setCurrentBlockState(0);
 }
