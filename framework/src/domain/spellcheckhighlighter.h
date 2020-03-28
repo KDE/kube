@@ -34,6 +34,7 @@ protected:
 private:
     void autodetectLanguage(const QString &sentence);
     QTextCharFormat mErrorFormat;
+    QTextCharFormat mQuoteFormat;
     QScopedPointer<Sonnet::Speller> mSpellchecker;
     QScopedPointer<Sonnet::GuessLanguage> mLanguageGuesser;
 };

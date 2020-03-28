@@ -26,7 +26,9 @@ SpellcheckHighlighter::SpellcheckHighlighter(QTextDocument *parent)
     mSpellchecker{new Sonnet::Speller()},
     mLanguageGuesser{new Sonnet::GuessLanguage()}
 {
-    mErrorFormat.setForeground(Qt::red);
+    //Danger red from our color scheme
+    mErrorFormat.setForeground(QColor{"#ed1515"});
+    mQuoteFormat.setForeground(QColor{"#7f8c8d"});
 
     if (!mSpellchecker->isValid()) {
         qWarning() << "Spellchecker is invalid";
@@ -77,6 +79,12 @@ static bool isSpellcheckable(const QStringRef &token)
 
 void SpellcheckHighlighter::highlightBlock(const QString &text)
 {
+    //Avoid spellchecking quotes
+    if (text.isEmpty() || text.at(0) == QChar{'>'}) {
+        setFormat(0, text.length(), mQuoteFormat);
+        setCurrentBlockState(0);
+        return;
+    }
     for (const auto &sentenceRef : split(QTextBoundaryFinder::Sentence, text)) {
         //Avoid spellchecking quotes
         if (sentenceRef.isEmpty() || sentenceRef.at(0) == QChar{'>'}) {
