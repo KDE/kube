@@ -277,7 +277,7 @@ void makeValidHtml(QString &body, const QString &headElement)
 }
 
 //FIXME strip signature works partially for HTML mails
-QString stripSignature(const QString &msg)
+static QString stripSignature(const QString &msg)
 {
     // Following RFC 3676, only > before --
     // I prefer to not delete a SB instead of delete good mail content.
@@ -340,7 +340,7 @@ QString stripSignature(const QString &msg)
     return res;
 }
 
-void setupPage(QWebEnginePage *page)
+static void setupPage(QWebEnginePage *page)
 {
         page->profile()->setHttpCacheType(QWebEngineProfile::MemoryHttpCache);
         page->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
@@ -366,30 +366,25 @@ void setupPage(QWebEnginePage *page)
 #endif
 }
 
-void plainMessageText(const QString &plainTextContent, const QString &htmlContent, bool aStripSignature, const std::function<void(const QString &)> &callback)
+static void plainMessageText(const QString &plainTextContent, const QString &htmlContent, bool aStripSignature, const std::function<void(const QString &)> &callback)
 {
-    QString result = plainTextContent;
-    if (plainTextContent.isEmpty()) {   //HTML-only mails
-        callback(toPlainText(htmlContent));
-        return;
-    }
-
+    const auto result = plainTextContent.isEmpty() ? toPlainText(htmlContent) : plainTextContent;
     if (aStripSignature) {
-        result = stripSignature(result);
+        callback(stripSignature(result));
+    } else {
+        callback(result);
     }
-    callback(result);
 }
 
-QString extractHeaderBodyScript()
+static QString extractHeaderBodyScript()
 {
-    const QString source = QStringLiteral("(function() {"
-                                          "var res = {"
-                                          "    body: document.getElementsByTagName('body')[0].innerHTML,"
-                                          "    header: document.getElementsByTagName('head')[0].innerHTML"
-                                          "};"
-                                          "return res;"
-                                          "})()");
-    return source;
+    return QStringLiteral("(function() {"
+                          "var res = {"
+                          "    body: document.getElementsByTagName('body')[0].innerHTML,"
+                          "    header: document.getElementsByTagName('head')[0].innerHTML"
+                          "};"
+                          "return res;"
+                          "})()");
 }
 
 void htmlMessageText(const QString &plainTextContent, const QString &htmlContent, bool aStripSignature, const std::function<void(const QString &body, QString &head)> &callback)
