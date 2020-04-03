@@ -105,6 +105,50 @@ private slots:
         QCOMPARE(unquote(removeFirstLine(result->body())), QLatin1String("HTML text"));
     }
 
+    void testStripSignatureReply()
+    {
+        auto msg = readMail("plaintext-with-signature.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        QVERIFY(!result->body().contains("This is a signature"));
+    }
+
+    void testStripSignatureHtmlReply()
+    {
+        auto msg = readMail("html-with-signature.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        QVERIFY(!result->body().contains("This is a signature"));
+    }
+
+    void testStripSignatureCrlfReply()
+    {
+        auto msg = readMail("crlf-with-signature.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        QVERIFY(!result->body().contains("This is a signature"));
+    }
+
+    void testStripEncryptedCRLFReply()
+    {
+        auto msg = readMail("crlf-encrypted-with-signature.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        QVERIFY(!result->body().contains("This is a signature"));
+    }
+
     void testHtml8BitEncodedReply()
     {
         auto msg = readMail("8bitencoded.mbox");

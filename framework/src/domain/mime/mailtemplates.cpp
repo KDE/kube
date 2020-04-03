@@ -281,6 +281,8 @@ QString stripSignature(const QString &msg)
 {
     // Following RFC 3676, only > before --
     // I prefer to not delete a SB instead of delete good mail content.
+    // We expect no CRLF from the ObjectTreeParser. The regex won't handle it.
+    Q_ASSERT(!msg.contains("\r\n"));
     const QRegExp sbDelimiterSearch = QRegExp(QLatin1String("(^|\n)[> ]*-- \n"));
     // The regular expression to look for prefix change
     const QRegExp commonReplySearch = QRegExp(QLatin1String("^[ ]*>"));
