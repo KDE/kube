@@ -83,7 +83,7 @@ Kube.View {
                     break;
                 case Kube.ComposerController.Reply:
                     composerController.loadReply(message)
-                    editorPage.forceActiveFocus()
+                    editorPage.focusBody()
                     break;
                 case Kube.ComposerController.Forward:
                     composerController.loadForward(message)

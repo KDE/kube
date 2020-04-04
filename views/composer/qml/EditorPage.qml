@@ -33,6 +33,10 @@ FocusScope {
     signal done()
     signal focusChange()
 
+    function focusBody() {
+        textEditor.forceActiveFocus()
+    }
+
     Rectangle {
         anchors.fill: parent
         color: Kube.Colors.paperWhite
@@ -147,7 +151,7 @@ FocusScope {
                 objectName: "subject"
                 Layout.fillWidth: true
                 activeFocusOnTab: true
-                focus: controller.subject == ""
+                focus: true
 
                 placeholderText: qsTr("Subject")
                 text: controller.subject
@@ -164,7 +168,6 @@ FocusScope {
                 id: textEditor
                 objectName: "textEditor"
                 activeFocusOnTab: true
-                focus: controller.subject != ""
                 placeholderText: qsTr("Body")
 
                 Layout.fillWidth: true
