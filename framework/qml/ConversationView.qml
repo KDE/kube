@@ -113,6 +113,15 @@ FocusScope {
                 //FIXME breaks keyboard navigation because we don't jump over invisible items
                 visible: !((root.hideTrash && model.trash) || (root.hideNonTrash && !model.trash))
 
+                NumberAnimation on opacity {
+                    id: fadeIn
+                    from: 0
+                    to: 1
+                    duration: 100
+                }
+
+                Component.onCompleted: fadeIn.start()
+
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton

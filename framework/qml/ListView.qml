@@ -30,6 +30,10 @@ ListView {
     ScrollBar.vertical: Kube.ScrollBar { id: scrollBar }
     highlightMoveDuration: 100
 
+    add: Transition {
+        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 100 }
+    }
+
     Keys.onPressed: {
         if (event.matches(StandardKey.MoveToNextLine)) {
             incrementCurrentIndex()
