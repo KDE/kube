@@ -19,7 +19,8 @@
 #include "spellcheckhighlighter.h"
 
 #include <QDebug>
-#include <QTextBoundaryFinder>
+
+#include "../syntaxhighlighter.h"
 
 SpellcheckHighlighter::SpellcheckHighlighter(QTextDocument *parent)
     : QSyntaxHighlighter(parent),
@@ -34,26 +35,6 @@ SpellcheckHighlighter::SpellcheckHighlighter(QTextDocument *parent)
         qWarning() << "Spellchecker is invalid";
     }
     qDebug() << "Available dictionaries: " << mSpellchecker->availableDictionaries();
-}
-
-static QVector<QStringRef> split(QTextBoundaryFinder::BoundaryType boundary, const QString &text)
-{
-    QVector<QStringRef> parts;
-    QTextBoundaryFinder boundaryFinder(boundary, text);
-
-    while (boundaryFinder.position() < text.length()) {
-        const int start = boundaryFinder.position();
-        const int end = boundaryFinder.toNextBoundary();
-        if (end == -1) {
-            break;
-        }
-        const int length = end - start;
-        if (length < 1) {
-            continue;
-        }
-        parts << QStringRef{&text, start, length};
-    }
-    return parts;
 }
 
 void SpellcheckHighlighter::autodetectLanguage(const QString &sentence)

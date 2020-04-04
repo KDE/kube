@@ -59,6 +59,7 @@ add_library(kubeframework SHARED
     keyring.cpp
     domainobjectcontroller.cpp
     extensionmodel.cpp
+    syntaxhighlighter.cpp
     viewhighlighter.cpp
     file.cpp
     logmodel.cpp

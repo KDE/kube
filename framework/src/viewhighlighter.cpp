@@ -23,15 +23,14 @@
 #include <QRegularExpression>
 #include <QString>
 
-class SearchHighlighter : public QSyntaxHighlighter
+#include "syntaxhighlighter.h"
+
+class Highlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 
 public:
-    SearchHighlighter(QTextDocument *parent = 0)
-        : QSyntaxHighlighter(parent)
-    {
-    }
+    using QSyntaxHighlighter::QSyntaxHighlighter;
 
     void setSearchString(const QString &s)
     {
@@ -42,6 +41,8 @@ public:
 protected:
     void highlightBlock(const QString &text) override
     {
+        highlightQuotes(text);
+
         if (!mSearchString.isEmpty()) {
             QTextCharFormat format;
             format.setFontWeight(QFont::Bold);
@@ -58,12 +59,25 @@ protected:
     }
 
 private:
+    void highlightQuotes(const QString &text)
+    {
+        static auto quoteFormat = [] {
+            QTextCharFormat quoteFormat;
+            quoteFormat.setForeground(QColor{"#7f8c8d"});
+            return quoteFormat;
+        }();
+        for (const auto &part : split(QTextBoundaryFinder::Line, text)) {
+            if (!part.isEmpty() && part.at(0) == QChar{'>'}) {
+                setFormat(part.position(), part.length(), quoteFormat);
+            }
+        }
+    }
+
     QString mSearchString;
 };
 
 struct ViewHighlighter::Private {
-    SearchHighlighter *searchHighligher;
-
+    Highlighter *searchHighligher;
 };
 
 
@@ -77,7 +91,7 @@ ViewHighlighter::ViewHighlighter(QObject *parent)
 void ViewHighlighter::setTextDocument(QQuickTextDocument *document)
 {
     if (document) {
-        d->searchHighligher = new SearchHighlighter{document->textDocument()};
+        d->searchHighligher = new Highlighter{document->textDocument()};
     }
 }
 
