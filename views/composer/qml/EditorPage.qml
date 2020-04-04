@@ -147,7 +147,7 @@ FocusScope {
                 objectName: "subject"
                 Layout.fillWidth: true
                 activeFocusOnTab: true
-                focus: true
+                focus: controller.subject == ""
 
                 placeholderText: qsTr("Subject")
                 text: controller.subject
@@ -164,6 +164,7 @@ FocusScope {
                 id: textEditor
                 objectName: "textEditor"
                 activeFocusOnTab: true
+                focus: controller.subject != ""
                 placeholderText: qsTr("Body")
 
                 Layout.fillWidth: true
