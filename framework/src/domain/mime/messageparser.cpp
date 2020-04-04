@@ -74,6 +74,11 @@ QString MessageParser::rawContent() const
     return mRawContent;
 }
 
+bool MessageParser::loaded() const
+{
+    return bool{d->mParser};
+}
+
 QString MessageParser::structureAsString() const
 {
     if (!d->mParser) {

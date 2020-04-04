@@ -44,6 +44,7 @@ class KUBE_EXPORT MessageParser : public QObject
     Q_PROPERTY (QAbstractItemModel* attachments READ attachments NOTIFY htmlChanged)
     Q_PROPERTY (QString rawContent READ rawContent NOTIFY htmlChanged)
     Q_PROPERTY (QString structureAsString READ structureAsString NOTIFY htmlChanged)
+    Q_PROPERTY (bool loaded READ loaded NOTIFY htmlChanged)
 
 public:
     explicit MessageParser(QObject *parent = Q_NULLPTR);
@@ -55,6 +56,7 @@ public:
     QAbstractItemModel *attachments() const;
     QString rawContent() const;
     QString structureAsString() const;
+    bool loaded() const;
 signals:
     void htmlChanged();
 

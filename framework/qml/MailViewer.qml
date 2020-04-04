@@ -45,6 +45,7 @@ Rectangle {
     property bool unread
     property alias searchString: mailViewer.searchString
     property alias autoLoadImages: mailViewer.autoLoadImages
+    property alias loaded: messageParser.loaded
 
     property bool collapsed: draft || sent
 
@@ -71,7 +72,7 @@ Rectangle {
 
     states: [
         State {
-            name: "incomplete"; when: root.incomplete
+            name: "incomplete"; when: root.incomplete || !root.loaded
             PropertyChanges { target: buttonContainer; visible: false}
             PropertyChanges { target: body; visible: false}
             PropertyChanges { target: footer; visible: false}
@@ -388,7 +389,7 @@ Rectangle {
                 left: parent.left
                 right: parent.right
             }
-            visible: root.incomplete
+            visible: false
             height: visible ? implicitHeight : 0
             text: qsTr("Incomplete body...")
             color: Kube.Colors.textColor
