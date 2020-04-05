@@ -34,6 +34,10 @@ ListView {
         NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 100 }
     }
 
+    displaced: Transition {
+        NumberAnimation { properties: "x,y"; duration: 50 }
+    }
+
     Keys.onPressed: {
         if (event.matches(StandardKey.MoveToNextLine)) {
             incrementCurrentIndex()
