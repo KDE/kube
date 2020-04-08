@@ -63,6 +63,7 @@ ApplicationWindow {
                 resource: "caldavresource",
                 name: "Test Calendar",
                 color: "#af1a6a",
+                enabled: true,
                 todos: [
                     {
                         resource: "caldavresource",
