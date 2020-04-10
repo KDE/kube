@@ -190,7 +190,15 @@ public:
     void set(const QStringList &list)
     {
         for (const auto &email : list) {
-            add({{"name", email}});
+            Kube::ListPropertyController::add({{"name", email}});
+        }
+    }
+
+    Q_INVOKABLE virtual void add(const QVariantMap &map)
+    {
+        // Support adding multiple addresses separated by comma
+        for (const auto part : map.value("name").toString().split(',')) {
+            Kube::ListPropertyController::add({{"name", part.trimmed()}});
         }
     }
 signals:
