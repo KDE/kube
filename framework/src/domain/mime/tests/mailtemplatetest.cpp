@@ -352,6 +352,22 @@ private slots:
         QCOMPARE(attattachments[1]->contentDisposition(false)->filename(), QLatin1String{"attachment2.txt"});
     }
 
+    void testForwardAlreadyForwarded()
+    {
+        auto msg = readMail("cid-links-forwarded-inline.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::forward(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        });
+        QTRY_VERIFY(result);
+        QCOMPARE(result->subject(false)->asUnicodeString(), QLatin1String{"FW: Html Hello (inlin)"});
+        QCOMPARE(result->to()->addresses(), {});
+        QCOMPARE(result->cc()->addresses(), {});
+        const QVector references{QByteArray{"a1777ec781546ccc5dcd4918a5e4e03d@info"}, QByteArray{"46b164308eb6056361c866932a740a3c@info"}};
+        QCOMPARE(result->references()->identifiers(), references);
+        QCOMPARE(result->inReplyTo()->identifiers(), {});
+    }
+
     void testCreatePlainMail()
     {
         QStringList to = {{"to@example.org"}};
