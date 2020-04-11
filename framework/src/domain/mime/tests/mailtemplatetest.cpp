@@ -284,6 +284,8 @@ private slots:
         QCOMPARE(result->subject(false)->asUnicodeString(), QLatin1String{"FW: A random subject with alternative contenttype"});
         QCOMPARE(result->to()->addresses(), {});
         QCOMPARE(result->cc()->addresses(), {});
+        QCOMPARE(result->references()->identifiers(), {"1505824.VT1nqpAGu0@vkpc5"});
+        QCOMPARE(result->inReplyTo()->identifiers(), {});
 
         auto attachments = result->attachments();
         QCOMPARE(attachments.size(), 1);
@@ -306,6 +308,8 @@ private slots:
         QCOMPARE(result->subject(false)->asUnicodeString(), QLatin1String{"FW: OpenPGP encrypted"});
         QCOMPARE(result->to()->addresses(), {});
         QCOMPARE(result->cc()->addresses(), {});
+        QCOMPARE(result->references()->identifiers(), {"1505824.VT2nqpAGu0@vkpc5"});
+        QCOMPARE(result->inReplyTo()->identifiers(), {});
 
         auto attachments = result->attachments();
         QCOMPARE(attachments.size(), 1);
@@ -328,6 +332,8 @@ private slots:
         QCOMPARE(result->subject(false)->asUnicodeString(), QLatin1String{"FW: OpenPGP encrypted with 2 text attachments"});
         QCOMPARE(result->to()->addresses(), {});
         QCOMPARE(result->cc()->addresses(), {});
+        QCOMPARE(result->references()->identifiers(), {"1505824.VT0nqpAGu0@vkpc5"});
+        QCOMPARE(result->inReplyTo()->identifiers(), {});
 
         auto attachments = result->attachments();
         QCOMPARE(attachments.size(), 1);
