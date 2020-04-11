@@ -70,6 +70,19 @@ FocusScope {
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
                 width: parent.width
                 color: Kube.Colors.buttonColor
+
+                MouseArea {
+                    id: mouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    drag.target: parent
+                    onReleased: {
+                        if (parent.Drag.drop() == Qt.MoveAction) {
+                            root.controller.remove(recipientId)
+                        }
+                    }
+                }
+
                 Kube.Label {
                     id: label
                     anchors {
@@ -136,17 +149,6 @@ FocusScope {
                 Drag.hotSpot.y: mouseArea.mouseY
                 Drag.source: delegateRoot
 
-                MouseArea {
-                    id: mouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    drag.target: parent
-                    onReleased: {
-                        if (parent.Drag.drop() == Qt.MoveAction) {
-                            root.controller.remove(recipientId)
-                        }
-                    }
-                }
             }
         }
 
