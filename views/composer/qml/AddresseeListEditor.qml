@@ -33,6 +33,22 @@ FocusScope {
     implicitHeight: listView.height + lineEdit.height
     height: implicitHeight
 
+    DropArea {
+        anchors.fill: parent
+
+        Rectangle {
+            anchors.fill: parent
+            color: Kube.Colors.highlightColor
+            opacity: 0.3
+            visible: parent.containsDrag
+        }
+
+        onDropped: {
+            drop.accept(Qt.MoveAction)
+            root.controller.add({name: drop.source.name})
+        }
+    }
+
     Column {
         anchors.fill: parent
 
@@ -48,6 +64,9 @@ FocusScope {
             spacing: Kube.Units.smallSpacing
             model: controller.model
             delegate: Rectangle {
+                id: delegateRoot
+                property var recipientId: model.id
+                property var name: model.name
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
                 width: parent.width
                 color: Kube.Colors.buttonColor
@@ -61,12 +80,7 @@ FocusScope {
                     }
                     text: model.name
                     elide: Text.ElideRight
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                    }
-                    ToolTip.visible: mouseArea.containsMouse
+                    ToolTip.visible: mouseArea.containsMouse && !mouseArea.drag.active
                     ToolTip.text: text
                 }
                 Kube.IconButton {
@@ -105,6 +119,33 @@ FocusScope {
                     onClicked: root.controller.remove(model.id)
                     padding: 0
                     iconName: Kube.Icons.remove
+                }
+
+                states: [
+                    State {
+                        name: "dnd"
+                        when: mouseArea.drag.active
+
+                        PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
+                        PropertyChanges {target: delegateRoot; opacity: 0.5}
+                    }
+                ]
+
+                Drag.active: mouseArea.drag.active
+                Drag.hotSpot.x: mouseArea.mouseX
+                Drag.hotSpot.y: mouseArea.mouseY
+                Drag.source: delegateRoot
+
+                MouseArea {
+                    id: mouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    drag.target: parent
+                    onReleased: {
+                        if (parent.Drag.drop() == Qt.MoveAction) {
+                            root.controller.remove(recipientId)
+                        }
+                    }
                 }
             }
         }
