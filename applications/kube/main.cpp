@@ -43,11 +43,13 @@
 #include <QStandardPaths>
 #include <QLockFile>
 #include <QDir>
+#include <QWindow>
 #include <sink/store.h>
 
 #include "backtrace.h"
 #include "framework/src/keyring.h"
 #include "kube_version.h"
+#include "dbusinterface.h"
 
 static int sCounter = 0;
 
@@ -152,24 +154,23 @@ int main(int argc, char *argv[])
     parser.process(app);
 
 
-    static QString location = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/kube";
-    QDir{}.mkpath(location);
-    QLockFile lockfile(location + QString("/%1.lock").arg(QString("kube")));
-    lockfile.setStaleLockTime(500);
+    //Only relevant for flatpak
+    DBusInterface interface;
+
     if (parser.isSet("lockfile")) {
-        if (!lockfile.tryLock(0)) {
-            const auto error = lockfile.error();
-            if (error == QLockFile::LockFailedError) {
-                qint64 pid;
-                QString hostname, appname;
-                lockfile.getLockInfo(&pid, &hostname, &appname);
-                qWarning() << "Failed to acquire exclusive lock. You can only run one instance of Kube.";
-                qWarning() << "Pid:" << pid << "Host:" << hostname << "App:" << appname;
-            } else {
-                qWarning() << "Error while trying to acquire exclusive lock: " << error;
-            }
+        if (!interface.registerService()) {
+            qInfo() << "Can't start multiple instances of kube in flatpak.";
+            interface.activate();
             return -1;
         }
+        QObject::connect(&interface, &DBusInterface::activated, [&] {
+            qDebug() << "Activated";
+            for (auto w : QApplication::topLevelWindows()) {
+                //QWindow::alert and QWindow::requestActivate don't work with wayland. But hide and show does.
+                w->setVisible(false);
+                w->setVisible(true);
+            }
+        });
     }
 
     if (parser.isSet("keyring")) {

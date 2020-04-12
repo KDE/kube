@@ -1,9 +1,9 @@
 include(ECMAddAppIcon)
 
-find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Quick)
+find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Quick DBus)
 
 # install executable
-set(SRCS main.cpp backtrace.cpp)
+set(SRCS main.cpp backtrace.cpp dbusinterface.cpp)
 
 if(APPLE OR WIN32)
     # Sets the icon on Windows and OSX
@@ -26,6 +26,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 target_link_libraries(${PROJECT_NAME}
     Qt5::Quick
+    Qt5::DBus
     ${CMAKE_DL_LIBS}
     kubeframework
 )
