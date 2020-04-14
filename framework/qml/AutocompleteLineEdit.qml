@@ -108,6 +108,7 @@ Kube.TextField {
 
         ListView {
             id: listView
+            contentHeight: contentItem.childrenRect.height
             height: contentHeight
             width: parent.width
             interactive: true

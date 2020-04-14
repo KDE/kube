@@ -60,6 +60,7 @@ FocusScope {
                 left: parent.left
                 right: parent.right
             }
+            contentHeight: contentItem.childrenRect.height
             height: contentHeight
             spacing: Kube.Units.smallSpacing
             model: controller.model
