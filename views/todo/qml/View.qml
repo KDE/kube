@@ -444,6 +444,7 @@ Kube.View {
             padding: 0
             TodoEditor {
                 id: editor
+                focus: true
                 anchors.fill: parent
                 accountId: root.currentAccount
                 currentFolder: root.currentFolder
