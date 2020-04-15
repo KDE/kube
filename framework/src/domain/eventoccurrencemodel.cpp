@@ -38,7 +38,7 @@ using namespace Sink;
 
 EventOccurrenceModel::EventOccurrenceModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mCalendarCache{EntityCache<ApplicationDomain::Calendar, ApplicationDomain::Calendar::Color>::Ptr::create()},
+    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}})},
     mCalendar{new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()}}
 {
     mRefreshTimer.setSingleShot(true);

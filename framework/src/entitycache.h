@@ -23,6 +23,7 @@
 #include <sink/store.h>
 #include <QSharedPointer>
 #include <QAbstractItemModel>
+#include <QByteArrayList>
 
 class KUBE_EXPORT EntityCacheInterface
 {
@@ -34,13 +35,13 @@ public:
     virtual QVariant getProperty(const QByteArray &identifier, const QByteArray &property) const = 0;
 };
 
-template<typename DomainType, typename Property>
+template<typename DomainType>
 class KUBE_EXPORT EntityCache : public EntityCacheInterface
 {
 public:
     typedef QSharedPointer<EntityCache> Ptr;
 
-    EntityCache();
+    EntityCache(const QByteArrayList &properties);
     virtual ~EntityCache() = default;
 
     virtual QVariant getProperty(const QByteArray &, const QByteArray &) const override;
@@ -50,12 +51,12 @@ private:
     QSharedPointer<QAbstractItemModel> mModel;
 };
 
-template<typename DomainType, typename Property>
-EntityCache<DomainType, Property>::EntityCache()
+template<typename DomainType>
+EntityCache<DomainType>::EntityCache(const QByteArrayList &properties)
     : EntityCacheInterface()
 {
     Sink::Query query;
-    query.request<Property>();
+    query.requestedProperties = properties;
     query.setFlags(Sink::Query::LiveQuery);
     mModel = Sink::Store::loadModel<DomainType>(query);
     QObject::connect(mModel.data(), &QAbstractItemModel::rowsInserted, mModel.data(), [this] (const QModelIndex &, int start, int end) {
@@ -66,8 +67,8 @@ EntityCache<DomainType, Property>::EntityCache()
     });
 }
 
-template<typename DomainType, typename Property>
-QVariant EntityCache<DomainType, Property>::getProperty(const QByteArray &identifier, const QByteArray &property) const
+template<typename DomainType>
+QVariant EntityCache<DomainType>::getProperty(const QByteArray &identifier, const QByteArray &property) const
 {
     if (auto entity = mCache.value(identifier)) {
         return entity->getProperty(property);

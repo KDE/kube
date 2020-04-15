@@ -34,7 +34,7 @@ using namespace Sink;
 
 TodoSourceModel::TodoSourceModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mCalendarCache{EntityCache<ApplicationDomain::Calendar, ApplicationDomain::Calendar::Color>::Ptr::create()}
+    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}, {ApplicationDomain::Calendar::Name::name}})}
 {
     mRefreshTimer.setSingleShot(true);
     QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &TodoSourceModel::updateFromSource);
@@ -156,7 +156,7 @@ int TodoSourceModel::columnCount(const QModelIndex &) const
 
 QByteArray TodoSourceModel::getColor(const QByteArray &calendar) const
 {
-    const auto color = mCalendarCache->getProperty(calendar, "color").toByteArray();
+    const auto color = mCalendarCache->getProperty(calendar, {ApplicationDomain::Calendar::Color::name}).toByteArray();
     if (color.isEmpty()) {
         qWarning() << "Failed to get color for calendar " << calendar;
     }
