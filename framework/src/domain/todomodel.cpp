@@ -215,8 +215,15 @@ QVariant TodoSourceModel::data(const QModelIndex &idx, int role) const
             if (todo.status == "COMPLETED") {
                 score -= 100;
             } else {
-                //TODO add if due date is soon
-                //TODO add more if overdue
+                //TODO add if from current account
+                //Due
+                if (todo.due.isValid() && (!todo.start.isValid() || todo.start > QDateTime::currentDateTime())) {
+                    score += 10;
+                    //Overdue
+                    if (todo.due >= QDateTime::currentDateTime()) {
+                        score += 50;
+                    }
+                }
                 if (todo.priority == 1) {
                     score += 50;
                 }
