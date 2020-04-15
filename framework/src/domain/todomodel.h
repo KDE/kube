@@ -50,6 +50,7 @@ public:
         CompletedDate,
         Date,
         Color,
+        Calendar,
         Status,
         Complete,
         Doing,
@@ -78,6 +79,7 @@ private:
     void refreshView();
     void updateFromSource();
     QByteArray getColor(const QByteArray &calendar) const;
+    QString getCalendarName(const QByteArray &calendar) const;
 
     QSharedPointer<QAbstractItemModel> mSourceModel;
     QSet<QByteArray> mCalendarFilter;
@@ -91,6 +93,7 @@ private:
         QDateTime completed;
         QSharedPointer<KCalCore::Incidence> incidence;
         QByteArray color;
+        QString calendarName;
         QString status;
         QSharedPointer<Sink::ApplicationDomain::Todo> domainObject;
         int priority;

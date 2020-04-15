@@ -114,7 +114,7 @@ void TodoSourceModel::updateFromSource()
             auto todo = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Todo::Ptr>();
             //Parse the todo
             if(auto icalTodo = KCalCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalCore::Todo>()) {
-                mTodos.append({icalTodo->dtStart(), icalTodo->dtDue(), icalTodo->completed(), icalTodo, getColor(todo->getCalendar()), todo->getStatus(), todo, todo->getPriority()});
+                mTodos.append({icalTodo->dtStart(), icalTodo->dtDue(), icalTodo->completed(), icalTodo, getColor(todo->getCalendar()), getCalendarName(todo->getCalendar()), todo->getStatus(), todo, todo->getPriority()});
             } else {
                 SinkWarning() << "Invalid ICal to process, ignoring...";
             }
@@ -163,6 +163,15 @@ QByteArray TodoSourceModel::getColor(const QByteArray &calendar) const
     return color;
 }
 
+QString TodoSourceModel::getCalendarName(const QByteArray &calendar) const
+{
+    const auto name = mCalendarCache->getProperty(calendar, {ApplicationDomain::Calendar::Name::name}).toString();
+    if (name.isEmpty()) {
+        qWarning() << "Failed to get name for calendar " << calendar;
+    }
+    return name;
+}
+
 QVariant TodoSourceModel::data(const QModelIndex &idx, int role) const
 {
     if (!hasIndex(idx.row(), idx.column())) {
@@ -191,6 +200,8 @@ QVariant TodoSourceModel::data(const QModelIndex &idx, int role) const
             return todo.completed;
         case Color:
             return todo.color;
+        case Calendar:
+            return todo.calendarName;
         case Status:
             return todo.status;
         case Complete:
@@ -233,6 +244,7 @@ QHash<int, QByteArray> TodoSourceModel::roleNames() const
         {CompletedDate, "completedDate"},
         {Date, "date"},
         {Color, "color"},
+        {Calendar, "calendar"},
         {Status, "status"},
         {Complete, "complete"},
         {Doing, "doing"},

@@ -307,6 +307,16 @@ Kube.View {
                             margins: Kube.Units.smallSpacing
                         }
 
+                        Rectangle {
+                            anchors {
+                                top: parent.top
+                                left: parent.left
+                                bottom:  parent.bottom
+                            }
+                            width: Kube.Units.smallSpacing
+
+                            color: model.color
+                        }
                         Column {
                             anchors {
                                 verticalCenter: parent.verticalCenter
@@ -323,6 +333,13 @@ Kube.View {
                                 font.bold: model.doing && !root.doing
                                 maximumLineCount: 2
                                 wrapMode: Text.WordWrap
+                                elide: Text.ElideRight
+                            }
+                            Kube.Label {
+                                text: model.calendar
+                                color: delegateRoot.textColor
+                                font.italic: true
+                                width: delegateRoot.width - Kube.Units.gridUnit * 3
                                 elide: Text.ElideRight
                             }
                         }
