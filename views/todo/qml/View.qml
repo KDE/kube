@@ -32,6 +32,9 @@ Kube.View {
     property bool doing: true
     property bool all: false
 
+    property date currentDate: new Date()
+    property bool autoUpdateDate: true
+
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
     // searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
 
@@ -101,6 +104,12 @@ Kube.View {
     }
 
     ButtonGroup { id: viewButtonGroup }
+
+    Timer {
+        running: autoUpdateDate
+        interval: 2000; repeat: true
+        onTriggered: root.currentDate = new Date()
+    }
 
     Controls1.SplitView {
         Layout.fillWidth: true
@@ -350,8 +359,34 @@ Kube.View {
                                 right: parent.right
                                 bottom: parent.bottom
                             }
-                            visible: model.date && !delegateRoot.buttonsVisible
-                            text: Qt.formatDateTime(model.date, "dd MMM yyyy")
+
+                            function sameDay(date1, date2) {
+                                return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
+                            }
+
+                            function daysSince(date1, date2) {
+                                //FIXME this is not going to work at month borders
+                                return (date1.getDate() - date2.getDate())
+                            }
+
+                            //TODO deal with start dates
+                            function formatDueDateTime(date) {
+                                const today = root.currentDate
+                                if (sameDay(date, today)) {
+                                    return qsTr("Due today")
+                                }
+                                const nextWeekToday = today.getTime() + ((24*60*60*1000) * 7);
+                                if (date.getTime() < nextWeekToday && date.getTime() > today.getTime()) {
+                                    return Qt.formatDateTime(date, "dddd") + qsTr(" (%1 days)").arg(daysSince(date, today))
+                                }
+                                if (date.getTime() < today.getTime()) {
+                                    return qsTr("Overdue for %1 days").arg(daysSince(today, date))
+                                }
+                                return Qt.formatDateTime(date, "dd MMM yyyy")
+                            }
+
+                            visible: !isNaN(model.date) && !delegateRoot.buttonsVisible
+                            text: (!isNaN(model.dueDate) && !model.complete) ? formatDueDateTime(model.dueDate) : Qt.formatDateTime(model.date, "dd MMM yyyy")
                             font.italic: true
                             color: delegateRoot.disabledTextColor
                             font.pointSize: Kube.Units.tinyFontSize

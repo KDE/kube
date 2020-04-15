@@ -228,6 +228,11 @@ static void createTodo(const QVariantMap &object, const QByteArray &calendarId, 
     calcoreEvent->setDtStart(object["starts"].toDateTime());
     calcoreEvent->setDtDue(object["due"].toDateTime());
 
+    if (object["doing"].toBool()) {
+        calcoreEvent->setCompleted(false);
+        calcoreEvent->setStatus(KCalCore::Incidence::StatusInProcess);
+    }
+
     sinkEvent.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
     sinkEvent.setCalendar(calendarId);

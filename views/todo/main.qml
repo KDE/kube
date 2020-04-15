@@ -68,13 +68,36 @@ ApplicationWindow {
                     {
                         resource: "caldavresource",
                         summary: "Todo start",
-                        starts: "2018-04-09T14:03:00",
+                        start: "2018-04-09T14:03:00",
                         description: "<pre>Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<pre>",
+                        doing: true
                     },
                     {
                         resource: "caldavresource",
                         summary: "Todo due",
-                        due: "2018-04-09T14:03:00",
+                        due: "2018-04-17T14:03:00",
+                        description: "Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n",
+                        doing: true
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo due today",
+                        due: "2018-04-11T14:03:00",
+                        description: "Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n",
+                        doing: true
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo overdue",
+                        due: "2018-04-03T14:03:00",
+                        description: "Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n",
+                        doing: true
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo start and due",
+                        start: "2018-04-13T14:03:00",
+                        due: "2018-04-14T14:03:00",
                         description: "Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n",
                     },
                     {
@@ -109,5 +132,7 @@ ApplicationWindow {
 
     View {
         anchors.fill: parent
+        currentDate: "2018-04-11T13:04:03"
+        autoUpdateDate: false
     }
 }
