@@ -337,7 +337,7 @@ Kube.View {
                             }
                             Kube.Label {
                                 text: model.calendar
-                                color: delegateRoot.textColor
+                                color: delegateRoot.disabledTextColor
                                 font.italic: true
                                 width: delegateRoot.width - Kube.Units.gridUnit * 3
                                 elide: Text.ElideRight

@@ -68,12 +68,21 @@ FocusScope {
 
                 Kube.SelectableLabel {
                     visible: !isNaN(controller.due)
-                    text: "Due on: " + controller.due.toLocaleString(Qt.locale(), "dd. MMMM")
+                    text: qsTr("Due on ") + controller.due.toLocaleString(Qt.locale(), "dd. MMMM")
+                    opacity: 0.75
                 }
 
                 Kube.SelectableLabel {
                     visible: !isNaN(controller.start)
-                    text: "Start on: " + controller.start.toLocaleString(Qt.locale(), "dd. MMMM")
+                    text: qsTr("Start on ") + controller.start.toLocaleString(Qt.locale(), "dd. MMMM")
+                    opacity: 0.75
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: Kube.Colors.textColor
+                    opacity: 0.5
                 }
 
                 Kube.TextArea {
