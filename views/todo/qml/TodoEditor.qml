@@ -32,6 +32,7 @@ FocusScope {
         doing: root.doing
     }
     property var accountId: null
+    property var currentFolder: null
 
     signal done()
 
@@ -138,6 +139,7 @@ FocusScope {
                     Layout.fillWidth: true
                     accountId: root.accountId
                     contentType: "todo"
+                    initialSelection: root.currentFolder
                     onSelected: {
                         if (!root.editMode) {
                             controller.calendar = calendar

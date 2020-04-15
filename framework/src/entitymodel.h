@@ -79,6 +79,8 @@ public:
 
     Q_INVOKABLE QVariantMap data(int row) const;
 
+    Q_INVOKABLE int findIndex(const QByteArray &property, const QVariant &value) const;
+
 signals:
     void initialItemsLoaded();
 

@@ -48,6 +48,16 @@ QHash<int, QByteArray> EntityModel::roleNames() const
     return mRoleNames;
 }
 
+int EntityModel::findIndex(const QByteArray &property, const QVariant &value) const
+{
+    for (int i = 0; i < rowCount(); i++) {
+        if (data(index(i, 0), mRoleNames.key(property)).toString() == value.toString()) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 QVariant EntityModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);

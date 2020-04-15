@@ -26,6 +26,7 @@ Kube.ComboBox {
 
     property alias accountId: calendarModel.accountId
     property string contentType: "event"
+    property var initialSelection: null
 
     signal selected(var calendar)
 
@@ -35,11 +36,14 @@ Kube.ComboBox {
         roles: ["name", "color"]
         sortRole: "name"
         filter: {"contentTypes": contentType, "enabled": true}
-        //Set initial selection.
-        //onCurrentIndexChanged will not work because the as more items are added the currentIndex changes,
-        //but depending on the sorting it will point to a different item (Which is really a bug of the model or ComboBox).
         onInitialItemsLoaded: {
+            if (root.initialSelection) {
+                root.currentIndex = calendarModel.findIndex("identifier", initialSelection)
+            }
             if (currentIndex >= 0) {
+                //Set initial selection.
+                //onCurrentIndexChanged will not work because the as more items are added the currentIndex changes,
+                //but depending on the sorting it will point to a different item (Which is really a bug of the model or ComboBox).
                 root.selected(calendarModel.data(currentIndex).object)
             }
         }

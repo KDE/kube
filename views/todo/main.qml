@@ -87,7 +87,15 @@ ApplicationWindow {
                 id: "calendar16",
                 resource: "caldavresource",
                 name: "Test Calendar16",
-                color: "#f67400"
+                enabled: true,
+                color: "#f67400",
+                todos: [
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo from another list",
+                        description: "Stuff"
+                    }
+                ]
             },
             {
                 id: "account2calendar",

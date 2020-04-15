@@ -429,6 +429,7 @@ Kube.View {
                 id: editor
                 anchors.fill: parent
                 accountId: root.currentAccount
+                currentFolder: root.currentFolder
                 doing: doingViewButton.checked
                 onDone: popup.close()
             }
