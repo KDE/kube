@@ -274,6 +274,7 @@ KubeComponent.Kube {
                 name: "Calendar",
                 color: "#af1a6a",
                 contentTypes: ["event"],
+                enabled: true,
                 events: [
                     {
                         summary: "Monday morning standup",
@@ -326,6 +327,7 @@ KubeComponent.Kube {
                 name: "Vacations",
                 color: "#00cc4b",
                 contentTypes: ["event"],
+                enabled: true,
                 events: [
                     {
                         summary: "Sandra is off",
@@ -354,23 +356,29 @@ KubeComponent.Kube {
                 name: "Tasks",
                 color: "#af1a6a",
                 contentTypes: ["todo"],
+                enabled: true,
                 todos: [
                     {
                         summary: "Prepare meeting",
                         starts: "2018-04-09T14:03:00",
+                        doing: true
                     },
                     {
                         summary: "Release Kube",
                         due: "2018-04-09T14:03:00",
+                        doing: true
                     },
                     {
-                        summary: "Blog about latest improvements"
+                        summary: "Blog about latest improvements",
+                        doing: true
                     },
                     {
-                        summary: "Pay bills"
+                        summary: "Pay bills",
+                        doing: true
                     },
                     {
-                        summary: "Get a gift for Pam"
+                        summary: "Get a gift for Pam",
+                        doing: true
                     },
                 ],
             },
@@ -378,7 +386,8 @@ KubeComponent.Kube {
                 id: "account2calendar",
                 resource: "resource2",
                 name: "Account2Calendar",
-                color: "#f67400"
+                color: "#f67400",
+                enabled: true
             }],
         }
         TestStore.setup(initialState)
