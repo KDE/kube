@@ -231,7 +231,7 @@ FocusScope {
                         }
 
                         visible: !delegateRoot.buttonsVisible
-                        text: formatDateTime(model.date, "dd MMM yyyy")
+                        text: formatDateTime(model.date)
                         font.italic: true
                         color: delegateRoot.disabledTextColor
                         font.pointSize: Kube.Units.tinyFontSize

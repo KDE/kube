@@ -117,7 +117,7 @@ QValidator *AccountSettings::imapServerValidator() const
             Q_UNUSED(pos);
             // imaps://mainserver.example.net:475
             const QUrl url(input);
-            static QSet<QString> validProtocols = QSet<QString>() << "imap" << "imaps";
+            static QSet<QString> validProtocols{{"imap"}, {"imaps"}};
             if (url.isValid() && validProtocols.contains(url.scheme().toLower())) {
                 return Acceptable;
             } else {
