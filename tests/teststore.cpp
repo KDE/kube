@@ -123,6 +123,7 @@ static void createMail(const QVariantMap &object, const QByteArray &folder = {},
     mail.setMimeMessage(msg->encodedContent(true));
     mail.setUnread(object["unread"].toBool());
     mail.setDraft(object["draft"].toBool());
+    mail.setImportant(object["important"].toBool());
     if (!folder.isEmpty()) {
         mail.setFolder(folder);
     }

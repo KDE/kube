@@ -27,7 +27,8 @@ import org.kube.framework 1.0 as Kube
 
 Kube.View {
     id: root
-    property variant currentFolder: null
+    property var currentFolder: null
+    property bool important: false
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
@@ -43,6 +44,12 @@ Kube.View {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": Kube.Context.currentAccountId, "type": "folder"})
         } else {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": Kube.Context.currentAccountId})
+        }
+    }
+
+    onCurrentFolderChanged: {
+        if (!!currentFolder) {
+            root.important = false
         }
     }
 
@@ -155,37 +162,83 @@ Kube.View {
                     top: newMailButton.bottom
                     topMargin: Kube.Units.largeSpacing
                     bottom: statusBarContainer.top
-                    left: newMailButton.left
+                    left: parent.left
+                    leftMargin: Kube.Units.largeSpacing
                     right: parent.right
+                    rightMargin: Kube.Units.largeSpacing
                 }
-                delegate: Kube.FolderListView {
-                    objectName: "folderListView"
-                    accountId: parent.accountId
 
-                    function indexSelected(currentIndex) {
-                        var folder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
-                        Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": folder,
-                                                                                "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
-                        root.currentFolder = folder
+                property var currentListView: null
+
+                function clearSelection() {
+                    if (accountFolderview.currentListView) {
+                        accountFolderview.currentListView.clearSelection()
                     }
+                }
+
+                delegate: ColumnLayout {
+                    id: delegateRoot
 
                     //Necessary to re-select on account change
                     function currentChanged() {
                         if (isCurrent) {
-                            indexSelected(currentIndex)
+                            listView.indexSelected(currentIndex)
                         }
                     }
 
-                    onCurrentIndexChanged: {
-                        if (isCurrent) {
-                            indexSelected(currentIndex)
+                    property Component buttonDelegate: Row {
+                        Kube.IconButton {
+                            height: Kube.Units.gridUnit
+                            padding: 0
+                            iconName: Kube.Icons.markImportant_inverted
+                            checkable: true
+                            checked: root.important
+                            onClicked: {
+                                root.important = true
+                                accountFolderview.clearSelection()
+                            }
                         }
+                        //TODO: edit mode
+                        // Kube.IconButton {
+                        //     height: Kube.Units.gridUnit
+                        //     padding: 0
+                        //     iconName: Kube.Icons.overflowMenu_inverted
+                        //     onClicked: listView.editMode = !listView.editMode;
+                        //     checkable: true
+                        //     checked: listView.editMode
+                        // }
                     }
 
-                    onDropped: {
-                        var folder = model.data(index, Kube.FolderListModel.DomainObject)
-                        Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": folder})
-                        drop.accept(Qt.MoveAction)
+                    Kube.FolderListView {
+                        id: listView
+                        objectName: "folderListView"
+                        accountId: delegateRoot.parent.accountId
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        function indexSelected(currentIndex) {
+                            if (currentIndex.valid) {
+                                root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
+                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": root.currentFolder,
+                                                                                        "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
+                            } else {
+                                root.currentFolder = null
+                            }
+                        }
+
+                        onCurrentIndexChanged: {
+                            accountFolderview.currentListView = listView
+                            if (isCurrent) {
+                                indexSelected(currentIndex)
+                            }
+                        }
+
+                        onDropped: {
+                            var folder = model.data(index, Kube.FolderListModel.DomainObject)
+                            Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": folder})
+                            drop.accept(Qt.MoveAction)
+                        }
                     }
                 }
             }
@@ -239,6 +292,7 @@ Kube.View {
                 anchors.fill: parent
                 activeFocusOnTab: true
                 Layout.minimumWidth: Kube.Units.gridUnit * 10
+                showImportant: root.important
                 Kube.Listener {
                     filter: Kube.Messages.folderSelection
                     onMessageReceived: {

@@ -25,10 +25,11 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
     //Private properties
-    property variant parentFolder: null
-    property variant currentMail: null
-    property alias filter: mailListModel.filter
-    property alias threaded: mailListModel.threaded
+    property var parentFolder: null
+    property var currentMail: null
+    property bool showImportant: false
+    property string filter: ""
+    property bool threaded: false
 
     onParentFolderChanged: {
         currentMail = null
@@ -115,7 +116,12 @@ FocusScope {
 
             model: Kube.MailListModel {
                 id: mailListModel
-                parentFolder: root.parentFolder
+                filter: {
+                    "folder": root.parentFolder,
+                    "important": root.showImportant,
+                    "string": root.filter,
+                    "threaded": root.threaded
+                }
             }
 
             delegate: Kube.ListDelegate {

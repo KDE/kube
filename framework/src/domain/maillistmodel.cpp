@@ -35,7 +35,7 @@ MailListModel::~MailListModel()
 
 }
 
-void MailListModel::setFilter(const QString &filter)
+void MailListModel::setFilterString(const QString &filter)
 {
     if (filter.length() < 3 && !filter.isEmpty()) {
         return;
@@ -68,7 +68,7 @@ void MailListModel::setFilter(const QString &filter)
     mQuery = oldQuery;
 }
 
-QString MailListModel::filter() const
+QString MailListModel::filterString() const
 {
      return {};
 }
@@ -289,6 +289,24 @@ QVariant MailListModel::parentFolder() const
     return QVariant();
 }
 
+void MailListModel::setFilter(const QVariantMap &filter)
+{
+    using namespace Sink::ApplicationDomain;
+    if (filter.contains("important") && filter.value("important").toBool()) {
+        setShowImportant(true);
+        return;
+    }
+    if (filter.contains("folder")) {
+        setParentFolder(filter.value("folder"));
+        return;
+    }
+}
+
+QVariantMap MailListModel::filter() const
+{
+    return {};
+}
+
 void MailListModel::setMail(const QVariant &variant)
 {
     using namespace Sink::ApplicationDomain;
@@ -444,6 +462,45 @@ void MailListModel::setShowInbox(bool)
 }
 
 bool MailListModel::showInbox() const
+{
+    return false;
+}
+
+void MailListModel::setShowImportant(bool show)
+{
+    if (!show) {
+        return;
+    }
+    using namespace Sink::ApplicationDomain;
+
+    mCurrentQueryItem.clear();
+    Sink::Query query;
+    query.setFlags(Sink::Query::LiveQuery);
+    query.filter<Sink::ApplicationDomain::Mail::Important>(true);
+    query.sort<Mail::Date>();
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::Draft>();
+    query.request<Mail::Folder>();
+    query.request<Mail::Sent>();
+    query.request<Mail::Trash>();
+    query.request<Mail::MimeMessage>();
+    query.request<Mail::FullPayloadAvailable>();
+    mFetchMails = true;
+    mFetchedMails.clear();
+    qDebug() << "Running mail query for drafts: ";
+    //Latest mail at the top
+    sort(0, Qt::DescendingOrder);
+    runQuery(query);
+}
+
+bool MailListModel::showImportant() const
 {
     return false;
 }

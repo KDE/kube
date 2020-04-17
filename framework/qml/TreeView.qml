@@ -26,10 +26,14 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
     property var model: null
-    property var currentIndex: modelAdaptor.mapRowToModelIndex(listView.currentIndex)
+    property var currentIndex: null
     property alias count: listView.count
 
     signal dropped(var index, var drop)
+
+    function clearSelection() {
+        listView.currentIndex = -1
+    }
 
     function selectRootIndex() {
         if (listView.count >= 1) {
@@ -54,6 +58,10 @@ FocusScope {
         model: Kube.TreeModelAdaptor {
             id: modelAdaptor
             model: root.model
+        }
+
+        onCurrentIndexChanged: {
+            root.currentIndex = modelAdaptor.mapRowToModelIndex(listView.currentIndex)
         }
 
         ScrollBar.vertical: Kube.ScrollBar { invertedColors: true }
