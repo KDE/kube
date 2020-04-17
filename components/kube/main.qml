@@ -104,7 +104,7 @@ KubeComponent.Kube {
                             date: setHour(now, 18),
                             from: "\"Andrea Mueller\"<andrea@example.org>",
                             subject: "RE: Kube 0.8 is out!",
-                            body: "Looking good indeed =)",
+                            body: "Looking good indeed =)\n\n> Hey,\n\n> Did you see? Kube 0.8 is finally out!\n\n> Get it now on www.kube-project.com\n\n> Cheers, Jane",
                             to: ["\"Jane Doe\"<jane@example.org>", "\"John Doe\"<john@example.org>"],
                             important: true,
                             unread: false
@@ -381,6 +381,20 @@ KubeComponent.Kube {
                         doing: true
                     },
                 ],
+            },
+            {
+                id: "calendar3",
+                resource: "resource1",
+                name: "My Project",
+                color: "#f67400",
+                contentTypes: ["todo"],
+                enabled: true,
+                todos: [
+                    {
+                        summary: "Draft project plan",
+                        doing: true
+                    }
+                ]
             },
             {
                 id: "account2calendar",
