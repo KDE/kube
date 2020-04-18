@@ -62,7 +62,6 @@ Kube.InlineAccountSwitcher {
         Layout.fillWidth: true
         Layout.maximumHeight: Math.min(contentHeight, parent.height - Kube.Units.gridUnit)
         Layout.preferredHeight: contentHeight
-        spacing: Kube.Units.smallSpacing
 
         onCurrentItemChanged: {
             root.currentListView = listView
@@ -93,7 +92,7 @@ Kube.InlineAccountSwitcher {
             selectionEnabled: root.selectionEnabled
 
             width: listView.availableWidth
-            height: Kube.Units.gridUnit
+            height: Kube.Units.gridUnit * 1.5
             hoverEnabled: true
             property bool isActive: listView.currentIndex === index
 
@@ -105,7 +104,10 @@ Kube.InlineAccountSwitcher {
             }
 
             RowLayout {
-                anchors.fill: parent
+                anchors {
+                    fill: parent
+                    leftMargin: Kube.Units.smallSpacing
+                }
                 spacing: Kube.Units.smallSpacing
                 Kube.CheckBox {
                     id: checkBox

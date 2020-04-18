@@ -107,7 +107,7 @@ FocusScope {
             RowLayout {
                 anchors {
                     fill: parent
-                    leftMargin: 2 + (model._q_TreeView_ItemDepth + 1) * Kube.Units.largeSpacing
+                    leftMargin: Kube.Units.smallSpacing + (model._q_TreeView_ItemDepth) * Kube.Units.largeSpacing
                 }
                 spacing: Kube.Units.smallSpacing
                 Kube.Label {
