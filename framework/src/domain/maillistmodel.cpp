@@ -295,14 +295,31 @@ QVariant MailListModel::parentFolder() const
 void MailListModel::setFilter(const QVariantMap &filter)
 {
     using namespace Sink::ApplicationDomain;
+    if (filter.contains("account")) {
+        mAccountId = filter.value("account").toByteArray();
+    }
+
     if (filter.contains("important") && filter.value("important").toBool()) {
         setShowImportant(true);
         return;
     }
-    if (filter.contains("folder")) {
+    if (filter.contains("drafts") && filter.value("drafts").toBool()) {
+        setShowDrafts(true);
+        return;
+    }
+    if (filter.contains("inbox") && filter.value("inbox").toBool()) {
+        qWarning() << "inbox";
+        setShowInbox(true);
+        return;
+    }
+    if (filter.contains("folder") && filter.value("folder").value<Folder::Ptr>()) {
         setParentFolder(filter.value("folder"));
         return;
     }
+    //Clear
+    mCurrentQueryItem.clear();
+    setSourceModel(nullptr);
+    return;
 }
 
 QVariantMap MailListModel::filter() const
@@ -426,6 +443,7 @@ void MailListModel::setShowImportant(bool show)
     mCurrentQueryItem.clear();
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
+    query.resourceFilter<SinkResource::Account>(mAccountId);
     query.filter<Sink::ApplicationDomain::Mail::Important>(true);
     query.sort<Mail::Date>();
     requestHeaders(query);

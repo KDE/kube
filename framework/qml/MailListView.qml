@@ -27,6 +27,7 @@ FocusScope {
     //Private properties
     property var parentFolder: null
     property var currentMail: null
+    property var currentAccount: null
     property bool showImportant: false
     property string filter: ""
     property bool threaded: false
@@ -120,7 +121,8 @@ FocusScope {
                     "folder": root.parentFolder,
                     "important": root.showImportant,
                     "string": root.filter,
-                    "threaded": root.threaded
+                    "threaded": root.threaded,
+                    "account": root.currentAccount,
                 }
             }
 

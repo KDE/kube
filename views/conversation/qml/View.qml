@@ -185,10 +185,16 @@ Kube.View {
                 delegate: ColumnLayout {
                     id: delegateRoot
 
-                    //Necessary to re-select on account change
                     function currentChanged() {
-                        if (isCurrent) {
-                            listView.indexSelected(currentIndex)
+                        if (delegateRoot.parent.isCurrent) {
+                            //Reset important on account switch
+                            root.important = false
+                            //Necessary to re-select folder on account change (so the maillist is updated)
+                            listView.indexSelected(listView.currentIndex)
+                            //To ensure we always have something selected in the UI as well
+                            if (!!listView.currentIndex) {
+                                listView.selectRootIndex()
+                            }
                         }
                     }
 
@@ -229,18 +235,20 @@ Kube.View {
                         Layout.fillHeight: true
 
                         function indexSelected(currentIndex) {
-                            if (currentIndex.valid) {
+                            if (!!currentIndex && currentIndex.valid) {
                                 root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
                                 Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": root.currentFolder,
                                                                                         "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
                             } else {
                                 root.currentFolder = null
+                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": null,
+                                                                                        "trash": false})
                             }
                         }
 
                         onCurrentIndexChanged: {
                             accountFolderview.currentListView = listView
-                            if (isCurrent) {
+                            if (delegateRoot.parent.isCurrent) {
                                 indexSelected(currentIndex)
                             }
                         }
@@ -304,6 +312,7 @@ Kube.View {
                 activeFocusOnTab: true
                 Layout.minimumWidth: Kube.Units.gridUnit * 10
                 showImportant: root.important
+                currentAccount: Kube.Context.currentAccountId
                 Kube.Listener {
                     filter: Kube.Messages.folderSelection
                     onMessageReceived: {
