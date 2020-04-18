@@ -18,7 +18,6 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0
 import QtTest 1.0
 import org.kube.test 1.0
 import "../qml"
@@ -26,9 +25,7 @@ import "../applicationstate.js" as State
 
 import org.kube.components.kube 1.0 as KubeComponent
 
-
-
-TestCase {
+ViewTestCase {
     id: testCase
     width: app.width
     height: app.height

@@ -23,7 +23,7 @@ import org.kube.framework 1.0 as Kube
 import org.kube.test 1.0
 import "../qml"
 
-TestCase {
+ViewTestCase {
     id: viewmanagerTestcase
     width: 400
     height: 400
