@@ -176,6 +176,12 @@ Kube.View {
                     }
                 }
 
+                function selectRootIndex() {
+                    if (accountFolderview.currentListView) {
+                        accountFolderview.currentListView.selectRootIndex()
+                    }
+                }
+
                 delegate: ColumnLayout {
                     id: delegateRoot
 
@@ -191,11 +197,16 @@ Kube.View {
                             height: Kube.Units.gridUnit
                             padding: 0
                             iconName: Kube.Icons.markImportant_inverted
-                            checkable: true
                             checked: root.important
-                            onClicked: {
-                                root.important = true
-                                accountFolderview.clearSelection()
+                            checkable: true
+                            onToggled: {
+                                if (checked) {
+                                    root.important = true
+                                    accountFolderview.clearSelection()
+                                } else {
+                                    root.important = true
+                                    accountFolderview.selectRootIndex()
+                                }
                             }
                         }
                         //TODO: edit mode
