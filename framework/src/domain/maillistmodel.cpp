@@ -403,10 +403,9 @@ void MailListModel::setShowInbox(bool)
     query.setFlags(Sink::Query::LiveQuery);
     query.filter<Sink::ApplicationDomain::Mail::Folder>(folderQuery);
     query.sort<Mail::Date>();
-    requestFullMail(query);
-    mFetchMails = true;
+    requestHeaders(query);
+    mFetchMails = false;
     mFetchedMails.clear();
-    qDebug() << "Running mail query for drafts: ";
     //Latest mail at the top
     sort(0, Qt::DescendingOrder);
     runQuery(query);
@@ -429,8 +428,8 @@ void MailListModel::setShowImportant(bool show)
     query.setFlags(Sink::Query::LiveQuery);
     query.filter<Sink::ApplicationDomain::Mail::Important>(true);
     query.sort<Mail::Date>();
-    requestFullMail(query);
-    mFetchMails = true;
+    requestHeaders(query);
+    mFetchMails = false;
     mFetchedMails.clear();
     qDebug() << "Running mail query for drafts: ";
     //Latest mail at the top
