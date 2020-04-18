@@ -35,6 +35,32 @@ MailListModel::~MailListModel()
 
 }
 
+
+static void requestHeaders(Sink::Query &query)
+{
+    using namespace Sink::ApplicationDomain;
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::Draft>();
+    query.request<Mail::Folder>();
+    query.request<Mail::Sent>();
+    query.request<Mail::Trash>();
+}
+
+static void requestFullMail(Sink::Query &query)
+{
+    using namespace Sink::ApplicationDomain;
+    requestHeaders(query);
+    query.request<Mail::MimeMessage>();
+    query.request<Mail::FullPayloadAvailable>();
+}
+
 void MailListModel::setFilterString(const QString &filter)
 {
     if (filter.length() < 3 && !filter.isEmpty()) {
@@ -47,19 +73,7 @@ void MailListModel::setFilterString(const QString &filter)
         query.setFlags(Sink::Query::NoFlags);
         auto f = filter;
         if (mCurrentQueryItem.isEmpty()) {
-            using namespace Sink::ApplicationDomain;
-            query.request<Mail::Subject>();
-            query.request<Mail::Sender>();
-            query.request<Mail::To>();
-            query.request<Mail::Cc>();
-            query.request<Mail::Bcc>();
-            query.request<Mail::Date>();
-            query.request<Mail::Unread>();
-            query.request<Mail::Important>();
-            query.request<Mail::Draft>();
-            query.request<Mail::Sent>();
-            query.request<Mail::Trash>();
-            query.request<Mail::Folder>();
+            requestHeaders(query);
         }
         query.filter({}, Sink::QueryBase::Comparator(f, Sink::QueryBase::Comparator::Fulltext));
         query.limit(0);
@@ -265,18 +279,7 @@ void MailListModel::setParentFolder(const QVariant &parentFolder)
 
     query.setFlags(Sink::Query::LiveQuery);
     query.limit(100);
-    query.request<Mail::Subject>();
-    query.request<Mail::Sender>();
-    query.request<Mail::To>();
-    query.request<Mail::Cc>();
-    query.request<Mail::Bcc>();
-    query.request<Mail::Date>();
-    query.request<Mail::Unread>();
-    query.request<Mail::Important>();
-    query.request<Mail::Draft>();
-    query.request<Mail::Sent>();
-    query.request<Mail::Trash>();
-    query.request<Mail::Folder>();
+    requestHeaders(query);
     mFetchMails = false;
     qDebug() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
     //Latest mail on top
@@ -322,20 +325,7 @@ void MailListModel::setMail(const QVariant &variant)
     mCurrentQueryItem = mail->identifier();
     Sink::Query query = Sink::StandardQueries::completeThread(*mail);
     query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
-    query.request<Mail::Subject>();
-    query.request<Mail::Sender>();
-    query.request<Mail::To>();
-    query.request<Mail::Cc>();
-    query.request<Mail::Bcc>();
-    query.request<Mail::Date>();
-    query.request<Mail::Unread>();
-    query.request<Mail::Important>();
-    query.request<Mail::Draft>();
-    query.request<Mail::Folder>();
-    query.request<Mail::Sent>();
-    query.request<Mail::Trash>();
-    query.request<Mail::MimeMessage>();
-    query.request<Mail::FullPayloadAvailable>();
+    requestFullMail(query);
     mFetchMails = true;
     mFetchedMails.clear();
     qDebug() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
@@ -364,20 +354,7 @@ void MailListModel::setSingleMail(const QVariant &variant)
     mCurrentQueryItem = mail->identifier();
     Sink::Query query{*mail};
     query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
-    query.request<Mail::Subject>();
-    query.request<Mail::Sender>();
-    query.request<Mail::To>();
-    query.request<Mail::Cc>();
-    query.request<Mail::Bcc>();
-    query.request<Mail::Date>();
-    query.request<Mail::Unread>();
-    query.request<Mail::Important>();
-    query.request<Mail::Draft>();
-    query.request<Mail::Folder>();
-    query.request<Mail::Sent>();
-    query.request<Mail::Trash>();
-    query.request<Mail::MimeMessage>();
-    query.request<Mail::FullPayloadAvailable>();
+    requestFullMail(query);
     mFetchMails = true;
     mFetchedMails.clear();
     qDebug() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
@@ -399,20 +376,7 @@ void MailListModel::setShowDrafts(bool)
     query.setFlags(Sink::Query::LiveQuery);
     query.filter<Mail::Draft>(true);
     query.filter<Mail::Trash>(false);
-    query.request<Mail::Subject>();
-    query.request<Mail::Sender>();
-    query.request<Mail::To>();
-    query.request<Mail::Cc>();
-    query.request<Mail::Bcc>();
-    query.request<Mail::Date>();
-    query.request<Mail::Unread>();
-    query.request<Mail::Important>();
-    query.request<Mail::Draft>();
-    query.request<Mail::Folder>();
-    query.request<Mail::Sent>();
-    query.request<Mail::Trash>();
-    query.request<Mail::MimeMessage>();
-    query.request<Mail::FullPayloadAvailable>();
+    requestFullMail(query);
     mFetchMails = true;
     mFetchedMails.clear();
     qDebug() << "Running mail query for drafts: ";
@@ -439,20 +403,7 @@ void MailListModel::setShowInbox(bool)
     query.setFlags(Sink::Query::LiveQuery);
     query.filter<Sink::ApplicationDomain::Mail::Folder>(folderQuery);
     query.sort<Mail::Date>();
-    query.request<Mail::Subject>();
-    query.request<Mail::Sender>();
-    query.request<Mail::To>();
-    query.request<Mail::Cc>();
-    query.request<Mail::Bcc>();
-    query.request<Mail::Date>();
-    query.request<Mail::Unread>();
-    query.request<Mail::Important>();
-    query.request<Mail::Draft>();
-    query.request<Mail::Folder>();
-    query.request<Mail::Sent>();
-    query.request<Mail::Trash>();
-    query.request<Mail::MimeMessage>();
-    query.request<Mail::FullPayloadAvailable>();
+    requestFullMail(query);
     mFetchMails = true;
     mFetchedMails.clear();
     qDebug() << "Running mail query for drafts: ";
@@ -478,20 +429,7 @@ void MailListModel::setShowImportant(bool show)
     query.setFlags(Sink::Query::LiveQuery);
     query.filter<Sink::ApplicationDomain::Mail::Important>(true);
     query.sort<Mail::Date>();
-    query.request<Mail::Subject>();
-    query.request<Mail::Sender>();
-    query.request<Mail::To>();
-    query.request<Mail::Cc>();
-    query.request<Mail::Bcc>();
-    query.request<Mail::Date>();
-    query.request<Mail::Unread>();
-    query.request<Mail::Important>();
-    query.request<Mail::Draft>();
-    query.request<Mail::Folder>();
-    query.request<Mail::Sent>();
-    query.request<Mail::Trash>();
-    query.request<Mail::MimeMessage>();
-    query.request<Mail::FullPayloadAvailable>();
+    requestFullMail(query);
     mFetchMails = true;
     mFetchedMails.clear();
     qDebug() << "Running mail query for drafts: ";
@@ -521,20 +459,7 @@ void MailListModel::setEntityId(const QString &id)
     Sink::Query query;
     query.setFlags(Sink::Query::LiveQuery);
     query.filter(id.toUtf8());
-    query.request<Mail::Subject>();
-    query.request<Mail::Sender>();
-    query.request<Mail::To>();
-    query.request<Mail::Cc>();
-    query.request<Mail::Bcc>();
-    query.request<Mail::Date>();
-    query.request<Mail::Unread>();
-    query.request<Mail::Important>();
-    query.request<Mail::Draft>();
-    query.request<Mail::Folder>();
-    query.request<Mail::Sent>();
-    query.request<Mail::Trash>();
-    query.request<Mail::MimeMessage>();
-    query.request<Mail::FullPayloadAvailable>();
+    requestHeaders(query);
     mFetchMails = true;
     mFetchedMails.clear();
     // Latest mail at the top
