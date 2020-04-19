@@ -34,7 +34,6 @@ Kube.View {
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
 
     onFilterChanged: {
-        mailListView.filter = filter
         Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
     }
 
@@ -313,6 +312,7 @@ Kube.View {
                 Layout.minimumWidth: Kube.Units.gridUnit * 10
                 showImportant: root.important
                 currentAccount: Kube.Context.currentAccountId
+                filter: root.filter
                 Kube.Listener {
                     filter: Kube.Messages.folderSelection
                     onMessageReceived: {
@@ -339,9 +339,17 @@ Kube.View {
                 filter: Kube.Messages.mailSelection
                 onMessageReceived: {
                     if (!mailListView.threaded) {
-                        mailViewModel.singleMail = message.mail
+                        mailViewModel.filter = {
+                            "singleMail": message.mail,
+                            "headersOnly": false,
+                            "fetchMails": true
+                        }
                     } else {
-                        mailViewModel.mail = message.mail
+                        mailViewModel.filter = {
+                            "mail": message.mail,
+                            "headersOnly": false,
+                            "fetchMails": true
+                        }
                     }
                 }
             }

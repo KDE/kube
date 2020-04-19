@@ -51,7 +51,7 @@ ViewTestCase {
         // });
         var image = grabImage(app.contentItem)
         // console.warn("Image ", image.size, app.contentItem.height)
-        image.save("something.png")
+        image.save("conversationview.png")
         // wait(9999999)
     }
 }

@@ -29,8 +29,8 @@ FocusScope {
     property var currentMail: null
     property var currentAccount: null
     property bool showImportant: false
-    property string filter: ""
-    property bool threaded: false
+    property var filter: null
+    property alias threaded: mailListModel.threaded
 
     onParentFolderChanged: {
         currentMail = null
@@ -121,8 +121,9 @@ FocusScope {
                     "folder": root.parentFolder,
                     "important": root.showImportant,
                     "string": root.filter,
-                    "threaded": root.threaded,
                     "account": root.currentAccount,
+                    "headersOnly": true,
+                    "fetchMails": false
                 }
             }
 

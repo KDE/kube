@@ -61,32 +61,6 @@ static void requestFullMail(Sink::Query &query)
     query.request<Mail::FullPayloadAvailable>();
 }
 
-void MailListModel::setFilterString(const QString &filter)
-{
-    if (filter.length() < 3 && !filter.isEmpty()) {
-        return;
-    }
-    auto oldQuery = mQuery;
-    auto query = mQuery;
-    if (!filter.isEmpty()) {
-        //Avoid live updates until we properly filter updates
-        query.setFlags(Sink::Query::NoFlags);
-        auto f = filter;
-        if (mCurrentQueryItem.isEmpty()) {
-            requestHeaders(query);
-        }
-        query.filter({}, Sink::QueryBase::Comparator(f, Sink::QueryBase::Comparator::Fulltext));
-        query.limit(0);
-    }
-    runQuery(query);
-    mQuery = oldQuery;
-}
-
-QString MailListModel::filterString() const
-{
-     return {};
-}
-
 QHash< int, QByteArray > MailListModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
@@ -230,6 +204,9 @@ bool MailListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourcePar
 
 void MailListModel::runQuery(const Sink::Query &query)
 {
+    if (mQuery == query) {
+        return;
+    }
     if (query.getBaseFilters().isEmpty() && query.ids().isEmpty()) {
         mQuery = {};
         m_model.clear();
@@ -241,85 +218,130 @@ void MailListModel::runQuery(const Sink::Query &query)
     }
 }
 
-void MailListModel::setParentFolder(const QVariant &parentFolder)
-{
-    using namespace Sink::ApplicationDomain;
-    auto folder = parentFolder.value<Folder::Ptr>();
-    if (!folder) {
-        mCurrentQueryItem.clear();
-        setSourceModel(nullptr);
-        return;
-    }
-    if (mCurrentQueryItem == folder->identifier()) {
-        return;
-    }
-    mCurrentQueryItem = folder->identifier();
-    const auto specialPurpose = folder->getSpecialPurpose();
-    mIsThreaded = !(specialPurpose.contains(SpecialPurpose::Mail::drafts) ||
-                              specialPurpose.contains(SpecialPurpose::Mail::sent));
-
-    Sink::Query query = [&] {
-        if (mIsThreaded) {
-            return Sink::StandardQueries::threadLeaders(*folder);
-        } else {
-            Sink::Query query;
-            query.setId("threadleaders-unthreaded");
-            if (!folder->resourceInstanceIdentifier().isEmpty()) {
-                query.resourceFilter(folder->resourceInstanceIdentifier());
-            }
-            query.filter<Sink::ApplicationDomain::Mail::Folder>(*folder);
-            query.sort<Sink::ApplicationDomain::Mail::Date>();
-            return query;
-        }
-    }();
-    if (!folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash)) {
-        //Filter trash if this is not a trash folder
-        query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
-    }
-
-    query.setFlags(Sink::Query::LiveQuery);
-    query.limit(100);
-    requestHeaders(query);
-    mFetchMails = false;
-    qDebug() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
-    //Latest mail on top
-    sort(0, Qt::DescendingOrder);
-    runQuery(query);
-}
-
-QVariant MailListModel::parentFolder() const
-{
-    return QVariant();
-}
-
 void MailListModel::setFilter(const QVariantMap &filter)
 {
+    qDebug() << "MailListModel::setFilter " << filter;
     using namespace Sink::ApplicationDomain;
-    if (filter.contains("account")) {
-        mAccountId = filter.value("account").toByteArray();
+    bool validQuery = false;
+    Sink::Query query;
+
+    //Base queries
+    if (filter.contains("folder") && filter.value("folder").value<Folder::Ptr>()) {
+        auto folder = filter.value("folder").value<Folder::Ptr>();
+        const auto specialPurpose = folder->getSpecialPurpose();
+        mIsThreaded = !(specialPurpose.contains(SpecialPurpose::Mail::drafts) ||
+                                specialPurpose.contains(SpecialPurpose::Mail::sent));
+
+        query = [&] {
+            if (mIsThreaded) {
+                return Sink::StandardQueries::threadLeaders(*folder);
+            } else {
+                Sink::Query query;
+                query.setId("threadleaders-unthreaded");
+                if (!folder->resourceInstanceIdentifier().isEmpty()) {
+                    query.resourceFilter(folder->resourceInstanceIdentifier());
+                }
+                query.filter<Sink::ApplicationDomain::Mail::Folder>(*folder);
+                query.sort<Sink::ApplicationDomain::Mail::Date>();
+                return query;
+            }
+        }();
+        if (!folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash)) {
+            //Filter trash if this is not a trash folder
+            query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
+        }
+
+        query.setFlags(Sink::Query::LiveQuery);
+        query.limit(100);
+
+        qDebug() << "Running folder query: " << folder->resourceInstanceIdentifier() << folder->identifier();
+        //Latest mail on top
+        sort(0, Qt::DescendingOrder);
+        validQuery = true;
     }
 
-    if (filter.contains("important") && filter.value("important").toBool()) {
-        setShowImportant(true);
-        return;
+    if (filter.value("important").toBool()) {
+        query.setFlags(Sink::Query::LiveQuery);
+        query.filter<Sink::ApplicationDomain::Mail::Important>(true);
+        query.sort<Mail::Date>();
+        //Latest mail at the top
+        sort(0, Qt::DescendingOrder);
+        validQuery = true;
     }
-    if (filter.contains("drafts") && filter.value("drafts").toBool()) {
-        setShowDrafts(true);
-        return;
+
+    if (filter.value("drafts").toBool()) {
+        query.setFlags(Sink::Query::LiveQuery);
+        query.filter<Mail::Draft>(true);
+        query.filter<Mail::Trash>(false);
+        qDebug() << "Running mail query for drafts: ";
+        //Latest mail at the top
+        sort(0, Qt::DescendingOrder);
+        validQuery = true;
     }
-    if (filter.contains("inbox") && filter.value("inbox").toBool()) {
-        qWarning() << "inbox";
-        setShowInbox(true);
-        return;
+    if (filter.value("inbox").toBool()) {
+        Sink::Query folderQuery{};
+        folderQuery.containsFilter<Sink::ApplicationDomain::Folder::SpecialPurpose>(Sink::ApplicationDomain::SpecialPurpose::Mail::inbox);
+        folderQuery.request<Sink::ApplicationDomain::Folder::SpecialPurpose>();
+        folderQuery.request<Sink::ApplicationDomain::Folder::Name>();
+
+        query.setFlags(Sink::Query::LiveQuery);
+        query.filter<Sink::ApplicationDomain::Mail::Folder>(folderQuery);
+        query.sort<Mail::Date>();
+        //Latest mail at the top
+        sort(0, Qt::DescendingOrder);
+        validQuery = true;
     }
-    if (filter.contains("folder") && filter.value("folder").value<Folder::Ptr>()) {
-        setParentFolder(filter.value("folder"));
-        return;
+
+    if (filter.contains("singleMail") && filter.value("singleMail").value<Sink::ApplicationDomain::Mail::Ptr>()) {
+        auto mail = filter.value("singleMail").value<Sink::ApplicationDomain::Mail::Ptr>();
+        query = Sink::Query{*mail};
+        query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
+        //Latest mail at the bottom
+        sort(0, Qt::AscendingOrder);
+        validQuery = true;
     }
-    //Clear
-    mCurrentQueryItem.clear();
-    setSourceModel(nullptr);
-    return;
+    if (filter.contains("mail") && filter.value("mail").value<Sink::ApplicationDomain::Mail::Ptr>()) {
+        auto mail = filter.value("mail").value<Sink::ApplicationDomain::Mail::Ptr>();
+        query = Sink::StandardQueries::completeThread(*mail);
+        query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
+        //Latest mail at the bottom
+        sort(0, Qt::AscendingOrder);
+        validQuery = true;
+    }
+
+    //Additional filtering
+    if (filter.contains("string") && filter.value("string").isValid()) {
+        const auto filterString = filter.value("string").toString();
+        if (filterString.length() < 3 && !filterString.isEmpty()) {
+            return;
+        }
+        if (!filterString.isEmpty()) {
+            query.filter({}, Sink::QueryBase::Comparator(filterString, Sink::QueryBase::Comparator::Fulltext));
+            query.limit(0);
+            //Avoid live updates until we properly filter updates
+            query.setFlags(Sink::Query::NoFlags);
+        }
+    }
+
+    if (filter.contains("account")) {
+        query.resourceFilter<SinkResource::Account>(filter.value("account").toByteArray());
+    }
+
+    if (filter.value("headersOnly").toBool()) {
+        requestHeaders(query);
+    } else {
+        requestFullMail(query);
+    }
+
+    mFetchMails = filter.value("fetchMails").toBool();
+    //TODO don't reset on string filter update?
+    mFetchedMails.clear();
+
+    if (validQuery) {
+        runQuery(query);
+    } else {
+        setSourceModel(nullptr);
+    }
 }
 
 QVariantMap MailListModel::filter() const
@@ -327,164 +349,3 @@ QVariantMap MailListModel::filter() const
     return {};
 }
 
-void MailListModel::setMail(const QVariant &variant)
-{
-    using namespace Sink::ApplicationDomain;
-    auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>();
-    if (!mail) {
-        mCurrentQueryItem.clear();
-        setSourceModel(nullptr);
-        return;
-    }
-    if (mCurrentQueryItem == mail->identifier()) {
-        return;
-    }
-    mCurrentQueryItem = mail->identifier();
-    Sink::Query query = Sink::StandardQueries::completeThread(*mail);
-    query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
-    requestFullMail(query);
-    mFetchMails = true;
-    mFetchedMails.clear();
-    qDebug() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
-    //Latest mail at the bottom
-    sort(0, Qt::AscendingOrder);
-    runQuery(query);
-}
-
-QVariant MailListModel::mail() const
-{
-    return QVariant();
-}
-
-void MailListModel::setSingleMail(const QVariant &variant)
-{
-    using namespace Sink::ApplicationDomain;
-    auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>();
-    if (!mail) {
-        mCurrentQueryItem.clear();
-        setSourceModel(nullptr);
-        return;
-    }
-    if (mCurrentQueryItem == mail->identifier()) {
-        return;
-    }
-    mCurrentQueryItem = mail->identifier();
-    Sink::Query query{*mail};
-    query.setFlags(Sink::Query::LiveQuery | Sink::Query::UpdateStatus);
-    requestFullMail(query);
-    mFetchMails = true;
-    mFetchedMails.clear();
-    qDebug() << "Running mail query: " << mail->resourceInstanceIdentifier() << mail->identifier();
-    //Latest mail at the bottom
-    sort(0, Qt::AscendingOrder);
-    runQuery(query);
-}
-
-QVariant MailListModel::singleMail() const
-{
-    return {};
-}
-
-
-void MailListModel::setShowDrafts(bool)
-{
-    using namespace Sink::ApplicationDomain;
-    Sink::Query query;
-    query.setFlags(Sink::Query::LiveQuery);
-    query.filter<Mail::Draft>(true);
-    query.filter<Mail::Trash>(false);
-    requestFullMail(query);
-    mFetchMails = true;
-    mFetchedMails.clear();
-    qDebug() << "Running mail query for drafts: ";
-    //Latest mail at the top
-    sort(0, Qt::DescendingOrder);
-    runQuery(query);
-}
-
-bool MailListModel::showDrafts() const
-{
-    return false;
-}
-
-void MailListModel::setShowInbox(bool)
-{
-    using namespace Sink::ApplicationDomain;
-
-    Sink::Query folderQuery{};
-    folderQuery.containsFilter<Sink::ApplicationDomain::Folder::SpecialPurpose>(Sink::ApplicationDomain::SpecialPurpose::Mail::inbox);
-    folderQuery.request<Sink::ApplicationDomain::Folder::SpecialPurpose>();
-    folderQuery.request<Sink::ApplicationDomain::Folder::Name>();
-
-    Sink::Query query;
-    query.setFlags(Sink::Query::LiveQuery);
-    query.filter<Sink::ApplicationDomain::Mail::Folder>(folderQuery);
-    query.sort<Mail::Date>();
-    requestHeaders(query);
-    mFetchMails = false;
-    mFetchedMails.clear();
-    //Latest mail at the top
-    sort(0, Qt::DescendingOrder);
-    runQuery(query);
-}
-
-bool MailListModel::showInbox() const
-{
-    return false;
-}
-
-void MailListModel::setShowImportant(bool show)
-{
-    if (!show) {
-        return;
-    }
-    using namespace Sink::ApplicationDomain;
-
-    mCurrentQueryItem.clear();
-    Sink::Query query;
-    query.setFlags(Sink::Query::LiveQuery);
-    query.resourceFilter<SinkResource::Account>(mAccountId);
-    query.filter<Sink::ApplicationDomain::Mail::Important>(true);
-    query.sort<Mail::Date>();
-    requestHeaders(query);
-    mFetchMails = false;
-    mFetchedMails.clear();
-    qDebug() << "Running mail query for drafts: ";
-    //Latest mail at the top
-    sort(0, Qt::DescendingOrder);
-    runQuery(query);
-}
-
-bool MailListModel::showImportant() const
-{
-    return false;
-}
-
-void MailListModel::setEntityId(const QString &id)
-{
-    qDebug() << "Running mail query for mail with ID:" << id;
-    if (id.isEmpty()) {
-        mCurrentQueryItem.clear();
-        setSourceModel(nullptr);
-        return;
-    }
-    if (mCurrentQueryItem == id) {
-        return;
-    }
-    mCurrentQueryItem = id.toLatin1();
-    using namespace Sink::ApplicationDomain;
-    Sink::Query query;
-    query.setFlags(Sink::Query::LiveQuery);
-    query.filter(id.toUtf8());
-    requestHeaders(query);
-    mFetchMails = true;
-    mFetchedMails.clear();
-    // Latest mail at the top
-    sort(0, Qt::DescendingOrder);
-    runQuery(query);
-}
-
-QString MailListModel::entityId() const
-{
-    return {};
-}

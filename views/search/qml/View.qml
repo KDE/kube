@@ -142,7 +142,11 @@ Kube.View {
                         Layout.fillHeight: true
                         activeFocusOnTab: true
                         model: Kube.MailListModel {
-                            singleMail: mailListView.currentMail
+                            filter: {
+                                "singleMail": mailListView.currentMail,
+                                "headersOnly": false,
+                                "fetchMails": true
+                            }
                         }
                     }
                 }

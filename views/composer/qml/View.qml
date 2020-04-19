@@ -178,7 +178,11 @@ Kube.View {
 
                 model: Kube.MailListModel {
                     id: mailListModel
-                    showDrafts: true
+                    filter: {
+                        "drafts": true,
+                        "headersOnly": false,
+                        "fetchMails": true
+                    }
                 }
 
                 delegate: Kube.ListDelegate {

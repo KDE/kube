@@ -29,18 +29,8 @@
 class KUBE_EXPORT MailListModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY (QVariant parentFolder READ parentFolder WRITE setParentFolder)
-    Q_PROPERTY (QVariant mail READ mail WRITE setMail)
-    Q_PROPERTY (QVariant singleMail READ singleMail WRITE setSingleMail)
-    Q_PROPERTY (bool showDrafts READ showDrafts WRITE setShowDrafts)
-    Q_PROPERTY (bool showInbox READ showInbox WRITE setShowInbox)
-    Q_PROPERTY (bool showImportant READ showImportant WRITE setShowImportant)
-    Q_PROPERTY (QString entityId READ entityId WRITE setEntityId)
-
     Q_PROPERTY (QVariantMap filter READ filter WRITE setFilter)
-
-    Q_PROPERTY (QString filterString READ filterString WRITE setFilterString)
-    Q_PROPERTY (bool threaded MEMBER mIsThreaded)
+    Q_PROPERTY (bool threaded MEMBER mIsThreaded) //READONLY
 
 public:
     enum Status {
@@ -84,32 +74,8 @@ public:
 
     void runQuery(const Sink::Query &query);
 
-    void setParentFolder(const QVariant &parentFolder);
-    QVariant parentFolder() const;
-
-    void setMail(const QVariant &mail);
-    QVariant mail() const;
-
-    void setSingleMail(const QVariant &mail);
-    QVariant singleMail() const;
-
-    void setFilterString(const QString &mail);
-    QString filterString() const;
-
     void setFilter(const QVariantMap &);
     QVariantMap filter() const;
-
-    void setShowDrafts(bool);
-    bool showDrafts() const;
-
-    void setShowInbox(bool);
-    bool showInbox() const;
-
-    void setShowImportant(bool);
-    bool showImportant() const;
-
-    void setEntityId(const QString &id);
-    QString entityId() const;
 
 private:
     void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail);
@@ -118,7 +84,5 @@ private:
     bool mFetchMails = false;
     bool mIsThreaded = true;
     QSet<QByteArray> mFetchedMails;
-    QByteArray mCurrentQueryItem;
-    QByteArray mAccountId;
     Sink::Query mQuery;
 };

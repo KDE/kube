@@ -51,7 +51,7 @@ private slots:
 
         {
             MailListModel model;
-            model.setParentFolder(QVariant::fromValue(Folder::Ptr::create(folder1)));
+            model.setFilter({{"folder", QVariant::fromValue(Folder::Ptr::create(folder1))}});
             QTRY_COMPARE(model.rowCount({}), 1);
 
             {
@@ -63,7 +63,7 @@ private slots:
         }
         {
             MailListModel model;
-            model.setMail(QVariant::fromValue(Mail::Ptr::create(mail1)));
+            model.setFilter({{"mail", QVariant::fromValue(Mail::Ptr::create(mail1))}});
             QTRY_COMPARE(model.rowCount({}), 1);
 
             {

@@ -34,7 +34,11 @@ FocusScope {
     Kube.ModelIndexRetriever {
         id: modelIndexRetriever
         model: Kube.MailListModel {
-            showInbox: true
+            filter: {
+                "inbox": true,
+                "headersOnly": true,
+                "fetchMails": false
+            }
         }
         currentIndex: 0
         onCurrentDataChanged: {
@@ -50,7 +54,11 @@ FocusScope {
                 right: parent.right
             }
             model: Kube.MailListModel {
-                mail: root.currentMail
+                filter: {
+                    "mail": root.currentMail,
+                    "headersOnly": false,
+                    "fetchMails": true
+                }
             }
             Kube.MailViewer {
                 anchors {
