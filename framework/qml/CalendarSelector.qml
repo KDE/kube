@@ -49,6 +49,15 @@ Kube.InlineAccountSwitcher {
             listView.currentIndex = -1
         }
 
+        function currentChanged() {
+            if (listView.parent.isCurrent) {
+                //Necessary to re-select folder on account change (so the tasklist is updated)
+                if (currentItem) {
+                    root.currentCalendar = currentItem.currentData.identifier
+                }
+            }
+        }
+
         property bool editMode: false
         property Component buttonDelegate: Kube.IconButton {
             height: Kube.Units.gridUnit
