@@ -36,11 +36,7 @@ Kube.View {
     property bool autoUpdateDate: true
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
-    // searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
-
-    onFilterChanged: {
-        Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
-    }
+    searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + todoView.parent.x, 0, todoView.parent.width + todoDetails.parent.width, height)
 
     onRefresh: {
         if (!!root.currentFolder) {
@@ -293,6 +289,7 @@ Kube.View {
                         "account": accountSwitcher.currentAccount,
                         "calendars": root.currentFolder ? [root.currentFolder] : accountSwitcher.enabledCalendars,
                         "doing": root.doing,
+                        "string": root.filter
                     }
                 }
                 delegate: Kube.ListDelegate {

@@ -268,6 +268,7 @@ TodoModel::TodoModel(QObject *parent)
     setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
     setFilterCaseSensitivity(Qt::CaseInsensitive);
+    setFilterRole(TodoSourceModel::Summary);
     setSourceModel(new TodoSourceModel(this));
 }
 
@@ -279,6 +280,8 @@ QHash<int, QByteArray> TodoModel::roleNames() const
 void TodoModel::setFilter(const QVariantMap &f)
 {
     static_cast<TodoSourceModel*>(sourceModel())->setFilter(f);
+    const auto filterString = f.value("string").toString();
+    setFilterFixedString(filterString);
 }
 
 bool TodoModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
@@ -291,7 +294,7 @@ bool TodoModel::lessThan(const QModelIndex &left, const QModelIndex &right) cons
     return leftScore < rightScore;
 }
 
-bool TodoModel::filterAcceptsRow(int /*sourceRow*/, const QModelIndex &/*sourceParent*/) const
+bool TodoModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    return true;
+    return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
 }
