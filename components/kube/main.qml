@@ -21,7 +21,6 @@ import QtQuick.Controls 2.0
 import QtQuick.Window 2.0
 
 import org.kube.components.kube 1.0 as KubeComponent
-import org.kube.framework 1.0 as Kube
 import org.kube.test 1.0
 import "qml"
 import "applicationstate.js" as State
