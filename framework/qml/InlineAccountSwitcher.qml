@@ -23,6 +23,7 @@ import org.kube.framework 1.0 as Kube
 FocusScope {
     id: root
     property Component delegate: null
+    property var currentDelegate: null
 
     ColumnLayout {
         id: layout
@@ -102,6 +103,9 @@ FocusScope {
                     onIsCurrentChanged: {
                         if (!!item && 'currentChanged' in item) {
                             item.currentChanged()
+                        }
+                        if (isCurrent) {
+                            root.currentDelegate = item
                         }
                     }
                 }

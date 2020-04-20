@@ -32,11 +32,9 @@ Kube.InlineAccountSwitcher {
     property alias enabledCalendars: calendarFilterCollector.checkedEntities
     property var currentCalendar: null
 
-    property var currentListView: null
-
     function clearSelection() {
-        if (root.currentListView) {
-            root.currentListView.currentIndex = -1
+        if (root.currentDelegate) {
+            root.currentDelegate.clearSelection()
         }
     }
 
@@ -46,6 +44,10 @@ Kube.InlineAccountSwitcher {
 
     delegate: Kube.ListView {
         id: listView
+
+        function clearSelection() {
+            listView.currentIndex = -1
+        }
 
         property bool editMode: false
         property Component buttonDelegate: Kube.IconButton {
@@ -64,7 +66,6 @@ Kube.InlineAccountSwitcher {
         Layout.preferredHeight: contentHeight
 
         onCurrentItemChanged: {
-            root.currentListView = listView
             if (currentItem) {
                 root.currentCalendar = currentItem.currentData.identifier
             }
