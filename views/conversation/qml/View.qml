@@ -167,20 +167,6 @@ Kube.View {
                     rightMargin: Kube.Units.largeSpacing
                 }
 
-                property var currentListView: null
-
-                function clearSelection() {
-                    if (accountFolderview.currentListView) {
-                        accountFolderview.currentListView.clearSelection()
-                    }
-                }
-
-                function selectRootIndex() {
-                    if (accountFolderview.currentListView) {
-                        accountFolderview.currentListView.selectRootIndex()
-                    }
-                }
-
                 delegate: ColumnLayout {
                     id: delegateRoot
 
@@ -204,13 +190,12 @@ Kube.View {
                             iconName: Kube.Icons.markImportant_inverted
                             checked: root.important
                             checkable: true
-                            onToggled: {
+                            onClicked: {
+                                root.important = checked
                                 if (checked) {
-                                    root.important = true
-                                    accountFolderview.clearSelection()
+                                    listView.clearSelection()
                                 } else {
-                                    root.important = true
-                                    accountFolderview.selectRootIndex()
+                                    listView.selectRootIndex()
                                 }
                             }
                         }
@@ -246,7 +231,6 @@ Kube.View {
                         }
 
                         onCurrentIndexChanged: {
-                            accountFolderview.currentListView = listView
                             if (delegateRoot.parent.isCurrent) {
                                 indexSelected(currentIndex)
                             }
