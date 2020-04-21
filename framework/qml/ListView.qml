@@ -36,6 +36,8 @@ ListView {
 
     displaced: Transition {
         NumberAnimation { properties: "x,y"; duration: 50 }
+        //Handle interrupted add transitions
+        NumberAnimation { property: "opacity"; to: 1.0; }
     }
 
     Keys.onPressed: {
