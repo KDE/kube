@@ -305,7 +305,7 @@ Kube.View {
                 }
 
                 AddresseeListEditor {
-                    label: qsTr("Sending email to:")
+                    label: qsTr("Sending copy to (Cc):")
                     Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
                     activeFocusOnTab: true
