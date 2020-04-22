@@ -293,11 +293,8 @@ Kube.View {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                Kube.Label {
-                    text: qsTr("Sending email to:")
-                }
-
                 AddresseeListEditor {
+                    label: qsTr("Sending email to:")
                     Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
                     focus: true
@@ -307,12 +304,9 @@ Kube.View {
                     completer: composerController.recipientCompleter
                 }
 
-                Kube.Label {
-                    text: qsTr("Sending copy to (Cc):")
-                }
                 AddresseeListEditor {
-                    id: cc
-                    Layout.preferredHeight: cc.implicitHeight
+                    label: qsTr("Sending email to:")
+                    Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
                     activeFocusOnTab: true
                     encrypt: composerController.encrypt
@@ -320,12 +314,9 @@ Kube.View {
                     completer: composerController.recipientCompleter
                 }
 
-                Kube.Label {
-                    text: qsTr("Sending secret copy to (Bcc):")
-                }
                 AddresseeListEditor {
-                    id: bcc
-                    Layout.preferredHeight: bcc.implicitHeight
+                    label: qsTr("Sending secret copy to (Bcc):")
+                    Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
                     activeFocusOnTab: true
                     encrypt: composerController.encrypt

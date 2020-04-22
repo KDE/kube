@@ -26,11 +26,12 @@ import org.kube.framework 1.0 as Kube
 
 FocusScope {
     id: root
-    property variant controller
-    property variant completer
+    property var controller
+    property var completer
     property bool encrypt: false
+    property alias label: heading.text
 
-    implicitHeight: listView.height + lineEdit.height
+    implicitHeight: heading.height + listView.height + lineEdit.height + 2 * Kube.Units.smallSpacing
     height: implicitHeight
 
     DropArea {
@@ -53,6 +54,10 @@ FocusScope {
         anchors.fill: parent
 
         spacing: Kube.Units.smallSpacing
+
+        Kube.Label {
+            id: heading
+        }
 
         ListView {
             id: listView
@@ -77,12 +82,31 @@ FocusScope {
                     anchors.fill: parent
                     hoverEnabled: true
                     drag.target: parent
+                    drag.filterChildren: true
+                    drag.axis: "YAxis"
                     onReleased: {
                         if (parent.Drag.drop() == Qt.MoveAction) {
                             root.controller.remove(recipientId)
                         }
                     }
                 }
+
+                states: [
+                    State {
+                        name: "dnd"
+                        when: mouseArea.drag.active
+
+                        PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
+                        PropertyChanges {target: delegateRoot; opacity: 0.5}
+                        PropertyChanges {target: delegateRoot; x: x; y: y}
+                        PropertyChanges {target: delegateRoot; parent: root}
+                    }
+                ]
+
+                Drag.active: mouseArea.drag.active
+                Drag.hotSpot.x: mouseArea.mouseX
+                Drag.hotSpot.y: mouseArea.mouseY
+                Drag.source: delegateRoot
 
                 Kube.Label {
                     id: label
@@ -134,21 +158,6 @@ FocusScope {
                     padding: 0
                     iconName: Kube.Icons.remove
                 }
-
-                states: [
-                    State {
-                        name: "dnd"
-                        when: mouseArea.drag.active
-
-                        PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
-                        PropertyChanges {target: delegateRoot; opacity: 0.5}
-                    }
-                ]
-
-                Drag.active: mouseArea.drag.active
-                Drag.hotSpot.x: mouseArea.mouseX
-                Drag.hotSpot.y: mouseArea.mouseY
-                Drag.source: delegateRoot
 
             }
         }
