@@ -107,8 +107,9 @@ FocusScope {
             RowLayout {
                 anchors {
                     fill: parent
-                    leftMargin: Kube.Units.smallSpacing + (model._q_TreeView_ItemDepth) * Kube.Units.largeSpacing
+                    leftMargin: Math.max(Kube.Units.smallSpacing, model._q_TreeView_ItemDepth * Kube.Units.largeSpacing)
                 }
+
                 spacing: Kube.Units.smallSpacing
                 Kube.Label {
                     id: label
@@ -117,21 +118,16 @@ FocusScope {
                     color: Kube.Colors.highlightedTextColor
                     elide: Text.ElideLeft
                     clip: false
-
-                    Kube.IconButton {
-                        anchors {
-                            right: label.left
-                            verticalCenter: label.verticalCenter
-                        }
-                        visible: model._q_TreeView_HasChildren
-                        iconName: model._q_TreeView_ItemExpanded ? Kube.Icons.goDown_inverted : Kube.Icons.goNext_inverted
-                        padding: 0
-                        width: Kube.Units.gridUnit
-                        height: Kube.Units.gridUnit
-                        onClicked: toggleExpanded()
-                        activeFocusOnTab: false
-                        hoverEnabled: false
-                    }
+                }
+                Kube.IconButton {
+                    visible: model._q_TreeView_HasChildren
+                    iconName: model._q_TreeView_ItemExpanded ? Kube.Icons.goDown_inverted : Kube.Icons.goNext_inverted
+                    padding: 0
+                    width: Kube.Units.gridUnit
+                    height: Kube.Units.gridUnit
+                    onClicked: toggleExpanded()
+                    activeFocusOnTab: false
+                    hoverEnabled: false
                 }
             }
         }
