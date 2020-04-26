@@ -48,9 +48,17 @@ public:
     };
     Q_ENUM(InvitationMethod);
 
+    enum InvitationEventState {
+        New,
+        Existing,
+        Update
+    };
+    Q_ENUM(InvitationEventState);
+
     KUBE_CONTROLLER_PROPERTY(QByteArray, Uid, uid)
     KUBE_CONTROLLER_PROPERTY(InvitationState, State, state)
     KUBE_CONTROLLER_PROPERTY(InvitationMethod, Method, method)
+    KUBE_CONTROLLER_PROPERTY(InvitationEventState, EventState, eventState)
     KUBE_CONTROLLER_PROPERTY(QString, Name, name)
 
     KUBE_CONTROLLER_ACTION(accept)
@@ -65,4 +73,6 @@ private:
     void handleRequest(KCalCore::Event::Ptr icalEvent);
     void handleReply(KCalCore::Event::Ptr icalEvent);
     void storeEvent(InvitationState);
+    Sink::ApplicationDomain::Event mExistingEvent;
+    KCalCore::Event::Ptr mLoadedIcalEvent;
 };

@@ -86,17 +86,33 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
     query.request<Event::Ical>();
     query.filter<Event::Uid>(icalEvent->uid().toUtf8());
     Store::fetchAll<Event>(query).then([this, icalEvent](const QList<Event::Ptr> &events) {
-        if (events.isEmpty()) {
-            populateFromEvent(*icalEvent);
-            setStart(icalEvent->dtStart());
-            setEnd(icalEvent->dtEnd());
-            setUid(icalEvent->uid().toUtf8());
-        } else {
-            auto icalEvent = KCalCore::ICalFormat().readIncidence(events.first()->getIcal()).dynamicCast<KCalCore::Event>();
-            if(!icalEvent) {
+        if (!events.isEmpty()) {
+            const auto event = *events.first();
+            auto localEvent = KCalCore::ICalFormat().readIncidence(event.getIcal()).dynamicCast<KCalCore::Event>();
+            if(!localEvent) {
                 SinkWarning() << "Invalid ICal to process, ignoring...";
                 return KAsync::null();
             }
+
+            mExistingEvent = event;
+            if (icalEvent->revision() > localEvent->revision()) {
+                setEventState(InvitationController::Update);
+                //The invitation is more recent, this is an update to an existing event
+                populateFromEvent(*icalEvent);
+                setStart(icalEvent->dtStart());
+                setEnd(icalEvent->dtEnd());
+                setUid(icalEvent->uid().toUtf8());
+            } else {
+                setEventState(InvitationController::Existing);
+                //Our local copy is more recent (we probably already dealt with the invitation)
+                populateFromEvent(*localEvent);
+                setStart(localEvent->dtStart());
+                setEnd(localEvent->dtEnd());
+                setUid(localEvent->uid().toUtf8());
+            }
+        } else {
+            setEventState(InvitationController::New);
+            //We don't even have a local copy, this is a new event
             populateFromEvent(*icalEvent);
             setStart(icalEvent->dtStart());
             setEnd(icalEvent->dtEnd());
@@ -152,6 +168,8 @@ void InvitationController::loadICal(const QString &ical)
         SinkWarning() << "Invalid ICal to process, ignoring...";
         return;
     }
+
+    mLoadedIcalEvent = icalEvent;
 
     switch (msg->method()) {
         case KCalCore::iTIPRequest:
@@ -218,19 +236,13 @@ void InvitationController::storeEvent(InvitationState status)
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
 
-    const auto calendar = getCalendar();
-    if (!calendar) {
-        SinkWarning() << "No calendar selected";
-        return;
-    }
-
     Query query;
     query.request<ApplicationDomain::Identity::Name>()
         .request<ApplicationDomain::Identity::Address>()
         .request<ApplicationDomain::Identity::Account>();
     auto job = Store::fetchAll<ApplicationDomain::Identity>(query)
         .guard(this)
-        .then([this, status, calendar] (const QList<Identity::Ptr> &list) {
+        .then([this, status] (const QList<Identity::Ptr> &list) {
             if (list.isEmpty()) {
                 SinkWarning() << "Failed to find an identity";
             }
@@ -255,25 +267,46 @@ void InvitationController::storeEvent(InvitationState status)
                 SinkWarning() << "Failed to find a matching identity.";
                 return KAsync::error("Failed to find a matching identity");
             }
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+
+            auto calcoreEvent = mLoadedIcalEvent;
             calcoreEvent->setUid(getUid());
             saveToEvent(*calcoreEvent);
 
             sendIMipReply(accountId, fromAddress, fromName, calcoreEvent, status == InvitationController::Accepted ? KCalCore::Attendee::Accepted : KCalCore::Attendee::Declined);
 
+            if (getEventState() == InvitationController::New) {
+                const auto calendar = getCalendar();
+                if (!calendar) {
+                    SinkWarning() << "No calendar selected";
+                    return KAsync::error("No calendar selected");
+                }
 
-            Event event(calendar->resourceInstanceIdentifier());
-            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
-            event.setCalendar(*calendar);
+                Event event(calendar->resourceInstanceIdentifier());
+                event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+                event.setCalendar(*calendar);
 
-            return Store::create(event)
-                .then([=] (const KAsync::Error &error) {
-                    if (error) {
-                        SinkWarning() << "Failed to save the event: " << error;
-                    }
-                    setState(status);
-                    emit done();
-                });
+                return Store::create(event)
+                    .then([=] (const KAsync::Error &error) {
+                        if (error) {
+                            SinkWarning() << "Failed to save the event: " << error;
+                        }
+                        setState(status);
+                        emit done();
+                    });
+            } else {
+                Event event(mExistingEvent);
+                event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+
+                return Store::modify(event)
+                    .then([=] (const KAsync::Error &error) {
+                        if (error) {
+                            SinkWarning() << "Failed to update the event: " << error;
+                        }
+                        setState(status);
+                        setEventState(InvitationController::Existing);
+                        emit done();
+                    });
+            }
         });
 
     run(job);

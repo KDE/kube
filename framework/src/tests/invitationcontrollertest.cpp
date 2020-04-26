@@ -22,16 +22,17 @@ class InvitationControllerTest : public QObject
     QByteArray resourceId;
     QByteArray mailtransportResourceId;
 
-    QString createInvitation(const QByteArray &uid)
+    QString createInvitation(const QByteArray &uid, const QString &summary, int revision)
     {
         auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
         calcoreEvent->setUid(uid);
-        calcoreEvent->setSummary("summary");
+        calcoreEvent->setSummary(summary);
         calcoreEvent->setDescription("description");
         calcoreEvent->setLocation("location");
         calcoreEvent->setDtStart(QDateTime::currentDateTime());
         calcoreEvent->setOrganizer("organizer@test.com");
         calcoreEvent->addAttendee(KCalCore::Attendee::Ptr::create("John Doe", "attendee1@test.com", true, KCalCore::Attendee::NeedsAction));
+        calcoreEvent->setRevision(revision);
 
         return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, KCalCore::iTIPRequest);
     }
@@ -67,7 +68,7 @@ private slots:
         Sink::Store::create(calendar).exec().waitForFinished();
 
         const QByteArray uid{"uid1"};
-        const auto ical = createInvitation(uid);
+        const auto ical = createInvitation(uid, "summary", 0);
 
         {
             InvitationController controller;
@@ -76,6 +77,7 @@ private slots:
             controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
 
             QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
+            QTRY_COMPARE(controller.getEventState(), InvitationController::New);
 
             controller.acceptAction()->execute();
             QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
@@ -106,11 +108,46 @@ private slots:
             QCOMPARE(msg->from()->asUnicodeString(), QLatin1String{"attendee1@test.com"});
         }
 
+        //Reload the event
         {
             InvitationController controller;
             controller.loadICal(ical);
             QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
             QTRY_COMPARE(controller.getUid(), uid);
+        }
+
+        const auto updatedIcal = createInvitation(uid, "summary2", 1);
+        //Load an update and accept it
+        {
+            InvitationController controller;
+            controller.loadICal(updatedIcal);
+            QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
+            QTRY_COMPARE(controller.getUid(), uid);
+
+            //Accept the update
+            controller.acceptAction()->execute();
+
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+
+            //Ensure the event is stored
+            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
+
+            auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
+            QCOMPARE(list.size(), 1);
+
+            auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
+            QVERIFY(event);
+            QCOMPARE(event->uid().toUtf8(), uid);
+            QCOMPARE(event->summary(), QLatin1String{"summary2"});
+        }
+
+        //Reload the event
+        {
+            InvitationController controller;
+            controller.loadICal(updatedIcal);
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+            QTRY_COMPARE(controller.getUid(), uid);
+            QCOMPARE(controller.getEventState(), InvitationController::Existing);
         }
     }
 };

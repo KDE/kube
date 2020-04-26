@@ -56,6 +56,11 @@ Item {
             PropertyChanges {target: buttons; visible: false}
         },
         State {
+            name: "updated"
+            when: controller.method == Kube.InvitationController.Request && controller.eventState == Kube.InvitationController.Update
+            PropertyChanges {target: heading; text: qsTr("The invitation has been updated: \"%1\"").arg(controller.summary)}
+        },
+        State {
             name: "accepted"
             when: controller.method == Kube.InvitationController.Request && controller.state == Kube.InvitationController.Accepted
             PropertyChanges {target: heading; text: qsTr("You have accepted: \"%1\"").arg(controller.summary)}
