@@ -187,6 +187,71 @@ private slots:
             QTRY_COMPARE(model.rowCount({}), 0);
         }
     }
+
+    void testRecurrenceException()
+    {
+        Sink::ApplicationDomain::DummyResource::create("account1");
+
+        using namespace Sink::ApplicationDomain;
+        auto account = ApplicationDomainType::createEntity<SinkAccount>();
+        Sink::Store::create(account).exec().waitForFinished();
+
+        auto resource = Sink::ApplicationDomain::DummyResource::create(account.identifier());
+        Sink::Store::create(resource).exec().waitForFinished();
+
+        auto calendar1 = ApplicationDomainType::createEntity<Calendar>(resource.identifier());
+        Sink::Store::create(calendar1).exec().waitForFinished();
+
+        const QDateTime start{{2018, 04, 17}, {6, 0, 0}};
+        {
+            auto event = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event");
+            calcoreEvent->setSummary("summary2");
+            calcoreEvent->setDescription("description");
+            calcoreEvent->setDtStart(start.addDays(1));
+            calcoreEvent->setDuration(3600);
+            calcoreEvent->setAllDay(false);
+            calcoreEvent->recurrence()->setDaily(1);
+            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setCalendar(calendar1);
+            Sink::Store::create(event).exec().waitForFinished();
+        }
+
+        //Exception
+        {
+            auto event = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event");
+            calcoreEvent->setSummary("summary2");
+            calcoreEvent->setDescription("description");
+            calcoreEvent->setRecurrenceId(start.addDays(2));
+            calcoreEvent->setDtStart(start.addDays(2).addSecs(3600));
+            calcoreEvent->setDuration(7200);
+            calcoreEvent->setAllDay(false);
+            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setCalendar(calendar1);
+            Sink::Store::create(event).exec().waitForFinished();
+        }
+
+        Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
+
+        {
+            EventOccurrenceModel model;
+            model.setStart(start.date());
+            model.setLength(7);
+            model.setCalendarFilter({calendar1.identifier()});
+            QTRY_COMPARE(model.rowCount({}), 6);
+
+            auto getOccurrence = [&] (int index) {
+                return model.index(index, 0, {}).data(EventOccurrenceModel::EventOccurrence).value<EventOccurrenceModel::Occurrence>();
+            };
+            QCOMPARE(getOccurrence(0).start, start.addDays(1));
+            QCOMPARE(getOccurrence(1).start, start.addDays(2).addSecs(3600)); //The exception
+            QCOMPARE(getOccurrence(2).start, start.addDays(3));
+        }
+    }
+
 };
 
 QTEST_MAIN(EventOccurrenceModelTest)

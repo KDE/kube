@@ -38,8 +38,7 @@ using namespace Sink;
 
 EventOccurrenceModel::EventOccurrenceModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}})},
-    mCalendar{new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()}}
+    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}})}
 {
     mRefreshTimer.setSingleShot(true);
     QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &EventOccurrenceModel::updateFromSource);
@@ -130,6 +129,9 @@ void EventOccurrenceModel::updateFromSource()
     mEvents.clear();
 
     if (mSourceModel) {
+        QMap<QByteArray, KCalCore::Incidence::Ptr> recurringEvents;
+        QMultiMap<QByteArray, KCalCore::Incidence::Ptr> exceptions;
+        QMap<QByteArray, QSharedPointer<Sink::ApplicationDomain::Event>> events;
         for (int i = 0; i < mSourceModel->rowCount(); ++i) {
             auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Event::Ptr>();
             const bool skip = [&] {
@@ -154,19 +156,35 @@ void EventOccurrenceModel::updateFromSource()
                 continue;
             }
 
+            //Collect recurring events and add the rest immediately
             if (icalEvent->recurs()) {
-                KCalCore::OccurrenceIterator occurrenceIterator{*mCalendar, icalEvent, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
-                while (occurrenceIterator.hasNext()) {
-                    occurrenceIterator.next();
-                    const auto start = occurrenceIterator.occurrenceStartDate();
-                    const auto end = icalEvent->endDateForStart(start);
-                    if (start.date() < mEnd && end.date() >= mStart) {
-                        mEvents.append({start, end, occurrenceIterator.incidence(), getColor(event->getCalendar()), event->getAllDay(), event});
-                    }
-                }
+                recurringEvents.insert(icalEvent->uid().toLatin1(), icalEvent);
+                events.insert(icalEvent->instanceIdentifier().toLatin1(), event);
+            } else if(icalEvent->recurrenceId().isValid()) {
+                exceptions.insert(icalEvent->uid().toLatin1(), icalEvent);
+                events.insert(icalEvent->instanceIdentifier().toLatin1(), event);
             } else {
                 if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
                     mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
+                }
+            }
+        }
+        //process all recurring events and their exceptions.
+        for (const auto &uid : recurringEvents.keys()) {
+            KCalCore::MemoryCalendar calendar{QTimeZone::systemTimeZone()};
+            calendar.addIncidence(recurringEvents.value(uid));
+            for (const auto &event : exceptions.values(uid)) {
+                calendar.addIncidence(event);
+            }
+            KCalCore::OccurrenceIterator occurrenceIterator{calendar, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
+            while (occurrenceIterator.hasNext()) {
+                occurrenceIterator.next();
+                const auto incidence = occurrenceIterator.incidence();
+                const auto event = events.value(incidence->instanceIdentifier().toLatin1());
+                const auto start = occurrenceIterator.occurrenceStartDate();
+                const auto end = incidence->endDateForStart(start);
+                if (start.date() < mEnd && end.date() >= mStart) {
+                    mEvents.append({start, end, incidence, getColor(event->getCalendar()), event->getAllDay(), event});
                 }
             }
         }

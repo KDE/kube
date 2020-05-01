@@ -110,7 +110,6 @@ private:
     int mLength{0};
     QSharedPointer<EntityCacheInterface> mCalendarCache;
 
-    QSharedPointer<KCalCore::MemoryCalendar> mCalendar;
     QTimer mRefreshTimer;
 
     QList<Occurrence> mEvents;
