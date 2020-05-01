@@ -60,6 +60,7 @@ public:
     KUBE_CONTROLLER_PROPERTY(InvitationMethod, Method, method)
     KUBE_CONTROLLER_PROPERTY(InvitationEventState, EventState, eventState)
     KUBE_CONTROLLER_PROPERTY(QString, Name, name)
+    KUBE_CONTROLLER_PROPERTY(QDateTime, RecurrenceId, recurrenceId)
 
     KUBE_CONTROLLER_ACTION(accept)
     KUBE_CONTROLLER_ACTION(decline)

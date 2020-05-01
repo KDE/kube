@@ -56,6 +56,12 @@ Item {
             PropertyChanges {target: buttons; visible: false}
         },
         State {
+            name: "updatedexception"
+            extend: "updated"
+            when: controller.method == Kube.InvitationController.Request && controller.eventState == Kube.InvitationController.Update && !isNaN(controller.recurrenceId)
+            PropertyChanges {target: label; visible: true; text: qsTr("This is an exception for the event originally occurring at: \"%1\"").arg(controller.recurrenceId.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))}
+        },
+        State {
             name: "updated"
             when: controller.method == Kube.InvitationController.Request && controller.eventState == Kube.InvitationController.Update
             PropertyChanges {target: heading; text: qsTr("The invitation has been updated: \"%1\"").arg(controller.summary)}
@@ -94,6 +100,13 @@ Item {
 
         Kube.Heading {
             id: heading
+            elide: Text.ElideRight
+            Layout.fillWidth: true
+        }
+
+        Kube.Label {
+            id: label
+            visible: false
             elide: Text.ElideRight
             Layout.fillWidth: true
         }

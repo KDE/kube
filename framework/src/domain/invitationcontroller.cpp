@@ -99,6 +99,9 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
                 setEventState(InvitationController::Update);
                 //The invitation is more recent, this is an update to an existing event
                 populateFromEvent(*icalEvent);
+                if (icalEvent->recurrenceId().isValid()) {
+                    setRecurrenceId(icalEvent->recurrenceId());
+                }
                 setStart(icalEvent->dtStart());
                 setEnd(icalEvent->dtEnd());
                 setUid(icalEvent->uid().toUtf8());
@@ -274,7 +277,7 @@ void InvitationController::storeEvent(InvitationState status)
 
             sendIMipReply(accountId, fromAddress, fromName, calcoreEvent, status == InvitationController::Accepted ? KCalCore::Attendee::Accepted : KCalCore::Attendee::Declined);
 
-            if (getEventState() == InvitationController::New) {
+            if (getEventState() == InvitationController::New || getRecurrenceId().isValid()) {
                 const auto calendar = getCalendar();
                 if (!calendar) {
                     SinkWarning() << "No calendar selected";
