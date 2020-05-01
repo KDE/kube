@@ -315,11 +315,12 @@ Kube.View {
 
                         Rectangle {
                             anchors {
-                                top: parent.top
+                                verticalCenter: parent.verticalCenter
                                 left: parent.left
-                                bottom:  parent.bottom
                             }
                             width: Kube.Units.smallSpacing
+                            height: width
+                            radius: width / 2
 
                             color: model.color
                         }
