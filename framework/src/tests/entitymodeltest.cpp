@@ -54,7 +54,7 @@ private slots:
             model.setAccountId(account.identifier());
             model.setEntityId(calendar2.identifier());
             QTRY_COMPARE(model.rowCount({}), 1);
-            QCOMPARE(model.data(0).value("name").toString(), {"name2"});
+            QCOMPARE(model.data(0).value("name").toString(), QLatin1String("name2"));
         }
 
         {
@@ -64,7 +64,7 @@ private slots:
             model.setAccountId(account.identifier());
             model.setEntityId(calendar2.identifier());
             QTRY_COMPARE(model.rowCount({}), 1);
-            QCOMPARE(model.property("name").toString(), {"name2"});
+            QCOMPARE(model.property("name").toString(), QLatin1String("name2"));
         }
     }
 };

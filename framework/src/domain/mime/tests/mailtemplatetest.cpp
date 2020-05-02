@@ -91,7 +91,7 @@ private slots:
         QTRY_VERIFY(result);
         QCOMPARE(normalize(removeFirstLine(result->body())), normalize(msg->body()));
         QCOMPARE(result->to()->addresses(), {{"konqi@example.org"}});
-        QCOMPARE(result->subject()->asUnicodeString(), {"RE: A random subject with alternative contenttype"});
+        QCOMPARE(result->subject()->asUnicodeString(), QLatin1String("RE: A random subject with alternative contenttype"));
     }
 
     void testHtmlReply()
@@ -200,7 +200,7 @@ private slots:
             result = r;
         });
         QTRY_VERIFY(result);
-        QCOMPARE(result->subject(false)->asUnicodeString(), {"FW: A random subject with alternative contenttype"});
+        QCOMPARE(result->subject(false)->asUnicodeString(), QLatin1String("FW: A random subject with alternative contenttype"));
         QCOMPARE(result->to()->addresses(), {});
         QCOMPARE(result->cc()->addresses(), {});
 
@@ -208,12 +208,12 @@ private slots:
         QCOMPARE(attachments.size(), 1);
         auto attachment = attachments[0];
         QCOMPARE(attachment->contentDisposition(false)->disposition(), KMime::Headers::CDinline);
-        QCOMPARE(attachment->contentDisposition(false)->filename(), {"A random subject with alternative contenttype.eml"});
+        QCOMPARE(attachment->contentDisposition(false)->filename(), QLatin1String("A random subject with alternative contenttype.eml"));
         QVERIFY(attachment->bodyIsMessage());
 
         attachment->parse();
         auto origMsg = attachment->bodyAsMessage();
-        QCOMPARE(origMsg->subject(false)->asUnicodeString(), {"A random subject with alternative contenttype"});
+        QCOMPARE(origMsg->subject(false)->asUnicodeString(), QLatin1String("A random subject with alternative contenttype"));
     }
 
     void testEncryptedForwardAsAttachment()
@@ -222,7 +222,7 @@ private slots:
         KMime::Message::Ptr result;
         MailTemplates::forward(msg, [&](const KMime::Message::Ptr &r) { result = r; });
         QTRY_VERIFY(result);
-        QCOMPARE(result->subject(false)->asUnicodeString(), {"FW: OpenPGP encrypted"});
+        QCOMPARE(result->subject(false)->asUnicodeString(), QLatin1String("FW: OpenPGP encrypted"));
         QCOMPARE(result->to()->addresses(), {});
         QCOMPARE(result->cc()->addresses(), {});
 
@@ -230,12 +230,12 @@ private slots:
         QCOMPARE(attachments.size(), 1);
         auto attachment = attachments[0];
         QCOMPARE(attachment->contentDisposition(false)->disposition(), KMime::Headers::CDinline);
-        QCOMPARE(attachment->contentDisposition(false)->filename(), {"OpenPGP encrypted.eml"});
+        QCOMPARE(attachment->contentDisposition(false)->filename(), QLatin1String("OpenPGP encrypted.eml"));
         QVERIFY(attachment->bodyIsMessage());
 
         attachment->parse();
         auto origMsg = attachment->bodyAsMessage();
-        QCOMPARE(origMsg->subject(false)->asUnicodeString(), {"OpenPGP encrypted"});
+        QCOMPARE(origMsg->subject(false)->asUnicodeString(), QLatin1String("OpenPGP encrypted"));
     }
 
     void testEncryptedWithAttachmentsForwardAsAttachment()
@@ -244,7 +244,7 @@ private slots:
         KMime::Message::Ptr result;
         MailTemplates::forward(msg, [&](const KMime::Message::Ptr &r) { result = r; });
         QTRY_VERIFY(result);
-        QCOMPARE(result->subject(false)->asUnicodeString(), {"FW: OpenPGP encrypted with 2 text attachments"});
+        QCOMPARE(result->subject(false)->asUnicodeString(), QLatin1String("FW: OpenPGP encrypted with 2 text attachments"));
         QCOMPARE(result->to()->addresses(), {});
         QCOMPARE(result->cc()->addresses(), {});
 
@@ -252,17 +252,17 @@ private slots:
         QCOMPARE(attachments.size(), 1);
         auto attachment = attachments[0];
         QCOMPARE(attachment->contentDisposition(false)->disposition(), KMime::Headers::CDinline);
-        QCOMPARE(attachment->contentDisposition(false)->filename(), {"OpenPGP encrypted with 2 text attachments.eml"});
+        QCOMPARE(attachment->contentDisposition(false)->filename(), QLatin1String("OpenPGP encrypted with 2 text attachments.eml"));
         QVERIFY(attachment->bodyIsMessage());
 
         attachment->parse();
         auto origMsg = attachment->bodyAsMessage();
-        QCOMPARE(origMsg->subject(false)->asUnicodeString(), {"OpenPGP encrypted with 2 text attachments"});
+        QCOMPARE(origMsg->subject(false)->asUnicodeString(), QLatin1String("OpenPGP encrypted with 2 text attachments"));
 
         auto attattachments = origMsg->attachments();
         QCOMPARE(attattachments.size(), 2);
-        QCOMPARE(attattachments[0]->contentDisposition(false)->filename(), {"attachment1.txt"});
-        QCOMPARE(attattachments[1]->contentDisposition(false)->filename(), {"attachment2.txt"});
+        QCOMPARE(attattachments[0]->contentDisposition(false)->filename(), QLatin1String("attachment1.txt"));
+        QCOMPARE(attattachments[1]->contentDisposition(false)->filename(), QLatin1String("attachment2.txt"));
     }
 
     void testCreatePlainMail()
@@ -384,7 +384,7 @@ private slots:
 
         QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/signed"});
         QCOMPARE(result->attachments().size(), 1);
-        QCOMPARE(result->attachments()[0]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
+        QCOMPARE(result->attachments()[0]->contentDisposition()->filename(), QLatin1String("0x8F246DE6.asc"));
         QCOMPARE(result->contents().size(), 2);
 
         auto signedMessage = result->contents()[0];
@@ -393,10 +393,10 @@ private slots:
         QCOMPARE(contents.size(), 2);
         QCOMPARE(contents[0]->contentType()->mimeType(), QByteArray{"text/plain"});
         QCOMPARE(contents[1]->contentType()->mimeType(), QByteArray{"application/pgp-keys"});
-        QCOMPARE(contents[1]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
+        QCOMPARE(contents[1]->contentDisposition()->filename(), QLatin1String("0x8F246DE6.asc"));
 
         auto signature = result->contents()[1];
-        QCOMPARE(signature->contentDisposition()->filename(), {"signature.asc"});
+        QCOMPARE(signature->contentDisposition()->filename(), QLatin1String("signature.asc"));
         QVERIFY(signature->contentType()->isMimeType("application/pgp-signature"));
     }
 
@@ -424,9 +424,9 @@ private slots:
 
         QCOMPARE(result->contentType()->mimeType(), QByteArray{"multipart/signed"});
         QCOMPARE(result->attachments().size(), 3);
-        QCOMPARE(result->attachments()[0]->contentDisposition()->filename(), {"filename1"});
-        QCOMPARE(result->attachments()[1]->contentDisposition()->filename(), {"filename2"});
-        QCOMPARE(result->attachments()[2]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
+        QCOMPARE(result->attachments()[0]->contentDisposition()->filename(), QLatin1String("filename1"));
+        QCOMPARE(result->attachments()[1]->contentDisposition()->filename(), QLatin1String("filename2"));
+        QCOMPARE(result->attachments()[2]->contentDisposition()->filename(), QLatin1String("0x8F246DE6.asc"));
 
         QCOMPARE(result->contents().size(), 2);
 
@@ -435,10 +435,10 @@ private slots:
         const auto contents = signedMessage->contents();
         QCOMPARE(contents.size(), 4);
         QCOMPARE(contents[0]->contentType()->mimeType(), QByteArray{"text/plain"});
-        QCOMPARE(contents[1]->contentDisposition()->filename(), {"filename1"});
-        QCOMPARE(contents[2]->contentDisposition()->filename(), {"filename2"});
+        QCOMPARE(contents[1]->contentDisposition()->filename(), QLatin1String("filename1"));
+        QCOMPARE(contents[2]->contentDisposition()->filename(), QLatin1String("filename2"));
         QCOMPARE(contents[3]->contentType()->mimeType(), QByteArray{"application/pgp-keys"});
-        QCOMPARE(contents[3]->contentDisposition()->filename(), {"0x8F246DE6.asc"});
+        QCOMPARE(contents[3]->contentDisposition()->filename(), QLatin1String("0x8F246DE6.asc"));
     }
 
     void testCreateIMipMessage()
@@ -467,7 +467,7 @@ private slots:
         QCOMPARE(result->contents().size(), 2);
         QVERIFY(result->contents()[0]->contentType()->isMimeType("text/plain"));
         QVERIFY(result->contents()[1]->contentType()->isMimeType("text/calendar"));
-        QCOMPARE(result->contents()[1]->contentType()->name(), {"event.ics"});
+        QCOMPARE(result->contents()[1]->contentType()->name(), QLatin1String("event.ics"));
     }
 };
 

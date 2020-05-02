@@ -89,7 +89,7 @@ private slots:
             auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
             QVERIFY(event);
             QCOMPARE(event->uid().toUtf8(), uid);
-            QCOMPARE(event->organizer()->fullName(), {"organizer@test.com"});
+            QCOMPARE(event->organizer()->fullName(), QLatin1String("organizer@test.com"));
 
             const auto attendee = event->attendeeByMail("attendee1@test.com");
             QVERIFY(attendee);
@@ -102,8 +102,8 @@ private slots:
             msg->setContent(mail.getMimeMessage());
             msg->parse();
 
-            QCOMPARE(msg->to()->asUnicodeString(), {"organizer@test.com"});
-            QCOMPARE(msg->from()->asUnicodeString(), {"attendee1@test.com"});
+            QCOMPARE(msg->to()->asUnicodeString(), QLatin1String("organizer@test.com"));
+            QCOMPARE(msg->from()->asUnicodeString(), QLatin1String("attendee1@test.com"));
         }
 
         {

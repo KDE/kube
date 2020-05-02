@@ -366,7 +366,7 @@ private slots:
         QCOMPARE(signaturePart->partMetaData()->crlMissing, false);
         QCOMPARE(signaturePart->partMetaData()->crlTooOld, false);
         QCOMPARE(signaturePart->partMetaData()->keyId, QByteArray{"8D9860C58F246DE6"});
-        QCOMPARE(signaturePart->partMetaData()->signer, {"unittest key (no password) <test@kolab.org>"});
+        QCOMPARE(signaturePart->partMetaData()->signer, QLatin1String("unittest key (no password) <test@kolab.org>"));
         QCOMPARE(signaturePart->partMetaData()->signerMailAddresses, QStringList{{"test@kolab.org"}});
     }
 
