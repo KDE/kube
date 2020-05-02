@@ -475,6 +475,7 @@ Kube.View {
             width: root.width * 0.7
             height: root.height * 0.7
             padding: 0
+            closePolicy: Popup.NoAutoClose
             TodoEditor {
                 id: editor
                 focus: true
