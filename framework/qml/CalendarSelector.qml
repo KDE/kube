@@ -106,6 +106,21 @@ Kube.InlineAccountSwitcher {
             hoverEnabled: true
             property bool isActive: listView.currentIndex === index
 
+            DropArea {
+                id: dropArea
+                property var calendarId: model.identifier
+                anchors.fill: parent
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: Kube.Colors.highlightColor
+                    opacity: 0.3
+                    visible: parent.containsDrag
+                }
+
+                onDropped: drop.accept(Qt.MoveAction)
+            }
+
             background: Kube.DelegateBackground {
                 anchors.fill: parent
                 color: Kube.Colors.textColor

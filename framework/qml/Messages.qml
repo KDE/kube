@@ -33,6 +33,7 @@ Item {
     property string markAsUnread: "markAsUnread"
     property string setImportant: "setImportant"
     property string moveToFolder: "moveToFolder"
+    property string moveToCalendar: "moveToCalendar"
     property string moveToDrafts: "moveToDrafts"
     property string unlockKeyring: "unlockKeyring"
     property string requestLogin: "requestLogin"

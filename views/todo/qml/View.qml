@@ -294,8 +294,6 @@ Kube.View {
                 }
                 delegate: Kube.ListDelegate {
                     id: delegateRoot
-                    //Required for D&D
-                    // property var mail: model.mail
                     property bool buttonsVisible: delegateRoot.hovered
 
                     width: todoView.availableWidth
@@ -304,6 +302,36 @@ Kube.View {
                     color: Kube.Colors.viewBackgroundColor
                     border.color: Kube.Colors.backgroundColor
                     border.width: 1
+
+
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        drag.target: parent
+                        drag.filterChildren: true
+                        onReleased: {
+                            if (parent.Drag.drop() == Qt.MoveAction) {
+                                Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"todo": model.domainObject, "calendarId": parent.Drag.target.calendarId})
+                            }
+                        }
+                    }
+
+                    states: [
+                        State {
+                            name: "dnd"
+                            when: mouseArea.drag.active
+
+                            PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
+                            PropertyChanges {target: delegateRoot; opacity: 0.5}
+                            ParentChange {target: delegateRoot; parent: root; x: x; y: y}
+                        }
+                    ]
+
+                    Drag.active: mouseArea.drag.active
+                    Drag.hotSpot.x: mouseArea.mouseX
+                    Drag.hotSpot.y: mouseArea.mouseY
+                    Drag.source: delegateRoot
 
                     Item {
                         id: content

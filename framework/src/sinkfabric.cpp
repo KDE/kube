@@ -139,6 +139,12 @@ public:
                 Store::modify(*mail).exec();
             }
         }
+        if (id == "moveToCalendar") {
+            if (auto todo = message["todo"].value<ApplicationDomain::Todo::Ptr>()) {
+                todo->setCalendar(message["calendarId"].value<QByteArray>());
+                Store::modify(*todo).exec();
+            }
+        }
         if (id == "unlockKeyring") {
             auto accountId = message["accountId"].value<QByteArray>();
             Kube::AccountKeyring{accountId}.load();
