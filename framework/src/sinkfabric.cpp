@@ -40,7 +40,7 @@ public:
 
     void notify(const QString &id, const QVariantMap &message)
     {
-        SinkLog() << "Received message: " << id << message;
+        SinkTrace() << "Received message: " << id << message;
         if (id == "synchronize"/*Kube::Messages::synchronize*/) {
             if (auto folder = message["folder"].value<ApplicationDomain::Folder::Ptr>()) {
                 SinkLog() << "Synchronizing folder " << folder->resourceInstanceIdentifier() << folder->identifier();
@@ -221,7 +221,7 @@ public:
         : mNotifier{Sink::Query{Sink::Query::LiveQuery}}
     {
         mNotifier.registerHandler([] (const Sink::Notification &notification) {
-            SinkLog() << "Received notification: " << notification;
+            SinkTrace() << "Received notification: " << notification;
 
             if (notification.type == Sink::Notification::Warning) {
                 if (notification.code == Sink::ApplicationDomain::TransmissionError) {
