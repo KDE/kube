@@ -141,16 +141,16 @@ FocusScope {
                 border.width: 1
 
                 states: [
-                State {
-                    name: "dnd"
-                    when: mouseArea.drag.active
+                    State {
+                        name: "dnd"
+                        when: mouseArea.drag.active
 
-                    PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
-                    PropertyChanges {target: delegateRoot; x: x; y: y}
-                    PropertyChanges {target: delegateRoot; parent: root}
-                    PropertyChanges {target: delegateRoot; opacity: 0.2}
-                    PropertyChanges {target: delegateRoot; highlighted: true}
-                }
+                        PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
+                        PropertyChanges {target: delegateRoot; x: x; y: y}
+                        PropertyChanges {target: delegateRoot; parent: root}
+                        PropertyChanges {target: delegateRoot; opacity: 0.2}
+                        PropertyChanges {target: delegateRoot; highlighted: true}
+                    }
                 ]
 
                 Drag.active: mouseArea.drag.active
