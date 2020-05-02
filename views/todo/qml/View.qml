@@ -315,6 +315,7 @@ Kube.View {
                                 Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"todo": model.domainObject, "calendarId": parent.Drag.target.calendarId})
                             }
                         }
+                        onClicked: delegateRoot.clicked()
                     }
 
                     states: [
