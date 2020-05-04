@@ -29,8 +29,6 @@ Kube.View {
     id: root
     property string currentAccount: Kube.Context.currentAccountId
     property variant currentFolder: null
-    property bool doing: true
-    property bool all: false
 
     property date currentDate: new Date()
     property bool autoUpdateDate: true
@@ -46,6 +44,24 @@ Kube.View {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": root.currentAccount})
         }
     }
+
+    states: [
+        State {
+            name: "doing"
+            PropertyChanges {target: root; currentFolder: null}
+            StateChangeScript {script: accountSwitcher.clearSelection()}
+        },
+        State {
+            name: "all"
+            PropertyChanges {target: root; currentFolder: null}
+            StateChangeScript {script: accountSwitcher.clearSelection()}
+        },
+        State {
+            name: "calendar"
+            PropertyChanges {target: root; currentFolder: accountSwitcher.currentCalendar}
+        }
+    ]
+    state: "doing"
 
     Kube.Listener {
         filter: Kube.Messages.search
@@ -154,15 +170,10 @@ Kube.View {
                     text: qsTr("Doing")
                     textColor: Kube.Colors.highlightedTextColor
                     checkable: true
-                    checked: root.doing
+                    checked: root.state == "doing"
                     horizontalAlignment: Text.AlignHLeft
                     ButtonGroup.group: viewButtonGroup
-                    onClicked: {
-                        root.doing = true
-                        root.all = false
-                        root.currentFolder = null
-                        accountSwitcher.clearSelection()
-                    }
+                    onClicked: root.state = "doing"
                 }
                 Kube.TextButton {
                     id: allViewButton
@@ -173,15 +184,10 @@ Kube.View {
                     text: qsTr("All")
                     textColor: Kube.Colors.highlightedTextColor
                     checkable: true
-                    checked: root.all
+                    checked: root.state == "all"
                     horizontalAlignment: Text.AlignHLeft
                     ButtonGroup.group: viewButtonGroup
-                    onClicked: {
-                        root.doing = false
-                        root.all = true
-                        root.currentFolder = null
-                        accountSwitcher.clearSelection()
-                    }
+                    onClicked: root.state = "all"
                 }
             }
 
@@ -199,10 +205,8 @@ Kube.View {
                 }
                 contentType: "todo"
                 onCurrentCalendarChanged: {
-                    root.currentFolder = currentCalendar
                     if (currentCalendar) {
-                        root.doing = false
-                        root.all = false
+                        root.state = "calendar"
                     }
                 }
             }
@@ -288,7 +292,7 @@ Kube.View {
                     filter: {
                         "account": accountSwitcher.currentAccount,
                         "calendars": root.currentFolder ? [root.currentFolder] : accountSwitcher.enabledCalendars,
-                        "doing": root.doing,
+                        "doing": root.state == "doing",
                         "string": root.filter
                     }
                 }
@@ -365,7 +369,7 @@ Kube.View {
                                 text: model.summary
                                 color: delegateRoot.textColor
                                 font.strikeout: model.complete
-                                font.bold: model.doing && !root.doing
+                                font.bold: model.doing && root.state != "doing"
                                 maximumLineCount: 2
                                 wrapMode: Text.WordWrap
                                 elide: Text.ElideRight
