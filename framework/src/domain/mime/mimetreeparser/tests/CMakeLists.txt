@@ -11,6 +11,7 @@ include(ECMAddTests)
 
 add_executable(mimetreeparsertest mimetreeparsertest.cpp)
 add_gpg_crypto_test(mimetreeparsertest mimetreeparsertest)
+add_mtp_symlink()
 target_link_libraries(mimetreeparsertest
     kube_otp
     Qt5::Core

@@ -3,12 +3,27 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-set( MIMETREEPARSERRELPATH framework/src/domain/mime/mimetreeparser)
+if (UNIX)
+  # Use a symlink to make this path shorter since gpg-agent won't work if it's too long
+  # Non-unix platforms don't support symlinks
+  set( MIMETREEPARSERRELPATH mtp)
+else (UNIX)
+  set( MIMETREEPARSERRELPATH framework/src/domain/mime/mimetreeparser)
+endif (UNIX)
+
 set( GNUPGHOME ${CMAKE_BINARY_DIR}/${MIMETREEPARSERRELPATH}/tests/gnupg_home )
 add_definitions( -DGNUPGHOME="${GNUPGHOME}" )
 
+macro (ADD_MTP_SYMLINK)
+   if (UNIX)
+     add_custom_target(mtp_link ALL
+       COMMAND ${CMAKE_COMMAND} -E create_symlink framework/src/domain/mime/mimetreeparser ${CMAKE_BINARY_DIR}/mtp)
+   endif (UNIX)
+endmacro (ADD_MTP_SYMLINK)
+
 macro (ADD_GPG_CRYPTO_TEST _target _testname)
    if (UNIX)
+      add_dependencies(${_target} mtp_link)
       if (APPLE)
          set(_library_path_variable "DYLD_LIBRARY_PATH")
       elseif (CYGWIN)
