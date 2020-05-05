@@ -336,7 +336,7 @@ Kube.View {
                     property bool buttonsVisible: delegateRoot.hovered
 
                     width: todoView.availableWidth
-                    height: Kube.Units.gridUnit * 3
+                    height: Kube.Units.gridUnit * 3 + 2 * Kube.Units.smallSpacing
 
                     color: Kube.Colors.viewBackgroundColor
                     border.color: Kube.Colors.backgroundColor
