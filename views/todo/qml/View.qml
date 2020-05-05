@@ -483,7 +483,7 @@ Kube.View {
                         opacity: 0.7
 
                         Kube.IconButton {
-                            iconName: model.doing ? Kube.Icons.listRemove : Kube.Icons.addNew
+                            iconName: model.doing ? Kube.Icons.undo : Kube.Icons.addNew
                             activeFocusOnTab: false
                             tooltip: model.doing ? qsTr("Unpick") : qsTr("Pick")
                             onClicked: {
