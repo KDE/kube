@@ -47,18 +47,45 @@ Kube.View {
 
     states: [
         State {
+            name: "inbox"
+            PropertyChanges {target: root; currentFolder: null}
+            StateChangeScript {script: accountSwitcher.clearSelection()}
+            PropertyChanges {target: todoModel; filter: {
+                "account": accountSwitcher.currentAccount,
+                "calendars": accountSwitcher.enabledCalendars,
+                "inbox": true,
+                "string": root.filter
+            }}
+        },
+        State {
             name: "doing"
             PropertyChanges {target: root; currentFolder: null}
             StateChangeScript {script: accountSwitcher.clearSelection()}
+            PropertyChanges {target: todoModel; filter: {
+                "account": accountSwitcher.currentAccount,
+                "calendars": accountSwitcher.enabledCalendars,
+                "doing": true,
+                "string": root.filter
+            }}
         },
         State {
             name: "all"
             PropertyChanges {target: root; currentFolder: null}
             StateChangeScript {script: accountSwitcher.clearSelection()}
+            PropertyChanges {target: todoModel; filter: {
+                "account": accountSwitcher.currentAccount,
+                "calendars": accountSwitcher.enabledCalendars,
+                "string": root.filter
+            }}
         },
         State {
             name: "calendar"
             PropertyChanges {target: root; currentFolder: accountSwitcher.currentCalendar}
+            PropertyChanges {target: todoModel; filter: {
+                "account": accountSwitcher.currentAccount,
+                "calendars": [root.currentFolder],
+                "string": root.filter
+            }}
         }
     ]
     state: "doing"
@@ -161,6 +188,20 @@ Kube.View {
                     height: Kube.Units.gridUnit
                 }
 
+                Kube.TextButton {
+                    id: inboxViewButton
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    text: qsTr("Inbox")
+                    textColor: Kube.Colors.highlightedTextColor
+                    checkable: true
+                    checked: root.state == "inbox"
+                    horizontalAlignment: Text.AlignHLeft
+                    ButtonGroup.group: viewButtonGroup
+                    onClicked: root.state = "inbox"
+                }
                 Kube.TextButton {
                     id: doingViewButton
                     anchors {
@@ -289,12 +330,6 @@ Kube.View {
 
                 model: Kube.TodoModel {
                     id: todoModel
-                    filter: {
-                        "account": accountSwitcher.currentAccount,
-                        "calendars": root.currentFolder ? [root.currentFolder] : accountSwitcher.enabledCalendars,
-                        "doing": root.state == "doing",
-                        "string": root.filter
-                    }
                 }
                 delegate: Kube.ListDelegate {
                     id: delegateRoot

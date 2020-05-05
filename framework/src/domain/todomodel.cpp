@@ -65,10 +65,12 @@ void TodoSourceModel::setFilter(const QVariantMap &filter)
     if (!account.isEmpty()) {
         query.resourceFilter<SinkResource::Account>(account);
     }
-    query.filter<Todo::Calendar>(QueryBase::Comparator(QVariant::fromValue(calendarFilter), QueryBase::Comparator::In));
+    query.filter<Todo::Calendar>(Query::Comparator(QVariant::fromValue(calendarFilter), Query::Comparator::In));
 
     if (filter.value("doing").toBool()) {
         query.filter<Todo::Status>("INPROCESS");
+    } else if (filter.value("inbox").toBool()) {
+        query.filter<Todo::Status>(Query::Comparator{QVariant::fromValue(QByteArrayList{"NEEDSACTION", ""}), Query::Comparator::In});
     }
 
     query.setFlags(Sink::Query::LiveQuery);

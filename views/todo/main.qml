@@ -104,6 +104,20 @@ ApplicationWindow {
                         resource: "caldavresource",
                         summary: "Todo"
                     },
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo done",
+                        due: "2018-04-03T14:03:00",
+                        description: "Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n",
+                        done: true
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Todo needs action",
+                        due: "2018-04-03T14:03:00",
+                        description: "Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n",
+                        needsAction: true
+                    },
                 ],
             },
             {

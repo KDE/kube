@@ -233,6 +233,13 @@ static void createTodo(const QVariantMap &object, const QByteArray &calendarId, 
         calcoreEvent->setCompleted(false);
         calcoreEvent->setStatus(KCalCore::Incidence::StatusInProcess);
     }
+    if (object["done"].toBool()) {
+        calcoreEvent->setCompleted(true);
+        calcoreEvent->setStatus(KCalCore::Incidence::StatusCompleted);
+    }
+    if (object["needsAction"].toBool()) {
+        calcoreEvent->setStatus(KCalCore::Incidence::StatusNeedsAction);
+    }
 
     sinkEvent.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
