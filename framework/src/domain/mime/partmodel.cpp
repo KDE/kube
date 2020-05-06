@@ -288,14 +288,11 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 if (!d->showHtml && d->containsHtmlAndPlain) {
                     return HtmlUtils::linkify(Qt::convertFromPlainText(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text()));
                 }
-                const auto text = messagePart->isHtml() ? messagePart->htmlContent() : messagePart->text();
                 if (messagePart->isHtml()) {
-                    return addCss(d->mParser->resolveCidLinks(text));
-                } else { //We assume plain
-                    //We alwas do richtext (so we get highlighted links and stuff).
-                    return HtmlUtils::linkify(Qt::convertFromPlainText(text));
+                    return addCss(d->mParser->resolveCidLinks(messagePart->htmlContent()));
                 }
-                return text;
+                //We alwas do richtext (so we get highlighted links and stuff).
+                return HtmlUtils::linkify(Qt::convertFromPlainText(messagePart->text()));
             }
             case IsEncryptedRole:
                 return messagePart->encryptionState() != MimeTreeParser::KMMsgNotEncrypted;
