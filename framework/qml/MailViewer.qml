@@ -88,6 +88,23 @@ Rectangle {
     ]
     state: "full"
 
+    //Must be lower in the stacking order than TextContent, otherwise link hovering breaks
+    MouseArea {
+        enabled: root.collapsed
+        hoverEnabled: root.collapsed
+        anchors.fill: parent
+        onClicked: {
+            root.collapsed = !root.collapsed
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: Kube.Colors.highlightColor
+            opacity: 0.4
+            visible: root.collapsed && parent.containsMouse
+        }
+    }
+
     Column {
         id: mainLayout
         anchors {
@@ -495,22 +512,6 @@ Rectangle {
         color: Kube.Colors.buttonColor
         opacity: 0.4
         visible: root.unread && !root.sent
-    }
-
-    MouseArea {
-        enabled: root.collapsed
-        hoverEnabled: root.collapsed
-        anchors.fill: parent
-        onClicked: {
-            root.collapsed = !root.collapsed
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            color: Kube.Colors.highlightColor
-            opacity: 0.4
-            visible: root.collapsed && parent.containsMouse
-        }
     }
 
     Component {

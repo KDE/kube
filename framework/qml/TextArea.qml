@@ -17,8 +17,8 @@
 */
 
 import QtQuick 2.7
-import QtQuick.Controls 2
-import QtQuick.Templates 2.0 as T
+import QtQuick.Controls 2.13
+import QtQuick.Templates 2.13 as T
 
 import org.kube.framework 1.0 as Kube
 
@@ -37,11 +37,14 @@ T.TextArea {
 
     font.family: Kube.Font.fontFamily
     color: Kube.Colors.textColor
-    onLinkActivated: Qt.openUrlExternally(link)
+    hoverEnabled: true
+    onLinkActivated: {
+        console.warn("Link activated", link)
+        Qt.openUrlExternally(link)
+    }
 
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
-        cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+    //FIXME with qt 5.13 connecting to this signal is a requirement for the cursorShape to be changed
+    onLinkHovered: {
+        console.warn("Link hovered", link)
     }
 }
