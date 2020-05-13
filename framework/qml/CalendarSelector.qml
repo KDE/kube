@@ -68,6 +68,81 @@ Kube.InlineAccountSwitcher {
             checked: listView.editMode
         }
 
+        footer: Component {
+            FocusScope {
+                height: Kube.Units.gridUnit +  Kube.Units.smallSpacing * 2
+                width: parent.width
+                visible: listView.editMode
+
+                Kube.TextButton {
+                    id: button
+                    text: "+ " + qsTr("Add calendar")
+                    textColor: Kube.Colors.highlightColor
+                    focus: true
+                    onClicked: {
+                        lineEdit.visible = true
+                        lineEdit.forceActiveFocus()
+                    }
+                }
+
+                Kube.TextField {
+                    id: lineEdit
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    visible: false
+
+                    signal aborted()
+
+                    selectByMouse: true
+
+                    onEditingFinished: {
+                        accepted()
+                    }
+
+                    validator: RegExpValidator { regExp: /.+/ }
+
+                    Keys.onReturnPressed: {
+                        if (acceptableInput) {
+                            accepted()
+                        } else {
+                            aborted()
+                        }
+                    }
+
+                    Keys.onEscapePressed: {
+                        aborted()
+                    }
+
+                    placeholderText: button.text
+
+                    Kube.EntityController {
+                        id: entityController
+                    }
+
+                    onAccepted: {
+                        entityController.create({type: "calendar", account: listView.parent.accountId, entity: {
+                            "name": text,
+                            "color": Kube.Colors.jazzberryJam,
+                            "contentTypes": [contentType],
+                            "enabled": true,
+                        }})
+                        clear()
+                        visible = false
+                        button.forceActiveFocus(Qt.TabFocusReason)
+                    }
+                    onAborted: {
+                        clear()
+                        visible = false
+                        button.forceActiveFocus(Qt.TabFocusReason)
+                    }
+                }
+            }
+
+        }
+        footerPositioning: ListView.InlineFooter
+
         currentIndex: -1
 
         Layout.fillWidth: true
@@ -182,6 +257,18 @@ Kube.InlineAccountSwitcher {
                     height: Kube.Units.gridUnit * 0.8
                     radius: width / 2
                     color: model.color
+                }
+                Kube.IconButton {
+                    id: removeButton
+
+                    Kube.EntityController {
+                        id: entityController
+                    }
+
+                    visible: listView.editMode
+                    onClicked: entityController.remove(model.object)
+                    padding: 0
+                    iconName: Kube.Icons.remove
                 }
                 ToolTip {
                     id: toolTipItem

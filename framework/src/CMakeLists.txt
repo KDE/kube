@@ -64,6 +64,7 @@ add_library(kubeframework SHARED
     file.cpp
     logmodel.cpp
     entitymodel.cpp
+    entitycontroller.cpp
     )
 generate_export_header(kubeframework BASE_NAME Kube EXPORT_FILE_NAME kube_export.h)
 set_target_properties(kubeframework PROPERTIES

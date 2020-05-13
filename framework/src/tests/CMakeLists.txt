@@ -23,5 +23,6 @@ auto_tests(
     maillistmodeltest
     eventoccurrencemodeltest
     entitymodeltest
+    entitycontrollertest
     invitationcontrollertest
 )
