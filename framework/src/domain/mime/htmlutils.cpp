@@ -18,7 +18,8 @@
 */
 #include "htmlutils.h"
 
-#include <QTextDocument>
+#include <QUrl>
+#include <QMap>
 
 static QString resolveEntities(const QString &in)
 {

@@ -22,6 +22,7 @@
 
 #include "domain/maillistmodel.h"
 #include "domain/folderlistmodel.h"
+#include "domain/mime/htmlutils.h"
 #include "domain/perioddayeventmodel.h"
 #include "domain/multidayeventmodel.h"
 #include "domain/eventoccurrencemodel.h"
@@ -116,6 +117,13 @@ static QObject *fabric_singletontype_provider(QQmlEngine *engine, QJSEngine *scr
     return new Kube::Fabric::Fabric;
 }
 
+static QObject *htmlutils_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return new HtmlUtils::HtmlUtils;
+}
+
 static QObject *keyring_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine)
@@ -205,6 +213,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<CheckedEntities>(uri, 1, 0, "CheckedEntities");
     qmlRegisterType<CheckableEntityModel>(uri, 1, 0, "CheckableEntityModel");
     qmlRegisterType<QQuickTreeModelAdaptor1>(uri, 1, 0, "TreeModelAdaptor");
+    qmlRegisterSingletonType<HtmlUtils::HtmlUtils>(uri, 1, 0, "HtmlUtils", htmlutils_singletontype_provider);
 
     qmlRegisterType<AccountFactory>(uri, 1, 0, "AccountFactory");
     qmlRegisterType<AccountsModel>(uri, 1, 0, "AccountsModel");

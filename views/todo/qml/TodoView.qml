@@ -87,7 +87,8 @@ FocusScope {
 
                 Kube.TextArea {
                     Layout.fillWidth: true
-                    text: controller.description
+                    text: Kube.HtmlUtils.toHtml(controller.description)
+                    textFormat: Kube.TextArea.RichText
                 }
 
                 Item {
