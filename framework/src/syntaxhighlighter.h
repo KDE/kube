@@ -20,4 +20,4 @@
 
 #include <QTextBoundaryFinder>
 
-QVector<QStringRef> split(QTextBoundaryFinder::BoundaryType boundary, const QString &text);
+QVector<QStringRef> split(QTextBoundaryFinder::BoundaryType boundary, const QString &text, int reason = 0);

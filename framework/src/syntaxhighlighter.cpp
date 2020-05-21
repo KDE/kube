@@ -20,18 +20,27 @@
 
 #include <QDebug>
 
-QVector<QStringRef> split(QTextBoundaryFinder::BoundaryType boundary, const QString &text)
+QVector<QStringRef> split(QTextBoundaryFinder::BoundaryType boundary, const QString &text, int reasonMask)
 {
     QVector<QStringRef> parts;
     QTextBoundaryFinder boundaryFinder(boundary, text);
 
     while (boundaryFinder.position() < text.length()) {
         const int start = boundaryFinder.position();
-        const int end = boundaryFinder.toNextBoundary();
-        if (end == -1) {
-            break;
+
+        //Advance until we find a break that matches the mask or are at the end
+        for (;;) {
+            if (boundaryFinder.toNextBoundary() == -1) {
+                boundaryFinder.toEnd();
+                break;
+            }
+            if (!reasonMask || boundaryFinder.boundaryReasons() & reasonMask) {
+                break;
+            }
         }
-        const int length = end - start;
+
+        const auto length = boundaryFinder.position() - start;
+
         if (length < 1) {
             continue;
         }

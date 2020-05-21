@@ -66,7 +66,7 @@ private:
             quoteFormat.setForeground(QColor{"#7f8c8d"});
             return quoteFormat;
         }();
-        for (const auto &part : split(QTextBoundaryFinder::Line, text)) {
+        for (const auto &part : split(QTextBoundaryFinder::Line, text, QTextBoundaryFinder::MandatoryBreak)) {
             if (!part.isEmpty() && part.at(0) == QChar{'>'}) {
                 setFormat(part.position(), part.length(), quoteFormat);
             }
