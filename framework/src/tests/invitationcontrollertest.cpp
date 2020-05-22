@@ -31,7 +31,7 @@ class InvitationControllerTest : public QObject
         calcoreEvent->setLocation("location");
         calcoreEvent->setDtStart(QDateTime::currentDateTime());
         calcoreEvent->setOrganizer("organizer@test.com");
-        calcoreEvent->addAttendee(KCalCore::Attendee::Ptr::create("John Doe", "attendee1@test.com", true, KCalCore::Attendee::NeedsAction));
+        calcoreEvent->addAttendee(KCalCore::Attendee("John Doe", "attendee1@test.com", true, KCalCore::Attendee::NeedsAction));
         calcoreEvent->setRevision(revision);
 
         return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, KCalCore::iTIPRequest);
@@ -91,11 +91,10 @@ private slots:
             auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
             QVERIFY(event);
             QCOMPARE(event->uid().toUtf8(), uid);
-            QCOMPARE(event->organizer()->fullName(), QLatin1String{"organizer@test.com"});
+            QCOMPARE(event->organizer().fullName(), QLatin1String{"organizer@test.com"});
 
             const auto attendee = event->attendeeByMail("attendee1@test.com");
-            QVERIFY(attendee);
-            QCOMPARE(attendee->status(), KCalCore::Attendee::Accepted);
+            QCOMPARE(attendee.status(), KCalCore::Attendee::Accepted);
 
             //Ensure the mail is sent to the organizer
             QTRY_COMPARE(Sink::Store::read<Mail>(Sink::Query{}.resourceFilter(mailtransportResourceId)).size(), 1);

@@ -1,7 +1,7 @@
 
 find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine Gui)
 find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
-find_package(KF5CalendarCore CONFIG REQUIRED)
+find_package(KF5CalendarCore 5.12.2 CONFIG REQUIRED)
 find_package(Sink 0.8.0 CONFIG REQUIRED)
 find_package(KAsync CONFIG REQUIRED)
 find_package(Gpgme REQUIRED)

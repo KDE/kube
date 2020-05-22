@@ -191,7 +191,7 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
     if (object.contains("attendees")) {
         for (const auto &attendee : object["attendees"].toList()) {
             auto map = attendee.toMap();
-            calcoreEvent->addAttendee(KCalCore::Attendee::Ptr::create(map["name"].toString(), map["email"].toString(), true, KCalCore::Attendee::NeedsAction, KCalCore::Attendee::ReqParticipant, QString{}));
+            calcoreEvent->addAttendee(KCalCore::Attendee(map["name"].toString(), map["email"].toString(), true, KCalCore::Attendee::NeedsAction, KCalCore::Attendee::ReqParticipant, QString{}));
         }
     }
 

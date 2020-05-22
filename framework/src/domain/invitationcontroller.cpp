@@ -58,14 +58,14 @@ void InvitationController::handleReply(KCalCore::Event::Ptr icalEvent)
 
     if (!attendees.isEmpty()) {
         auto attendee = attendees.first();
-        if (attendee->status() == KCalCore::Attendee::Declined) {
+        if (attendee.status() == KCalCore::Attendee::Declined) {
             setState(InvitationState::Declined);
-        } else if (attendee->status() == KCalCore::Attendee::Accepted) {
+        } else if (attendee.status() == KCalCore::Attendee::Accepted) {
             setState(InvitationState::Accepted);
         } else {
             setState(InvitationState::Unknown);
         }
-        setName(assembleEmailAddress(attendee->name(), attendee->email()));
+        setName(assembleEmailAddress(attendee.name(), attendee.email()));
     }
 
     populateFromEvent(*icalEvent);
@@ -189,7 +189,7 @@ void InvitationController::loadICal(const QString &ical)
 
 static void sendIMipReply(const QByteArray &accountId, const QString &from, const QString &fromName, KCalCore::Event::Ptr event, KCalCore::Attendee::PartStat status)
 {
-    const auto organizerEmail = event->organizer()->fullName();
+    const auto organizerEmail = event->organizer().fullName();
 
     if (organizerEmail.isEmpty()) {
         SinkWarning() << "Failed to find the organizer to send the reply to " << organizerEmail;
@@ -198,7 +198,7 @@ static void sendIMipReply(const QByteArray &accountId, const QString &from, cons
 
     auto reply = KCalCore::Event::Ptr::create(*event);
     reply->clearAttendees();
-    reply->addAttendee(KCalCore::Attendee::Ptr::create(fromName, from, false, status));
+    reply->addAttendee(KCalCore::Attendee(fromName, from, false, status));
 
     QString body;
     if (status == KCalCore::Attendee::Accepted) {
