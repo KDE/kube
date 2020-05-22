@@ -181,9 +181,9 @@ int main(int argc, char *argv[])
             return -1;
         }
         auto object = json.object();
-        for (const auto accountId : object.keys()) {
+        for (const auto &accountId : object.keys()) {
             auto dict = object.value(accountId).toObject();
-            for (const auto resourceId : dict.keys()) {
+            for (const auto &resourceId : dict.keys()) {
                 Kube::AccountKeyring{accountId.toUtf8()}.addPassword(resourceId.toUtf8(), dict.value(resourceId).toString().toUtf8());
             }
         }

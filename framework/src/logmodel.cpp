@@ -37,7 +37,7 @@ LogModel::LogModel(QObject *parent)
     }
 
     QHash<int, QByteArray> roleNames;
-    for (const auto r : mRoles.keys()) {
+    for (const auto &r : mRoles.keys()) {
         roleNames.insert(mRoles[r], r);
     }
     setItemRoleNames(roleNames);
