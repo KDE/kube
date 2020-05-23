@@ -70,8 +70,11 @@ FocusScope {
             id: delegate
             width: listView.availableWidth
             height: Kube.Units.gridUnit * 1.5
-            hoverEnabled: true
             property bool isActive: listView.currentIndex === index
+
+            //FIXME The enabled property is specific to the folder model
+            selectionEnabled: model.enabled
+            hoverEnabled: selectionEnabled
 
             DropArea {
                 anchors.fill: parent
@@ -115,7 +118,7 @@ FocusScope {
                     id: label
                     Layout.fillWidth: true
                     text: model.name
-                    color: Kube.Colors.highlightedTextColor
+                    color: delegate.selectionEnabled ? Kube.Colors.highlightedTextColor : Kube.Colors.disabledTextColor
                     elide: Text.ElideLeft
                     clip: false
                 }

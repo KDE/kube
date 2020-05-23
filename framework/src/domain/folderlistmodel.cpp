@@ -61,6 +61,7 @@ QHash< int, QByteArray > FolderListModel::roleNames() const
     roles[DomainObject] = "domainObject";
     roles[Status] = "status";
     roles[Trash] = "trash";
+    roles[Enabled] = "enabled";
     roles[HasNewData] = "hasNewData";
 
     return roles;
@@ -91,10 +92,9 @@ QVariant FolderListModel::data(const QModelIndex &idx, int role) const
             return NoStatus;
         }
         case Trash:
-            if (folder) {
-                return folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash);
-            }
-            return false;
+            return folder->getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash);
+        case Enabled:
+            return folder->getEnabled();
         case HasNewData:
             return mHasNewData.contains(folder->identifier());
     }

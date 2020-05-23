@@ -57,6 +57,7 @@ public:
         DomainObject,
         Status,
         Trash,
+        Enabled,
         HasNewData
     };
     Q_ENUMS(Roles)
