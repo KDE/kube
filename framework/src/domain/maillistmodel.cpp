@@ -226,7 +226,7 @@ void MailListModel::setFilter(const QVariantMap &filter)
     Sink::Query query;
 
     //Base queries
-    if (filter.contains("folder") && filter.value("folder").value<Folder::Ptr>()) {
+    if (filter.value("folder").value<Folder::Ptr>()) {
         auto folder = filter.value("folder").value<Folder::Ptr>();
         const auto specialPurpose = folder->getSpecialPurpose();
         mIsThreaded = !(specialPurpose.contains(SpecialPurpose::Mail::drafts) ||
@@ -258,6 +258,8 @@ void MailListModel::setFilter(const QVariantMap &filter)
         //Latest mail on top
         sort(0, Qt::DescendingOrder);
         validQuery = true;
+    } else if (filter.contains("account")) {
+        query.resourceFilter<SinkResource::Account>(filter.value("account").toByteArray());
     }
 
     if (filter.value("important").toBool()) {
@@ -321,10 +323,6 @@ void MailListModel::setFilter(const QVariantMap &filter)
             //Avoid live updates until we properly filter updates
             query.setFlags(Sink::Query::NoFlags);
         }
-    }
-
-    if (filter.contains("account")) {
-        query.resourceFilter<SinkResource::Account>(filter.value("account").toByteArray());
     }
 
     if (filter.value("headersOnly").toBool()) {
