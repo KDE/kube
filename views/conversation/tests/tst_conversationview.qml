@@ -94,6 +94,7 @@ ViewTestCase {
                 }],
         }
         TestStore.setup(initialState)
+        Kube.Context.currentAccountId = "account1"
         var mailView = createTemporaryObject(mailViewComponent, testCase, {})
         var folderListView = findChild(mailView, "folderListView");
         verify(folderListView)
