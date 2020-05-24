@@ -63,7 +63,7 @@ TestCase {
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
         tryVerify(function(){ return (1300 > htmlView.width && htmlView.width > 1200)})
-        tryVerify(function(){ return (2600 > htmlView.height && htmlView.height > 2400)})
+        tryVerify(function(){ return (2700 > htmlView.height && htmlView.height > 2400)})
     }
 
 }
