@@ -149,6 +149,9 @@ private slots:
             QCOMPARE(controller.getEventState(), InvitationController::Existing);
         }
     }
+
+    //TODO test accepting an exception on top of an existing recurring event
+
 };
 
 QTEST_MAIN(InvitationControllerTest)

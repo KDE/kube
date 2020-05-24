@@ -87,8 +87,16 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
     query.filter<Event::Uid>(icalEvent->uid().toUtf8());
     Store::fetchAll<Event>(query).then([this, icalEvent](const QList<Event::Ptr> &events) {
         if (!events.isEmpty()) {
-            const auto event = *events.first();
-            auto localEvent = KCalCore::ICalFormat().readIncidence(event.getIcal()).dynamicCast<KCalCore::Event>();
+            //Find the matching occurrence in case of exceptions
+            const auto [event, localEvent] = [&] {
+                for (const auto &e : events) {
+                    auto ical = KCalCore::ICalFormat().readIncidence(e->getIcal()).dynamicCast<KCalCore::Event>();
+                    if (ical && ical->instanceIdentifier() == icalEvent->instanceIdentifier()) {
+                        return std::pair(*e, ical);
+                    }
+                }
+                return std::pair<Event, KCalCore::Event::Ptr>{};
+            }();
             if(!localEvent) {
                 SinkWarning() << "Invalid ICal to process, ignoring...";
                 return KAsync::null();
