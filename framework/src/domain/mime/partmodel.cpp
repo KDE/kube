@@ -24,14 +24,73 @@
 
 #include <QDebug>
 #include <QTextDocument>
+#include <QRegularExpression>
+
+static std::pair<QString, bool> trim(const QString &text)
+{
+    const QList<QRegularExpression> delimiters{
+        QRegularExpression{"<p>-+Original Message-+", QRegularExpression::CaseInsensitiveOption},
+        QRegularExpression{"<p>On.*wrote:", QRegularExpression::CaseInsensitiveOption}
+    };
+    for (const auto &expression : delimiters) {
+        auto i = expression.globalMatch(text);
+        while (i.hasNext()) {
+            const auto match = i.next();
+            const int startOffset = match.capturedStart(0);
+            // This is a very simplistic detection for an inline reply where we would have the patterns before the actual message content.
+            // We simply ignore anything we find within the first few lines.
+            if (startOffset >= 5) {
+                return {text.mid(0, startOffset), true};
+            } else {
+                //Search for the next delimiter
+                continue;
+            }
+        }
+    }
+
+    return {text, false};
+}
+
+static QString addCss(const QString &s)
+{
+    //Get the default font from QApplication
+    static const auto fontFamily = QFont{}.family();
+    //overflow:hidden ensures no scrollbars are ever shown.
+    static const auto css = QString("<style>\n")
+               + QString("body {\n"
+               "  overflow:hidden;\n"
+               "  font-family: \"%1\" ! important;\n"
+               "  color: #31363b ! important;\n"
+               "  background-color: #fcfcfc ! important\n"
+               "}\n").arg(fontFamily)
+               + QString("blockquote { \n"
+               "  border-left: 2px solid #bdc3c7 ! important;\n"
+               "}\n")
+               + QString("</style>");
+
+    const auto header = QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
+                  "<html><head><title></title>")
+                  + css + QLatin1String("</head>\n<body>\n");
+    return header + s + QStringLiteral("</body></html>");
+}
 
 class PartModelPrivate
 {
 public:
-    PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser);
+    PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser)
+        : q(q_ptr)
+        , mParser(parser)
+    {
+        collectContents();
+    }
+
+
     ~PartModelPrivate() = default;
 
     void checkPart(const MimeTreeParser::MessagePart::Ptr part) {
+        //Extract the content of the part and
+        mContents.insert(part.data(), extractContent(part.data()));
+
         //Has to contain html, and be an alternative part (so it's not only html)
         if (part->isHtml() && part.dynamicCast<MimeTreeParser::AlternativeMessagePart>()) {
             containsHtmlAndPlain = true;
@@ -51,27 +110,73 @@ public:
         }
     }
 
+    QVariant extractContent(MimeTreeParser::MessagePart *messagePart)
+    {
+        if (auto alternativePart = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
+            if (alternativePart->availableModes().contains(MimeTreeParser::AlternativeMessagePart::MultipartIcal)) {
+                return alternativePart->icalContent();
+            }
+        }
+
+        auto preprocessPlaintext = [&] (const QString &text) {
+            //We alwas do richtext (so we get highlighted links and stuff).
+            const auto html = Qt::convertFromPlainText(text);
+            if (trimMail) {
+                const auto result = trim(html);
+                //FIXME can't do this here in a const function
+                isTrimmed = result.second;
+                // emit trimMailChanged();
+                return HtmlUtils::linkify(result.first);
+            }
+            return HtmlUtils::linkify(html);
+        };
+
+        if (!showHtml && containsHtmlAndPlain) {
+            return preprocessPlaintext(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text());
+        }
+        if (messagePart->isHtml()) {
+            return addCss(mParser->resolveCidLinks(messagePart->htmlContent()));
+        }
+        return preprocessPlaintext(messagePart->text());
+    }
+
+    QVariant contentForPart(MimeTreeParser::MessagePart *messagePart) const
+    {
+        return mContents.value(messagePart);
+    }
+
+    void collectContents()
+    {
+        mEncapsulatedParts.clear();
+        mParents.clear();
+        mContents.clear();
+        containsHtmlAndPlain = false;
+        isTrimmed = false;
+
+        mParts = mParser->collectContentParts();
+        for (auto p : mParts) {
+            checkPart(p);
+            if (auto e = p.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
+                findEncapsulated(e);
+            }
+        }
+    }
+
     PartModel *q;
     QVector<MimeTreeParser::MessagePartPtr> mParts;
     QHash<MimeTreeParser::MessagePart*, QVector<MimeTreeParser::MessagePartPtr>> mEncapsulatedParts;
     QHash<MimeTreeParser::MessagePart*, MimeTreeParser::MessagePart*> mParents;
+    QMap<MimeTreeParser::MessagePart*, QVariant> mContents;
     std::shared_ptr<MimeTreeParser::ObjectTreeParser> mParser;
     bool showHtml{false};
     bool containsHtmlAndPlain{false};
+#ifdef KUBE_EXPERIMENTAL
+    bool trimMail{true};
+#else
+    bool trimMail{false};
+#endif
+    bool isTrimmed{false};
 };
-
-PartModelPrivate::PartModelPrivate(PartModel *q_ptr, const std::shared_ptr<MimeTreeParser::ObjectTreeParser> &parser)
-    : q(q_ptr)
-    , mParser(parser)
-{
-    mParts = mParser->collectContentParts();
-    for (auto p : mParts) {
-        checkPart(p);
-        if (auto e = p.dynamicCast<MimeTreeParser::EncapsulatedRfc822MessagePart>()) {
-            findEncapsulated(e);
-        }
-    }
-}
 
 PartModel::PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser)
     : d(std::unique_ptr<PartModelPrivate>(new PartModelPrivate(this, parser)))
@@ -87,6 +192,7 @@ void PartModel::setShowHtml(bool html)
     if (d->showHtml != html) {
         beginResetModel();
         d->showHtml = html;
+        d->collectContents();
         endResetModel();
         emit showHtmlChanged();
     }
@@ -95,6 +201,27 @@ void PartModel::setShowHtml(bool html)
 bool PartModel::showHtml() const
 {
     return d->showHtml;
+}
+
+void PartModel::setTrimMail(bool trim)
+{
+    if (d->trimMail != trim) {
+        beginResetModel();
+        d->trimMail = trim;
+        d->collectContents();
+        endResetModel();
+        emit trimMailChanged();
+    }
+}
+
+bool PartModel::trimMail() const
+{
+    return d->trimMail;
+}
+
+bool PartModel::isTrimmed() const
+{
+    return d->isTrimmed;
 }
 
 bool PartModel::containsHtml() const
@@ -141,29 +268,6 @@ QModelIndex PartModel::index(int row, int column, const QModelIndex &parent) con
         return createIndex(row, column, d->mParts.at(row).data());
     }
     return QModelIndex();
-}
-
-static QString addCss(const QString &s)
-{
-    //Get the default font from QApplication
-    static const auto fontFamily = QFont{}.family();
-    //overflow:hidden ensures no scrollbars are ever shown.
-    static const auto css = QString("<style>\n")
-               + QString("body {\n"
-               "  overflow:hidden;\n"
-               "  font-family: \"%1\" ! important;\n"
-               "  color: #31363b ! important;\n"
-               "  background-color: #fcfcfc ! important\n"
-               "}\n").arg(fontFamily)
-               + QString("blockquote { \n"
-               "  border-left: 2px solid #bdc3c7 ! important;\n"
-               "}\n")
-               + QString("</style>");
-
-    const auto header = QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
-                  "<html><head><title></title>")
-                  + css + QLatin1String("</head>\n<body>\n");
-    return header + s + QStringLiteral("</body></html>");
 }
 
 SignatureInfo *encryptionInfo(MimeTreeParser::MessagePart *messagePart)
@@ -279,21 +383,8 @@ QVariant PartModel::data(const QModelIndex &index, int role) const
                 return false;
             case IsErrorRole:
                 return messagePart->error();
-            case ContentRole: {
-                if (auto alternativePart = dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
-                    if (alternativePart->availableModes().contains(MimeTreeParser::AlternativeMessagePart::MultipartIcal)) {
-                        return alternativePart->icalContent();
-                    }
-                }
-                if (!d->showHtml && d->containsHtmlAndPlain) {
-                    return HtmlUtils::linkify(Qt::convertFromPlainText(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text()));
-                }
-                if (messagePart->isHtml()) {
-                    return addCss(d->mParser->resolveCidLinks(messagePart->htmlContent()));
-                }
-                //We alwas do richtext (so we get highlighted links and stuff).
-                return HtmlUtils::linkify(Qt::convertFromPlainText(messagePart->text()));
-            }
+            case ContentRole:
+                return d->contentForPart(messagePart);
             case IsEncryptedRole:
                 return messagePart->encryptionState() != MimeTreeParser::KMMsgNotEncrypted;
             case IsSignedRole:

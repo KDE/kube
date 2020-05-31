@@ -434,6 +434,22 @@ Rectangle {
             iconName: Kube.Icons.goDown
         }
 
+        Kube.TextButton {
+            anchors {
+                left: parent.left
+            }
+            width: Kube.Units.gridUnit
+            height: Kube.Units.gridUnit
+            padding: 0
+            visible: root.partModel && root.partModel.isTrimmed
+            // Center dots instead of ...
+            text: "\u00B7\u00B7\u00B7"
+            opacity: 50
+            onClicked: {
+                root.partModel.trimMail = !root.partModel.trimMail
+            }
+        }
+
         Item {
             id: footer
             property var mail: root.mail

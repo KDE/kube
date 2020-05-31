@@ -34,6 +34,8 @@ class PartModel : public QAbstractItemModel {
     Q_OBJECT
     Q_PROPERTY(bool showHtml READ showHtml WRITE setShowHtml NOTIFY showHtmlChanged)
     Q_PROPERTY(bool containsHtml READ containsHtml NOTIFY containsHtmlChanged)
+    Q_PROPERTY(bool trimMail READ trimMail WRITE setTrimMail NOTIFY trimMailChanged)
+    Q_PROPERTY(bool isTrimmed READ isTrimmed NOTIFY trimMailChanged)
 public:
     PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser);
     ~PartModel();
@@ -68,8 +70,13 @@ public:
     bool showHtml() const;
     bool containsHtml() const;
 
+    void setTrimMail(bool trim);
+    bool trimMail() const;
+    bool isTrimmed() const;
+
 signals:
     void showHtmlChanged();
+    void trimMailChanged();
     void containsHtmlChanged();
 
 private:
