@@ -124,16 +124,14 @@ public:
             return HtmlUtils::linkify(html);
         };
 
-        //Has to contain html, and be an alternative part (so it's not only html)
-        if (part->isHtml() && part.dynamicCast<MimeTreeParser::AlternativeMessagePart>()) {
-            containsHtmlAndPlain = true;
-            emit q->containsHtmlChanged();
-            if (!showHtml) {
-                return preprocessPlaintext(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text());
-            }
-        }
-
         if (messagePart->isHtml()) {
+            if (dynamic_cast<MimeTreeParser::AlternativeMessagePart*>(messagePart)) {
+                containsHtmlAndPlain = true;
+                emit q->containsHtmlChanged();
+                if (!showHtml) {
+                    return preprocessPlaintext(messagePart->plaintextContent());
+                }
+            }
             return addCss(mParser->resolveCidLinks(messagePart->htmlContent()));
         }
         return preprocessPlaintext(messagePart->text());
