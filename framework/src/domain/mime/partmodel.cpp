@@ -90,12 +90,6 @@ public:
     void checkPart(const MimeTreeParser::MessagePart::Ptr part) {
         //Extract the content of the part and
         mContents.insert(part.data(), extractContent(part.data()));
-
-        //Has to contain html, and be an alternative part (so it's not only html)
-        if (part->isHtml() && part.dynamicCast<MimeTreeParser::AlternativeMessagePart>()) {
-            containsHtmlAndPlain = true;
-            emit q->containsHtmlChanged();
-        }
     }
 
     //Recursively find encapsulated messages
@@ -123,17 +117,22 @@ public:
             const auto html = Qt::convertFromPlainText(text);
             if (trimMail) {
                 const auto result = trim(html);
-                //FIXME can't do this here in a const function
                 isTrimmed = result.second;
-                // emit trimMailChanged();
+                emit q->trimMailChanged();
                 return HtmlUtils::linkify(result.first);
             }
             return HtmlUtils::linkify(html);
         };
 
-        if (!showHtml && containsHtmlAndPlain) {
-            return preprocessPlaintext(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text());
+        //Has to contain html, and be an alternative part (so it's not only html)
+        if (part->isHtml() && part.dynamicCast<MimeTreeParser::AlternativeMessagePart>()) {
+            containsHtmlAndPlain = true;
+            emit q->containsHtmlChanged();
+            if (!showHtml) {
+                return preprocessPlaintext(messagePart->isHtml() ? messagePart->plaintextContent() : messagePart->text());
+            }
         }
+
         if (messagePart->isHtml()) {
             return addCss(mParser->resolveCidLinks(messagePart->htmlContent()));
         }
