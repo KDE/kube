@@ -22,17 +22,24 @@ class InvitationControllerTest : public QObject
     QByteArray resourceId;
     QByteArray mailtransportResourceId;
 
-    QString createInvitation(const QByteArray &uid, const QString &summary, int revision)
+    QString createInvitation(const QByteArray &uid, const QString &summary, int revision, QDateTime dtStart = QDateTime::currentDateTime(), bool recurring = false, QDateTime recurrenceId = {})
     {
         auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
         calcoreEvent->setUid(uid);
         calcoreEvent->setSummary(summary);
         calcoreEvent->setDescription("description");
         calcoreEvent->setLocation("location");
-        calcoreEvent->setDtStart(QDateTime::currentDateTime());
+        calcoreEvent->setDtStart(dtStart);
         calcoreEvent->setOrganizer("organizer@test.com");
         calcoreEvent->addAttendee(KCalCore::Attendee("John Doe", "attendee1@test.com", true, KCalCore::Attendee::NeedsAction));
         calcoreEvent->setRevision(revision);
+
+        if (recurring) {
+            calcoreEvent->recurrence()->setDaily(1);
+        }
+        if (recurrenceId.isValid()) {
+            calcoreEvent->setRecurrenceId(recurrenceId);
+        }
 
         return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, KCalCore::iTIPRequest);
     }
@@ -150,7 +157,151 @@ private slots:
         }
     }
 
-    //TODO test accepting an exception on top of an existing recurring event
+    void testAcceptRecurrenceException()
+    {
+        auto calendar = ApplicationDomainType::createEntity<Calendar>(resourceId);
+        Sink::Store::create(calendar).exec().waitForFinished();
+
+        const QByteArray uid{"uid2"};
+        auto dtstart = QDateTime{{2020, 1, 1}, {14, 0, 0}, Qt::UTC};
+        const auto ical = createInvitation(uid, "summary", 0, dtstart, true);
+
+        {
+            InvitationController controller;
+            controller.loadICal(ical);
+
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+
+            QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
+            QTRY_COMPARE(controller.getEventState(), InvitationController::New);
+
+            controller.acceptAction()->execute();
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+
+            //Ensure the event is stored
+            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
+
+            auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
+            QCOMPARE(list.size(), 1);
+
+            auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
+            QVERIFY(event);
+            QCOMPARE(event->uid().toUtf8(), uid);
+            QCOMPARE(event->organizer().fullName(), QLatin1String{"organizer@test.com"});
+        }
+
+        //Reload the event
+        {
+            InvitationController controller;
+            controller.loadICal(ical);
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+            QTRY_COMPARE(controller.getUid(), uid);
+            QVERIFY(!controller.getRecurrenceId().isValid());
+        }
+
+        //Load an exception and accept it
+        {
+            InvitationController controller;
+            //TODO I suppose the revision of the exception can also be 0?
+            controller.loadICal(createInvitation(uid, "exceptionSummary", 1, dtstart.addSecs(3600), false, dtstart));
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+            QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
+            QTRY_COMPARE(controller.getUid(), uid);
+            QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
+            QTRY_COMPARE(controller.getRecurrenceId(), dtstart);
+
+            //Accept the update
+            controller.acceptAction()->execute();
+
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+
+            //Ensure the event is stored
+            //FIXME, or just flush?
+            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
+
+            auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
+            QCOMPARE(list.size(), 2);
+
+            for (const auto &entry : list) {
+                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                QVERIFY(event);
+                QCOMPARE(event->uid().toUtf8(), uid);
+                if (event->recurrenceId().isValid()) {
+                    QCOMPARE(event->summary(), QLatin1String{"exceptionSummary"});
+                } else {
+                    QCOMPARE(event->summary(), QLatin1String{"summary"});
+                }
+            }
+        }
+
+        //Update the exception and accept it
+        {
+            InvitationController controller;
+            controller.loadICal(createInvitation(uid, "exceptionSummary2", 3, dtstart.addSecs(3600), false, dtstart));
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+            QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
+            QTRY_COMPARE(controller.getUid(), uid);
+            QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
+            QTRY_COMPARE(controller.getRecurrenceId(), dtstart);
+
+            //Accept the update
+            controller.acceptAction()->execute();
+
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+
+            //Ensure the event is stored
+            //FIXME, or just flush?
+            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
+
+            auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
+            QCOMPARE(list.size(), 2);
+
+            for (const auto &entry : list) {
+                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                QVERIFY(event);
+                QCOMPARE(event->uid().toUtf8(), uid);
+                if (event->recurrenceId().isValid()) {
+                    QCOMPARE(event->summary(), QLatin1String{"exceptionSummary2"});
+                } else {
+                    QCOMPARE(event->summary(), QLatin1String{"summary"});
+                }
+            }
+        }
+
+        //Update the main event and accept it
+        {
+            InvitationController controller;
+            controller.loadICal(createInvitation(uid, "summary2", 4, dtstart, true));
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+            QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
+            QTRY_COMPARE(controller.getUid(), uid);
+            QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
+            QVERIFY(!controller.getRecurrenceId().isValid());
+
+            //Accept the update
+            controller.acceptAction()->execute();
+
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+
+            //Ensure the event is stored
+            //FIXME, or just flush?
+            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
+
+            auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
+            QCOMPARE(list.size(), 2);
+
+            for (const auto &entry : list) {
+                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                QVERIFY(event);
+                QCOMPARE(event->uid().toUtf8(), uid);
+                if (event->recurrenceId().isValid()) {
+                    QCOMPARE(event->summary(), QLatin1String{"exceptionSummary2"});
+                } else {
+                    QCOMPARE(event->summary(), QLatin1String{"summary2"});
+                }
+            }
+        }
+    }
 
 };
 

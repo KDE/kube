@@ -86,22 +86,17 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
     query.request<Event::Ical>();
     query.filter<Event::Uid>(icalEvent->uid().toUtf8());
     Store::fetchAll<Event>(query).then([this, icalEvent](const QList<Event::Ptr> &events) {
-        if (!events.isEmpty()) {
-            //Find the matching occurrence in case of exceptions
-            const auto [event, localEvent] = [&] {
-                for (const auto &e : events) {
-                    auto ical = KCalCore::ICalFormat().readIncidence(e->getIcal()).dynamicCast<KCalCore::Event>();
-                    if (ical && ical->instanceIdentifier() == icalEvent->instanceIdentifier()) {
-                        return std::pair(*e, ical);
-                    }
+        //Find the matching occurrence in case of exceptions
+        const auto [event, localEvent] = [&] {
+            for (const auto &e : events) {
+                auto ical = KCalCore::ICalFormat().readIncidence(e->getIcal()).dynamicCast<KCalCore::Event>();
+                if (ical && ical->instanceIdentifier() == icalEvent->instanceIdentifier()) {
+                    return std::pair(*e, ical);
                 }
-                return std::pair<Event, KCalCore::Event::Ptr>{};
-            }();
-            if(!localEvent) {
-                SinkWarning() << "Invalid ICal to process, ignoring...";
-                return KAsync::null();
             }
-
+            return std::pair<Event, KCalCore::Event::Ptr>{};
+        }();
+        if (localEvent) {
             mExistingEvent = event;
             if (icalEvent->revision() > localEvent->revision()) {
                 setEventState(InvitationController::Update);
@@ -122,7 +117,13 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
                 setUid(localEvent->uid().toUtf8());
             }
         } else {
-            setEventState(InvitationController::New);
+            mExistingEvent = {};
+            if (icalEvent->recurrenceId().isValid()) {
+                setRecurrenceId(icalEvent->recurrenceId());
+                setEventState(InvitationController::Update);
+            } else {
+                setEventState(InvitationController::New);
+            }
             //We don't even have a local copy, this is a new event
             populateFromEvent(*icalEvent);
             setStart(icalEvent->dtStart());
@@ -285,7 +286,7 @@ void InvitationController::storeEvent(InvitationState status)
 
             sendIMipReply(accountId, fromAddress, fromName, calcoreEvent, status == InvitationController::Accepted ? KCalCore::Attendee::Accepted : KCalCore::Attendee::Declined);
 
-            if (getEventState() == InvitationController::New || getRecurrenceId().isValid()) {
+            if (mExistingEvent.identifier().isEmpty()) {
                 const auto calendar = getCalendar();
                 if (!calendar) {
                     SinkWarning() << "No calendar selected";
