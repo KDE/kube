@@ -151,6 +151,8 @@ FocusScope {
                     current: delegateRoot.isCurrentItem
                     searchString: root.searchString
                     autoLoadImages: root.autoLoadImages
+                    // Collapse all but the latest sent message by default
+                    collapsed: (listView.count > 1) && (delegateRoot.index < (listView.count - 1)) && (draft || sent)
                 }
             }
 

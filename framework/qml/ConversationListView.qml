@@ -28,6 +28,7 @@ FocusScope {
     id: root
     property alias model: repeater.model
     property alias delegate: repeater.delegate
+    property alias count: repeater.count
     property alias contentHeight: flickable.contentHeight
     property int currentIndex: -1
 
