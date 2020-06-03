@@ -29,8 +29,20 @@
 static std::pair<QString, bool> trim(const QString &text)
 {
     const QList<QRegularExpression> delimiters{
+        //English
         QRegularExpression{"<p>-+Original Message-+", QRegularExpression::CaseInsensitiveOption},
-        QRegularExpression{"<p>On.*wrote:", QRegularExpression::CaseInsensitiveOption}
+        //The remainder is not quoted
+        QRegularExpression{"<p>On.*wrote:", QRegularExpression::CaseInsensitiveOption},
+        //The remainder is quoted
+        QRegularExpression{"&gt; On.*wrote:", QRegularExpression::CaseInsensitiveOption},
+
+        //German
+        //Forwarded
+        QRegularExpression{"<p>Von:.*</p>", QRegularExpression::CaseInsensitiveOption},
+        //Reply
+        QRegularExpression{"<p>Am.*schrieb.*:</p>", QRegularExpression::CaseInsensitiveOption},
+        //Signature
+        QRegularExpression{"<p>-- <br>", QRegularExpression::CaseInsensitiveOption}
     };
     for (const auto &expression : delimiters) {
         auto i = expression.globalMatch(text);
