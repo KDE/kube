@@ -441,7 +441,7 @@ Rectangle {
             width: Kube.Units.gridUnit
             height: Kube.Units.gridUnit
             padding: 0
-            visible: root.partModel && root.partModel.isTrimmed
+            visible: root.partModel && root.partModel.isTrimmed && !root.collapsed
             // Center dots instead of ...
             text: "\u00B7\u00B7\u00B7"
             opacity: 50
