@@ -36,6 +36,8 @@ class KUBE_EXPORT AccountSettings : public QObject
     Q_PROPERTY(QString imapServer MEMBER mImapServer NOTIFY imapResourceChanged)
     Q_PROPERTY(QValidator* imapServerValidator READ imapServerValidator CONSTANT)
     Q_PROPERTY(QString imapUsername MEMBER mImapUsername NOTIFY imapResourceChanged)
+    Q_PROPERTY(bool imapStarttls MEMBER mImapStarttls NOTIFY imapResourceChanged)
+    Q_PROPERTY(QString imapAuthenticationMode MEMBER mImapAuthenticationMode NOTIFY imapResourceChanged)
 
     Q_PROPERTY(QString smtpServer MEMBER mSmtpServer NOTIFY smtpResourceChanged)
     Q_PROPERTY(QValidator* smtpServerValidator READ smtpServerValidator CONSTANT)
@@ -110,6 +112,8 @@ protected:
     QByteArray mImapIdentifier;
     QString mImapServer;
     QString mImapUsername;
+    QString mImapAuthenticationMode;
+    bool mImapStarttls;
 
     QByteArray mMaildirIdentifier;
     QString mPath;

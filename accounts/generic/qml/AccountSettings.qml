@@ -112,6 +112,37 @@ Item {
         }
 
         Kube.Label {
+            text: qsTr("Use Starttls")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.CheckBox {
+            Layout.fillWidth: true
+            checked: settings.imapStarttls
+            onToggled: settings.imapStarttls = checked
+        }
+
+        Kube.Label {
+            text: qsTr("Authentication Method")
+            Layout.alignment: Qt.AlignRight
+        }
+        Kube.ComboBox {
+            Layout.fillWidth: true
+            model: ["CLEARTEXT", "LOGIN", "PLAIN"]
+
+            function getCurrentIndex(mode) {
+                var index = find(mode)
+                if (index < 0) {
+                    //Default to PLAIN
+                    return 2
+                }
+                return index
+            }
+
+            currentIndex: getCurrentIndex(settings.imapAuthenticationMode)
+            onCurrentIndexChanged: settings.imapAuthenticationMode = textAt(currentIndex)
+        }
+
+        Kube.Label {
             text: qsTr("SMTP address")
             Layout.alignment: Qt.AlignRight
         }

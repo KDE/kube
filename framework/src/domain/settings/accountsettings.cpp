@@ -57,6 +57,8 @@ void AccountSettings::setAccountIdentifier(const QByteArray &id)
     mName = QString();
     mImapServer = QString();
     mImapUsername = QString();
+    mImapAuthenticationMode = QString();
+    mImapStarttls = false;
     mSmtpServer = QString();
     mSmtpUsername = QString();
     mCardDavServer = QString();
@@ -199,6 +201,8 @@ void AccountSettings::loadImapResource()
             mImapIdentifier = resource.identifier();
             mImapServer = resource.getProperty("server").toString();
             mImapUsername = resource.getProperty("username").toString();
+            mImapStarttls = resource.getProperty("starttls").toBool();
+            mImapAuthenticationMode = resource.getProperty("authenticationMode").toString();
             emit imapResourceChanged();
         }).onError([](const KAsync::Error &error) {
             qWarning() << "Failed to load the imap resource: " << error.errorMessage;
@@ -304,7 +308,9 @@ void AccountSettings::saveImapResource()
 {
     mImapIdentifier = saveResource<ImapResource>(mAccountIdentifier, mImapIdentifier, {
             {"server", mImapServer},
-            {"username", mImapUsername}
+            {"username", mImapUsername},
+            {"starttls", mImapStarttls},
+            {"authenticationMode", mImapAuthenticationMode}
         });
 }
 
