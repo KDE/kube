@@ -1,0 +1,26 @@
+From foo@example.com Thu, 26 May 2011 01:16:54 +0100
+From: Thomas McGuire <foo@example.com>
+Subject: HTML test
+Date: Thu, 26 May 2011 01:16:54 +0100
+Message-ID: <1501334.pROlBb7MZF@herrwackelpudding.localhost>
+X-KMail-Transport: GMX
+X-KMail-Fcc: 28
+X-KMail-Drafts: 7
+X-KMail-Templates: 9
+User-Agent: KMail/4.6 beta5 (Linux/2.6.34.7-0.7-desktop; KDE/4.6.41; x86_64; git-0269848; 2011-04-19)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/html; charset="windows-1252"
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8" /></head><body style=3D'font-size: 10pt; font-family: Verdana,Gen=
+eva,sans-serif'>
+<div class=3D"pre" style=3D"margin: 0; padding: 0; font-family: monospace">=
+This is some <strong>formatted</strong> funky text.<br /><br /><span class=
+=3D"sig">--&nbsp;<br />This is a signature.<br />Senior Software Engineer<br=
+ /><br />Kolab Systems AG<br />Z&uuml;rich, Switzerland<br /><br />e: <a hr=
+ef=3D"mailto:mollekopf@kolabsystems.com">mollekopf@kolabsystems.com</a><br =
+/>w: <a href=3D"https://kolabsystems.com" target=3D"_blank" rel=3D"noopener=
+ noreferrer">https://kolabsystems.com</a><br /><br />pgp: EA657400 Christia=
+n Mollekopf</span></div>
+</body></html>
