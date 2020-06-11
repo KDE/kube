@@ -29,6 +29,8 @@ Kube.View {
     id: root
     property var currentFolder: null
     property bool important: false
+    property bool hideTrash: false
+    property bool hideNonTrash: false
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + mailListView.parent.x, 0, (mailView.x + mailView.width) - mailListView.parent.x, (mailView.y + mailView.height) - mailListView.y)
@@ -332,7 +334,9 @@ Kube.View {
                         mailViewModel.filter = {
                             "mail": message.mail,
                             "headersOnly": false,
-                            "fetchMails": true
+                            "fetchMails": true,
+                            "hideTrash": root.hideTrash,
+                            "hideNonTrash": root.hideNonTrash
                         }
                     }
                 }
@@ -341,8 +345,8 @@ Kube.View {
             Kube.Listener {
                 filter: Kube.Messages.folderSelection
                 onMessageReceived: {
-                    mailView.hideTrash = !message.trash
-                    mailView.hideNonTrash = message.trash
+                    root.hideTrash = !message.trash
+                    root.hideNonTrash = message.trash
                 }
             }
 

@@ -325,6 +325,14 @@ void MailListModel::setFilter(const QVariantMap &filter)
         }
     }
 
+    if (filter.value("hideTrash").toBool()) {
+        query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
+    }
+
+    if (filter.value("hideNonTrash").toBool()) {
+        query.filter<Sink::ApplicationDomain::Mail::Trash>(true);
+    }
+
     if (filter.value("headersOnly").toBool()) {
         requestHeaders(query);
     } else {

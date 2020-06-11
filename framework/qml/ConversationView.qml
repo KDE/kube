@@ -110,8 +110,6 @@ FocusScope {
 
                 height: sheet.height + Kube.Units.gridUnit
                 width: listView.width
-                //FIXME breaks keyboard navigation because we don't jump over invisible items
-                visible: !((root.hideTrash && model.trash) || (root.hideNonTrash && !model.trash))
 
                 NumberAnimation on opacity {
                     id: fadeIn
