@@ -46,8 +46,7 @@ Rectangle {
     property alias searchString: mailViewer.searchString
     property alias autoLoadImages: mailViewer.autoLoadImages
     property alias loaded: messageParser.loaded
-
-    property bool collapsed: draft || sent
+    property bool collapsed: false
 
     implicitHeight: mainLayout.height + 2 * Kube.Units.largeSpacing
 
