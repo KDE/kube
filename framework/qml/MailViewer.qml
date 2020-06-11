@@ -30,13 +30,13 @@ Rectangle {
 
     property var mail
     property var message
-    property var subject
-    property var sender
-    property var senderName
-    property var to
-    property var cc
-    property var bcc
-    property var date
+    property string subject
+    property string sender
+    property string senderName
+    property string to
+    property string cc
+    property string bcc
+    property date date
     property bool trash
     property bool draft
     property bool sent
