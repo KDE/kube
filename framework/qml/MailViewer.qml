@@ -237,7 +237,8 @@ Rectangle {
 
                     width: parent.width - goDown.width - Kube.Units.smallSpacing
 
-                    text:"to: "+ root.to + " "  + root.cc + " " +  root.bcc
+                    text: "to: "+ root.to + " "  + root.cc + " " +  root.bcc
+                    copyText: [root.to, root.cc, root.bcc].filter(s => !!s).join()
                     elide: Text.ElideRight
                     opacity: 0.75
                 }
@@ -247,7 +248,8 @@ Rectangle {
 
                     width: parent.width - goDown.width - Kube.Units.smallSpacing
 
-                    text:"to: " + root.to
+                    text: "to: " + root.to
+                    copyText: root.to
                     wrapMode: Text.WordWrap
                     opacity: 0.75
                 }
@@ -257,7 +259,8 @@ Rectangle {
 
                     width: parent.width - goDown.width - Kube.Units.smallSpacing
 
-                    text:"cc: " + root.cc
+                    text: "cc: " + root.cc
+                    copyText: root.cc
                     wrapMode: Text.WordWrap
                     opacity: 0.75
                 }
@@ -267,7 +270,8 @@ Rectangle {
 
                     width: parent.width - goDown.width - Kube.Units.smallSpacing
 
-                    text:"bcc: " + root.bcc
+                    text: "bcc: " + root.bcc
+                    copyText: root.bcc
                     wrapMode: Text.WordWrap
                     opacity: 0.75
                 }

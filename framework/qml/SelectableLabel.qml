@@ -24,13 +24,14 @@ import org.kube.framework 1.0 as Kube
 Kube.Label {
     id: root
     default property alias children: menu.children
+    property string copyText: text
     Kube.ContextMenuOverlay {
         id: menu
         anchors.fill: parent
         Kube.TextButton {
             id: button
             text: qsTr("Copy")
-            onClicked: clipboard.text = root.text
+            onClicked: clipboard.text = root.copyText
             Kube.Clipboard {
                 id: clipboard
             }

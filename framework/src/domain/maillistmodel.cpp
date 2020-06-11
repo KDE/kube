@@ -93,7 +93,11 @@ static QString join(const QList<Sink::ApplicationDomain::Mail::Contact> &contact
     QStringList list;
     for (const auto &contact : contacts) {
         if (!contact.name.isEmpty()) {
-            list << QString("%1 <%2>").arg(contact.name).arg(contact.emailAddress);
+            if (contact.name.contains(",")) {
+                list << QString("\"%1\" <%2>").arg(contact.name).arg(contact.emailAddress);
+            } else {
+                list << QString("%1 <%2>").arg(contact.name).arg(contact.emailAddress);
+            }
         } else {
             list << contact.emailAddress;
         }
