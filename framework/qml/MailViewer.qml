@@ -241,6 +241,11 @@ Rectangle {
                     copyText: [root.to, root.cc, root.bcc].filter(s => !!s).join()
                     elide: Text.ElideRight
                     opacity: 0.75
+
+                    Kube.TextButton {
+                        text: qsTr("Send mail to")
+                        onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {"recipients": [[root.to, root.cc, root.bcc].filter(s => !!s).join()]})
+                    }
                 }
 
                 Kube.SelectableLabel {
