@@ -101,6 +101,8 @@ MouseArea {
 
         // Show the scrollbars
         flickable.flick(0, 0);
+        //Workaround because we seem to break this but rely on it in ConversationListView
+        flickable.movementStarted();
         flickable.contentY = newPos;
         cancelFlickStateTimer.start()
     }
