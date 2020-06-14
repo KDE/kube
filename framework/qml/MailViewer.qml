@@ -40,7 +40,8 @@ Rectangle {
     property bool trash
     property bool draft
     property bool sent
-    property bool incomplete: false
+    property bool busy: false
+    property string busyMessage: qsTr("Incomplete body...")
     property bool current: false
     property bool unread
     property alias searchString: mailViewer.searchString
@@ -71,11 +72,11 @@ Rectangle {
 
     states: [
         State {
-            name: "incomplete"; when: root.incomplete || !root.loaded
+            name: "busy"; when: root.busy || !root.loaded
             PropertyChanges { target: buttonContainer; visible: false}
             PropertyChanges { target: body; visible: false}
             PropertyChanges { target: footer; visible: false}
-            PropertyChanges { target: incompleteBody; visible: true}
+            PropertyChanges { target: busyBody; visible: true}
         },
         State {
             name: "collapsed"; when: root.collapsed
@@ -409,26 +410,16 @@ Rectangle {
         }
 
         Kube.Label {
-            id: incompleteBody
+            id: busyBody
             anchors {
                 left: parent.left
                 right: parent.right
             }
             visible: false
             height: visible ? implicitHeight : 0
-            text: qsTr("Incomplete body...")
+            text: root.busyMessage
             color: Kube.Colors.textColor
             enabled: false
-            states: [
-                State {
-                    name: "inprogress"; when: model.status == Kube.MailListModel.InProgressStatus
-                    PropertyChanges { target: incompleteBody; text: qsTr("Downloading message...") }
-                },
-                State {
-                    name: "error"; when: model.status == Kube.MailListModel.ErrorStatus
-                    PropertyChanges { target: incompleteBody; text: qsTr("Failed to download message...") }
-                }
-            ]
         }
 
         Kube.IconButton {

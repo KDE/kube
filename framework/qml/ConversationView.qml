@@ -145,12 +145,23 @@ FocusScope {
                     trash: model.trash
                     draft: model.draft
                     sent: model.sent
-                    incomplete: model.incomplete
+                    busy: model.incomplete
                     current: delegateRoot.isCurrentItem
                     searchString: root.searchString
                     autoLoadImages: root.autoLoadImages
                     // Collapse all but the latest sent message by default
                     collapsed: (listView.count > 1) && (delegateRoot.index < (listView.count - 1)) && (draft || sent)
+
+                    states: [
+                        State {
+                            name: "inprogress"; when: model.status == Kube.MailListModel.InProgressStatus
+                            PropertyChanges { target: sheet; busyMessage: qsTr("Downloading message...") }
+                        },
+                        State {
+                            name: "error"; when: model.status == Kube.MailListModel.ErrorStatus
+                            PropertyChanges { target: sheet; busyMessage: qsTr("Failed to download message...") }
+                        }
+                    ]
                 }
             }
 
