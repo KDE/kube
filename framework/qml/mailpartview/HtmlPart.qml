@@ -56,22 +56,16 @@ Item {
             width: Math.min(root.contentWidth, 2000)
             height: Math.min(root.contentHeight, 4000)
             Component.onCompleted: loadHtml(content, "file:///")
-            onContentsSizeChanged: {
-                //Some pages apparently don't have a size when loading has finished.
-                if (root.contentHeight <= root.minimumSize) {
-                    root.contentHeight = Math.max(contentsSize.height / Screen.devicePixelRatio, root.minimumSize)
-                }
-                if (root.contentWidth <= root.minimumSize) {
-                    root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, root.minimumSize)
-                }
-            }
             onLoadingChanged: {
-                if (loadRequest.status == WebEngineLoadRequest.LoadFailedStatus) {
+                if (loadRequest.status == WebEngineView.LoadFailedStatus) {
                     console.warn("Failed to load html content.")
                     console.warn("Error is ", loadRequest.errorString)
                 }
-                root.contentHeight = Math.max(contentsSize.height / Screen.devicePixelRatio, root.minimumSize)
                 root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, root.minimumSize)
+
+                if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
+                    runJavaScript("document.body.scrollHeight", function(result) { console.warn("JS Height 2", result); root.contentHeight = result; });
+                }
             }
             onLinkHovered: {
                 console.debug("Link hovered ", hoveredUrl)
@@ -98,7 +92,7 @@ Item {
                 localContentCanAccessRemoteUrls: false
                 localContentCanAccessFileUrls: false
                 linksIncludedInFocusChain: false
-                javascriptEnabled: false
+                javascriptEnabled: true
                 javascriptCanOpenWindows: false
                 javascriptCanAccessClipboard: false
                 hyperlinkAuditingEnabled: false
