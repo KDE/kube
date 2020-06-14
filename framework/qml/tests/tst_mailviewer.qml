@@ -63,8 +63,8 @@ TestCase {
         verify(htmlView)
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
-        tryVerify(function(){ return (1300 > htmlView.width && htmlView.width > 1200)})
-        tryVerify(function(){ return (2800 > htmlView.height && htmlView.height > 2600)})
+        tryVerify(function(){ return (700 > htmlView.width && htmlView.width > 600)})
+        tryVerify(function(){ return (1400 > htmlView.height && htmlView.height > 1250)})
     }
 
     Component {
@@ -108,8 +108,10 @@ blockquote {
         verify(htmlView)
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
-        tryVerify(function(){ return (400 > htmlView.width && htmlView.width > 300)})
-        tryVerify(function(){ return (1300 > htmlView.height && htmlView.height > 1100)})
+        //The width is 400 because the parent is.
+        tryVerify(function(){ return (450 > htmlView.width && htmlView.width > 350)})
+        //The calculated height is slightly too large
+        tryVerify(function(){ return (650 > htmlView.height && htmlView.height > 500)})
 
         var part = createTemporaryObject(textComponent, testCase, {content: data})
         var textView = findChild(part, "textView");
@@ -359,8 +361,8 @@ blockquote {
         verify(htmlView)
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
-        tryVerify(function(){ return (1300 > htmlView.width && htmlView.width > 1200)})
-        tryVerify(function(){ return (2800 > htmlView.height && htmlView.height > 2700)})
+        tryVerify(function(){ return (700 > htmlView.width && htmlView.width > 600)})
+        tryVerify(function(){ return (1400 > htmlView.height && htmlView.height > 1250)})
     }
 
 

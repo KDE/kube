@@ -61,10 +61,13 @@ Item {
                     console.warn("Failed to load html content.")
                     console.warn("Error is ", loadRequest.errorString)
                 }
-                root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, root.minimumSize)
+                root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, flickable.minimumSize)
 
                 if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
-                    runJavaScript("[document.body.scrollHeight, document.body.scrollWidth]", function(result) { console.debug("WebEngineView queried dimensions", result); root.contentHeight = result[0]; root.contentWidth = result[1];});
+                    runJavaScript("[document.body.scrollHeight, document.body.scrollWidth]", function(result) {
+                        root.contentHeight = result[0] / Screen.devicePixelRatio;
+                        root.contentWidth = Math.max(result[1] / Screen.devicePixelRatio, flickable.width)
+                    });
                 }
             }
             onLinkHovered: {
