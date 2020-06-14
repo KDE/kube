@@ -64,7 +64,7 @@ TestCase {
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
         tryVerify(function(){ return (1300 > htmlView.width && htmlView.width > 1200)})
-        tryVerify(function(){ return (2800 > htmlView.height && htmlView.height > 2700)})
+        tryVerify(function(){ return (2800 > htmlView.height && htmlView.height > 2600)})
     }
 
     Component {
@@ -109,7 +109,7 @@ blockquote {
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
         tryVerify(function(){ return (400 > htmlView.width && htmlView.width > 300)})
-        tryVerify(function(){ return (1300 > htmlView.height && htmlView.height > 1200)})
+        tryVerify(function(){ return (1300 > htmlView.height && htmlView.height > 1100)})
 
         var part = createTemporaryObject(textComponent, testCase, {content: data})
         var textView = findChild(part, "textView");
@@ -359,7 +359,7 @@ blockquote {
         verify(htmlView)
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
-        tryVerify(function(){ return (500 > htmlView.width && htmlView.width > 400)})
+        tryVerify(function(){ return (1300 > htmlView.width && htmlView.width > 1200)})
         tryVerify(function(){ return (2800 > htmlView.height && htmlView.height > 2700)})
     }
 

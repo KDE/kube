@@ -64,7 +64,7 @@ Item {
                 root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, root.minimumSize)
 
                 if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
-                    runJavaScript("document.body.scrollHeight", function(result) { console.warn("JS Height 2", result); root.contentHeight = result; });
+                    runJavaScript("[document.body.scrollHeight, document.body.scrollWidth]", function(result) { console.debug("WebEngineView queried dimensions", result); root.contentHeight = result[0]; root.contentWidth = result[1];});
                 }
             }
             onLinkHovered: {
