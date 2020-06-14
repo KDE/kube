@@ -58,10 +58,10 @@ Item {
             Component.onCompleted: loadHtml(content, "file:///")
             onContentsSizeChanged: {
                 //Some pages apparently don't have a size when loading has finished.
-                if (root.contentHeight < root.minimumSize) {
+                if (root.contentHeight <= root.minimumSize) {
                     root.contentHeight = Math.max(contentsSize.height / Screen.devicePixelRatio, root.minimumSize)
                 }
-                if (root.contentWidth < root.minimumSize) {
+                if (root.contentWidth <= root.minimumSize) {
                     root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, root.minimumSize)
                 }
             }

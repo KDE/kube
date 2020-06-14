@@ -39,6 +39,7 @@ Item {
 
     Kube.TextArea {
         id: textEdit
+        objectName: "textView"
 
         anchors {
             top: parent.top
