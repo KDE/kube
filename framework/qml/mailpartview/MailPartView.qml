@@ -18,57 +18,27 @@
 
 import QtQuick 2.4
 
-import org.kube.framework 1.0 as Kube
-
 Item {
     id: root
     property alias rootIndex: visualModel.rootIndex
     property alias model: visualModel.model
     property alias searchString: visualModel.searchString
     property alias autoLoadImages: visualModel.autoLoadImages
-    property variant sender
-    property variant date
-    height: childrenRect.height
+    height: partListView.height
 
-    Rectangle {
-        id: border
-        anchors {
-            top: parent.top
-            left: parent.left
-            leftMargin: Kube.Units.smallSpacing
-        }
-        color: Kube.Colors.lightgrey
-        height: partListView.height + sender.height
-        width: Kube.Units.smallSpacing
-    }
-
-    Text {
-        id: sender
-        anchors {
-            top: parent.top
-            left: border.right
-            leftMargin: Kube.Units.smallSpacing
-            right: parent.right
-        }
-
-        text: qsTr("sent by %1 on %2").arg(root.sender).arg(Qt.formatDateTime(root.date, "dd MMM yyyy hh:mm"))
-        color: "grey"
-        clip: true
-    }
     ListView {
         id: partListView
         anchors {
-            top: sender.bottom
-            left: border.right
-            margins: Kube.Units.smallSpacing
-            leftMargin: Kube.Units.smallSpacing
+            top: parent.top
+            left: parent.left
+            margins: 5
         }
-        model: MailDataModel {
+        spacing: 5
+        height: contentHeight
+        width: parent.width - 10
+        interactive: false
+        model: MailPartModel {
             id: visualModel
         }
-        spacing: 7
-        height: contentHeight
-        width: parent.width - Kube.Units.smallSpacing * 3
-        interactive: false
     }
 }

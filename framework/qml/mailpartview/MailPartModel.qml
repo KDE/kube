@@ -143,14 +143,14 @@ DelegateModel {
         Component.onCompleted: {
             switch (model.type) {
                 case "plain":
-                    partLoader.setSource("TextContent.qml",
+                    partLoader.setSource("TextPart.qml",
                                         {"content": model.content,
                                         "embedded": model.embedded,
                                         "type": model.type
                                         })
                     break
                 case "html":
-                    partLoader.setSource("HtmlContent.qml",
+                    partLoader.setSource("HtmlPart.qml",
                                         {"content": model.content,
                                         })
                     break;

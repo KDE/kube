@@ -22,4 +22,3 @@ string(SUBSTRING "${AVAILABLE_ACCOUNT_PLUGINS}" 2 -1 AVAILABLE_ACCOUNT_PLUGINS)
 
 configure_file(accounts/AccountConfiguration.qml.in accounts/AccountConfiguration.qml)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/accounts/AccountConfiguration.qml DESTINATION ${QML_INSTALL_DIR}/org/kube/components/accounts)
-install_qml_component(mailviewer)

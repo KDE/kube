@@ -95,7 +95,7 @@ ApplicationWindow {
         anchors.centerIn: parent
         border.color: "blue"
         border.width: 2
-        MailViewer {
+        MailPartView {
             anchors.fill: parent
             visible: true
             model: messageParser.parts

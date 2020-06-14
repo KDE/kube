@@ -22,7 +22,7 @@ import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
 
-import org.kube.components.mailviewer 1.0 as MV
+import "mailpartview" as MPV
 import org.kube.framework 1.0 as Kube
 
 Rectangle {
@@ -397,7 +397,7 @@ Rectangle {
                 right: parent.right
             }
             height: visible ? mailViewer.height + 20 : 0
-            MV.MailViewer {
+            MPV.MailPartView {
                 id: mailViewer
                 objectName: "mailViewer"
                 anchors.top: body.top
