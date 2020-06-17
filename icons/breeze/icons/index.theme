@@ -20,7 +20,6 @@ Name[ru]=Kube
 Name[sk]=Kube
 Name[sv]=Kube
 Name[uk]=Kube
-Name[x-test]=xxKubexx
 Name[zh_TW]=Kube
 
 Comment=Kube Theme
@@ -44,7 +43,6 @@ Comment[ru]=Оформление Kube
 Comment[sk]=Téma Kube
 Comment[sv]=Kube tema
 Comment[uk]=Тема Kube
-Comment[x-test]=xxKube Themexx
 Comment[zh_TW]=Kube 主題
 
 DisplayDepth=32
