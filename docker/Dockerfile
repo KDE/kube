@@ -1,4 +1,4 @@
-FROM fedora:rawhide
+FROM fedora:32
 
 RUN dnf -y update
 
