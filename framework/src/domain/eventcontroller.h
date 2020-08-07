@@ -67,6 +67,8 @@ public:
         Unknown,
         Accepted,
         Declined,
+        Cancelled, //This is not part of the usual partstat in ical, but for our purposes where it belongs
+        NoMatch
     };
     Q_ENUM(ParticipantStatus);
 

@@ -34,15 +34,6 @@ class KUBE_EXPORT InvitationController : public EventController
     Q_OBJECT
 
 public:
-    enum InvitationState {
-        Unknown,
-        Accepted,
-        Declined,
-        Cancelled, //This is not part of the usual partstat in ical, but for our purposes where it belongs
-        NoMatch
-    };
-    Q_ENUM(InvitationState);
-
     enum InvitationMethod {
         Reply,
         Request,
@@ -58,7 +49,7 @@ public:
     Q_ENUM(InvitationEventState);
 
     KUBE_CONTROLLER_PROPERTY(QByteArray, Uid, uid)
-    KUBE_CONTROLLER_PROPERTY(InvitationState, State, state)
+    KUBE_CONTROLLER_PROPERTY(ParticipantStatus, State, state)
     KUBE_CONTROLLER_PROPERTY(InvitationMethod, Method, method)
     KUBE_CONTROLLER_PROPERTY(InvitationEventState, EventState, eventState)
     KUBE_CONTROLLER_PROPERTY(QString, Name, name)
@@ -76,7 +67,8 @@ private:
     void handleRequest(KCalCore::Event::Ptr icalEvent);
     void handleReply(KCalCore::Event::Ptr icalEvent);
     void handleCancellation(KCalCore::Event::Ptr icalEvent);
-    void storeEvent(InvitationState);
+    void storeEvent(ParticipantStatus);
+    KAsync::Job<ParticipantStatus> findAttendeeStatus();
     Sink::ApplicationDomain::Event mExistingEvent;
     KCalCore::Event::Ptr mLoadedIcalEvent;
 };

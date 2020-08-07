@@ -79,11 +79,11 @@ void InvitationController::handleReply(KCalCore::Event::Ptr icalEvent)
     if (!attendees.isEmpty()) {
         auto attendee = attendees.first();
         if (attendee.status() == KCalCore::Attendee::Declined) {
-            setState(InvitationState::Declined);
+            setState(ParticipantStatus::Declined);
         } else if (attendee.status() == KCalCore::Attendee::Accepted) {
-            setState(InvitationState::Accepted);
+            setState(ParticipantStatus::Accepted);
         } else {
-            setState(InvitationState::Unknown);
+            setState(ParticipantStatus::Unknown);
         }
         setName(assembleEmailAddress(attendee.name(), attendee.email()));
     }
@@ -118,6 +118,34 @@ void InvitationController::handleCancellation(KCalCore::Event::Ptr icalEvent)
         setUid(icalEvent->uid().toUtf8());
     }).exec();
 
+}
+
+KAsync::Job<EventController::ParticipantStatus> InvitationController::findAttendeeStatus()
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    Query query;
+    query.request<ApplicationDomain::Identity::Name>()
+        .request<ApplicationDomain::Identity::Address>()
+        .request<ApplicationDomain::Identity::Account>();
+    auto job = Store::fetchAll<ApplicationDomain::Identity>(query)
+        .then([this] (const QList<Identity::Ptr> &list) {
+            if (list.isEmpty()) {
+                SinkWarning() << "Failed to find an identity";
+            }
+            for (const auto &identity : list) {
+                const auto id = attendeesController()->findByProperty("email", identity->getAddress());
+                if (!id.isEmpty()) {
+                    return attendeesController()->value(id, "status").value<EventController::ParticipantStatus>();
+                } else {
+                    SinkLog() << "No attendee found for " << identity->getAddress();
+                }
+            }
+            SinkWarning() << "Failed to find matching identity in list of attendees.";
+            return EventController::NoMatch;
+        });
+    return job;
 }
 
 void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
@@ -165,36 +193,12 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
             setUid(icalEvent->uid().toUtf8());
         }
 
-        Query query;
-        query.request<ApplicationDomain::Identity::Name>()
-            .request<ApplicationDomain::Identity::Address>()
-            .request<ApplicationDomain::Identity::Account>();
-        auto job = Store::fetchAll<ApplicationDomain::Identity>(query)
+        return findAttendeeStatus()
             .guard(this)
-            .then([this] (const QList<Identity::Ptr> &list) {
-                if (list.isEmpty()) {
-                    SinkWarning() << "Failed to find an identity";
-                }
-                for (const auto &identity : list) {
-                    const auto id = attendeesController()->findByProperty("email", identity->getAddress());
-                    if (!id.isEmpty()) {
-                        const auto status = attendeesController()->value(id, "status").value<EventController::ParticipantStatus>();
-                        if (status == EventController::Accepted) {
-                            setState(InvitationController::Accepted);
-                        } else if (status == EventController::Declined) {
-                            setState(InvitationController::Declined);
-                        } else {
-                            setState(InvitationController::Unknown);
-                        }
-                        return;
-                    } else {
-                        SinkLog() << "No attendee found for " << identity->getAddress();
-                    }
-                }
-                SinkWarning() << "Failed to find matching identity in list of attendees.";
-                setState(InvitationState::NoMatch);
+            .then([this] (ParticipantStatus status) {
+                setState(status);
             });
-        return job;
+
     }).exec();
 }
 
@@ -280,7 +284,7 @@ static void sendIMipReply(const QByteArray &accountId, const QString &from, cons
         }).exec();
 }
 
-void InvitationController::storeEvent(InvitationState status)
+void InvitationController::storeEvent(ParticipantStatus status)
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
@@ -374,12 +378,12 @@ void InvitationController::accept()
                 emit done();
             }));
     } else {
-        storeEvent(InvitationState::Accepted);
+        storeEvent(ParticipantStatus::Accepted);
     }
 }
 
 void InvitationController::decline()
 {
-    storeEvent(InvitationState::Declined);
+    storeEvent(ParticipantStatus::Declined);
 }
 
