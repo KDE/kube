@@ -38,13 +38,15 @@ public:
         Unknown,
         Accepted,
         Declined,
+        Cancelled, //This is not part of the usual partstat in ical, but for our purposes where it belongs
         NoMatch
     };
     Q_ENUM(InvitationState);
 
     enum InvitationMethod {
         Reply,
-        Request
+        Request,
+        Cancel
     };
     Q_ENUM(InvitationMethod);
 
@@ -73,6 +75,7 @@ public:
 private:
     void handleRequest(KCalCore::Event::Ptr icalEvent);
     void handleReply(KCalCore::Event::Ptr icalEvent);
+    void handleCancellation(KCalCore::Event::Ptr icalEvent);
     void storeEvent(InvitationState);
     Sink::ApplicationDomain::Event mExistingEvent;
     KCalCore::Event::Ptr mLoadedIcalEvent;

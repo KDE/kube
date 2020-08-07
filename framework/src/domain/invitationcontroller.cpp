@@ -74,6 +74,21 @@ void InvitationController::handleReply(KCalCore::Event::Ptr icalEvent)
     setUid(icalEvent->uid().toUtf8());
 }
 
+void InvitationController::handleCancellation(KCalCore::Event::Ptr icalEvent)
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    setMethod(InvitationMethod::Cancel);
+    //TODO set to Existing if we already removed the event
+    setEventState(InvitationController::Update);
+    setState(InvitationController::Cancelled);
+    populateFromEvent(*icalEvent);
+    setStart(icalEvent->dtStart());
+    setEnd(icalEvent->dtEnd());
+    setUid(icalEvent->uid().toUtf8());
+}
+
 void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
 {
     using namespace Sink;
@@ -189,6 +204,9 @@ void InvitationController::loadICal(const QString &ical)
             break;
         case KCalCore::iTIPReply:
             handleReply(icalEvent);
+            break;
+        case KCalCore::iTIPCancel:
+            handleCancellation(icalEvent);
             break;
         default:
             SinkWarning() << "Invalid method " << msg->method();
@@ -326,7 +344,19 @@ void InvitationController::storeEvent(InvitationState status)
 
 void InvitationController::accept()
 {
-    storeEvent(InvitationState::Accepted);
+    if (getMethod() == Cancel) {
+        // TODO just modify the event to be cancelled?
+        run(Sink::Store::remove(mExistingEvent)
+            .then([=] (const KAsync::Error &error) {
+                if (error) {
+                    SinkWarning() << "Failed to update the event: " << error;
+                }
+                setState(InvitationController::Cancelled);
+                emit done();
+            }));
+    } else {
+        storeEvent(InvitationState::Accepted);
+    }
 }
 
 void InvitationController::decline()

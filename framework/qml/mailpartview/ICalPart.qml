@@ -38,6 +38,12 @@ Item {
 
     states: [
         State {
+            name: "cancelled"
+            when: controller.method == Kube.InvitationController.Cancel && controller.state == Kube.InvitationController.Accepted
+            PropertyChanges {target: heading; text: qsTr("\"%1\" has been cancelled.").arg(controller.summary)}
+            PropertyChanges {target: buttons; visible: false}
+        },
+        State {
             name: "replyAccepted"
             when: controller.method == Kube.InvitationController.Reply && controller.state == Kube.InvitationController.Accepted
             PropertyChanges {target: heading; text: qsTr("%1 has accepted: \"%2\"").arg(controller.name).arg(controller.summary)}

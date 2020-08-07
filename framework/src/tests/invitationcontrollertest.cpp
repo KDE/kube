@@ -22,7 +22,7 @@ class InvitationControllerTest : public QObject
     QByteArray resourceId;
     QByteArray mailtransportResourceId;
 
-    QString createInvitation(const QByteArray &uid, const QString &summary, int revision, QDateTime dtStart = QDateTime::currentDateTime(), bool recurring = false, QDateTime recurrenceId = {})
+    QString createInvitation(const QByteArray &uid, const QString &summary, int revision, QDateTime dtStart = QDateTime::currentDateTime(), bool recurring = false, QDateTime recurrenceId = {}, KCalCore::iTIPMethod method = KCalCore::iTIPRequest)
     {
         auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
         calcoreEvent->setUid(uid);
@@ -41,7 +41,7 @@ class InvitationControllerTest : public QObject
             calcoreEvent->setRecurrenceId(recurrenceId);
         }
 
-        return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, KCalCore::iTIPRequest);
+        return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, method);
     }
 
 
@@ -83,6 +83,7 @@ private slots:
 
             controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
 
+            QTRY_COMPARE(controller.getMethod(), InvitationController::Request);
             QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
             QTRY_COMPARE(controller.getEventState(), InvitationController::New);
 
@@ -300,6 +301,59 @@ private slots:
                     QCOMPARE(event->summary(), QLatin1String{"summary2"});
                 }
             }
+        }
+    }
+
+    void testCancellation()
+    {
+        auto calendar = ApplicationDomainType::createEntity<Calendar>(resourceId);
+        Sink::Store::create(calendar).exec().waitForFinished();
+
+        const QByteArray uid{"uid1"};
+        const auto ical = createInvitation(uid, "summary", 0, QDateTime::currentDateTime(), false, {}, KCalCore::iTIPCancel);
+
+        //TODO first create the event by accepting a reuqest, then accept the cancellation
+
+        {
+            InvitationController controller;
+            controller.loadICal(ical);
+
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+
+            QTRY_COMPARE(controller.getMethod(), InvitationController::Cancel);
+            QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
+            QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
+
+            controller.acceptAction()->execute();
+            QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
+        }
+    }
+
+    void testReply()
+    {
+        auto calendar = ApplicationDomainType::createEntity<Calendar>(resourceId);
+        Sink::Store::create(calendar).exec().waitForFinished();
+
+        const QByteArray uid{"uid1"};
+        const auto ical = createInvitation(uid, "summary", 0, QDateTime::currentDateTime(), false, {}, KCalCore::iTIPReply);
+
+        {
+            InvitationController controller;
+            controller.loadICal(ical);
+
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+
+            QTRY_COMPARE(controller.getMethod(), InvitationController::Reply);
+            QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
+
+            controller.acceptAction()->execute();
+            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+
+            //Ensure the event is stored
+            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
+
+            auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
+            QCOMPARE(list.size(), 1);
         }
     }
 
