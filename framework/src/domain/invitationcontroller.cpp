@@ -193,6 +193,12 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
             setUid(icalEvent->uid().toUtf8());
         }
 
+        //Roundcube sends cancellations not as METHOD=CANCEL, but instead updates the event status.
+        if (icalEvent->status() == KCalCore::Incidence::StatusCanceled) {
+            setState(EventController::Cancelled);
+            return KAsync::null();
+        }
+
         return findAttendeeStatus()
             .guard(this)
             .then([this] (ParticipantStatus status) {

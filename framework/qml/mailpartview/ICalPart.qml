@@ -68,6 +68,11 @@ Item {
             PropertyChanges {target: label; visible: true; text: qsTr("This is an exception for the event originally occurring at: \"%1\"").arg(controller.recurrenceId.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))}
         },
         State {
+            name: "updatedcancelled"
+            when: controller.method == Kube.InvitationController.Request && controller.eventState == Kube.InvitationController.Update && controller.state == Kube.InvitationController.Cancelled
+            PropertyChanges {target: heading; text: qsTr("The invitation has been cancelled: \"%1\"").arg(controller.summary)}
+        },
+        State {
             name: "updated"
             when: controller.method == Kube.InvitationController.Request && controller.eventState == Kube.InvitationController.Update
             PropertyChanges {target: heading; text: qsTr("The invitation has been updated: \"%1\"").arg(controller.summary)}
