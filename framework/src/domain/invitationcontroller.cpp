@@ -47,6 +47,26 @@ static QString assembleEmailAddress(const QString &name, const QString &email) {
     return mb.prettyAddress();
 }
 
+static KAsync::Job<std::pair<Sink::ApplicationDomain::Event, KCalCore::Event::Ptr>> findExistingEvents(const QByteArray &uid, const QString &instanceIdentifier)
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+    Query query;
+    query.request<Event::Uid>();
+    query.request<Event::Ical>();
+    query.filter<Event::Uid>(uid);
+    return Store::fetchAll<Event>(query).then([=](const QList<Event::Ptr> &events) {
+        //Find the matching occurrence in case of exceptions
+        for (const auto &e : events) {
+            auto ical = KCalCore::ICalFormat().readIncidence(e->getIcal()).dynamicCast<KCalCore::Event>();
+            if (ical && ical->instanceIdentifier() == instanceIdentifier) {
+                return std::pair(*e, ical);
+            }
+        }
+        return std::pair<Event, KCalCore::Event::Ptr>{};
+    });
+}
+
 void InvitationController::handleReply(KCalCore::Event::Ptr icalEvent)
 {
     using namespace Sink;
@@ -80,13 +100,24 @@ void InvitationController::handleCancellation(KCalCore::Event::Ptr icalEvent)
     using namespace Sink::ApplicationDomain;
 
     setMethod(InvitationMethod::Cancel);
-    //TODO set to Existing if we already removed the event
-    setEventState(InvitationController::Update);
     setState(InvitationController::Cancelled);
-    populateFromEvent(*icalEvent);
-    setStart(icalEvent->dtStart());
-    setEnd(icalEvent->dtEnd());
-    setUid(icalEvent->uid().toUtf8());
+
+    findExistingEvents(icalEvent->uid().toUtf8(), icalEvent->instanceIdentifier())
+    .then([this, icalEvent](const std::pair<Event, KCalCore::Event::Ptr> &pair) {
+        const auto [event, localEvent] = pair;
+        if (localEvent) {
+            mExistingEvent = event;
+            setEventState(InvitationController::Update);
+        } else {
+            //Already removed the event?
+            setEventState(InvitationController::Existing);
+        }
+        populateFromEvent(*icalEvent);
+        setStart(icalEvent->dtStart());
+        setEnd(icalEvent->dtEnd());
+        setUid(icalEvent->uid().toUtf8());
+    }).exec();
+
 }
 
 void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
@@ -96,21 +127,9 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
 
     setMethod(InvitationMethod::Request);
 
-    Query query;
-    query.request<Event::Uid>();
-    query.request<Event::Ical>();
-    query.filter<Event::Uid>(icalEvent->uid().toUtf8());
-    Store::fetchAll<Event>(query).then([this, icalEvent](const QList<Event::Ptr> &events) {
-        //Find the matching occurrence in case of exceptions
-        const auto [event, localEvent] = [&] {
-            for (const auto &e : events) {
-                auto ical = KCalCore::ICalFormat().readIncidence(e->getIcal()).dynamicCast<KCalCore::Event>();
-                if (ical && ical->instanceIdentifier() == icalEvent->instanceIdentifier()) {
-                    return std::pair(*e, ical);
-                }
-            }
-            return std::pair<Event, KCalCore::Event::Ptr>{};
-        }();
+    findExistingEvents(icalEvent->uid().toUtf8(), icalEvent->instanceIdentifier())
+    .then([this, icalEvent](const std::pair<Event, KCalCore::Event::Ptr> &pair) {
+        const auto [event, localEvent] = pair;
         if (localEvent) {
             mExistingEvent = event;
             if (icalEvent->revision() > localEvent->revision()) {

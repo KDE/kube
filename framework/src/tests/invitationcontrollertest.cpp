@@ -312,16 +312,27 @@ private slots:
         auto calendar = ApplicationDomainType::createEntity<Calendar>(resourceId);
         Sink::Store::create(calendar).exec().waitForFinished();
 
-        const QByteArray uid{"uid1"};
-        const auto ical = createInvitation(uid, "summary", 0, QDateTime::currentDateTime(), false, {}, KCalCore::iTIPCancel);
+        const QByteArray uid{"uid3"};
 
-        //TODO first create the event by accepting a reuqest, then accept the cancellation
-
+        //Create event
         {
             InvitationController controller;
+            const auto ical = createInvitation(uid, "summary", 0);
+            controller.loadICal(ical);
+            QTRY_COMPARE(controller.getMethod(), InvitationController::Request);
+            QTRY_COMPARE(controller.getEventState(), InvitationController::New);
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+            controller.acceptAction()->execute();
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
+        }
+
+        //Cancel event
+        {
+            InvitationController controller;
+            const auto ical = createInvitation(uid, "summary", 1, QDateTime::currentDateTime(), false, {}, KCalCore::iTIPCancel);
             controller.loadICal(ical);
 
-            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
 
             QTRY_COMPARE(controller.getMethod(), InvitationController::Cancel);
             QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
@@ -330,6 +341,7 @@ private slots:
             controller.acceptAction()->execute();
             Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
             QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 0);
         }
     }
 
