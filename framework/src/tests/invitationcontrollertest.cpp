@@ -88,10 +88,11 @@ private slots:
             QTRY_COMPARE(controller.getEventState(), InvitationController::New);
 
             controller.acceptAction()->execute();
-            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
+            QCOMPARE(controller.getState(), InvitationController::Accepted);
 
             //Ensure the event is stored
-            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
 
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 1);
@@ -133,11 +134,12 @@ private slots:
 
             //Accept the update
             controller.acceptAction()->execute();
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
 
-            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+            QCOMPARE(controller.getState(), InvitationController::Accepted);
 
             //Ensure the event is stored
-            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
 
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 1);
@@ -177,10 +179,11 @@ private slots:
             QTRY_COMPARE(controller.getEventState(), InvitationController::New);
 
             controller.acceptAction()->execute();
-            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
+            QCOMPARE(controller.getState(), InvitationController::Accepted);
 
             //Ensure the event is stored
-            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
 
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 1);
@@ -213,12 +216,12 @@ private slots:
 
             //Accept the update
             controller.acceptAction()->execute();
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
 
-            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+            QCOMPARE(controller.getState(), InvitationController::Accepted);
 
             //Ensure the event is stored
-            //FIXME, or just flush?
-            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
 
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 2);
@@ -247,12 +250,12 @@ private slots:
 
             //Accept the update
             controller.acceptAction()->execute();
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
 
             QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
 
             //Ensure the event is stored
-            //FIXME, or just flush?
-            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
 
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 2);
@@ -281,12 +284,12 @@ private slots:
 
             //Accept the update
             controller.acceptAction()->execute();
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
 
             QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
 
             //Ensure the event is stored
-            //FIXME, or just flush?
-            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
 
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 2);
@@ -325,6 +328,7 @@ private slots:
             QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
 
             controller.acceptAction()->execute();
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
             QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
         }
     }
@@ -347,10 +351,11 @@ private slots:
             QTRY_COMPARE(controller.getState(), InvitationController::Unknown);
 
             controller.acceptAction()->execute();
-            QTRY_COMPARE(controller.getState(), InvitationController::Accepted);
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
+            QCOMPARE(controller.getState(), InvitationController::Accepted);
 
             //Ensure the event is stored
-            QTRY_COMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
 
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 1);
