@@ -38,10 +38,21 @@ Item {
 
     states: [
         State {
-            name: "cancelled"
+            name: "exceptioncancelled"
+            extend: "cancelled"
+            when: controller.method == Kube.InvitationController.Cancel && !isNaN(controller.recurrenceId)
+            PropertyChanges {target: label; visible: true; text: qsTr("This is an exception for the event originally occurring at: \"%1\"").arg(controller.recurrenceId.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))}
+        },
+        State {
+            name: "cancelledaccepted"
+            extend: "cancelled"
             when: controller.method == Kube.InvitationController.Cancel && controller.state == Kube.InvitationController.Accepted
-            PropertyChanges {target: heading; text: qsTr("\"%1\" has been cancelled.").arg(controller.summary)}
             PropertyChanges {target: buttons; visible: false}
+        },
+        State {
+            name: "cancelled"
+            when: controller.method == Kube.InvitationController.Cancel
+            PropertyChanges {target: heading; text: qsTr("\"%1\" has been cancelled.").arg(controller.summary)}
         },
         State {
             name: "replyAccepted"
@@ -66,11 +77,6 @@ Item {
             extend: "updated"
             when: controller.method == Kube.InvitationController.Request && controller.eventState == Kube.InvitationController.Update && !isNaN(controller.recurrenceId)
             PropertyChanges {target: label; visible: true; text: qsTr("This is an exception for the event originally occurring at: \"%1\"").arg(controller.recurrenceId.toLocaleString(Qt.locale(), "dd. MMMM hh:mm"))}
-        },
-        State {
-            name: "updatedcancelled"
-            when: controller.method == Kube.InvitationController.Request && controller.eventState == Kube.InvitationController.Update && controller.state == Kube.InvitationController.Cancelled
-            PropertyChanges {target: heading; text: qsTr("The invitation has been cancelled: \"%1\"").arg(controller.summary)}
         },
         State {
             name: "updated"

@@ -107,11 +107,20 @@ void InvitationController::handleCancellation(KCalCore::Event::Ptr icalEvent)
         const auto [event, localEvent] = pair;
         if (localEvent) {
             mExistingEvent = event;
-            setEventState(InvitationController::Update);
+            if (icalEvent->revision() > localEvent->revision()) {
+                setEventState(InvitationController::Update);
+            } else {
+                setEventState(InvitationController::Existing);
+            }
         } else {
             //Already removed the event?
             setEventState(InvitationController::Existing);
         }
+
+        if (icalEvent->recurrenceId().isValid()) {
+            setRecurrenceId(icalEvent->recurrenceId());
+        }
+
         populateFromEvent(*icalEvent);
         setStart(icalEvent->dtStart());
         setEnd(icalEvent->dtEnd());
@@ -193,12 +202,6 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
             setUid(icalEvent->uid().toUtf8());
         }
 
-        //Roundcube sends cancellations not as METHOD=CANCEL, but instead updates the event status.
-        if (icalEvent->status() == KCalCore::Incidence::StatusCanceled) {
-            setState(EventController::Cancelled);
-            return KAsync::null();
-        }
-
         return findAttendeeStatus()
             .guard(this)
             .then([this] (ParticipantStatus status) {
@@ -229,6 +232,12 @@ void InvitationController::loadICal(const QString &ical)
 
     switch (msg->method()) {
         case KCalCore::iTIPRequest:
+            //Roundcube sends cancellations not as METHOD=CANCEL, but instead updates the event status.
+            if (icalEvent->status() == KCalCore::Incidence::StatusCanceled) {
+                handleCancellation(icalEvent);
+                break;
+            }
+
             handleRequest(icalEvent);
             break;
         case KCalCore::iTIPReply:

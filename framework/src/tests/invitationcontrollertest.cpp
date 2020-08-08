@@ -336,7 +336,7 @@ private slots:
             const auto ical = createInvitation(uid, "summary", 1, QDateTime::currentDateTime(), false, {}, true);
             controller.loadICal(ical);
 
-            QTRY_COMPARE(controller.getMethod(), InvitationController::Request);
+            QTRY_COMPARE(controller.getMethod(), InvitationController::Cancel);
             QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
             QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
         }
