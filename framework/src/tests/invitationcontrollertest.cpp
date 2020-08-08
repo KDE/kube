@@ -22,31 +22,41 @@ class InvitationControllerTest : public QObject
     QByteArray resourceId;
     QByteArray mailtransportResourceId;
 
-    QString createInvitation(const QByteArray &uid, const QString &summary, int revision, QDateTime dtStart = QDateTime::currentDateTime(), bool recurring = false, QDateTime recurrenceId = {}, bool cancelled = false, KCalCore::iTIPMethod method = KCalCore::iTIPRequest)
+    struct Invitation {
+        QByteArray uid;
+        QString summary;
+        int revision;
+        QDateTime dtStart{QDateTime::currentDateTime()};
+        bool recurring = false;
+        QDateTime recurrenceId = {};
+        bool cancelled = false;
+        KCalCore::iTIPMethod method = KCalCore::iTIPRequest;
+    };
+
+    QString createInvitation(const Invitation &invitation)
     {
         auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
-        calcoreEvent->setUid(uid);
-        calcoreEvent->setSummary(summary);
+        calcoreEvent->setUid(invitation.uid);
+        calcoreEvent->setSummary(invitation.summary);
         calcoreEvent->setDescription("description");
         calcoreEvent->setLocation("location");
-        calcoreEvent->setDtStart(dtStart);
+        calcoreEvent->setDtStart(invitation.dtStart);
         calcoreEvent->setOrganizer("organizer@test.com");
         calcoreEvent->addAttendee(KCalCore::Attendee("John Doe", "attendee1@test.com", true, KCalCore::Attendee::NeedsAction));
-        calcoreEvent->setRevision(revision);
-        if (cancelled) {
+        calcoreEvent->setRevision(invitation.revision);
+        if (invitation.cancelled) {
             calcoreEvent->setStatus(KCalCore::Incidence::StatusCanceled);
         }
 
-        if (recurring) {
+        if (invitation.recurring) {
             calcoreEvent->recurrence()->setDaily(1);
         }
-        if (recurrenceId.isValid()) {
-            calcoreEvent->setRecurrenceId(recurrenceId);
+        if (invitation.recurrenceId.isValid()) {
+            calcoreEvent->setRecurrenceId(invitation.recurrenceId);
         }
 
-        return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, method);
+        return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, invitation.method);
     }
-
 
 private slots:
     void initTestCase()
@@ -78,7 +88,7 @@ private slots:
         Sink::Store::create(calendar).exec().waitForFinished();
 
         const QByteArray uid{"uid1"};
-        const auto ical = createInvitation(uid, "summary", 0);
+        const auto ical = createInvitation({uid, "summary", 0});
 
         {
             InvitationController controller;
@@ -127,7 +137,7 @@ private slots:
             QTRY_COMPARE(controller.getUid(), uid);
         }
 
-        const auto updatedIcal = createInvitation(uid, "summary2", 1);
+        const auto updatedIcal = createInvitation({uid, "summary2", 1});
         //Load an update and accept it
         {
             InvitationController controller;
@@ -170,7 +180,7 @@ private slots:
 
         const QByteArray uid{"uid2"};
         auto dtstart = QDateTime{{2020, 1, 1}, {14, 0, 0}, Qt::UTC};
-        const auto ical = createInvitation(uid, "summary", 0, dtstart, true);
+        const auto ical = createInvitation({uid, "summary", 0, dtstart, true});
 
         {
             InvitationController controller;
@@ -210,7 +220,7 @@ private slots:
         {
             InvitationController controller;
             //TODO I suppose the revision of the exception can also be 0?
-            controller.loadICal(createInvitation(uid, "exceptionSummary", 1, dtstart.addSecs(3600), false, dtstart));
+            controller.loadICal(createInvitation({uid, "exceptionSummary", 1, dtstart.addSecs(3600), false, dtstart}));
             controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
             QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
             QTRY_COMPARE(controller.getUid(), uid);
@@ -244,7 +254,7 @@ private slots:
         //Update the exception and accept it
         {
             InvitationController controller;
-            controller.loadICal(createInvitation(uid, "exceptionSummary2", 3, dtstart.addSecs(3600), false, dtstart));
+            controller.loadICal(createInvitation({uid, "exceptionSummary2", 3, dtstart.addSecs(3600), false, dtstart}));
             controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
             QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
             QTRY_COMPARE(controller.getUid(), uid);
@@ -278,7 +288,7 @@ private slots:
         //Update the main event and accept it
         {
             InvitationController controller;
-            controller.loadICal(createInvitation(uid, "summary2", 4, dtstart, true));
+            controller.loadICal(createInvitation({.uid = uid, .summary = "summary2", .revision = 4, .dtStart = dtstart, .recurring = true}));
             controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
             QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
             QTRY_COMPARE(controller.getUid(), uid);
@@ -320,7 +330,7 @@ private slots:
         //Create event
         {
             InvitationController controller;
-            const auto ical = createInvitation(uid, "summary", 0);
+            const auto ical = createInvitation({uid, "summary", 0});
             controller.loadICal(ical);
             QTRY_COMPARE(controller.getMethod(), InvitationController::Request);
             QTRY_COMPARE(controller.getEventState(), InvitationController::New);
@@ -333,7 +343,7 @@ private slots:
         //Cancellation via status update, like roundcube does
         {
             InvitationController controller;
-            const auto ical = createInvitation(uid, "summary", 1, QDateTime::currentDateTime(), false, {}, true);
+            const auto ical = createInvitation({.uid = uid, .summary = "summary", .revision = 1, .cancelled = true});
             controller.loadICal(ical);
 
             QTRY_COMPARE(controller.getMethod(), InvitationController::Cancel);
@@ -344,7 +354,7 @@ private slots:
         //Cancellation per rfc
         {
             InvitationController controller;
-            const auto ical = createInvitation(uid, "summary", 1, QDateTime::currentDateTime(), false, {}, false, KCalCore::iTIPCancel);
+            const auto ical = createInvitation({.uid = uid, .summary = "summary", .revision = 1, .method = KCalCore::iTIPCancel});
             controller.loadICal(ical);
 
             QTRY_COMPARE(controller.getMethod(), InvitationController::Cancel);
@@ -364,7 +374,7 @@ private slots:
         Sink::Store::create(calendar).exec().waitForFinished();
 
         const QByteArray uid{"uid1"};
-        const auto ical = createInvitation(uid, "summary", 0, QDateTime::currentDateTime(), false, {}, false, KCalCore::iTIPReply);
+        const auto ical = createInvitation({.uid = uid, .summary = "summary", .method = KCalCore::iTIPReply});
 
         {
             InvitationController controller;
