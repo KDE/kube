@@ -48,7 +48,7 @@ static QList<QByteArray> toList(const QVariant &variant) {
         }
         return list;
     }
-    return variant.value<QSet<QByteArray>>().toList();
+    return variant.value<QSet<QByteArray>>().values();
 }
 
 void TodoSourceModel::setFilter(const QVariantMap &filter)

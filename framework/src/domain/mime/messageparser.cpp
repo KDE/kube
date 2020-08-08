@@ -19,7 +19,7 @@
 #include "messageparser.h"
 
 #include <sink/mimetreeparser/objecttreeparser.h>
-#include <QTime>
+#include <QElapsedTimer>
 #include <sink/log.h>
 
 #include "partmodel.h"
@@ -54,7 +54,7 @@ void MessageParser::setMessage(const QVariant &message)
 {
     mRawContent = message.toString();
     asyncRun<std::shared_ptr<MimeTreeParser::ObjectTreeParser>>(this, [=] {
-            QTime time;
+            QElapsedTimer time;
             time.start();
             auto parser = std::make_shared<MimeTreeParser::ObjectTreeParser>();
             parser->parseObjectTree(message.toByteArray());

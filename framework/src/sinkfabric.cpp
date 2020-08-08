@@ -58,7 +58,7 @@ public:
                     folderQuery.request<Sink::ApplicationDomain::Folder::Name>();
                     Store::fetch<Sink::ApplicationDomain::Folder>(folderQuery)
                         .then([] (const QList<Sink::ApplicationDomain::Folder::Ptr> &folders) {
-                            for (const auto f : folders) {
+                            for (const auto &f : folders) {
                                 auto scope = SyncScope().resourceFilter(f->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(f->identifier()));
                                 scope.setType<ApplicationDomain::Mail>();
                                 Store::synchronize(scope).exec();

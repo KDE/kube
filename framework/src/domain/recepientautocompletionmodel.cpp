@@ -61,7 +61,7 @@ void RecipientAutocompletionModel::save()
     }
 
     QSettings settings(getPath(), QSettings::IniFormat);
-    settings.setValue("list", QStringList{list.toList()});
+    settings.setValue("list", QStringList{list.values()});
 }
 
 void RecipientAutocompletionModel::load()

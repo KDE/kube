@@ -310,7 +310,7 @@ static KCalCore::Attendee::PartStat fromStatus(EventController::ParticipantStatu
             return KCalCore::Attendee::Accepted;
         case EventController::Declined:
             return KCalCore::Attendee::Declined;
-        case EventController::Unknown:
+        default:
             break;
     }
     return KCalCore::Attendee::NeedsAction;

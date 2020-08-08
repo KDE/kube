@@ -106,7 +106,7 @@ ListPropertyController::ListPropertyController(const QStringList &roles)
     }
 
     QHash<int, QByteArray> roleNames;
-    for (const auto r : mRoles.keys()) {
+    for (const auto &r : mRoles.keys()) {
         roleNames.insert(mRoles[r], r.toLatin1());
     }
     mModel->setItemRoleNames(roleNames);

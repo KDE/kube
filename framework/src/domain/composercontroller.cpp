@@ -197,7 +197,7 @@ public:
     Q_INVOKABLE virtual void add(const QVariantMap &map)
     {
         // Support adding multiple addresses separated by comma
-        for (const auto part : map.value("name").toString().split(',')) {
+        for (const auto &part : map.value("name").toString().split(',')) {
             Kube::ListPropertyController::add({{"name", part.trimmed()}});
         }
     }
@@ -406,7 +406,7 @@ void ComposerController::loadDraft(const QVariant &message) {
 
 void ComposerController::selectIdentityFromMailboxes(const KMime::Types::Mailbox::List &mailboxes, const QVector<QString> &meStrings)
 {
-    for (const auto mb : mailboxes) {
+    for (const auto &mb : mailboxes) {
         const auto address = mb.addrSpec().asString();
         if (meStrings.contains(address)) {
             static_cast<IdentitySelector*>(mIdentitySelector.data())->setCurrentIdentity(address);

@@ -88,7 +88,7 @@ static QString linkify_htmlsafe(const QString &in)
 		if(linkify_isOneOf(in.at(n), "\"\'`<>")) {
 			// hex encode
 			QString hex;
-			hex.sprintf("%%%02X", in.at(n).toLatin1());
+			hex.asprintf("%%%02X", in.at(n).toLatin1());
 			out.append(hex);
 		} else {
 			out.append(in.at(n));

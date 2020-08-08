@@ -113,7 +113,7 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
                 }
                 sorted.append(srcIdx);
             }
-            qSort(sorted.begin(), sorted.end(), [&] (const QModelIndex &left, const QModelIndex &right) {
+            std::sort(sorted.begin(), sorted.end(), [&] (const QModelIndex &left, const QModelIndex &right) {
                 //All-day first, sorted by duration (in the hope that we can fit multiple on the same line)
                 const auto leftAllDay = left.data(EventOccurrenceModel::AllDay).toBool();
                 const auto rightAllDay = right.data(EventOccurrenceModel::AllDay).toBool();
