@@ -71,7 +71,7 @@ int MultiDayEventModel::columnCount(const QModelIndex &) const
 
 static long long getDuration(const QDate &start, const QDate &end)
 {
-    return qMax(start.daysTo(end), 1ll);
+    return qMax(start.daysTo(end) + 1, 1ll);
 }
 
 // We first sort all occurences so we get all-day first (sorted by duration),

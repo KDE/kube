@@ -96,7 +96,7 @@ private slots:
             calcoreEvent->setUid("event4.1");
             calcoreEvent->setSummary("summary4.1");
             calcoreEvent->setDtStart(start.addDays(2));
-            calcoreEvent->setDtEnd(start.addDays(4));
+            calcoreEvent->setDtEnd(start.addDays(3));
             calcoreEvent->setAllDay(true);
             event4.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event4.setCalendar(calendar1);
@@ -166,9 +166,20 @@ private slots:
                 MultiDayEventModel multiDayModel;
                 multiDayModel.setModel(&model);
                 QTRY_COMPARE(multiDayModel.rowCount({}), 1);
-                QTRY_COMPARE(countEvents(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>()), expectedNumberOfOccurreces);
+                const auto lines = multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
+                QTRY_COMPARE(countEvents(lines), expectedNumberOfOccurreces);
                 //We have 6 lines in the first week
-                QCOMPARE(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>().size(), 6);
+                QCOMPARE(lines.size(), 6);
+                QCOMPARE(lines[0].toList().size(), 1); //All day event
+                QCOMPARE(lines[0].toList()[0].toMap().value("duration").toInt(), 1);
+                QCOMPARE(lines[1].toList().size(), 1); //All day event
+                QCOMPARE(lines[1].toList()[0].toMap().value("duration").toInt(), 2);
+                QCOMPARE(lines[2].toList().size(), 7); //Recurring event summary2/summary3
+                QCOMPARE(lines[3].toList().size(), 2); //summary5/summary6
+                QCOMPARE(lines[4].toList().size(), 1); //summary2 FIXME why is it on a second row? because above summary3 moves in-between. Try to prefer existing events?
+                QCOMPARE(lines[4].toList()[0].toMap().value("text").toString(), "summary2");
+                QCOMPARE(lines[5].toList().size(), 1); //summary7
+                QCOMPARE(lines[5].toList()[0].toMap().value("text").toString(), "summary7");
             }
 
             {
