@@ -167,7 +167,7 @@ private slots:
                 multiDayModel.setModel(&model);
                 QTRY_COMPARE(multiDayModel.rowCount({}), 1);
                 QTRY_COMPARE(countEvents(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>()), expectedNumberOfOccurreces);
-                //Count lines
+                //We have 6 lines in the first week
                 QCOMPARE(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>().size(), 6);
             }
 

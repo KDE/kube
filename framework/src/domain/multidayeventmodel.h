@@ -63,6 +63,8 @@ public:
 
     void setModel(EventOccurrenceModel *model);
 private:
+    QList<QModelIndex> sortedEventsFromSourceModel(const QDate &rowStart) const;
+    QVariantList layoutLines(const QDate &rowStart) const;
     EventOccurrenceModel *mSourceModel{nullptr};
     int mPeriodLength{7};
 };
