@@ -90,6 +90,19 @@ private slots:
             Sink::Store::create(event4).exec().waitForFinished();
         }
         {
+            //all day event 2 with duration of two days
+            auto event4 = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event4.1");
+            calcoreEvent->setSummary("summary4.1");
+            calcoreEvent->setDtStart(start.addDays(2));
+            calcoreEvent->setDtEnd(start.addDays(4));
+            calcoreEvent->setAllDay(true);
+            event4.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event4.setCalendar(calendar1);
+            Sink::Store::create(event4).exec().waitForFinished();
+        }
+        {
             auto event1 = ApplicationDomainType::createEntity<Event>(resource.identifier());
             auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
             calcoreEvent->setUid("event5");
@@ -132,7 +145,7 @@ private slots:
         Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
 
         {
-            const int expectedNumberOfOccurreces = 12;
+            const int expectedNumberOfOccurreces = 13;
             const int numberOfDays = 7;
             EventOccurrenceModel model;
             model.setStart(start.date());
@@ -155,7 +168,7 @@ private slots:
                 QTRY_COMPARE(multiDayModel.rowCount({}), 1);
                 QTRY_COMPARE(countEvents(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>()), expectedNumberOfOccurreces);
                 //Count lines
-                QTRY_COMPARE(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>().size(), 4);
+                QCOMPARE(multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>().size(), 6);
             }
 
             {

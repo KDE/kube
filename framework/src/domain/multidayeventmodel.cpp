@@ -157,8 +157,8 @@ QVariant MultiDayEventModel::data(const QModelIndex &idx, int role) const
                 const bool allDayLine = srcIdx.data(EventOccurrenceModel::AllDay).toBool();
 
                 //Fill line with events that fit
-                int lastStart = 0;
-                int lastDuration = 0;
+                int lastStart = start;
+                int lastDuration = duration;
                 auto doesIntersect = [&] (int start, int end) {
                     const auto lastEnd = lastStart + lastDuration;
                     if (((start <= lastStart) && (end >= lastStart)) ||
