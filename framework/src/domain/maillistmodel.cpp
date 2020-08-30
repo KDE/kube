@@ -225,6 +225,7 @@ void MailListModel::runQuery(const Sink::Query &query)
 void MailListModel::setFilter(const QVariantMap &filter)
 {
     qDebug() << "MailListModel::setFilter " << filter;
+    using namespace Sink;
     using namespace Sink::ApplicationDomain;
     bool validQuery = false;
     Sink::Query query;
@@ -267,9 +268,15 @@ void MailListModel::setFilter(const QVariantMap &filter)
     }
 
     if (filter.value("important").toBool()) {
+        query.setId("threadLeadersImportant");
         query.setFlags(Sink::Query::LiveQuery);
         query.filter<Sink::ApplicationDomain::Mail::Important>(true);
-        query.sort<Mail::Date>();
+        query.sort<ApplicationDomain::Mail::Date>();
+        query.reduce<ApplicationDomain::Mail::ThreadId>(Query::Reduce::Selector::max<ApplicationDomain::Mail::Date>())
+            .count()
+            .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
+            .collect<ApplicationDomain::Mail::Unread>()
+            .collect<ApplicationDomain::Mail::Important>();
         //Latest mail at the top
         sort(0, Qt::DescendingOrder);
         validQuery = true;
