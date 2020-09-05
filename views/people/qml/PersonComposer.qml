@@ -233,19 +233,11 @@ Flickable {
             Kube.Label {
                 text: "Addressbook"
             }
-            Kube.ComboBox {
-                width: parent.width
-
-                model: Kube.EntityModel {
-                    id: addressbookModel
-                    type: "addressbook"
-                    roles: ["name"]
-                }
-                textRole: "name"
-                onCurrentIndexChanged: {
-                    if (currentIndex >= 0) {
-                        contactController.addressbook = addressbookModel.data(currentIndex).object
-                    }
+            Kube.EntityComboBox {
+                type: "addressbook"
+                initialSelectionObject: contactController.addressbook
+                onSelected: {
+                    contactController.addressbook = entity
                 }
             }
         }

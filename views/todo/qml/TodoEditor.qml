@@ -134,15 +134,16 @@ FocusScope {
                     Keys.onEscapePressed: calendarSelector.forceActiveFocus(Qt.TabFocusReason)
                 }
 
-                Kube.CalendarComboBox {
+                Kube.EntityComboBox {
                     id: calendarSelector
                     Layout.fillWidth: true
                     accountId: root.accountId
-                    contentType: "todo"
+                    type: "calendar"
+                    filter: {"contentTypes": "todo", "enabled": true}
                     initialSelection: root.currentFolder
                     onSelected: {
                         if (!root.editMode) {
-                            controller.calendar = calendar
+                            controller.calendar = entity
                         }
                     }
                 }

@@ -48,10 +48,20 @@ QHash<int, QByteArray> EntityModel::roleNames() const
     return mRoleNames;
 }
 
+static bool isEqual(const QVariant &left, const QVariant &right)
+{
+    const auto l = left.value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
+    const auto r = right.value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
+    if (l && r) {
+        return l->identifier() == r->identifier();
+    }
+    return left.toString() == right.toString();
+}
+
 int EntityModel::findIndex(const QByteArray &property, const QVariant &value) const
 {
     for (int i = 0; i < rowCount(); i++) {
-        if (data(index(i, 0), mRoleNames.key(property)).toString() == value.toString()) {
+        if (isEqual(data(index(i, 0), mRoleNames.key(property)), value)) {
             return i;
         }
     }

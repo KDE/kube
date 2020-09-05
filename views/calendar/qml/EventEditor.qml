@@ -198,13 +198,14 @@ Item {
                 Layout.fillWidth: true
             }
 
-            Kube.CalendarComboBox {
+            Kube.EntityComboBox {
                 id: calendarSelector
                 accountId: root.accountId
-                contentType: "event"
+                type: "calendar"
+                filter: {"contentTypes": "event", "enabled": true}
                 onSelected: {
                     if (!root.editMode) {
-                        controller.calendar = calendar
+                        controller.calendar = entity
                     }
                 }
             }

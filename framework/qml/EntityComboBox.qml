@@ -24,27 +24,36 @@ import org.kube.framework 1.0 as Kube
 Kube.ComboBox {
     id: root
 
-    property alias accountId: calendarModel.accountId
-    property string contentType: "event"
+    property alias accountId: entityModel.accountId
+    property alias type: entityModel.type
+    property alias filter: entityModel.filter
     property var initialSelection: null
+    property var initialSelectionObject: null
 
-    signal selected(var calendar)
+    signal selected(var entity)
 
     model: Kube.EntityModel {
-        id: calendarModel
-        type: "calendar"
+        id: entityModel
         roles: ["name", "color"]
         sortRole: "name"
-        filter: {"contentTypes": contentType, "enabled": true}
         onInitialItemsLoaded: {
             if (root.initialSelection) {
-                root.currentIndex = calendarModel.findIndex("identifier", initialSelection)
+                var foundIndex = entityModel.findIndex("identifier", root.initialSelection)
+                if (foundIndex >= 0) {
+                    root.currentIndex = foundIndex;
+                }
+            }
+            if (root.initialSelectionObject) {
+                var foundIndex =  entityModel.findIndex("object", root.initialSelectionObject)
+                if (foundIndex >= 0) {
+                    root.currentIndex = foundIndex;
+                }
             }
             if (currentIndex >= 0) {
                 //Set initial selection.
                 //onCurrentIndexChanged will not work because the as more items are added the currentIndex changes,
                 //but depending on the sorting it will point to a different item (Which is really a bug of the model or ComboBox).
-                root.selected(calendarModel.data(currentIndex).object)
+                root.selected(entityModel.data(currentIndex).object)
             }
         }
     }
@@ -53,7 +62,7 @@ Kube.ComboBox {
 
     onCurrentIndexChanged: {
         if (currentIndex >= 0) {
-            root.selected(calendarModel.data(currentIndex).object)
+            root.selected(entityModel.data(currentIndex).object)
         }
     }
 
@@ -67,11 +76,12 @@ Kube.ComboBox {
                 height: parent.height
             }
             Rectangle {
+                visible: !!model.color
                 anchors.verticalCenter: parent.verticalCenter
                 width: Kube.Units.gridUnit
                 height: Kube.Units.gridUnit
                 radius: Kube.Units.gridUnit / 2
-                color: model.color
+                color: !!model.color ? model.color : "blue"
             }
             Kube.Label {
                 padding: Kube.Units.smallSpacing
@@ -84,7 +94,7 @@ Kube.ComboBox {
             anchors.fill: parent
 
             onClicked: {
-                root.currentIndex = calendarSelector.highlightedIndex
+                root.currentIndex = root.highlightedIndex
                 root.popup.close()
             }
         }

@@ -165,14 +165,15 @@ Item {
                 text: qsTr("in")
             }
 
-            Kube.CalendarComboBox {
+            Kube.EntityComboBox {
                 id: calendarSelector
                 Layout.fillWidth: true
                 accountId: Kube.Context.currentAccountId
-                contentType: "event"
+                type: "calendar"
+                filter: {"contentTypes": "event", "enabled": true}
                 onSelected: {
-                    if (calendar) {
-                        controller.calendar = calendar
+                    if (entity) {
+                        controller.calendar = entity
                     }
                 }
             }
