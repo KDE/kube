@@ -28,6 +28,7 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QTemporaryFile>
+#include <KEmailAddress>
 #include <sink/store.h>
 #include <sink/log.h>
 
@@ -202,7 +203,7 @@ public:
     Q_INVOKABLE virtual void add(const QVariantMap &map)
     {
         // Support adding multiple addresses separated by comma
-        for (const auto &part : map.value("name").toString().split(',')) {
+        for (const auto &part : KEmailAddress::splitAddressList(map.value("name").toString())) {
             Kube::ListPropertyController::add({{"name", part.trimmed()}});
         }
     }

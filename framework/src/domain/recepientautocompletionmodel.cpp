@@ -24,6 +24,7 @@
 #include <QSet>
 #include <QDebug>
 #include <QTimer>
+#include <KMime/Message>
 #include <sink/store.h>
 #include <sink/applicationdomaintype.h>
 
@@ -74,6 +75,12 @@ void RecipientAutocompletionModel::load()
         return item;
     };
     for (const auto &entry : list) {
+        //Validate entries because we used to write unquoted nonsense like "Doe, John doe@example.com"
+        KMime::Types::Mailbox mb;
+        mb.fromUnicodeString(entry);
+        if (mb.address().isEmpty()) {
+            continue;
+        }
         mSourceModel->appendRow(add(entry));
     }
     Sink::Query query;
@@ -107,9 +114,12 @@ bool RecipientAutocompletionModel::addToModel(const QString &address, const QStr
     };
     auto formattedName = [&] () {
         if (name.isEmpty()) {
-            return QString(address);
+            return address;
         }
-        return QString("%1 <%2>").arg(QString(name), QString(address));
+        KMime::Types::Mailbox mb;
+        mb.setName(name);
+        mb.setAddress(address.toUtf8());
+        return mb.prettyAddress(KMime::Types::Mailbox::QuoteWhenNecessary);
     }();
     auto matches = mSourceModel->findItems(formattedName);
     if (matches.isEmpty()) {
