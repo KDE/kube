@@ -152,12 +152,17 @@ public:
 
     void findKey(const QByteArray &id, const QString &addressee, bool fetchRemote)
     {
-        mMissingKeys << id;
-        setFoundAllKeys(false);
         KMime::Types::Mailbox mb;
         mb.fromUnicodeString(addressee);
 
+        if (mb.address().isEmpty()) {
+            return;
+        }
+
         SinkLog() << "Searching key for: " << mb.address();
+
+        mMissingKeys << id;
+        setFoundAllKeys(false);
 
         setValue(id, "fetching", fetchRemote);
 
