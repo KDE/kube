@@ -207,6 +207,14 @@ int main(int argc, char *argv[])
         }
     }
 
+    //Try unlocking all available accounts on startup
+    Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>({})
+        .then([](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
+            for (const auto &account : accounts) {
+                Kube::Keyring::instance()->tryUnlock(account->identifier());
+            }
+        }).exec();
+
     QQmlApplicationEngine engine;
     //For windows
     engine.addImportPath(QCoreApplication::applicationDirPath() + QStringLiteral("/../qml"));
