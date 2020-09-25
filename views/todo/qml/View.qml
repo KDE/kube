@@ -402,7 +402,7 @@ Kube.View {
                             Kube.Label{
                                 width: content.width - Kube.Units.gridUnit * 3
                                 text: model.summary
-                                color: delegateRoot.textColor
+                                color: model.complete ? delegateRoot.disabledTextColor : delegateRoot.textColor
                                 font.strikeout: model.complete
                                 font.bold: model.doing && root.state != "doing"
                                 maximumLineCount: 2
