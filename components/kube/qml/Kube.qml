@@ -29,6 +29,7 @@ ApplicationWindow {
     id: app
 
     property int sidebarWidth: Kube.Units.gridUnit + Kube.Units.largeSpacing
+    property string defaultView: "conversation"
 
     height: Screen.desktopAvailableHeight * 0.8
     width: Screen.desktopAvailableWidth * 0.8
@@ -254,7 +255,7 @@ ApplicationWindow {
             Component.onCompleted: {
                 dontFocus = true
                 prepareViewInBackground("log", {})
-                showView("conversation")
+                showView(app.defaultView)
                 if (startupCheck.noAccount) {
                     showView("accounts")
                 }

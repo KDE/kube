@@ -48,6 +48,7 @@
 
 #include "backtrace.h"
 #include "framework/src/keyring.h"
+#include "framework/src/fabric.h"
 #include "kube_version.h"
 #include "dbusinterface.h"
 
@@ -151,7 +152,7 @@ int main(int argc, char *argv[])
         QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"), "keyring dictionary"}
     );
     parser.addOption({{"l", "lockfile"}, "Use a lockfile to enforce that only a single instance can be started.", ""});
-    parser.addOption({"view", "Start with the given view active.", ""});
+    parser.addOption({"view", "Start with the given view active.", "value", "conversation"});
     parser.process(app);
 
 
@@ -161,7 +162,9 @@ int main(int argc, char *argv[])
     if (parser.isSet("lockfile")) {
         if (!interface.registerService()) {
             qInfo() << "Can't start multiple instances of kube in flatpak.";
-            interface.activate("");
+            if (parser.isSet("view")) {
+                interface.activate(parser.value("view"));
+            }
             return -1;
         }
         QObject::connect(&interface, &DBusInterface::activated, [&] (const QString &view) {
@@ -227,6 +230,9 @@ int main(int argc, char *argv[])
         qWarning() << "Searched: " << engine.importPathList();
         return -1;
     }
+    engine.setInitialProperties({
+        { "defaultView", QVariant::fromValue(parser.value("view")) }
+    });
     engine.load(QUrl::fromLocalFile(mainFile));
     return app.exec();
 }
