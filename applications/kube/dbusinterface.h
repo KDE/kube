@@ -27,8 +27,8 @@ public:
     DBusInterface() = default;
 
     bool registerService();
-    void activate();
+    void activate(const QString &view);
 
 signals:
-    void activated();
+    void activated(const QString &view);
 };

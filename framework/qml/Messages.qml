@@ -68,5 +68,7 @@ Item {
     property string scrollConversationUp: "scrollConversationUp"
 
     property string eventEditor: "eventEditor"
+
+    property string showView: "showView"
 }
 

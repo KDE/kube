@@ -88,6 +88,11 @@ ApplicationWindow {
     }
 
     Kube.Listener {
+        filter: Kube.Messages.showView
+        onMessageReceived: kubeViews.showView(message.view)
+    }
+
+    Kube.Listener {
         filter: Kube.Messages.displayNotification
         onMessageReceived: {
             if (message.message) {

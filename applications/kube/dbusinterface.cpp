@@ -35,11 +35,11 @@ class Adaptor: public QDBusAbstractAdaptor
 public:
     Adaptor(QObject *obj) : QDBusAbstractAdaptor(obj) {}
 signals:
-    void activated();
+    void activated(const QString &view);
 
 public slots:
-    Q_NOREPLY void activate() {
-        emit activated();
+    Q_NOREPLY void activate(const QString &view) {
+        emit activated(view);
     }
 };
 
@@ -55,11 +55,11 @@ bool DBusInterface::registerService()
     return ret;
 }
 
-void DBusInterface::activate()
+void DBusInterface::activate(const QString &view)
 {
     QDBusInterface iface(service, path, interface, QDBusConnection::sessionBus());
     if (iface.isValid()) {
-        iface.call("activate");
+        iface.call("activate", view);
     }
 }
 

@@ -151,6 +151,7 @@ int main(int argc, char *argv[])
         QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"), "keyring dictionary"}
     );
     parser.addOption({{"l", "lockfile"}, "Use a lockfile to enforce that only a single instance can be started.", ""});
+    parser.addOption({"view", "Start with the given view active.", ""});
     parser.process(app);
 
 
@@ -160,16 +161,17 @@ int main(int argc, char *argv[])
     if (parser.isSet("lockfile")) {
         if (!interface.registerService()) {
             qInfo() << "Can't start multiple instances of kube in flatpak.";
-            interface.activate();
+            interface.activate("");
             return -1;
         }
-        QObject::connect(&interface, &DBusInterface::activated, [&] {
-            qDebug() << "Activated";
+        QObject::connect(&interface, &DBusInterface::activated, [&] (const QString &view) {
+            qDebug() << "Activated " << view;
             for (auto w : QApplication::topLevelWindows()) {
                 //QWindow::alert and QWindow::requestActivate don't work with wayland. But hide and show does.
                 w->setVisible(false);
                 w->setVisible(true);
             }
+            Kube::Fabric::Fabric{}.postMessage("showView", {{"view", view}});
         });
     }
 
