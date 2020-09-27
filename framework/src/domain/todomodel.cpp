@@ -237,6 +237,14 @@ QVariant TodoSourceModel::data(const QModelIndex &idx, int role) const
         }
         case Todo:
             return QVariant::fromValue(todo.domainObject);
+        case SortDate:
+            if (todo.due.isValid()) {
+                return todo.due;
+            }
+            if (todo.start.isValid()) {
+                return todo.start;
+            }
+            return icalTodo->lastModified();
         default:
             SinkWarning() << "Unknown role for todo:" << QMetaEnum::fromType<Roles>().valueToKey(role) << role;
             return {};
@@ -292,7 +300,12 @@ bool TodoModel::lessThan(const QModelIndex &left, const QModelIndex &right) cons
     const auto leftScore = left.data(TodoSourceModel::Relevance).toInt();
     const auto rightScore = right.data(TodoSourceModel::Relevance).toInt();
     if (leftScore == rightScore) {
-        return left.data(TodoSourceModel::Summary) < right.data(TodoSourceModel::Summary);
+        const auto leftDate = left.data(TodoSourceModel::SortDate);
+        const auto rightDate = right.data(TodoSourceModel::SortDate);
+        if (leftDate == rightDate) {
+            return left.data(TodoSourceModel::Summary) < right.data(TodoSourceModel::Summary);
+        }
+        return leftDate < rightDate;
     }
     return leftScore < rightScore;
 }

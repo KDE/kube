@@ -57,6 +57,7 @@ public:
         Important,
         Relevance,
         Todo,
+        SortDate,
         LastRole
     };
     Q_ENUM(Roles);
