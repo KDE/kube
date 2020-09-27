@@ -331,6 +331,20 @@ Kube.View {
                 model: Kube.TodoModel {
                     id: todoModel
                 }
+
+                footerPositioning: ListView.OverlayFooter
+                footer: Rectangle {
+                    property int taskLimit: 5
+                    visible: doingViewButton.checked && todoView.count > taskLimit
+                    color: Kube.Colors.warningColor
+                    height: Kube.Units.gridUnit * 2
+                    width: parent. width
+                    Label {
+                        anchors.centerIn: parent
+                        text: qsTr("This list is longer than %1 tasks. Focus on the top %1?").arg(taskLimit)
+                    }
+                }
+
                 delegate: Kube.ListDelegate {
                     id: delegateRoot
                     property bool buttonsVisible: delegateRoot.hovered
