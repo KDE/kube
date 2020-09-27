@@ -282,6 +282,7 @@ QHash<int, QByteArray> TodoModel::roleNames() const
 void TodoModel::setFilter(const QVariantMap &f)
 {
     static_cast<TodoSourceModel*>(sourceModel())->setFilter(f);
+    mFilterNotStarted = f.value("doing").toBool();
     const auto filterString = f.value("string").toString();
     setFilterFixedString(filterString);
 }
@@ -298,5 +299,11 @@ bool TodoModel::lessThan(const QModelIndex &left, const QModelIndex &right) cons
 
 bool TodoModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
+    if (mFilterNotStarted) {
+        const auto startDate = sourceModel()->index(sourceRow, 0, sourceParent).data(TodoSourceModel::StartDate).value<QDateTime>();
+        if (startDate.isValid() && startDate < QDateTime::currentDateTime()) {
+            return false;
+        }
+    }
     return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
 }
