@@ -164,6 +164,8 @@ int main(int argc, char *argv[])
             qInfo() << "Can't start multiple instances of kube in flatpak.";
             if (parser.isSet("view")) {
                 interface.activate(parser.value("view"));
+            } else {
+                interface.activate();
             }
             return -1;
         }
@@ -174,7 +176,9 @@ int main(int argc, char *argv[])
                 w->setVisible(false);
                 w->setVisible(true);
             }
-            Kube::Fabric::Fabric{}.postMessage("showView", {{"view", view}});
+            if (!view.isEmpty()) {
+                Kube::Fabric::Fabric{}.postMessage("showView", {{"view", view}});
+            }
         });
     }
 
