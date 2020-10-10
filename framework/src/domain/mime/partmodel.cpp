@@ -28,21 +28,22 @@
 
 static std::pair<QString, bool> trim(const QString &text)
 {
+    //The delimiters have <p>.? prefixed including the .? because sometimes we get a byte order mark <feff> (seen with user-agent: Microsoft-MacOutlook/10.1d.0.190908)
     const QList<QRegularExpression> delimiters{
         //English
-        QRegularExpression{"<p>-+Original Message-+", QRegularExpression::CaseInsensitiveOption},
+        QRegularExpression{"<p>.?-+Original Message-+", QRegularExpression::CaseInsensitiveOption},
         //The remainder is not quoted
-        QRegularExpression{"<p>On.*wrote:", QRegularExpression::CaseInsensitiveOption},
+        QRegularExpression{"<p>.?On.*wrote:", QRegularExpression::CaseInsensitiveOption},
         //The remainder is quoted
         QRegularExpression{"&gt; On.*wrote:", QRegularExpression::CaseInsensitiveOption},
 
         //German
         //Forwarded
-        QRegularExpression{"<p>Von:.*</p>", QRegularExpression::CaseInsensitiveOption},
+        QRegularExpression{"<p>.?Von:.*</p>", QRegularExpression::CaseInsensitiveOption},
         //Reply
-        QRegularExpression{"<p>Am.*schrieb.*:</p>", QRegularExpression::CaseInsensitiveOption},
+        QRegularExpression{"<p>.?Am.*schrieb.*:</p>", QRegularExpression::CaseInsensitiveOption},
         //Signature
-        QRegularExpression{"<p>-- <br>", QRegularExpression::CaseInsensitiveOption}
+        QRegularExpression{"<p>.?-- <br>", QRegularExpression::CaseInsensitiveOption}
     };
     for (const auto &expression : delimiters) {
         auto i = expression.globalMatch(text);
