@@ -307,6 +307,18 @@ Kube.View {
                     }
                 }
 
+                Keys.onPressed: {
+                    //Not implemented as a shortcut because we want it only to apply if we have the focus
+                    if (event.text == "d" || event.key == Qt.Key_Delete) {
+                        todoDetails.controller.remove()
+                    } else if (event.key == Qt.Key_Return) {
+                        todoDetails.controller.complete = !todoDetails.controller.complete;
+                        todoDetails.controller.saveAction.execute();
+                    } else if (event.key == Qt.Key_Home) {
+                        todoView.currentIndex = 0
+                    }
+                }
+
                 Column {
                     anchors.centerIn: parent
                     visible: todoView.count === 0
