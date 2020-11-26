@@ -1,0 +1,29 @@
+The following makefile illustrates how this is built.
+
+
+SSHSERVER=user@server
+GPG_HOMEDIR=../gpg
+GPG_KEY=gpgkeyid
+UPLOADDIR=/directory/on/server/flatpak
+LOCALREPO=repo
+KUBEPATH=/path/to/this/directory
+
+build:
+	mkdir -p ${LOCALREPO}
+	mkdir -p build
+	echo "Building kube"
+	flatpak-builder -v --force-clean --ccache --gpg-homedir=${GPG_HOMEDIR} --gpg-sign=${GPG_KEY} --repo=${LOCALREPO} --subject="Build of Kube `date`" build ${KUBEPATH}/com.kubeproject.kube.json
+	echo "Building experimental kube"
+	flatpak-builder -v --force-clean --ccache --gpg-homedir=${GPG_HOMEDIR} --gpg-sign=${GPG_KEY} --repo=${LOCALREPO} --subject="Build of Kube `date`" build ${KUBEPATH}/com.kubeproject.kube.experimental.json
+	echo "Finalizing"
+	flatpak build-update-repo ${LOCALREPO} --prune --prune-depth=20 --generate-static-deltas --gpg-homedir=${GPG_HOMEDIR} --gpg-sign=${GPG_KEY}
+	echo "Signing"
+	flatpak build-sign ${LOCALREPO} com.kubeproject.kube --gpg-homedir=${GPG_HOMEDIR} --gpg-sign=${GPG_KEY}
+
+upload:
+	rsync -Paz --delete -e 'ssh -oBatchMode=yes' ${LOCALREPO}/ ${SSHSERVER}:${UPLOADDIR}/repo/
+	scp -B ${KUBEPATH}/com.kubeproject.kube.flatpakref ${SSHSERVER}:${UPLOADDIR}/
+
+.PHONY: build
+.PHONY: upload
+.NOTPARALLEL: build

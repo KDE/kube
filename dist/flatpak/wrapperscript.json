@@ -1,0 +1,14 @@
+{
+    "name": "kubewrapper",
+    "buildsystem": "simple",
+    "build-commands": [
+        "cp kubewrapper.sh /app/bin/kubewrapper.sh",
+        "chmod +x /app/bin/kubewrapper.sh"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "path": "kubewrapper.sh"
+        }
+    ]
+}

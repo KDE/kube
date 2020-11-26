@@ -1,0 +1,155 @@
+diff --git a/framework/src/domain/eventoccurrencemodel.cpp b/framework/src/domain/eventoccurrencemodel.cpp
+index 222be8ff..e9fa3ccc 100644
+--- a/framework/src/domain/eventoccurrencemodel.cpp
++++ b/framework/src/domain/eventoccurrencemodel.cpp
+@@ -69,12 +69,18 @@ int EventOccurrenceModel::length() const
+     return mLength;
+ }
+ 
+-void EventOccurrenceModel::setCalendarFilter(const QSet<QByteArray> &calendarFilter)
++void EventOccurrenceModel::setCalendarFilter(const QList<QByteArray> &calendarFilter)
+ {
+-    mCalendarFilter = calendarFilter;
++    qWarning() << "Setting the calendar filter to " << calendarFilter;
++    mCalendarFilter = calendarFilter.toSet();
+     updateQuery();
+ }
+ 
++QList<QByteArray> EventOccurrenceModel::calendarFilter() const
++{
++    return mCalendarFilter.toList();
++}
++
+ void EventOccurrenceModel::setFilter(const QVariantMap &filter)
+ {
+     mFilter = filter;
+diff --git a/framework/src/domain/eventoccurrencemodel.h b/framework/src/domain/eventoccurrencemodel.h
+index c97854f0..142f3931 100644
+--- a/framework/src/domain/eventoccurrencemodel.h
++++ b/framework/src/domain/eventoccurrencemodel.h
+@@ -50,7 +50,7 @@ class KUBE_EXPORT EventOccurrenceModel : public QAbstractItemModel
+     Q_OBJECT
+     Q_PROPERTY(QDate start READ start WRITE setStart)
+     Q_PROPERTY(int length READ length WRITE setLength)
+-    Q_PROPERTY(QSet<QByteArray> calendarFilter WRITE setCalendarFilter)
++    Q_PROPERTY(QList<QByteArray> calendarFilter READ calendarFilter WRITE setCalendarFilter)
+     Q_PROPERTY(QVariantMap filter WRITE setFilter)
+ 
+ public:
+@@ -83,7 +83,8 @@ public:
+     QDate start() const;
+     void setLength(int);
+     int length() const;
+-    void setCalendarFilter(const QSet<QByteArray> &);
++    void setCalendarFilter(const QList<QByteArray> &);
++    QList<QByteArray> calendarFilter() const;
+     void setFilter(const QVariantMap &);
+ 
+     struct Occurrence {
+diff --git a/views/calendar/qml/MultiDayView.qml b/views/calendar/qml/MultiDayView.qml
+index 91c25939..ec1cea4d 100644
+--- a/views/calendar/qml/MultiDayView.qml
++++ b/views/calendar/qml/MultiDayView.qml
+@@ -39,6 +39,9 @@ Item {
+     property alias dayHeaderDelegate: dayLabels.delegate
+     property Component weekHeaderDelegate
+     property int month
++    onCalendarFilterChanged: {
++        console.warn("Calendar filter ", calendarFilter)
++    }
+ 
+     //Internal
+     property int numberOfLinesShown: 0
+@@ -67,6 +70,7 @@ Item {
+                 model: Kube.EventOccurrenceModel {
+                     start: root.startDate
+                     length: root.daysToShow
++                    //FIXME Unable to assign QJSValue to QSet<QByteArray>: Use QVariantList, or QVector<QString>
+                     calendarFilter: root.calendarFilter
+                     filter: root.filter ? root.filter : {}
+                 }
+diff --git a/views/calendar/tests/tst_calendar.qml b/views/calendar/tests/tst_calendar.qml
+index 02357fcd..f60526e9 100644
+--- a/views/calendar/tests/tst_calendar.qml
++++ b/views/calendar/tests/tst_calendar.qml
+@@ -32,4 +32,80 @@ ViewTestCase {
+     function test_start() {
+         verify(view)
+     }
++
++
++
++    function test_3selectMessage() {
++        var initialState = {
++            accounts: [
++                {
++                    id: "account1",
++                    name: "Test Account"
++                },
++            ],
++            identities: [{
++                account: "account1",
++                name: "Test Identity",
++                address: "identity@example.org"
++            }],
++            resources: [
++                {
++                    id: "caldavresource",
++                    account: "account1",
++                    type: "caldav",
++                }
++            ],
++            calendars: [{
++                id: "calendar1",
++                resource: "caldavresource",
++                name: "Test Calendar",
++                color: "#af1a6a",
++                events: [
++                    {
++                        resource: "caldavresource",
++                        summary: "Event1",
++                        starts: "2018-04-09T14:03:00",
++                        organizer: "organizer@example.org",
++                        attendees: [{email: "attendee1@example.org"}, {email: "identity@example.org"}]
++                    },
++                    // Day-long events
++                    {
++                        resource: "caldavresource",
++                        summary: "Test day-long event1",
++                        description: "This is test day-long event #1",
++                        starts: "2018-04-10T00:00:00",
++                        ends:   "2018-04-14T00:00:00",
++                        allDay: true,
++                    },
++                ],
++            },
++            {
++                id: "calendar16",
++                resource: "caldavresource",
++                name: "Test Calendar16",
++                color: "#f67400"
++            }],
++        }
++        TestStore.setup(initialState)
++        // var mailView = createTemporaryObject(mailViewComponent, testCase, {})
++        // var folderListView = findChild(mailView, "folderListView");
++        // verify(folderListView)
++
++        // var folder = TestStore.load("folder", {resource: "resource1"})
++        // verify(folder)
++
++        // Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": folder, "trash": false});
++
++        // var mailListView = findChild(mailView, "mailListView");
++        // verify(mailListView)
++        // var listView = findChild(mailListView, "listView");
++        // verify(listView)
++        // tryCompare(listView, "count", 2)
++
++        // var conversationView = findChild(mailView, "mailView");
++        // verify(conversationView)
++        // var listView = findChild(conversationView, "listView");
++        // verify(listView)
++    }
++
+ }

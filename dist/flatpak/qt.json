@@ -1,0 +1,337 @@
+{
+    "name": "qt",
+    "cleanup": [ "/man",
+                 "/share/man",
+                 "/lib/systemd",
+                 "*.la"],
+    "build-options" : {
+        "cflags": "-O2 -g -fstack-protector-strong -D_FORTIFY_SOURCE=2",
+        "cxxflags": "-O2 -g -fstack-protector-strong -D_FORTIFY_SOURCE=2",
+        "ldflags": "-fstack-protector-strong -Wl,-z,relro,-z,now",
+        "env": {
+            "V": "1"
+        }
+    },
+    "modules": [
+        {
+            "name": "qt5-qtbase",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "build-options" : {
+                "arch" : {
+                    "x86_64" : {
+                        "config-opts" : [
+                            "-reduce-relocations", "-force-debug-info"
+                        ]
+                    },
+                    "arm" : {
+                        "config-opts" : [
+                            "-no-reduce-relocations", "-optimize-size", "-opengl es2"
+                        ]
+                    },
+                    "aarch64" : {
+                        "config-opts" : [
+                            "-no-reduce-relocations", "-optimize-size", "-opengl es2"
+                        ]
+                    }
+                }
+            },
+            "config-opts": [ "-confirm-license", "-opensource",
+                             "-shared",
+                             "-platform", "linux-g++",
+                             "-optimized-qmake",
+                             "-nomake", "examples",
+                             "-nomake", "tests",
+                             "-system-harfbuzz",
+                             "-system-sqlite",
+                             "-accessibility",
+                             "-dbus-linked",
+                             "-fontconfig",
+                             "-glib",
+                             "-icu",
+                             "-journald",
+                             "-openssl-linked",
+                             "-no-pch",
+                             "-no-rpath",
+                             "-no-directfb",
+                             "-no-linuxfb",
+                             "-no-kms",
+                             "-no-cups",
+                             "-system-proxies",
+                             "-gtk",
+                             "-no-use-gold-linker"
+                           ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtbase.git",
+                    "branch": "v5.14.2"
+                },
+                {
+                    "type": "patch",
+                    "path": "patch/qtbase-avoid-hardcoding-kernel-version.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patch/qtbase-use-wayland-on-gnome.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patch/qtbase-qsequentialiterable-appendable.patch"
+                },
+                {
+                    "//TODO": "Temporary fix for https://github.com/flatpak/flatpak/issues/3397.",
+                    "type": "patch",
+                    "path": "patch/qtbase-revert-correct-handling-for-xdg-runtime-dir.patch"
+                },
+                {
+                    "type": "shell",
+                    "commands": [ "mv configure configure.qt" ]
+                },
+                {
+                    "type": "script",
+                    "commands": [
+                        "processed=`sed -e 's/--/-/g ; s/=/ /g' <<< $@`",
+                        "./configure.qt $processed"
+                    ],
+                    "dest-filename": "configure"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtdeclarative",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs", "lib/plugins/qmltooling" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtdeclarative.git",
+                    "branch": "v5.14.2"
+                },
+                {
+                    "type": "patch",
+                    "path": "patch/qtdeclarative-use-python3.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patch/qtdeclarative-fix-sets.patch"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qttools",
+            "buildsystem": "qmake",
+            "cleanup": [
+                "/mkspecs",
+                "/bin/assistant", "/bin/qhelpgenerator", "/bin/qcollectiongenerator", "/bin/qhelpconverter", "/bin/pixeltool", "/bin/designer",
+                "/bin/lrelease", "/bin/lupdate", "/bin/lconvert", "/bin/linguist", "/bin/qdoc", "/bin/qtattributionsscanner",
+                "/bin/qtplugininfo", "/bin/qtdiag", "/bin/qdbusviewer"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qttools.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtscript",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtscript.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name" : "qt5-qtwebengine",
+            "buildsystem" : "qmake",
+            "cleanup" : [
+                "/bin",
+                "/mkspecs"
+            ],
+            "config-opts" : [
+                "--",
+                "-system-ffmpeg",
+                "-webengine-proprietary-codecs",
+                "-webengine-icu",
+                "-webp"
+            ],
+            "modules" : [
+                {
+                    "name": "python-2.7",
+                    "config-opts": [
+                        "--enable-shared",
+                        "--with-ensurepip=yes",
+                        "--with-system-expat",
+                        "--with-system-ffi",
+                        "--enable-loadable-sqlite-extensions",
+                        "--with-dbmliborder=gdbm",
+                        "--enable-unicode=ucs4"
+                    ],
+                    "post-install": [
+                        "chmod 644 $FLATPAK_DEST/lib/libpython2.7.so.1.0"
+                    ],
+                    "cleanup": [
+                        "*"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://www.python.org/ftp/python/2.7.16/Python-2.7.16.tgz",
+                            "sha256": "01da813a3600876f03f46db11cc5c408175e99f03af2ba942ef324389a83bad5"
+                        }
+                    ]
+                },
+                {
+                    "name" : "pciutils",
+                    "no-autogen" : true,
+                    "make-args" : [
+                        "SHARED=no",
+                        "ZLIB=no",
+                        "PREFIX=/app"
+                    ],
+                    "make-install-args" : [
+                        "SHARED=no",
+                        "ZLIB=no",
+                        "PREFIX=/app"
+                    ],
+                    "install-rule": "install",
+                    "sources" : [
+                        {
+                            "type" : "git",
+                            "url" : "https://kernel.googlesource.com/pub/scm/utils/pciutils/pciutils",
+                            "branch" : "v3.6.2"
+                        }
+                    ]
+                }
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtwebengine.git",
+                    "branch": "v5.14.2"
+                },
+                {
+                    "type" : "patch",
+                    "path" : "patch/webengineresources.patch"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtsvg",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtsvg.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtx11extras",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtx11extras.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtquickcontrols",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtquickcontrols.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtquickcontrols2",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtquickcontrols2.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtgraphicaleffects",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtgraphicaleffects.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtxmlpatterns",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtxmlpatterns.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtimageformats",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtimageformats.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtwayland",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtwayland.git",
+                    "branch": "v5.14.2"
+                },
+                {
+                    "type": "patch",
+                    "path": "patch/qtwayland-use-gnome-platform-theme-on-gnome-based-desktops.patch"
+                }
+            ]
+        },
+        {
+            "name": "qt5-qtnetworkauth",
+            "buildsystem": "qmake",
+            "cleanup": [ "/bin", "/mkspecs" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.qt.io/qt/qtnetworkauth.git",
+                    "branch": "v5.14.2"
+                }
+            ]
+        }
+    ]
+}

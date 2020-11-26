@@ -1,0 +1,55 @@
+{
+    "id": "com.kolabnow.kube",
+    "branch": "master",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "18.08",
+    "sdk": "org.freedesktop.Sdk",
+    "command": "kubewrapper.sh",
+    "rename-icon": "kube_icon",
+    "desktop-file-name-prefix": "Kolab Now ",
+    "tags": ["kolabnow"],
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--device=dri",
+        "--filesystem=host",
+        "--filesystem=/tmp",
+        "--share=network",
+        "--env=SASL_PATH=/app/lib/sasl2/",
+        "--env=QT_QPA_PLATFORMTHEME="
+    ],
+    "separate-locales": false,
+    "cleanup": ["/include", "*.a", "*.la", "*.prl"],
+    "modules": [
+        "kubedeps.json",
+        {
+            "config-opts": [
+                "-DENABLE_TESTING=OFF",
+                "-DCMAKE_INSTALL_LIBDIR=lib"
+            ],
+            "name": "sink",
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "git://anongit.kde.org/sink.git", "branch": "develop" } ]
+        },
+        {
+            "config-opts": [
+                "-DENABLE_TESTING=OFF",
+                "-DCMAKE_INSTALL_LIBDIR=lib",
+                "-DKUBE_APPLICATION_ID=com.kolabnow.kube",
+                "-DAVAILABLE_ACCOUNT_PLUGINS=kolabnow",
+                "-DKUBE_DESKTOPFILE_COMMENT=\"Send, receive and manage your Kolab Now mail with Kube\"",
+                "-DKUBE_DESKTOPFILE_CATEGORIES=Qt;Office;Network;Email;"
+            ],
+            "name": "kube",
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kube.git", "branch": "develop" } ],
+            "post-install": [
+                "rm -rf /app/include",
+                "rm -rf /app/lib/*.la /app/lib/*.a /app/lib/*.prl ",
+                "rm -rf /app/share/icons/hicolor/scalable"
+            ]
+        },
+        "wrapperscript.json"
+    ]
+}

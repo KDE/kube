@@ -1,0 +1,71 @@
+From 4b078768bf99390b1d011761bc538c317615d993 Mon Sep 17 00:00:00 2001
+From: Fabian Kosmale <fabian.kosmale@qt.io>
+Date: Thu, 12 Mar 2020 16:28:48 +0100
+Subject: [PATCH] WIP: check that sets work
+
+Task-number: QTBUG-82743
+Change-Id: I64f20c6bf1e47737c7b927f79e1e78c1a1603741
+---
+
+diff --git a/src/qml/jsruntime/qv4engine.cpp b/src/qml/jsruntime/qv4engine.cpp
+index 1efe09c..680ccc0 100644
+--- a/src/qml/jsruntime/qv4engine.cpp
++++ b/src/qml/jsruntime/qv4engine.cpp
+@@ -1521,7 +1521,7 @@
+             retn = QVariant(typeHint, temp);
+             QMetaType::destroy(typeHint, temp);
+             auto retnAsIterable = retn.value<QtMetaTypePrivate::QSequentialIterableImpl>();
+-            if (retnAsIterable._iteratorCapabilities & QtMetaTypePrivate::ContainerIsAppendable) {
++            if (retnAsIterable.containerCapabilities() & QtMetaTypePrivate::ContainerIsAppendable) {
+                 auto const length = a->getLength();
+                 QV4::ScopedValue arrayValue(scope);
+                 for (qint64 i = 0; i < length; ++i) {
+diff --git a/tests/auto/qml/qqmllanguage/data/arrayToContainer.qml b/tests/auto/qml/qqmllanguage/data/arrayToContainer.qml
+index ee400eb..d8e278a 100644
+--- a/tests/auto/qml/qqmllanguage/data/arrayToContainer.qml
++++ b/tests/auto/qml/qqmllanguage/data/arrayToContainer.qml
+@@ -3,5 +3,7 @@
+ 
+ TestItem {
+     property var vector
++    property var myset
+     positions: vector
++    barrays: myset
+ }
+diff --git a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
+index 4d4056b..5407837 100644
+--- a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
++++ b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
+@@ -5667,25 +5667,31 @@
+ {
+     Q_OBJECT
+     Q_PROPERTY( QVector<QPointF> positions MEMBER m_points  )
++    Q_PROPERTY( QSet<QByteArray> barrays MEMBER m_barrays  )
+ 
+ public:
+     TestItem() = default;
+     QVector< QPointF > m_points;
++    QSet<QByteArray> m_barrays;
+ };
+ 
+ 
+ Q_DECLARE_METATYPE(QVector<QPointF>);
++Q_DECLARE_METATYPE(QSet<QByteArray>);
+ void tst_qqmllanguage::arrayToContainer()
+ {
+     QQmlEngine engine;
+     qmlRegisterType<TestItem>("qt.test", 1, 0, "TestItem");
+     QVector<QPointF> points { QPointF (2.0, 3.0) };
++    QSet<QByteArray> barrays { QByteArray("hello"), QByteArray("world") };
+     engine.rootContext()->setContextProperty("test", QVariant::fromValue(points));
+     QQmlComponent component(&engine, testFileUrl("arrayToContainer.qml"));
+     VERIFY_ERRORS(0);
+-    QScopedPointer<TestItem> root(qobject_cast<TestItem *>(component.createWithInitialProperties( {{"vector", QVariant::fromValue(points)}} )));
++    QScopedPointer<TestItem> root(qobject_cast<TestItem *>(component.createWithInitialProperties( {{"vector", QVariant::fromValue(points)}, {"myset", QVariant::fromValue(barrays)} } )));
+     QVERIFY(root);
+     QCOMPARE(root->m_points.at(0), QPointF (2.0, 3.0) );
++    QVERIFY(root->m_barrays.contains("hello"));
++    QVERIFY(root->m_barrays.contains("world"));
+ }
+ 
+ class EnumTester : public QObject

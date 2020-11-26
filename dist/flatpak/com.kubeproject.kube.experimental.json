@@ -1,0 +1,54 @@
+{
+    "id": "com.kubeproject.kube",
+    "branch": "experimental",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "19.08",
+    "sdk": "org.freedesktop.Sdk",
+    "command": "kubewrapper.sh",
+    "rename-icon": "kube_icon",
+    "desktop-file-name-prefix": "(Experimental) ",
+    "tags": ["nightly", "experimental"],
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--device=dri",
+        "--filesystem=host",
+        "--filesystem=/tmp",
+        "--share=network",
+        "--env=SASL_PATH=/app/lib/sasl2/",
+        "--env=QT_QPA_PLATFORMTHEME=",
+        "--talk-name=org.freedesktop.secrets",
+        "--own-name=com.kubeproject.kube"
+    ],
+    "separate-locales": false,
+    "cleanup": ["/include", "*.a", "*.la", "*.prl", "/lib/cmake"],
+    "modules": [
+        "kubedeps.json",
+        {
+            "config-opts": [
+                "-DCMAKE_INSTALL_LIBDIR=lib"
+            ],
+            "name": "sink",
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/pim/sink.git", "branch": "develop" } ]
+        },
+        {
+            "config-opts": [
+                "-DCMAKE_INSTALL_LIBDIR=lib",
+                "-DKUBE_APPLICATION_ID=com.kubeproject.kube",
+                "-DKUBE_DESKTOPFILE_EXEC=kubewrapper.sh",
+                "-DEXPERIMENTAL_VIEWS=ON",
+                "-DENABLE_EXTENSIONS=OFF"
+            ],
+            "name": "kube",
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/pim/kube.git", "branch": "develop" } ],
+            "post-install": [
+                "rm -rf /app/include",
+                "rm -rf /app/lib/*.la /app/lib/*.a /app/lib/*.prl "
+            ]
+        },
+        "wrapperscript.json"
+    ]
+}

@@ -1,0 +1,15 @@
+diff -r -p pinentry-1.1.0/qt/main.cpp pinentry-1.1.0_mod/qt/main.cpp
+*** pinentry-1.1.0/qt/main.cpp	2017-12-03 17:13:05.000000000 +0100
+--- pinentry-1.1.0_mod/qt/main.cpp	2020-03-14 11:19:18.768004832 +0100
+*************** qt_cmd_handler(pinentry_t pe)
+*** 229,234 ****
+--- 229,236 ----
+              pe->repeat_okay = (pinStr == pinentry.repeatedPin());
+          }
+  
++         pe->may_cache_password = 1;
++ 
+          int len = strlen(pin.constData());
+          if (len >= 0) {
+              pinentry_setbufferlen(pe, len + 1);
+

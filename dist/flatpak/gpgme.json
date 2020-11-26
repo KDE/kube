@@ -1,37 +1,45 @@
 {
     "name": "gpgme",
-    "sources": [ { "type": "git", "url": "git://git.gnupg.org/gpgme.git", "branch": "gpgme-1.10.0"} ],
+    "sources": [ { "type": "git", "url": "git://git.gnupg.org/gpgme.git", "branch": "gpgme-1.13.1"} ],
     "modules": [
         {
             "name": "libgpg-error",
-            "sources": [ { "type": "archive", "url": "http://mirrors.dotsrc.org/gnupg/libgpg-error/libgpg-error-1.31.tar.bz2", "sha256": "40d0a823c9329478063903192a1f82496083b277265904878f4bc09e0db7a4ef" } ],
-            "cleanup": [ "/lib/libgpg-error.la" ],
-            "modules": [
+            "sources": [
                 {
-                    "name": "gettext",
-                    "sources": [{
-                        "type": "archive",
-                        "url": "https://ftp.gnu.org/pub/gnu/gettext/gettext-0.19.8.tar.gz",
-                        "sha256": "3da4f6bd79685648ecf46dab51d66fcdddc156f41ed07e580a696a38ac61d48f"
-                    }]
+                    "type": "archive",
+                    "url": "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.37.tar.bz2",
+                    "sha256": "b32d6ff72a73cf79797f7f2d039e95e9c6f92f0c1450215410840ab62aea9763"
                 }
+            ],
+            "cleanup": [
+                "/lib/libgpg-error.la"
             ]
         },
         {
             "name": "libassuan",
-            "sources": [ { "type": "archive", "url": "https://www.gnupg.org/ftp/gcrypt/libassuan/libassuan-2.5.1.tar.bz2", "sha256": "47f96c37b4f2aac289f0bc1bacfa8bd8b4b209a488d3d15e2229cb6cc9b26449" } ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://www.gnupg.org/ftp/gcrypt/libassuan/libassuan-2.5.3.tar.bz2",
+                    "sha256": "91bcb0403866b4e7c4bc1cc52ed4c364a9b5414b3994f718c70303f7f765e702"
+                }
+            ],
             "cleanup": [
                 "/lib/libassuan.la"
             ]
         },
         {
             "name": "pinentry",
-            "config-opts": ["-enable-pinentry-qt"],
+            "config-opts": ["--enable-pinentry-qt", "--disable-fallback-curses"],
             "sources": [
                 {
                     "type": "archive",
                     "url": "https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-1.1.0.tar.bz2",
                     "sha256": "68076686fa724a290ea49cdf0d1c0c1500907d1b759a3bcbfbec0293e8f56570"
+                },
+                {
+                    "type": "patch",
+                    "path": "patch/pinentry-keyring.patch"
                 }
             ]
         }
