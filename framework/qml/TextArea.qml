@@ -47,4 +47,44 @@ T.TextArea {
     onLinkHovered: {
         console.warn("Link hovered", link)
     }
+
+    MouseArea {
+        id: contextMenuMouseArea
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+
+        property string hoveredLink: null
+
+        onPressed: {
+            // selection gets lost due to focus loss
+            var selectionStart = root.selectionStart
+            var selectionEnd = root.selectionEnd
+            if (root.linkHovered) {
+                contextMenuMouseArea.hoveredLink = root.hoveredLink
+            } else {
+                contextMenuMouseArea.hoveredLink = null
+            }
+            contextMenu.popup()
+            root.select(selectionStart, selectionEnd)
+        }
+
+        Menu {
+            id: contextMenu
+            MenuItem {
+                text: contextMenuMouseArea.hoveredLink ? qsTr("Copy Link") : qsTr("Copy Selection")
+                onTriggered: {
+                    if (contextMenuMouseArea.hoveredLink) {
+                        clipboard.text = contextMenuMouseArea.hoveredLink
+                    } else {
+                        root.copy()
+                    }
+                }
+                enabled: root.selectedText.length > 0 || contextMenuMouseArea.hoveredLink
+                Kube.Clipboard {
+                    id: clipboard
+                }
+            }
+        }
+    }
 }
+
