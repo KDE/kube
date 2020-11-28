@@ -53,7 +53,7 @@ T.TextArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
 
-        property string hoveredLink: null
+        property var hoveredLink: null
 
         onPressed: {
             // selection gets lost due to focus loss

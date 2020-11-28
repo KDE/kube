@@ -43,7 +43,7 @@ Row {
 
     Connections {
         target: ExtensionApi
-        onSecretAvailable: {
+        function onSecretAvailable(secret) {
             root.secret = secret
         }
     }
