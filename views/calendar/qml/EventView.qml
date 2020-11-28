@@ -105,14 +105,24 @@ FocusScope {
                     }
                 }
 
-                Kube.TextArea {
+                Flickable {
+                    id: flickable
                     Layout.fillWidth: true
-                    text: controller.description
-                }
-
-                Item {
-                    width: 1
-                    height: Kube.Units.largeSpacing
+                    Layout.fillHeight: true
+                    boundsBehavior: Flickable.StopAtBounds
+                    ScrollBar.horizontal: Kube.ScrollBar {  }
+                    contentHeight: textArea.height
+                    contentWidth: textArea.width
+                    clip: true
+                    Kube.TextArea {
+                        id: textArea
+                        width: flickable.width
+                        text: controller.description
+                    }
+                    Kube.ScrollHelper {
+                        anchors.fill: parent
+                        flickable: flickable
+                    }
                 }
 
                 RowLayout {
