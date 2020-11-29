@@ -20,7 +20,6 @@
 pragma Singleton
 
 import QtQuick 2.7
-import org.kube.framework 1.0 as Kube
 
 Item {
     //Ensure the gridUnit is divisble by 4 without remainder, otherwise we'll end up with alignment issues
@@ -35,7 +34,9 @@ Item {
 
     property variant fontMetrics: TextMetrics {
         text: "M"
-        font.family: Kube.Font.fontFamily
+        // Same as Kube.Font.fontFamily, but that introduces a "cyclic depedency".
+        // (because we use Units all over the place in the framework?)
+        font.family: "Noto Sans"
     }
 }
 
