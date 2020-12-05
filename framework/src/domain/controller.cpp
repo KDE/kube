@@ -72,8 +72,7 @@ void Controller::clear()
 
 void Controller::run(const KAsync::Job<void> &job)
 {
-    auto jobToExec = job;
-    jobToExec.onError([] (const KAsync::Error &error) {
+    auto jobToExec = job.onError([] (const KAsync::Error &error) {
         SinkWarningCtx(Sink::Log::Context{"controller"}) << "Error while executing job: " << error.errorMessage;
     });
     //TODO handle error
