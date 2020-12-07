@@ -383,15 +383,7 @@ void InvitationController::storeEvent(ParticipantStatus status)
 void InvitationController::accept()
 {
     if (getMethod() == Cancel) {
-        // TODO just modify the event to be cancelled?
-        run(Sink::Store::remove(mExistingEvent)
-            .then([=] (const KAsync::Error &error) {
-                if (error) {
-                    SinkWarning() << "Failed to update the event: " << error;
-                }
-                setState(InvitationController::Cancelled);
-                emit done();
-            }));
+        storeEvent(ParticipantStatus::Cancelled);
     } else {
         storeEvent(ParticipantStatus::Accepted);
     }

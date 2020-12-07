@@ -318,6 +318,83 @@ private slots:
                 }
             }
         }
+
+        //Cancel an exception of the event
+        {
+            InvitationController controller;
+            const auto recurrenceId = dtstart;
+            controller.loadICal(createInvitation({.uid = uid, .summary = "exceptionSummary2", .revision = 5, .recurrenceId = recurrenceId, .cancelled = true}));
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+            QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
+            QTRY_COMPARE(controller.getUid(), uid);
+            //TODO should this still be unknown until we accept?
+            QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
+            QTRY_COMPARE(controller.getRecurrenceId(), recurrenceId);
+
+            //Accept the update
+            controller.acceptAction()->execute();
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
+
+            QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
+
+            //Ensure the event is stored
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
+
+            auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
+            QCOMPARE(list.size(), 2);
+
+            for (const auto &entry : list) {
+                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                QVERIFY(event);
+                QCOMPARE(event->uid().toUtf8(), uid);
+                if (event->recurrenceId().isValid()) {
+                    QCOMPARE(event->summary(), QLatin1String{"exceptionSummary2"});
+                    QCOMPARE(event->status(), KCalCore::Incidence::StatusCanceled);
+                } else {
+                    QCOMPARE(event->summary(), QLatin1String{"summary2"});
+                    QCOMPARE(event->status(), KCalCore::Incidence::StatusNone);
+                }
+            }
+        }
+
+        //Cancel the entire event
+        {
+            InvitationController controller;
+            const auto recurrenceId = dtstart;
+            controller.loadICal(createInvitation({.uid = uid, .summary = "summary2", .revision = 6, .cancelled = true}));
+            controller.setCalendar(ApplicationDomainType::Ptr::create(calendar));
+            QTRY_COMPARE(controller.getEventState(), InvitationController::Update);
+            QTRY_COMPARE(controller.getUid(), uid);
+            //TODO should this still be unknown until we accept?
+            QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
+            QVERIFY(!controller.getRecurrenceId().isValid());
+
+            //Accept the update
+            controller.acceptAction()->execute();
+            Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
+
+            QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
+
+            //Ensure the event is stored
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 2);
+
+            auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
+            QCOMPARE(list.size(), 2);
+
+            for (const auto &entry : list) {
+                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                QVERIFY(event);
+                QCOMPARE(event->uid().toUtf8(), uid);
+                if (event->recurrenceId().isValid()) {
+                    QCOMPARE(event->summary(), QLatin1String{"exceptionSummary2"});
+                    QCOMPARE(event->status(), KCalCore::Incidence::StatusCanceled);
+                } else {
+                    QCOMPARE(event->summary(), QLatin1String{"summary2"});
+                    QCOMPARE(event->status(), KCalCore::Incidence::StatusCanceled);
+                }
+            }
+        }
+
     }
 
     void testCancellation()
@@ -364,7 +441,7 @@ private slots:
             controller.acceptAction()->execute();
             Sink::ResourceControl::flushMessageQueue(resourceId).exec().waitForFinished();
             QTRY_COMPARE(controller.getState(), InvitationController::Cancelled);
-            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 0);
+            QCOMPARE(Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar)).size(), 1);
         }
     }
 
