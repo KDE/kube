@@ -45,7 +45,7 @@ TestCase {
             trash: false
             draft: false
             sent: false
-            incomplete: false
+            busy: false
             current: true
             autoLoadImages: true
         }
