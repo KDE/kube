@@ -29,7 +29,7 @@ DelegateModel {
     delegate: Item {
         id: partColumn
 
-        width: parent.width
+        width: parent ? parent.width : 0
         height: childrenRect.height
 
         function getColor(securityLevel)
