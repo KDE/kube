@@ -600,6 +600,7 @@ private slots:
         QCOMPARE(result->to()->addresses(), {{"jane@doe.com"}});
         QCOMPARE(result->cc()->addresses(), {{"john@doe.com"}});
         QCOMPARE(result->inReplyTo()->asUnicodeString(), {"<03db3530-0000-0000-95a2-8a148f00000@example.com>"});
+        QCOMPARE(result->references()->asUnicodeString(), {"<dbe9d22b-0a3f-cb1e-e883-8a148f00000@example.com> <03db3530-0000-0000-95a2-8a148f00000@example.com>"});
         QCOMPARE(normalize(removeFirstLine(result->body())), QLatin1String{"FsdflkjdslfjHappyMonday!Belowyouwillfindaquickoverviewofthecurrenton-goings.Remember"});
     }
 
