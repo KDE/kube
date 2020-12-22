@@ -368,14 +368,10 @@ static void setupPage(QWebEnginePage *page)
         page->settings()->setAttribute(QWebEngineSettings::AllowRunningInsecureContent, false);
 }
 
-static void plainMessageText(const QString &plainTextContent, const QString &htmlContent, bool aStripSignature, const std::function<void(const QString &)> &callback)
+static void plainMessageText(const QString &plainTextContent, const QString &htmlContent, const std::function<void(const QString &)> &callback)
 {
     const auto result = plainTextContent.isEmpty() ? toPlainText(htmlContent) : plainTextContent;
-    if (aStripSignature) {
-        callback(stripSignature(result));
-    } else {
-        callback(result);
-    }
+    callback(result);
 }
 
 static QString extractHeaderBodyScript()
@@ -389,7 +385,7 @@ static QString extractHeaderBodyScript()
                           "})()");
 }
 
-void htmlMessageText(const QString &plainTextContent, const QString &htmlContent, bool aStripSignature, const std::function<void(const QString &body, QString &head)> &callback)
+void htmlMessageText(const QString &plainTextContent, const QString &htmlContent, const std::function<void(const QString &body, QString &head)> &callback)
 {
     QString htmlElement = htmlContent;
 
@@ -409,15 +405,9 @@ void htmlMessageText(const QString &plainTextContent, const QString &htmlContent
         auto bodyElement = map.value(QStringLiteral("body")).toString();
         auto headerElement = map.value(QStringLiteral("header")).toString();
         if (!bodyElement.isEmpty()) {
-            if (aStripSignature) {
-                callback(stripSignature(bodyElement), headerElement);
-            }
             return callback(bodyElement, headerElement);
         }
 
-        if (aStripSignature) {
-            return callback(stripSignature(htmlElement), headerElement);
-        }
         return callback(htmlElement, headerElement);
     });
 }
@@ -769,25 +759,25 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     plainBody.append(onDateYouWroteLine);
     htmlBody.append(plainToHtml(onDateYouWroteLine));
 
-    //Strip signature for replies
-    const bool stripSignature = true;
-
     const auto plainTextContent = otp.plainTextContent();
     const auto htmlContent = otp.htmlContent();
 
-    plainMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body) {
+    plainMessageText(plainTextContent, htmlContent, [=] (const QString &body) {
+        QString result = stripSignature(body);
         //Quoted body
-        QString plainQuote = quotedPlainText(body,  fromHeader ? fromHeader->displayString() : QString{});
-        if (plainQuote.endsWith(QLatin1Char('\n'))) {
-            plainQuote.chop(1);
+        result = quotedPlainText(result,  fromHeader ? fromHeader->displayString() : QString{});
+        if (result.endsWith(QLatin1Char('\n'))) {
+            result.chop(1);
         }
         //The plain body is complete
-        auto plainBodyResult = plainBody + plainQuote;
-        htmlMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body, const QString &headElement) {
+        auto plainBodyResult = plainBody + result;
+        htmlMessageText(plainTextContent, htmlContent, [=] (const QString &body, const QString &headElement) {
+            QString result = stripSignature(body);
+
             //The html body is complete
             const auto htmlBodyResult = [&]() {
                 if (!alwaysPlain) {
-                    auto htmlBodyResult = htmlBody + quotedHtmlText(body);
+                    auto htmlBodyResult = htmlBody + quotedHtmlText(result);
                     makeValidHtml(htmlBodyResult, headElement);
                     return htmlBodyResult;
                 }
