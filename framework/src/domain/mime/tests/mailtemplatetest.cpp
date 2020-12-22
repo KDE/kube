@@ -81,6 +81,14 @@ private slots:
         QtWebEngine::initialize();
     }
 
+
+    //Ensures we don't crash on garbage
+    void testEmpty()
+    {
+        MailTemplates::reply(KMime::Message::Ptr::create(), [&] (const KMime::Message::Ptr &) {
+        });
+    }
+
     void testPlainReply()
     {
         auto msg = readMail("plaintext.mbox");
@@ -573,6 +581,28 @@ private slots:
         QVERIFY(result->contents()[1]->contentType()->isMimeType("text/calendar"));
         QCOMPARE(result->contents()[1]->contentType()->name(), QLatin1String{"event.ics"});
     }
+
+    void testEncryptedWithProtectedHeadersReply()
+    {
+
+        KMime::Types::AddrSpecList me;
+        KMime::Types::Mailbox mb;
+        mb.setAddress("to1@example.org");
+        me << mb.addrSpec();
+
+        auto msg = readMail("openpgp-encrypted-memoryhole2.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::reply(msg, [&] (const KMime::Message::Ptr &r) {
+            result = r;
+        }, me);
+        QTRY_VERIFY(result);
+        QCOMPARE(result->subject()->asUnicodeString(), QLatin1String{"RE: This is the subject"});
+        QCOMPARE(result->to()->addresses(), {{"jane@doe.com"}});
+        QCOMPARE(result->cc()->addresses(), {{"john@doe.com"}});
+        QCOMPARE(result->inReplyTo()->asUnicodeString(), {"<03db3530-0000-0000-95a2-8a148f00000@example.com>"});
+        QCOMPARE(normalize(removeFirstLine(result->body())), QLatin1String{"FsdflkjdslfjHappyMonday!Belowyouwillfindaquickoverviewofthecurrenton-goings.Remember"});
+    }
+
 };
 
 QTEST_MAIN(MailTemplateTest)

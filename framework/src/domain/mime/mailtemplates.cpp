@@ -41,6 +41,12 @@
 
 #include "mailcrypto.h"
 
+QDebug operator<<(QDebug dbg, const KMime::Types::Mailbox &mb)
+{
+    dbg << mb.addrSpec().asString();
+    return dbg;
+}
+
 namespace KMime {
     namespace Types {
 static bool operator==(const KMime::Types::AddrSpec &left, const KMime::Types::AddrSpec &right)
@@ -168,17 +174,13 @@ static QString replySubject(const QString &s)
     return replacePrefixes(s, replyPrefixes, localPrefix);
 }
 
-QByteArray getRefStr(const KMime::Message::Ptr &msg)
+static QByteArray getRefStr(const QByteArray &references, const QByteArray &messageId)
 {
-    QByteArray firstRef, lastRef, refStr, retRefStr;
+    QByteArray firstRef, lastRef, refStr{references.trimmed()}, retRefStr;
     int i, j;
 
-    if (auto hdr = msg->references(false)) {
-        refStr = hdr->as7BitString(false).trimmed();
-    }
-
     if (refStr.isEmpty()) {
-        return msg->messageID()->as7BitString(false);
+        return messageId;
     }
 
     i = refStr.indexOf('<');
@@ -196,7 +198,7 @@ QByteArray getRefStr(const KMime::Message::Ptr &msg)
         retRefStr += lastRef + ' ';
     }
 
-    retRefStr += msg->messageID()->as7BitString(false);
+    retRefStr += messageId;
     return retRefStr;
 }
 
@@ -555,13 +557,29 @@ enum ReplyStrategy {
     ReplyNone
 };
 
-static KMime::Types::Mailbox::List getMailingListAddresses(const KMime::Message::Ptr &origMsg)
+
+static QByteArray as7BitString(const KMime::Headers::Base *h)
+{
+    if (h) {
+        return h->as7BitString(false);
+    }
+    return {};
+}
+
+
+static QString asUnicodeString(const KMime::Headers::Base *h)
+{
+    if (h) {
+        return h->asUnicodeString();
+    }
+    return {};
+}
+
+static KMime::Types::Mailbox::List getMailingListAddresses(const KMime::Headers::Base *listPostHeader)
 {
     KMime::Types::Mailbox::List mailingListAddresses;
-    if (origMsg->headerByType("List-Post") &&
-            origMsg->headerByType("List-Post")->asUnicodeString().contains(QStringLiteral("mailto:"), Qt::CaseInsensitive)) {
-
-        const QString listPost = origMsg->headerByType("List-Post")->asUnicodeString();
+    const QString listPost = asUnicodeString(listPostHeader);
+    if (listPost.contains(QStringLiteral("mailto:"), Qt::CaseInsensitive)) {
         QRegExp rx(QStringLiteral("<mailto:([^@>]+)@([^>]+)>"), Qt::CaseInsensitive);
         if (rx.indexIn(listPost, 0) != -1) {   // matched
             KMime::Types::Mailbox mailbox;
@@ -577,11 +595,8 @@ struct RecipientMailboxes {
     KMime::Types::Mailbox::List cc;
 };
 
-static RecipientMailboxes getRecipients(const KMime::Message::Ptr &origMsg, const KMime::Types::AddrSpecList &me)
+static RecipientMailboxes getRecipients(const KMime::Types::Mailbox::List &from, const KMime::Types::Mailbox::List &to, const KMime::Types::Mailbox::List &cc, const KMime::Types::Mailbox::List &replyToList, const KMime::Types::Mailbox::List &mailingListAddresses, const KMime::Types::AddrSpecList &me)
 {
-    const KMime::Types::Mailbox::List replyToList = origMsg->replyTo()->mailboxes();
-    const KMime::Types::Mailbox::List mailingListAddresses = getMailingListAddresses(origMsg);
-
     KMime::Types::Mailbox::List toList;
     KMime::Types::Mailbox::List ccList;
     auto listContainsMe = [&] (const KMime::Types::Mailbox::List &list) {
@@ -595,11 +610,11 @@ static RecipientMailboxes getRecipients(const KMime::Message::Ptr &origMsg, cons
         return false;
     };
 
-    if (listContainsMe(origMsg->from()->mailboxes())) {
+    if (listContainsMe(from)) {
         // sender seems to be one of our own identities, so we assume that this
         // is a reply to a "sent" mail where the users wants to add additional
         // information for the recipient.
-        return {origMsg->to()->mailboxes(), origMsg->cc()->mailboxes()};
+        return {to, cc};
     }
 
     KMime::Types::Mailbox::List recipients;
@@ -621,22 +636,22 @@ static RecipientMailboxes getRecipients(const KMime::Message::Ptr &origMsg, cons
 
     if (!mailingListAddresses.isEmpty()) {
         // this is a mailing list message
-        if (recipients.isEmpty() && !origMsg->from()->asUnicodeString().isEmpty()) {
+        if (recipients.isEmpty() && !from.isEmpty()) {
             // The sender didn't set a Reply-to address, so we add the From
             // address to the list of CC recipients.
-            ccRecipients += origMsg->from()->mailboxes();
-            qDebug() << "Added" << origMsg->from()->asUnicodeString() << "to the list of CC recipients";
+            ccRecipients += from;
+            qDebug() << "Added" << from << "to the list of CC recipients";
         }
 
         // if it is a mailing list, add the posting address
-        recipients.prepend(mailingListAddresses[ 0 ]);
+        recipients.prepend(mailingListAddresses[0]);
     } else {
         // this is a normal message
-        if (recipients.isEmpty() && !origMsg->from()->asUnicodeString().isEmpty()) {
+        if (recipients.isEmpty() && !from.isEmpty()) {
             // in case of replying to a normal message only then add the From
             // address to the list of recipients if there was no Reply-to address
-            recipients += origMsg->from()->mailboxes();
-            qDebug() << "Added" << origMsg->from()->asUnicodeString() << "to the list of recipients";
+            recipients += from;
+            qDebug() << "Added" << from << "to the list of recipients";
         }
     }
 
@@ -644,23 +659,16 @@ static RecipientMailboxes getRecipients(const KMime::Message::Ptr &origMsg, cons
     toList = stripMyAddressesFromAddressList(recipients, me);
 
     // merge To header and CC header into a list of CC recipients
-    if (!origMsg->cc()->asUnicodeString().isEmpty() || !origMsg->to()->asUnicodeString().isEmpty()) {
-        KMime::Types::Mailbox::List list;
-        if (!origMsg->to()->asUnicodeString().isEmpty()) {
-            list += origMsg->to()->mailboxes();
-        }
-        if (!origMsg->cc()->asUnicodeString().isEmpty()) {
-            list += origMsg->cc()->mailboxes();
-        }
-
+    auto appendToCcRecipients = [&](const KMime::Types::Mailbox::List & list) {
         foreach (const KMime::Types::Mailbox &mailbox, list) {
-            if (!recipients.contains(mailbox) &&
-                    !ccRecipients.contains(mailbox)) {
+            if (!recipients.contains(mailbox) && !ccRecipients.contains(mailbox)) {
                 ccRecipients += mailbox;
                 qDebug() << "Added" << mailbox.prettyAddress() << "to the list of CC recipients";
             }
         }
-    }
+    };
+    appendToCcRecipients(to);
+    appendToCcRecipients(cc);
 
     if (!ccRecipients.isEmpty()) {
         // strip all my addresses from the list of CC recipients
@@ -688,15 +696,44 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
 {
     //FIXME
     const bool alwaysPlain = true;
-    KMime::Message::Ptr msg(new KMime::Message);
 
+    // Decrypt what we have to
+    MimeTreeParser::ObjectTreeParser otp;
+    otp.parseObjectTree(origMsg.data());
+    otp.decryptAndVerify();
+
+    auto partList = otp.collectContentParts();
+    if (partList.isEmpty()) {
+        Q_ASSERT(false);
+        return;
+    }
+    auto part = partList[0];
+    Q_ASSERT(part);
+
+    // Prepare the reply message
+    KMime::Message::Ptr msg(new KMime::Message);
 
     msg->removeHeader<KMime::Headers::To>();
     msg->removeHeader<KMime::Headers::Subject>();
     msg->contentType(true)->setMimeType("text/plain");
     msg->contentType()->setCharset("utf-8");
 
-    const auto recipients = getRecipients(origMsg, me);
+    auto getMailboxes = [](const KMime::Headers::Base *h) -> KMime::Types::Mailbox::List {
+        if (h) {
+            return static_cast<const KMime::Headers::Generics::AddressList*>(h)->mailboxes();
+        }
+        return {};
+    };
+
+    auto fromHeader = static_cast<const KMime::Headers::From*>(part->header(KMime::Headers::From::staticType()));
+    const auto recipients = getRecipients(
+        fromHeader ? fromHeader->mailboxes() : KMime::Types::Mailbox::List{},
+        getMailboxes(part->header(KMime::Headers::To::staticType())),
+        getMailboxes(part->header(KMime::Headers::Cc::staticType())),
+        getMailboxes(part->header(KMime::Headers::ReplyTo::staticType())),
+        getMailingListAddresses(part->header("List-Post")),
+        me
+    );
     for (const auto &mailbox : recipients.to) {
         msg->to()->addAddress(mailbox);
     }
@@ -704,15 +741,19 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
         msg->cc(true)->addAddress(mailbox);
     }
 
-    const QByteArray refStr = getRefStr(origMsg);
+    const auto messageId = as7BitString(part->header(KMime::Headers::MessageID::staticType()));
+
+    const QByteArray refStr = getRefStr(as7BitString(part->header(KMime::Headers::References::staticType())), messageId);
     if (!refStr.isEmpty()) {
         msg->references()->fromUnicodeString(QString::fromLocal8Bit(refStr), "utf-8");
     }
 
     //In-Reply-To = original msg-id
-    msg->inReplyTo()->from7BitString(origMsg->messageID()->as7BitString(false));
+    msg->inReplyTo()->from7BitString(messageId);
 
-    msg->subject()->fromUnicodeString(replySubject(origMsg->subject()->asUnicodeString()), "utf-8");
+
+    const auto subjectHeader = part->header(KMime::Headers::Subject::staticType());
+    msg->subject()->fromUnicodeString(replySubject(asUnicodeString(subjectHeader)), "utf-8");
 
     auto definedLocale = QLocale::system();
 
@@ -721,7 +762,8 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     QString htmlBody;
 
     //On $datetime you wrote:
-    const QDateTime date = origMsg->date()->dateTime();
+    auto dateHeader = static_cast<const KMime::Headers::Date*>(part->header(KMime::Headers::Date::staticType()));
+    const QDateTime date = dateHeader ? dateHeader->dateTime() : QDateTime{};
     const auto dateTimeString = QString("%1 %2").arg(definedLocale.toString(date.date(), QLocale::LongFormat)).arg(definedLocale.toString(date.time(), QLocale::LongFormat));
     const auto onDateYouWroteLine = QString("On %1 you wrote:\n").arg(dateTimeString);
     plainBody.append(onDateYouWroteLine);
@@ -730,15 +772,12 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
     //Strip signature for replies
     const bool stripSignature = true;
 
-    MimeTreeParser::ObjectTreeParser otp;
-    otp.parseObjectTree(origMsg.data());
-    otp.decryptAndVerify();
     const auto plainTextContent = otp.plainTextContent();
     const auto htmlContent = otp.htmlContent();
 
     plainMessageText(plainTextContent, htmlContent, stripSignature, [=] (const QString &body) {
         //Quoted body
-        QString plainQuote = quotedPlainText(body, origMsg->from()->displayString());
+        QString plainQuote = quotedPlainText(body,  fromHeader ? fromHeader->displayString() : QString{});
         if (plainQuote.endsWith(QLatin1Char('\n'))) {
             plainQuote.chop(1);
         }
