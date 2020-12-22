@@ -808,19 +808,21 @@ void MailTemplates::reply(const KMime::Message::Ptr &origMsg, const std::functio
 void MailTemplates::forward(const KMime::Message::Ptr &origMsg,
     const std::function<void(const KMime::Message::Ptr &result)> &callback)
 {
-    KMime::Message::Ptr wrapperMsg(new KMime::Message);
+    MimeTreeParser::ObjectTreeParser otp;
+    otp.parseObjectTree(origMsg.data());
+    otp.decryptAndVerify();
 
+
+    KMime::Message::Ptr wrapperMsg(new KMime::Message);
     wrapperMsg->to()->clear();
     wrapperMsg->cc()->clear();
 
     // Decrypt the original message, it will be encrypted again in the composer
     // for the right recipient
     KMime::Message::Ptr forwardedMessage(new KMime::Message());
+
     if (isEncrypted(origMsg.data())) {
         qDebug() << "Original message was encrypted, decrypting it";
-        MimeTreeParser::ObjectTreeParser otp;
-        otp.parseObjectTree(origMsg.data());
-        otp.decryptAndVerify();
 
         auto htmlContent = otp.htmlContent();
 
@@ -833,7 +835,11 @@ void MailTemplates::forward(const KMime::Message::Ptr &origMsg,
         if (!attachments.isEmpty()) {
             QVector<KMime::Content *> contents = {recreatedMsg};
             for (const auto &attachment : attachments) {
-                contents.append(attachment->node());
+                //Copy the node, to avoid deleting the parts node.
+                auto c = new KMime::Content;
+                c->setContent(attachment->node()->encodedContent());
+                c->parse();
+                contents.append(c);
             }
 
             auto msg = createMultipartMixedContent(contents);
@@ -848,16 +854,30 @@ void MailTemplates::forward(const KMime::Message::Ptr &origMsg,
         forwardedMessage->setHead(origMsg->head());
         forwardedMessage->setBody(tmpForwardedMessage->encodedBody());
         forwardedMessage->parse();
-
     } else {
         qDebug() << "Original message was not encrypted, using it as-is";
         forwardedMessage = origMsg;
     }
 
-    wrapperMsg->subject()->fromUnicodeString(
-        forwardSubject(forwardedMessage->subject()->asUnicodeString()), "utf-8");
+    auto partList = otp.collectContentParts();
+    if (partList.isEmpty()) {
+        Q_ASSERT(false);
+        callback({});
+        return;
+    }
+    auto part = partList[0];
+    Q_ASSERT(part);
 
-    const QByteArray refStr = getRefStr(forwardedMessage);
+    const auto subjectHeader = part->header(KMime::Headers::Subject::staticType());
+    const auto subject = asUnicodeString(subjectHeader);
+
+    const QByteArray refStr = getRefStr(
+        as7BitString(part->header(KMime::Headers::References::staticType())),
+        as7BitString(part->header(KMime::Headers::MessageID::staticType()))
+    );
+
+    wrapperMsg->subject()->fromUnicodeString(forwardSubject(subject), "utf-8");
+
     if (!refStr.isEmpty()) {
         wrapperMsg->references()->fromUnicodeString(QString::fromLocal8Bit(refStr), "utf-8");
     }
@@ -866,7 +886,7 @@ void MailTemplates::forward(const KMime::Message::Ptr &origMsg,
 
     fwdAttachment->contentDisposition()->setDisposition(KMime::Headers::CDinline);
     fwdAttachment->contentType()->setMimeType("message/rfc822");
-    fwdAttachment->contentDisposition()->setFilename(forwardedMessage->subject()->asUnicodeString() + ".eml");
+    fwdAttachment->contentDisposition()->setFilename(subject + ".eml");
     fwdAttachment->setBody(KMime::CRLFtoLF(forwardedMessage->encodedContent(false)));
 
     wrapperMsg->addContent(fwdAttachment);

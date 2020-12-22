@@ -604,6 +604,30 @@ private slots:
         QCOMPARE(normalize(removeFirstLine(result->body())), QLatin1String{"FsdflkjdslfjHappyMonday!Belowyouwillfindaquickoverviewofthecurrenton-goings.Remember"});
     }
 
+
+    void testEncryptedWithProtectedHeadersForwardAsAttachment()
+    {
+        auto msg = readMail("openpgp-encrypted-memoryhole2.mbox");
+        KMime::Message::Ptr result;
+        MailTemplates::forward(msg, [&](const KMime::Message::Ptr &r) { result = r; });
+        QTRY_VERIFY(result);
+        QCOMPARE(result->subject()->asUnicodeString(), QLatin1String{"FW: This is the subject"});
+        QCOMPARE(result->to()->addresses(), {});
+        QCOMPARE(result->cc()->addresses(), {});
+        QCOMPARE(result->references()->asUnicodeString(), {"<dbe9d22b-0a3f-cb1e-e883-8a148f00000@example.com> <03db3530-0000-0000-95a2-8a148f00000@example.com>"});
+        QCOMPARE(result->inReplyTo()->identifiers(), {});
+
+        auto attachments = result->attachments();
+        QCOMPARE(attachments.size(), 1);
+        auto attachment = attachments[0];
+        QCOMPARE(attachment->contentDisposition(false)->disposition(), KMime::Headers::CDinline);
+        QCOMPARE(attachment->contentDisposition(false)->filename(), QLatin1String{"This is the subject.eml"});
+        QVERIFY(attachment->bodyIsMessage());
+
+        attachment->parse();
+        auto origMsg = attachment->bodyAsMessage();
+        QCOMPARE(origMsg->subject(false)->asUnicodeString(), QLatin1String{"..."});
+    }
 };
 
 QTEST_MAIN(MailTemplateTest)
