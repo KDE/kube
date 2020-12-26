@@ -26,12 +26,13 @@
 #include <QTextDocument>
 #include <QRegularExpression>
 
-static std::pair<QString, bool> trim(const QString &text)
+std::pair<QString, bool> PartModel::trim(const QString &text)
 {
     //The delimiters have <p>.? prefixed including the .? because sometimes we get a byte order mark <feff> (seen with user-agent: Microsoft-MacOutlook/10.1d.0.190908)
+    //We match both regulard withspace with \s and non-breaking spaces with \u00A0
     const QList<QRegularExpression> delimiters{
         //English
-        QRegularExpression{"<p>.?-+Original Message-+", QRegularExpression::CaseInsensitiveOption},
+        QRegularExpression{"<p>.?-+Original(\\s|\u00A0)Message-+", QRegularExpression::CaseInsensitiveOption},
         //The remainder is not quoted
         QRegularExpression{"<p>.?On.*wrote:", QRegularExpression::CaseInsensitiveOption},
         //The remainder is quoted
@@ -43,7 +44,7 @@ static std::pair<QString, bool> trim(const QString &text)
         //Reply
         QRegularExpression{"<p>.?Am.*schrieb.*:</p>", QRegularExpression::CaseInsensitiveOption},
         //Signature
-        QRegularExpression{"<p>.?-- <br>", QRegularExpression::CaseInsensitiveOption}
+        QRegularExpression{"<p>.?--(\\s|\u00A0)<br>", QRegularExpression::CaseInsensitiveOption}
     };
     for (const auto &expression : delimiters) {
         auto i = expression.globalMatch(text);
@@ -126,10 +127,10 @@ public:
         }
 
         auto preprocessPlaintext = [&] (const QString &text) {
-            //We alwas do richtext (so we get highlighted links and stuff).
+            //We alwas do richtext (so we get highlighted links and stuff). NOTE: this inserts non-breaking spaces instead of regular spaces.
             const auto html = Qt::convertFromPlainText(text);
             if (trimMail) {
-                const auto result = trim(html);
+                const auto result = PartModel::trim(html);
                 isTrimmed = result.second;
                 emit q->trimMailChanged();
                 return HtmlUtils::linkify(result.first);

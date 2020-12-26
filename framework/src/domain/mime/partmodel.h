@@ -40,6 +40,8 @@ public:
     PartModel(std::shared_ptr<MimeTreeParser::ObjectTreeParser> parser);
     ~PartModel();
 
+    static std::pair<QString, bool> trim(const QString &text);
+
 public:
     enum Roles {
         TypeRole  = Qt::UserRole + 1,
