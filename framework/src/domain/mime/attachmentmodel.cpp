@@ -160,7 +160,17 @@ static QString saveAttachmentToDisk(const QModelIndex &index, const QString &pat
             // convert CRLF to LF before writing text attachments to disk
             data = KMime::CRLFtoLF(data);
         }
-        auto fname = path + part->filename();
+        const auto name = part->filename();
+        auto fname = path + name;
+
+        //Fallback name should we end up with an empty name
+        if (name.isEmpty()) {
+            fname = path + "unnamed";
+            while (QFileInfo{fname}.exists()) {
+                fname = fname + "_1";
+            }
+        }
+
         //A file with that name already exists, we assume it's the right file
         if (QFileInfo{fname}.exists()) {
             return fname;
