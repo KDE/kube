@@ -645,6 +645,11 @@ Rectangle {
                     }
                 }
             }
+            Kube.ScrollHelper {
+                id: scrollHelper
+                flickable: flickable
+                anchors.fill: parent
+            }
         }
     }
 }
