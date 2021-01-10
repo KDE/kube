@@ -52,6 +52,12 @@ FocusScope {
         }
     }
 
+    function showSearchOverlay(show) {
+        if (searchObject) {
+            searchObject.visible = show
+        }
+    }
+
     //Help
     property Component helpViewComponent: null
     function showHelp() {
@@ -78,11 +84,12 @@ FocusScope {
     StackView.onActivated: {
         root.isCurrentView = true
         root.refresh()
+        showSearchOverlay(true)
     }
 
     StackView.onDeactivated: {
         root.isCurrentView = false
-        clearSearch()
+        showSearchOverlay(false)
     }
 
     //This signal will be emitted before destruction if the view was not done

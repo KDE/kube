@@ -141,8 +141,8 @@ FocusScope {
 
     Rectangle {
         id: filterField
-        enabled: true
         parent: ApplicationWindow.overlay
+        visible: root.visible
 
         anchors {
             horizontalCenter: parent.horizontalCenter
@@ -174,6 +174,7 @@ FocusScope {
         Shortcut {
             sequences: [StandardKey.Cancel]
             onActivated: filterField.clearSearch()
+            enabled: filterField.visible
         }
 
         RowLayout {
