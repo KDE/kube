@@ -1,7 +1,7 @@
 ## Kube
 
-Kube is a personal information and collaboration application currently in its early
-stages of development. It uses Sink for data access and synchronization.
+Kube is a personal information and communication application.
+It uses Sink for data access and synchronization.
 
 See docs/project.md for more information.
 
@@ -11,7 +11,8 @@ GPLV2+
 
 ## Getting involved
 
-https://kube.kde.org/
+* https://invent.kde.org/pim/kube
+* https://kube-project.com
 
 ## Extract translatable messages
 

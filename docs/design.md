@@ -134,12 +134,9 @@ Same as files? Import/Export calendar data
 * SMTP: based on libcurl
 
 ### Cryptography
-* PGP
 
-Keyselection, encryption, decryption, signing
-Probably requires access to identities in some way.
-
-see also [Cryptography](cryptography).
+Encryption is based on GpgME and uses the systems gpg keyring.
+Please note that Kube does not currently manage your key, and retrieves a key matching your email address (gpg2 --list-secret-keys youremail@example.com)
 
 ### MIME-Message parsing
 * KMime

@@ -24,40 +24,22 @@ Note: This is a draft only
 We need to go through the current codebase, assess what features are available, how the implementation looks and where it is, and to what extent the code is reusable.
 This will help us in figuring out the useful feature set, and will allow us to reuse the lessons learned that are embedded in the codebase.
 
-This inventory is currently hosted in an ikiwiki (ikiwiki.info) git repository(kde:scratch/aseigo/KontactCodebaseInventory.git)
+This inventory is currently hosted in an ikiwiki (ikiwiki.info) git repository(https://invent.kde.org/aseigo/KontactCodebaseInventory.git)
 
 # Target platforms
 The codebase is supposed to be portable across a range of platforms.
-Initially we'll work on a reasonably recent linux distribution though.
 
-The aimed for minimum bar is:
+Any recent linux platform should work. For Windows and macOS POC's have been created, which could be revived with moderate effort.
 
-Linux:
-
-* Fedora 22
-* Ubuntu 12.04
-* Centos/RHEL 7
-
-Windows:
-
-* 7sp1
-
-OS X:
-
-* ?
-
-Android:
-
-* 5.0
+Android has not been attempted so far.
 
 # Dependencies
 Since the codebase needs to be portable across various platforms old and new, dependencies should be managed that they are as little and as low as possible. While we don't want to reinvent the wheel constantly or work with ancient technology, each additional dependency or dependency bump needs to be justified and we need to evaluate wether that results in a problem with any of the target platforms. This evaluation of course includes transitive dependencies.
 
 Currently available dependencies:
 
-* GCC 4.6.3 / MSVC 2013
-* Qt 5.9
-** Used as installation format for all qml parts. Intended to serve as abstraction layer to allow replacing certain modules on differnet platforms/formfactors.
+* A c++ 20 compatible compiler
+* Qt 5.13
 * kf5-kcodecs
 ** dependency of kmime, email address handling (KEmailAddress)
 * kf5-kmime
@@ -96,41 +78,9 @@ Currently available dependencies:
 * Run the tests before you push
 
 # Roadmap
-The final roadmap lives on phabricator.kde.org. This section tries to outline some of the high level aims that should help form the roadmap.
+The final roadmap lives on invent.kde.org (previously phabricator.kde.org).
 
-## Priorities
-* High Priority
-    * kolab support
-    * reliability/maintainability (testability)
-    * portability
-    * usability
-    * Mobile
-    * QML interface
-    * Configuration Synchronization
-    * Automatic setup
-    * Enterprise environment support
-    * Professional product, and actual alternative to competitors
-    * Open Protocols/Standards
-    * Multi Accounts & Identities
-    * Crypto / Privacy
-    * Fast at scale
-* Medium Priority
-    * Search / Tags
-    * More integrated with the rest of kolab
-    * Closer integration between mail/tasks/events/addressbook
-    * Well supported
-    * Community
-    * Automation (Wallace)
-    * Extensible / Theming
-    * Multiple open instances
-    * Offline support
-
-## Features
-A list of features that has to be refined and put on the roadmap on phabricator.
-This is very much WIP and the features listed here are largely coming from what is existing in Kontact and the Kolab Groupware Server.
-
-### General
-* autoconfiguration/automatic setup/preconfiguration: The complete setup process should require a minimum of configuration and should be fully scriptable.
+Here's just an outdated list of features we once aimed for:
 
 ### Mail
 * folderlist (with search)
@@ -166,13 +116,6 @@ This is very much WIP and the features listed here are largely coming from what 
 * iTip handling
 * freebusy for scheduling
 * tags
-
-### Notes
-* notebooks
-* create/edit/modify note
-* tags
-* note editor
-    * title/content
 
 ### Todos
 * todolists

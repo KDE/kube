@@ -7,7 +7,7 @@ Multiple choices are available for developing the Kube project:
 
 ## Manually
 
-- If sink is not in you repositories:
+- If sink is not in your repositories:
     - Install the dependencies of Sink:
         - extra-cmake-modules
         - qt5-qtbase-devel / qtbase5-dev
@@ -44,12 +44,12 @@ Sink will require the flatc executable to generate some relevant headers that we
 Building kube in a docker containers ensures reproducability and decouples the development environment from the host system (so upgrading your host system doesn't break all your builds). To avoid having to develop inside the container directly, source, build and install directories reside on the host system.
 
 - Go to the `docker` directory
-- In the `run.sh` script, set the SOURCEDIR, BUILDDIR and INSTALLDIR variables
+- In the `Makefile`, set the SOURCEDIR, BUILDDIR and INSTALLDIR variables
   to an existing path containing respectively the source, build and
   installation directory of kube. The build and installation directory should be
   empty at first, for the source directory you may use an existing directory containing the necessary source directories.
-- Run the `./build.sh` script
-- Run the `./run.sh` script
+- Run the `make build` script
+- Run the `make run` script
 - If you don't have the sources available yet, run the `~/initrepositories.sh` script
 - To configure the build directories, for each repository:
     - `mkdir /build/$REPO && cd /build/$REPO`

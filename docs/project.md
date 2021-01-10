@@ -1,16 +1,64 @@
-# Why?
-This project started with the aim to produce a product that doesn't cater to all usecases, but does what it does well.
-We want a codebase that is well maintainable by a small team, and that can move fast.
-We want a codebase where it is fast and easy to prototype new features and turn them eventually into full implementations, without compromising the quality of the rest of the system. Additionaly the product should be portable accross a variety of platforms, including mobile, not only due to a portable codebase, but also due to different UI's for the various formfactors.
+# What is Kube
 
-Because no existing codebase fullfills those premises or easily allows to reach them, this project started.
+Kube is a personal information and communication application.
+This includes time and task-management (the time available, and what it's used for), as well as the necessary communication around it (currently based on email).
 
+## Principles
+
+These are some of the principles Kube is built on. They are intended as a guide, and not a rule.
+
+* Simple
+    * Strive for simplicity in UI and Code
+    * Avoid options if possible
+    * Minimal configuration
+    * Opinionated where necessary
+* Usable Security
+    * Don't sacrifice usability for security
+* Portable
+    * to operating systems: Windows/macOS/Linux/...
+    * to desktops: Plasma/Gnome/....
+    * to formfactors: Desktop/Mobile/Tablet
+* Content focused
+    * Low-key presentation
+    * Out of your way
+    * Plaintext over HTML (simple?)
+* Networked
+    * Avoid local only data (e.g. local only tags)
+    * The backends decide what we can work with
+* Clear data ownership
+    * All data belongs to individual accounts
+    * No shared data with unclear account synchronization
+* Maintainable
+    * Comparatively small codebase
+    * Self contained
+    * Few dependencies
+* Supportable
+    * Logging
+    * Scriptable
+
+Features:
+* EMail/Addressbook/Calendar/Tasks
+* GPG based end to end encryption
+* Conversation View
+* Fulltext search, including encrypted messages
+* Read-only support for protected headers
+* Keyboard navigation
+
+# Current state
+
+* Usable as daily driver
+* Requires a companion interface for tasks not yet implemented (e.g. webmail to create folders)
+
+# Future
+
+The focus is on quality of life improvements and features that are missing elsewhere,
+rather than trying reach feature parity with other popular clients.
 
 ## Differentiators
 In order to avoid simply replicating what's already existing it's important to know how this product differentiates to other existing solutions.
 This section is supposed to outline that.
 
-* To Roundcube Next
+* To Roundcube
     * Native application
         * Responsivness of UI (assuming we can't reach that in the browser)
         * Not in a browser (assuming we can't effectively hide that)
@@ -20,7 +68,7 @@ This section is supposed to outline that.
     * Multi-account support
 
 * To Kontact/Thunderbird/...
-    * Simple but powerful UI (assuming we can achieve that)
+    * Simple but powerful UI
     * Performance (lower resource usage, quick and responsive operations)
     * Easy & automated setup (scriptable setup process, syncable configuration, setup can easily be nuked and setup from scratch)
     * Codebase
@@ -50,12 +98,11 @@ Kube aims to be available on various form-factors and platforms.
 While this is an open project that welcomes participation from everyone who's interested, we do have an explicit team strucuture to ensure it's clear to everyone who's repsonsible for what. External contributions are always welcome and the team is of course open for extension.
 
 Team Lead/Maintainer: Christian Mollekopf
-Team Members: Michael Bohlender, Sandro Knauss, Aaron Seigo
 
 It's the team leads responsibility to:
 
-* Organize regular online meetings (so far on google hangouts)
-* Give direction to the product and ensure it's followed
+* Organize regular online meetings
+* Give direction to the product
 * Direct development and oversee decisions
 * Ensure documentation of decisions
 
@@ -65,7 +112,7 @@ Decisions are generally made in discussion with the team, and result in document
 Should the team not be able to reach consensus, the team lead makes the final decision.
 
 ## Planning
-All planning happens on the [KDE Phabricator instance](https://phabricator.kde.org/tag/kube/).
+All planning happens on [invent.kde.org](https://invent.kde.org/pim/kube), the old planning is avialable on [KDE Phabricator instance](https://phabricator.kde.org/tag/kube/).
 
 ## Releases / Milestones
 Releases will follow achieved milestones. Milestones are assembled from tasks on the roadmap.
@@ -74,8 +121,8 @@ Releases will follow achieved milestones. Milestones are assembled from tasks on
 The product will follow the semantic versioning scheme (semver.org), with each feature release corresponding to a milestone on phabricator.
 
 ## Git repository
-The git repository can be found here: [git://anongit.kde.org/kube](git://anongit.kde.org/kube)
+The git repository can be found here: [https://invent.kde.org/pim/kube.git](https://invent.kde.org/pim/kube.git)
 
-The "development" branch is used for the latest development version, master is always stable and always releasable. Branches for specific versions that receive patch releases may be created as required.
+The "master" branch is used for the latest development version, releases are tagged. Branches for specific versions that receive patch releases may be created as required.
 
-For new developments use feature branches prefixed with "feature/" or simply use the "git flow" tool.
+For new developments use feature branches prefixed with "dev/".
