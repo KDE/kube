@@ -331,8 +331,6 @@ void MailListModel::setFilter(const QVariantMap &filter)
         if (!filterString.isEmpty()) {
             query.filter({}, Sink::QueryBase::Comparator(filterString, Sink::QueryBase::Comparator::Fulltext));
             query.limit(0);
-            //Avoid live updates until we properly filter updates
-            query.setFlags(Sink::Query::NoFlags);
         }
     }
 
