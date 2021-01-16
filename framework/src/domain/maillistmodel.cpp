@@ -263,7 +263,7 @@ void MailListModel::setFilter(const QVariantMap &filter)
         //Latest mail on top
         sort(0, Qt::DescendingOrder);
         validQuery = true;
-    } else if (filter.contains("account")) {
+    } else if (!filter.value("account").toByteArray().isEmpty()) {
         query.resourceFilter<SinkResource::Account>(filter.value("account").toByteArray());
     }
 
@@ -332,6 +332,7 @@ void MailListModel::setFilter(const QVariantMap &filter)
             query.filter({}, Sink::QueryBase::Comparator(filterString, Sink::QueryBase::Comparator::Fulltext));
             query.limit(0);
         }
+        validQuery = true;
     }
 
     if (filter.value("hideTrash").toBool()) {
