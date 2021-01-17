@@ -74,9 +74,7 @@ Kube.View {
             color: Kube.Colors.darkBackgroundColor
             ColumnLayout {
                 anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: parent.top
+                    fill: parent
                     margins: Kube.Units.smallSpacing
                 }
                 RowLayout {
@@ -95,6 +93,49 @@ Kube.View {
                     Kube.Label {
                         text: qsTr("Important")
                         color: Kube.Colors.highlightedTextColor
+                    }
+                }
+
+                Kube.Label{
+                    text: qsTr("Accounts")
+                    color: Kube.Colors.highlightedTextColor
+                    font.weight: Font.Bold
+                }
+
+                Kube.ListView {
+                    id: listView
+                    activeFocusOnTab: true
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+                    currentIndex: -1
+                    highlightFollowsCurrentItem: false
+
+                    onCurrentItemChanged: {
+                        if (currentItem) {
+                            mailListView.currentAccount = currentItem.currentData.accountId
+                        }
+                    }
+
+                    model: Kube.AccountsModel {}
+
+                    delegate: Kube.ListDelegate {
+                        id: delegateRoot
+
+                        width: listView.availableWidth
+                        height: Kube.Units.gridUnit * 1.5
+
+                        color: Kube.Colors.darkBackgroundColor
+                        border.width: 0
+                        Kube.Label {
+                            anchors {
+                                centerIn: parent
+                            }
+                            text: model.name
+                            color: Kube.Colors.highlightedTextColor
+                            elide: Text.ElideRight
+                        }
                     }
                 }
             }
