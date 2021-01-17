@@ -162,12 +162,6 @@ Kube.View {
                         currentIndex = 0
                     }
                 }
-                Keys.onDownPressed: {
-                    listView.incrementCurrentIndex()
-                }
-                Keys.onUpPressed: {
-                    listView.decrementCurrentIndex()
-                }
                 //END keyboard nav
 
                 onCurrentItemChanged: {
