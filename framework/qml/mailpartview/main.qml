@@ -25,8 +25,11 @@ ApplicationWindow {
     id: app
     height: 900
     width: 1500
+    //Pass as --file=$filename argument
+    property string filepath: ""
 
     Component.onCompleted: {
+        app.filepath = Qt.application.arguments[2].replace("--file=", "")
         var initialState = {
             accounts: [
                 {
@@ -82,7 +85,7 @@ ApplicationWindow {
 
     Kube.File {
         id: file
-        path: "/src/kube/framework/src/domain/mime/testdata/gmail-invitation.mbox"
+        path: app.filepath
     }
     Kube.MessageParser {
         id: messageParser

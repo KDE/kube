@@ -26,15 +26,18 @@ namespace Kube {
 
 class KUBE_EXPORT File : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QString path MEMBER mPath)
-    Q_PROPERTY(QString defaultContent MEMBER mDefaultContent)
-    Q_PROPERTY(QString data READ data CONSTANT)
+    Q_PROPERTY(QString path WRITE setPath MEMBER mPath)
+    Q_PROPERTY(QString data READ data NOTIFY dataChanged)
 public:
     QString data();
     Q_INVOKABLE QString read(const QString &path);
+public slots:
+    void setPath(const QString &);
+signals:
+    void dataChanged();
 private:
     QString mPath;
-    QString mDefaultContent;
+    QString mData;
 };
 
 }

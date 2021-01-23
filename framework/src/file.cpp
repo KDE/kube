@@ -27,11 +27,14 @@ using namespace Kube;
 
 QString File::data()
 {
-    auto s = read(mPath);
-    if (s.isEmpty()) {
-        return mDefaultContent;
-    }
-    return s;
+    return mData;
+}
+
+void File::setPath(const QString &path)
+{
+    mPath = path;
+    mData = read(path);
+    emit dataChanged();
 }
 
 QString File::read(const QString &path)
