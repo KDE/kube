@@ -92,16 +92,36 @@ ApplicationWindow {
         message: file.data
     }
 
-    Rectangle {
-        width: 800
-        height: 800
-        anchors.centerIn: parent
-        border.color: "blue"
-        border.width: 2
+    Flickable {
+        id: flickable
+        anchors.fill: parent
+        ScrollBar.vertical: Kube.ScrollBar { }
+        contentWidth: parent.width
+        contentHeight: partView.height
         MailPartView {
-            anchors.fill: parent
-            visible: true
+            id: partView
+            width: parent.width
             model: messageParser.parts
+            Rectangle {
+                anchors.fill: parent
+                border.color: "blue"
+                border.width: 2
+                color: "transparent"
+            }
+        }
+
+        Kube.ScrollHelper {
+            id: scrollHelper
+            flickable: flickable
+            anchors.fill: parent
+        }
+
+        //Intercept all scroll events,
+        //necessary due to the webengineview
+        Kube.MouseProxy {
+            anchors.fill: parent
+            target: scrollHelper
+            forwardWheelEvents: true
         }
     }
 }
