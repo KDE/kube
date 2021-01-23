@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Templates 2.0 as T
+import QtQuick.Controls 2 as T
 import org.kube.framework 1.0 as Kube
 
 T.TextField {
@@ -35,25 +35,6 @@ T.TextField {
     font.family: Kube.Font.fontFamily
     selectionColor: Kube.Colors.highlightColor
     selectByMouse: true
-
-    Label {
-        id: placeholder
-        x: root.leftPadding
-        y: root.topPadding
-
-        width: root.width - (root.leftPadding + root.rightPadding)
-        height: root.height - (root.topPadding + root.bottomPadding)
-
-        visible: root.text == ""
-        text: root.placeholderText
-        color: Kube.Colors.disabledTextColor
-        elide: Text.ElideRight
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
-            cursorShape: Qt.IBeamCursor
-        }
-    }
 
     background: Rectangle {
         id: background
