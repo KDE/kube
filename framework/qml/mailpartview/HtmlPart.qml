@@ -41,8 +41,6 @@ Item {
         id: flickable
         anchors.fill: parent
 
-        contentHeight: htmlView.height
-        contentWidth: htmlView.width
 
         clip: true
         boundsBehavior: Flickable.StopAtBounds
@@ -52,21 +50,20 @@ Item {
         WebEngineView {
             id: htmlView
             objectName: "htmlView"
+            anchors.fill: parent
 
-            width: Math.min(root.contentWidth, 2000)
-            height: Math.min(root.contentHeight, 4000)
             Component.onCompleted: loadHtml(content, "file:///")
             onLoadingChanged: {
                 if (loadRequest.status == WebEngineView.LoadFailedStatus) {
                     console.warn("Failed to load html content.")
                     console.warn("Error is ", loadRequest.errorString)
                 }
-                root.contentWidth = Math.max(contentsSize.width / Screen.devicePixelRatio, flickable.minimumSize)
+                root.contentWidth = Math.max(contentsSize.width, flickable.minimumSize)
 
                 if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
-                    runJavaScript("[document.body.scrollHeight, document.body.scrollWidth]", function(result) {
-                        root.contentHeight = result[0] / Screen.devicePixelRatio;
-                        root.contentWidth = Math.max(result[1] / Screen.devicePixelRatio, flickable.width)
+                    runJavaScript("[document.body.scrollHeight, document.body.scrollWidth, document.documentElement.scrollHeight]", function(result) {
+                        root.contentHeight = Math.max(result[0], result[2]);
+                        root.contentWidth = Math.max(result[1], flickable.width)
                     });
                 }
             }
