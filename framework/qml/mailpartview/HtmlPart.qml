@@ -62,8 +62,8 @@ Item {
 
                 if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
                     runJavaScript("[document.body.scrollHeight, document.body.scrollWidth, document.documentElement.scrollHeight]", function(result) {
-                        root.contentHeight = Math.max(result[0], result[2]);
-                        root.contentWidth = Math.max(result[1], flickable.width)
+                        root.contentHeight = Math.min(Math.max(result[0], result[2]), 4000);
+                        root.contentWidth = Math.min(Math.max(result[1], flickable.width), 2000)
                     });
                 }
             }
