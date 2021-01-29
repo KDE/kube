@@ -19,6 +19,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2
 import QtQuick.Layouts 1.1
+import Qt.labs.settings 1.0
 
 import org.kube.framework 1.0 as Kube
 
@@ -33,6 +34,12 @@ FocusScope {
     }
     property var accountId: null
     property var currentFolder: null
+
+    Settings {
+        id: settings
+        category: "TodoEditor"
+        property var lastUsedTodolist
+    }
 
     signal done()
 
@@ -140,10 +147,11 @@ FocusScope {
                     accountId: root.accountId
                     type: "calendar"
                     filter: {"contentTypes": "todo", "enabled": true}
-                    initialSelection: root.currentFolder
+                    initialSelection: root.currentFolder ? root.currentFolder : settings.lastUsedTodolist
                     onSelected: {
                         if (!root.editMode) {
                             controller.calendar = entity
+                            settings.lastUsedTodolist = identifier
                         }
                     }
                 }

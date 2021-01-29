@@ -30,7 +30,7 @@ Kube.ComboBox {
     property var initialSelection: null
     property var initialSelectionObject: null
 
-    signal selected(var entity)
+    signal selected(var entity, var identifier)
 
     model: Kube.EntityModel {
         id: entityModel
@@ -49,11 +49,12 @@ Kube.ComboBox {
                     root.currentIndex = foundIndex;
                 }
             }
-            if (currentIndex >= 0) {
+            if (root.currentIndex >= 0) {
                 //Set initial selection.
                 //onCurrentIndexChanged will not work because the as more items are added the currentIndex changes,
                 //but depending on the sorting it will point to a different item (Which is really a bug of the model or ComboBox).
-                root.selected(entityModel.data(currentIndex).object)
+                var index = entityModel.data(currentIndex)
+                root.selected(index.object, index.identifier)
             }
         }
     }
@@ -62,7 +63,8 @@ Kube.ComboBox {
 
     onCurrentIndexChanged: {
         if (currentIndex >= 0) {
-            root.selected(entityModel.data(currentIndex).object)
+            var index = entityModel.data(currentIndex)
+            root.selected(index.object, index.identifier)
         }
     }
 
