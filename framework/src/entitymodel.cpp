@@ -60,8 +60,9 @@ static bool isEqual(const QVariant &left, const QVariant &right)
 
 int EntityModel::findIndex(const QByteArray &property, const QVariant &value) const
 {
+    const auto role = mRoleNames.key(property);
     for (int i = 0; i < rowCount(); i++) {
-        if (isEqual(data(index(i, 0), mRoleNames.key(property)), value)) {
+        if (isEqual(data(index(i, 0), role), value)) {
             return i;
         }
     }
