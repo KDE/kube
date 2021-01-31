@@ -61,10 +61,13 @@ TestCase {
 
         var htmlView = findChild(viewer, "htmlView");
         verify(htmlView)
+        var htmlPart = findChild(viewer, "htmlPart");
+        verify(htmlPart)
+
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
-        tryVerify(function(){ return (700 > htmlView.width && htmlView.width > 600)})
-        tryVerify(function(){ return (1400 > htmlView.height && htmlView.height > 1250)})
+        tryVerify(function(){ return (1300 > htmlPart.contentWidth && htmlPart.contentWidth > 1200)})
+        tryVerify(function(){ return (2700 > htmlPart.contentHeight && htmlPart.contentHeight > 2600)})
     }
 
     Component {
@@ -103,18 +106,17 @@ blockquote {
 
 <p>I would still suggest scheduling a meeting</p></div></div><br /><div><strong>TASK DETAIL</strong><div><a href=\"https://test.com/T336176\">https://test.com/T336176</a></div></div><br /><div><strong>EMAIL PREFERENCES</strong><div><a href=\"https://test.com/settings/panel/emailpreferences/\">https://test.com/settings/panel/emailpreferences/</a></div></div><br /><div><strong>To: </strong>mollekopf, john<br /><strong>Cc: </strong>john, test, Support<br /></div></body></html>"
 
-        var part = createTemporaryObject(htmlComponent, testCase, {content: data})
-        var htmlView = findChild(part, "htmlView");
+        var htmlPart = createTemporaryObject(htmlComponent, testCase, {content: data})
+        var htmlView = findChild(htmlPart, "htmlView");
         verify(htmlView)
+
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
-        //The width is 400 because the parent is.
-        tryVerify(function(){ return (450 > htmlView.width && htmlView.width > 350)})
-        //The calculated height is slightly too large
-        tryVerify(function(){ return (650 > htmlView.height && htmlView.height > 500)})
+        tryVerify(function(){ return (450 > htmlPart.contentWidth && htmlPart.contentWidth > 350)})
+        tryVerify(function(){ return (500 > htmlPart.contentHeight && htmlPart.contentHeight > 400)})
 
-        var part = createTemporaryObject(textComponent, testCase, {content: data})
-        var textView = findChild(part, "textView");
+        var textPart = createTemporaryObject(textComponent, testCase, {content: data})
+        var textView = findChild(textPart, "textView");
         verify(textView)
         tryVerify(function(){ return (500 > textView.width && textView.width > 300)})
         tryVerify(function(){ return (500 > textView.height && textView.height > 400)})
@@ -356,13 +358,13 @@ blockquote {
 </body>
 </html>"
 
-        var part = createTemporaryObject(htmlComponent, testCase, {content: data, autoLoadImages: true})
-        var htmlView = findChild(part, "htmlView");
+        var htmlPart = createTemporaryObject(htmlComponent, testCase, {content: data, autoLoadImages: true})
+        var htmlView = findChild(htmlPart, "htmlView");
         verify(htmlView)
         tryVerify(function(){ return htmlView.loadProgress == 100})
 
-        tryVerify(function(){ return (700 > htmlView.width && htmlView.width > 600)})
-        tryVerify(function(){ return (1400 > htmlView.height && htmlView.height > 1250)})
+        tryVerify(function(){ return (1300 > htmlPart.contentWidth && htmlPart.contentWidth > 1200)})
+        tryVerify(function(){ console.warn("height", htmlPart.contentHeight); return (2800 > htmlPart.contentHeight && htmlPart.contentHeight > 2700)})
     }
 
 

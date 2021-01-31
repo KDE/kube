@@ -25,6 +25,7 @@ import org.kube.framework 1.0 as Kube
 
 Item {
     id: root
+    objectName: "htmlPart"
     property string content
     //We have to give it a minimum size so the html content starts to expand
     property int minimumSize: 10
