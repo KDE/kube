@@ -423,7 +423,9 @@ void ComposerController::selectIdentityFromMailboxes(const KMime::Types::Mailbox
 
 void ComposerController::loadReply(const QVariant &message) {
     clear();
-    loadMessage(message, [this] (const KMime::Message::Ptr &mail) {
+    auto guard = QPointer<QObject>{this};
+    loadMessage(message, [this, guard] (const KMime::Message::Ptr &mail) {
+        Q_ASSERT(guard);
         //Find all personal email addresses to exclude from reply
         KMime::Types::AddrSpecList me;
         QVector<QString> meStrings;
@@ -439,7 +441,8 @@ void ComposerController::loadReply(const QVariant &message) {
 
         setEncrypt(KMime::isEncrypted(mail.data()));
         setSign(KMime::isSigned(mail.data()));
-        MailTemplates::reply(mail, [this] (const auto &msg) {
+        MailTemplates::reply(mail, [this, guard] (const auto &msg) {
+            Q_ASSERT(guard);
             setMessage(msg);
         }, me);
     });
