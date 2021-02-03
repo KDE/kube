@@ -44,7 +44,7 @@ ViewTestCase {
         var composer = createTemporaryObject(composerComponent, testCase, {})
         var newMailButton = findChild(composer, "newMailButton");
         verify(newMailButton)
-        verify(newMailButton.activeFocus)
+        tryVerify(function(){ return newMailButton.activeFocus })
     }
 
     function test_3sendMessage() {
