@@ -322,6 +322,13 @@ void MailListModel::setFilter(const QVariantMap &filter)
         validQuery = true;
     }
 
+    if (filter.contains("entityId") && !filter.value("entityId").value<QByteArray>().isEmpty()) {
+        query.setFlags(Sink::Query::LiveQuery);
+        query.filter(filter.value("entityId").value<QByteArray>());
+        sort(0, Qt::DescendingOrder);
+        validQuery = true;
+    }
+
     //Additional filtering
     if (filter.contains("string") && filter.value("string").isValid()) {
         const auto filterString = filter.value("string").toString();

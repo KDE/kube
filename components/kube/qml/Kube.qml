@@ -181,7 +181,7 @@ ApplicationWindow {
                     model: Kube.ExtensionModel {
                         id: extensionModel
                         extensionPoint: "views"
-                        sortOrder: ["search", "composer", "conversation", "people"]
+                        sortOrder: ["search", "composer", "inbound", "conversation", "people"]
                     }
                     Kube.IconButton {
                         id: button

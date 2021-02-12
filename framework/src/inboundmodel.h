@@ -1,0 +1,71 @@
+/*
+    Copyright (c) 2016 Michael Bohlender <michael.bohlender@kdemail.net>
+    Copyright (c) 2016 Christian Mollekopf <mollekopf@kolabsys.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#pragma once
+#include "kube_export.h"
+
+#include <QStandardItemModel>
+#include <QSortFilterProxyModel>
+#include <QVariantMap>
+#include <QSet>
+#include <QString>
+#include <fabric.h>
+
+namespace Sink {
+    namespace ApplicationDomain {
+        class Mail;
+    };
+};
+
+class KUBE_EXPORT InboundModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    InboundModel(QObject *parent = Q_NULLPTR);
+    ~InboundModel();
+
+    Q_INVOKABLE void insert(const QVariantMap &);
+
+signals:
+    void entryAdded(const QVariantMap &message);
+
+private slots:
+    void mailRowsInserted(const QModelIndex &parent, int first, int last);
+
+private:
+    void saveSettings();
+    void loadSettings();
+    void init();
+    void add(const QSharedPointer<Sink::ApplicationDomain::Mail> &);
+    QString folderName(const QByteArray &id) const;
+    bool filter(const Sink::ApplicationDomain::Mail &mail);
+
+    QHash<QByteArray, int> mRoles;
+    QHash<QByteArray, QString> mFolderNames;
+    QSharedPointer<QAbstractItemModel> mSourceModel;
+    QSharedPointer<QStandardItemModel> mInboundModel;
+    QSet<QString> senderBlacklist;
+    QSet<QString> toBlacklist;
+    QString senderNameContainsFilter;
+    QMap<QString, QString> perFolderMimeMessageWhitelistFilter;
+    QList<QString> folderSpecialPurposeBlacklist;
+    QList<QString> folderNameBlacklist;
+};

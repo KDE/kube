@@ -1,6 +1,5 @@
 /*
- *  Copyright (C) 2017 Michael Bohlender, <michael.bohlender@kdemail.net>
- *  Copyright (C) 2017 Christian Mollekopf, <mollekopf@kolabsys.com>
+ *  Copyright (C) 2021 Christian Mollekopf, <mollekopf@kolabsys.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -79,9 +78,9 @@ Controls1.SplitView {
 
             clip: true
 
-            model: Kube.LogModel {
+            model: Kube.InboundModel {
                 id: logModel
-                objectName: "logModel"
+                objectName: "inboundModel"
                 onEntryAdded: {
                     Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
                 }
@@ -101,52 +100,18 @@ Controls1.SplitView {
                 }
             }
 
-            delegate: Kube.ListDelegate {
+            delegate: Kube.MailListDelegate {
                 id: delegateRoot
-                border.color: Kube.Colors.buttonColor
-                border.width: 1
-                Kube.Label {
-                    id: description
-                    anchors {
-                        top: parent.top
-                        topMargin: Kube.Units.smallSpacing
-                        left: parent.left
-                        leftMargin: Kube.Units.largeSpacing
-                    }
-                    height: Kube.Units.gridUnit
-                    width: parent.width - Kube.Units.largeSpacing * 2
-                    text: model.type == Kube.Notifications.error ? qsTr("Error") : qsTr("Info")
-                }
+                height: Kube.Units.gridUnit * 5
 
-                Kube.Label {
-                    id: message
-                    anchors {
-                        topMargin: Kube.Units.smallSpacing
-                        top: description.bottom
-                        left: parent.left
-                        leftMargin: Kube.Units.largeSpacing
-                    }
-                    height: Kube.Units.gridUnit
-                    width: parent.width - Kube.Units.largeSpacing * 2
-                    maximumLineCount: 1
-                    elide: Text.ElideRight
-                    color: delegateRoot.disabledTextColor
-                    text: model.message
-                }
-
-                Kube.Label {
-                    id: date
-
-                    anchors {
-                        right: parent.right
-                        bottom: parent.bottom
-                        rightMargin: Kube.Units.smallSpacing
-                    }
-                    text: Qt.formatDateTime(model.timestamp, " hh:mm:ss dd MMM yyyy")
-                    font.italic: true
-                    color: delegateRoot.disabledTextColor
-                    font.pointSize: Kube.Units.smallFontSize
-                }
+                subject: model.data.subject
+                unread: model.data.unread
+                senderName: model.data.senderName
+                date: model.data.date
+                important: model.data.important
+                trash: model.data.trash
+                threadSize: model.data.threadSize
+                mail: model.data.mail
             }
         }
     }
@@ -195,6 +160,9 @@ Controls1.SplitView {
                 }
                 if (subtype == Kube.Notifications.messageSent) {
                     return transmissionSuccessComponent
+                }
+                if (subtype == "mail") {
+                    return conversationComponent
                 }
                 return detailsComponent
             }
@@ -472,5 +440,20 @@ Controls1.SplitView {
             }
         }
     }
+    Component {
+        id: conversationComponent
 
+                Kube.ConversationView {
+                    id: componentRoot
+                    objectName: "mailView"
+                    activeFocusOnTab: true
+                    model: Kube.MailListModel {
+                        filter: {
+                            "entityId": componentRoot.parent ? componentRoot.parent.entityId : null,
+                            "headersOnly": false,
+                            "fetchMails": true
+                        }
+                    }
+                }
+    }
 }
