@@ -32,7 +32,7 @@ T.ItemDelegate {
     property bool selectionEnabled: true
 
     height: Kube.Units.gridUnit * 3
-    width: root.ListView.view.width
+    width: root.ListView.view.availableWidth
     hoverEnabled: true
     highlighted: ListView.isCurrentItem
 

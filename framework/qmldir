@@ -6,6 +6,7 @@ CalendarSelector 1.0 CalendarSelector.qml
 EntityComboBox 1.0 EntityComboBox.qml
 FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml
+MailListDelegate 1.0 MailListDelegate.qml
 MailViewer 1.0 MailViewer.qml
 InlineAccountSwitcher 1.0 InlineAccountSwitcher.qml
 NewAccountDialog 1.0 NewAccountDialog.qml

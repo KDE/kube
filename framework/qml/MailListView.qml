@@ -127,206 +127,221 @@ FocusScope {
                 }
             }
 
-            delegate: Kube.ListDelegate {
-                id: delegateRoot
-                //Required for D&D
-                property var mail: model.mail
-                property bool buttonsVisible: delegateRoot.hovered
-
-                width: listView.availableWidth
+            delegate: Kube.MailListDelegate {
                 height: Kube.Units.gridUnit * 5
 
-                color: Kube.Colors.viewBackgroundColor
-                border.color: Kube.Colors.backgroundColor
-                border.width: 1
+                subject: model.subject
+                unread: model.unread
+                senderName: model.senderName
+                date: model.date
+                important: model.important
+                trash: model.trash
+                threadSize: model.threadSize
+                mail: model.mail
 
-                states: [
-                    State {
-                        name: "dnd"
-                        when: mouseArea.drag.active
-
-                        PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
-                        PropertyChanges {target: delegateRoot; x: x; y: y}
-                        PropertyChanges {target: delegateRoot; parent: root}
-                        PropertyChanges {target: delegateRoot; opacity: 0.2}
-                        PropertyChanges {target: delegateRoot; highlighted: true}
-                    }
-                ]
-
-                Drag.active: mouseArea.drag.active
-                Drag.hotSpot.x: mouseArea.mouseX
-                Drag.hotSpot.y: mouseArea.mouseY
-                Drag.source: delegateRoot
-
-                MouseArea {
-                    id: mouseArea
-                    anchors.fill: parent
-                    drag.target: parent
-                    onReleased: {
-                        var dropAction = parent.Drag.drop()
-                        if (dropAction == Qt.MoveAction) {
-                            parent.visible = false
-                        }
-                    }
-                    onClicked: delegateRoot.clicked()
-                }
-
-                Item {
-                    id: content
-
-                    anchors {
-                        fill: parent
-                        margins: Kube.Units.smallSpacing
-                    }
-                    property color unreadColor: (model.unread && !delegateRoot.highlighted) ? Kube.Colors.highlightColor : delegateRoot.textColor
-
-                    //TODO batch editing
-                    //                 Kube.CheckBox {
-                    //                     id: checkBox
-                    //
-                    //                     anchors.verticalCenter: parent.verticalCenter
-                    //                     visible: (checked || delegateRoot.hovered) && !mouseArea.drag.active
-                    //                     opacity: 0.9
-                    //                 }
-
-                    Column {
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-                            left: parent.left
-                            leftMargin:  Kube.Units.largeSpacing // + checkBox.width
-                        }
-
-                        Kube.Label{
-                            id: subject
-                            width: content.width - Kube.Units.gridUnit * 3
-                            text: model.subject
-                            color: content.unreadColor
-                            maximumLineCount: 2
-                            wrapMode: Text.WordWrap
-                            elide: Text.ElideRight
-                        }
-
-                        Kube.Label {
-                            id: sender
-                            text: model.senderName
-                            color: delegateRoot.textColor
-                            font.italic: true
-                            width: delegateRoot.width - Kube.Units.gridUnit * 3
-                            elide: Text.ElideRight
-                        }
-                    }
-
-                    Kube.Label {
-                        id: date
-                        anchors {
-                            right: parent.right
-                            bottom: parent.bottom
-                        }
-
-                        function sameDay(date1, date2) {
-                            return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
-                        }
-
-                        function formatDateTime(date) {
-                            const today = new Date()
-                            if (sameDay(date, today)) {
-                                return Qt.formatDateTime(date, "hh:mm")
-                            }
-                            const lastWeekToday = today.getTime() - ((24*60*60*1000) * 7);
-                            if (date.getTime() >= lastWeekToday) {
-                                return Qt.formatDateTime(date, "ddd hh:mm")
-                            }
-                            return Qt.formatDateTime(date, "dd MMM yyyy")
-                        }
-
-                        visible: !delegateRoot.buttonsVisible
-                        text: formatDateTime(model.date)
-                        font.italic: true
-                        color: delegateRoot.disabledTextColor
-                        font.pointSize: Kube.Units.tinyFontSize
-                    }
-
-                    Kube.Label {
-                        id: threadCounter
-                        anchors {
-                            right: parent.right
-                            margins: Kube.Units.smallSpacing
-                        }
-                        text: model.threadSize
-                        color: content.unreadColor
-                        visible: model.threadSize > 1 && !delegateRoot.buttonsVisible
-
-                    }
-                }
-
-                Kube.Icon {
-                    anchors {
-                        right: parent.right
-                        verticalCenter: parent.verticalCenter
-                        margins: Kube.Units.smallSpacing
-                    }
-
-                    visible:  model.important && !delegateRoot.buttonsVisible && !mouseArea.drag.active
-                    iconName: Kube.Icons.isImportant
-                }
-
-                Column {
-                    id: buttons
-
-                    anchors {
-                        right: parent.right
-                        margins: Kube.Units.smallSpacing
-                        verticalCenter: parent.verticalCenter
-                    }
-
-                    visible: delegateRoot.buttonsVisible && !mouseArea.drag.active
-                    opacity: 0.7
-
-                    Kube.IconButton {
-                        id: restoreButton
-                        iconName: Kube.Icons.undo
-                        visible: !!model.trash
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
-                        activeFocusOnTab: false
-                        tooltip: qsTr("Restore from trash")
-                    }
-
-                    Kube.IconButton {
-                        id: readButton
-                        iconName: Kube.Icons.markAsRead
-                        visible: model.unread && !model.trash
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
-                        tooltip: qsTr("Mark as read")
-                    }
-                    Kube.IconButton {
-                        id: unreadButton
-                        iconName: Kube.Icons.markAsUnread
-                        visible: !model.unread && !model.trash
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
-                        activeFocusOnTab: false
-                        tooltip: qsTr("Mark as unread")
-                    }
-
-                    Kube.IconButton {
-                        id: importantButton
-                        iconName: model.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
-                        visible: !!model.mail
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": model.mail, "important": !model.important})
-                        activeFocusOnTab: false
-                        tooltip: qsTr("Mark as important")
-                    }
-
-                    Kube.IconButton {
-                        id: deleteButton
-                        objectName: "deleteButton"
-                        iconName: Kube.Icons.moveToTrash
-                        visible: !!model.mail
-                        onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
-                        activeFocusOnTab: false
-                        tooltip: qsTr("Move to trash")
-                    }
-                }
+                // model: model
             }
+
+            //delegate: Kube.ListDelegate {
+            //    id: delegateRoot
+            //    //Required for D&D
+            //    property var mail: model.mail
+            //    property bool buttonsVisible: delegateRoot.hovered
+
+            //    width: listView.availableWidth
+            //    height: Kube.Units.gridUnit * 5
+
+            //    color: Kube.Colors.viewBackgroundColor
+            //    border.color: Kube.Colors.backgroundColor
+            //    border.width: 1
+
+            //    states: [
+            //        State {
+            //            name: "dnd"
+            //            when: mouseArea.drag.active
+
+            //            PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
+            //            PropertyChanges {target: delegateRoot; x: x; y: y}
+            //            PropertyChanges {target: delegateRoot; parent: root}
+            //            PropertyChanges {target: delegateRoot; opacity: 0.2}
+            //            PropertyChanges {target: delegateRoot; highlighted: true}
+            //        }
+            //    ]
+
+            //    Drag.active: mouseArea.drag.active
+            //    Drag.hotSpot.x: mouseArea.mouseX
+            //    Drag.hotSpot.y: mouseArea.mouseY
+            //    Drag.source: delegateRoot
+
+            //    MouseArea {
+            //        id: mouseArea
+            //        anchors.fill: parent
+            //        drag.target: parent
+            //        onReleased: {
+            //            var dropAction = parent.Drag.drop()
+            //            if (dropAction == Qt.MoveAction) {
+            //                parent.visible = false
+            //            }
+            //        }
+            //        onClicked: delegateRoot.clicked()
+            //    }
+
+            //    Item {
+            //        id: content
+
+            //        anchors {
+            //            fill: parent
+            //            margins: Kube.Units.smallSpacing
+            //        }
+            //        property color unreadColor: (model.unread && !delegateRoot.highlighted) ? Kube.Colors.highlightColor : delegateRoot.textColor
+
+            //        //TODO batch editing
+            //        //                 Kube.CheckBox {
+            //        //                     id: checkBox
+            //        //
+            //        //                     anchors.verticalCenter: parent.verticalCenter
+            //        //                     visible: (checked || delegateRoot.hovered) && !mouseArea.drag.active
+            //        //                     opacity: 0.9
+            //        //                 }
+
+            //        Column {
+            //            anchors {
+            //                verticalCenter: parent.verticalCenter
+            //                left: parent.left
+            //                leftMargin:  Kube.Units.largeSpacing // + checkBox.width
+            //            }
+
+            //            Kube.Label{
+            //                id: subject
+            //                width: content.width - Kube.Units.gridUnit * 3
+            //                text: model.subject
+            //                color: content.unreadColor
+            //                maximumLineCount: 2
+            //                wrapMode: Text.WordWrap
+            //                elide: Text.ElideRight
+            //            }
+
+            //            Kube.Label {
+            //                id: sender
+            //                text: model.senderName
+            //                color: delegateRoot.textColor
+            //                font.italic: true
+            //                width: delegateRoot.width - Kube.Units.gridUnit * 3
+            //                elide: Text.ElideRight
+            //            }
+            //        }
+
+            //        Kube.Label {
+            //            id: date
+            //            anchors {
+            //                right: parent.right
+            //                bottom: parent.bottom
+            //            }
+
+            //            function sameDay(date1, date2) {
+            //                return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
+            //            }
+
+            //            function formatDateTime(date) {
+            //                const today = new Date()
+            //                if (sameDay(date, today)) {
+            //                    return Qt.formatDateTime(date, "hh:mm")
+            //                }
+            //                const lastWeekToday = today.getTime() - ((24*60*60*1000) * 7);
+            //                if (date.getTime() >= lastWeekToday) {
+            //                    return Qt.formatDateTime(date, "ddd hh:mm")
+            //                }
+            //                return Qt.formatDateTime(date, "dd MMM yyyy")
+            //            }
+
+            //            visible: !delegateRoot.buttonsVisible
+            //            text: formatDateTime(model.date)
+            //            font.italic: true
+            //            color: delegateRoot.disabledTextColor
+            //            font.pointSize: Kube.Units.tinyFontSize
+            //        }
+
+            //        Kube.Label {
+            //            id: threadCounter
+            //            anchors {
+            //                right: parent.right
+            //                margins: Kube.Units.smallSpacing
+            //            }
+            //            text: model.threadSize
+            //            color: content.unreadColor
+            //            visible: model.threadSize > 1 && !delegateRoot.buttonsVisible
+
+            //        }
+            //    }
+
+            //    Kube.Icon {
+            //        anchors {
+            //            right: parent.right
+            //            verticalCenter: parent.verticalCenter
+            //            margins: Kube.Units.smallSpacing
+            //        }
+
+            //        visible:  model.important && !delegateRoot.buttonsVisible && !mouseArea.drag.active
+            //        iconName: Kube.Icons.isImportant
+            //    }
+
+            //    Column {
+            //        id: buttons
+
+            //        anchors {
+            //            right: parent.right
+            //            margins: Kube.Units.smallSpacing
+            //            verticalCenter: parent.verticalCenter
+            //        }
+
+            //        visible: delegateRoot.buttonsVisible && !mouseArea.drag.active
+            //        opacity: 0.7
+
+            //        Kube.IconButton {
+            //            id: restoreButton
+            //            iconName: Kube.Icons.undo
+            //            visible: !!model.trash
+            //            onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": model.mail})
+            //            activeFocusOnTab: false
+            //            tooltip: qsTr("Restore from trash")
+            //        }
+
+            //        Kube.IconButton {
+            //            id: readButton
+            //            iconName: Kube.Icons.markAsRead
+            //            visible: model.unread && !model.trash
+            //            onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": model.mail})
+            //            tooltip: qsTr("Mark as read")
+            //        }
+            //        Kube.IconButton {
+            //            id: unreadButton
+            //            iconName: Kube.Icons.markAsUnread
+            //            visible: !model.unread && !model.trash
+            //            onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": model.mail})
+            //            activeFocusOnTab: false
+            //            tooltip: qsTr("Mark as unread")
+            //        }
+
+            //        Kube.IconButton {
+            //            id: importantButton
+            //            iconName: model.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
+            //            visible: !!model.mail
+            //            onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": model.mail, "important": !model.important})
+            //            activeFocusOnTab: false
+            //            tooltip: qsTr("Mark as important")
+            //        }
+
+            //        Kube.IconButton {
+            //            id: deleteButton
+            //            objectName: "deleteButton"
+            //            iconName: Kube.Icons.moveToTrash
+            //            visible: !!model.mail
+            //            onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": model.mail})
+            //            activeFocusOnTab: false
+            //            tooltip: qsTr("Move to trash")
+            //        }
+            //    }
+            //}
         }
     }
 }
