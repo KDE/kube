@@ -50,6 +50,9 @@ wantedIcons = [
     "view-calendar.svg",
     "question.svg",
     "overflow-menu.svg",
+    "notifications.svg",
+    "notifications-disabled.svg",
+    "mail-folder-inbox.svg",
 ]
 
 def ensure_dir(file_path):
