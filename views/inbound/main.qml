@@ -286,8 +286,14 @@ blockquote {
         }
         TestStore.setup(initialState)
     }
-
+    Shortcut {
+        sequence: StandardKey.Refresh
+        onActivated: {
+            view.refresh()
+        }
+    }
     View {
+        id: view
         anchors.fill: parent
     }
 }

@@ -22,7 +22,7 @@ import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
-Controls1.SplitView {
+Kube.View {
     id: root
 
     property bool pendingError: false;
@@ -34,35 +34,19 @@ Controls1.SplitView {
         Kube.Fabric.postMessage(Kube.Messages.notificationPending, {notificationPending: pendingNotification})
     }
 
-    StackView.onActivated: {
-        root.pendingError = false;
-        root.pendingNotification = false;
-        //Always select the latest notification
-        listView.currentIndex = 0
+    onRefresh: {
+        inboundModel.refresh()
     }
+
+    Controls1.SplitView {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
 
     Item {
         id: accountList
         width: parent.width/3
         Layout.fillHeight: true
 
-        Kube.Listener {
-            filter: Kube.Messages.notification
-            onMessageReceived: {
-                //Ignore noise that we can't usefully render anyways
-                if (!message.message) {
-                    return
-                }
-                //Avoid highlighting the iconbutton again if we're already looking at this view.
-                if (root.StackView.status != StackView.Active) {
-                    if (message.type == Kube.Notifications.error) {
-                        root.pendingError = true
-                    }
-                    root.pendingNotification = true
-                }
-                logModel.insert(message)
-            }
-        }
 
         Kube.Label {
             anchors.centerIn: parent
@@ -79,7 +63,7 @@ Controls1.SplitView {
             clip: true
 
             model: Kube.InboundModel {
-                id: logModel
+                id: inboundModel
                 objectName: "inboundModel"
                 onEntryAdded: {
                     Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
@@ -87,16 +71,21 @@ Controls1.SplitView {
             }
 
             onCurrentItemChanged: {
-                if (!!currentItem.currentData.resource) {
-                    details.resourceId = currentItem.currentData.resource
+                var currentData = currentItem.currentData;
+                if (!!currentData.resource) {
+                    details.resourceId = currentData.resource
                 }
-                details.message = currentItem.currentData.message + "\n" + currentItem.currentData.details
-                details.timestamp = currentItem.currentData.timestamp
-                details.entities = currentItem.currentData.entities
-                if (!!currentItem.currentData.subtype) {
-                    details.subtype = currentItem.currentData.subtype
+                details.message = currentData.message + "\n" + currentItem.currentData.details
+                details.timestamp = currentData.timestamp
+                details.entities = currentData.entities
+                details.itemData = currentData.data
+                if (!!currentData.subtype) {
+                    details.subtype = currentData.subtype
                 } else {
                     details.subtype = ""
+                }
+                if (currentData.data.mail && currentData.data.unread) {
+                    Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentData.data.mail})
                 }
             }
 
@@ -122,6 +111,7 @@ Controls1.SplitView {
         property string message: ""
         property string resourceId: ""
         property var entities: []
+        property var itemData: null
 
         Kube.ModelIndexRetriever {
             id: retriever
@@ -144,6 +134,7 @@ Controls1.SplitView {
             property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
             property string accountName: retriever.currentData ? retriever.currentData.name : ""
             property string entityId: (details.entities && details.entities.length != 0) ? details.entities[0] : ""
+            property var itemData: details.itemData
 
             function getComponent(subtype) {
                 if (subtype == Kube.Notifications.loginError) {
@@ -170,6 +161,7 @@ Controls1.SplitView {
             sourceComponent: getComponent(details.subtype)
         }
     }
+}
 
     Component {
         id: detailsComponent
@@ -443,17 +435,17 @@ Controls1.SplitView {
     Component {
         id: conversationComponent
 
-                Kube.ConversationView {
-                    id: componentRoot
-                    objectName: "mailView"
-                    activeFocusOnTab: true
-                    model: Kube.MailListModel {
-                        filter: {
-                            "entityId": componentRoot.parent ? componentRoot.parent.entityId : null,
-                            "headersOnly": false,
-                            "fetchMails": true
-                        }
-                    }
+        Kube.ConversationView {
+            id: componentRoot
+            objectName: "mailView"
+            activeFocusOnTab: true
+            model: Kube.MailListModel {
+                filter: {
+                    "mail": componentRoot.parent ? componentRoot.parent.itemData.mail : null,
+                    "headersOnly": false,
+                    "fetchMails": true
                 }
+            }
+        }
     }
 }

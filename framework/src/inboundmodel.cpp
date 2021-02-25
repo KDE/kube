@@ -63,6 +63,11 @@ QString InboundModel::folderName(const QByteArray &id) const
     return mFolderNames.value(id);
 }
 
+void InboundModel::refresh()
+{
+    init();
+}
+
 void InboundModel::init()
 {
     loadSettings();
@@ -112,6 +117,8 @@ void InboundModel::init()
                     .collect<ApplicationDomain::Mail::Important>();
                 mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
+                QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
+                QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::mailRowsRemoved);
             }).exec();
     }
 }
@@ -159,7 +166,7 @@ bool InboundModel::filter(const Sink::ApplicationDomain::Mail &mail)
     }
 
     // Ignore own messages (phabricator only lists name)
-    if (mail.getSender().name.contains(senderNameContainsFilter, Qt::CaseInsensitive)) {
+    if (!senderNameContainsFilter.isEmpty() && mail.getSender().name.contains(senderNameContainsFilter, Qt::CaseInsensitive)) {
         return true;
     }
 
@@ -180,21 +187,12 @@ bool InboundModel::filter(const Sink::ApplicationDomain::Mail &mail)
         }
     }
 
-    // Ignore thread if we have read all replies
-    if (!mail.getCollectedProperty<Sink::ApplicationDomain::Mail::Unread>().contains(true)) {
-        return true;
-    }
-
-
     return false;
 }
 
-void InboundModel::add(const Sink::ApplicationDomain::Mail::Ptr &mail)
+QVariantMap InboundModel::toVariantMap(const Sink::ApplicationDomain::Mail::Ptr &mail)
 {
-    if (filter(*mail)) {
-        return;
-    }
-    insert({
+    return {
         {"type", "mail"},
         {"message", QObject::tr("A new message is available: %1").arg(mail->getSubject())},
         {"subtype", "mail"},
@@ -211,8 +209,29 @@ void InboundModel::add(const Sink::ApplicationDomain::Mail::Ptr &mail)
             {"trash", mail->getTrash()},
             {"threadSize", mail->count()},
             {"mail", QVariant::fromValue(mail)}
-        }}
-    });
+        }
+        }
+    };
+}
+
+void InboundModel::add(const Sink::ApplicationDomain::Mail::Ptr &mail)
+{
+    if (filter(*mail)) {
+        return;
+    }
+    insert(mail->identifier(), toVariantMap(mail));
+}
+
+void InboundModel::update(const Sink::ApplicationDomain::Mail::Ptr &mail)
+{
+    update(mail->identifier(), toVariantMap(mail));
+}
+
+void InboundModel::remove(const Sink::ApplicationDomain::Mail::Ptr &mail)
+{
+    for (auto item : mInboundModel->findItems(QString{mail->identifier()})) {
+        mInboundModel->removeRows(item->row(), 1);
+    }
 }
 
 void InboundModel::mailRowsInserted(const QModelIndex &parent, int first, int last)
@@ -223,9 +242,32 @@ void InboundModel::mailRowsInserted(const QModelIndex &parent, int first, int la
     }
 }
 
-void InboundModel::insert(const QVariantMap &message)
+void InboundModel::mailRowsRemoved(const QModelIndex &parent, int first, int last)
 {
-    auto item = new QStandardItem;
+    for (auto row = first; row <= last; row++) {
+        auto entity = mSourceModel->index(row, 0, parent).data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
+        remove(entity);
+    }
+}
+
+void InboundModel::mailDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+{
+    if (!topLeft.isValid() || !bottomRight.isValid()) {
+        return;
+    }
+    for (auto row = topLeft.row(); row <= bottomRight.row(); row++) {
+        auto entity = mSourceModel->index(row, 0, topLeft.parent()).data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
+        if (filter(*entity)) {
+            remove(entity);
+        } else {
+            update(entity);
+        }
+    }
+}
+
+void InboundModel::insert(const QByteArray &key, const QVariantMap &message)
+{
+    auto item = new QStandardItem{QString{key}};
     auto addProperty = [&] (const QByteArray &key) {
         item->setData(message.value(key), mRoles[key]);
     };
@@ -239,4 +281,21 @@ void InboundModel::insert(const QVariantMap &message)
     addProperty("data");
     mInboundModel->insertRow(0, item);
     emit entryAdded(message);
+}
+
+void InboundModel::update(const QByteArray &key, const QVariantMap &message)
+{
+    for (auto item : mInboundModel->findItems(QString{key})) {
+        auto addProperty = [&] (const QByteArray &key) {
+            item->setData(message.value(key), mRoles[key]);
+        };
+        item->setData(message.value("date"), mRoles["timestamp"]);
+        addProperty("type");
+        addProperty("subtype");
+        addProperty("message");
+        addProperty("details");
+        addProperty("resource");
+        addProperty("entities");
+        addProperty("data");
+    }
 }

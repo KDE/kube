@@ -42,19 +42,26 @@ public:
     InboundModel(QObject *parent = Q_NULLPTR);
     ~InboundModel();
 
-    Q_INVOKABLE void insert(const QVariantMap &);
+    Q_INVOKABLE void insert(const QByteArray &key, const QVariantMap &);
+    Q_INVOKABLE void update(const QByteArray &key, const QVariantMap &);
+    Q_INVOKABLE void refresh();
 
 signals:
     void entryAdded(const QVariantMap &message);
 
 private slots:
     void mailRowsInserted(const QModelIndex &parent, int first, int last);
+    void mailRowsRemoved(const QModelIndex &parent, int first, int last);
+    void mailDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 
 private:
     void saveSettings();
     void loadSettings();
     void init();
     void add(const QSharedPointer<Sink::ApplicationDomain::Mail> &);
+    void remove(const QSharedPointer<Sink::ApplicationDomain::Mail> &);
+    void update(const QSharedPointer<Sink::ApplicationDomain::Mail> &);
+    QVariantMap toVariantMap(const QSharedPointer<Sink::ApplicationDomain::Mail> &mail);
     QString folderName(const QByteArray &id) const;
     bool filter(const Sink::ApplicationDomain::Mail &mail);
 
