@@ -42,126 +42,126 @@ Kube.View {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-    Item {
-        id: accountList
-        width: parent.width/3
-        Layout.fillHeight: true
+        Item {
+            id: accountList
+            width: parent.width/3
+            Layout.fillHeight: true
 
 
-        Kube.Label {
-            anchors.centerIn: parent
-            visible: listView.count == 0
-            text: qsTr("Nothing here...")
+            Kube.Label {
+                anchors.centerIn: parent
+                visible: listView.count == 0
+                text: qsTr("Nothing here...")
+            }
+
+            Kube.ListView {
+                id: listView
+                anchors {
+                    fill: parent
+                }
+
+                clip: true
+
+                model: Kube.InboundModel {
+                    id: inboundModel
+                    objectName: "inboundModel"
+                    onEntryAdded: {
+                        Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
+                    }
+                }
+
+                onCurrentItemChanged: {
+                    var currentData = currentItem.currentData;
+                    if (!!currentData.resource) {
+                        details.resourceId = currentData.resource
+                    }
+                    details.message = currentData.message + "\n" + currentItem.currentData.details
+                    details.timestamp = currentData.timestamp
+                    details.entities = currentData.entities
+                    details.itemData = currentData.data
+                    if (!!currentData.subtype) {
+                        details.subtype = currentData.subtype
+                    } else {
+                        details.subtype = ""
+                    }
+                    if (currentData.data.mail && currentData.data.unread) {
+                        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentData.data.mail})
+                    }
+                }
+
+                delegate: Kube.MailListDelegate {
+                    id: delegateRoot
+                    height: Kube.Units.gridUnit * 5
+
+                    subject: model.data.subject
+                    unread: model.data.unread
+                    senderName: model.data.senderName
+                    date: model.data.date
+                    important: model.data.important
+                    trash: model.data.trash
+                    threadSize: model.data.threadSize
+                    mail: model.data.mail
+                }
+            }
         }
+        Item {
+            id: details
+            property string subtype: ""
+            property date timestamp
+            property string message: ""
+            property string resourceId: ""
+            property var entities: []
+            property var itemData: null
 
-        Kube.ListView {
-            id: listView
-            anchors {
-                fill: parent
-            }
-
-            clip: true
-
-            model: Kube.InboundModel {
-                id: inboundModel
-                objectName: "inboundModel"
-                onEntryAdded: {
-                    Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
+            Kube.ModelIndexRetriever {
+                id: retriever
+                model: Kube.AccountsModel {
+                    resourceId: details.resourceId
                 }
             }
 
-            onCurrentItemChanged: {
-                var currentData = currentItem.currentData;
-                if (!!currentData.resource) {
-                    details.resourceId = currentData.resource
+            Loader {
+                id: detailsLoader
+                visible: message != ""
+                clip: true
+                anchors {
+                    fill: parent
+                    margins: Kube.Units.largeSpacing
                 }
-                details.message = currentData.message + "\n" + currentItem.currentData.details
-                details.timestamp = currentData.timestamp
-                details.entities = currentData.entities
-                details.itemData = currentData.data
-                if (!!currentData.subtype) {
-                    details.subtype = currentData.subtype
-                } else {
-                    details.subtype = ""
-                }
-                if (currentData.data.mail && currentData.data.unread) {
-                    Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentData.data.mail})
-                }
-            }
+                property date timestamp: details.timestamp
+                property string message: details.message
+                property string resourceId: details.resourceId
+                property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
+                property string accountName: retriever.currentData ? retriever.currentData.name : ""
+                property string entityId: (details.entities && details.entities.length != 0) ? details.entities[0] : ""
+                property var itemData: details.itemData
 
-            delegate: Kube.MailListDelegate {
-                id: delegateRoot
-                height: Kube.Units.gridUnit * 5
+                function getComponent(subtype) {
+                    if (subtype == Kube.Notifications.loginError) {
+                        return loginErrorComponent
+                    }
+                    if (subtype == Kube.Notifications.hostNotFoundError) {
+                        return hostNotFoundErrorComponent
+                    }
+                    if (subtype == Kube.Notifications.connectionError) {
+                        return hostNotFoundErrorComponent
+                    }
+                    if (subtype == Kube.Notifications.transmissionError) {
+                        return transmissionErrorComponent
+                    }
+                    if (subtype == Kube.Notifications.messageSent) {
+                        return transmissionSuccessComponent
+                    }
+                    if (subtype == "mail") {
+                        return conversationComponent
+                    }
+                    return detailsComponent
+                }
 
-                subject: model.data.subject
-                unread: model.data.unread
-                senderName: model.data.senderName
-                date: model.data.date
-                important: model.data.important
-                trash: model.data.trash
-                threadSize: model.data.threadSize
-                mail: model.data.mail
+                sourceComponent: getComponent(details.subtype)
             }
         }
     }
-    Item {
-        id: details
-        property string subtype: ""
-        property date timestamp
-        property string message: ""
-        property string resourceId: ""
-        property var entities: []
-        property var itemData: null
-
-        Kube.ModelIndexRetriever {
-            id: retriever
-            model: Kube.AccountsModel {
-                resourceId: details.resourceId
-            }
-        }
-
-        Loader {
-            id: detailsLoader
-            visible: message != ""
-            clip: true
-            anchors {
-                fill: parent
-                margins: Kube.Units.largeSpacing
-            }
-            property date timestamp: details.timestamp
-            property string message: details.message
-            property string resourceId: details.resourceId
-            property string accountId: retriever.currentData ? retriever.currentData.accountId : ""
-            property string accountName: retriever.currentData ? retriever.currentData.name : ""
-            property string entityId: (details.entities && details.entities.length != 0) ? details.entities[0] : ""
-            property var itemData: details.itemData
-
-            function getComponent(subtype) {
-                if (subtype == Kube.Notifications.loginError) {
-                    return loginErrorComponent
-                }
-                if (subtype == Kube.Notifications.hostNotFoundError) {
-                    return hostNotFoundErrorComponent
-                }
-                if (subtype == Kube.Notifications.connectionError) {
-                    return hostNotFoundErrorComponent
-                }
-                if (subtype == Kube.Notifications.transmissionError) {
-                    return transmissionErrorComponent
-                }
-                if (subtype == Kube.Notifications.messageSent) {
-                    return transmissionSuccessComponent
-                }
-                if (subtype == "mail") {
-                    return conversationComponent
-                }
-                return detailsComponent
-            }
-
-            sourceComponent: getComponent(details.subtype)
-        }
-    }
-}
 
     Component {
         id: detailsComponent
