@@ -28,6 +28,30 @@
 InboundModel::InboundModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
+    init();
+}
+
+InboundModel::~InboundModel()
+{
+
+}
+
+QString InboundModel::folderName(const QByteArray &id) const
+{
+    return mFolderNames.value(id);
+}
+
+void InboundModel::refresh()
+{
+    init();
+}
+
+void InboundModel::init()
+{
+    mFolderNames.clear();
+
+    loadSettings();
+
     QByteArrayList roles{"type", "subtype", "timestamp", "message", "details", "entities", "resource", "data"};
 
     int role = Qt::UserRole + 1;
@@ -49,28 +73,6 @@ InboundModel::InboundModel(QObject *parent)
 
     setSortRole(mRoles.value("timestamp"));
     sort(0, Qt::DescendingOrder);
-
-    init();
-}
-
-InboundModel::~InboundModel()
-{
-
-}
-
-QString InboundModel::folderName(const QByteArray &id) const
-{
-    return mFolderNames.value(id);
-}
-
-void InboundModel::refresh()
-{
-    init();
-}
-
-void InboundModel::init()
-{
-    loadSettings();
 
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
@@ -150,6 +152,7 @@ void InboundModel::loadSettings()
     senderNameContainsFilter = settings.value("senderNameContainsFilter").toString();
 
     settings.beginGroup("perFolderMimeMessageWhitelistFilter");
+    perFolderMimeMessageWhitelistFilter.clear();
     for (const auto &folder : settings.allKeys()) {
         perFolderMimeMessageWhitelistFilter.insert(folder, settings.value(folder).toString());
     }
