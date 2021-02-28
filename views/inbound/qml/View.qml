@@ -71,6 +71,9 @@ Kube.View {
                 }
 
                 onCurrentItemChanged: {
+                    if (!currentItem || !currentItem.currentData) {
+                        return
+                    }
                     var currentData = currentItem.currentData;
                     if (!!currentData.resource) {
                         details.resourceId = currentData.resource
