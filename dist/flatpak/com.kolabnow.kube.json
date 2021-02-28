@@ -30,7 +30,7 @@
             ],
             "name": "sink",
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "git://anongit.kde.org/sink.git", "branch": "develop" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/pim/sink.git", "branch": "develop" } ]
         },
         {
             "config-opts": [
@@ -43,7 +43,7 @@
             ],
             "name": "kube",
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kube.git", "branch": "develop" } ],
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/pim/kube.git", "branch": "develop" } ],
             "post-install": [
                 "rm -rf /app/include",
                 "rm -rf /app/lib/*.la /app/lib/*.a /app/lib/*.prl ",
