@@ -25,6 +25,7 @@
 #include <QSortFilterProxyModel>
 #include <QVariantMap>
 #include <QSet>
+#include <QRegularExpression>
 #include <QString>
 #include <fabric.h>
 
@@ -73,6 +74,7 @@ private:
     QSet<QString> toBlacklist;
     QString senderNameContainsFilter;
     QMap<QString, QString> perFolderMimeMessageWhitelistFilter;
+    QList<QRegularExpression> messageFilter;
     QList<QString> folderSpecialPurposeBlacklist;
     QList<QString> folderNameBlacklist;
 };

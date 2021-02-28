@@ -151,6 +151,11 @@ void InboundModel::loadSettings()
     folderNameBlacklist = settings.value("folderNameBlacklist").toStringList();
     senderNameContainsFilter = settings.value("senderNameContainsFilter").toString();
 
+    messageFilter.clear();
+    for (const auto filter : settings.value("messageFilter").toStringList()) {
+        messageFilter.append(QRegularExpression{filter});
+    }
+
     settings.beginGroup("perFolderMimeMessageWhitelistFilter");
     perFolderMimeMessageWhitelistFilter.clear();
     for (const auto &folder : settings.allKeys()) {
@@ -179,10 +184,17 @@ bool InboundModel::filter(const Sink::ApplicationDomain::Mail &mail)
         }
     }
 
+    const auto &mimeMessage = mail.getMimeMessage();
+
+    for (const auto &filter : messageFilter) {
+        if (filter.match(mimeMessage).hasMatch()) {
+            return true;
+        }
+    }
+
     for (const auto &name : perFolderMimeMessageWhitelistFilter.keys()) {
         if (folderName(mail.getFolder()) == name) {
             //For this folder, exclude everything but what matches (whitelist)
-            const auto &mimeMessage = mail.getMimeMessage();
             if (mimeMessage.contains(perFolderMimeMessageWhitelistFilter.value(name).toUtf8())) {
                 return false;
             }
