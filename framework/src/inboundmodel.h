@@ -54,6 +54,8 @@ private slots:
     void mailRowsInserted(const QModelIndex &parent, int first, int last);
     void mailRowsRemoved(const QModelIndex &parent, int first, int last);
     void mailDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
+    void eventRowsInserted(const QModelIndex &parent, int first, int last);
+    void eventModelReset();
 
 private:
     void saveSettings();
@@ -69,6 +71,7 @@ private:
     QHash<QByteArray, int> mRoles;
     QHash<QByteArray, QString> mFolderNames;
     QSharedPointer<QAbstractItemModel> mSourceModel;
+    QSharedPointer<QAbstractItemModel> mEventSourceModel;
     QSharedPointer<QStandardItemModel> mInboundModel;
     QSet<QString> senderBlacklist;
     QSet<QString> toBlacklist;

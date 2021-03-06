@@ -25,6 +25,8 @@
 #include <sink/store.h>
 #include <sink/applicationdomaintype.h>
 
+#include "eventoccurrencemodel.h"
+
 InboundModel::InboundModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
@@ -121,6 +123,31 @@ void InboundModel::init()
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::mailRowsRemoved);
+            }).exec();
+    }
+    {
+
+        Sink::Query calendarQuery{};
+        calendarQuery.filter<Calendar::Enabled>(true);
+        calendarQuery.request<Calendar::Name>();
+
+        Sink::Store::fetchAll<Calendar>(calendarQuery)
+            .then([this] (const QList<Calendar::Ptr> &list) {
+
+                QList<QString> calendarFilter;
+                for (const auto &calendar : list) {
+                    calendarFilter << QString{calendar->identifier()};
+                }
+
+                auto model = QSharedPointer<EventOccurrenceModel>::create();
+                // model->setStart(QDateTime::currentDateTime().date());
+                model->setStart(QDate{2018, 3, 1});
+
+                model->setLength(700);
+                model->setCalendarFilter(calendarFilter);
+                mEventSourceModel = model;
+                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
+                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::modelReset, this, &InboundModel::eventModelReset);
             }).exec();
     }
 }
@@ -278,6 +305,37 @@ void InboundModel::mailDataChanged(const QModelIndex &topLeft, const QModelIndex
             update(entity);
         }
     }
+}
+
+void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int last)
+{
+    for (auto row = first; row <= last; row++) {
+        auto idx = mEventSourceModel->index(row, 0, parent);
+        auto event = idx.data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
+        auto occurence = idx.data(EventOccurrenceModel::EventOccurrence).value<EventOccurrenceModel::Occurrence>();
+
+        const QVariantMap variantMap {
+            {"type", "event"},
+            {"message", QObject::tr("A new event is available: %1").arg(event->getSummary())},
+            {"subtype", "event"},
+            {"entities", QVariantList{event->identifier()}},
+            {"resource", QString{event->resourceInstanceIdentifier()}},
+            {"date", occurence.start},
+            {"data", QVariantMap{
+                {"subject", event->getSummary()},
+                {"mail", QVariant::fromValue(event)}
+            }
+            }
+        };
+
+        insert(event->identifier(), variantMap);
+    }
+}
+
+void InboundModel::eventModelReset()
+{
+    //TODO remove previous events
+    eventRowsInserted({}, 0, mEventSourceModel->rowCount() - 1);
 }
 
 void InboundModel::insert(const QByteArray &key, const QVariantMap &message)

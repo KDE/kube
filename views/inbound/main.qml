@@ -60,7 +60,12 @@ ApplicationWindow {
                     id: "resource3",
                     account: "account2",
                     type: "dummy"
-                }
+                },
+                {
+                    id: "caldavresource",
+                    account: "account1",
+                    type: "caldav",
+                },
             ],
             folders: [{
                     resource: "resource1",
@@ -283,6 +288,51 @@ blockquote {
                     name: "Folder 3"
                 }
             ],
+            calendars: [{
+                id: "calendar1",
+                resource: "caldavresource",
+                name: "Test Calendar",
+                color: "#af1a6a",
+                enabled: true,
+                events: [
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event1!",
+                        starts: "2018-04-09T14:03:00",
+                        organizer: "organizer@example.org",
+                        attendees: [{email: "attendee1@example.org"}, {email: "identity@example.org"}]
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event3!",
+                        starts: "2018-04-09T14:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Test Event1 with a waaaaaaaay to long summary. Why don't you just use the description you fool!",
+                        description: "This is test event #1",
+                        starts: "2018-04-10T14:03:00",
+                        ends:   "2018-04-10T16:03:00",
+                    },
+
+                    // Day-long events
+                    {
+                        resource: "caldavresource",
+                        summary: "Test day-long event1",
+                        description: "This is test day-long event #1",
+                        starts: "2018-04-10T00:00:00",
+                        ends:   "2018-04-14T00:00:00",
+                        allDay: true,
+                    },
+                ],
+            },
+            {
+                id: "calendar2",
+                resource: "caldavresource",
+                name: "Test Calendar2",
+                enabled: true,
+                color: "#00cc4b"
+            }]
         }
         TestStore.setup(initialState)
     }
