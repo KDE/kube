@@ -55,6 +55,19 @@ Kube.View {
                 text: qsTr("Nothing here...")
             }
 
+
+            Component {
+                id: sectionHeading
+                Rectangle {
+                    width: ListView.view.width
+                    height: childrenRect.height
+
+                    Kube.Heading {
+                        text: section == "event" ? "Coming up" : "Recently"
+                    }
+                }
+            }
+
             Kube.ListView {
                 id: listView
                 anchors {
@@ -62,6 +75,10 @@ Kube.View {
                 }
 
                 clip: true
+
+                section.property: "type"
+                section.criteria: ViewSection.FullString
+                section.delegate: sectionHeading
 
                 model: Kube.InboundModel {
                     id: inboundModel
