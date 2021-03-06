@@ -37,7 +37,6 @@ Kube.ListDelegate {
     property var mail
     property bool buttonsVisible: delegateRoot.hovered
 
-    // width: listView.availableWidth
     height: Kube.Units.gridUnit * 5
 
     color: Kube.Colors.viewBackgroundColor
