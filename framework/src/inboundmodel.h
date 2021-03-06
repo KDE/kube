@@ -27,6 +27,7 @@
 #include <QSet>
 #include <QRegularExpression>
 #include <QString>
+#include <QDateTime>
 #include <fabric.h>
 
 namespace Sink {
@@ -38,6 +39,8 @@ namespace Sink {
 class KUBE_EXPORT InboundModel : public QSortFilterProxyModel
 {
     Q_OBJECT
+
+    Q_PROPERTY(QDateTime currentDate MEMBER mCurrentDateTime)
 
 public:
     InboundModel(QObject *parent = Q_NULLPTR);
@@ -80,4 +83,5 @@ private:
     QList<QRegularExpression> messageFilter;
     QList<QString> folderSpecialPurposeBlacklist;
     QList<QString> folderNameBlacklist;
+    QDateTime mCurrentDateTime;
 };

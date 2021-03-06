@@ -140,10 +140,9 @@ void InboundModel::init()
                 }
 
                 auto model = QSharedPointer<EventOccurrenceModel>::create();
-                // model->setStart(QDateTime::currentDateTime().date());
-                model->setStart(QDate{2018, 3, 1});
+                model->setStart(mCurrentDateTime.date());
 
-                model->setLength(700);
+                model->setLength(7);
                 model->setCalendarFilter(calendarFilter);
                 mEventSourceModel = model;
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);

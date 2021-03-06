@@ -239,7 +239,7 @@ Bvr+rojxTJ3X+pzb2LJQwJnALL/VdIF3yHtGu2//Yfu4oxGGA0M90KiW
                         },
                         {
                             resource: "resource1",
-                            date: "2020-07-20T17:47:29",
+                            date: "2017-07-20T17:47:29",
                             subject: "html content with blockquote",
                             bodyIsHtml: true,
                             body:
@@ -345,5 +345,8 @@ blockquote {
     View {
         id: view
         anchors.fill: parent
+
+        currentDate: "2018-04-08T13:04:03"
+        autoUpdateDate: false
     }
 }

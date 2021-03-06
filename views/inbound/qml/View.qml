@@ -25,6 +25,9 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
     id: root
 
+    property date currentDate: new Date()
+    property bool autoUpdateDate: true
+
     property bool pendingError: false;
     property bool pendingNotification: false;
     onPendingErrorChanged: {
@@ -86,6 +89,7 @@ Kube.View {
                     onEntryAdded: {
                         Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
                     }
+                    currentDate: root.currentDate
                 }
 
                 onCurrentItemChanged: {
