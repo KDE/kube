@@ -37,6 +37,7 @@ Kube.GenericListDelegate {
     subText: calendar
     disabled: complete
     strikeout: complete
+    hideSubtext: true
 
     onDropped: {
         if (dropAction == Qt.MoveAction) {

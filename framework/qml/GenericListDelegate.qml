@@ -28,12 +28,15 @@ Kube.ListDelegate {
 
     property var mainText
     property var subText
-    property var disabled
-    property var strikeout
-    property var bold
-    property var important
+    property var disabled: false
+    property var active: false
+    property var strikeout: false
+    property var bold: false
+    property var important: false
     property var dateText
-    property var dotColor
+    property var dotColor: null
+    property var counter: 0
+    property var hideSubtext: false
 
     property list<Item> buttons
 
@@ -82,16 +85,19 @@ Kube.ListDelegate {
             margins: Kube.Units.smallSpacing
         }
 
+       property color unreadColor: delegateRoot.disabled ? delegateRoot.disabledTextColor : ((delegateRoot.active && !delegateRoot.highlighted) ? Kube.Colors.highlightColor : delegateRoot.textColor)
+
         Rectangle {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
+            visible: delegateRoot.dotColor
             width: Kube.Units.smallSpacing
             height: width
             radius: width / 2
 
-            color: delegateRoot.dotColor
+            color: delegateRoot.dotColor ? delegateRoot.dotColor : ""
         }
         Column {
             anchors {
@@ -104,7 +110,7 @@ Kube.ListDelegate {
                 id: mainLabel
                 width: content.width - Kube.Units.gridUnit * 3
                 text: delegateRoot.mainText
-                color: delegateRoot.disabled ? delegateRoot.disabledTextColor : delegateRoot.textColor
+                color: content.unreadColor
                 font.strikeout: delegateRoot.strikeout
                 font.bold: delegateRoot.bold
                 maximumLineCount: 2
@@ -113,9 +119,9 @@ Kube.ListDelegate {
             }
             Kube.Label {
                 id: subLabel
-                visible: delegateRoot.hovered
+                visible: delegateRoot.hovered && delegateRoot.hideSubtext
                 text: delegateRoot.subText
-                color: delegateRoot.disabledTextColor
+                color: delegateRoot.hideSubtext ? delegateRoot.disabledTextColor : delegateRoot.textColor
                 font.italic: true
                 width: delegateRoot.width - Kube.Units.gridUnit * 3
                 elide: Text.ElideRight
@@ -129,12 +135,23 @@ Kube.ListDelegate {
                 bottom: parent.bottom
             }
 
-            visible: delegateRoot.date && !delegateRoot.buttonsVisible
+            visible: delegateRoot.dateText && !delegateRoot.buttonsVisible
             text: delegateRoot.dateText
             font.italic: true
             color: delegateRoot.disabledTextColor
             font.pointSize: Kube.Units.tinyFontSize
         }
+       Kube.Label {
+           id: counter
+           anchors {
+               right: parent.right
+               margins: Kube.Units.smallSpacing
+           }
+           text: delegateRoot.counter
+           color: content.unreadColor
+           visible: delegateRoot.counter > 1 && !delegateRoot.buttonsVisible
+
+       }
     }
 
     Kube.Icon {
