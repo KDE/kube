@@ -366,9 +366,10 @@ Kube.View {
                     date: model.date
                     dueDate: model.dueDate
                     domainObject: model.domainObject
-                    color: model.color
+                    dotColor: model.color
+                    bold: model.doing && root.state != "doing"
 
-                    state: root.state
+                    currentDate: root.currentDate
                 }
             }
         }

@@ -8,6 +8,7 @@ FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml
 MailListDelegate 1.0 MailListDelegate.qml
 TodoListDelegate 1.0 TodoListDelegate.qml
+GenericListDelegate 1.0 GenericListDelegate.qml
 MailViewer 1.0 MailViewer.qml
 InlineAccountSwitcher 1.0 InlineAccountSwitcher.qml
 NewAccountDialog 1.0 NewAccountDialog.qml
