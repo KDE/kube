@@ -249,7 +249,8 @@ QVariantMap InboundModel::toVariantMap(const Sink::ApplicationDomain::Mail::Ptr 
             {"important", mail->getImportant()},
             {"trash", mail->getTrash()},
             {"threadSize", mail->count()},
-            {"mail", QVariant::fromValue(mail)}
+            {"mail", QVariant::fromValue(mail)},
+            {"domainObject", QVariant::fromValue(mail)}
         }
         }
     };
@@ -322,7 +323,8 @@ void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int l
             {"date", occurence.start},
             {"data", QVariantMap{
                 {"subject", event->getSummary()},
-                {"mail", QVariant::fromValue(event)}
+                {"domainObject", QVariant::fromValue(event)},
+                {"date", occurence.start},
             }
             }
         };

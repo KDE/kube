@@ -32,11 +32,13 @@ Kube.ListDelegate {
     property var active: false
     property var strikeout: false
     property var bold: false
-    property var important: false
     property var dateText
     property var dotColor: null
     property var counter: 0
-    property var hideSubtext: false
+    property var subtextVisible: delegateRoot.hovered
+    property var subtextDisabled: false
+    property Component buttonDelegate: null
+    property Component statusDelegate: null
 
     property list<Item> buttons
 
@@ -119,9 +121,9 @@ Kube.ListDelegate {
             }
             Kube.Label {
                 id: subLabel
-                visible: delegateRoot.hovered && delegateRoot.hideSubtext
+                visible: delegateRoot.subtextVisible
                 text: delegateRoot.subText
-                color: delegateRoot.hideSubtext ? delegateRoot.disabledTextColor : delegateRoot.textColor
+                color: delegateRoot.subtextDisabled ? delegateRoot.disabledTextColor : delegateRoot.textColor
                 font.italic: true
                 width: delegateRoot.width - Kube.Units.gridUnit * 3
                 elide: Text.ElideRight
@@ -154,28 +156,15 @@ Kube.ListDelegate {
        }
     }
 
-    Kube.Icon {
+    Loader {
         anchors {
             right: parent.right
             verticalCenter: parent.verticalCenter
-            margins: Kube.Units.smallSpacing
+            // We use twice the margin to compensate for button padding
+            margins: delegateRoot.buttonsVisible ? Kube.Units.smallSpacing : 2 * Kube.Units.smallSpacing
         }
-
-        visible:  delegateRoot.important && !delegateRoot.buttonsVisible
-        iconName: Kube.Icons.isImportant
-    }
-
-    Column {
-        id: buttons
-
-        anchors {
-            right: parent.right
-            margins: Kube.Units.smallSpacing
-            verticalCenter: parent.verticalCenter
-        }
-
-        visible: delegateRoot.buttonsVisible
-        opacity: 0.7
-        children: delegateRoot.buttons
+        active: delegateRoot.buttonsVisible && delegateRoot.buttonDelegate || delegateRoot.statusDelegate
+        opacity: delegateRoot.buttonsVisible ? 0.7 : 1
+        sourceComponent: delegateRoot.buttonsVisible ? delegateRoot.buttonDelegate : delegateRoot.statusDelegate
     }
 }

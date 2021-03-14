@@ -114,18 +114,149 @@ Kube.View {
                     }
                 }
 
-                delegate: Kube.MailListDelegate {
+                delegate: Kube.GenericListDelegate {
                     id: delegateRoot
-                    height: Kube.Units.gridUnit * 5
 
-                    subject: model.data.subject
-                    unread: model.data.unread
-                    senderName: model.data.senderName
-                    date: model.data.date
-                    important: model.data.important
-                    trash: model.data.trash
-                    threadSize: model.data.threadSize
-                    mail: model.data.mail
+                    property var isMail: model.type == "mail"
+                    property var domainObject: model.data.domainObject
+                    property var important: model.data.important
+                    height: isMail ? Kube.Units.gridUnit * 5 : (Kube.Units.gridUnit * 3 + 2 * Kube.Units.smallSpacing)
+
+                    onDropped: {
+                        if (dropAction == Qt.MoveAction) {
+                            if (isMail) {
+                                delegateRoot.visible = false
+                            } else {
+                                Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"event": delegateRoot.domainObject, "calendarId": dropTarget.calendarId})
+                            }
+                        }
+                    }
+                    function sameDay(date1, date2) {
+                        return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
+                    }
+
+                    function daysSince(date1, date2) {
+                        //FIXME this is not going to work at month borders
+                        return (date1.getDate() - date2.getDate())
+                    }
+
+                    //TODO deal with start dates
+                    function formatDueDateTime(date) {
+                        //TODO remove reference to root
+                        const today = currentDate
+                        if (sameDay(date, today)) {
+                            return qsTr("Due today")
+                        }
+                        const nextWeekToday = today.getTime() + ((24*60*60*1000) * 7);
+                        if (date.getTime() < nextWeekToday && date.getTime() > today.getTime()) {
+                            return Qt.formatDateTime(date, "dddd") + qsTr(" (%1 days)").arg(daysSince(date, today))
+                        }
+                        if (date.getTime() < today.getTime()) {
+                            return qsTr("Overdue for %1 days").arg(daysSince(today, date))
+                        }
+                        return Qt.formatDateTime(date, "dd MMM yyyy")
+                    }
+
+                    function formatDateTime(date) {
+                        const today = new Date()
+                        if (sameDay(date, today)) {
+                            return Qt.formatDateTime(date, "hh:mm")
+                        }
+                        const lastWeekToday = today.getTime() - ((24*60*60*1000) * 7);
+                        if (date.getTime() >= lastWeekToday) {
+                            return Qt.formatDateTime(date, "ddd hh:mm")
+                        }
+                        return Qt.formatDateTime(date, "dd MMM yyyy")
+                    }
+
+                    mainText: model.data.subject
+                    subText: isMail ? model.data.senderName : model.data.calendar
+                    dateText: isMail ? formatDateTime(model.data.date) : (!isNaN(dueDate) && !complete) ? formatDueDateTime(dueDate) : Qt.formatDateTime(date, "dd MMM yyyy")
+                    active: model.data.unread
+                    disabled: model.data.complete
+                    strikeout: model.data.complete ? model.data.complete : false
+                    counter: model.data.threadSize
+                    subtextVisible: true
+                    subtextDisabled: false
+
+                    Component {
+                        id: importantStatusComponent
+                        Kube.Icon {
+                            iconName: Kube.Icons.isImportant
+                            visible:  delegateRoot.important
+                        }
+                    }
+
+                    statusDelegate: isMail ? importantStatusComponent : null
+
+                    Component {
+                        id: mailButtonComponent
+                        Column {
+                            Kube.IconButton {
+                                id: restoreButton
+                                iconName: Kube.Icons.undo
+                                visible: !!delegateRoot.trash
+                                onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": delegateRoot.domainObject})
+                                activeFocusOnTab: false
+                                tooltip: qsTr("Restore from trash")
+                            }
+
+                            Kube.IconButton {
+                                id: readButton
+                                iconName: Kube.Icons.markAsRead
+                                visible: model.data.unread && !model.data.trash
+                                onClicked: {
+                                    Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": delegateRoot.domainObject})
+                                }
+                                tooltip: qsTr("Mark as read")
+                            }
+
+                            Kube.IconButton {
+                                id: unreadButton
+                                iconName: Kube.Icons.markAsUnread
+                                visible: !model.data.unread && !model.data.trash
+                                onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": delegateRoot.domainObject})
+                                activeFocusOnTab: false
+                                tooltip: qsTr("Mark as unread")
+                            }
+
+                            Kube.IconButton {
+                                id: importantButton
+                                iconName: delegateRoot.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
+                                visible: !!delegateRoot.domainObject
+                                onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": delegateRoot.domainObject, "important": !model.data.important})
+                                activeFocusOnTab: false
+                                tooltip: qsTr("Mark as important")
+                            }
+
+                            Kube.IconButton {
+                                id: deleteButton
+                                objectName: "deleteButton"
+                                iconName: Kube.Icons.moveToTrash
+                                visible: !!delegateRoot.domainObject
+                                onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": delegateRoot.domainObject})
+                                activeFocusOnTab: false
+                                tooltip: qsTr("Move to trash")
+                            }
+                        }
+                    }
+
+                    Component {
+                        id: eventButtonComponent
+                        Column {
+                            //Cancel
+                            //Reschedule
+                            //Ignore?
+                            Kube.IconButton {
+                                iconName: Kube.Icons.checkbox
+                                activeFocusOnTab: false
+                                tooltip: qsTr("Done!")
+                            }
+                        }
+                    }
+
+                    buttonDelegate: isMail ? mailButtonComponent : eventButtonComponent
+
                 }
             }
         }

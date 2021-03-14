@@ -23,9 +23,12 @@ import QtQuick.Layouts 1.1
 import org.kube.framework 1.0 as Kube
 
 Kube.GenericListDelegate {
+    id: delegateRoot
+
     property var summary
-    property var complete
+    property var complete: false
     property var doing
+    property var important: false
     property var calendar
     property var date
     property var dueDate
@@ -37,7 +40,8 @@ Kube.GenericListDelegate {
     subText: calendar
     disabled: complete
     strikeout: complete
-    hideSubtext: true
+    subtextVisible: hovered
+    subtextDisabled: true
 
     onDropped: {
         if (dropAction == Qt.MoveAction) {
@@ -72,31 +76,36 @@ Kube.GenericListDelegate {
 
     dateText: (!isNaN(dueDate) && !complete) ? formatDueDateTime(dueDate) : Qt.formatDateTime(date, "dd MMM yyyy")
 
-    buttons: [
-       Kube.IconButton {
-           iconName: doing ? Kube.Icons.undo : Kube.Icons.addNew
-           activeFocusOnTab: false
-           tooltip: doing ? qsTr("Unpick") : qsTr("Pick")
-           onClicked: {
-               var controller = controllerComponent.createObject(parent, {"todo": domainObject});
-               if (controller.complete) {
-                   controller.complete = false
-               }
-               controller.doing = !controller.doing;
-               controller.saveAction.execute();
-           }
-       },
+    statusDelegate: Kube.Icon {
+        iconName: Kube.Icons.isImportant
+        visible:  delegateRoot.important
+    }
 
-       Kube.IconButton {
-           iconName: Kube.Icons.checkbox
-           checked: complete
-           activeFocusOnTab: false
-           tooltip: qsTr("Done!")
-           onClicked: {
-               var controller = controllerComponent.createObject(parent, {"todo": domainObject});
-               controller.complete = !controller.complete;
-               controller.saveAction.execute();
-           }
-       }
-   ]
+    buttonDelegate: Column {
+        Kube.IconButton {
+            iconName: doing ? Kube.Icons.undo : Kube.Icons.addNew
+            activeFocusOnTab: false
+            tooltip: doing ? qsTr("Unpick") : qsTr("Pick")
+            onClicked: {
+                var controller = controllerComponent.createObject(parent, {"todo": domainObject});
+                if (controller.complete) {
+                    controller.complete = false
+                }
+                controller.doing = !controller.doing;
+                controller.saveAction.execute();
+            }
+        }
+
+        Kube.IconButton {
+            iconName: Kube.Icons.checkbox
+            checked: complete
+            activeFocusOnTab: false
+            tooltip: qsTr("Done!")
+            onClicked: {
+                var controller = controllerComponent.createObject(parent, {"todo": domainObject});
+                controller.complete = !controller.complete;
+                controller.saveAction.execute();
+            }
+        }
+    }
 }

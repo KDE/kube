@@ -30,6 +30,7 @@ Kube.GenericListDelegate {
     property var date
     property var trash
     property var threadSize
+    property var important: false
 
     //Required for D&D
     property var mail
@@ -40,7 +41,7 @@ Kube.GenericListDelegate {
     disabled: false
     strikeout: false
     counter: threadSize
-    hideSubtext: false
+    subtextVisible: true
 
     onDropped: {
         if (dropAction == Qt.MoveAction) {
@@ -68,50 +69,55 @@ Kube.GenericListDelegate {
 
     dateText: formatDateTime(delegateRoot.date)
 
-    buttons: [
-       Kube.IconButton {
-           id: restoreButton
-           iconName: Kube.Icons.undo
-           visible: !!delegateRoot.trash
-           onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": delegateRoot.mail})
-           activeFocusOnTab: false
-           tooltip: qsTr("Restore from trash")
-       },
+    statusDelegate: Kube.Icon {
+        iconName: Kube.Icons.isImportant
+        visible:  delegateRoot.important
+    }
 
-       Kube.IconButton {
-           id: readButton
-           iconName: Kube.Icons.markAsRead
-           visible: delegateRoot.unread && !delegateRoot.trash
-           onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": delegateRoot.mail})
-           tooltip: qsTr("Mark as read")
-       },
+    buttonDelegate: Column {
+        Kube.IconButton {
+            id: restoreButton
+            iconName: Kube.Icons.undo
+            visible: !!delegateRoot.trash
+            onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": delegateRoot.mail})
+            activeFocusOnTab: false
+            tooltip: qsTr("Restore from trash")
+        }
 
-       Kube.IconButton {
-           id: unreadButton
-           iconName: Kube.Icons.markAsUnread
-           visible: !delegateRoot.unread && !delegateRoot.trash
-           onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": delegateRoot.mail})
-           activeFocusOnTab: false
-           tooltip: qsTr("Mark as unread")
-       },
+        Kube.IconButton {
+            id: readButton
+            iconName: Kube.Icons.markAsRead
+            visible: delegateRoot.unread && !delegateRoot.trash
+            onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": delegateRoot.mail})
+            tooltip: qsTr("Mark as read")
+        }
 
-       Kube.IconButton {
-           id: importantButton
-           iconName: delegateRoot.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
-           visible: !!delegateRoot.mail
-           onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": delegateRoot.mail, "important": !delegateRoot.important})
-           activeFocusOnTab: false
-           tooltip: qsTr("Mark as important")
-       },
+        Kube.IconButton {
+            id: unreadButton
+            iconName: Kube.Icons.markAsUnread
+            visible: !delegateRoot.unread && !delegateRoot.trash
+            onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": delegateRoot.mail})
+            activeFocusOnTab: false
+            tooltip: qsTr("Mark as unread")
+        }
 
-       Kube.IconButton {
-           id: deleteButton
-           objectName: "deleteButton"
-           iconName: Kube.Icons.moveToTrash
-           visible: !!delegateRoot.mail
-           onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": delegateRoot.mail})
-           activeFocusOnTab: false
-           tooltip: qsTr("Move to trash")
-       }
-   ]
+        Kube.IconButton {
+            id: importantButton
+            iconName: delegateRoot.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
+            visible: !!delegateRoot.mail
+            onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": delegateRoot.mail, "important": !delegateRoot.important})
+            activeFocusOnTab: false
+            tooltip: qsTr("Mark as important")
+        }
+
+        Kube.IconButton {
+            id: deleteButton
+            objectName: "deleteButton"
+            iconName: Kube.Icons.moveToTrash
+            visible: !!delegateRoot.mail
+            onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": delegateRoot.mail})
+            activeFocusOnTab: false
+            tooltip: qsTr("Move to trash")
+        }
+    }
 }
