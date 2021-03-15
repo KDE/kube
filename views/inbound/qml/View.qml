@@ -140,19 +140,22 @@ Kube.View {
                         return (date1.getDate() - date2.getDate())
                     }
 
-                    //TODO deal with start dates
-                    function formatDueDateTime(date) {
+                    function formatStartDateTime(date) {
                         //TODO remove reference to root
                         const today = currentDate
                         if (sameDay(date, today)) {
-                            return qsTr("Due today")
+                            return qsTr("Today")
+                        }
+
+                        if (daysSince(date, today) == 1) {
+                            return qsTr("Tomorrow")
                         }
                         const nextWeekToday = today.getTime() + ((24*60*60*1000) * 7);
                         if (date.getTime() < nextWeekToday && date.getTime() > today.getTime()) {
                             return Qt.formatDateTime(date, "dddd") + qsTr(" (%1 days)").arg(daysSince(date, today))
                         }
                         if (date.getTime() < today.getTime()) {
-                            return qsTr("Overdue for %1 days").arg(daysSince(today, date))
+                            return qsTr("%1 days ago").arg(daysSince(today, date))
                         }
                         return Qt.formatDateTime(date, "dd MMM yyyy")
                     }
@@ -171,7 +174,7 @@ Kube.View {
 
                     mainText: model.data.subject
                     subText: isMail ? model.data.senderName : model.data.calendar
-                    dateText: isMail ? formatDateTime(model.data.date) : (!isNaN(dueDate) && !complete) ? formatDueDateTime(dueDate) : Qt.formatDateTime(date, "dd MMM yyyy")
+                    dateText: isMail ? formatDateTime(model.data.date) : formatStartDateTime(model.data.date)
                     active: model.data.unread
                     disabled: model.data.complete
                     strikeout: model.data.complete ? model.data.complete : false
