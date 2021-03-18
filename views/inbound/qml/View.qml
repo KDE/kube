@@ -42,6 +42,13 @@ Kube.View {
         inboundModel.refresh()
     }
 
+    Timer {
+        running: autoUpdateDate
+        interval: 2000; repeat: true
+        onTriggered: root.currentDate = new Date()
+    }
+
+
     Controls1.SplitView {
         Layout.fillWidth: true
         Layout.fillHeight: true

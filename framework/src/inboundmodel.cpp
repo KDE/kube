@@ -25,8 +25,6 @@
 #include <sink/store.h>
 #include <sink/applicationdomaintype.h>
 
-#include "eventoccurrencemodel.h"
-
 InboundModel::InboundModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
@@ -307,12 +305,27 @@ void InboundModel::mailDataChanged(const QModelIndex &topLeft, const QModelIndex
     }
 }
 
+
+bool InboundModel::filter(const EventOccurrenceModel::Occurrence &occurrence)
+{
+    //Filter todays events that have already passed
+    if (occurrence.start < mCurrentDateTime) {
+        return true;
+    }
+
+    return false;
+}
+
 void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int last)
 {
     for (auto row = first; row <= last; row++) {
         auto idx = mEventSourceModel->index(row, 0, parent);
         auto event = idx.data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
         auto occurrence = idx.data(EventOccurrenceModel::EventOccurrence).value<EventOccurrenceModel::Occurrence>();
+
+        if (filter(occurrence)) {
+            continue;
+        }
 
         const QVariantMap variantMap {
             {"type", "event"},

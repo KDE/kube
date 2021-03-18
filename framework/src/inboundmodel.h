@@ -30,6 +30,8 @@
 #include <QDateTime>
 #include <fabric.h>
 
+#include "eventoccurrencemodel.h"
+
 namespace Sink {
     namespace ApplicationDomain {
         class Mail;
@@ -70,6 +72,7 @@ private:
     QVariantMap toVariantMap(const QSharedPointer<Sink::ApplicationDomain::Mail> &mail);
     QString folderName(const QByteArray &id) const;
     bool filter(const Sink::ApplicationDomain::Mail &mail);
+    bool filter(const EventOccurrenceModel::Occurrence &mail);
 
     QHash<QByteArray, int> mRoles;
     QHash<QByteArray, QString> mFolderNames;

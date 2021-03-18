@@ -70,7 +70,19 @@ ApplicationWindow {
             folders: [{
                     resource: "resource1",
                     name: "Folder 1",
-                    mails: [{
+                    mails: [
+                        {
+                            resource: "resource1",
+                            messageId: "<msg0@test.com>",
+                            date: "2018-04-08T11:04:03",
+                            subject: "subject",
+                            body: "body",
+                            to: ["to@example.org"],
+                            cc: ["cc@example.org"],
+                            bcc: ["bcc@example.org"],
+                            unread: true
+                        },
+                        {
                             resource: "resource1",
                             messageId: "<msg1@test.com>",
                             date: "2017-07-24T15:46:29",
@@ -295,6 +307,13 @@ blockquote {
                 color: "#af1a6a",
                 enabled: true,
                 events: [
+                    {
+                        resource: "caldavresource",
+                        summary: "Today event",
+                        starts: "2018-04-08T08:03:00",
+                        organizer: "organizer@example.org",
+                        attendees: [{email: "attendee1@example.org"}, {email: "identity@example.org"}]
+                    },
                     {
                         resource: "caldavresource",
                         summary: "Short event1!",
