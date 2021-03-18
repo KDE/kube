@@ -59,7 +59,7 @@ FocusScope {
             id: heading
         }
 
-        ListView {
+        Kube.ListView {
             id: listView
             anchors {
                 left: parent.left
@@ -74,7 +74,7 @@ FocusScope {
                 property var recipientId: model.id
                 property var name: model.name
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
-                width: parent.width
+                width: ListView.view.availableWidth
                 color: Kube.Colors.buttonColor
 
                 MouseArea {

@@ -106,7 +106,7 @@ Kube.TextField {
         width: root.width
         contentHeight: listView.height
 
-        ListView {
+        Kube.ListView {
             id: listView
             contentHeight: contentItem.childrenRect.height
             height: contentHeight
@@ -133,7 +133,7 @@ Kube.TextField {
                             accept()
                         }
                     }
-                    Kube.Label{
+                    Kube.Label {
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: parent.left
