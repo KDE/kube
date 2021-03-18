@@ -27,7 +27,7 @@ Kube.ListDelegate {
     property bool buttonsVisible: delegateRoot.hovered
 
     property var mainText
-    property var subText
+    property var subText: null
     property var disabled: false
     property var active: false
     property var strikeout: false
@@ -122,7 +122,7 @@ Kube.ListDelegate {
             Kube.Label {
                 id: subLabel
                 visible: delegateRoot.subtextVisible
-                text: delegateRoot.subText
+                text: delegateRoot.subText ? delegateRoot.subText : ""
                 color: delegateRoot.subtextDisabled ? delegateRoot.disabledTextColor : delegateRoot.textColor
                 font.italic: true
                 width: delegateRoot.width - Kube.Units.gridUnit * 3
@@ -149,7 +149,7 @@ Kube.ListDelegate {
                right: parent.right
                margins: Kube.Units.smallSpacing
            }
-           text: delegateRoot.counter
+           text: delegateRoot.counter ? delegateRoot.counter : ""
            color: content.unreadColor
            visible: delegateRoot.counter > 1 && !delegateRoot.buttonsVisible
 

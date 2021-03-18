@@ -185,7 +185,7 @@ Kube.View {
                     active: model.data.unread
                     disabled: model.data.complete
                     strikeout: model.data.complete ? model.data.complete : false
-                    counter: model.data.threadSize
+                    counter: isMail ? model.data.threadSize : 0
                     subtextVisible: true
                     subtextDisabled: false
 
