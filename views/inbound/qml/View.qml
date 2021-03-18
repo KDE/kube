@@ -144,14 +144,14 @@ Kube.View {
                         //TODO remove reference to root
                         const today = currentDate
                         if (sameDay(date, today)) {
-                            return qsTr("Today")
+                            return qsTr("Today, ")+ Qt.formatDateTime(date, "hh:mm")
                         }
 
-                        if (daysSince(date, today) == 1) {
-                            return qsTr("Tomorrow")
+                        const daysTo = daysSince(date, today)
+                        if (daysTo == 1) {
+                            return qsTr("Tomorrow, ") + Qt.formatDateTime(date, "hh:mm")
                         }
-                        const nextWeekToday = today.getTime() + ((24*60*60*1000) * 7);
-                        if (date.getTime() < nextWeekToday && date.getTime() > today.getTime()) {
+                        if (daysTo <= 7) {
                             return Qt.formatDateTime(date, "dddd") + qsTr(" (%1 days)").arg(daysSince(date, today))
                         }
                         if (date.getTime() < today.getTime()) {
@@ -313,6 +313,10 @@ Kube.View {
                     }
                     if (subtype == "mail") {
                         return conversationComponent
+                    }
+
+                    if (subtype == "event") {
+                        return eventComponent
                     }
                     return detailsComponent
                 }
@@ -604,6 +608,24 @@ Kube.View {
                     "headersOnly": false,
                     "fetchMails": true
                 }
+            }
+        }
+    }
+
+
+    Component {
+        id: controllerComponent
+        Kube.EventController {
+        }
+    }
+    Component {
+        id: eventComponent
+        EventView {
+            id: componentRoot
+            property var occurrence: componentRoot.parent ? componentRoot.parent.itemData.occurrence : null
+            onOccurrenceChanged: {
+                //Workaround because we need to create a new controller to reload the occurrence
+                componentRoot.controller = controllerComponent.createObject(parent, {"eventOccurrence": occurrence})
             }
         }
     }

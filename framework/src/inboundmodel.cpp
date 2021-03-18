@@ -312,7 +312,7 @@ void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int l
     for (auto row = first; row <= last; row++) {
         auto idx = mEventSourceModel->index(row, 0, parent);
         auto event = idx.data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
-        auto occurence = idx.data(EventOccurrenceModel::EventOccurrence).value<EventOccurrenceModel::Occurrence>();
+        auto occurrence = idx.data(EventOccurrenceModel::EventOccurrence).value<EventOccurrenceModel::Occurrence>();
 
         const QVariantMap variantMap {
             {"type", "event"},
@@ -320,11 +320,12 @@ void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int l
             {"subtype", "event"},
             {"entities", QVariantList{event->identifier()}},
             {"resource", QString{event->resourceInstanceIdentifier()}},
-            {"date", occurence.start},
+            {"date", occurrence.start},
             {"data", QVariantMap{
                 {"subject", event->getSummary()},
                 {"domainObject", QVariant::fromValue(event)},
-                {"date", occurence.start},
+                {"occurrence", QVariant::fromValue(occurrence)},
+                {"date", occurrence.start},
             }
             }
         };

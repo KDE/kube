@@ -21,30 +21,38 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.3
 
 import org.kube.framework 1.0 as Kube
+
 import "dateutils.js" as DateUtils
 
 FocusScope {
     id: root
-    property var controller
-
-    implicitWidth: stackView.currentItem.implicitWidth
-    implicitHeight: stackView.currentItem.implicitHeight
+    property var controller: null
 
     signal done()
+
+    onControllerChanged: {
+        //Wait for a controller to be set before we add a view
+        if (controller) {
+            stackView.push(eventDetails, StackView.Immediate)
+        }
+    }
+
+    // function edit() {
+    //     var item = stackView.push(editor, StackView.Immediate)
+    //     item.forceActiveFocus()
+    // }
 
     StackView {
         id: stackView
         anchors.fill: parent
-        initialItem: eventDetails
         clip: true
+        visible: controller
     }
 
     Component {
         id: eventDetails
         Rectangle {
-            implicitWidth: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
-            implicitHeight: contentLayout.implicitHeight + 2 * Kube.Units.largeSpacing
-            color: Kube.Colors.viewBackgroundColor
+            color: Kube.Colors.paperWhite
 
             ColumnLayout {
                 id: contentLayout
@@ -105,6 +113,13 @@ FocusScope {
                     }
                 }
 
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: Kube.Colors.textColor
+                    opacity: 0.5
+                }
+
                 Flickable {
                     id: flickable
                     Layout.fillWidth: true
@@ -117,7 +132,8 @@ FocusScope {
                     Kube.TextArea {
                         id: textArea
                         width: flickable.width
-                        text: controller.description
+                        text: Kube.HtmlUtils.toHtml(controller.description)
+                        textFormat: Kube.TextArea.RichText
                     }
                     Kube.ScrollHelper {
                         anchors.fill: parent
@@ -125,36 +141,36 @@ FocusScope {
                     }
                 }
 
-                RowLayout {
-                    Kube.Button {
-                        text: qsTr("Remove")
-                        onClicked: {
-                            root.controller.remove()
-                            root.done()
-                        }
-                    }
-                    Item {
-                        Layout.fillWidth: true
-                    }
-                    Kube.Button {
-                        enabled: controller.ourEvent
-                        text: qsTr("Edit")
-                        onClicked: {
-                            stackView.push(editor, StackView.Immediate)
-                        }
-                    }
-
-                }
+                // RowLayout {
+                //     width: parent.width
+                //     Kube.Button {
+                //         text: qsTr("Remove")
+                //         onClicked: {
+                //             root.controller.remove()
+                //         }
+                //     }
+                //     Item {
+                //         Layout.fillWidth: true
+                //     }
+                //     Kube.Button {
+                //         text: qsTr("Edit")
+                //         onClicked: root.edit()
+                //     }
+                // }
             }
         }
     }
 
-    Component {
-        id: editor
-        EventEditor {
-            controller: root.controller
-            editMode: true
-            onDone: root.done()
-        }
-    }
+    //Component {
+    //    id: editor
+    //    TodoEditor {
+    //        controller: root.controller
+    //        editMode: true
+    //        onDone: {
+    //            //Reload
+    //            root.controller.todo = root.controller.todo
+    //            stackView.pop(StackView.Immediate)
+    //        }
+    //    }
+    //}
 }
