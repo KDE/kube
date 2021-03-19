@@ -65,6 +65,8 @@ FocusScope {
                 left: parent.left
                 right: parent.right
             }
+
+            ScrollBar.vertical: null
             contentHeight: contentItem.childrenRect.height
             height: contentHeight
             spacing: Kube.Units.smallSpacing

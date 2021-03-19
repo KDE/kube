@@ -112,6 +112,7 @@ Kube.TextField {
             height: contentHeight
             width: parent.width
             interactive: true
+            ScrollBar.vertical: null
             model: root.model
             delegate: Kube.ListDelegate {
                 id: listDelegate
