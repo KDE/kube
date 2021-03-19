@@ -204,7 +204,17 @@ public:
     {
         // Support adding multiple addresses separated by comma
         for (const auto &part : KEmailAddress::splitAddressList(map.value("name").toString())) {
-            Kube::ListPropertyController::add({{"name", part.trimmed()}});
+            const auto address = part.trimmed();
+
+            //Validation
+            KMime::Types::Mailbox mb;
+            mb.fromUnicodeString(address);
+            if (mb.address().isEmpty()) {
+                SinkTrace() << "Ignoring invalid address " << address;
+                continue;
+            }
+
+            Kube::ListPropertyController::add({{"name", address}});
         }
     }
 signals:
