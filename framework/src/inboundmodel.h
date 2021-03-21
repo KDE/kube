@@ -87,4 +87,5 @@ private:
     QList<QString> folderSpecialPurposeBlacklist;
     QList<QString> folderNameBlacklist;
     QDateTime mCurrentDateTime;
+    int mMinNumberOfItems;
 };

@@ -26,7 +26,8 @@
 #include <sink/applicationdomaintype.h>
 
 InboundModel::InboundModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
+    : QSortFilterProxyModel(parent),
+    mMinNumberOfItems{50}
 {
     init();
 }
@@ -111,7 +112,7 @@ void InboundModel::init()
                 query.setFlags(Sink::Query::LiveQuery);
                 // query.resourceFilter<SinkResource::Account>(mCurrentAccount);
                 query.sort<Mail::Date>();
-                query.limit(100);
+                query.limit(mMinNumberOfItems * 2);
                 query.reduce<ApplicationDomain::Mail::ThreadId>(Query::Reduce::Selector::max<ApplicationDomain::Mail::Date>())
                     .count()
                     .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
@@ -121,6 +122,14 @@ void InboundModel::init()
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::mailRowsRemoved);
+
+                QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+                    if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+                        if (rowCount() < mMinNumberOfItems && mSourceModel->canFetchMore({})) {
+                            mSourceModel->fetchMore({});
+                        }
+                    }
+                });
             }).exec();
     }
     {
