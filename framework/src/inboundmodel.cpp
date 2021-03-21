@@ -127,6 +127,8 @@ void InboundModel::init()
                     if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
                         if (rowCount() < mMinNumberOfItems && mSourceModel->canFetchMore({})) {
                             mSourceModel->fetchMore({});
+                        } else {
+                            emit initialItemsLoaded();
                         }
                     }
                 });

@@ -54,6 +54,7 @@ public:
 
 signals:
     void entryAdded(const QVariantMap &message);
+    void initialItemsLoaded();
 
 private slots:
     void mailRowsInserted(const QModelIndex &parent, int first, int last);

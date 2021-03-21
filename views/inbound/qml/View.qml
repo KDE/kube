@@ -93,8 +93,15 @@ Kube.View {
                 model: Kube.InboundModel {
                     id: inboundModel
                     objectName: "inboundModel"
+                    property var enableNotifications: false
                     onEntryAdded: {
-                        Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
+                        if (enableNotifications) {
+                            Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
+                        }
+                    }
+
+                    onInitialItemsLoaded: {
+                        enableNotifications = true;
                     }
                     currentDate: root.currentDate
                 }
