@@ -150,13 +150,11 @@ Kube.View {
                     }
 
                     function daysSince(date1, date2) {
-                        //FIXME this is not going to work at month borders
-                        return (date1.getDate() - date2.getDate())
+                        const oneDay = 24 * 60 * 60 * 1000;
+                        return Math.round(Math.abs((date1.getTime() - date2.getTime()) / oneDay));
                     }
 
-                    function formatStartDateTime(date) {
-                        //TODO remove reference to root
-                        const today = currentDate
+                    function formatStartDateTime(date, today) {
                         if (sameDay(date, today)) {
                             return qsTr("Today, ")+ Qt.formatDateTime(date, "hh:mm")
                         }
@@ -188,7 +186,7 @@ Kube.View {
 
                     mainText: model.data.subject
                     subText: isMail ? model.data.senderName : model.data.calendar
-                    dateText: isMail ? formatDateTime(model.data.date) : formatStartDateTime(model.data.date)
+                    dateText: isMail ? formatDateTime(model.data.date) : formatStartDateTime(model.data.date, root.currentDate)
                     active: model.data.unread
                     disabled: model.data.complete
                     strikeout: model.data.complete ? model.data.complete : false
