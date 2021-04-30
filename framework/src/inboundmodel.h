@@ -65,6 +65,7 @@ private slots:
     void eventModelReset();
 
 private:
+    void removeAllByType(const QString &type);
     void saveSettings();
     void loadSettings();
     void init();

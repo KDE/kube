@@ -383,9 +383,16 @@ void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int l
     }
 }
 
+void InboundModel::removeAllByType(const QString &type)
+{
+    for (const auto  &index : mInboundModel->match(mInboundModel->index(0, 0), mRoles["type"], type, -1, Qt::MatchExactly)) {
+        mInboundModel->removeRow(index.row());
+    }
+}
+
 void InboundModel::eventModelReset()
 {
-    //TODO remove previous events
+    removeAllByType("event");
     eventRowsInserted({}, 0, mEventSourceModel->rowCount() - 1);
 }
 
