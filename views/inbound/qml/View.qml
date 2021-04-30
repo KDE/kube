@@ -22,6 +22,8 @@ import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
+import "dateutils.js" as DateUtils
+
 Kube.View {
     id: root
 
@@ -153,36 +155,28 @@ Kube.View {
                             }
                         }
                     }
-                    function sameDay(date1, date2) {
-                        return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
-                    }
-
-                    function daysSince(date1, date2) {
-                        const oneDay = 24 * 60 * 60 * 1000;
-                        return Math.round(Math.abs((date1.getTime() - date2.getTime()) / oneDay));
-                    }
 
                     function formatStartDateTime(date, today) {
-                        if (sameDay(date, today)) {
+                        if (DateUtils.sameDay(date, today)) {
                             return qsTr("Today, ")+ Qt.formatDateTime(date, "hh:mm")
                         }
 
-                        const daysTo = daysSince(date, today)
+                        const daysTo = DateUtils.daysSince(date, today)
                         if (daysTo == 1) {
                             return qsTr("Tomorrow, ") + Qt.formatDateTime(date, "hh:mm")
                         }
                         if (daysTo <= 7) {
-                            return Qt.formatDateTime(date, "dddd") + qsTr(" (%1 days)").arg(daysSince(date, today))
+                            return Qt.formatDateTime(date, "dddd") + qsTr(" (in %1 days)").arg(daysTo)
                         }
                         if (date.getTime() < today.getTime()) {
-                            return qsTr("%1 days ago").arg(daysSince(today, date))
+                            return qsTr("%1 days ago").arg(DateUtils.daysSince(today, date))
                         }
                         return Qt.formatDateTime(date, "dd MMM yyyy")
                     }
 
                     function formatDateTime(date) {
                         const today = new Date()
-                        if (sameDay(date, today)) {
+                        if (DateUtils.sameDay(date, today)) {
                             return Qt.formatDateTime(date, "hh:mm")
                         }
                         const lastWeekToday = today.getTime() - ((24*60*60*1000) * 7);

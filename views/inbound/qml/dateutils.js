@@ -108,3 +108,10 @@ function getFirstDayOfMonth(date) {
     return d
 }
 
+function daysSince(date1, date2) {
+    var d1 = roundToDay(date1)
+    var d2 = roundToDay(date2)
+    const oneDay = 24 * 60 * 60 * 1000;
+    return Math.round(Math.abs((d1.getTime() - d2.getTime()) / oneDay));
+}
+
