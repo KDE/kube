@@ -51,6 +51,7 @@ public:
     Q_INVOKABLE void insert(const QByteArray &key, const QVariantMap &);
     Q_INVOKABLE void update(const QByteArray &key, const QVariantMap &);
     Q_INVOKABLE void refresh();
+    Q_INVOKABLE int firstRecentIndex();
 
 signals:
     void entryAdded(const QVariantMap &message);

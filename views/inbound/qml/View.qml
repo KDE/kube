@@ -85,6 +85,13 @@ Kube.View {
                 }
 
                 clip: true
+                focus: true
+
+                onActiveFocusChanged: {
+                    if (activeFocus && currentIndex < 0) {
+                        currentIndex = 0
+                    }
+                }
 
                 section.property: "type"
                 section.criteria: ViewSection.FullString
@@ -102,6 +109,7 @@ Kube.View {
 
                     onInitialItemsLoaded: {
                         enableNotifications = true;
+                        currentIndex = inboundModel.firstRecentIndex();
                     }
                     currentDate: root.currentDate
                 }

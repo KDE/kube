@@ -47,6 +47,15 @@ void InboundModel::refresh()
     init();
 }
 
+
+int InboundModel::firstRecentIndex()
+{
+    for (const auto  &index : mInboundModel->match(mInboundModel->index(0, 0), mRoles["type"], "mail", 1, Qt::MatchExactly)) {
+        return index.row();
+    }
+    return 0;
+}
+
 void InboundModel::init()
 {
     mFolderNames.clear();
@@ -128,7 +137,10 @@ void InboundModel::init()
                         if (rowCount() < mMinNumberOfItems && mSourceModel->canFetchMore({})) {
                             mSourceModel->fetchMore({});
                         } else {
-                            emit initialItemsLoaded();
+                            //Wait for events to be loaded as well
+                            if (mEventSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
+                                emit initialItemsLoaded();
+                            }
                         }
                     }
                 });
@@ -156,6 +168,19 @@ void InboundModel::init()
                 mEventSourceModel = model;
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::modelReset, this, &InboundModel::eventModelReset);
+
+                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+                    if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+                        if (rowCount() < mMinNumberOfItems && mEventSourceModel->canFetchMore({})) {
+                            mEventSourceModel->fetchMore({});
+                        } else {
+                            //Wait for mails to be loaded as well
+                            if (mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
+                                emit initialItemsLoaded();
+                            }
+                        }
+                    }
+                });
             }).exec();
     }
 }
