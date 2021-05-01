@@ -41,6 +41,7 @@ Kube.View {
 
     onRefresh: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {})
+        inboundModel.enableNotifications = false
         inboundModel.refresh()
     }
 
@@ -111,7 +112,8 @@ Kube.View {
 
                     onInitialItemsLoaded: {
                         enableNotifications = true;
-                        currentIndex = inboundModel.firstRecentIndex();
+                        listView.currentIndex = inboundModel.firstRecentIndex();
+                        listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
                     }
                     currentDate: root.currentDate
                 }

@@ -91,4 +91,5 @@ private:
     QList<QString> folderNameBlacklist;
     QDateTime mCurrentDateTime;
     int mMinNumberOfItems;
+    bool mEventsLoaded;
 };
