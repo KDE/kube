@@ -109,6 +109,9 @@ FocusScope {
             contentHeight: root.hourHeight * 24
             contentWidth: width
 
+            //Position the view starting at 8:00, but with the label visible
+            contentY: root.hourHeight * 8 - 10
+
             clip: true
             boundsBehavior: Flickable.StopAtBounds
 
