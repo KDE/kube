@@ -2,6 +2,7 @@
 #include <QTest>
 #include <QDebug>
 #include <QStandardItemModel>
+#include <QSignalSpy>
 #include <sink/test.h>
 #include <sink/store.h>
 #include <sink/resourcecontrol.h>
@@ -273,6 +274,85 @@ private slots:
             QCOMPARE(getOccurrence(0).start, start.addDays(1));
             QCOMPARE(getOccurrence(1).start, start.addDays(2).addSecs(3600)); //The exception
             QCOMPARE(getOccurrence(2).start, start.addDays(3));
+        }
+    }
+
+
+    //Original event on saturday, exception on monday next week
+    void testRecurrenceException2()
+    {
+        Sink::ApplicationDomain::DummyResource::create("account1");
+
+        using namespace Sink::ApplicationDomain;
+        auto account = ApplicationDomainType::createEntity<SinkAccount>();
+        Sink::Store::create(account).exec().waitForFinished();
+
+        auto resource = Sink::ApplicationDomain::DummyResource::create(account.identifier());
+        Sink::Store::create(resource).exec().waitForFinished();
+
+        auto calendar1 = ApplicationDomainType::createEntity<Calendar>(resource.identifier());
+        Sink::Store::create(calendar1).exec().waitForFinished();
+
+        //Monthly recurrence
+        {
+            auto event = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event");
+            calcoreEvent->setSummary("summary2");
+            calcoreEvent->setDescription("description");
+            calcoreEvent->setDtStart(QDateTime{{2021, 3, 1}, {15, 0, 0}});
+            calcoreEvent->setDuration(3600);
+            calcoreEvent->setAllDay(false);
+            calcoreEvent->recurrence()->setMonthly(1);
+            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setCalendar(calendar1);
+            Sink::Store::create(event).exec().waitForFinished();
+        }
+
+        //Recurs on saturday, exception on the following monday
+        {
+            auto event = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event");
+            calcoreEvent->setSummary("summary2");
+            calcoreEvent->setDescription("description");
+            calcoreEvent->setRecurrenceId(QDateTime{{2021, 5, 1}, {15, 0, 0}});
+            calcoreEvent->setDtStart(QDateTime{{2021, 5, 3}, {15, 0, 0}});
+            calcoreEvent->setDuration(7200);
+            calcoreEvent->setAllDay(false);
+            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setCalendar(calendar1);
+            Sink::Store::create(event).exec().waitForFinished();
+        }
+
+        Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
+
+        //Old week (start on monday before)
+        {
+            EventOccurrenceModel model;
+
+            QSignalSpy spy(&model, &QAbstractItemModel::modelReset);
+
+            model.setStart({2021, 4, 26});
+            model.setLength(7);
+            model.setCalendarFilter({calendar1.identifier()});
+
+            QTRY_COMPARE(spy.count(), 2);
+            QCOMPARE(model.rowCount({}), 0);
+        }
+        //New week (start on monday after the occurrence)
+        {
+            EventOccurrenceModel model;
+            model.setStart({2021, 5, 3});
+            model.setLength(7);
+            model.setCalendarFilter({calendar1.identifier()});
+            QTRY_COMPARE(model.rowCount({}), 1);
+
+            auto getOccurrence = [&] (int index) {
+                return model.index(index, 0, {}).data(EventOccurrenceModel::EventOccurrence).value<EventOccurrenceModel::Occurrence>();
+            };
+            QDateTime expected{{2021, 5, 3}, {15, 0, 0}};
+            QCOMPARE(getOccurrence(0).start, expected);
         }
     }
 

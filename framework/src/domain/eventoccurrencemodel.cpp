@@ -191,6 +191,14 @@ void EventOccurrenceModel::updateFromSource()
                 }
             }
         }
+        //Process all exceptions that had no main event present in the current query
+        for (const auto &uid : exceptions.keys()) {
+            const auto icalEvent = exceptions.value(uid).dynamicCast<KCalCore::Event>();
+            const auto event = events.value(icalEvent->instanceIdentifier().toLatin1());
+            if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
+                mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
+            }
+        }
     }
 
     endResetModel();
