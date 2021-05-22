@@ -19,6 +19,7 @@
 
 #include "fabric.h"
 #include "sinkfabric.h"
+#include "notificationfabric.h"
 
 #include <QDebug>
 
@@ -41,6 +42,7 @@ public:
         if (!mDepsUp) {
             mDepsUp = true;
             SinkFabric::instance();
+            NotificationFabric::instance();
         }
     }
 

@@ -1,5 +1,5 @@
 
-find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine Gui)
+find_package(Qt5 COMPONENTS REQUIRED Core Concurrent Quick Qml WebEngineWidgets Test WebEngine Gui DBus)
 find_package(KF5Mime 4.87.0 CONFIG REQUIRED)
 find_package(KF5CalendarCore 5.12.2 CONFIG REQUIRED)
 find_package(Sink 0.9.0 CONFIG REQUIRED)
@@ -51,6 +51,7 @@ add_library(kubeframework SHARED
     accounts/accountsmodel.cpp
     fabric.cpp
     sinkfabric.cpp
+    notificationfabric.cpp
     kubeimage.cpp
     clipboardproxy.cpp
     krecursivefilterproxymodel.cpp
@@ -82,6 +83,7 @@ target_link_libraries(kubeframework
     Qt5::Test
     Qt5::WebEngine
     Qt5::Gui
+    Qt5::DBus
     KF5::Codecs
     KF5::Contacts
     KF5::CalendarCore
