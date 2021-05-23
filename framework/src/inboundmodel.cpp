@@ -372,7 +372,12 @@ void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int l
 
 void InboundModel::removeAllByType(const QString &type)
 {
-    for (const auto  &index : mInboundModel->match(mInboundModel->index(0, 0), mRoles["type"], type, -1, Qt::MatchExactly)) {
+    while (true) {
+        const auto list = mInboundModel->match(mInboundModel->index(0, 0), mRoles["type"], type, 1, Qt::MatchExactly);
+        if (list.isEmpty()) {
+            break;
+        }
+        const auto index = list.first();
         mInboundModel->removeRow(index.row());
     }
 }
