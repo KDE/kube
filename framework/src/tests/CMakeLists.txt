@@ -26,4 +26,5 @@ auto_tests(
     entitycontrollertest
     invitationcontrollertest
     partmodeltest
+    inboundmodeltest
 )

@@ -42,7 +42,7 @@ class KUBE_EXPORT InboundModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDateTime currentDate MEMBER mCurrentDateTime)
+    Q_PROPERTY(QDateTime currentDate WRITE setCurrentDate)
 
 public:
     InboundModel(QObject *parent = Q_NULLPTR);
@@ -52,6 +52,18 @@ public:
     Q_INVOKABLE void update(const QByteArray &key, const QVariantMap &);
     Q_INVOKABLE void refresh();
     Q_INVOKABLE int firstRecentIndex();
+    Q_INVOKABLE void setCurrentDate(const QDateTime &dt);
+
+
+    void configure(
+        const QSet<QString> &_senderBlacklist,
+        const QSet<QString> &_toBlacklist,
+        const QString &_senderNameContainsFilter,
+        const QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
+        const QList<QRegularExpression> &_messageFilter,
+        const QList<QString> &_folderSpecialPurposeBlacklist,
+        const QList<QString> &_folderNameBlacklist
+    );
 
 signals:
     void entryAdded(const QVariantMap &message);
@@ -65,6 +77,7 @@ private slots:
     void eventModelReset();
 
 private:
+    void refresh(bool refreshMail, bool refeshCalendar);
     void removeAllByType(const QString &type);
     void saveSettings();
     void loadSettings();
@@ -82,6 +95,7 @@ private:
     QSharedPointer<QAbstractItemModel> mSourceModel;
     QSharedPointer<QAbstractItemModel> mEventSourceModel;
     QSharedPointer<QStandardItemModel> mInboundModel;
+
     QSet<QString> senderBlacklist;
     QSet<QString> toBlacklist;
     QString senderNameContainsFilter;
@@ -90,6 +104,7 @@ private:
     QList<QString> folderSpecialPurposeBlacklist;
     QList<QString> folderNameBlacklist;
     QDateTime mCurrentDateTime;
+
     int mMinNumberOfItems;
     bool mEventsLoaded;
 };

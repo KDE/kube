@@ -29,40 +29,6 @@ InboundModel::InboundModel(QObject *parent)
     : QSortFilterProxyModel(parent),
     mMinNumberOfItems{50}
 {
-    init();
-}
-
-InboundModel::~InboundModel()
-{
-
-}
-
-QString InboundModel::folderName(const QByteArray &id) const
-{
-    return mFolderNames.value(id);
-}
-
-void InboundModel::refresh()
-{
-    init();
-}
-
-
-int InboundModel::firstRecentIndex()
-{
-    for (const auto  &index : match(index(0, 0), mRoles["type"], "mail", 1, Qt::MatchExactly)) {
-        return index.row();
-    }
-    return 0;
-}
-
-void InboundModel::init()
-{
-    mFolderNames.clear();
-    mEventsLoaded = false;
-
-    loadSettings();
-
     QByteArrayList roles{"type", "subtype", "timestamp", "message", "details", "entities", "resource", "data"};
 
     int role = Qt::UserRole + 1;
@@ -85,9 +51,36 @@ void InboundModel::init()
     setSortRole(mRoles.value("timestamp"));
     sort(0, Qt::DescendingOrder);
 
+    init();
+}
+
+InboundModel::~InboundModel()
+{
+
+}
+
+QString InboundModel::folderName(const QByteArray &id) const
+{
+    return mFolderNames.value(id);
+}
+
+void InboundModel::refresh()
+{
+    refresh(true, true);
+}
+
+void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
+{
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
-    {
+
+    mFolderNames.clear();
+    mEventsLoaded = false;
+
+    loadSettings();
+
+    if (refreshMail) {
+        removeAllByType("mail");
 
         Sink::Query folderQuery{};
         folderQuery.filter<Folder::Enabled>(true);
@@ -146,8 +139,9 @@ void InboundModel::init()
                 });
             }).exec();
     }
-    {
 
+    if (refreshCalendar) {
+        removeAllByType("event");
         Sink::Query calendarQuery{};
         calendarQuery.filter<Calendar::Enabled>(true);
         calendarQuery.request<Calendar::Name>();
@@ -162,14 +156,51 @@ void InboundModel::init()
 
                 auto model = QSharedPointer<EventOccurrenceModel>::create();
                 model->setStart(mCurrentDateTime.date());
-
                 model->setLength(7);
                 model->setCalendarFilter(calendarFilter);
+
                 mEventSourceModel = model;
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::modelReset, this, &InboundModel::eventModelReset);
             }).exec();
     }
+}
+
+int InboundModel::firstRecentIndex()
+{
+    // qWarning() << "Getting first recent index" << index.row();
+    for (const auto  &index : match(index(0, 0), mRoles["type"], "mail", 1, Qt::MatchExactly)) {
+        qWarning() << "First recent index" << index.row();
+        return index.row();
+    }
+    return 0;
+}
+
+void InboundModel::init()
+{
+    refresh();
+}
+
+void InboundModel::configure(
+    const QSet<QString> &_senderBlacklist,
+    const QSet<QString> &_toBlacklist,
+    const QString &_senderNameContainsFilter,
+    const QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
+    const QList<QRegularExpression> &_messageFilter,
+    const QList<QString> &_folderSpecialPurposeBlacklist,
+    const QList<QString> &_folderNameBlacklist
+)
+{
+    senderBlacklist = _senderBlacklist;
+    toBlacklist = _toBlacklist;
+    senderNameContainsFilter = _senderNameContainsFilter;
+    perFolderMimeMessageWhitelistFilter = _perFolderMimeMessageWhitelistFilter;
+    messageFilter = _messageFilter;
+    folderSpecialPurposeBlacklist = _folderSpecialPurposeBlacklist;
+    folderNameBlacklist = _folderSpecialPurposeBlacklist;
+
+    saveSettings();
+    init();
 }
 
 void InboundModel::saveSettings()
@@ -426,3 +457,10 @@ void InboundModel::update(const QByteArray &key, const QVariantMap &message)
         addProperty("data");
     }
 }
+
+void InboundModel::setCurrentDate(const QDateTime &dt)
+{
+    mCurrentDateTime = dt;
+    refresh(false, true);
+}
+
