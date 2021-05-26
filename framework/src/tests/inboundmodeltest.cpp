@@ -79,7 +79,7 @@ private slots:
             {}  // QList<QString> &_folderNameBlacklist,
         );
 
-        QTest::qWait(500);
+        QTest::qWait(200);
         QTRY_COMPARE(model.rowCount({}), 4);
 
         {
@@ -102,7 +102,7 @@ private slots:
             Sink::Store::modify(*event).exec().waitForFinished();
             Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
 
-            QTest::qWait(500);
+            QTest::qWait(200);
             QCOMPARE(resetSpy.count(), 0);
             //FIXME we seem to be removing and readding all events twice
             QCOMPARE(rowsRemovedSpy.count(), 8);
@@ -110,17 +110,28 @@ private slots:
         }
 
 
+        //Filter by date
         {
             QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
             QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
             QSignalSpy rowsRemovedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
             model.setCurrentDate(start.addSecs(3600));
 
-            QTest::qWait(500);
+            QTest::qWait(200);
             QCOMPARE(resetSpy.count(), 0);
-            //FIXME This should just remove 1
-            QCOMPARE(rowsRemovedSpy.count(), 4);
-            QCOMPARE(rowsInsertedSpy.count(), 3);
+            QCOMPARE(rowsRemovedSpy.count(), 1);
+            QCOMPARE(rowsInsertedSpy.count(), 0);
+        }
+        {
+            QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
+            QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
+            QSignalSpy rowsRemovedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
+            model.setCurrentDate(start.addSecs(3600));
+
+            QTest::qWait(200);
+            QCOMPARE(resetSpy.count(), 0);
+            QCOMPARE(rowsRemovedSpy.count(), 0);
+            QCOMPARE(rowsInsertedSpy.count(), 0);
         }
     }
 };

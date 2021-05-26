@@ -401,16 +401,24 @@ void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int l
     }
 }
 
-void InboundModel::removeAllByType(const QString &type)
+void InboundModel::getAllByType(const QString &type, std::function<QModelIndex(const QModelIndex &)> callback)
 {
+    QModelIndex index = mInboundModel->index(0, 0);
     while (true) {
-        const auto list = mInboundModel->match(mInboundModel->index(0, 0), mRoles["type"], type, 1, Qt::MatchExactly);
+        const auto list = mInboundModel->match(index, mRoles["type"], type, 1, Qt::MatchExactly);
         if (list.isEmpty()) {
             break;
         }
-        const auto index = list.first();
-        mInboundModel->removeRow(index.row());
+        index = callback(list.first());
     }
+}
+
+void InboundModel::removeAllByType(const QString &type)
+{
+    getAllByType(type, [this](const QModelIndex &index) {
+        mInboundModel->removeRow(index.row());
+        return mInboundModel->index(0, 0);
+    });
 }
 
 void InboundModel::eventModelReset()
@@ -461,6 +469,12 @@ void InboundModel::update(const QByteArray &key, const QVariantMap &message)
 void InboundModel::setCurrentDate(const QDateTime &dt)
 {
     mCurrentDateTime = dt;
-    refresh(false, true);
+    getAllByType("event", [&](const QModelIndex &index) {
+        const auto occurrence = index.data(mRoles["data"]).toMap()["occurrence"].value<EventOccurrenceModel::Occurrence>();
+        if (filter(occurrence)) {
+            mInboundModel->removeRow(index.row());
+        }
+        return index.sibling(index.row() + 1, index.column());
+    });
 }
 

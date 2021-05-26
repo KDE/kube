@@ -78,6 +78,7 @@ private slots:
 
 private:
     void refresh(bool refreshMail, bool refeshCalendar);
+    void getAllByType(const QString &type, std::function<QModelIndex(const QModelIndex &)> callback);
     void removeAllByType(const QString &type);
     void saveSettings();
     void loadSettings();
