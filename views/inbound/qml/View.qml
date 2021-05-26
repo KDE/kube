@@ -41,8 +41,6 @@ Kube.View {
 
     onRefresh: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {})
-        inboundModel.enableNotifications = false
-        inboundModel.refresh()
     }
 
     Timer {
