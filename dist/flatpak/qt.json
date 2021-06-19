@@ -64,7 +64,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtbase.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 },
                 {
                     "type": "patch",
@@ -75,13 +75,13 @@
                     "path": "patch/qtbase-use-wayland-on-gnome.patch"
                 },
                 {
-                    "type": "patch",
-                    "path": "patch/qtbase-qsequentialiterable-appendable.patch"
-                },
-                {
                     "//TODO": "Temporary fix for https://github.com/flatpak/flatpak/issues/3397.",
                     "type": "patch",
                     "path": "patch/qtbase-revert-correct-handling-for-xdg-runtime-dir.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "patch/qtbase-filechooser-portal-send-window-id-in-hex.patch"
                 },
                 {
                     "type": "shell",
@@ -105,15 +105,11 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtdeclarative.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 },
                 {
                     "type": "patch",
                     "path": "patch/qtdeclarative-use-python3.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patch/qtdeclarative-fix-sets.patch"
                 }
             ]
         },
@@ -130,7 +126,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qttools.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -142,7 +138,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtscript.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -213,7 +209,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtwebengine.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 },
                 {
                     "type" : "patch",
@@ -229,7 +225,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtsvg.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -241,7 +237,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtx11extras.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -253,7 +249,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtquickcontrols.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -265,7 +261,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtquickcontrols2.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -277,7 +273,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtgraphicaleffects.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -289,7 +285,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtxmlpatterns.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -301,7 +297,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtimageformats.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         },
@@ -313,7 +309,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtwayland.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 },
                 {
                     "type": "patch",
@@ -329,7 +325,7 @@
                 {
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtnetworkauth.git",
-                    "branch": "v5.14.2"
+                    "branch": "v5.15.2"
                 }
             ]
         }
