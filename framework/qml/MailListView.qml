@@ -34,6 +34,7 @@ FocusScope {
 
     onParentFolderChanged: {
         currentMail = null
+        listView.currentIndex = 0
     }
 
     Kube.Listener {
