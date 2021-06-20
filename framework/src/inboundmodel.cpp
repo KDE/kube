@@ -59,6 +59,17 @@ InboundModel::~InboundModel()
 
 }
 
+void InboundModel::ignoreSender(const QVariant &variant)
+{
+    if (auto mail = variant.value<Sink::ApplicationDomain::Mail::Ptr>()) {
+        const auto sender = mail->getSender().emailAddress;
+        qDebug() << "Ignoring " << sender;
+        senderBlacklist.insert(sender);
+        saveSettings();
+        refresh(true, false);
+    }
+}
+
 QString InboundModel::folderName(const QByteArray &id) const
 {
     return mFolderNames.value(id);

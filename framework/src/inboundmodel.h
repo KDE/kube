@@ -53,6 +53,7 @@ public:
     Q_INVOKABLE void refresh();
     Q_INVOKABLE int firstRecentIndex();
     Q_INVOKABLE void setCurrentDate(const QDateTime &dt);
+    Q_INVOKABLE void ignoreSender(const QVariant &mail);
 
 
     void configure(
