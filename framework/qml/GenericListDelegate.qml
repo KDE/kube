@@ -40,7 +40,6 @@ Kube.ListDelegate {
     property Component buttonDelegate: null
     property Component statusDelegate: null
 
-    property list<Item> buttons
 
     signal dropped(var dropAction, var dropTarget)
 
