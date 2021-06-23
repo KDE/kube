@@ -38,6 +38,7 @@ TextEditor 1.0 TextEditor.qml
 HeaderField 1.0 HeaderField.qml
 ToolTip 1.0 ToolTip.qml
 Label 1.0 Label.qml
+LeftSidebar 1.0 LeftSidebar.qml
 ScrollBar 1.0 ScrollBar.qml
 SelectableLabel 1.0 SelectableLabel.qml
 SelectableItem 1.0 SelectableItem.qml
