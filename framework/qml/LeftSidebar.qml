@@ -44,6 +44,7 @@ Rectangle {
             margins: Kube.Units.largeSpacing
         }
         height: childrenRect.height
+        spacing: Kube.Units.largeSpacing
     }
 
     ColumnLayout {

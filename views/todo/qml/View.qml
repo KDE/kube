@@ -167,43 +167,40 @@ Kube.View {
                     onClicked: editorPopup.createObject(root, {}).open()
                 },
 
-                Item {
-                    Layout.fillWidth: true
-                    height: Kube.Units.gridUnit
-                },
-
-                Kube.TextButton {
-                    id: inboxViewButton
-                    Layout.fillWidth: true
-                    text: qsTr("Inbox")
-                    textColor: Kube.Colors.highlightedTextColor
-                    checkable: true
-                    checked: root.state == "inbox"
-                    horizontalAlignment: Text.AlignHLeft
-                    ButtonGroup.group: viewButtonGroup
-                    onClicked: root.state = "inbox"
-                },
-                Kube.TextButton {
-                    id: doingViewButton
-                    Layout.fillWidth: true
-                    text: qsTr("Doing")
-                    textColor: Kube.Colors.highlightedTextColor
-                    checkable: true
-                    checked: root.state == "doing"
-                    horizontalAlignment: Text.AlignHLeft
-                    ButtonGroup.group: viewButtonGroup
-                    onClicked: root.state = "doing"
-                },
-                Kube.TextButton {
-                    id: allViewButton
-                    Layout.fillWidth: true
-                    text: qsTr("All")
-                    textColor: Kube.Colors.highlightedTextColor
-                    checkable: true
-                    checked: root.state == "all"
-                    horizontalAlignment: Text.AlignHLeft
-                    ButtonGroup.group: viewButtonGroup
-                    onClicked: root.state = "all"
+                ColumnLayout {
+                    Kube.TextButton {
+                        id: inboxViewButton
+                        Layout.fillWidth: true
+                        text: qsTr("Inbox")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.state == "inbox"
+                        horizontalAlignment: Text.AlignHLeft
+                        ButtonGroup.group: viewButtonGroup
+                        onClicked: root.state = "inbox"
+                    }
+                    Kube.TextButton {
+                        id: doingViewButton
+                        Layout.fillWidth: true
+                        text: qsTr("Doing")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.state == "doing"
+                        horizontalAlignment: Text.AlignHLeft
+                        ButtonGroup.group: viewButtonGroup
+                        onClicked: root.state = "doing"
+                    }
+                    Kube.TextButton {
+                        id: allViewButton
+                        Layout.fillWidth: true
+                        text: qsTr("All")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.state == "all"
+                        horizontalAlignment: Text.AlignHLeft
+                        ButtonGroup.group: viewButtonGroup
+                        onClicked: root.state = "all"
+                    }
                 }
             ]
 
