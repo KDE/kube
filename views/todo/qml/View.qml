@@ -153,47 +153,28 @@ Kube.View {
     Controls1.SplitView {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Rectangle {
-            width: Kube.Units.gridUnit * 10
+
+        Kube.LeftSidebar {
             Layout.fillHeight: parent.height
-            color: Kube.Colors.darkBackgroundColor
-
-            Column {
-                id: topLayout
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    margins: Kube.Units.largeSpacing
-                }
-
+            buttons: [
                 Kube.PositiveButton {
                     id: newMailButton
                     objectName: "newMailButton"
 
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
+                    Layout.fillWidth: true
                     focus: true
                     text: qsTr("New Todo")
                     onClicked: editorPopup.createObject(root, {}).open()
-                }
+                },
 
                 Item {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
+                    Layout.fillWidth: true
                     height: Kube.Units.gridUnit
-                }
+                },
 
                 Kube.TextButton {
                     id: inboxViewButton
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
+                    Layout.fillWidth: true
                     text: qsTr("Inbox")
                     textColor: Kube.Colors.highlightedTextColor
                     checkable: true
@@ -201,13 +182,10 @@ Kube.View {
                     horizontalAlignment: Text.AlignHLeft
                     ButtonGroup.group: viewButtonGroup
                     onClicked: root.state = "inbox"
-                }
+                },
                 Kube.TextButton {
                     id: doingViewButton
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
+                    Layout.fillWidth: true
                     text: qsTr("Doing")
                     textColor: Kube.Colors.highlightedTextColor
                     checkable: true
@@ -215,13 +193,10 @@ Kube.View {
                     horizontalAlignment: Text.AlignHLeft
                     ButtonGroup.group: viewButtonGroup
                     onClicked: root.state = "doing"
-                }
+                },
                 Kube.TextButton {
                     id: allViewButton
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
+                    Layout.fillWidth: true
                     text: qsTr("All")
                     textColor: Kube.Colors.highlightedTextColor
                     checkable: true
@@ -230,58 +205,16 @@ Kube.View {
                     ButtonGroup.group: viewButtonGroup
                     onClicked: root.state = "all"
                 }
-            }
+            ]
 
-            Kube.CalendarSelector {
+            mainDelegate: Kube.CalendarSelector {
                 id: accountSwitcher
                 activeFocusOnTab: true
                 selectionEnabled: true
-                anchors {
-                    top: topLayout.bottom
-                    topMargin: Kube.Units.largeSpacing
-                    bottom: statusBarContainer.top
-                    left: topLayout.left
-                    right: parent.right
-                    rightMargin: Kube.Units.largeSpacing
-                }
                 contentType: "todo"
                 onCurrentCalendarChanged: {
                     if (currentCalendar) {
                         root.state = "calendar"
-                    }
-                }
-            }
-
-            Item {
-                id: statusBarContainer
-                anchors {
-                    topMargin: Kube.Units.smallSpacing
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: parent.right
-                }
-                height: childrenRect.height
-
-                Rectangle {
-                    id: border
-                    visible: statusBar.visible
-                    anchors {
-                        right: parent.right
-                        left: parent.left
-                        margins: Kube.Units.smallSpacing
-                    }
-                    height: 1
-                    color: Kube.Colors.viewBackgroundColor
-                    opacity: 0.3
-                }
-                Kube.StatusBar {
-                    id: statusBar
-                    accountId: root.currentAccount
-                    height: Kube.Units.gridUnit * 2
-                    anchors {
-                        top: border.bottom
-                        left: statusBarContainer.left
-                        right: statusBarContainer.right
                     }
                 }
             }
