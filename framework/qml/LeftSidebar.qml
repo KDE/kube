@@ -25,12 +25,12 @@ import org.kube.framework 1.0 as Kube
 Rectangle {
     id: root
 
-    property Component mainDelegate: null
     property Component statusDelegate: Kube.StatusBar {
                                            accountId: Kube.Context.currentAccountId
                                        }
 
     property alias buttons: topLayout.children
+    default property alias _contentChildren: mainLayout.children
 
     width: Kube.Units.gridUnit * 10
     color: Kube.Colors.darkBackgroundColor
@@ -46,8 +46,8 @@ Rectangle {
         height: childrenRect.height
     }
 
-    Loader {
-        id: mainLoader
+    ColumnLayout {
+        id: mainLayout
         anchors {
             top: topLayout.bottom
             topMargin: Kube.Units.largeSpacing
@@ -57,7 +57,6 @@ Rectangle {
             right: parent.right
             rightMargin: Kube.Units.largeSpacing
         }
-        sourceComponent: root.mainDelegate
     }
 
     Item {

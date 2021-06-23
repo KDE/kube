@@ -207,8 +207,10 @@ Kube.View {
                 }
             ]
 
-            mainDelegate: Kube.CalendarSelector {
+            Kube.CalendarSelector {
                 id: accountSwitcher
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 activeFocusOnTab: true
                 selectionEnabled: true
                 contentType: "todo"
