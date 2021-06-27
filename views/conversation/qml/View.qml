@@ -39,6 +39,15 @@ Kube.View {
         Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.folderSelection
+        onMessageReceived: {
+            //TODO we don't currently expect this to be changed outside of this view.
+            //Otherwise we'd have to select the correct entry in the listview
+            root.currentFolder = message.folder
+        }
+    }
+
     onRefresh: {
         if (!!root.currentFolder) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
@@ -49,7 +58,7 @@ Kube.View {
     }
 
     onCurrentFolderChanged: {
-        if (!!currentFolder) {
+        if (!!root.currentFolder) {
             root.important = false
         }
     }
@@ -141,7 +150,6 @@ Kube.View {
             Layout.fillHeight: parent.height
             buttons: [
                 Kube.PositiveButton {
-                    id: newMailButton
                     objectName: "newMailButton"
                     Layout.fillWidth: true
                     focus: true
@@ -210,11 +218,9 @@ Kube.View {
 
                         function indexSelected(currentIndex) {
                             if (!!currentIndex && currentIndex.valid) {
-                                root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
-                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": root.currentFolder,
+                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(currentIndex, Kube.FolderListModel.DomainObject),
                                                                                         "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
                             } else {
-                                root.currentFolder = null
                                 Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": null,
                                                                                         "trash": false})
                             }
