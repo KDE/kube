@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.15
 import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
@@ -30,17 +30,42 @@ Kube.View {
     property date currentDate: new Date()
     property bool autoUpdateDate: true
 
-    property bool pendingError: false;
-    property bool pendingNotification: false;
+    property bool pendingError: false
+    property bool pendingNotification: false
+
+    property bool showInbound: true
+    property bool important: false
+    property var currentFolder: null
+
     onPendingErrorChanged: {
         Kube.Fabric.postMessage(Kube.Messages.errorPending, {errorPending: pendingError})
     }
+
     onPendingNotificationChanged: {
         Kube.Fabric.postMessage(Kube.Messages.notificationPending, {notificationPending: pendingNotification})
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.folderSelection
+        onMessageReceived: {
+            //TODO we don't currently expect this to be changed outside of this view.
+            //Otherwise we'd have to select the correct entry in the listview
+            root.currentFolder = message.folder
+        }
+    }
+
     onRefresh: {
-        Kube.Fabric.postMessage(Kube.Messages.synchronize, {})
+        if (!!root.currentFolder) {
+        } else {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {})
+        }
+    }
+
+    onCurrentFolderChanged: {
+        if (!!root.currentFolder) {
+            root.important = false
+            root.showInbound = false
+        }
     }
 
     Timer {
@@ -54,12 +79,156 @@ Kube.View {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        Item {
-            id: accountList
+        Kube.LeftSidebar {
+            Layout.fillHeight: parent.height
+            buttons: [
+                Kube.PositiveButton {
+                    id: newMailButton
+                    objectName: "newMailButton"
+                    Layout.fillWidth: true
+                    focus: true
+                    text: qsTr("New Email")
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {})
+                },
+                ColumnLayout {
+                    Kube.TextButton {
+                        id: inboxViewButton
+                        Layout.fillWidth: true
+                        text: qsTr("Inbound")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.showInbound
+                        horizontalAlignment: Text.AlignHLeft
+                        ButtonGroup.group: viewButtonGroup
+                        onClicked: {
+                            root.showInbound = true
+                            accountFolderview.currentDelegate.clearSelection()
+                        }
+                    }
+                    Kube.TextButton {
+                        Layout.fillWidth: true
+                        text: qsTr("Events")
+                        textColor: Kube.Colors.highlightedTextColor
+                    }
+                    Kube.TextButton {
+                        text: qsTr("All")
+                    }
+                }
+            ]
+
+            Kube.InlineAccountSwitcher {
+                id: accountFolderview
+                activeFocusOnTab: true
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                delegate: ColumnLayout {
+                    id: delegateRoot
+
+                    function clearSelection() {
+                        folderListView.clearSelection()
+                    }
+
+                    function currentChanged() {
+                        if (delegateRoot.parent.isCurrent) {
+                            //Reset important on account switch
+                            root.important = false
+                            //Necessary to re-select folder on account change (so the maillist is updated)
+                            folderListView.indexSelected(listView.currentIndex)
+                            //To ensure we always have something selected in the UI as well
+                            if (!!folderListView.currentIndex) {
+                                folderListView.selectRootIndex()
+                            }
+                        }
+                    }
+
+                    property Component buttonDelegate: Row {
+                        Kube.IconButton {
+                            height: Kube.Units.gridUnit
+                            padding: 0
+                            iconName: Kube.Icons.markImportant_inverted
+                            checked: root.important
+                            checkable: true
+                            onClicked: {
+                                root.important = checked
+                                if (checked) {
+                                    folderListView.clearSelection()
+                                } else {
+                                    folderListView.selectRootIndex()
+                                }
+                            }
+                        }
+                    }
+
+                    Kube.FolderListView {
+                        id: folderListView
+                        objectName: "folderListView"
+                        accountId: delegateRoot.parent.accountId
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        function indexSelected(currentIndex) {
+                            if (!!currentIndex && currentIndex.valid) {
+                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(currentIndex, Kube.FolderListModel.DomainObject),
+                                                                                        "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
+                            } else {
+                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": null,
+                                                                                        "trash": false})
+                            }
+                        }
+
+                        onCurrentIndexChanged: {
+                            if (delegateRoot.parent.isCurrent) {
+                                indexSelected(currentIndex)
+                            }
+                        }
+
+                        onDropped: {
+                            var folder = model.data(index, Kube.FolderListModel.DomainObject)
+                            Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": folder})
+                            drop.accept(Qt.MoveAction)
+                        }
+                    }
+                }
+            }
+        }
+
+    StackLayout {
             width: parent.width/3
             Layout.fillHeight: true
 
+        currentIndex: root.showInbound ? 1 : 0
 
+        Rectangle {
+            color: "transparent"
+            border.width: 1
+            border.color: Kube.Colors.buttonColor
+
+            Kube.MailListView  {
+                id: mailListView
+                objectName: "mailListView"
+                anchors.fill: parent
+                activeFocusOnTab: true
+                Layout.minimumWidth: Kube.Units.gridUnit * 10
+                showImportant: root.important
+                currentAccount: Kube.Context.currentAccountId
+                filter: root.filter
+                Kube.Listener {
+                    filter: Kube.Messages.folderSelection
+                    onMessageReceived: {
+                        root.clearSearch()
+                        mailListView.parentFolder = message.folder
+                    }
+                }
+                onCurrentMailChanged: {
+                    Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
+                }
+            }
+        }
+
+        Item {
             Kube.Label {
                 anchors.centerIn: parent
                 visible: listView.count == 0
@@ -81,9 +250,7 @@ Kube.View {
 
             Kube.ListView {
                 id: listView
-                anchors {
-                    fill: parent
-                }
+                anchors.fill: parent
 
                 clip: true
                 focus: true
@@ -288,6 +455,8 @@ Kube.View {
                 }
             }
         }
+    }
+
         Item {
             id: details
             property string subtype: ""
