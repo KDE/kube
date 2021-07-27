@@ -29,7 +29,7 @@ ApplicationWindow {
     id: app
 
     property int sidebarWidth: Kube.Units.gridUnit + Kube.Units.largeSpacing
-    property string defaultView: "conversation"
+    property string defaultView: "inbound"
 
     height: Screen.desktopAvailableHeight * 0.8
     width: Screen.desktopAvailableWidth * 0.8
