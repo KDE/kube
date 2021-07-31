@@ -75,8 +75,14 @@ Item {
             }
             //One row => one week
             Item {
+                id: weekRow
                 width: parent.width
-                height: root.dayHeight
+                height: expanded ?  calculatedHeight : root.dayHeight
+                //FIXME expanding like this is not useful for the last row (we'd have to expand up)
+                property int calculatedHeight: Math.max(root.dayHeight, events.length * Kube.Units.gridUnit + (root.showDayIndicator ? Kube.Units.gridUnit + Kube.Units.smallSpacing : 0))
+                property bool expanded: false
+                property bool overfilled: calculatedHeight > root.dayHeight
+
                 clip: true
                 Row {
                     width: parent.width
@@ -90,7 +96,7 @@ Item {
                     }
                     Item {
                         id: dayDelegate
-                        height: root.dayHeight
+                        height: parent.height
                         width: parent.width - weekHeader.width
                         property var startDate: weekStartDate
                         //Grid
@@ -228,6 +234,15 @@ Item {
                             }
                         }
                     }
+                }
+                Kube.IconButton {
+                    visible: weekRow.overfilled
+                    anchors {
+                        bottom: parent.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    iconName: weekRow.expanded ? Kube.Icons.goUp : Kube.Icons.goDown
+                    onClicked: weekRow.expanded = !weekRow.expanded
                 }
             }
         }
