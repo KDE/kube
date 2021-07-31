@@ -96,6 +96,31 @@ ApplicationWindow {
                     },
                     {
                         resource: "caldavresource",
+                        summary: "Short event6!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event7!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event8!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event9!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event10!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
                         summary: "Test Event1 with a waaaaaaaay to long summary. Why don't you just use the description you fool!",
                         description: "This is test event #1",
                         starts: "2018-04-10T14:03:00",

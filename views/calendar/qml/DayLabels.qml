@@ -29,8 +29,6 @@ Row {
     property int daysToShow
     property Component delegate
 
-    height: childrenRect.height
-    width: dayWidth * daysToShow
 
     spacing: 0
     Repeater {

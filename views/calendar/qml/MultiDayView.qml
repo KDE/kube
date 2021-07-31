@@ -17,9 +17,9 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.4
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.2
+import QtQuick 2
+import QtQuick.Layouts 1
+import QtQuick.Controls 2
 
 import org.kube.framework 1.0 as Kube
 import "dateutils.js" as DateUtils
@@ -49,10 +49,11 @@ Item {
 
     height: implicitHeight
 
-    Column {
+    ColumnLayout {
         anchors {
             fill: parent
         }
+        spacing: 0
 
         DayLabels {
             id: dayLabels
@@ -76,9 +77,10 @@ Item {
             //One row => one week
             Item {
                 id: weekRow
-                width: parent.width
-                height: expanded ?  calculatedHeight : root.dayHeight
-                //FIXME expanding like this is not useful for the last row (we'd have to expand up)
+                Layout.fillHeight: true
+                Layout.minimumHeight: expanded ? calculatedHeight : Kube.Units.gridUnit + Kube.Units.smallSpacing
+                Layout.preferredHeight: root.dayHeight
+                implicitWidth: parent.width
                 property int calculatedHeight: Math.max(root.dayHeight, events.length * Kube.Units.gridUnit + (root.showDayIndicator ? Kube.Units.gridUnit + Kube.Units.smallSpacing : 0))
                 property bool expanded: false
                 property bool overfilled: calculatedHeight > root.dayHeight
