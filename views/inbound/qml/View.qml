@@ -92,7 +92,6 @@ Kube.View {
                 },
                 ColumnLayout {
                     Kube.TextButton {
-                        id: inboxViewButton
                         Layout.fillWidth: true
                         text: qsTr("Inbound")
                         textColor: Kube.Colors.highlightedTextColor
@@ -104,14 +103,6 @@ Kube.View {
                             root.showInbound = true
                             accountFolderview.currentDelegate.clearSelection()
                         }
-                    }
-                    Kube.TextButton {
-                        Layout.fillWidth: true
-                        text: qsTr("Events")
-                        textColor: Kube.Colors.highlightedTextColor
-                    }
-                    Kube.TextButton {
-                        text: qsTr("All")
                     }
                 }
             ]
@@ -200,11 +191,18 @@ Kube.View {
             Layout.fillHeight: true
 
         currentIndex: root.showInbound ? 1 : 0
+        onCurrentIndexChanged: {
+            children[currentIndex].reselect();
+        }
 
         Rectangle {
             color: "transparent"
             border.width: 1
             border.color: Kube.Colors.buttonColor
+
+            function reselect() {
+                mailListView.currentMail = mailListView.currentMail
+            }
 
             Kube.MailListView  {
                 id: mailListView
@@ -223,12 +221,21 @@ Kube.View {
                     }
                 }
                 onCurrentMailChanged: {
-                    Kube.Fabric.postMessage(Kube.Messages.mailSelection, {"mail": currentMail})
+                    details.itemData = { "mail": currentMail }
+                    details.subtype = "mail"
                 }
             }
         }
 
         Item {
+
+            function reselect() {
+                console.warn("Reselect")
+                var idx = listView.currentIndex
+                listView.currentIndex = -1;
+                listView.currentIndex = idx;
+            }
+
             Kube.Label {
                 anchors.centerIn: parent
                 visible: listView.count == 0
@@ -285,6 +292,7 @@ Kube.View {
 
                 onCurrentItemChanged: {
                     if (!currentItem || !currentItem.currentData) {
+                        details.subtype = ""
                         return
                     }
                     var currentData = currentItem.currentData;
@@ -794,14 +802,32 @@ Kube.View {
 
         Kube.ConversationView {
             id: componentRoot
+
+            function mailFilter() {
+                console.warn("Rebuilding mail filter", componentRoot.parent.itemData.mail)
+                if (!mailListView.threaded || root.showInbound) {
+                    return {
+                        "singleMail": componentRoot.parent ? componentRoot.parent.itemData.mail : null,
+                        "headersOnly": false,
+                        "fetchMails": true
+                    }
+                }
+                return {
+                    "mail": componentRoot.parent ? componentRoot.parent.itemData.mail : null,
+                    "headersOnly": false,
+                    "fetchMails": true,
+                    //TODO hide trash in non-trash folders
+                    //Don't hide trash in the trash folder
+            //                 "hideTrash": root.hideTrash,
+            //                 "hideNonTrash": root.hideNonTrash
+                }
+            }
+
             objectName: "mailView"
             activeFocusOnTab: true
             model: Kube.MailListModel {
-                filter: {
-                    "mail": componentRoot.parent ? componentRoot.parent.itemData.mail : null,
-                    "headersOnly": false,
-                    "fetchMails": true
-                }
+                id: mailViewModel
+                filter: mailFilter()
             }
         }
     }
