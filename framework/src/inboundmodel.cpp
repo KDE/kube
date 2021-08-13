@@ -126,12 +126,52 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
                 query.setFlags(Sink::Query::LiveQuery);
                 // query.resourceFilter<SinkResource::Account>(mCurrentAccount);
                 query.sort<Mail::Date>();
-                query.limit(mMinNumberOfItems * 2);
+                query.limit(mMinNumberOfItems);
                 query.reduce<ApplicationDomain::Mail::ThreadId>(Query::Reduce::Selector::max<ApplicationDomain::Mail::Date>())
                     .count()
                     .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
                     .collect<ApplicationDomain::Mail::Unread>()
                     .collect<ApplicationDomain::Mail::Important>();
+
+                query.setPostQueryFilter([=, folderNames = mFolderNames] (const ApplicationDomain::ApplicationDomainType &entity){
+                    const ApplicationDomain::Mail mail(entity);
+                    //TODO turn into query filter
+                    if (!folderNames.contains(mail.getFolder())) {
+                        return false;
+                    }
+
+                    if (senderBlacklist.contains(mail.getSender().emailAddress)) {
+                        return false;
+                    }
+
+                    // Ignore own messages (phabricator only lists name)
+                    if (!senderNameContainsFilter.isEmpty() && mail.getSender().name.contains(senderNameContainsFilter, Qt::CaseInsensitive)) {
+                        return false;
+                    }
+
+                    for (const auto &to : mail.getTo()) {
+                        if (toBlacklist.contains(to.emailAddress)) {
+                            return false;
+                        }
+                    }
+
+                    const auto &mimeMessage = mail.getMimeMessage();
+
+                    for (const auto &filter : messageFilter) {
+                        if (filter.match(mimeMessage).hasMatch()) {
+                            return false;
+                        }
+                    }
+
+                    for (const auto &name : perFolderMimeMessageWhitelistFilter.keys()) {
+                        if (folderNames.value(mail.getFolder()) == name) {
+                            //For this folder, exclude everything but what matches (whitelist)
+                            return mimeMessage.contains(perFolderMimeMessageWhitelistFilter.value(name).toUtf8());
+                        }
+                    }
+                    return true;
+                });
+
                 mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
@@ -139,12 +179,8 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
 
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
                     if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                        if (rowCount() < mMinNumberOfItems && mSourceModel->canFetchMore({})) {
-                            mSourceModel->fetchMore({});
-                        } else {
-                            if (mEventsLoaded) {
-                                emit initialItemsLoaded();
-                            }
+                        if (mEventsLoaded) {
+                            emit initialItemsLoaded();
                         }
                     }
                 });
@@ -252,48 +288,6 @@ void InboundModel::loadSettings()
     }
 }
 
-bool InboundModel::filter(const Sink::ApplicationDomain::Mail &mail)
-{
-    if (!mFolderNames.contains(mail.getFolder())) {
-        return true;
-    }
-
-    if (senderBlacklist.contains(mail.getSender().emailAddress)) {
-        return true;
-    }
-
-    // Ignore own messages (phabricator only lists name)
-    if (!senderNameContainsFilter.isEmpty() && mail.getSender().name.contains(senderNameContainsFilter, Qt::CaseInsensitive)) {
-        return true;
-    }
-
-    for (const auto &to : mail.getTo()) {
-        if (toBlacklist.contains(to.emailAddress)) {
-            return true;
-        }
-    }
-
-    const auto &mimeMessage = mail.getMimeMessage();
-
-    for (const auto &filter : messageFilter) {
-        if (filter.match(mimeMessage).hasMatch()) {
-            return true;
-        }
-    }
-
-    for (const auto &name : perFolderMimeMessageWhitelistFilter.keys()) {
-        if (folderName(mail.getFolder()) == name) {
-            //For this folder, exclude everything but what matches (whitelist)
-            if (mimeMessage.contains(perFolderMimeMessageWhitelistFilter.value(name).toUtf8())) {
-                return false;
-            }
-            return true;
-        }
-    }
-
-    return false;
-}
-
 QVariantMap InboundModel::toVariantMap(const Sink::ApplicationDomain::Mail::Ptr &mail)
 {
     return {
@@ -321,9 +315,6 @@ QVariantMap InboundModel::toVariantMap(const Sink::ApplicationDomain::Mail::Ptr 
 
 void InboundModel::add(const Sink::ApplicationDomain::Mail::Ptr &mail)
 {
-    if (filter(*mail)) {
-        return;
-    }
     insert(mail->identifier(), toVariantMap(mail));
 }
 
@@ -362,11 +353,7 @@ void InboundModel::mailDataChanged(const QModelIndex &topLeft, const QModelIndex
     }
     for (auto row = topLeft.row(); row <= bottomRight.row(); row++) {
         auto entity = mSourceModel->index(row, 0, topLeft.parent()).data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
-        if (filter(*entity)) {
-            remove(entity);
-        } else {
-            update(entity);
-        }
+        update(entity);
     }
 }
 
