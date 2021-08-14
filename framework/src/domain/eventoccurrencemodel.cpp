@@ -34,6 +34,10 @@
 
 #include <entitycache.h>
 
+#include <algorithm>
+#include <vector>
+#include <iterator>
+
 using namespace Sink;
 
 EventOccurrenceModel::EventOccurrenceModel(QObject *parent)
@@ -142,9 +146,8 @@ void EventOccurrenceModel::refreshView()
 
 void EventOccurrenceModel::updateFromSource()
 {
-    beginResetModel();
 
-    mEvents.clear();
+    QList<Occurrence> newEvents;
 
     if (mSourceModel) {
         QMap<QByteArray, KCalCore::Incidence::Ptr> recurringEvents;
@@ -169,7 +172,7 @@ void EventOccurrenceModel::updateFromSource()
                 events.insert(icalEvent->instanceIdentifier().toLatin1(), event);
             } else {
                 if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
-                    mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
+                    newEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
                 }
             }
         }
@@ -188,7 +191,7 @@ void EventOccurrenceModel::updateFromSource()
                 const auto start = occurrenceIterator.occurrenceStartDate();
                 const auto end = incidence->endDateForStart(start);
                 if (start.date() < mEnd && end.date() >= mStart) {
-                    mEvents.append({start, end, incidence, getColor(event->getCalendar()), event->getAllDay(), event});
+                    newEvents.append({start, end, incidence, getColor(event->getCalendar()), event->getAllDay(), event});
                 }
             }
         }
@@ -197,12 +200,42 @@ void EventOccurrenceModel::updateFromSource()
             const auto icalEvent = exceptions.value(uid).dynamicCast<KCalCore::Event>();
             const auto event = events.value(icalEvent->instanceIdentifier().toLatin1());
             if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
-                mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
+                newEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
             }
         }
     }
 
-    endResetModel();
+    for (const auto &event : mEvents) {
+        auto it = std::find_if(std::begin(newEvents), std::end(newEvents), [&] (const auto &e) {
+            return e.incidence->uid() == event.incidence->uid();
+        });
+        if (it == std::end(newEvents)) {
+            //Removed
+            const int startIndex = std::distance(std::begin(newEvents), it);
+            beginRemoveRows(QModelIndex(), startIndex, startIndex);
+            mEvents.erase(mEvents.begin() + startIndex, mEvents.begin() + startIndex + 1);
+            endRemoveRows();
+        }
+    }
+    for (auto newIt = std::begin(newEvents); newIt != std::end(newEvents); newIt++) {
+        const auto event = *newIt;
+        auto it = std::find_if(std::begin(mEvents), std::end(mEvents), [&] (const auto &e) {
+            return e.incidence->uid() == event.incidence->uid();
+        });
+        if (it == std::end(mEvents)) {
+            //New event
+            const int startIndex = std::distance(std::begin(newEvents), newIt);
+            beginInsertRows(QModelIndex(), startIndex, startIndex);
+            mEvents.insert(startIndex, event);
+            endInsertRows();
+        } else {
+            //Existing event
+            const int startIndex = std::distance(std::begin(mEvents), it);
+            mEvents[startIndex] = event;
+            emit dataChanged(index(startIndex, 0), index(startIndex, 0), {});
+        }
+    }
+
 }
 
 QModelIndex EventOccurrenceModel::index(int row, int column, const QModelIndex &parent) const
