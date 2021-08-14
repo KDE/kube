@@ -104,6 +104,21 @@ void EventOccurrenceModel::updateQuery()
 
     query.filter<Event::StartTime, Event::EndTime>(Sink::Query::Comparator(QVariantList{mStart, mEnd}, Sink::Query::Comparator::Overlap));
 
+    query.setPostQueryFilter([=, filter = mFilter, calendarFilter = mCalendarFilter] (const ApplicationDomain::ApplicationDomainType &entity){
+        const Sink::ApplicationDomain::Event event(entity);
+        if (!calendarFilter.contains(event.getCalendar())) {
+            return false;
+        }
+
+        for (auto it = filter.constBegin(); it!= filter.constEnd(); it++) {
+            if (event.getProperty(it.key().toLatin1()) != it.value()) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
     mSourceModel = Store::loadModel<ApplicationDomain::Event>(query);
 
     QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &EventOccurrenceModel::refreshView);
@@ -137,20 +152,6 @@ void EventOccurrenceModel::updateFromSource()
         QMap<QByteArray, QSharedPointer<Sink::ApplicationDomain::Event>> events;
         for (int i = 0; i < mSourceModel->rowCount(); ++i) {
             auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Event::Ptr>();
-            const bool skip = [&] {
-                if (!mCalendarFilter.contains(event->getCalendar())) {
-                    return true;
-                }
-                for (auto it = mFilter.constBegin(); it!= mFilter.constEnd(); it++) {
-                    if (event->getProperty(it.key().toLatin1()) != it.value()) {
-                        return true;
-                    }
-                }
-                return false;
-            }();
-            if (skip) {
-                continue;
-            }
 
             //Parse the event
             auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
