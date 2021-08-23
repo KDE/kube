@@ -3,6 +3,7 @@ module org.kube.framework
 ConversationView 1.0 ConversationView.qml
 ConversationListView 1.0 ConversationListView.qml
 CalendarSelector 1.0 CalendarSelector.qml
+EntitySelector 1.0 EntitySelector.qml
 EntityComboBox 1.0 EntityComboBox.qml
 FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml

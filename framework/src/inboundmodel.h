@@ -29,6 +29,7 @@
 #include <QString>
 #include <QDateTime>
 #include <fabric.h>
+#include <sink/store.h>
 
 #include "eventoccurrencemodel.h"
 
@@ -43,6 +44,7 @@ class KUBE_EXPORT InboundModel : public QSortFilterProxyModel
     Q_OBJECT
 
     Q_PROPERTY(QDateTime currentDate WRITE setCurrentDate)
+    Q_PROPERTY (QVariantMap filter READ filter WRITE setFilter NOTIFY filterChanged)
 
 public:
     InboundModel(QObject *parent = Q_NULLPTR);
@@ -66,9 +68,17 @@ public:
         const QList<QString> &_folderNameBlacklist
     );
 
+
+    void setFilter(const QVariantMap &);
+    QVariantMap filter() const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    QHash<int, QByteArray> roleNames() const override;
+
 signals:
     void entryAdded(const QVariantMap &message);
     void initialItemsLoaded();
+    void filterChanged();
 
 private slots:
     void mailRowsInserted(const QModelIndex &parent, int first, int last);
@@ -78,6 +88,8 @@ private slots:
     void eventModelReset();
 
 private:
+
+    void runQuery(const Sink::Query &query);
     void refresh(bool refreshMail, bool refeshCalendar);
     void getAllByType(const QString &type, std::function<QModelIndex(const QModelIndex &)> callback);
     void removeAllByType(const QString &type);
@@ -92,8 +104,10 @@ private:
     bool filter(const EventOccurrenceModel::Occurrence &mail);
 
     QHash<QByteArray, int> mRoles;
+    QHash<int, QByteArray> mRoleNames;
     QHash<QByteArray, QString> mFolderNames;
     QSharedPointer<QAbstractItemModel> mSourceModel;
+    QSharedPointer<QAbstractItemModel> m_model;
     QSharedPointer<QAbstractItemModel> mEventSourceModel;
     QSharedPointer<QStandardItemModel> mInboundModel;
 

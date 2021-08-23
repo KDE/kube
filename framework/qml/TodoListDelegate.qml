@@ -45,7 +45,7 @@ Kube.GenericListDelegate {
 
     onDropped: {
         if (dropAction == Qt.MoveAction) {
-            Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"todo": domainObject, "calendarId": dropTarget.calendarId})
+            Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"todo": domainObject, "calendarId": dropTarget.targetId})
         }
     }
 

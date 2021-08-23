@@ -24,6 +24,7 @@
 #include <QSettings>
 #include <sink/store.h>
 #include <sink/applicationdomaintype.h>
+#include <sink/standardqueries.h>
 
 InboundModel::InboundModel(QObject *parent)
     : QSortFilterProxyModel(parent),
@@ -39,17 +40,12 @@ InboundModel::InboundModel(QObject *parent)
         role++;
     }
 
-    QHash<int, QByteArray> roleNames;
     for (const auto &r : mRoles.keys()) {
-        roleNames.insert(mRoles[r], r);
+        mRoleNames.insert(mRoles[r], r);
     }
 
     mInboundModel = QSharedPointer<QStandardItemModel>::create();
-    mInboundModel->setItemRoleNames(roleNames);
-    setSourceModel(mInboundModel.data());
-
-    setSortRole(mRoles.value("timestamp"));
-    sort(0, Qt::DescendingOrder);
+    mInboundModel->setItemRoleNames(mRoleNames);
 
     init();
 }
@@ -89,6 +85,7 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
     mEventsLoaded = false;
 
     loadSettings();
+
 
     if (refreshMail) {
         removeAllByType("mail");
@@ -172,16 +169,15 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
                     return true;
                 });
 
-                mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::mailRowsRemoved);
 
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
                     if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                        if (mEventsLoaded) {
+                        // if (mEventsLoaded) {
                             emit initialItemsLoaded();
-                        }
+                        // }
                     }
                 });
             }).exec();
@@ -225,6 +221,11 @@ int InboundModel::firstRecentIndex()
 
 void InboundModel::init()
 {
+
+    setSourceModel(mInboundModel.data());
+    setSortRole(mRoles.value("timestamp"));
+    sort(0, Qt::DescendingOrder);
+
     refresh();
 }
 
@@ -254,8 +255,8 @@ void InboundModel::saveSettings()
 {
     QSettings settings;
     settings.beginGroup("inbound");
-    settings.setValue("senderBlacklist", QVariant::fromValue(QStringList{senderBlacklist.toList()}));
-    settings.setValue("toBlacklist", QVariant::fromValue(QStringList{toBlacklist.toList()}));
+    settings.setValue("senderBlacklist", QVariant::fromValue(QStringList{senderBlacklist.values()}));
+    settings.setValue("toBlacklist", QVariant::fromValue(QStringList{toBlacklist.values()}));
     settings.setValue("folderSpecialPurposeBlacklist", QVariant::fromValue(QStringList{folderSpecialPurposeBlacklist}));
 
     for (auto it = perFolderMimeMessageWhitelistFilter.constBegin(); it != perFolderMimeMessageWhitelistFilter.constEnd(); it++) {
@@ -265,19 +266,24 @@ void InboundModel::saveSettings()
     settings.setValue("senderNameContainsFilter", QVariant::fromValue(senderNameContainsFilter));
 }
 
+template <typename T>
+QSet<T> toSet(const QList<T> &list) {
+    return QSet<T>(list.begin(), list.end());
+}
+
 void InboundModel::loadSettings()
 {
     QSettings settings;
     settings.beginGroup("inbound");
 
-    senderBlacklist = settings.value("senderBlacklist").toStringList().toSet();
-    toBlacklist = settings.value("toBlacklist").toStringList().toSet();
+    senderBlacklist = toSet(settings.value("senderBlacklist").toStringList());
+    toBlacklist = toSet(settings.value("toBlacklist").toStringList());
     folderSpecialPurposeBlacklist = settings.value("folderSpecialPurposeBlacklist").toStringList();
     folderNameBlacklist = settings.value("folderNameBlacklist").toStringList();
     senderNameContainsFilter = settings.value("senderNameContainsFilter").toString();
 
     messageFilter.clear();
-    for (const auto filter : settings.value("messageFilter").toStringList()) {
+    for (const auto &filter : settings.value("messageFilter").toStringList()) {
         messageFilter.append(QRegularExpression{filter});
     }
 
@@ -476,3 +482,235 @@ void InboundModel::setCurrentDate(const QDateTime &dt)
     });
 }
 
+
+static void requestHeaders(Sink::Query &query)
+{
+    using namespace Sink::ApplicationDomain;
+    query.request<Mail::Subject>();
+    query.request<Mail::Sender>();
+    query.request<Mail::To>();
+    query.request<Mail::Cc>();
+    query.request<Mail::Bcc>();
+    query.request<Mail::Date>();
+    query.request<Mail::Unread>();
+    query.request<Mail::Important>();
+    query.request<Mail::Draft>();
+    query.request<Mail::Folder>();
+    query.request<Mail::Sent>();
+    query.request<Mail::Trash>();
+}
+
+static void requestFullMail(Sink::Query &query)
+{
+    using namespace Sink::ApplicationDomain;
+    requestHeaders(query);
+    query.request<Mail::MimeMessage>();
+    query.request<Mail::FullPayloadAvailable>();
+}
+
+
+void InboundModel::setFilter(const QVariantMap &filter)
+{
+    emit filterChanged();
+
+    if (filter.value("inbound").toBool()) {
+        m_model.clear();
+        init();
+        return;
+    }
+
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+    bool validQuery = false;
+    Sink::Query query;
+
+    if (filter.value("folder").value<ApplicationDomainType::Ptr>()) {
+        const Folder folder{*filter.value("folder").value<ApplicationDomainType::Ptr>()};
+        const auto specialPurpose = folder.getSpecialPurpose();
+        bool mIsThreaded = !(specialPurpose.contains(SpecialPurpose::Mail::drafts) ||
+                                specialPurpose.contains(SpecialPurpose::Mail::sent));
+
+        query = [&] {
+            if (mIsThreaded) {
+                return Sink::StandardQueries::threadLeaders(folder);
+            } else {
+                Sink::Query query;
+                query.setId("threadleaders-unthreaded");
+                if (!folder.resourceInstanceIdentifier().isEmpty()) {
+                    query.resourceFilter(folder.resourceInstanceIdentifier());
+                }
+                query.filter<Sink::ApplicationDomain::Mail::Folder>(folder);
+                query.sort<Sink::ApplicationDomain::Mail::Date>();
+                return query;
+            }
+        }();
+        if (!folder.getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash)) {
+            //Filter trash if this is not a trash folder
+            query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
+        }
+
+       query.setFlags(Sink::Query::LiveQuery);
+       query.limit(100);
+
+       //Latest mail on top
+       sort(0, Qt::DescendingOrder);
+       validQuery = true;
+    }
+    if (filter.value("headersOnly").toBool()) {
+        requestHeaders(query);
+    } else {
+        requestFullMail(query);
+    }
+
+    if (validQuery) {
+        runQuery(query);
+    } else {
+        setSourceModel(nullptr);
+    }
+}
+
+
+void InboundModel::runQuery(const Sink::Query &query)
+{
+    if (query.getBaseFilters().isEmpty() && query.ids().isEmpty()) {
+        m_model.clear();
+        setSourceModel(nullptr);
+    } else {
+        m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+
+        QObject::connect(m_model.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+            if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+                // if (mEventsLoaded) {
+                    emit initialItemsLoaded();
+                // }
+            }
+        });
+        setSourceModel(m_model.data());
+    }
+}
+
+QVariantMap InboundModel::filter() const
+{
+    return {};
+}
+
+QHash<int, QByteArray> InboundModel::roleNames() const
+{
+    return mRoleNames;
+}
+
+
+QVariant InboundModel::data(const QModelIndex &idx, int role) const
+{
+    // qWarning() << "Getting model data" << idx << role;
+    if (m_model) {
+        // qWarning() << "Getting model data from model" << idx << role;
+        auto srcIdx = mapToSource(idx);
+        auto mail = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
+        //TODO constexpr to get the role from name and then do a switch?
+        //TODO get the mail from the source model
+        const auto roleName = mRoleNames.value(role);
+        if (roleName == "type") {
+            return "mail";
+        }
+        if (roleName == "message") {
+            return QObject::tr("A new message is available: %1").arg(mail->getSubject());
+        }
+        if (roleName == "subtype") {
+            return "mail";
+        }
+        if (roleName == "entities") {
+            return QVariantList{mail->identifier()};
+        }
+        if (roleName == "resource") {
+            return QString{mail->resourceInstanceIdentifier()};
+        }
+        if (roleName == "date") {
+            return mail->getDate();
+        }
+//?
+        if (roleName == "timestamp") {
+            return mail->getDate();
+        }
+        if (roleName == "data") {
+            return QVariantMap{
+                {"subject", mail->getSubject()},
+                {"unread", mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Unread>().contains(true)},
+                {"senderName", mail->getSender().name},
+                {"folderName", folderName(mail->getFolder())},
+                {"date", mail->getDate()},
+                {"important", mail->getImportant()},
+                {"trash", mail->getTrash()},
+                {"threadSize", mail->count()},
+                {"mail", QVariant::fromValue(mail)},
+                {"domainObject", QVariant::fromValue(mail)}
+            };
+        }
+    }
+    //TODO if we show a folder just retrieve data from maillistmodel and mash into our "special format"
+    // auto srcIdx = mapToSource(idx);
+    // auto mail = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
+    // switch (role) {
+    //     case Subject:
+    //         if (mail->isAggregate()) {
+    //             return mail->getProperty(QByteArray{Sink::ApplicationDomain::Mail::Subject::name} + QByteArray{"Selected"});
+    //         } else {
+    //             return mail->getSubject();
+    //         }
+    //     case Sender:
+    //         return mail->getSender().emailAddress;
+    //     case SenderName:
+    //         return mail->getSender().name;
+    //     case To:
+    //         return join(mail->getTo());
+    //     case Cc:
+    //         return join(mail->getCc());
+    //     case Bcc:
+    //         return join(mail->getBcc());
+    //     case Date:
+    //         return mail->getDate();
+    //     case Unread:
+    //         if (mail->isAggregate()) {
+    //             return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Unread>().contains(true);
+    //         } else {
+    //             return mail->getUnread();
+    //         }
+    //     case Important:
+    //         if (mail->isAggregate()) {
+    //             return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Important>().contains(true);
+    //         } else {
+    //             return mail->getImportant();
+    //         }
+    //     case Draft:
+    //         return mail->getDraft();
+    //     case Sent:
+    //         return mail->getSent();
+    //     case Trash:
+    //         return mail->getTrash();
+    //     case Id:
+    //         return mail->identifier();
+    //     case DomainObject:
+    //         return QVariant::fromValue(mail);
+    //     case MimeMessage:
+    //         if (mFetchMails) {
+    //             const_cast<MailListModel*>(this)->fetchMail(mail);
+    //         }
+    //         return mail->getMimeMessage();
+    //     case ThreadSize:
+    //         return mail->count();
+    //     case Mail:
+    //         return QVariant::fromValue(mail);
+    //     case Incomplete:
+    //         return !mail->getFullPayloadAvailable();
+    //     case Status:
+    //         const auto status = srcIdx.data(Sink::Store::StatusRole).toInt();
+    //         if (status == Sink::ApplicationDomain::SyncStatus::SyncInProgress) {
+    //             return InProgressStatus;
+    //         }
+    //         if (status == Sink::ApplicationDomain::SyncStatus::SyncError) {
+    //             return ErrorStatus;
+    //         }
+    //         return NoStatus;
+    // }
+    return QSortFilterProxyModel::data(idx, role);
+}

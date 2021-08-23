@@ -101,87 +101,39 @@ Kube.View {
                         ButtonGroup.group: viewButtonGroup
                         onClicked: {
                             root.showInbound = true
-                            accountFolderview.currentDelegate.clearSelection()
+                            accountSwitcher.clearSelection()
                         }
                     }
                 }
             ]
 
-            Kube.InlineAccountSwitcher {
-                id: accountFolderview
-                activeFocusOnTab: true
 
+            Kube.EntitySelector {
+                id: accountSwitcher
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                delegate: ColumnLayout {
-                    id: delegateRoot
-
-                    function clearSelection() {
-                        folderListView.clearSelection()
-                    }
-
-                    function currentChanged() {
-                        if (delegateRoot.parent.isCurrent) {
-                            //Reset important on account switch
-                            root.important = false
-                            //Necessary to re-select folder on account change (so the maillist is updated)
-                            folderListView.indexSelected(listView.currentIndex)
-                            //To ensure we always have something selected in the UI as well
-                            if (!!folderListView.currentIndex) {
-                                folderListView.selectRootIndex()
-                            }
-                        }
-                    }
-
-                    property Component buttonDelegate: Row {
-                        Kube.IconButton {
-                            height: Kube.Units.gridUnit
-                            padding: 0
-                            iconName: Kube.Icons.markImportant_inverted
-                            checked: root.important
-                            checkable: true
-                            onClicked: {
-                                root.important = checked
-                                if (checked) {
-                                    folderListView.clearSelection()
-                                } else {
-                                    folderListView.selectRootIndex()
-                                }
-                            }
-                        }
-                    }
-
-                    Kube.FolderListView {
-                        id: folderListView
-                        objectName: "folderListView"
-                        accountId: delegateRoot.parent.accountId
-
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        function indexSelected(currentIndex) {
-                            if (!!currentIndex && currentIndex.valid) {
-                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(currentIndex, Kube.FolderListModel.DomainObject),
-                                                                                        "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
-                            } else {
-                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": null,
-                                                                                        "trash": false})
-                            }
-                        }
-
-                        onCurrentIndexChanged: {
-                            if (delegateRoot.parent.isCurrent) {
-                                indexSelected(currentIndex)
-                            }
-                        }
-
-                        onDropped: {
-                            var folder = model.data(index, Kube.FolderListModel.DomainObject)
-                            Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": folder})
-                            drop.accept(Qt.MoveAction)
-                        }
-                    }
+                activeFocusOnTab: true
+                selectionEnabled: true
+                entityType: "folder"
+                roles: ["name", "enabled"]
+                //TODO custom sort role
+                Kube.EntityController {
+                    id: entityController
+                }
+                onEntityCreated: {
+                    entityController.create({type: "folder", account: accountId, entity: {
+                        "name": text,
+                        "enabled": true,
+                    }})
+                }
+                onEntityRemoved: {
+                    entityController.remove(entity)
+                }
+                onCurrentEntityChanged: {
+                    Kube.Fabric.postMessage(Kube.Messages.folderSelection, {
+                        "folder": currentEntity,
+                        "trash": false
+                    })
                 }
             }
         }
@@ -190,42 +142,6 @@ Kube.View {
             width: parent.width/3
             Layout.fillHeight: true
 
-        currentIndex: root.showInbound ? 1 : 0
-        onCurrentIndexChanged: {
-            children[currentIndex].reselect();
-        }
-
-        Rectangle {
-            color: "transparent"
-            border.width: 1
-            border.color: Kube.Colors.buttonColor
-
-            function reselect() {
-                mailListView.currentMail = mailListView.currentMail
-            }
-
-            Kube.MailListView  {
-                id: mailListView
-                objectName: "mailListView"
-                anchors.fill: parent
-                activeFocusOnTab: true
-                Layout.minimumWidth: Kube.Units.gridUnit * 10
-                showImportant: root.important
-                currentAccount: Kube.Context.currentAccountId
-                filter: root.filter
-                Kube.Listener {
-                    filter: Kube.Messages.folderSelection
-                    onMessageReceived: {
-                        root.clearSearch()
-                        mailListView.parentFolder = message.folder
-                    }
-                }
-                onCurrentMailChanged: {
-                    details.itemData = { "mail": currentMail }
-                    details.subtype = "mail"
-                }
-            }
-        }
 
         Item {
 
@@ -268,9 +184,11 @@ Kube.View {
                     }
                 }
 
-                section.property: "type"
-                section.criteria: ViewSection.FullString
-                section.delegate: sectionHeading
+                section {
+                    property: "type"
+                    criteria: ViewSection.FullString
+                    delegate: root.showInbound ? sectionHeading : null
+                }
 
                 model: Kube.InboundModel {
                     id: inboundModel
@@ -282,10 +200,20 @@ Kube.View {
                         }
                     }
 
+                    filter: {
+                        "inbound": root.showInbound,
+                        "folder": root.showInbound ? null : accountSwitcher.currentEntity
+                    }
+
+                    onFilterChanged: {
+                        listView.startTime = new Date().getTime()
+                        console.warn("On filter changed")
+                    }
                     onInitialItemsLoaded: {
                         enableNotifications = true;
                         listView.currentIndex = inboundModel.firstRecentIndex();
                         listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
+                        console.warn("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
                     }
                     currentDate: root.currentDate
                 }
@@ -326,7 +254,7 @@ Kube.View {
                             if (isMail) {
                                 delegateRoot.visible = false
                             } else {
-                                Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"event": delegateRoot.domainObject, "calendarId": dropTarget.calendarId})
+                                Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"event": delegateRoot.domainObject, "calendarId": dropTarget.targetId})
                             }
                         }
                     }
@@ -805,7 +733,9 @@ Kube.View {
 
             function mailFilter() {
                 console.warn("Rebuilding mail filter", componentRoot.parent.itemData.mail)
-                if (!mailListView.threaded || root.showInbound) {
+                //FIXME
+                // if (!mailListView.threaded || root.showInbound) {
+                if (root.showInbound) {
                     return {
                         "singleMail": componentRoot.parent ? componentRoot.parent.itemData.mail : null,
                         "headersOnly": false,
