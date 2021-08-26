@@ -178,6 +178,8 @@ Kube.View {
                 clip: true
                 focus: true
 
+                property double startTime: 0
+
                 onActiveFocusChanged: {
                     if (activeFocus && currentIndex < 0) {
                         currentIndex = 0
@@ -207,13 +209,13 @@ Kube.View {
 
                     onFilterChanged: {
                         listView.startTime = new Date().getTime()
-                        console.warn("On filter changed")
                     }
+
                     onInitialItemsLoaded: {
                         enableNotifications = true;
                         listView.currentIndex = inboundModel.firstRecentIndex();
                         listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
-                        console.warn("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
+                        console.info("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
                     }
                     currentDate: root.currentDate
                 }

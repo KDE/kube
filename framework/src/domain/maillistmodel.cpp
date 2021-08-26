@@ -218,6 +218,11 @@ void MailListModel::runQuery(const Sink::Query &query)
     } else {
         mQuery = query;
         m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+        QObject::connect(m_model.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+            if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+                emit initialItemsLoaded();
+            }
+        });
         setSourceModel(m_model.data());
     }
 }
@@ -225,6 +230,7 @@ void MailListModel::runQuery(const Sink::Query &query)
 void MailListModel::setFilter(const QVariantMap &filter)
 {
     qDebug() << "MailListModel::setFilter " << filter;
+    emit filterChanged();
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
     bool validQuery = false;

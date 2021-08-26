@@ -118,6 +118,7 @@ FocusScope {
 
             model: Kube.MailListModel {
                 id: mailListModel
+                property var startTime;
                 filter: {
                     "folder": root.parentFolder,
                     "important": root.showImportant,
@@ -125,6 +126,14 @@ FocusScope {
                     "account": root.currentAccount,
                     "headersOnly": true,
                     "fetchMails": false
+                }
+
+                onFilterChanged: {
+                    mailListModel.startTime = new Date().getTime()
+                }
+
+                onInitialItemsLoaded: {
+                    console.info("Initial items loaded: " + (new Date().getTime() - mailListModel.startTime) + " ms")
                 }
             }
 
