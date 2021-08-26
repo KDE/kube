@@ -115,8 +115,7 @@ Kube.View {
                 activeFocusOnTab: true
                 selectionEnabled: true
                 entityType: "folder"
-                //FIXME specialPurpose is required for the sort strategy to work
-                roles: ["name", "enabled", "specialpurpose"]
+                roles: ["name", "enabled"]
                 sortRole: "customMail"
                 Kube.EntityController {
                     id: entityController
