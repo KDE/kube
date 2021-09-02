@@ -1,6 +1,7 @@
 {
     "name": "gpgme",
     "sources": [ { "type": "git", "url": "git://git.gnupg.org/gpgme.git", "branch": "gpgme-1.13.1"} ],
+    "config-opts": ["--disable-gpg-test"],
     "modules": [
         {
             "name": "libgpg-error",

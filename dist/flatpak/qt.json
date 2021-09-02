@@ -97,10 +97,6 @@
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtdeclarative.git",
                     "branch": "v5.15.2"
-                },
-                {
-                    "type": "patch",
-                    "path": "patch/qtdeclarative-use-python3.patch"
                 }
             ]
         },
@@ -136,6 +132,12 @@
         {
             "name" : "qt5-qtwebengine",
             "buildsystem" : "qmake",
+            "build-options" : {
+                "append-path": "/usr/lib/sdk/node14/bin",
+                "env": [
+                  "npm_config_nodedir=/usr/lib/sdk/node14"
+                ]
+            },
             "cleanup" : [
                 "/bin",
                 "/mkspecs"
@@ -201,10 +203,6 @@
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtwebengine.git",
                     "branch": "v5.15.2"
-                },
-                {
-                    "type" : "patch",
-                    "path" : "patch/webengineresources.patch"
                 }
             ]
         },
@@ -301,10 +299,6 @@
                     "type": "git",
                     "url": "https://code.qt.io/qt/qtwayland.git",
                     "branch": "v5.15.2"
-                },
-                {
-                    "type": "patch",
-                    "path": "patch/qtwayland-use-gnome-platform-theme-on-gnome-based-desktops.patch"
                 }
             ]
         },
