@@ -29,7 +29,8 @@ Kube.EntitySelector {
     property string contentType: "event"
 
     entityType: "calendar"
-    roles: ["name", "enabled"]
+    roles: ["name", "color", "enabled"]
+    sortRole: "name"
     filter: {"contentTypes": contentType}
 
     Kube.EntityController {
