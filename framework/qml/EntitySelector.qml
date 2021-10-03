@@ -52,6 +52,8 @@ Kube.InlineAccountSwitcher {
     delegate: Kube.ListView {
         id: listView
 
+        property bool editMode: false
+
         function clearSelection() {
             listView.currentIndex = -1
         }
@@ -66,7 +68,6 @@ Kube.InlineAccountSwitcher {
             }
         }
 
-        property bool editMode: false
         property Component buttonDelegate: Kube.IconButton {
             height: Kube.Units.gridUnit
             padding: 0
@@ -160,7 +161,7 @@ Kube.InlineAccountSwitcher {
             type: root.entityType
             roles: root.roles
             sortRole: root.sortRole
-            filter: listView.editMode ? root.filter : Object.assign(root.filter, {enabled: true})
+            filter: (listView.editMode ? root.filter : Object.assign({}, root.filter, {enabled: true}))
             accountId: listView.parent.accountId
             checkedEntities: entityFilterCollector
             onInitialItemsLoaded: {
