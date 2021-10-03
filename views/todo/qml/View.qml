@@ -80,7 +80,7 @@ Kube.View {
         },
         State {
             name: "calendar"
-            PropertyChanges {target: root; currentFolder: accountSwitcher.currentCalendar}
+            PropertyChanges {target: root; currentFolder: accountSwitcher.currentEntity}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
                 "calendars": [root.currentFolder],
@@ -211,8 +211,8 @@ Kube.View {
                 activeFocusOnTab: true
                 selectionEnabled: true
                 contentType: "todo"
-                onCurrentCalendarChanged: {
-                    if (currentCalendar) {
+                onCurrentEntityChanged: {
+                    if (currentEntity) {
                         root.state = "calendar"
                     }
                 }
