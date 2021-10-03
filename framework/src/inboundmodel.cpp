@@ -237,7 +237,7 @@ void InboundModel::configure(
     const QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
     const QList<QRegularExpression> &_messageFilter,
     const QList<QString> &_folderSpecialPurposeBlacklist,
-    const QList<QString> &_folderNameBlacklist
+    const QList<QString> &/*_folderNameBlacklist*/
 )
 {
     senderBlacklist = _senderBlacklist;
@@ -353,7 +353,7 @@ void InboundModel::mailRowsRemoved(const QModelIndex &parent, int first, int las
     }
 }
 
-void InboundModel::mailDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+void InboundModel::mailDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &/*roles*/)
 {
     if (!topLeft.isValid() || !bottomRight.isValid()) {
         return;
