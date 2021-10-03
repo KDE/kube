@@ -208,6 +208,7 @@ Kube.View {
                     }
 
                     onFilterChanged: {
+                        enableNotifications = false;
                         listView.startTime = new Date().getTime()
                     }
 
