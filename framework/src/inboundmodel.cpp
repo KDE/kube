@@ -169,6 +169,7 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
                     return true;
                 });
 
+                mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::mailRowsRemoved);
