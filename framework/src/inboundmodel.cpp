@@ -82,7 +82,6 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
     using namespace Sink::ApplicationDomain;
 
     mFolderNames.clear();
-    mEventsLoaded = false;
 
     loadSettings();
 
@@ -176,9 +175,7 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
 
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
                     if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                        // if (mEventsLoaded) {
-                            emit initialItemsLoaded();
-                        // }
+                        emit initialItemsLoaded();
                     }
                 });
             }).exec();
@@ -205,6 +202,8 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
 
                 mEventSourceModel = model;
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
+                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::eventRowsRemoved);
+                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::eventDataChanged);
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::modelReset, this, &InboundModel::eventModelReset);
             }).exec();
     }
@@ -375,10 +374,31 @@ bool InboundModel::filter(const EventOccurrenceModel::Occurrence &occurrence)
     return false;
 }
 
+
+static QVariantMap toVariantMap(const Sink::ApplicationDomain::Event::Ptr &event, const EventOccurrenceModel::Occurrence &occurrence)
+{
+    return {
+        {"type", "event"},
+        {"message", QObject::tr("A new event is available: %1").arg(event->getSummary())},
+        {"subtype", "event"},
+        {"entities", QVariantList{event->identifier()}},
+        {"resource", QString{event->resourceInstanceIdentifier()}},
+        {"date", occurrence.start},
+        {"data", QVariantMap{
+            {"subject", event->getSummary()},
+            {"domainObject", QVariant::fromValue(event)},
+            {"occurrence", QVariant::fromValue(occurrence)},
+            {"date", occurrence.start},
+        }
+        }
+    };
+}
+
 void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int last)
 {
     for (auto row = first; row <= last; row++) {
         auto idx = mEventSourceModel->index(row, 0, parent);
+
         auto event = idx.data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
         auto occurrence = idx.data(EventOccurrenceModel::EventOccurrence).value<EventOccurrenceModel::Occurrence>();
 
@@ -386,23 +406,38 @@ void InboundModel::eventRowsInserted(const QModelIndex &parent, int first, int l
             continue;
         }
 
-        const QVariantMap variantMap {
-            {"type", "event"},
-            {"message", QObject::tr("A new event is available: %1").arg(event->getSummary())},
-            {"subtype", "event"},
-            {"entities", QVariantList{event->identifier()}},
-            {"resource", QString{event->resourceInstanceIdentifier()}},
-            {"date", occurrence.start},
-            {"data", QVariantMap{
-                {"subject", event->getSummary()},
-                {"domainObject", QVariant::fromValue(event)},
-                {"occurrence", QVariant::fromValue(occurrence)},
-                {"date", occurrence.start},
-            }
-            }
-        };
+        //TODO use identifier + recurrenceid as id here?
+        insert(event->identifier(), ::toVariantMap(event, occurrence));
+    }
+}
 
-        insert(event->identifier(), variantMap);
+void InboundModel::eventRowsRemoved(const QModelIndex &parent, int first, int last)
+{
+    for (auto row = first; row <= last; row++) {
+        auto idx = mEventSourceModel->index(row, 0, parent);
+
+        auto event = idx.data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
+
+        for (auto item : mInboundModel->findItems(QString{event->identifier()})) {
+            mInboundModel->removeRows(item->row(), 1);
+        }
+    }
+}
+
+void InboundModel::eventDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+{
+    if (!topLeft.isValid() || !bottomRight.isValid()) {
+        return;
+    }
+    for (auto row = topLeft.row(); row <= bottomRight.row(); row++) {
+        auto idx = mEventSourceModel->index(row, 0, topLeft.parent());
+
+        auto event = idx.data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
+        auto occurrence = idx.data(EventOccurrenceModel::EventOccurrence).value<EventOccurrenceModel::Occurrence>();
+
+        //TODO remove when filtered?
+
+        update(event->identifier(), ::toVariantMap(event, occurrence));
     }
 }
 
@@ -430,7 +465,6 @@ void InboundModel::eventModelReset()
 {
     removeAllByType("event");
     eventRowsInserted({}, 0, mEventSourceModel->rowCount() - 1);
-    mEventsLoaded = true;
     if (mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
         emit initialItemsLoaded();
     }
@@ -581,9 +615,7 @@ void InboundModel::runQuery(const Sink::Query &query)
 
         QObject::connect(m_model.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
             if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                // if (mEventsLoaded) {
-                    emit initialItemsLoaded();
-                // }
+                emit initialItemsLoaded();
             }
         });
         setSourceModel(m_model.data());

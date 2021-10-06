@@ -98,15 +98,17 @@ private slots:
             QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
             QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
             QSignalSpy rowsRemovedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
+            QSignalSpy dataChangedSpy(&model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
 
             Sink::Store::modify(*event).exec().waitForFinished();
             Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
 
             QTest::qWait(200);
             QCOMPARE(resetSpy.count(), 0);
-            //FIXME we seem to be removing and readding all events twice
-            QCOMPARE(rowsRemovedSpy.count(), 8);
-            QCOMPARE(rowsInsertedSpy.count(), 8);
+            QCOMPARE(rowsRemovedSpy.count(), 0);
+            QCOMPARE(rowsInsertedSpy.count(), 0);
+            //57 seems excessive? We only get ~4-8 in inboundmodel
+            QCOMPARE(dataChangedSpy.count(), 57);
         }
 
 

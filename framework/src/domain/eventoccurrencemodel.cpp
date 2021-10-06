@@ -91,6 +91,7 @@ void EventOccurrenceModel::updateQuery()
 {
     using namespace Sink::ApplicationDomain;
     if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
+        mSourceModel.clear();
         refreshView();
         return;
     }
@@ -207,7 +208,7 @@ void EventOccurrenceModel::updateFromSource()
 
     for (const auto &event : mEvents) {
         auto it = std::find_if(std::begin(newEvents), std::end(newEvents), [&] (const auto &e) {
-            return e.incidence->uid() == event.incidence->uid();
+            return e.incidence->uid() == event.incidence->uid() && e.start == event.start;
         });
         if (it == std::end(newEvents)) {
             //Removed
@@ -220,7 +221,7 @@ void EventOccurrenceModel::updateFromSource()
     for (auto newIt = std::begin(newEvents); newIt != std::end(newEvents); newIt++) {
         const auto event = *newIt;
         auto it = std::find_if(std::begin(mEvents), std::end(mEvents), [&] (const auto &e) {
-            return e.incidence->uid() == event.incidence->uid();
+            return e.incidence->uid() == event.incidence->uid() && e.start == event.start;
         });
         if (it == std::end(mEvents)) {
             //New event

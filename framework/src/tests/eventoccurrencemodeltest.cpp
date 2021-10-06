@@ -331,13 +331,13 @@ private slots:
         {
             EventOccurrenceModel model;
 
-            QSignalSpy spy(&model, &QAbstractItemModel::modelReset);
-
             model.setStart({2021, 4, 26});
             model.setLength(7);
             model.setCalendarFilter({calendar1.identifier()});
 
-            QTRY_COMPARE(spy.count(), 2);
+            //We don't have any signal when loading is done
+            QTest::qWait(200);
+
             QCOMPARE(model.rowCount({}), 0);
         }
         //New week (start on monday after the occurrence)

@@ -85,6 +85,8 @@ private slots:
     void mailRowsRemoved(const QModelIndex &parent, int first, int last);
     void mailDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
     void eventRowsInserted(const QModelIndex &parent, int first, int last);
+    void eventRowsRemoved(const QModelIndex &parent, int first, int last);
+    void eventDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
     void eventModelReset();
 
 private:
