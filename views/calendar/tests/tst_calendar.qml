@@ -104,7 +104,7 @@ ViewTestCase {
         var calendarSelector = findChild(view, "calendarSelector");
         verify(calendarSelector)
         //Only testable from qt 5.14 on
-        // tryCompare(calendarSelector, "enabledCalendars", ["calendar1"])
+        // tryCompare(calendarSelector, "enabledEntities", ["calendar1"])
 
         var weekView = findChild(view, "weekView");
         verify(weekView)

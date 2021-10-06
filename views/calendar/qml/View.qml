@@ -150,7 +150,7 @@ Kube.View {
             Layout.fillWidth: true
             currentDate: root.currentDate
             startDate: DateUtils.getFirstDayOfWeek(root.selectedDate)
-            calendarFilter: accountSwitcher.enabledCalendars
+            calendarFilter: accountSwitcher.enabledEntities
         }
 
         MonthView {
@@ -160,7 +160,7 @@ Kube.View {
             currentDate: root.currentDate
             startDate: DateUtils.getFirstDayOfWeek(DateUtils.getFirstDayOfMonth(root.selectedDate))
             month: root.selectedDate.getMonth()
-            calendarFilter: accountSwitcher.enabledCalendars
+            calendarFilter: accountSwitcher.enabledEntities
         }
     }
 

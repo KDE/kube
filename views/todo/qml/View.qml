@@ -28,7 +28,8 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
     id: root
     property string currentAccount: Kube.Context.currentAccountId
-    property variant currentFolder: null
+    property var currentFolder: null
+    property var currentFolderIdentifier: null
 
     property date currentDate: new Date()
     property bool autoUpdateDate: true
@@ -49,10 +50,11 @@ Kube.View {
         State {
             name: "inbox"
             PropertyChanges {target: root; currentFolder: null}
+            PropertyChanges {target: root; currentFolderIdentifier: null}
             StateChangeScript {script: accountSwitcher.clearSelection()}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
-                "calendars": accountSwitcher.enabledCalendars,
+                "calendars": accountSwitcher.enabledEntities,
                 "inbox": true,
                 "string": root.filter
             }}
@@ -60,10 +62,11 @@ Kube.View {
         State {
             name: "doing"
             PropertyChanges {target: root; currentFolder: null}
+            PropertyChanges {target: root; currentFolderIdentifier: null}
             StateChangeScript {script: accountSwitcher.clearSelection()}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
-                "calendars": accountSwitcher.enabledCalendars,
+                "calendars": accountSwitcher.enabledEntities,
                 "doing": true,
                 "string": root.filter
             }}
@@ -71,19 +74,21 @@ Kube.View {
         State {
             name: "all"
             PropertyChanges {target: root; currentFolder: null}
+            PropertyChanges {target: root; currentFolderIdentifier: null}
             StateChangeScript {script: accountSwitcher.clearSelection()}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
-                "calendars": accountSwitcher.enabledCalendars,
+                "calendars": accountSwitcher.enabledEntities,
                 "string": root.filter
             }}
         },
         State {
             name: "calendar"
             PropertyChanges {target: root; currentFolder: accountSwitcher.currentEntity}
+            PropertyChanges {target: root; currentFolderIdentifier: accountSwitcher.currentEntityIdentifier}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
-                "calendars": [root.currentFolder],
+                "calendars": [accountSwitcher.currentEntityIdentifier],
                 "string": root.filter
             }}
         }
@@ -342,7 +347,7 @@ Kube.View {
                 focus: true
                 anchors.fill: parent
                 accountId: root.currentAccount
-                currentFolder: root.currentFolder
+                currentFolder: root.currentFolderIdentifier
                 doing: doingViewButton.checked
                 onDone: popup.close()
             }
