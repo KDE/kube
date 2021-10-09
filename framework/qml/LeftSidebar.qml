@@ -43,7 +43,6 @@ Rectangle {
             right: parent.right
             margins: Kube.Units.largeSpacing
         }
-        height: childrenRect.height
         spacing: Kube.Units.largeSpacing
     }
 
