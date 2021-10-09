@@ -90,6 +90,7 @@ void EventOccurrenceModel::setFilter(const QVariantMap &filter)
 void EventOccurrenceModel::updateQuery()
 {
     using namespace Sink::ApplicationDomain;
+    mInitialItemsLoaded = false;
     if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
         mSourceModel.clear();
         refreshView();
@@ -237,6 +238,16 @@ void EventOccurrenceModel::updateFromSource()
         }
     }
 
+    if (!mInitialItemsLoaded && mSourceModel && mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
+        mInitialItemsLoaded = true;
+        emit initialItemsLoaded();
+    }
+}
+
+
+bool EventOccurrenceModel::initialItemsComplete() const
+{
+    return mInitialItemsLoaded;
 }
 
 QModelIndex EventOccurrenceModel::index(int row, int column, const QModelIndex &parent) const

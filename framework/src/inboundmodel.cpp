@@ -175,7 +175,10 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
 
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
                     if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                        emit initialItemsLoaded();
+                        //Only emit initialItemsLoaded if both source models have finished loading
+                        if (mEventSourceModel && static_cast<EventOccurrenceModel*>(mEventSourceModel.data())->initialItemsComplete()) {
+                            emit initialItemsLoaded();
+                        }
                     }
                 });
             }).exec();
@@ -204,7 +207,12 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::eventRowsRemoved);
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::eventDataChanged);
-                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::modelReset, this, &InboundModel::eventModelReset);
+                QObject::connect(model.data(), &EventOccurrenceModel::initialItemsLoaded, this, [this]() {
+                    //Only emit initialItemsLoaded if both source models have finished loading
+                    if (mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
+                        emit initialItemsLoaded();
+                    }
+                });
             }).exec();
     }
 }
@@ -424,7 +432,7 @@ void InboundModel::eventRowsRemoved(const QModelIndex &parent, int first, int la
     }
 }
 
-void InboundModel::eventDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+void InboundModel::eventDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &/*roles*/)
 {
     if (!topLeft.isValid() || !bottomRight.isValid()) {
         return;
@@ -459,15 +467,6 @@ void InboundModel::removeAllByType(const QString &type)
         mInboundModel->removeRow(index.row());
         return mInboundModel->index(0, 0);
     });
-}
-
-void InboundModel::eventModelReset()
-{
-    removeAllByType("event");
-    eventRowsInserted({}, 0, mEventSourceModel->rowCount() - 1);
-    if (mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
-        emit initialItemsLoaded();
-    }
 }
 
 void InboundModel::insert(const QByteArray &key, const QVariantMap &message)

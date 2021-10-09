@@ -95,6 +95,10 @@ public:
         QSharedPointer<Sink::ApplicationDomain::Event> domainObject;
     };
 
+    bool initialItemsComplete() const;
+
+signals:
+    void initialItemsLoaded();
 
 private:
     void updateQuery();
@@ -114,6 +118,7 @@ private:
 
     QList<Occurrence> mEvents;
     QVariantMap mFilter;
+    bool mInitialItemsLoaded{false};
 };
 
 Q_DECLARE_METATYPE(EventOccurrenceModel::Occurrence);

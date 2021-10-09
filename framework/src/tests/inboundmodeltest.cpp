@@ -68,19 +68,23 @@ private slots:
 
         InboundModel model;
 
-        model.setCurrentDate(start);
-        model.configure(
-            {}, // QSet<QString> &_senderBlacklist,
-            {}, // QSet<QString> &_toBlacklist,
-            {}, // QString &_senderNameContainsFilter,
-            {}, // QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
-            {}, // QList<QRegularExpression> &_messageFilter,
-            {}, // QList<QString> &_folderSpecialPurposeBlacklist,
-            {}  // QList<QString> &_folderNameBlacklist,
-        );
+        {
+            QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
+            model.setCurrentDate(start);
+            model.configure(
+                {}, // QSet<QString> &_senderBlacklist,
+                {}, // QSet<QString> &_toBlacklist,
+                {}, // QString &_senderNameContainsFilter,
+                {}, // QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
+                {}, // QList<QRegularExpression> &_messageFilter,
+                {}, // QList<QString> &_folderSpecialPurposeBlacklist,
+                {}  // QList<QString> &_folderNameBlacklist,
+            );
 
-        QTest::qWait(200);
-        QTRY_COMPARE(model.rowCount({}), 4);
+            QTest::qWait(200);
+            QTRY_COMPARE(model.rowCount({}), 4);
+            QCOMPARE(initialItemsLoadedSpy.count(), 1);
+        }
 
         {
 
@@ -99,6 +103,7 @@ private slots:
             QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
             QSignalSpy rowsRemovedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
             QSignalSpy dataChangedSpy(&model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+            QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
 
             Sink::Store::modify(*event).exec().waitForFinished();
             Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
@@ -107,8 +112,10 @@ private slots:
             QCOMPARE(resetSpy.count(), 0);
             QCOMPARE(rowsRemovedSpy.count(), 0);
             QCOMPARE(rowsInsertedSpy.count(), 0);
+            //FIXME
             //57 seems excessive? We only get ~4-8 in inboundmodel
             QCOMPARE(dataChangedSpy.count(), 57);
+            QCOMPARE(initialItemsLoadedSpy.count(), 0);
         }
 
 
