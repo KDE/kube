@@ -225,7 +225,7 @@ Kube.InlineAccountSwitcher {
                         width: Kube.Units.gridUnit * 0.8
                         height: Kube.Units.gridUnit * 0.8
 
-                        color: model.color
+                        color: !!model.color ? model.color : color
 
                         Rectangle {
                             id: highlight
@@ -258,7 +258,7 @@ Kube.InlineAccountSwitcher {
                     width: Kube.Units.gridUnit * 0.8
                     height: Kube.Units.gridUnit * 0.8
                     radius: width / 2
-                    color: model.color
+                    color: !!model.color ? model.color : color
                 }
                 Kube.IconButton {
                     id: removeButton
