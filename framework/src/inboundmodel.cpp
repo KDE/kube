@@ -549,6 +549,7 @@ void InboundModel::setFilter(const QVariantMap &filter)
 
     if (filter.value("inbound").toBool()) {
         m_model.clear();
+        //TODO apply search filter
         init();
         return;
     }
@@ -578,18 +579,33 @@ void InboundModel::setFilter(const QVariantMap &filter)
                 return query;
             }
         }();
+
         if (!folder.getSpecialPurpose().contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash)) {
             //Filter trash if this is not a trash folder
             query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
         }
 
-       query.setFlags(Sink::Query::LiveQuery);
-       query.limit(100);
+        query.setFlags(Sink::Query::LiveQuery);
+        query.limit(100);
 
-       //Latest mail on top
-       sort(0, Qt::DescendingOrder);
-       validQuery = true;
+        //Latest mail on top
+        sort(0, Qt::DescendingOrder);
+        validQuery = true;
     }
+
+    //Additional filtering
+    if (filter.contains("string") && filter.value("string").isValid()) {
+        const auto filterString = filter.value("string").toString();
+        if (filterString.length() < 3 && !filterString.isEmpty()) {
+            return;
+        }
+        if (!filterString.isEmpty()) {
+            query.filter({}, Sink::QueryBase::Comparator(filterString, Sink::QueryBase::Comparator::Fulltext));
+            query.limit(0);
+        }
+        validQuery = true;
+    }
+
     if (filter.value("headersOnly").toBool()) {
         requestHeaders(query);
     } else {

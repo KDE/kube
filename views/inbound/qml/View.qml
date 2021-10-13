@@ -16,7 +16,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.4
+import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 1.3 as Controls1
 import QtQuick.Controls 2
@@ -43,6 +43,13 @@ Kube.View {
 
     onPendingNotificationChanged: {
         Kube.Fabric.postMessage(Kube.Messages.notificationPending, {notificationPending: pendingNotification})
+    }
+
+    //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
+    searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + listItem.x, 0, (details.x + details.width) - listItem.x, (details.y + details.height) - listItem.y)
+
+    onFilterChanged: {
+        Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
     }
 
     Kube.Listener {
@@ -74,6 +81,83 @@ Kube.View {
         onTriggered: root.currentDate = new Date()
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.search
+        onMessageReceived: root.triggerSearch()
+    }
+
+    helpViewComponent: Kube.HelpPopup {
+        ListModel {
+            ListElement { description: qsTr("Jump to top of threadlist:"); shortcut: "t" }
+            ListElement { description: qsTr("Jump to next thread:"); shortcut: "j" }
+            ListElement { description: qsTr("Jump to previous thread:"); shortcut: "k" }
+            ListElement { description: qsTr("Jump to next message:"); shortcut: "n" }
+            ListElement { description: qsTr("Jump to previous message:"); shortcut: "p" }
+            ListElement { description: qsTr("Jump to next folder:"); shortcut: "f,n" }
+            ListElement { description: qsTr("Jump to previous folder:"); shortcut: "f,p" }
+            ListElement { description: qsTr("Compose new message:"); shortcut: "c" }
+            ListElement { description: qsTr("Reply to the currently focused message:"); shortcut: "r" }
+            ListElement { description: qsTr("Delete the currently focused message:"); shortcut: "d" }
+            ListElement { description: qsTr("Mark the currently focused message as important:"); shortcut: "i" }
+            ListElement { description: qsTr("Mark the currently focused message as unread:"); shortcut: "u" }
+            ListElement { description: qsTr("Show this help text:"); shortcut: "?" }
+        }
+    }
+
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['j']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextConversation, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['k']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousConversation, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['t']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectTopConversation, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['Shift+J']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.scrollConversationDown, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['Shift+K']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.scrollConversationUp, {})
+    }
+    Shortcut {
+        sequences: ['n']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextMessage, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['p']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousMessage, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['f,n']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectNextFolder, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['f,p']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.selectPreviousFolder, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequences: ['c']
+        onActivated: Kube.Fabric.postMessage(Kube.Messages.compose, {})
+    }
+    Shortcut {
+        enabled: root.isCurrentView
+        sequence: "?"
+        onActivated: root.showHelp()
+    }
 
     Controls1.SplitView {
         Layout.fillWidth: true
@@ -139,11 +223,11 @@ Kube.View {
         }
 
     StackLayout {
-            width: parent.width/3
-            Layout.fillHeight: true
-
+        width: parent.width/3
+        Layout.fillHeight: true
 
         Item {
+            id: listItem
 
             function reselect() {
                 console.warn("Reselect")
@@ -152,12 +236,35 @@ Kube.View {
                 listView.currentIndex = idx;
             }
 
+            Kube.Listener {
+                filter: Kube.Messages.selectTopConversation
+                onMessageReceived: {
+                    listView.currentIndex = 0
+                    listView.forceActiveFocus()
+                }
+            }
+
+            Kube.Listener {
+                filter: Kube.Messages.selectNextConversation
+                onMessageReceived: {
+                    listView.incrementCurrentIndex()
+                    listView.forceActiveFocus()
+                }
+            }
+
+            Kube.Listener {
+                filter: Kube.Messages.selectPreviousConversation
+                onMessageReceived: {
+                    listView.decrementCurrentIndex()
+                    listView.forceActiveFocus()
+                }
+            }
+
             Kube.Label {
                 anchors.centerIn: parent
                 visible: listView.count == 0
                 text: qsTr("Nothing here...")
             }
-
 
             Component {
                 id: sectionHeading
@@ -192,6 +299,25 @@ Kube.View {
                     delegate: root.showInbound ? sectionHeading : null
                 }
 
+                Keys.onPressed: {
+                    //Not implemented as a shortcut because we want it only to apply if we have the focus
+                    if (currentItem.currentData.data.mail) {
+                        var currentMail = currentItem.currentData.data.mail;
+                        if (event.text == "d" || event.key == Qt.Key_Delete) {
+                            Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": currentMail})
+                        } else if (event.text == "r") {
+                            Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": currentMail})
+                        } else if (event.text == "i") {
+                            Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": currentMail, "important": !currentItem.currentData.data.important})
+                        } else if (event.text == "u") {
+                            Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": currentMail})
+                        }
+                    }
+                    if (event.key == Qt.Key_Home) {
+                        listView.currentIndex = 0
+                    }
+                }
+
                 model: Kube.InboundModel {
                     id: inboundModel
                     objectName: "inboundModel"
@@ -204,7 +330,8 @@ Kube.View {
 
                     filter: {
                         "inbound": root.showInbound,
-                        "folder": root.showInbound ? null : accountSwitcher.currentEntity
+                        "folder": root.showInbound ? null : accountSwitcher.currentEntity,
+                        "string": root.filter,
                     }
 
                     onFilterChanged: {
