@@ -182,7 +182,6 @@ Kube.View {
                         checkable: true
                         checked: root.showInbound
                         horizontalAlignment: Text.AlignHLeft
-                        ButtonGroup.group: viewButtonGroup
                         onClicked: {
                             root.showInbound = true
                             accountSwitcher.clearSelection()
