@@ -19,8 +19,6 @@ private slots:
 
     void testMailListModel()
     {
-        Sink::ApplicationDomain::DummyResource::create("account1");
-
         using namespace Sink::ApplicationDomain;
         auto account = ApplicationDomainType::createEntity<SinkAccount>();
         Sink::Store::create(account).exec().waitForFinished();
