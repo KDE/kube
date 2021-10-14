@@ -65,6 +65,9 @@ public:
 private:
     QList<QModelIndex> sortedEventsFromSourceModel(const QDate &rowStart) const;
     QVariantList layoutLines(const QDate &rowStart) const;
+    void reset();
+
     EventOccurrenceModel *mSourceModel{nullptr};
     int mPeriodLength{7};
+    QTimer mRefreshTimer;
 };
