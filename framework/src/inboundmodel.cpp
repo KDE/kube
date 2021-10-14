@@ -123,6 +123,7 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
                 // query.resourceFilter<SinkResource::Account>(mCurrentAccount);
                 query.sort<Mail::Date>();
                 query.limit(mMinNumberOfItems);
+                query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
                 query.reduce<ApplicationDomain::Mail::ThreadId>(Query::Reduce::Selector::max<ApplicationDomain::Mail::Date>())
                     .count()
                     .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
@@ -171,7 +172,7 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
                 mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
-                QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::mailRowsRemoved);
+                QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsAboutToBeRemoved, this, &InboundModel::mailRowsRemoved);
 
                 QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
                     if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
@@ -205,7 +206,7 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
 
                 mEventSourceModel = model;
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
-                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsRemoved, this, &InboundModel::eventRowsRemoved);
+                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsAboutToBeRemoved, this, &InboundModel::eventRowsRemoved);
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::eventDataChanged);
                 QObject::connect(model.data(), &EventOccurrenceModel::initialItemsLoaded, this, [this]() {
                     //Only emit initialItemsLoaded if both source models have finished loading

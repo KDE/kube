@@ -145,7 +145,7 @@ private slots:
         }
     }
 
-    void testMailInbox()
+    void testMailInbound()
     {
         using namespace Sink::ApplicationDomain;
         auto account = ApplicationDomainType::createEntity<SinkAccount>();
@@ -176,40 +176,111 @@ private slots:
         VERIFYEXEC(Sink::ResourceControl::flushMessageQueue(resource.identifier()));
 
 
-        //Inbound mode
-        {
-            InboundModel model;
-            QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
-            model.setCurrentDate({});
-            model.configure(
-                {}, // QSet<QString> &_senderBlacklist,
-                {}, // QSet<QString> &_toBlacklist,
-                {}, // QString &_senderNameContainsFilter,
-                {}, // QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
-                {}, // QList<QRegularExpression> &_messageFilter,
-                {}, // QList<QString> &_folderSpecialPurposeBlacklist,
-                {}  // QList<QString> &_folderNameBlacklist,
-            );
+        InboundModel model;
+        QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
+        model.setCurrentDate({});
+        model.configure(
+            {}, // QSet<QString> &_senderBlacklist,
+            {}, // QSet<QString> &_toBlacklist,
+            {}, // QString &_senderNameContainsFilter,
+            {}, // QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
+            {}, // QList<QRegularExpression> &_messageFilter,
+            {}, // QList<QString> &_folderSpecialPurposeBlacklist,
+            {}  // QList<QString> &_folderNameBlacklist,
+        );
 
-            QTest::qWait(200);
-            QTRY_COMPARE(model.rowCount({}), 2);
-            // QCOMPARE(initialItemsLoadedSpy.count(), 1);
+        //FIXME
+        // QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
+        QTRY_COMPARE(model.rowCount({}), 2);
+
+        //Test move to trash
+        {
+            QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
+            QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
+            QSignalSpy rowsRemovedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
+            QSignalSpy dataChangedSpy(&model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+            QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
+
+            auto idx = model.index(0, 0, {});
+            auto mail = idx.data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>();
+            mail->setTrash(true);
+
+            VERIFYEXEC(Sink::Store::modify(*mail));
+            VERIFYEXEC(Sink::ResourceControl::flushMessageQueue(resource.identifier()));
+
+            QTRY_COMPARE(rowsRemovedSpy.count(), 1);
+            QCOMPARE(resetSpy.count(), 0);
+            QCOMPARE(rowsInsertedSpy.count(), 0);
+            QCOMPARE(dataChangedSpy.count(), 0);
+
+            QTRY_COMPARE(model.rowCount({}), 1);
+        }
+    }
+
+    void testMailFolder()
+    {
+        using namespace Sink::ApplicationDomain;
+        auto account = ApplicationDomainType::createEntity<SinkAccount>();
+        VERIFYEXEC(Sink::Store::create(account));
+
+        auto resource = Sink::ApplicationDomain::DummyResource::create(account.identifier());
+        VERIFYEXEC(Sink::Store::create(resource));
+
+        auto folder1 = ApplicationDomainType::createEntity<Folder>(resource.identifier());
+        VERIFYEXEC(Sink::Store::create(folder1));
+
+        auto folder2 = ApplicationDomainType::createEntity<Folder>(resource.identifier());
+        VERIFYEXEC(Sink::Store::create(folder2));
+
+        auto mail1 = ApplicationDomainType::createEntity<Mail>(resource.identifier());
+        mail1.setFolder(folder1);
+        KMime::Types::Mailbox from;
+        from.fromUnicodeString("from@example.org");
+        auto message = MailTemplates::createMessage({}, {"foo@test.com"}, {}, {}, from, "Subject", "Body", false, {}, {}, {});
+        mail1.setMimeMessage(message->encodedContent(true));
+        VERIFYEXEC(Sink::Store::create(mail1));
+
+        auto mail2 = ApplicationDomainType::createEntity<Mail>(resource.identifier());
+        mail2.setFolder(folder2);
+        VERIFYEXEC(Sink::Store::create(mail2));
+
+        VERIFYEXEC(Sink::ResourceControl::flushMessageQueue(resource.identifier()));
+
+
+        InboundModel model;
+        QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
+        model.setFilter({{"folder", QVariant::fromValue(ApplicationDomainType::Ptr::create(folder1))}});
+
+        QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
+        QCOMPARE(model.rowCount({}), 1);
+        {
+            auto idx = model.index(0, 0, {});
+            auto mail = idx.data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>();
+            QVERIFY(mail);
+            QVERIFY(!mail->getSubject().isEmpty());
         }
 
-        //Folder mode
+        //Test move to trash
         {
-            InboundModel model;
+            QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
+            QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
+            QSignalSpy rowsRemovedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
+            QSignalSpy dataChangedSpy(&model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
             QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
-            model.setFilter({{"folder", QVariant::fromValue(ApplicationDomainType::Ptr::create(folder1))}});
 
-            QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
-            QCOMPARE(model.rowCount({}), 1);
-            {
-                auto idx = model.index(0, 0, {});
-                auto mail = idx.data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>();
-                QVERIFY(mail);
-                QVERIFY(!mail->getSubject().isEmpty());
-            }
+            auto idx = model.index(0, 0, {});
+            auto mail = idx.data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>();
+            mail->setTrash(true);
+
+            VERIFYEXEC(Sink::Store::modify(*mail));
+            VERIFYEXEC(Sink::ResourceControl::flushMessageQueue(resource.identifier()));
+
+            QTRY_COMPARE(rowsRemovedSpy.count(), 1);
+            QCOMPARE(resetSpy.count(), 0);
+            QCOMPARE(rowsInsertedSpy.count(), 0);
+            QCOMPARE(dataChangedSpy.count(), 0);
+
+            QTRY_COMPARE(model.rowCount({}), 0);
         }
     }
 
