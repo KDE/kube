@@ -207,13 +207,17 @@ void EventOccurrenceModel::updateFromSource()
         }
     }
 
-    for (const auto &event : mEvents) {
-        auto it = std::find_if(std::begin(newEvents), std::end(newEvents), [&] (const auto &e) {
+    for (auto it = std::begin(mEvents); it != std::end(mEvents); it++) {
+        const auto event = *it;
+        auto itToRemove = std::find_if(std::begin(newEvents), std::end(newEvents), [&] (const auto &e) {
+            Q_ASSERT(e.incidence);
+            Q_ASSERT(event.incidence);
             return e.incidence->uid() == event.incidence->uid() && e.start == event.start;
         });
-        if (it == std::end(newEvents)) {
+        // Can't find the vevent in newEvents anymore, so remove from list
+        if (itToRemove == std::end(newEvents)) {
             //Removed
-            const int startIndex = std::distance(std::begin(newEvents), it);
+            const int startIndex = std::distance(std::begin(mEvents), it);
             beginRemoveRows(QModelIndex(), startIndex, startIndex);
             mEvents.erase(mEvents.begin() + startIndex, mEvents.begin() + startIndex + 1);
             endRemoveRows();

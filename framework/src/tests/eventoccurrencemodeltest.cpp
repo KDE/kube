@@ -149,10 +149,14 @@ private slots:
             const int expectedNumberOfOccurreces = 13;
             const int numberOfDays = 7;
             EventOccurrenceModel model;
+
+            QSignalSpy initialItemsLoadedSpy(&model, &EventOccurrenceModel::initialItemsLoaded);
+
             model.setStart(start.date());
             model.setLength(numberOfDays);
             model.setCalendarFilter({calendar1.identifier()});
             QTRY_COMPARE(model.rowCount({}), expectedNumberOfOccurreces);
+            QCOMPARE(initialItemsLoadedSpy.count(), 1);
 
             auto countEvents = [&] (const QVariantList &lines) {
                 int count = 0;
@@ -208,6 +212,38 @@ private slots:
                 }
             }
 
+            //Test modification
+            {
+                auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+                calcoreEvent->setUid("event1");
+                calcoreEvent->setSummary("summary1");
+                calcoreEvent->setDescription("description");
+                calcoreEvent->setDtStart(start);
+                calcoreEvent->setDuration(7200);
+                calcoreEvent->setAllDay(false);
+
+                const auto event = model.index(0, 0, {}).data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
+                event->setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+
+                QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
+                QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
+                QSignalSpy rowsRemovedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
+                QSignalSpy dataChangedSpy(&model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+                QSignalSpy initialItemsLoadedSpy(&model, &EventOccurrenceModel::initialItemsLoaded);
+
+                VERIFYEXEC(Sink::Store::modify(*event));
+                VERIFYEXEC(Sink::ResourceControl::flushMessageQueue(resource.identifier()));
+
+                QTest::qWait(200);
+                QCOMPARE(resetSpy.count(), 0);
+                QCOMPARE(rowsRemovedSpy.count(), 1);
+                QCOMPARE(rowsInsertedSpy.count(), 0);
+                //FIXME 26 seems excessive?
+                QCOMPARE(dataChangedSpy.count(), 26);
+                QCOMPARE(initialItemsLoadedSpy.count(), 0);
+            }
+
+            //Test an empty filter
             model.setCalendarFilter({});
             QTRY_COMPARE(model.rowCount({}), 0);
         }
