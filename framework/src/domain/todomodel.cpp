@@ -34,10 +34,9 @@ using namespace Sink;
 
 TodoSourceModel::TodoSourceModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}, {ApplicationDomain::Calendar::Name::name}})}
+    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}, {ApplicationDomain::Calendar::Name::name}})},
+    mUpdateFromSourceDebouncer{100, [this] { this->updateFromSource(); }}
 {
-    mRefreshTimer.setSingleShot(true);
-    QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &TodoSourceModel::updateFromSource);
 }
 
 static QList<QByteArray> toList(const QVariant &variant) {
@@ -98,11 +97,7 @@ void TodoSourceModel::setFilter(const QVariantMap &filter)
 
 void TodoSourceModel::refreshView()
 {
-    if (!mRefreshTimer.isActive()) {
-        //Instant update, but then only refresh every 50ms max.
-        updateFromSource();
-        mRefreshTimer.start(50);
-    }
+    mUpdateFromSourceDebouncer.trigger();
 }
 
 void TodoSourceModel::updateFromSource()

@@ -238,8 +238,7 @@ private slots:
                 QCOMPARE(resetSpy.count(), 0);
                 QCOMPARE(rowsRemovedSpy.count(), 1);
                 QCOMPARE(rowsInsertedSpy.count(), 0);
-                //FIXME 26 seems excessive?
-                QCOMPARE(dataChangedSpy.count(), 26);
+                QCOMPARE(dataChangedSpy.count(), 13);
                 QCOMPARE(initialItemsLoadedSpy.count(), 0);
             }
 

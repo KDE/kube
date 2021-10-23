@@ -42,10 +42,9 @@ using namespace Sink;
 
 EventOccurrenceModel::EventOccurrenceModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}})}
+    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}})},
+    mUpdateFromSourceDebouncer{100,[this] { this->updateFromSource(); }}
 {
-    mRefreshTimer.setSingleShot(true);
-    QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &EventOccurrenceModel::updateFromSource);
 }
 
 void EventOccurrenceModel::setStart(const QDate &start)
@@ -139,11 +138,7 @@ void EventOccurrenceModel::updateQuery()
 
 void EventOccurrenceModel::refreshView()
 {
-    if (!mRefreshTimer.isActive()) {
-        //Instant update, but then only refresh every 50ms max.
-        updateFromSource();
-        mRefreshTimer.start(50);
-    }
+    mUpdateFromSourceDebouncer.trigger();
 }
 
 void EventOccurrenceModel::updateFromSource()

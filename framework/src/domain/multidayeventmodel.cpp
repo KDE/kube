@@ -33,10 +33,9 @@ enum Roles {
 };
 
 MultiDayEventModel::MultiDayEventModel(QObject *parent)
-    : QAbstractItemModel(parent)
+    : QAbstractItemModel(parent),
+    mUpdateFromSourceDebouncer{100,[this] { this->reset(); }}
 {
-    mRefreshTimer.setSingleShot(true);
-    QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &MultiDayEventModel::reset);
 }
 
 QModelIndex MultiDayEventModel::index(int row, int column, const QModelIndex &parent) const
@@ -232,10 +231,7 @@ void MultiDayEventModel::setModel(EventOccurrenceModel *model)
     beginResetModel();
     mSourceModel = model;
     auto resetModel = [this] {
-        if (!mRefreshTimer.isActive()) {
-            mRefreshTimer.start(50);
-            reset();
-        }
+        mUpdateFromSourceDebouncer.trigger();
     };
     QObject::connect(model, &QAbstractItemModel::dataChanged, this, resetModel);
     QObject::connect(model, &QAbstractItemModel::layoutChanged, this, resetModel);

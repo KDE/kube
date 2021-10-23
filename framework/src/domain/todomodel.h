@@ -27,6 +27,7 @@
 #include <QSharedPointer>
 #include <QTimer>
 #include <QDateTime>
+#include "debouncer.h"
 
 namespace KCalCore {
     class Incidence;
@@ -86,7 +87,7 @@ private:
     QSet<QByteArray> mCalendarFilter;
     QSharedPointer<EntityCacheInterface> mCalendarCache;
 
-    QTimer mRefreshTimer;
+    Debouncer mUpdateFromSourceDebouncer;
 
     struct Occurrence {
         QDateTime start;

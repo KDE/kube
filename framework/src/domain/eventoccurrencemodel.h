@@ -28,6 +28,7 @@
 #include <QSharedPointer>
 #include <QTimer>
 #include <QDateTime>
+#include "debouncer.h"
 
 namespace KCalCore {
     class MemoryCalendar;
@@ -114,7 +115,7 @@ private:
     int mLength{0};
     QSharedPointer<EntityCacheInterface> mCalendarCache;
 
-    QTimer mRefreshTimer;
+    Debouncer mUpdateFromSourceDebouncer;
 
     QList<Occurrence> mEvents;
     QVariantMap mFilter;

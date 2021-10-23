@@ -29,6 +29,7 @@
 #include <QTimer>
 #include <QDateTime>
 #include "eventoccurrencemodel.h"
+#include "debouncer.h"
 
 namespace KCalCore {
     class MemoryCalendar;
@@ -69,5 +70,5 @@ private:
 
     EventOccurrenceModel *mSourceModel{nullptr};
     int mPeriodLength{7};
-    QTimer mRefreshTimer;
+    Debouncer mUpdateFromSourceDebouncer;
 };
