@@ -143,7 +143,6 @@ void EventOccurrenceModel::refreshView()
 
 void EventOccurrenceModel::updateFromSource()
 {
-
     QList<Occurrence> newEvents;
 
     if (mSourceModel) {
@@ -202,22 +201,28 @@ void EventOccurrenceModel::updateFromSource()
         }
     }
 
-    for (auto it = std::begin(mEvents); it != std::end(mEvents); it++) {
-        const auto event = *it;
-        auto itToRemove = std::find_if(std::begin(newEvents), std::end(newEvents), [&] (const auto &e) {
-            Q_ASSERT(e.incidence);
-            Q_ASSERT(event.incidence);
-            return e.incidence->uid() == event.incidence->uid() && e.start == event.start;
-        });
-        // Can't find the vevent in newEvents anymore, so remove from list
-        if (itToRemove == std::end(newEvents)) {
-            //Removed
-            const int startIndex = std::distance(std::begin(mEvents), it);
-            beginRemoveRows(QModelIndex(), startIndex, startIndex);
-            mEvents.erase(mEvents.begin() + startIndex, mEvents.begin() + startIndex + 1);
-            endRemoveRows();
+    {
+        auto it = std::begin(mEvents);
+        while (it != std::end(mEvents)) {
+            const auto event = *it;
+            auto itToRemove = std::find_if(std::begin(newEvents), std::end(newEvents), [&] (const auto &e) {
+                Q_ASSERT(e.incidence);
+                Q_ASSERT(event.incidence);
+                return e.incidence->uid() == event.incidence->uid() && e.start == event.start;
+            });
+            // Can't find the vevent in newEvents anymore, so remove from list
+            if (itToRemove == std::end(newEvents)) {
+                //Removed
+                const int startIndex = std::distance(std::begin(mEvents), it);
+                beginRemoveRows(QModelIndex(), startIndex, startIndex);
+                it = mEvents.erase(it);
+                endRemoveRows();
+            } else {
+                it++;
+            }
         }
     }
+
     for (auto newIt = std::begin(newEvents); newIt != std::end(newEvents); newIt++) {
         const auto event = *newIt;
         auto it = std::find_if(std::begin(mEvents), std::end(mEvents), [&] (const auto &e) {
