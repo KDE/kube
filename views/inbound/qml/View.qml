@@ -62,7 +62,9 @@ Kube.View {
     }
 
     onRefresh: {
-        if (!!root.currentFolder) {
+        if (!root.showInbound && !!root.currentFolder) {
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
+            Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": Kube.Context.currentAccountId, "type": "folder"})
         } else {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {})
         }
