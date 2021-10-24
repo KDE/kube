@@ -295,10 +295,10 @@ bool TodoModel::lessThan(const QModelIndex &left, const QModelIndex &right) cons
     const auto leftScore = left.data(TodoSourceModel::Relevance).toInt();
     const auto rightScore = right.data(TodoSourceModel::Relevance).toInt();
     if (leftScore == rightScore) {
-        const auto leftDate = left.data(TodoSourceModel::SortDate);
-        const auto rightDate = right.data(TodoSourceModel::SortDate);
+        const auto leftDate = left.data(TodoSourceModel::SortDate).toDateTime();
+        const auto rightDate = right.data(TodoSourceModel::SortDate).toDateTime();
         if (leftDate == rightDate) {
-            return left.data(TodoSourceModel::Summary) < right.data(TodoSourceModel::Summary);
+            return left.data(TodoSourceModel::Summary).toString() < right.data(TodoSourceModel::Summary).toString();
         }
         return leftDate < rightDate;
     }
