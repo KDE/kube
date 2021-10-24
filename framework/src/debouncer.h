@@ -24,8 +24,8 @@
 /**
  * A signal throttler/debouncer
  *
- * It's currently more a throttler, ensuring that the slot is called at most every interval,
- * but immediately when first invoked.
+ * The callback is initially slightly delayed, to debounce multiple calls in quick succession.
+ * The delay used for this is small to provide responsiveness. Successive calls are then batched into a single callback after  mInterval ms.
  */
 class Debouncer {
     public:
@@ -41,14 +41,18 @@ class Debouncer {
                 }
             });
 
+            mDelayTimer.setSingleShot(true);
+            QObject::connect(&mDelayTimer, &QTimer::timeout, [this] {
+                mCalledAlready = true;
+                mCallback();
+            });
         }
 
         void trigger() {
             mCalledAlready = false;
             if (!mRefreshTimer.isActive()) {
-                mCallback();
-                mCalledAlready = true;
                 mRefreshTimer.start(mInterval);
+                mDelayTimer.start(30);
             }
         }
 
@@ -56,5 +60,6 @@ class Debouncer {
         int mInterval;
         bool mCalledAlready{false};
         QTimer mRefreshTimer;
+        QTimer mDelayTimer;
         std::function<void()> mCallback;
 };
