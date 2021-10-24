@@ -214,15 +214,10 @@ private slots:
 
             //Test modification
             {
-                auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
-                calcoreEvent->setUid("event1");
-                calcoreEvent->setSummary("summary1");
-                calcoreEvent->setDescription("description");
-                calcoreEvent->setDtStart(start);
-                calcoreEvent->setDuration(7200);
-                calcoreEvent->setAllDay(false);
-
                 const auto event = model.index(0, 0, {}).data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
+                auto calcoreEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
+                calcoreEvent->setSummary("modified");
+
                 event->setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
                 QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
@@ -236,9 +231,9 @@ private slots:
 
                 QTest::qWait(200);
                 QCOMPARE(resetSpy.count(), 0);
-                QCOMPARE(rowsRemovedSpy.count(), 1);
+                QCOMPARE(rowsRemovedSpy.count(), 0);
                 QCOMPARE(rowsInsertedSpy.count(), 0);
-                QCOMPARE(dataChangedSpy.count(), 13);
+                QCOMPARE(dataChangedSpy.count(), 1);
                 QCOMPARE(initialItemsLoadedSpy.count(), 0);
             }
 

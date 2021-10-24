@@ -113,9 +113,7 @@ private slots:
             QCOMPARE(resetSpy.count(), 0);
             QCOMPARE(rowsRemovedSpy.count(), 0);
             QCOMPARE(rowsInsertedSpy.count(), 0);
-            //FIXME
-            //28 seems excessive? We only get ~4-8 in inboundmodel
-            QCOMPARE(dataChangedSpy.count(), 28);
+            QCOMPARE(dataChangedSpy.count(), 2);
             QCOMPARE(initialItemsLoadedSpy.count(), 0);
         }
 

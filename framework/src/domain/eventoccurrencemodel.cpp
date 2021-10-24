@@ -230,10 +230,11 @@ void EventOccurrenceModel::updateFromSource()
             mEvents.insert(startIndex, event);
             endInsertRows();
         } else {
-            //Existing event
-            const int startIndex = std::distance(std::begin(mEvents), it);
-            mEvents[startIndex] = event;
-            emit dataChanged(index(startIndex, 0), index(startIndex, 0), {});
+            if (*(newIt->incidence) != *(it->incidence)) {
+                const int startIndex = std::distance(std::begin(mEvents), it);
+                mEvents[startIndex] = event;
+                emit dataChanged(index(startIndex, 0), index(startIndex, 0), {});
+            }
         }
     }
 
