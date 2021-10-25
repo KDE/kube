@@ -34,6 +34,8 @@ FocusScope {
     property date startDate: currentDate
     property var calendarFilter
 
+    readonly property int horizontalSpacing: Kube.Units.smallSpacing
+
     Item {
         anchors {
             top: parent.top
@@ -67,6 +69,7 @@ FocusScope {
                 left: parent.left
                 leftMargin: Kube.Units.gridUnit * 2
             }
+            horizontalSpacing: root.horizontalSpacing
 
             dayWidth: root.dayWidth
             daysToShow: root.daysToShow
@@ -100,6 +103,7 @@ FocusScope {
 
             anchors {
                 top: daylong.bottom
+                topMargin: 2
             }
 
             Layout.fillWidth: true
@@ -238,7 +242,7 @@ FocusScope {
                                     rightMargin: Kube.Units.smallSpacing
                                 }
                                 radius: 2
-                                width: root.dayWidth - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indentation
+                                width: root.dayWidth - root.horizontalSpacing * 2 - Kube.Units.gridUnit * model.modelData.indentation
                                 height: Math.max(root.hourHeight * 0.5, root.hourHeight * model.modelData.duration)
                                 y: root.hourHeight * model.modelData.starts
                                 x: Kube.Units.gridUnit * model.modelData.indentation

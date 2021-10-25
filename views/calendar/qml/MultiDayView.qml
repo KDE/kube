@@ -41,11 +41,14 @@ Item {
     property int month
 
     //Internal
+    readonly property int verticalSpacing: 2
+    property int horizontalSpacing: Kube.Units.smallSpacing
+    readonly property int lineHeight: Kube.Units.gridUnit
     property int numberOfLinesShown: 0
-    property int numberOfRows: (daysToShow / daysPerRow)
+    readonly property int numberOfRows: (daysToShow / daysPerRow)
     property var dayHeight: (height - dayLabels.height) / numberOfRows
 
-    implicitHeight: (numberOfRows > 1 ? Kube.Units.gridUnit * 10 * numberOfRows: numberOfLinesShown * Kube.Units.gridUnit) + dayLabels.height
+    implicitHeight: (numberOfRows > 1 ? Kube.Units.gridUnit * 10 * numberOfRows: numberOfLinesShown * (Kube.Units.gridUnit + verticalSpacing)) + dayLabels.height + root.verticalSpacing
 
     height: implicitHeight
 
@@ -95,8 +98,11 @@ Item {
                 Layout.minimumHeight: expanded ? calculatedHeight : Kube.Units.gridUnit + Kube.Units.smallSpacing
                 Layout.preferredHeight: root.dayHeight
                 implicitWidth: parent.width
-                property int calculatedHeight: Math.max(root.dayHeight, events.length * Kube.Units.gridUnit + (root.showDayIndicator ? Kube.Units.gridUnit + Kube.Units.smallSpacing : 0))
                 property bool expanded: expandButton.checked
+                readonly property int calculatedHeight: Math.max(
+                    root.dayHeight,
+                    events.length * (root.lineHeight + root.verticalSpacing) + (root.showDayIndicator ? Kube.Units.gridUnit + root.verticalSpacing : root.verticalSpacing)
+                )
                 property bool overfilled: calculatedHeight > root.dayHeight
 
                 clip: true
@@ -174,8 +180,11 @@ Item {
                             anchors {
                                 fill: parent
                                 //Offset for date
-                                topMargin: root.showDayIndicator ? Kube.Units.gridUnit + Kube.Units.smallSpacing : 0
+                                topMargin: root.showDayIndicator ? Kube.Units.gridUnit + root.verticalSpacing : root.verticalSpacing
                             }
+
+                            spacing: root.verticalSpacing
+
                             Repeater {
                                 id: linesRepeater
                                 model: events
@@ -184,7 +193,7 @@ Item {
                                 }
                                 Item {
                                     id: line
-                                    height: Kube.Units.gridUnit
+                                    height: root.lineHeight
                                     width: parent.width
 
                                     //Events
@@ -192,9 +201,9 @@ Item {
                                         id: eventsRepeater
                                         model: modelData
                                         Rectangle {
-                                            x: root.dayWidth * modelData.starts
+                                            x: root.dayWidth * modelData.starts + root.horizontalSpacing
                                             y: 0
-                                            width: root.dayWidth * modelData.duration
+                                            width: root.dayWidth * modelData.duration - (2 * root.horizontalSpacing)
                                             height: parent.height
 
                                             radius: 2
@@ -202,7 +211,7 @@ Item {
                                             Rectangle {
                                                 anchors.fill: parent
                                                 color: modelData.color
-                                                radius: 2
+                                                radius: parent.radius
                                                 border.width: 1
                                                 border.color: Kube.Colors.viewBackgroundColor
                                                 opacity: 0.6
