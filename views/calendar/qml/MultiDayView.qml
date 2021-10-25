@@ -49,6 +49,20 @@ Item {
 
     height: implicitHeight
 
+    ButtonGroup {
+        id: expandButtonGroup
+        exclusive: false
+        //Like exclusive, but a checked button can be unchecked by clicking again.
+        onClicked: {
+            for (var i = 0; i < buttons.length; i++){
+                var btn = buttons[i];
+                if (button != btn) {
+                    btn.checked = false;
+                }
+            }
+        }
+    }
+
     ColumnLayout {
         anchors {
             fill: parent
@@ -82,7 +96,7 @@ Item {
                 Layout.preferredHeight: root.dayHeight
                 implicitWidth: parent.width
                 property int calculatedHeight: Math.max(root.dayHeight, events.length * Kube.Units.gridUnit + (root.showDayIndicator ? Kube.Units.gridUnit + Kube.Units.smallSpacing : 0))
-                property bool expanded: false
+                property bool expanded: expandButton.checked
                 property bool overfilled: calculatedHeight > root.dayHeight
 
                 clip: true
@@ -238,13 +252,15 @@ Item {
                     }
                 }
                 Kube.IconButton {
+                    id: expandButton
                     visible: weekRow.overfilled
                     anchors {
                         bottom: parent.bottom
                         horizontalCenter: parent.horizontalCenter
                     }
-                    iconName: weekRow.expanded ? Kube.Icons.goUp : Kube.Icons.goDown
-                    onClicked: weekRow.expanded = !weekRow.expanded
+                    checkable: true
+                    iconName: checked ? Kube.Icons.goUp : Kube.Icons.goDown
+                    ButtonGroup.group: expandButtonGroup
                 }
             }
         }
