@@ -141,9 +141,9 @@ Item {
                                         Rectangle {
                                             anchors.fill: parent
                                             anchors.margins: 1
-                                            color: Kube.Colors.buttonColor
-                                            opacity: 0.2
-                                            visible: isInPast
+                                            color: isToday && root.showDayIndicator ? Kube.Colors.activeBackgroundColor : Kube.Colors.buttonColor
+                                            opacity: isToday && root.showDayIndicator ? 0.2 : 0.4
+                                            visible: isInPast || (isToday && root.showDayIndicator)
                                         }
                                     }
 

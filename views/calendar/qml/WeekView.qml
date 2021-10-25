@@ -181,7 +181,7 @@ FocusScope {
                         Rectangle {
                             anchors.fill: parent
                             color: Kube.Colors.buttonColor
-                            opacity: 0.2
+                            opacity: 0.4
                             visible: isInPast
                         }
 

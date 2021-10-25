@@ -43,6 +43,7 @@ Item {
     property string backgroundColor: cardboardGrey
     property string darkBackgroundColor: charcoalGrey
     property string viewBackgroundColor: paperWhite
+    property string activeBackgroundColor: plasmaBlue
     property string highlightColor: plasmaBlue
     property string highlightedTextColor: paperWhite
     property string buttonColor: alternateGrey
