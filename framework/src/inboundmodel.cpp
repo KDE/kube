@@ -47,7 +47,7 @@ InboundModel::InboundModel(QObject *parent)
     mInboundModel = QSharedPointer<QStandardItemModel>::create();
     mInboundModel->setItemRoleNames(mRoleNames);
 
-    init();
+    initInboundFilter();
 }
 
 InboundModel::~InboundModel()
@@ -70,6 +70,19 @@ QString InboundModel::folderName(const QByteArray &id) const
 {
     return mFolderNames.value(id);
 }
+
+static bool applyStringFilter(Sink::Query &query, const QString &filterString)
+{
+    if (filterString.length() < 3 && !filterString.isEmpty()) {
+        return false;
+    }
+    if (!filterString.isEmpty()) {
+        query.filter({}, Sink::QueryBase::Comparator(filterString, Sink::QueryBase::Comparator::Fulltext));
+        query.limit(0);
+    }
+    return true;
+}
+
 
 void InboundModel::refresh()
 {
@@ -129,6 +142,11 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
                     .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
                     .collect<ApplicationDomain::Mail::Unread>()
                     .collect<ApplicationDomain::Mail::Important>();
+
+
+                if (mFilter.value("string").isValid()) {
+                    applyStringFilter(query, mFilter.value("string").toString());
+                }
 
                 query.setPostQueryFilter([=, folderNames = mFolderNames] (const ApplicationDomain::ApplicationDomainType &entity){
                     const ApplicationDomain::Mail mail(entity);
@@ -203,6 +221,7 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
                 model->setStart(mCurrentDateTime.date());
                 model->setLength(7);
                 model->setCalendarFilter(calendarFilter);
+                //TODO text filter
 
                 mEventSourceModel = model;
                 QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
@@ -228,7 +247,7 @@ int InboundModel::firstRecentIndex()
     return 0;
 }
 
-void InboundModel::init()
+void InboundModel::initInboundFilter()
 {
 
     setSourceModel(mInboundModel.data());
@@ -257,7 +276,7 @@ void InboundModel::configure(
     folderNameBlacklist = _folderSpecialPurposeBlacklist;
 
     saveSettings();
-    init();
+    initInboundFilter();
 }
 
 void InboundModel::saveSettings()
@@ -543,15 +562,14 @@ static void requestFullMail(Sink::Query &query)
     query.request<Mail::FullPayloadAvailable>();
 }
 
-
 void InboundModel::setFilter(const QVariantMap &filter)
 {
+    mFilter = filter;
     emit filterChanged();
 
     if (filter.value("inbound").toBool()) {
         m_model.clear();
-        //TODO apply search filter
-        init();
+        initInboundFilter();
         return;
     }
 
@@ -595,16 +613,8 @@ void InboundModel::setFilter(const QVariantMap &filter)
     }
 
     //Additional filtering
-    if (filter.contains("string") && filter.value("string").isValid()) {
-        const auto filterString = filter.value("string").toString();
-        if (filterString.length() < 3 && !filterString.isEmpty()) {
-            return;
-        }
-        if (!filterString.isEmpty()) {
-            query.filter({}, Sink::QueryBase::Comparator(filterString, Sink::QueryBase::Comparator::Fulltext));
-            query.limit(0);
-        }
-        validQuery = true;
+    if (filter.value("string").isValid()) {
+        validQuery = applyStringFilter(query, filter.value("string").toString());
     }
 
     if (filter.value("headersOnly").toBool()) {

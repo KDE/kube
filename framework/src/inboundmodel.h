@@ -96,7 +96,7 @@ private:
     void removeAllByType(const QString &type);
     void saveSettings();
     void loadSettings();
-    void init();
+    void initInboundFilter();
     void add(const QSharedPointer<Sink::ApplicationDomain::Mail> &);
     void remove(const QSharedPointer<Sink::ApplicationDomain::Mail> &);
     void update(const QSharedPointer<Sink::ApplicationDomain::Mail> &);
@@ -120,6 +120,7 @@ private:
     QList<QString> folderSpecialPurposeBlacklist;
     QList<QString> folderNameBlacklist;
     QDateTime mCurrentDateTime;
+    QVariantMap mFilter;
 
     int mMinNumberOfItems;
     bool mEventsLoaded;
