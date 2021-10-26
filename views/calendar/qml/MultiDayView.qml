@@ -226,6 +226,7 @@ Item {
                                                 color: Kube.Colors.textColor
                                                 text: modelData.text
                                                 elide: Text.ElideRight
+                                                font.weight: Font.Medium
                                             }
 
                                             MouseArea {

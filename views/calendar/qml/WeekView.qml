@@ -273,6 +273,7 @@ FocusScope {
                                         }
                                         text: model.modelData.text
                                         color: Kube.Colors.textColor
+                                        font.weight: Font.Medium
                                         wrapMode: Text.Wrap
                                         elide: Text.ElideRight
                                         //Only show two lines if we have either space for three or there is no dateLabel
