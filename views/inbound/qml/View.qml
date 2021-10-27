@@ -863,24 +863,14 @@ Kube.View {
             id: componentRoot
 
             function mailFilter() {
-                console.warn("Rebuilding mail filter", componentRoot.parent.itemData.mail)
-                //FIXME
-                // if (!mailListView.threaded || root.showInbound) {
-                if (root.showInbound) {
-                    return {
-                        "singleMail": componentRoot.parent ? componentRoot.parent.itemData.mail : null,
-                        "headersOnly": false,
-                        "fetchMails": true
-                    }
-                }
                 return {
                     "mail": componentRoot.parent ? componentRoot.parent.itemData.mail : null,
                     "headersOnly": false,
                     "fetchMails": true,
                     //TODO hide trash in non-trash folders
                     //Don't hide trash in the trash folder
-            //                 "hideTrash": root.hideTrash,
-            //                 "hideNonTrash": root.hideNonTrash
+                    // "hideTrash": root.hideTrash,
+                    // "hideNonTrash": root.hideNonTrash
                 }
             }
 
