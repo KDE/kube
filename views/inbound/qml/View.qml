@@ -223,306 +223,306 @@ Kube.View {
             }
         }
 
-    StackLayout {
-        width: parent.width/3
-        Layout.fillHeight: true
+        StackLayout {
+            width: parent.width/3
+            Layout.fillHeight: true
 
-        Item {
-            id: listItem
+            Item {
+                id: listItem
 
-            function reselect() {
-                console.warn("Reselect")
-                var idx = listView.currentIndex
-                listView.currentIndex = -1;
-                listView.currentIndex = idx;
-            }
-
-            Kube.Listener {
-                filter: Kube.Messages.selectTopConversation
-                onMessageReceived: {
-                    listView.currentIndex = 0
-                    listView.forceActiveFocus()
-                }
-            }
-
-            Kube.Listener {
-                filter: Kube.Messages.selectNextConversation
-                onMessageReceived: {
-                    listView.incrementCurrentIndex()
-                    listView.forceActiveFocus()
-                }
-            }
-
-            Kube.Listener {
-                filter: Kube.Messages.selectPreviousConversation
-                onMessageReceived: {
-                    listView.decrementCurrentIndex()
-                    listView.forceActiveFocus()
-                }
-            }
-
-            Kube.Label {
-                anchors.centerIn: parent
-                visible: listView.count == 0
-                text: qsTr("Nothing here...")
-            }
-
-            Component {
-                id: sectionHeading
-                Rectangle {
-                    width: ListView.view.width
-                    height: childrenRect.height
-
-                    Kube.Heading {
-                        text: section == "event" ? "Coming up" : "Recently"
-                    }
-                }
-            }
-
-            Kube.ListView {
-                id: listView
-                anchors.fill: parent
-
-                clip: true
-                focus: true
-
-                property double startTime: 0
-
-                onActiveFocusChanged: {
-                    if (activeFocus && currentIndex < 0) {
-                        currentIndex = 0
-                    }
+                function reselect() {
+                    console.warn("Reselect")
+                    var idx = listView.currentIndex
+                    listView.currentIndex = -1;
+                    listView.currentIndex = idx;
                 }
 
-                section {
-                    property: "type"
-                    criteria: ViewSection.FullString
-                    delegate: root.showInbound ? sectionHeading : null
-                }
-
-                Keys.onPressed: {
-                    //Not implemented as a shortcut because we want it only to apply if we have the focus
-                    if (currentItem.currentData.data.mail) {
-                        var currentMail = currentItem.currentData.data.mail;
-                        if (event.text == "d" || event.key == Qt.Key_Delete) {
-                            Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": currentMail})
-                        } else if (event.text == "r") {
-                            Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": currentMail})
-                        } else if (event.text == "i") {
-                            Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": currentMail, "important": !currentItem.currentData.data.important})
-                        } else if (event.text == "u") {
-                            Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": currentMail})
-                        }
-                    }
-                    if (event.key == Qt.Key_Home) {
+                Kube.Listener {
+                    filter: Kube.Messages.selectTopConversation
+                    onMessageReceived: {
                         listView.currentIndex = 0
+                        listView.forceActiveFocus()
                     }
                 }
 
-                model: Kube.InboundModel {
-                    id: inboundModel
-                    objectName: "inboundModel"
-                    property var enableNotifications: false
-                    onEntryAdded: {
-                        if (enableNotifications) {
-                            Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
+                Kube.Listener {
+                    filter: Kube.Messages.selectNextConversation
+                    onMessageReceived: {
+                        listView.incrementCurrentIndex()
+                        listView.forceActiveFocus()
+                    }
+                }
+
+                Kube.Listener {
+                    filter: Kube.Messages.selectPreviousConversation
+                    onMessageReceived: {
+                        listView.decrementCurrentIndex()
+                        listView.forceActiveFocus()
+                    }
+                }
+
+                Kube.Label {
+                    anchors.centerIn: parent
+                    visible: listView.count == 0
+                    text: qsTr("Nothing here...")
+                }
+
+                Component {
+                    id: sectionHeading
+                    Rectangle {
+                        width: ListView.view.width
+                        height: childrenRect.height
+
+                        Kube.Heading {
+                            text: section == "event" ? "Coming up" : "Recently"
+                        }
+                    }
+                }
+
+                Kube.ListView {
+                    id: listView
+                    anchors.fill: parent
+
+                    clip: true
+                    focus: true
+
+                    property double startTime: 0
+
+                    onActiveFocusChanged: {
+                        if (activeFocus && currentIndex < 0) {
+                            currentIndex = 0
                         }
                     }
 
-                    filter: {
-                        "inbound": root.showInbound,
-                        "folder": root.showInbound ? null : accountSwitcher.currentEntity,
-                        "string": root.filter,
+                    section {
+                        property: "type"
+                        criteria: ViewSection.FullString
+                        delegate: root.showInbound ? sectionHeading : null
                     }
 
-                    onFilterChanged: {
-                        enableNotifications = false;
-                        listView.startTime = new Date().getTime()
-                    }
-
-                    onInitialItemsLoaded: {
-                        enableNotifications = true;
-                        listView.currentIndex = inboundModel.firstRecentIndex();
-                        listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
-                        console.info("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
-                    }
-                    currentDate: root.currentDate
-                }
-
-                onCurrentItemChanged: {
-                    if (!currentItem || !currentItem.currentData) {
-                        details.subtype = ""
-                        return
-                    }
-                    var currentData = currentItem.currentData;
-                    if (!!currentData.resource) {
-                        details.resourceId = currentData.resource
-                    }
-                    details.message = currentData.message + "\n" + currentItem.currentData.details
-                    details.timestamp = currentData.timestamp
-                    details.entities = currentData.entities
-                    details.itemData = currentData.data
-                    if (!!currentData.subtype) {
-                        details.subtype = currentData.subtype
-                    } else {
-                        details.subtype = ""
-                    }
-                    if (currentData.data.mail && currentData.data.unread) {
-                        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentData.data.mail})
-                    }
-                }
-
-                delegate: Kube.GenericListDelegate {
-                    id: delegateRoot
-
-                    property var isMail: model.type == "mail"
-                    property var domainObject: model.data.domainObject
-                    property var important: model.data.important
-                    height: isMail ? Kube.Units.gridUnit * 5 : (Kube.Units.gridUnit * 3 + 2 * Kube.Units.smallSpacing)
-
-                    onDropped: {
-                        if (dropAction == Qt.MoveAction) {
-                            if (isMail) {
-                                delegateRoot.visible = false
-                            } else {
-                                Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"event": delegateRoot.domainObject, "calendarId": dropTarget.targetId})
+                    Keys.onPressed: {
+                        //Not implemented as a shortcut because we want it only to apply if we have the focus
+                        if (currentItem.currentData.data.mail) {
+                            var currentMail = currentItem.currentData.data.mail;
+                            if (event.text == "d" || event.key == Qt.Key_Delete) {
+                                Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": currentMail})
+                            } else if (event.text == "r") {
+                                Kube.Fabric.postMessage(Kube.Messages.reply, {"mail": currentMail})
+                            } else if (event.text == "i") {
+                                Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": currentMail, "important": !currentItem.currentData.data.important})
+                            } else if (event.text == "u") {
+                                Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": currentMail})
                             }
                         }
-                    }
-
-                    function formatStartDateTime(date, today) {
-                        if (DateUtils.sameDay(date, today)) {
-                            return qsTr("Today, ")+ Qt.formatDateTime(date, "hh:mm")
-                        }
-
-                        const daysTo = DateUtils.daysSince(date, today)
-                        if (daysTo == 1) {
-                            return qsTr("Tomorrow, ") + Qt.formatDateTime(date, "hh:mm")
-                        }
-                        if (daysTo <= 7) {
-                            return Qt.formatDateTime(date, "dddd") + qsTr(" (in %1 days)").arg(daysTo)
-                        }
-                        if (date.getTime() < today.getTime()) {
-                            return qsTr("%1 days ago").arg(DateUtils.daysSince(today, date))
-                        }
-                        return Qt.formatDateTime(date, "dd MMM yyyy")
-                    }
-
-                    function formatDateTime(date) {
-                        const today = new Date()
-                        if (DateUtils.sameDay(date, today)) {
-                            return Qt.formatDateTime(date, "hh:mm")
-                        }
-                        const lastWeekToday = today.getTime() - ((24*60*60*1000) * 7);
-                        if (date.getTime() >= lastWeekToday) {
-                            return Qt.formatDateTime(date, "ddd hh:mm")
-                        }
-                        return Qt.formatDateTime(date, "dd MMM yyyy")
-                    }
-
-                    mainText: model.data.subject
-                    subText: isMail ? model.data.senderName : model.data.calendar
-                    dateText: isMail ? formatDateTime(model.data.date) : formatStartDateTime(model.data.date, root.currentDate)
-                    active: model.data.unread
-                    disabled: model.data.complete
-                    strikeout: model.data.complete ? model.data.complete : false
-                    counter: isMail ? model.data.threadSize : 0
-                    subtextVisible: true
-                    subtextDisabled: false
-
-                    Component {
-                        id: importantStatusComponent
-                        Kube.Icon {
-                            iconName: Kube.Icons.isImportant
-                            visible:  delegateRoot.important
+                        if (event.key == Qt.Key_Home) {
+                            listView.currentIndex = 0
                         }
                     }
 
-                    statusDelegate: isMail ? importantStatusComponent : null
+                    model: Kube.InboundModel {
+                        id: inboundModel
+                        objectName: "inboundModel"
+                        property var enableNotifications: false
+                        onEntryAdded: {
+                            if (enableNotifications) {
+                                Kube.Fabric.postMessage(Kube.Messages.displayNotification, message)
+                            }
+                        }
 
-                    Component {
-                        id: mailButtonComponent
-                        Row {
-                            Column {
-                                Kube.IconButton {
-                                    id: ignoreButton
-                                    iconName: Kube.Icons.listRemove
-                                    onClicked: inboundModel.ignoreSender(delegateRoot.domainObject)
-                                    activeFocusOnTab: false
-                                    tooltip: qsTr("Ignore sender")
+                        filter: {
+                            "inbound": root.showInbound,
+                            "folder": root.showInbound ? null : accountSwitcher.currentEntity,
+                            "string": root.filter,
+                        }
+
+                        onFilterChanged: {
+                            enableNotifications = false;
+                            listView.startTime = new Date().getTime()
+                        }
+
+                        onInitialItemsLoaded: {
+                            enableNotifications = true;
+                            listView.currentIndex = inboundModel.firstRecentIndex();
+                            listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
+                            console.info("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
+                        }
+                        currentDate: root.currentDate
+                    }
+
+                    onCurrentItemChanged: {
+                        if (!currentItem || !currentItem.currentData) {
+                            details.subtype = ""
+                            return
+                        }
+                        var currentData = currentItem.currentData;
+                        if (!!currentData.resource) {
+                            details.resourceId = currentData.resource
+                        }
+                        details.message = currentData.message + "\n" + currentItem.currentData.details
+                        details.timestamp = currentData.timestamp
+                        details.entities = currentData.entities
+                        details.itemData = currentData.data
+                        if (!!currentData.subtype) {
+                            details.subtype = currentData.subtype
+                        } else {
+                            details.subtype = ""
+                        }
+                        if (currentData.data.mail && currentData.data.unread) {
+                            Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": currentData.data.mail})
+                        }
+                    }
+
+                    delegate: Kube.GenericListDelegate {
+                        id: delegateRoot
+
+                        property var isMail: model.type == "mail"
+                        property var domainObject: model.data.domainObject
+                        property var important: model.data.important
+                        height: isMail ? Kube.Units.gridUnit * 5 : (Kube.Units.gridUnit * 3 + 2 * Kube.Units.smallSpacing)
+
+                        onDropped: {
+                            if (dropAction == Qt.MoveAction) {
+                                if (isMail) {
+                                    delegateRoot.visible = false
+                                } else {
+                                    Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"event": delegateRoot.domainObject, "calendarId": dropTarget.targetId})
                                 }
                             }
-                            Column {
-                                Kube.IconButton {
-                                    id: restoreButton
-                                    iconName: Kube.Icons.undo
-                                    visible: !!delegateRoot.trash
-                                    onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": delegateRoot.domainObject})
-                                    activeFocusOnTab: false
-                                    tooltip: qsTr("Restore from trash")
-                                }
+                        }
 
-                                Kube.IconButton {
-                                    id: readButton
-                                    iconName: Kube.Icons.markAsRead
-                                    visible: model.data.unread && !model.data.trash
-                                    onClicked: {
-                                        Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": delegateRoot.domainObject})
+                        function formatStartDateTime(date, today) {
+                            if (DateUtils.sameDay(date, today)) {
+                                return qsTr("Today, ")+ Qt.formatDateTime(date, "hh:mm")
+                            }
+
+                            const daysTo = DateUtils.daysSince(date, today)
+                            if (daysTo == 1) {
+                                return qsTr("Tomorrow, ") + Qt.formatDateTime(date, "hh:mm")
+                            }
+                            if (daysTo <= 7) {
+                                return Qt.formatDateTime(date, "dddd") + qsTr(" (in %1 days)").arg(daysTo)
+                            }
+                            if (date.getTime() < today.getTime()) {
+                                return qsTr("%1 days ago").arg(DateUtils.daysSince(today, date))
+                            }
+                            return Qt.formatDateTime(date, "dd MMM yyyy")
+                        }
+
+                        function formatDateTime(date) {
+                            const today = new Date()
+                            if (DateUtils.sameDay(date, today)) {
+                                return Qt.formatDateTime(date, "hh:mm")
+                            }
+                            const lastWeekToday = today.getTime() - ((24*60*60*1000) * 7);
+                            if (date.getTime() >= lastWeekToday) {
+                                return Qt.formatDateTime(date, "ddd hh:mm")
+                            }
+                            return Qt.formatDateTime(date, "dd MMM yyyy")
+                        }
+
+                        mainText: model.data.subject
+                        subText: isMail ? model.data.senderName : model.data.calendar
+                        dateText: isMail ? formatDateTime(model.data.date) : formatStartDateTime(model.data.date, root.currentDate)
+                        active: model.data.unread
+                        disabled: model.data.complete
+                        strikeout: model.data.complete ? model.data.complete : false
+                        counter: isMail ? model.data.threadSize : 0
+                        subtextVisible: true
+                        subtextDisabled: false
+
+                        Component {
+                            id: importantStatusComponent
+                            Kube.Icon {
+                                iconName: Kube.Icons.isImportant
+                                visible:  delegateRoot.important
+                            }
+                        }
+
+                        statusDelegate: isMail ? importantStatusComponent : null
+
+                        Component {
+                            id: mailButtonComponent
+                            Row {
+                                Column {
+                                    Kube.IconButton {
+                                        id: ignoreButton
+                                        iconName: Kube.Icons.listRemove
+                                        onClicked: inboundModel.ignoreSender(delegateRoot.domainObject)
+                                        activeFocusOnTab: false
+                                        tooltip: qsTr("Ignore sender")
                                     }
-                                    tooltip: qsTr("Mark as read")
                                 }
+                                Column {
+                                    Kube.IconButton {
+                                        id: restoreButton
+                                        iconName: Kube.Icons.undo
+                                        visible: !!delegateRoot.trash
+                                        onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": delegateRoot.domainObject})
+                                        activeFocusOnTab: false
+                                        tooltip: qsTr("Restore from trash")
+                                    }
 
-                                Kube.IconButton {
-                                    id: unreadButton
-                                    iconName: Kube.Icons.markAsUnread
-                                    visible: !model.data.unread && !model.data.trash
-                                    onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": delegateRoot.domainObject})
-                                    activeFocusOnTab: false
-                                    tooltip: qsTr("Mark as unread")
-                                }
+                                    Kube.IconButton {
+                                        id: readButton
+                                        iconName: Kube.Icons.markAsRead
+                                        visible: model.data.unread && !model.data.trash
+                                        onClicked: {
+                                            Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": delegateRoot.domainObject})
+                                        }
+                                        tooltip: qsTr("Mark as read")
+                                    }
 
-                                Kube.IconButton {
-                                    id: importantButton
-                                    iconName: delegateRoot.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
-                                    visible: !!delegateRoot.domainObject
-                                    onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": delegateRoot.domainObject, "important": !model.data.important})
-                                    activeFocusOnTab: false
-                                    tooltip: qsTr("Mark as important")
-                                }
+                                    Kube.IconButton {
+                                        id: unreadButton
+                                        iconName: Kube.Icons.markAsUnread
+                                        visible: !model.data.unread && !model.data.trash
+                                        onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": delegateRoot.domainObject})
+                                        activeFocusOnTab: false
+                                        tooltip: qsTr("Mark as unread")
+                                    }
 
-                                Kube.IconButton {
-                                    id: deleteButton
-                                    objectName: "deleteButton"
-                                    iconName: Kube.Icons.moveToTrash
-                                    visible: !!delegateRoot.domainObject
-                                    onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": delegateRoot.domainObject})
-                                    activeFocusOnTab: false
-                                    tooltip: qsTr("Move to trash")
+                                    Kube.IconButton {
+                                        id: importantButton
+                                        iconName: delegateRoot.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
+                                        visible: !!delegateRoot.domainObject
+                                        onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": delegateRoot.domainObject, "important": !model.data.important})
+                                        activeFocusOnTab: false
+                                        tooltip: qsTr("Mark as important")
+                                    }
+
+                                    Kube.IconButton {
+                                        id: deleteButton
+                                        objectName: "deleteButton"
+                                        iconName: Kube.Icons.moveToTrash
+                                        visible: !!delegateRoot.domainObject
+                                        onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": delegateRoot.domainObject})
+                                        activeFocusOnTab: false
+                                        tooltip: qsTr("Move to trash")
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    Component {
-                        id: eventButtonComponent
-                        Column {
-                            //Cancel
-                            //Reschedule
-                            //Ignore?
-                            Kube.IconButton {
-                                iconName: Kube.Icons.checkbox
-                                activeFocusOnTab: false
-                                tooltip: qsTr("Done!")
+                        Component {
+                            id: eventButtonComponent
+                            Column {
+                                //Cancel
+                                //Reschedule
+                                //Ignore?
+                                Kube.IconButton {
+                                    iconName: Kube.Icons.checkbox
+                                    activeFocusOnTab: false
+                                    tooltip: qsTr("Done!")
+                                }
                             }
                         }
+
+                        buttonDelegate: isMail ? mailButtonComponent : eventButtonComponent
+
                     }
-
-                    buttonDelegate: isMail ? mailButtonComponent : eventButtonComponent
-
                 }
             }
         }
-    }
 
         Item {
             id: details
