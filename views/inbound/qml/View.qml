@@ -446,6 +446,7 @@ Kube.View {
                                 Column {
                                     Kube.IconButton {
                                         id: ignoreButton
+                                        visible: root.showInbound
                                         iconName: Kube.Icons.listRemove
                                         onClicked: inboundModel.ignoreSender(delegateRoot.domainObject)
                                         activeFocusOnTab: false
