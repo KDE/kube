@@ -181,6 +181,8 @@ Kube.InlineAccountSwitcher {
             height: Kube.Units.gridUnit * 1.5
             hoverEnabled: true
             property bool isActive: listView.currentIndex === index
+            property color color: !!model.color ? model.color : Kube.Colors.textColor
+            property bool showColorIndicator: !!model.color
 
             DropArea {
                 id: dropArea
@@ -225,7 +227,11 @@ Kube.InlineAccountSwitcher {
                         width: Kube.Units.gridUnit * 0.8
                         height: Kube.Units.gridUnit * 0.8
 
-                        color: !!model.color ? model.color : color
+                        color: delegate.color
+
+                        //Add a border because we don't have a background
+                        border.color: Kube.Colors.backgroundColor
+                        border.width: !delegate.showColorIndicator ? 1 : 0
 
                         Rectangle {
                             id: highlight
@@ -237,8 +243,8 @@ Kube.InlineAccountSwitcher {
 
                         Kube.Icon {
                             anchors.centerIn: parent
-                            height: Kube.Units.gridUnit
-                            width: Kube.Units.gridUnit
+                            height: Kube.Units.gridUnit - 4
+                            width: Kube.Units.gridUnit - 4
                             visible: checkBox.checked
                             iconName: Kube.Icons.checkbox_inverted
                         }
@@ -254,11 +260,11 @@ Kube.InlineAccountSwitcher {
                     clip: true
                 }
                 Rectangle {
-                    visible: !listView.editMode && !!model.color
+                    visible: delegate.showColorIndicator && !listView.editMode
                     width: Kube.Units.gridUnit * 0.8
                     height: Kube.Units.gridUnit * 0.8
                     radius: width / 2
-                    color: !!model.color ? model.color : color
+                    color: delegate.color
                 }
                 Kube.IconButton {
                     id: removeButton
