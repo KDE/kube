@@ -30,7 +30,7 @@ Kube.InlineAccountSwitcher {
     property string entityType
     property var roles
     property string sortRole
-    property var filter: {}
+    property var filter: ({})
 
     property alias enabledEntities: entityFilterCollector.checkedEntities
     property var currentEntityIdentifier: null

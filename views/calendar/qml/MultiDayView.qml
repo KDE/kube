@@ -87,7 +87,7 @@ Item {
                     start: root.startDate
                     length: root.daysToShow
                     calendarFilter: root.calendarFilter
-                    filter: root.filter ? root.filter : {}
+                    filter: root.filter ? root.filter : ({})
                 }
                 // daysPerRow: root.daysPerRow //Hardcoded to 7
             }
