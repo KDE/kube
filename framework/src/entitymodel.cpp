@@ -336,8 +336,16 @@ bool EntityModel::setData(const QModelIndex &index, const QVariant &value, int r
         if (!modifiedEntity.changedProperties().isEmpty()) {
             Sink::Store::modify(modifiedEntity).exec();
         }
+    } else if (mType == "folder") {
+        Sink::ApplicationDomain::Folder modifiedEntity{*entity};
+        const auto propertyName = mRoleNames.value(role);
+        modifiedEntity.setProperty(propertyName, value.toBool());
+        //Ignore if we didn't modify anything.
+        if (!modifiedEntity.changedProperties().isEmpty()) {
+            Sink::Store::modify(modifiedEntity).exec();
+        }
     } else {
-        qWarning() << "Not implemented";
+        qWarning() << "Type is not implemented " << mType;
     }
     return true;
 }
