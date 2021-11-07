@@ -257,7 +257,7 @@ void EntityModel::setType(const QString &type)
 
 QString EntityModel::type() const
 {
-    return {};
+    return mType;
 }
 
 void EntityModel::setRoles(const QStringList &roles)
@@ -276,10 +276,19 @@ void EntityModel::setRoles(const QStringList &roles)
     updateQuery();
 }
 
+
+static QStringList toStringList(const QByteArrayList &list)
+{
+    QStringList s;
+    for (const auto &e : list) {
+        s << e;
+    }
+    return s;
+}
+
 QStringList EntityModel::roles() const
 {
-    // return mRoleNames.values();
-    return {};
+    return toStringList(mRoleNames.values());
 }
 
 void EntityModel::setFilter(const QVariantMap &filter)
@@ -290,7 +299,7 @@ void EntityModel::setFilter(const QVariantMap &filter)
 
 QVariantMap EntityModel::filter() const
 {
-    return {};
+    return mFilter;
 }
 
 void EntityModel::setSortRole(const QString &sortRole)
