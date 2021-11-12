@@ -30,9 +30,9 @@ Kube.View {
     visibleViews: 2
     property bool newMessage: false
     property int loadType: Kube.ComposerController.Draft
-    property variant message: ({})
+    property variant message: {}
     property variant recipients: []
-    property variant accountId: ({})
+    property variant accountId: {}
 
     resources: [
         Kube.ComposerController {
