@@ -23,7 +23,7 @@ import org.kube.framework 1.0 as Kube
 Repeater {
     id: root
     property alias extensionPoint: extensionModel.extensionPoint
-    property variant context: ({})
+    property variant context: {}
     property Item item: null
 
     model: Kube.ExtensionModel {
