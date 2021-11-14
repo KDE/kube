@@ -82,7 +82,7 @@ static QDateTime getDate(const QVariant &v)
 
 bool InboundModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-    if (mInboundModel) {
+    if (!m_model) {
         const auto leftDate = left.data(mRoles["timestamp"]).toDateTime();
         const auto rightDate = right.data(mRoles["timestamp"]).toDateTime();
         if (leftDate == rightDate) {
@@ -296,8 +296,6 @@ void InboundModel::initInboundFilter()
 {
 
     setSourceModel(mInboundModel.data());
-    setSortRole(mRoles.value("timestamp"));
-    sort(0, Qt::DescendingOrder);
 
     refresh();
 }
@@ -653,7 +651,6 @@ void InboundModel::setFilter(const QVariantMap &filter)
         query.limit(100);
 
         //Latest mail on top
-        sort(0, Qt::DescendingOrder);
         validQuery = true;
     }
 
