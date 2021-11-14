@@ -706,10 +706,9 @@ QVariant InboundModel::data(const QModelIndex &idx, int role) const
     // qWarning() << "Getting model data" << idx << role;
     if (m_model) {
         // qWarning() << "Getting model data from model" << idx << role;
-        auto srcIdx = mapToSource(idx);
-        auto mail = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
+        const auto srcIdx = mapToSource(idx);
+        const auto mail = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
         //TODO constexpr to get the role from name and then do a switch?
-        //TODO get the mail from the source model
         const auto roleName = mRoleNames.value(role);
         if (roleName == "type") {
             return "mail";
@@ -729,7 +728,6 @@ QVariant InboundModel::data(const QModelIndex &idx, int role) const
         if (roleName == "date") {
             return mail->getDate();
         }
-//?
         if (roleName == "timestamp") {
             return mail->getDate();
         }
@@ -748,70 +746,5 @@ QVariant InboundModel::data(const QModelIndex &idx, int role) const
             };
         }
     }
-    //TODO if we show a folder just retrieve data from maillistmodel and mash into our "special format"
-    // auto srcIdx = mapToSource(idx);
-    // auto mail = srcIdx.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Mail::Ptr>();
-    // switch (role) {
-    //     case Subject:
-    //         if (mail->isAggregate()) {
-    //             return mail->getProperty(QByteArray{Sink::ApplicationDomain::Mail::Subject::name} + QByteArray{"Selected"});
-    //         } else {
-    //             return mail->getSubject();
-    //         }
-    //     case Sender:
-    //         return mail->getSender().emailAddress;
-    //     case SenderName:
-    //         return mail->getSender().name;
-    //     case To:
-    //         return join(mail->getTo());
-    //     case Cc:
-    //         return join(mail->getCc());
-    //     case Bcc:
-    //         return join(mail->getBcc());
-    //     case Date:
-    //         return mail->getDate();
-    //     case Unread:
-    //         if (mail->isAggregate()) {
-    //             return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Unread>().contains(true);
-    //         } else {
-    //             return mail->getUnread();
-    //         }
-    //     case Important:
-    //         if (mail->isAggregate()) {
-    //             return mail->getCollectedProperty<Sink::ApplicationDomain::Mail::Important>().contains(true);
-    //         } else {
-    //             return mail->getImportant();
-    //         }
-    //     case Draft:
-    //         return mail->getDraft();
-    //     case Sent:
-    //         return mail->getSent();
-    //     case Trash:
-    //         return mail->getTrash();
-    //     case Id:
-    //         return mail->identifier();
-    //     case DomainObject:
-    //         return QVariant::fromValue(mail);
-    //     case MimeMessage:
-    //         if (mFetchMails) {
-    //             const_cast<MailListModel*>(this)->fetchMail(mail);
-    //         }
-    //         return mail->getMimeMessage();
-    //     case ThreadSize:
-    //         return mail->count();
-    //     case Mail:
-    //         return QVariant::fromValue(mail);
-    //     case Incomplete:
-    //         return !mail->getFullPayloadAvailable();
-    //     case Status:
-    //         const auto status = srcIdx.data(Sink::Store::StatusRole).toInt();
-    //         if (status == Sink::ApplicationDomain::SyncStatus::SyncInProgress) {
-    //             return InProgressStatus;
-    //         }
-    //         if (status == Sink::ApplicationDomain::SyncStatus::SyncError) {
-    //             return ErrorStatus;
-    //         }
-    //         return NoStatus;
-    // }
     return QSortFilterProxyModel::data(idx, role);
 }
