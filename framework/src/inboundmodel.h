@@ -72,6 +72,7 @@ public:
     void setFilter(const QVariantMap &);
     QVariantMap filter() const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 

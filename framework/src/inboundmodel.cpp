@@ -30,6 +30,9 @@ InboundModel::InboundModel(QObject *parent)
     : QSortFilterProxyModel(parent),
     mMinNumberOfItems{50}
 {
+    setDynamicSortFilter(true);
+    sort(0, Qt::DescendingOrder);
+
     QByteArrayList roles{"type", "subtype", "timestamp", "message", "details", "entities", "resource", "data"};
 
     int role = Qt::UserRole + 1;
@@ -53,6 +56,48 @@ InboundModel::InboundModel(QObject *parent)
 InboundModel::~InboundModel()
 {
 
+}
+
+static QByteArray getIdentifier(const QVariant &v)
+{
+    if (v.canConvert<Sink::ApplicationDomain::Event::Ptr>()) {
+        return v.value<Sink::ApplicationDomain::Event::Ptr>()->identifier();
+    }
+    if (v.canConvert<Sink::ApplicationDomain::Mail::Ptr>()) {
+        return v.value<Sink::ApplicationDomain::Mail::Ptr>()->identifier();
+    }
+    return {};
+}
+
+static QDateTime getDate(const QVariant &v)
+{
+    if (v.canConvert<Sink::ApplicationDomain::Event::Ptr>()) {
+        return v.value<Sink::ApplicationDomain::Event::Ptr>()->getStartTime();
+    }
+    if (v.canConvert<Sink::ApplicationDomain::Mail::Ptr>()) {
+        return v.value<Sink::ApplicationDomain::Mail::Ptr>()->getDate();
+    }
+    return {};
+}
+
+bool InboundModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+    if (mInboundModel) {
+        const auto leftDate = left.data(mRoles["timestamp"]).toDateTime();
+        const auto rightDate = right.data(mRoles["timestamp"]).toDateTime();
+        if (leftDate == rightDate) {
+            return left.data(mRoles["id"]).toByteArray() <
+                    right.data(mRoles["id"]).toByteArray();
+        }
+        return leftDate < rightDate;
+    }
+    const auto leftDate = getDate(left.data(Sink::Store::DomainObjectRole));
+    const auto rightDate = getDate(right.data(Sink::Store::DomainObjectRole));
+    if (leftDate == rightDate) {
+        return getIdentifier(left.data(Sink::Store::DomainObjectRole)) <
+                getIdentifier(right.data(Sink::Store::DomainObjectRole));
+    }
+    return leftDate < rightDate;
 }
 
 void InboundModel::ignoreSender(const QVariant &variant)

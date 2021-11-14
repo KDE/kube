@@ -282,6 +282,153 @@ private slots:
         }
     }
 
+    void testInboundSorting()
+    {
+        using namespace Sink::ApplicationDomain;
+        auto account = ApplicationDomainType::createEntity<SinkAccount>();
+        VERIFYEXEC(Sink::Store::create(account));
+
+        auto resource = Sink::ApplicationDomain::DummyResource::create(account.identifier());
+        VERIFYEXEC(Sink::Store::create(resource));
+
+        auto folder1 = ApplicationDomainType::createEntity<Folder>(resource.identifier());
+        VERIFYEXEC(Sink::Store::create(folder1));
+
+        {
+            auto mail1 = ApplicationDomainType::createEntity<Mail>(resource.identifier());
+            mail1.setFolder(folder1);
+            KMime::Types::Mailbox from;
+            from.fromUnicodeString("from@example.org");
+            auto message = MailTemplates::createMessage({}, {"foo@test.com"}, {}, {}, from, "mail1", "testInboundSorting", false, {}, {}, {});
+            message->date()->setDateTime(QDateTime::currentDateTime().addDays(-1));
+            message->assemble();
+            mail1.setMimeMessage(message->encodedContent(true));
+            VERIFYEXEC(Sink::Store::create(mail1));
+        }
+
+        {
+            auto mail2 = ApplicationDomainType::createEntity<Mail>(resource.identifier());
+            mail2.setFolder(folder1);
+            KMime::Types::Mailbox from;
+            from.fromUnicodeString("from@example.org");
+            auto message = MailTemplates::createMessage({}, {"foo@test.com"}, {}, {}, from, "mail2", "testInboundSorting", false, {}, {}, {});
+            message->date()->setDateTime(QDateTime::currentDateTime());
+            message->assemble();
+            qWarning() << message->encodedContent(true);
+            mail2.setMimeMessage(message->encodedContent(true));
+            VERIFYEXEC(Sink::Store::create(mail2));
+        }
+
+        {
+            auto mail3 = ApplicationDomainType::createEntity<Mail>(resource.identifier());
+            mail3.setFolder(folder1);
+            KMime::Types::Mailbox from;
+            from.fromUnicodeString("from@example.org");
+            auto message = MailTemplates::createMessage({}, {"foo@test.com"}, {}, {}, from, "mail3", "testInboundSorting", false, {}, {}, {});
+            message->date()->setDateTime(QDateTime::currentDateTime().addDays(-2));
+            message->assemble();
+            qWarning() << message->encodedContent(true);
+            mail3.setMimeMessage(message->encodedContent(true));
+            VERIFYEXEC(Sink::Store::create(mail3));
+        }
+
+        VERIFYEXEC(Sink::ResourceControl::flushMessageQueue(resource.identifier()));
+
+
+        InboundModel model;
+        QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
+        model.setCurrentDate({});
+        model.configure(
+            {}, // QSet<QString> &_senderBlacklist,
+            {}, // QSet<QString> &_toBlacklist,
+            {}, // QString &_senderNameContainsFilter,
+            {}, // QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
+            {}, // QList<QRegularExpression> &_messageFilter,
+            {}, // QList<QString> &_folderSpecialPurposeBlacklist,
+            {}  // QList<QString> &_folderNameBlacklist,
+        );
+        model.setFilter({
+            {"inbound", true},
+            {"string", "testInboundSorting"}
+        });
+
+        //FIXME
+        // QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
+        QTRY_COMPARE(model.rowCount({}), 3);
+        {
+            //Sorted by date, not creation
+            QCOMPARE(model.index(0, 0, {}).data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>()->getSubject(), QString{"mail2"});
+            QCOMPARE(model.index(1, 0, {}).data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>()->getSubject(), QString{"mail1"});
+            QCOMPARE(model.index(2, 0, {}).data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>()->getSubject(), QString{"mail3"});
+        }
+    }
+
+    void testMailFolderSorting()
+    {
+        using namespace Sink::ApplicationDomain;
+        auto account = ApplicationDomainType::createEntity<SinkAccount>();
+        VERIFYEXEC(Sink::Store::create(account));
+
+        auto resource = Sink::ApplicationDomain::DummyResource::create(account.identifier());
+        VERIFYEXEC(Sink::Store::create(resource));
+
+        auto folder1 = ApplicationDomainType::createEntity<Folder>(resource.identifier());
+        VERIFYEXEC(Sink::Store::create(folder1));
+
+        {
+            auto mail1 = ApplicationDomainType::createEntity<Mail>(resource.identifier());
+            mail1.setFolder(folder1);
+            KMime::Types::Mailbox from;
+            from.fromUnicodeString("from@example.org");
+            auto message = MailTemplates::createMessage({}, {"foo@test.com"}, {}, {}, from, "mail1", "Body", false, {}, {}, {});
+            message->date()->setDateTime(QDateTime::currentDateTime().addDays(-1));
+            message->assemble();
+            mail1.setMimeMessage(message->encodedContent(true));
+            VERIFYEXEC(Sink::Store::create(mail1));
+        }
+
+        {
+            auto mail2 = ApplicationDomainType::createEntity<Mail>(resource.identifier());
+            mail2.setFolder(folder1);
+            KMime::Types::Mailbox from;
+            from.fromUnicodeString("from@example.org");
+            auto message = MailTemplates::createMessage({}, {"foo@test.com"}, {}, {}, from, "mail2", "Body", false, {}, {}, {});
+            message->date()->setDateTime(QDateTime::currentDateTime());
+            message->assemble();
+            qWarning() << message->encodedContent(true);
+            mail2.setMimeMessage(message->encodedContent(true));
+            VERIFYEXEC(Sink::Store::create(mail2));
+        }
+
+        {
+            auto mail3 = ApplicationDomainType::createEntity<Mail>(resource.identifier());
+            mail3.setFolder(folder1);
+            KMime::Types::Mailbox from;
+            from.fromUnicodeString("from@example.org");
+            auto message = MailTemplates::createMessage({}, {"foo@test.com"}, {}, {}, from, "mail3", "Body", false, {}, {}, {});
+            message->date()->setDateTime(QDateTime::currentDateTime().addDays(-2));
+            message->assemble();
+            qWarning() << message->encodedContent(true);
+            mail3.setMimeMessage(message->encodedContent(true));
+            VERIFYEXEC(Sink::Store::create(mail3));
+        }
+
+        VERIFYEXEC(Sink::ResourceControl::flushMessageQueue(resource.identifier()));
+
+        InboundModel model;
+        QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
+        model.setFilter({{"folder", QVariant::fromValue(ApplicationDomainType::Ptr::create(folder1))}});
+
+        QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
+        QCOMPARE(model.rowCount({}), 3);
+        {
+            //Sorted by date, not creation
+            QCOMPARE(model.index(0, 0, {}).data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>()->getSubject(), QString{"mail2"});
+            QCOMPARE(model.index(1, 0, {}).data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>()->getSubject(), QString{"mail1"});
+            QCOMPARE(model.index(2, 0, {}).data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>()->getSubject(), QString{"mail3"});
+        }
+    }
+
 };
 
 QTEST_MAIN(InboundModelTest)
