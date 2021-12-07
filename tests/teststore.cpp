@@ -312,6 +312,22 @@ static void createAddressbook(const QVariantMap &object)
     addressbook.setName(object["name"].toString());
     Sink::Store::create(addressbook).exec().waitForFinished();
 
+    if (object.contains("generator")) {
+        const auto generator = object.value("generator").toMap();
+        const auto _template = generator["template"].toMap();
+        const auto count = generator["count"].toInt();
+        const auto key = generator["key"].toString();
+
+        for (int i = 0; i < count; i++) {
+            auto _object = _template;
+            const auto replacement = key + QString::number(i);
+            _object.insert("givenname", _object["givenname"].toString().replace(key, replacement));
+            _object.insert("email", _object["email"].toStringList().replaceInStrings(key, replacement));
+
+            createContact(_object, addressbook.identifier(), resourceId);
+        }
+    }
+
     iterateOverObjects(object.value("contacts").toList(), [=](const QVariantMap &object) {
         createContact(object, addressbook.identifier(), resourceId);
     });
