@@ -105,14 +105,14 @@ Kube.TextField {
         padding: 0
         width: root.width
         contentHeight: listView.height
+        height: contentHeight
 
         Kube.ListView {
             id: listView
-            contentHeight: contentItem.childrenRect.height
-            height: contentHeight
+            contentHeight: count * (root.height + spacing)
+            height: Math.min(contentHeight, Kube.Units.gridUnit * 20)
             width: parent.width
             interactive: true
-            ScrollBar.vertical: null
             model: root.model
             delegate: Kube.ListDelegate {
                 id: listDelegate
