@@ -38,7 +38,8 @@
 #include <QFont>
 #include <QFontInfo>
 #include <QDebug>
-#include <QTimer>
+#include <QElapsedTimer>
+#include <QQuickWindow>
 #include <QQmlContext>
 #include <QStandardPaths>
 #include <QLockFile>
@@ -119,6 +120,9 @@ int main(int argc, char *argv[])
     std::signal(SIGABRT, crashHandler);
     std::set_terminate(terminateHandler);
 
+    QElapsedTimer startupTimer;
+    startupTimer.start();
+
     //Instead of QtWebEngine::initialize();
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
@@ -171,7 +175,7 @@ int main(int argc, char *argv[])
         }
         QObject::connect(&interface, &DBusInterface::activated, [&] (const QString &view) {
             qDebug() << "Activated " << view;
-            for (auto w : QApplication::topLevelWindows()) {
+            for (auto w : QGuiApplication::topLevelWindows()) {
                 //QWindow::alert and QWindow::requestActivate don't work with wayland. But hide and show does.
                 w->setVisible(false);
                 w->setVisible(true);
@@ -224,6 +228,7 @@ int main(int argc, char *argv[])
             }
         }).exec();
 
+    qInfo() << "Startuptime: Initializing engine" << startupTimer.elapsed();
     QQmlApplicationEngine engine;
     //For windows
     engine.addImportPath(QCoreApplication::applicationDirPath() + QStringLiteral("/../qml"));
@@ -238,6 +243,26 @@ int main(int argc, char *argv[])
         { "defaultView", QVariant::fromValue(parser.value("view")) }
     });
     engine.load(QUrl::fromLocalFile(mainFile));
+    qInfo() << "Startuptime: Loaded main QML file" << startupTimer.elapsed();
+
+    for (auto w : QGuiApplication::topLevelWindows()) {
+        QQuickWindow *window;
+        if (w->isVisible()) {
+            window = qobject_cast<QQuickWindow*>(w);
+            static QMetaObject::Connection conn = QObject::connect(window, &QQuickWindow::frameSwapped, &app, [&app, &startupTimer]() {
+                // this is a queued signal, so there may be still one in the queue after calling disconnect()
+                if (conn) {
+#if defined(Q_CC_MSVC)
+                    app.disconnect(conn); // MSVC cannot distinguish between static and non-static overloads in lambdas
+#else
+                    QObject::disconnect(conn);
+#endif
+                    qInfo() << "Startuptime: Startup complete" << startupTimer.elapsed();
+                }
+            });
+        }
+    }
+
     return app.exec();
 }
 
