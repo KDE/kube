@@ -649,7 +649,41 @@ void InboundModel::setFilter(const QVariantMap &filter)
         query.setFlags(Sink::Query::LiveQuery);
         query.limit(100);
 
-        //Latest mail on top
+        validQuery = true;
+    } else if (!filter.value("account").toByteArray().isEmpty()) {
+        query.resourceFilter<SinkResource::Account>(filter.value("account").toByteArray());
+    }
+
+    if (filter.value("important").toBool()) {
+        query.setId("threadLeadersImportant");
+        query.setFlags(Sink::Query::LiveQuery);
+        query.filter<Sink::ApplicationDomain::Mail::Important>(true);
+        query.sort<ApplicationDomain::Mail::Date>();
+        query.reduce<ApplicationDomain::Mail::ThreadId>(Query::Reduce::Selector::max<ApplicationDomain::Mail::Date>())
+            .count()
+            .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
+            .collect<ApplicationDomain::Mail::Unread>()
+            .collect<ApplicationDomain::Mail::Important>();
+        validQuery = true;
+    }
+
+    if (filter.value("recent").toBool()) {
+        query.setFlags(Sink::Query::LiveQuery);
+        query.filter<Mail::Sent>(true);
+        query.filter<Mail::Trash>(false);
+        query.sort<ApplicationDomain::Mail::Date>();
+        query.reduce<ApplicationDomain::Mail::ThreadId>(Query::Reduce::Selector::max<ApplicationDomain::Mail::Date>())
+            .count()
+            .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
+            .collect<ApplicationDomain::Mail::Unread>()
+            .collect<ApplicationDomain::Mail::Sent>();
+        validQuery = true;
+    }
+
+    if (filter.value("drafts").toBool()) {
+        query.setFlags(Sink::Query::LiveQuery);
+        query.filter<Mail::Draft>(true);
+        query.filter<Mail::Trash>(false);
         validQuery = true;
     }
 

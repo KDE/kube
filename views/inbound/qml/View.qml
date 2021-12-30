@@ -34,7 +34,8 @@ Kube.View {
     property bool pendingNotification: false
 
     property bool showInbound: true
-    property bool important: false
+    property bool showRecent: false
+    property bool showImportant: false
     property var currentFolder: null
 
     onPendingErrorChanged: {
@@ -72,8 +73,9 @@ Kube.View {
 
     onCurrentFolderChanged: {
         if (!!root.currentFolder) {
-            root.important = false
             root.showInbound = false
+            root.showRecent = false
+            root.showImportant = false
         }
     }
 
@@ -186,6 +188,36 @@ Kube.View {
                         horizontalAlignment: Text.AlignHLeft
                         onClicked: {
                             root.showInbound = true
+                            root.showRecent = false
+                            root.showImportant = false
+                            accountSwitcher.clearSelection()
+                        }
+                    }
+                    Kube.TextButton {
+                        Layout.fillWidth: true
+                        text: qsTr("Recent")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.showRecent
+                        horizontalAlignment: Text.AlignHLeft
+                        onClicked: {
+                            root.showInbound = false
+                            root.showRecent = true
+                            root.showImportant = false
+                            accountSwitcher.clearSelection()
+                        }
+                    }
+                    Kube.TextButton {
+                        Layout.fillWidth: true
+                        text: qsTr("Important")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.showImportant
+                        horizontalAlignment: Text.AlignHLeft
+                        onClicked: {
+                            root.showInbound = false
+                            root.showRecent = false
+                            root.showImportant = true
                             accountSwitcher.clearSelection()
                         }
                     }
@@ -331,7 +363,9 @@ Kube.View {
 
                         filter: {
                             "inbound": root.showInbound,
-                            "folder": root.showInbound ? null : accountSwitcher.currentEntity,
+                            "recent": root.showRecent,
+                            "important": root.showImportant,
+                            "folder": (root.showInbound || root.showRecent || root.showImportant) ? null : accountSwitcher.currentEntity,
                             "string": root.filter,
                         }
 
