@@ -107,7 +107,7 @@ void InboundModel::ignoreSender(const QVariant &variant)
         qDebug() << "Ignoring " << sender;
         senderBlacklist.insert(sender);
         saveSettings();
-        refresh(true, false);
+        refreshMail();
     }
 }
 
@@ -131,10 +131,11 @@ static bool applyStringFilter(Sink::Query &query, const QString &filterString)
 
 void InboundModel::refresh()
 {
-    refresh(true, true);
+    refreshMail();
+    refreshCalendar();
 }
 
-void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
+void InboundModel::refreshMail()
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
@@ -143,143 +144,146 @@ void InboundModel::refresh(bool refreshMail, bool refreshCalendar)
 
     loadSettings();
 
+    removeAllByType("mail");
 
-    if (refreshMail) {
-        removeAllByType("mail");
+    Sink::Query folderQuery{};
+    folderQuery.filter<Folder::Enabled>(true);
+    folderQuery.request<Folder::SpecialPurpose>();
+    folderQuery.request<Folder::Name>();
 
-        Sink::Query folderQuery{};
-        folderQuery.filter<Folder::Enabled>(true);
-        folderQuery.request<Folder::SpecialPurpose>();
-        folderQuery.request<Folder::Name>();
-
-        Sink::Store::fetchAll<Folder>(folderQuery)
-            .then([this] (const QList<Folder::Ptr> &list) {
-                QList<QByteArray> folders;
-                for (const auto &folder : list) {
-                    const auto skip = [this, folder] {
-                        for (const auto &purpose : folderSpecialPurposeBlacklist) {
-                            if (folder->getSpecialPurpose().contains(purpose.toLatin1())) {
-                                return true;
-                            }
+    Sink::Store::fetchAll<Folder>(folderQuery)
+        .then([this] (const QList<Folder::Ptr> &list) {
+            QList<QByteArray> folders;
+            for (const auto &folder : list) {
+                const auto skip = [this, folder] {
+                    for (const auto &purpose : folderSpecialPurposeBlacklist) {
+                        if (folder->getSpecialPurpose().contains(purpose.toLatin1())) {
+                            return true;
                         }
-                        for (const auto &name : folderNameBlacklist) {
-                            if (folder->getName().contains(name, Qt::CaseInsensitive)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }();
-                    if (skip) {
-                        continue;
                     }
-                    folders << folder->identifier();
-                    mFolderNames.insert(folder->identifier(), folder->getName());
+                    for (const auto &name : folderNameBlacklist) {
+                        if (folder->getName().contains(name, Qt::CaseInsensitive)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }();
+                if (skip) {
+                    continue;
+                }
+                folders << folder->identifier();
+                mFolderNames.insert(folder->identifier(), folder->getName());
+            }
+
+            Sink::Query query;
+            query.setFlags(Sink::Query::LiveQuery);
+            // query.resourceFilter<SinkResource::Account>(mCurrentAccount);
+            query.sort<Mail::Date>();
+            query.limit(mMinNumberOfItems);
+            query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
+            query.reduce<ApplicationDomain::Mail::ThreadId>(Query::Reduce::Selector::max<ApplicationDomain::Mail::Date>())
+                .count()
+                .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
+                .collect<ApplicationDomain::Mail::Unread>()
+                .collect<ApplicationDomain::Mail::Important>();
+
+
+            if (mFilter.value("string").isValid()) {
+                applyStringFilter(query, mFilter.value("string").toString());
+            }
+
+            query.setPostQueryFilter([=, folderNames = mFolderNames] (const ApplicationDomain::ApplicationDomainType &entity){
+                const ApplicationDomain::Mail mail(entity);
+                //TODO turn into query filter
+                if (!folderNames.contains(mail.getFolder())) {
+                    return false;
                 }
 
-                Sink::Query query;
-                query.setFlags(Sink::Query::LiveQuery);
-                // query.resourceFilter<SinkResource::Account>(mCurrentAccount);
-                query.sort<Mail::Date>();
-                query.limit(mMinNumberOfItems);
-                query.filter<Sink::ApplicationDomain::Mail::Trash>(false);
-                query.reduce<ApplicationDomain::Mail::ThreadId>(Query::Reduce::Selector::max<ApplicationDomain::Mail::Date>())
-                    .count()
-                    .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
-                    .collect<ApplicationDomain::Mail::Unread>()
-                    .collect<ApplicationDomain::Mail::Important>();
-
-
-                if (mFilter.value("string").isValid()) {
-                    applyStringFilter(query, mFilter.value("string").toString());
+                if (senderBlacklist.contains(mail.getSender().emailAddress)) {
+                    return false;
                 }
 
-                query.setPostQueryFilter([=, folderNames = mFolderNames] (const ApplicationDomain::ApplicationDomainType &entity){
-                    const ApplicationDomain::Mail mail(entity);
-                    //TODO turn into query filter
-                    if (!folderNames.contains(mail.getFolder())) {
-                        return false;
-                    }
-
-                    if (senderBlacklist.contains(mail.getSender().emailAddress)) {
-                        return false;
-                    }
-
-                    // Ignore own messages (phabricator only lists name)
-                    if (!senderNameContainsFilter.isEmpty() && mail.getSender().name.contains(senderNameContainsFilter, Qt::CaseInsensitive)) {
-                        return false;
-                    }
-
-                    for (const auto &to : mail.getTo()) {
-                        if (toBlacklist.contains(to.emailAddress)) {
-                            return false;
-                        }
-                    }
-
-                    const auto &mimeMessage = mail.getMimeMessage();
-
-                    for (const auto &filter : messageFilter) {
-                        if (filter.match(mimeMessage).hasMatch()) {
-                            return false;
-                        }
-                    }
-
-                    for (const auto &name : perFolderMimeMessageWhitelistFilter.keys()) {
-                        if (folderNames.value(mail.getFolder()) == name) {
-                            //For this folder, exclude everything but what matches (whitelist)
-                            return mimeMessage.contains(perFolderMimeMessageWhitelistFilter.value(name).toUtf8());
-                        }
-                    }
-                    return true;
-                });
-
-                mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
-                QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
-                QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
-                QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsAboutToBeRemoved, this, &InboundModel::mailRowsRemoved);
-
-                QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
-                    if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                        //Only emit initialItemsLoaded if both source models have finished loading
-                        if (mEventSourceModel && static_cast<EventOccurrenceModel*>(mEventSourceModel.data())->initialItemsComplete()) {
-                            emit initialItemsLoaded();
-                        }
-                    }
-                });
-            }).exec();
-    }
-
-    if (refreshCalendar) {
-        removeAllByType("event");
-        Sink::Query calendarQuery{};
-        calendarQuery.filter<Calendar::Enabled>(true);
-        calendarQuery.request<Calendar::Name>();
-
-        Sink::Store::fetchAll<Calendar>(calendarQuery)
-            .then([this] (const QList<Calendar::Ptr> &list) {
-
-                QList<QString> calendarFilter;
-                for (const auto &calendar : list) {
-                    calendarFilter << QString{calendar->identifier()};
+                // Ignore own messages (phabricator only lists name)
+                if (!senderNameContainsFilter.isEmpty() && mail.getSender().name.contains(senderNameContainsFilter, Qt::CaseInsensitive)) {
+                    return false;
                 }
 
-                auto model = QSharedPointer<EventOccurrenceModel>::create();
-                model->setStart(mCurrentDateTime.date());
-                model->setLength(7);
-                model->setCalendarFilter(calendarFilter);
-                //TODO text filter
+                for (const auto &to : mail.getTo()) {
+                    if (toBlacklist.contains(to.emailAddress)) {
+                        return false;
+                    }
+                }
 
-                mEventSourceModel = model;
-                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
-                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsAboutToBeRemoved, this, &InboundModel::eventRowsRemoved);
-                QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::eventDataChanged);
-                QObject::connect(model.data(), &EventOccurrenceModel::initialItemsLoaded, this, [this]() {
+                const auto &mimeMessage = mail.getMimeMessage();
+
+                for (const auto &filter : messageFilter) {
+                    if (filter.match(mimeMessage).hasMatch()) {
+                        return false;
+                    }
+                }
+
+                for (const auto &name : perFolderMimeMessageWhitelistFilter.keys()) {
+                    if (folderNames.value(mail.getFolder()) == name) {
+                        //For this folder, exclude everything but what matches (whitelist)
+                        return mimeMessage.contains(perFolderMimeMessageWhitelistFilter.value(name).toUtf8());
+                    }
+                }
+                return true;
+            });
+
+            mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+            QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
+            QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
+            QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsAboutToBeRemoved, this, &InboundModel::mailRowsRemoved);
+
+            QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+                if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
                     //Only emit initialItemsLoaded if both source models have finished loading
-                    if (mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
+                    if (mEventSourceModel && static_cast<EventOccurrenceModel*>(mEventSourceModel.data())->initialItemsComplete()) {
                         emit initialItemsLoaded();
                     }
-                });
-            }).exec();
-    }
+                }
+            });
+        }).exec();
+}
+
+void InboundModel::refreshCalendar()
+{
+    using namespace Sink;
+    using namespace Sink::ApplicationDomain;
+
+    loadSettings();
+
+    removeAllByType("event");
+    Sink::Query calendarQuery{};
+    calendarQuery.filter<Calendar::Enabled>(true);
+    calendarQuery.request<Calendar::Name>();
+
+    Sink::Store::fetchAll<Calendar>(calendarQuery)
+        .then([this] (const QList<Calendar::Ptr> &list) {
+
+            QList<QString> calendarFilter;
+            for (const auto &calendar : list) {
+                calendarFilter << QString{calendar->identifier()};
+            }
+
+            auto model = QSharedPointer<EventOccurrenceModel>::create();
+            model->setStart(mCurrentDateTime.date());
+            model->setLength(7);
+            model->setCalendarFilter(calendarFilter);
+            //TODO text filter
+
+            mEventSourceModel = model;
+            QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::eventRowsInserted);
+            QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::rowsAboutToBeRemoved, this, &InboundModel::eventRowsRemoved);
+            QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::eventDataChanged);
+            QObject::connect(model.data(), &EventOccurrenceModel::initialItemsLoaded, this, [this]() {
+                //Only emit initialItemsLoaded if both source models have finished loading
+                if (mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
+                    emit initialItemsLoaded();
+                }
+            });
+        }).exec();
 }
 
 int InboundModel::firstRecentIndex()

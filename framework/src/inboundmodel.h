@@ -92,7 +92,8 @@ private slots:
 private:
 
     void runQuery(const Sink::Query &query);
-    void refresh(bool refreshMail, bool refeshCalendar);
+    void refreshMail();
+    void refreshCalendar();
     void getAllByType(const QString &type, std::function<QModelIndex(const QModelIndex &)> callback);
     void removeAllByType(const QString &type);
     void saveSettings();
