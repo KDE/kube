@@ -46,11 +46,6 @@ InboundModel::InboundModel(QObject *parent)
     for (const auto &r : mRoles.keys()) {
         mRoleNames.insert(mRoles[r], r);
     }
-
-    mInboundModel = QSharedPointer<QStandardItemModel>::create();
-    mInboundModel->setItemRoleNames(mRoleNames);
-
-    initInboundFilter();
 }
 
 InboundModel::~InboundModel()
@@ -298,9 +293,9 @@ int InboundModel::firstRecentIndex()
 
 void InboundModel::initInboundFilter()
 {
-
+    mInboundModel = QSharedPointer<QStandardItemModel>::create();
+    mInboundModel->setItemRoleNames(mRoleNames);
     setSourceModel(mInboundModel.data());
-
     refresh();
 }
 
