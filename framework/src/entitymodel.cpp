@@ -330,6 +330,8 @@ bool EntityModel::setData(const QModelIndex &index, const QVariant &value, int r
     const auto entity = EntityModel::data(index, ObjectRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
     if (mType == "calendar") {
         Sink::ApplicationDomain::Calendar modifiedEntity{*entity};
+        //Reset because we e.g. nameCollected shows up in here
+        modifiedEntity.setChangedProperties({});
         const auto propertyName = mRoleNames.value(role);
         modifiedEntity.setProperty(propertyName, value.toBool());
         //Ignore if we didn't modify anything.
@@ -338,6 +340,8 @@ bool EntityModel::setData(const QModelIndex &index, const QVariant &value, int r
         }
     } else if (mType == "folder") {
         Sink::ApplicationDomain::Folder modifiedEntity{*entity};
+        //Reset because we e.g. nameCollected shows up in here
+        modifiedEntity.setChangedProperties({});
         const auto propertyName = mRoleNames.value(role);
         modifiedEntity.setProperty(propertyName, value.toBool());
         //Ignore if we didn't modify anything.
