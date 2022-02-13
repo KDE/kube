@@ -159,6 +159,7 @@ int main(int argc, char *argv[])
     parser.addOption({"view", "Start with the given view active.", "value", "inbound"});
     parser.process(app);
 
+    qInfo() << "Startuptime: starting" << startupTimer.elapsed();
 
     //Only relevant for flatpak
     DBusInterface interface;
@@ -185,6 +186,7 @@ int main(int argc, char *argv[])
             }
         });
     }
+    qInfo() << "Startuptime: Registered dbus interface" << startupTimer.elapsed();
 
     if (parser.isSet("keyring")) {
         auto keyringDict = parser.value("keyring");
@@ -201,6 +203,7 @@ int main(int argc, char *argv[])
             }
         }
     }
+    qInfo() << "Startuptime: Unlocked keyring" << startupTimer.elapsed();
 
     {
         QQmlContext *rootContext = nullptr;
@@ -219,6 +222,7 @@ int main(int argc, char *argv[])
             return app.exec();
         }
     }
+    qInfo() << "Startuptime: Upgraded" << startupTimer.elapsed();
 
     //Try unlocking all available accounts on startup
     Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>({})
