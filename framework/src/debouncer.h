@@ -29,12 +29,12 @@
  */
 class Debouncer {
     public:
-        Debouncer(int interval, std::function<void()> callback)
+        Debouncer(int interval, std::function<void()> callback, QObject *guard)
             :mInterval{interval},
             mCallback{callback}
         {
             mRefreshTimer.setSingleShot(true);
-            QObject::connect(&mRefreshTimer, &QTimer::timeout, [this] {
+            QObject::connect(&mRefreshTimer, &QTimer::timeout, guard, [this] {
                 //Avoid calling after the timeout if there was no trigger inbetween
                 if (!mCalledAlready) {
                     mCallback();
@@ -42,7 +42,7 @@ class Debouncer {
             });
 
             mDelayTimer.setSingleShot(true);
-            QObject::connect(&mDelayTimer, &QTimer::timeout, [this] {
+            QObject::connect(&mDelayTimer, &QTimer::timeout, guard, [this] {
                 mCalledAlready = true;
                 mCallback();
             });

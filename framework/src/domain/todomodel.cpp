@@ -35,7 +35,7 @@ using namespace Sink;
 TodoSourceModel::TodoSourceModel(QObject *parent)
     : QAbstractItemModel(parent),
     mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}, {ApplicationDomain::Calendar::Name::name}})},
-    mUpdateFromSourceDebouncer{100, [this] { this->updateFromSource(); }}
+    mUpdateFromSourceDebouncer{100, [this] { this->updateFromSource(); }, this}
 {
 }
 

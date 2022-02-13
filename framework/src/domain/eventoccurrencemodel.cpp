@@ -43,7 +43,7 @@ using namespace Sink;
 EventOccurrenceModel::EventOccurrenceModel(QObject *parent)
     : QAbstractItemModel(parent),
     mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}})},
-    mUpdateFromSourceDebouncer{100,[this] { this->updateFromSource(); }}
+    mUpdateFromSourceDebouncer{100,[this] { this->updateFromSource(); }, this}
 {
 }
 

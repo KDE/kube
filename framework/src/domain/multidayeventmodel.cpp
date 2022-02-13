@@ -34,7 +34,7 @@ enum Roles {
 
 MultiDayEventModel::MultiDayEventModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mUpdateFromSourceDebouncer{100,[this] { this->reset(); }}
+    mUpdateFromSourceDebouncer{100,[this] { this->reset(); }, this}
 {
 }
 
