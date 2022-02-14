@@ -151,6 +151,7 @@ void EventOccurrenceModel::updateFromSource()
         QMap<QByteArray, QSharedPointer<Sink::ApplicationDomain::Event>> events;
         for (int i = 0; i < mSourceModel->rowCount(); ++i) {
             auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Event::Ptr>();
+            Q_ASSERT(event);
 
             //Parse the event
             auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
@@ -183,6 +184,7 @@ void EventOccurrenceModel::updateFromSource()
             while (occurrenceIterator.hasNext()) {
                 occurrenceIterator.next();
                 const auto incidence = occurrenceIterator.incidence();
+                Q_ASSERT(incidence);
                 const auto event = events.value(incidence->instanceIdentifier().toLatin1());
                 const auto start = occurrenceIterator.occurrenceStartDate();
                 const auto end = incidence->endDateForStart(start);
@@ -194,6 +196,7 @@ void EventOccurrenceModel::updateFromSource()
         //Process all exceptions that had no main event present in the current query
         for (const auto &uid : exceptions.keys()) {
             const auto icalEvent = exceptions.value(uid).dynamicCast<KCalCore::Event>();
+            Q_ASSERT(icalEvent);
             const auto event = events.value(icalEvent->instanceIdentifier().toLatin1());
             if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
                 newEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
@@ -226,6 +229,7 @@ void EventOccurrenceModel::updateFromSource()
     for (auto newIt = std::begin(newEvents); newIt != std::end(newEvents); newIt++) {
         const auto event = *newIt;
         auto it = std::find_if(std::begin(mEvents), std::end(mEvents), [&] (const auto &e) {
+            Q_ASSERT(e.incidence);
             return e.incidence->uid() == event.incidence->uid() && e.start == event.start;
         });
         if (it == std::end(mEvents)) {
