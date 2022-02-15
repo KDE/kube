@@ -55,6 +55,10 @@ void Keyring::unlock(const QByteArray &accountId)
 
 void Keyring::tryUnlock(const QByteArray &accountId)
 {
+    if (isUnlocked(accountId)) {
+        qInfo() << "Already unlocked" << accountId;
+        return;
+    }
     AccountKeyring{accountId}.load();
 }
 
