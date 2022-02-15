@@ -45,6 +45,7 @@
 #include <QLockFile>
 #include <QDir>
 #include <QWindow>
+#include <QTimer>
 #include <sink/store.h>
 
 #include "backtrace.h"
@@ -225,12 +226,15 @@ int main(int argc, char *argv[])
     qInfo() << "Startuptime: Upgraded" << startupTimer.elapsed();
 
     //Try unlocking all available accounts on startup
-    Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>({})
-        .then([](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
-            for (const auto &account : accounts) {
-                Kube::Keyring::instance()->tryUnlock(account->identifier());
-            }
-        }).exec();
+    QTimer::singleShot(0, [] {
+        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>({})
+            .then([](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
+                for (const auto &account : accounts) {
+                    qWarning() << "Found account " << account->identifier();
+                    Kube::Keyring::instance()->tryUnlock(account->identifier());
+                }
+            }).exec();
+    });
 
     qInfo() << "Startuptime: Initializing engine" << startupTimer.elapsed();
     QQmlApplicationEngine engine;
