@@ -21,6 +21,7 @@
 #include "sinkfabric.h"
 
 #include <QDebug>
+#include <QTimer>
 
 namespace Kube {
 namespace Fabric {
@@ -70,7 +71,9 @@ private:
 
 void Fabric::postMessage(const QString &id, const QVariantMap &msg)
 {
-    Bus::instance().postMessage(id, msg);
+    QTimer::singleShot(0, [=] {
+        Bus::instance().postMessage(id, msg);
+    });
 }
 
 Listener::Listener(QObject *parent)
