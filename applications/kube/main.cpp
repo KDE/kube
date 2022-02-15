@@ -263,6 +263,7 @@ int main(int argc, char *argv[])
 #if defined(Q_CC_MSVC)
                     app.disconnect(conn); // MSVC cannot distinguish between static and non-static overloads in lambdas
 #else
+                    Q_UNUSED(app);
                     QObject::disconnect(conn);
 #endif
                     qInfo() << "Startuptime: Startup complete" << startupTimer.elapsed();
