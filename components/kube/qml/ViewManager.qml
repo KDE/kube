@@ -38,7 +38,7 @@ StackView {
     }
 
     function pushView(view, properties, name) {
-        var item = push(view, properties, StackView.Immediate)
+        var item = push(view, properties ? Object.assign({}, properties, {visible: true}) : {visible: true}, StackView.Immediate)
         item.parent = root
         item.anchors.fill = root
         item.objectName = name
@@ -55,7 +55,7 @@ StackView {
         var component = createComponent(name)
         function finishCreation() {
             if (component.status == Component.Ready) {
-                var incubator = component.incubateObject(root, properties ? properties : {});
+                var incubator = component.incubateObject(root, properties ? Object.assign({}, properties, {visible: false}) : {visible: false});
 
                 function finishObjectCreation(status) {
                     var view = incubator.object;
