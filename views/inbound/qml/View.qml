@@ -371,6 +371,8 @@ Kube.View {
 
                         onFilterChanged: {
                             enableNotifications = false;
+                            //Avoid selecting each item at the current index until the initial items are loaded
+                            listView.currentIndex = -1;
                             listView.startTime = new Date().getTime()
                         }
 
