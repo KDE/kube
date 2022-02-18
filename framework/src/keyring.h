@@ -36,6 +36,9 @@ public:
     Q_INVOKABLE void tryUnlock(const QByteArray &accountId);
     void addPassword(const QByteArray &resourceId, const QString &password);
 
+signals:
+    void unlocked(const QByteArray &accountId);
+
 private:
     Q_DISABLE_COPY(Keyring);
     QSet<QByteArray> mUnlocked;

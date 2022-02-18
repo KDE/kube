@@ -45,18 +45,21 @@ ApplicationWindow {
         id: accountFactory
     }
 
+    Component.onCompleted: {
+        Kube.Keyring.onUnlocked = function (accountId) {
+            if (!Kube.Keyring.isUnlocked(accountId)) {
+                if (accountFactory.requiresKeyring) {
+                    Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": accountId})
+                }
+            }
+        }
+    }
+
     onCurrentAccountChanged: {
         accountFactory.accountId = currentAccount
 
         Kube.Keyring.tryUnlock(currentAccount)
 
-        if (!Kube.Keyring.isUnlocked(currentAccount)) {
-            if (accountFactory.requiresKeyring) {
-                Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": currentAccount})
-            } else {
-                Kube.Keyring.unlock(currentAccount)
-            }
-        }
 
         if (!!currentAccount) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})

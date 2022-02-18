@@ -98,7 +98,7 @@ void Keyring::tryUnlock(const QByteArray &accountId)
         return;
     }
 
-    asyncRun<QVariantMap>(Keyring::instance(), [=] {
+    asyncRun<QVariantMap>(this, [=] {
             return loadSecret(accountId);
         },
         [=](const QVariantMap &secrets) {
@@ -110,12 +110,13 @@ void Keyring::tryUnlock(const QByteArray &accountId)
                 }
                 auto secret = secrets.value(resource);
                 if (secret.isValid()) {
-                    Sink::SecretStore::instance().insert(resource.toLatin1(), secret.toString());
-                    Keyring::instance()->unlock(accountId);
+                    addPassword(resource.toLatin1(), secret.toString());
+                    unlock(accountId);
                 } else {
                     qWarning() << "Found no stored secret for " << resource;
                 }
             }
+            emit unlocked(accountId);
         });
 }
 
