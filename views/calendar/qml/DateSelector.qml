@@ -109,6 +109,7 @@ Item {
                 text: model.day
                 font: grid.font
                 color: root.textColor
+                height: implicitHeight
 
                 Rectangle {
                     anchors {
