@@ -55,11 +55,22 @@ StackView {
         var component = createComponent(name)
         function finishCreation() {
             if (component.status == Component.Ready) {
-                var view = component.createObject(root, properties ? properties : {});
-                viewDict[name] = view
-                if (push) {
-                    pushView(view, properties, name)
+                var incubator = component.incubateObject(root, properties ? properties : {});
+
+                function finishObjectCreation(status) {
+                    var view = incubator.object;
+                    viewDict[name] = view
+                    if (push) {
+                        pushView(view, properties, name)
+                    }
                 }
+
+                if (incubator.status != Component.Ready) {
+                    incubator.onStatusChanged = finishObjectCreation
+                } else {
+                    finishObjectCreation();
+                }
+
             } else {
                 console.error("Error while loading the component:", component.errorString())
             }
