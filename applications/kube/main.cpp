@@ -200,8 +200,9 @@ int main(int argc, char *argv[])
         for (const auto &accountId : object.keys()) {
             auto dict = object.value(accountId).toObject();
             for (const auto &resourceId : dict.keys()) {
-                Kube::AccountKeyring{accountId.toUtf8()}.addPassword(resourceId.toUtf8(), dict.value(resourceId).toString().toUtf8());
+                Kube::Keyring::instance()->addPassword(resourceId.toUtf8(), dict.value(resourceId).toString().toUtf8());
             }
+            Kube::Keyring::instance()->unlock(accountId.toUtf8());
         }
     }
     qInfo() << "Startuptime: Unlocked keyring" << startupTimer.elapsed();
