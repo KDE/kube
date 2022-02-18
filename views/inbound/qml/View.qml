@@ -317,6 +317,7 @@ Kube.View {
 
                     clip: true
                     focus: true
+                    reuseItems: true
 
                     property double startTime: 0
 

@@ -17,7 +17,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.7
+import QtQuick 2.15
 import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
