@@ -126,8 +126,10 @@ static bool applyStringFilter(Sink::Query &query, const QString &filterString)
 
 void InboundModel::refresh()
 {
-    refreshMail();
-    refreshCalendar();
+    if (mCurrentDateTime.isValid() && mInboundModel) {
+        refreshMail();
+        refreshCalendar();
+    }
 }
 
 void InboundModel::refreshMail()
@@ -263,6 +265,7 @@ void InboundModel::refreshCalendar()
             }
 
             auto model = QSharedPointer<EventOccurrenceModel>::create();
+            Q_ASSERT(mCurrentDateTime.isValid());
             model->setStart(mCurrentDateTime.date());
             model->setLength(7);
             model->setCalendarFilter(calendarFilter);
@@ -568,6 +571,7 @@ void InboundModel::update(const QByteArray &key, const QVariantMap &message)
 
 void InboundModel::setCurrentDate(const QDateTime &dt)
 {
+    bool initEventModel = !mCurrentDateTime.isValid();
     mCurrentDateTime = dt;
     getAllByType("event", [&](const QModelIndex &index) {
         const auto occurrence = index.data(mRoles["data"]).toMap()["occurrence"].value<EventOccurrenceModel::Occurrence>();
@@ -576,6 +580,9 @@ void InboundModel::setCurrentDate(const QDateTime &dt)
         }
         return index.sibling(index.row() + 1, index.column());
     });
+    if (initEventModel) {
+        refresh();
+    }
 }
 
 
