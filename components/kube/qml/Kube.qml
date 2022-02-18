@@ -46,13 +46,13 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        Kube.Keyring.onUnlocked = function (accountId) {
+        Kube.Keyring.unlocked.connect(function (accountId) {
             if (!Kube.Keyring.isUnlocked(accountId)) {
                 if (accountFactory.requiresKeyring) {
                     Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": accountId})
                 }
             }
-        }
+        })
     }
 
     onCurrentAccountChanged: {
