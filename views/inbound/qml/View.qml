@@ -379,6 +379,8 @@ Kube.View {
 
                         onInitialItemsLoaded: {
                             enableNotifications = true;
+                            //Make sure the view is up-to-date before positioning
+                            listView.forceLayout()
                             listView.currentIndex = inboundModel.firstRecentIndex();
                             //FIXME this does not seem to work
                             // listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
