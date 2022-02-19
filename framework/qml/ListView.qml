@@ -37,7 +37,8 @@ ListView {
     }
 
     displaced: Transition {
-        NumberAnimation { properties: "x,y"; duration: 50 }
+        //FIXME This causes some delegates to be invisible every now and then (no idea why)
+        // NumberAnimation { properties: "x,y"; duration: 50 }
         //Handle interrupted add transitions
         NumberAnimation { property: "opacity"; to: 1.0; }
     }
