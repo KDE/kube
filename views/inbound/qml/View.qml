@@ -380,7 +380,9 @@ Kube.View {
                         onInitialItemsLoaded: {
                             enableNotifications = true;
                             listView.currentIndex = inboundModel.firstRecentIndex();
-                            listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
+                            //FIXME this does not seem to work
+                            // listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
+                            listView.positionViewAtIndex(Math.max(0, listView.currentIndex - 3), ListView.Beginning);
                             console.info("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
                         }
                         currentDate: root.currentDate
