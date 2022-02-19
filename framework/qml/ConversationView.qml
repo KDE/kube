@@ -98,12 +98,11 @@ FocusScope {
 
                 property var currentData: model
                 property bool isCurrentItem: false
-                property int index: -1
 
                 focus: true
                 activeFocusOnTab: false
                 onActiveFocusChanged: {
-                    if (activeFocus) {
+                    if (activeFocus && delegateRoot.index) {
                         listView.currentIndex = delegateRoot.index
                     }
                 }
