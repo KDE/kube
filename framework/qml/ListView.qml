@@ -31,7 +31,9 @@ ListView {
     highlightMoveDuration: 100
 
     add: Transition {
-        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 100 }
+        // FIXME Even though we handle interrupted transitions in the displaced handler,
+        // we still occasionally end up with invisible items (e.g. when starting into the inbound view)
+        // NumberAnimation { property: "opacity"; from: 0.1; to: 1.0; duration: 100 }
     }
 
     displaced: Transition {
