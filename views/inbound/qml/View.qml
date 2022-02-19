@@ -62,6 +62,12 @@ Kube.View {
         }
     }
 
+    onActivated: {
+        //In case of an initial load we may have positioned before the view is actually expanded,
+        //so position again once the view is activated.
+        listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
+    }
+
     onRefresh: {
         if (!root.showInbound && !!root.currentFolder) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
@@ -382,9 +388,7 @@ Kube.View {
                             //Make sure the view is up-to-date before positioning
                             listView.forceLayout()
                             listView.currentIndex = inboundModel.firstRecentIndex();
-                            //FIXME this does not seem to work
-                            // listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
-                            listView.positionViewAtIndex(Math.max(0, listView.currentIndex - 3), ListView.Beginning);
+                            listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
                             console.info("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
                         }
                         currentDate: root.currentDate
