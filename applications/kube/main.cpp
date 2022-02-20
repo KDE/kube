@@ -29,7 +29,7 @@
 #include <process.h>
 #endif
 
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QCommandLineParser>
 #include <QJsonDocument>
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("kube");
 
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     auto fontSize = app.font().pointSize();
 #if defined(Q_OS_UNIX)  && (!defined(Q_OS_MAC))
     if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORMTHEME")) {
