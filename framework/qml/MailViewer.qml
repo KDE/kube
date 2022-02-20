@@ -84,6 +84,13 @@ Rectangle {
             PropertyChanges { target: body; visible: false}
             PropertyChanges { target: footer; visible: false}
             PropertyChanges { target: collapsedBody; visible: true}
+        },
+        State {
+            name: "full"; when: !root.collapsed && !root.busy && root.loaded
+            PropertyChanges { target: buttonContainer; visible: true}
+            PropertyChanges { target: body; visible: true}
+            PropertyChanges { target: footer; visible: true}
+            PropertyChanges { target: collapsedBody; visible: false}
         }
     ]
     state: "full"
