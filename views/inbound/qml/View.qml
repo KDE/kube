@@ -420,9 +420,9 @@ Kube.View {
                     delegate: Kube.GenericListDelegate {
                         id: delegateRoot
 
-                        property var isMail: model.type == "mail"
+                        property bool isMail: model.type == "mail"
                         property var domainObject: model.data.domainObject
-                        property var important: model.data.important
+                        property bool important: isMail && model.data.important
                         height: isMail ? Kube.Units.gridUnit * 5 : (Kube.Units.gridUnit * 3 + 2 * Kube.Units.smallSpacing)
 
                         onDropped: {
