@@ -46,12 +46,6 @@ InboundModel::InboundModel(QObject *parent)
     for (const auto &r : mRoles.keys()) {
         mRoleNames.insert(mRoles[r], r);
     }
-
-    //FIXME This shouldn't be required, but without it some delegates sometimes simply don't show,
-    //and this seems to help.
-    QObject::connect(this, &InboundModel::initialItemsLoaded, this, [this]() {
-        invalidate();
-    });
 }
 
 InboundModel::~InboundModel()
