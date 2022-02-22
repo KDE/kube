@@ -56,7 +56,6 @@
 #include "kube_version.h"
 #include "dbusinterface.h"
 
-static int sCounter = 0;
 
 QString findFile(const QString file, const QStringList importPathList)
 {
