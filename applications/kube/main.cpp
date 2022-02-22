@@ -117,6 +117,12 @@ int main(int argc, char *argv[])
     //Only relevant for flatpak
     DBusInterface interface;
 
+    //For testing of the backtrace generator
+    if (parser.isSet("segfault")) {
+        QCommandLineParser *parser2 = nullptr;
+        parser2->addHelpOption();
+    }
+
     if (parser.isSet("lockfile")) {
         if (!interface.registerService()) {
             qInfo() << "Can't start multiple instances of kube in flatpak.";
