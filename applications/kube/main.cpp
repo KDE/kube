@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
         QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"), "keyring dictionary"}
     );
     parser.addOption({{"l", "lockfile"}, "Use a lockfile to enforce that only a single instance can be started.", ""});
+    parser.addOption({{"s", "segfault"}, "segfault.", ""});
     parser.addOption({"view", "Start with the given view active.", "value", "inbound"});
     parser.process(app);
 
