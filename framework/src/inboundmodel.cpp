@@ -277,7 +277,7 @@ void InboundModel::refreshCalendar()
             QObject::connect(mEventSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::eventDataChanged);
             QObject::connect(model.data(), &EventOccurrenceModel::initialItemsLoaded, this, [this]() {
                 //Only emit initialItemsLoaded if both source models have finished loading
-                if (mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
+                if (mSourceModel && mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
                     emit initialItemsLoaded();
                 }
             });
