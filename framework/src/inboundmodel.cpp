@@ -141,7 +141,6 @@ void InboundModel::refreshMail()
 
     loadSettings();
 
-    removeAllByType("mail");
 
     Sink::Query folderQuery{};
     folderQuery.filter<Folder::Enabled>(true);
@@ -228,19 +227,26 @@ void InboundModel::refreshMail()
                 return true;
             });
 
-            mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
-            QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
-            QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
-            QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsAboutToBeRemoved, this, &InboundModel::mailRowsRemoved);
+            if (mSourceModel) {
+                Sink::Store::updateModel<Sink::ApplicationDomain::Mail>(query, mSourceModel);
+            } else {
+                mSourceModel = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+                QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsInserted, this, &InboundModel::mailRowsInserted);
+                QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &InboundModel::mailDataChanged);
+                QObject::connect(mSourceModel.data(), &QAbstractItemModel::rowsAboutToBeRemoved, this, &InboundModel::mailRowsRemoved);
 
-            QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
-                if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                    //Only emit initialItemsLoaded if both source models have finished loading
-                    if (mEventSourceModel && static_cast<EventOccurrenceModel*>(mEventSourceModel.data())->initialItemsComplete()) {
-                        emit initialItemsLoaded();
+                QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+                    if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+                        qWarning() << "Fetched all mails";
+                        //Only emit initialItemsLoaded if both source models have finished loading
+                        if (mEventSourceModel && static_cast<EventOccurrenceModel*>(mEventSourceModel.data())->initialItemsComplete()) {
+                            qWarning() << "initial items loaded";
+                            // invalidate();
+                            emit initialItemsLoaded();
+                        }
                     }
-                }
-            });
+                });
+            }
         }).exec();
 }
 
@@ -296,9 +302,11 @@ int InboundModel::firstRecentIndex()
 
 void InboundModel::initInboundFilter()
 {
-    mInboundModel = QSharedPointer<QStandardItemModel>::create();
-    mInboundModel->setItemRoleNames(mRoleNames);
-    setSourceModel(mInboundModel.data());
+    if (!mInboundModel) {
+        mInboundModel = QSharedPointer<QStandardItemModel>::create();
+        mInboundModel->setItemRoleNames(mRoleNames);
+        setSourceModel(mInboundModel.data());
+    }
     refresh();
 }
 
@@ -719,14 +727,18 @@ void InboundModel::runQuery(const Sink::Query &query)
         m_model.clear();
         setSourceModel(nullptr);
     } else {
-        m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
+        if (m_model) {
+            Sink::Store::updateModel<Sink::ApplicationDomain::Mail>(query, m_model);
+        } else {
+            m_model = Sink::Store::loadModel<Sink::ApplicationDomain::Mail>(query);
 
-        QObject::connect(m_model.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
-            if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
-                emit initialItemsLoaded();
-            }
-        });
-        setSourceModel(m_model.data());
+            QObject::connect(m_model.data(), &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles) {
+                if (roles.contains(Sink::Store::ChildrenFetchedRole)) {
+                    emit initialItemsLoaded();
+                }
+            });
+            setSourceModel(m_model.data());
+        }
     }
 }
 
