@@ -101,9 +101,17 @@ FocusScope {
                     property variant accountId: currentData.accountId
                     property bool isCurrent: accountDelegate.isCurrent
                     onIsCurrentChanged: {
-                        if (!!item && 'currentChanged' in item) {
-                            item.currentChanged()
+                        if (!!item) {
+                            if ('currentChanged' in item) {
+                                item.currentChanged(isCurrent)
+                            }
+                            if (isCurrent) {
+                                root.currentDelegate = item
+                            }
                         }
+                    }
+                    onLoaded: {
+                        //No need to call currentChanged when first instantiating the item
                         if (isCurrent) {
                             root.currentDelegate = item
                         }

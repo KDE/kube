@@ -168,8 +168,8 @@ Kube.View {
                 delegate: ColumnLayout {
                     id: delegateRoot
 
-                    function currentChanged() {
-                        if (delegateRoot.parent.isCurrent) {
+                    function currentChanged(isCurrent) {
+                        if (isCurrent) {
                             //Reset important on account switch
                             root.important = false
                             //Necessary to re-select folder on account change (so the maillist is updated)
