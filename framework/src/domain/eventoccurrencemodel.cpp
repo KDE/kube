@@ -247,7 +247,7 @@ void EventOccurrenceModel::updateFromSource()
         }
     }
 
-    if (!mInitialItemsLoaded && mSourceModel && mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool()) {
+    if (!mInitialItemsLoaded && (!mSourceModel || mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool())) {
         mInitialItemsLoaded = true;
         emit initialItemsLoaded();
     }
