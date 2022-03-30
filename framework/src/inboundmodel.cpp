@@ -305,8 +305,8 @@ void InboundModel::initInboundFilter()
     if (!mInboundModel) {
         mInboundModel = QSharedPointer<QStandardItemModel>::create();
         mInboundModel->setItemRoleNames(mRoleNames);
-        setSourceModel(mInboundModel.data());
-    }
+    setSourceModel(mInboundModel.data());
+
     refresh();
 }
 
@@ -667,9 +667,7 @@ void InboundModel::setFilter(const QVariantMap &filter)
         validQuery = true;
     } else if (!filter.value("account").toByteArray().isEmpty()) {
         query.resourceFilter<SinkResource::Account>(filter.value("account").toByteArray());
-    }
-
-    if (filter.value("important").toBool()) {
+    } else if (filter.value("important").toBool()) {
         query.setId("threadLeadersImportant");
         query.setFlags(Sink::Query::LiveQuery);
         query.filter<Sink::ApplicationDomain::Mail::Important>(true);
@@ -680,9 +678,7 @@ void InboundModel::setFilter(const QVariantMap &filter)
             .collect<ApplicationDomain::Mail::Unread>()
             .collect<ApplicationDomain::Mail::Important>();
         validQuery = true;
-    }
-
-    if (filter.value("recent").toBool()) {
+    } else if (filter.value("recent").toBool()) {
         query.setFlags(Sink::Query::LiveQuery);
         query.filter<Mail::Sent>(true);
         query.filter<Mail::Trash>(false);
@@ -737,8 +733,8 @@ void InboundModel::runQuery(const Sink::Query &query)
                     emit initialItemsLoaded();
                 }
             });
-            setSourceModel(m_model.data());
         }
+        setSourceModel(m_model.data());
     }
 }
 
