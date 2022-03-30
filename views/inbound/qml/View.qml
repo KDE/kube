@@ -33,9 +33,14 @@ Kube.View {
     property bool pendingError: false
     property bool pendingNotification: false
 
-    property bool showInbound: true
-    property bool showRecent: false
-    property bool showImportant: false
+    property var modelFilter: {
+        "inbound": true,
+        "recent": false,
+        "important": false,
+        "folder": null,
+        "string": root.filter,
+    }
+
     property var currentFolder: null
 
     onPendingErrorChanged: {
@@ -50,6 +55,13 @@ Kube.View {
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + listItem.x, 0, (details.x + details.width) - listItem.x, (details.y + details.height) - listItem.y)
 
     onFilterChanged: {
+        root.modelFilter = {
+            "inbound": root.modelFilter.inbound,
+            "recent": root.modelFilter.recent,
+            "important": root.modelFilter.important,
+            "folder": root.modelFilter.folder,
+            "string": filter,
+        }
         Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
     }
 
@@ -69,7 +81,7 @@ Kube.View {
     }
 
     onRefresh: {
-        if (!root.showInbound && !!root.currentFolder) {
+        if (!root.modelFilter.inbound && !!root.currentFolder) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": Kube.Context.currentAccountId, "type": "folder"})
         } else {
@@ -79,9 +91,13 @@ Kube.View {
 
     onCurrentFolderChanged: {
         if (!!root.currentFolder) {
-            root.showInbound = false
-            root.showRecent = false
-            root.showImportant = false
+            root.modelFilter = {
+                "inbound": false,
+                "recent": false,
+                "important": false,
+                "folder": accountSwitcher.currentEntity,
+                "string": root.filter,
+            }
         }
     }
 
@@ -190,12 +206,16 @@ Kube.View {
                         text: qsTr("Inbound")
                         textColor: Kube.Colors.highlightedTextColor
                         checkable: true
-                        checked: root.showInbound
+                        checked: root.modelFilter.inbound
                         horizontalAlignment: Text.AlignHLeft
                         onClicked: {
-                            root.showInbound = true
-                            root.showRecent = false
-                            root.showImportant = false
+                            root.modelFilter = {
+                                "inbound": true,
+                                "recent": false,
+                                "important": false,
+                                "folder": null,
+                                "string": root.filter,
+                            }
                             accountSwitcher.clearSelection()
                         }
                     }
@@ -204,12 +224,16 @@ Kube.View {
                         text: qsTr("Recent")
                         textColor: Kube.Colors.highlightedTextColor
                         checkable: true
-                        checked: root.showRecent
+                        checked: root.modelFilter.recent
                         horizontalAlignment: Text.AlignHLeft
                         onClicked: {
-                            root.showInbound = false
-                            root.showRecent = true
-                            root.showImportant = false
+                            root.modelFilter = {
+                                "inbound": false,
+                                "recent": true,
+                                "important": false,
+                                "folder": null,
+                                "string": root.filter,
+                            }
                             accountSwitcher.clearSelection()
                         }
                     }
@@ -218,12 +242,16 @@ Kube.View {
                         text: qsTr("Important")
                         textColor: Kube.Colors.highlightedTextColor
                         checkable: true
-                        checked: root.showImportant
+                        checked: root.modelFilter.important
                         horizontalAlignment: Text.AlignHLeft
                         onClicked: {
-                            root.showInbound = false
-                            root.showRecent = false
-                            root.showImportant = true
+                            root.modelFilter = {
+                                "inbound": false,
+                                "recent": false,
+                                "important": true,
+                                "folder": null,
+                                "string": root.filter,
+                            }
                             accountSwitcher.clearSelection()
                         }
                     }
@@ -336,7 +364,7 @@ Kube.View {
                     section {
                         property: "type"
                         criteria: ViewSection.FullString
-                        delegate: root.showInbound ? sectionHeading : null
+                        delegate: root.modelFilter.inbound ? sectionHeading : null
                     }
 
                     Keys.onPressed: {
@@ -368,13 +396,7 @@ Kube.View {
                             }
                         }
 
-                        filter: {
-                            "inbound": root.showInbound,
-                            "recent": root.showRecent,
-                            "important": root.showImportant,
-                            "folder": (root.showInbound || root.showRecent || root.showImportant) ? null : accountSwitcher.currentEntity,
-                            "string": root.filter,
-                        }
+                        filter: root.modelFilter
 
                         onFilterChanged: {
                             enableNotifications = false;
@@ -491,7 +513,7 @@ Kube.View {
                                 Column {
                                     Kube.IconButton {
                                         id: ignoreButton
-                                        visible: root.showInbound
+                                        visible: root.modelFilter.inbound
                                         iconName: Kube.Icons.listRemove
                                         onClicked: inboundModel.ignoreSender(delegateRoot.domainObject)
                                         activeFocusOnTab: false
