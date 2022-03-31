@@ -142,7 +142,7 @@
         },
         {
             "name": "lmdb",
-            "sources": [ { "type": "git", "url": "git://github.com/LMDB/lmdb.git", "branch": "LMDB_0.9.23"}],
+            "sources": [ { "type": "git", "url": "https://github.com/LMDB/lmdb.git", "branch": "LMDB_0.9.23"}],
             "no-autogen": true,
             "make-install-args": ["prefix=/app"],
             "subdir" : "libraries/liblmdb"
