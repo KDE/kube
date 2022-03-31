@@ -305,6 +305,7 @@ void InboundModel::initInboundFilter()
     if (!mInboundModel) {
         mInboundModel = QSharedPointer<QStandardItemModel>::create();
         mInboundModel->setItemRoleNames(mRoleNames);
+    }
     setSourceModel(mInboundModel.data());
 
     refresh();
