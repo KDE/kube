@@ -243,6 +243,86 @@ private slots:
         }
     }
 
+    void testMultiWeekEvents()
+    {
+        Sink::ApplicationDomain::DummyResource::create("account1");
+
+        using namespace Sink::ApplicationDomain;
+        auto account = ApplicationDomainType::createEntity<SinkAccount>();
+        Sink::Store::create(account).exec().waitForFinished();
+
+        auto resource = Sink::ApplicationDomain::DummyResource::create(account.identifier());
+        Sink::Store::create(resource).exec().waitForFinished();
+
+        auto calendar1 = ApplicationDomainType::createEntity<Calendar>(resource.identifier());
+        Sink::Store::create(calendar1).exec().waitForFinished();
+
+        const QDateTime start{{2018, 04, 17}, {6, 0, 0}};
+        {
+            //all day event 2 with duration of two days
+            auto event4 = ApplicationDomainType::createEntity<Event>(resource.identifier());
+            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            calcoreEvent->setUid("event1");
+            calcoreEvent->setSummary("summary1");
+            calcoreEvent->setDtStart(start.addDays(2));
+            calcoreEvent->setDtEnd(start.addDays(9));
+            calcoreEvent->setAllDay(true);
+            event4.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event4.setCalendar(calendar1);
+            Sink::Store::create(event4).exec().waitForFinished();
+        }
+
+        Sink::ResourceControl::flushMessageQueue(resource.identifier()).exec().waitForFinished();
+
+        {
+            const int numberOfDays = 7 * 6;
+            EventOccurrenceModel model;
+
+            QSignalSpy initialItemsLoadedSpy(&model, &EventOccurrenceModel::initialItemsLoaded);
+
+            model.setStart(start.date());
+            model.setLength(numberOfDays);
+            model.setCalendarFilter({calendar1.identifier()});
+            //FIXME Reverse these tests?
+            QTRY_COMPARE(model.rowCount({}), 1);
+            QCOMPARE(initialItemsLoadedSpy.count(), 1);
+
+            auto countEvents = [&] (const QVariantList &lines) {
+                int count = 0;
+                for (const auto &line : lines) {
+                    count += line.toList().size();
+                }
+                return count;
+            };
+
+            //Check the multidayevent model
+            {
+                MultiDayEventModel multiDayModel;
+                multiDayModel.setModel(&model);
+                QTRY_COMPARE(multiDayModel.rowCount({}), 6);
+                {
+                    const auto lines = multiDayModel.index(0, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
+                    QCOMPARE(countEvents(lines), 1);
+                    QCOMPARE(lines.size(), 1);
+                    QCOMPARE(lines[0].toList().size(), 1); //All day event
+                    QCOMPARE(lines[0].toList()[0].toMap().value("duration").toInt(), 5);
+                }
+                {
+                    const auto lines = multiDayModel.index(1, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
+                    QCOMPARE(countEvents(lines), 1);
+                    QCOMPARE(lines.size(), 1);
+                    QCOMPARE(lines[0].toList().size(), 1); //All day event
+                    QCOMPARE(lines[0].toList()[0].toMap().value("duration").toInt(), 3);
+                }
+                {
+                    const auto lines = multiDayModel.index(2, 0, {}).data(multiDayModel.roleNames().key("events")).value<QVariantList>();
+                    QCOMPARE(countEvents(lines), 0);
+                    QCOMPARE(lines.size(), 0);
+                }
+            }
+        }
+    }
+
     void testRecurrenceException()
     {
         Sink::ApplicationDomain::DummyResource::create("account1");

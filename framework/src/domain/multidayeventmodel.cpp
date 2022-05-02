@@ -130,6 +130,13 @@ QVariantList MultiDayEventModel::layoutLines(const QDate &rowStart) const
         return qMax(rowStart.daysTo(start), 0ll);
     };
 
+    auto getStartOfLineDate = [&rowStart] (const QDate &start) {
+        if (rowStart < start) {
+            return start;
+        }
+        return rowStart;
+    };
+
     QList<QModelIndex> sorted = sortedEventsFromSourceModel(rowStart);
 
     // for (const auto &srcIdx : sorted) {
@@ -141,7 +148,7 @@ QVariantList MultiDayEventModel::layoutLines(const QDate &rowStart) const
         const auto srcIdx = sorted.takeFirst();
         const auto startDate = srcIdx.data(EventOccurrenceModel::StartTime).toDateTime();
         const auto start = getStart(startDate.date());
-        const auto duration = qMin(getDuration(startDate.date(), srcIdx.data(EventOccurrenceModel::EndTime).toDateTime().date()), mPeriodLength - start);
+        const auto duration = qMin(getDuration(getStartOfLineDate(startDate.date()), srcIdx.data(EventOccurrenceModel::EndTime).toDateTime().date()), mPeriodLength - start);
         // qWarning() << "First of line " << srcIdx.data(EventOccurrenceModel::StartTime).toDateTime() << duration << srcIdx.data(EventOccurrenceModel::Summary).toString();
         auto currentLine = QVariantList{};
 
