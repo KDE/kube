@@ -525,6 +525,7 @@ void InboundModel::eventDataChanged(const QModelIndex &topLeft, const QModelInde
 
 void InboundModel::getAllByType(const QString &type, std::function<QModelIndex(const QModelIndex &)> callback)
 {
+    Q_ASSERT(mInboundModel);
     QModelIndex index = mInboundModel->index(0, 0);
     while (true) {
         const auto list = mInboundModel->match(index, mRoles["type"], type, 1, Qt::MatchExactly);
@@ -582,13 +583,15 @@ void InboundModel::setCurrentDate(const QDateTime &dt)
 {
     bool initEventModel = !mCurrentDateTime.isValid();
     mCurrentDateTime = dt;
-    getAllByType("event", [&](const QModelIndex &index) {
-        const auto occurrence = index.data(mRoles["data"]).toMap()["occurrence"].value<EventOccurrenceModel::Occurrence>();
-        if (filter(occurrence)) {
-            mInboundModel->removeRow(index.row());
-        }
-        return index.sibling(index.row() + 1, index.column());
-    });
+    if (mInboundModel) {
+        getAllByType("event", [&](const QModelIndex &index) {
+            const auto occurrence = index.data(mRoles["data"]).toMap()["occurrence"].value<EventOccurrenceModel::Occurrence>();
+            if (filter(occurrence)) {
+                mInboundModel->removeRow(index.row());
+            }
+            return index.sibling(index.row() + 1, index.column());
+        });
+    }
     if (initEventModel) {
         refresh();
     }

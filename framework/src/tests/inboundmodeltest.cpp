@@ -141,6 +141,9 @@ private slots:
             QCOMPARE(rowsRemovedSpy.count(), 0);
             QCOMPARE(rowsInsertedSpy.count(), 0);
         }
+
+        //Cleanup
+        VERIFYEXEC(Sink::Store::remove(resource));
     }
 
     void testMailInbound()
@@ -176,7 +179,7 @@ private slots:
 
         InboundModel model;
         QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
-        model.setCurrentDate({});
+        model.setCurrentDate({{2018, 04, 17}, {6, 0, 0}});
         model.configure(
             {}, // QSet<QString> &_senderBlacklist,
             {}, // QSet<QString> &_toBlacklist,
@@ -186,10 +189,10 @@ private slots:
             {}, // QList<QString> &_folderSpecialPurposeBlacklist,
             {}  // QList<QString> &_folderNameBlacklist,
         );
+        model.setFilter({{"inbound", QVariant::fromValue(true)}});
 
-        //FIXME
-        // QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
-        QTRY_COMPARE(model.rowCount({}), 2);
+        QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
+        QCOMPARE(model.rowCount({}), 2);
 
         //Test move to trash
         {
@@ -337,7 +340,7 @@ private slots:
 
         InboundModel model;
         QSignalSpy initialItemsLoadedSpy(&model, &InboundModel::initialItemsLoaded);
-        model.setCurrentDate({});
+        model.setCurrentDate({{2018, 04, 17}, {6, 0, 0}});
         model.configure(
             {}, // QSet<QString> &_senderBlacklist,
             {}, // QSet<QString> &_toBlacklist,
@@ -352,9 +355,8 @@ private slots:
             {"string", "testInboundSorting"}
         });
 
-        //FIXME
-        // QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
-        QTRY_COMPARE(model.rowCount({}), 3);
+        QTRY_COMPARE(initialItemsLoadedSpy.count(), 1);
+        QCOMPARE(model.rowCount({}), 3);
         {
             //Sorted by date, not creation
             QCOMPARE(model.index(0, 0, {}).data(model.roleNames().key("data")).toMap().value("mail").value<Mail::Ptr>()->getSubject(), QString{"mail2"});
