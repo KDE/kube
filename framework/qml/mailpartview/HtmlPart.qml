@@ -27,6 +27,7 @@ Item {
     id: root
     objectName: "htmlPart"
     property string content
+    property bool loaded: false
     //We have to give it a minimum size so the html content starts to expand
     property int minimumSize: 10
     property int contentHeight: minimumSize
@@ -59,12 +60,13 @@ Item {
                     console.warn("Failed to load html content.")
                     console.warn("Error is ", loadRequest.errorString)
                 }
-                root.contentWidth = Math.max(contentsSize.width, flickable.minimumSize)
+                root.contentWidth = Math.max(contentsSize.width, minimumSize)
 
                 if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
                     runJavaScript("[document.body.scrollHeight, document.body.scrollWidth, document.documentElement.scrollHeight]", function(result) {
                         root.contentHeight = Math.min(Math.max(result[0], result[2]), 4000);
                         root.contentWidth = Math.min(Math.max(result[1], flickable.width), 2000)
+                        root.loaded = true
                     });
                 }
             }
