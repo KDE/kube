@@ -40,11 +40,11 @@ ViewTestCase {
         compare(listModel.rowCount(), 0)
 
         Kube.Fabric.postMessage(Kube.Messages.notification, {type: Kube.Notifications.info, message: "foobar", resource: "resource"})
-        compare(listModel.rowCount(), 1)
+        tryVerify(function(){ return listModel.rowCount() == 1})
         compare(logView.pendingError, false)
 
         Kube.Fabric.postMessage(Kube.Messages.notification, {"type": Kube.Notifications.error, message: "foobar", resource: "resource"})
-        compare(listModel.rowCount(), 2)
+        tryVerify(function(){ return listModel.rowCount() == 2})
         compare(logView.pendingError, true)
 
         //FIXME test the model contents again
@@ -55,7 +55,9 @@ ViewTestCase {
         // compare(listModel.get(0).errors.get(0).resource, "resource")
 
         Kube.Fabric.postMessage(Kube.Messages.notification, {"type": Kube.Notifications.error, "subtype": "merge", message: "merge1", resource: "resource1"})
-        compare(listModel.rowCount(), 3)
+        tryVerify(function(){ return listModel.rowCount() == 3})
+
+        //FIXME this test no longer works because async
         Kube.Fabric.postMessage(Kube.Messages.notification, {"type": Kube.Notifications.error, "subtype": "merge", message: "merge2", resource: "resource2"})
         compare(listModel.rowCount(), 3)
 
