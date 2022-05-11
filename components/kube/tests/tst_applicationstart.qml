@@ -35,8 +35,8 @@ TestCase {
     }
 
     function test_startToWizard() {
-        var accountWizard = findChild(kube, "accountWizard");
-        verify(accountWizard)
+        var accountWizard;
+        tryVerify(function(){ accountWizard = findChild(kube, "accountWizard"); return accountWizard})
         verify(accountWizard.visible)
     }
 }

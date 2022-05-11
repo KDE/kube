@@ -25,6 +25,7 @@ StackView {
     property string currentViewName: currentItem ? currentItem.objectName : ""
     property variant extensionModel: null
     property bool dontFocus: false
+    property bool loading: false
 
     /*
      * We maintain the view's lifetimes separately from the StackView in the viewDict.
@@ -55,9 +56,11 @@ StackView {
         var component = createComponent(name)
         function finishCreation() {
             if (component.status == Component.Ready) {
+                root.loading = true;
                 var incubator = component.incubateObject(root, properties ? Object.assign({}, properties, {visible: false}) : {visible: false});
 
                 function finishObjectCreation(status) {
+                    root.loading = false;
                     var view = incubator.object;
                     viewDict[name] = view
                     if (push) {
