@@ -68,9 +68,8 @@ Kube.View {
     Kube.Listener {
         filter: Kube.Messages.folderSelection
         onMessageReceived: {
-            //TODO we don't currently expect this to be changed outside of this view.
-            //Otherwise we'd have to select the correct entry in the listview
             root.currentFolder = message.folder
+            accountSwitcher.selectEntity(message.folder)
         }
     }
 
@@ -347,6 +346,7 @@ Kube.View {
 
                 Kube.ListView {
                     id: listView
+                    objectName: "listView"
                     anchors.fill: parent
 
                     clip: true

@@ -45,6 +45,10 @@ Kube.InlineAccountSwitcher {
         }
     }
 
+    function selectEntity(entity) {
+        root.currentDelegate.selectEntity(entity)
+    }
+
     Kube.CheckedEntities {
         id: entityFilterCollector
     }
@@ -56,6 +60,17 @@ Kube.InlineAccountSwitcher {
 
         function clearSelection() {
             listView.currentIndex = -1
+        }
+
+        function selectEntity(entity) {
+            if (entity) {
+                var foundIndex = checkableModel.findIndex("object", entity)
+                if (foundIndex >= 0) {
+                    listView.currentIndex = foundIndex;
+                }
+            } else {
+                listView.currentIndex = -1;
+            }
         }
 
         function currentChanged(isCurrent) {
