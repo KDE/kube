@@ -1,21 +1,5 @@
 #!/bin/bash
 
-echo "cm user.doe" | cyradm --auth PLAIN -u cyrus -w admin localhost
-
-echo "sam user.doe.* cyrus c;
-dm user.doe.*;
-cm user.doe.test;
-cm user.doe.Drafts;
-cm user.doe.Trash;
-sam user.doe cyrus c;
-" | cyradm --auth PLAIN -u cyrus -w admin localhost
-
-echo "sam user.doe.* cyrus c;
-subscribe INBOX.test;
-subscribe INBOX.Drafts;
-subscribe INBOX.Trash;
-" | cyradm --auth PLAIN -u doe -w doe localhost
-
 MSG=$(cat <<EOF
 Return-Path: <nepomuk-bounces@kde.org>
 Received: from compute4.internal (compute4.nyi.mail.srv.osa [10.202.2.44])
@@ -90,9 +74,13 @@ https://mail.kde.org/mailman/listinfo/nepomuk
 EOF
 )
 
+HIGHESTNUM=$(ls /var/spool/imap/d/user/doe/test/ | sort -g | tail -1 | cut -c1-4)
+START=$(($HIGHESTNUM + 1))
+END=$(($HIGHESTNUM + 100))
+
 #Create a bunch of test messages in the test folder
 FOLDERPATH=/var/spool/imap/d/user/doe/test
-for i in `seq 1 5000`;
+for i in `seq $START $END`;
 do
    DATEOFFSET=$((1361234760 + $i))
    DATE=$(date -R -d @$DATEOFFSET.790)
@@ -102,10 +90,3 @@ done
 
 sudo chown -R cyrus:mail $FOLDERPATH
 sudo reconstruct "user.doe.test"
-
-sinksh create account type generic identifier perfAccount name perfAccount
-sinksh create resource type sink.imap identifier perfImap account perfAccount server imaps://localhost:993 username doe
-sinksh create resource type sink.mailtransport identifier perfSmtp account perfAccount server smtps://localhost:587 username doe
-sinksh create resource type sink.carddav  identifier perfCarddav account perfAccount server https://localhost username doe
-sinksh create resource type sink.caldav  identifier perfCaldav account perfAccount server https://localhost username doe
-sinksh create identity name "John Doe" address doe@kolab.org account perfAccount

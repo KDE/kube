@@ -59,6 +59,7 @@ ADD setupperformancetest.sh /home/developer/setupperformancetest.sh
 ADD setupgoogletest.sh /home/developer/setupgoogletest.sh
 ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
 ADD initrepositories.sh /home/developer/initrepositories.sh
+ADD generatemessages.sh /home/developer/generatemessages.sh
 
 ADD keyconfig /home/developer/keyconfig
 ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf
