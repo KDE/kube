@@ -56,5 +56,13 @@ ListView {
         flickable: root
         anchors.fill: root
     }
+
+    onAtYEndChanged: {
+        //The fetchMore logic doesn't work in the inbound view (not sure why, it should).
+        //However, this does pretty much the same and works.
+        if (atYEnd  && typeof model.tryFetchMore === "function") {
+            model.tryFetchMore()
+        }
+    }
 }
 

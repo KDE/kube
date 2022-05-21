@@ -800,3 +800,25 @@ QVariant InboundModel::data(const QModelIndex &idx, int role) const
     }
     return QSortFilterProxyModel::data(idx, role);
 }
+
+bool InboundModel::canFetchMore(const QModelIndex &parent) const
+{
+    if (mSourceModel && !parent.isValid()) {
+        return mSourceModel->canFetchMore({});
+    }
+    return false;
+}
+
+void InboundModel::fetchMore(const QModelIndex &parent)
+{
+    if (mSourceModel) {
+        mSourceModel->fetchMore({});
+    }
+}
+
+void InboundModel::tryFetchMore()
+{
+    if (mSourceModel) {
+        mSourceModel->fetchMore({});
+    }
+}

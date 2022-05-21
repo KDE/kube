@@ -76,6 +76,10 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
+    bool canFetchMore(const QModelIndex &parent) const override;
+    void fetchMore(const QModelIndex &parent) override;
+    Q_INVOKABLE void tryFetchMore();
+
 signals:
     void entryAdded(const QVariantMap &message);
     void initialItemsLoaded();
