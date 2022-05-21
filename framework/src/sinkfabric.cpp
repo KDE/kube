@@ -55,7 +55,7 @@ public:
             if (folder) {
                 SinkLog() << "Synchronizing folder " << folder->resourceInstanceIdentifier() << folder->identifier();
                 auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(folder->identifier()));
-                scope.setType<ApplicationDomain::Mail>();
+                scope.setType<Mail>();
                 Store::synchronize(scope).exec();
             } else if (message.contains("specialPurpose")) {
                 auto specialPurpose = message["specialPurpose"].value<QString>();
@@ -63,14 +63,14 @@ public:
                 if (specialPurpose == "drafts") {
                     //TODO or rather just synchronize draft mails and have resource figure out what that means?
                     Sink::Query folderQuery{};
-                    folderQuery.containsFilter<Sink::ApplicationDomain::Folder::SpecialPurpose>(Sink::ApplicationDomain::SpecialPurpose::Mail::drafts);
-                    folderQuery.request<Sink::ApplicationDomain::Folder::SpecialPurpose>();
-                    folderQuery.request<Sink::ApplicationDomain::Folder::Name>();
-                    Store::fetch<Sink::ApplicationDomain::Folder>(folderQuery)
-                        .then([] (const QList<Sink::ApplicationDomain::Folder::Ptr> &folders) {
+                    folderQuery.containsFilter<Folder::SpecialPurpose>(SpecialPurpose::Mail::drafts);
+                    folderQuery.request<Folder::SpecialPurpose>();
+                    folderQuery.request<Folder::Name>();
+                    Store::fetch<Folder>(folderQuery)
+                        .then([] (const QList<Folder::Ptr> &folders) {
                             for (const auto &f : folders) {
                                 auto scope = SyncScope().resourceFilter(f->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(f->identifier()));
-                                scope.setType<ApplicationDomain::Mail>();
+                                scope.setType<Mail>();
                                 Store::synchronize(scope).exec();
                             }
                         }).exec();
@@ -107,50 +107,50 @@ public:
             job.exec();
         }
         if (id == "markAsRead"/*Kube::Messages::synchronize*/) {
-            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
+            if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setUnread(false);
                 Store::modify(*mail).exec();
             }
         }
         if (id == "markAsUnread"/*Kube::Messages::synchronize*/) {
-            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
+            if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setUnread(true);
                 Store::modify(*mail).exec();
             }
         }
         if (id == "setImportant"/*Kube::Messages::synchronize*/) {
-            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
+            if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setImportant(message["important"].toBool());
                 Store::modify(*mail).exec();
             }
         }
         if (id == "moveToTrash"/*Kube::Messages::synchronize*/) {
-            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
+            if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setTrash(true);
                 Store::modify(*mail).exec();
             }
         }
         if (id == "restoreFromTrash") {
-            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
+            if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setTrash(false);
                 Store::modify(*mail).exec();
             }
         }
         if (id == "moveToDrafts"/*Kube::Messages::synchronize*/) {
-            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
+            if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setDraft(true);
                 Store::modify(*mail).exec();
             }
         }
         if (id == "moveToFolder"/*Kube::Messages::synchronize*/) {
-            if (auto mail = message["mail"].value<ApplicationDomain::Mail::Ptr>()) {
-                auto folder = message["folder"].value<ApplicationDomain::Folder::Ptr>();
+            if (auto mail = message["mail"].value<Mail::Ptr>()) {
+                auto folder = message["folder"].value<Folder::Ptr>();
                 mail->setFolder(*folder);
                 Store::modify(*mail).exec();
             }
         }
         if (id == "moveToCalendar") {
-            if (auto todo = message["todo"].value<ApplicationDomain::Todo::Ptr>()) {
+            if (auto todo = message["todo"].value<Todo::Ptr>()) {
                 todo->setCalendar(message["calendarId"].value<QByteArray>());
                 Store::modify(*todo).exec();
             }
