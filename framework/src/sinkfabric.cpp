@@ -42,7 +42,17 @@ public:
     {
         SinkTrace() << "Received message: " << id << message;
         if (id == "synchronize"/*Kube::Messages::synchronize*/) {
-            if (auto folder = message["folder"].value<ApplicationDomain::Folder::Ptr>()) {
+            auto folder = [&] () -> ApplicationDomainType::Ptr {
+                if (auto folder = message["folder"].value<Folder::Ptr>()) {
+                    return folder;
+                }
+                //The inboundmodel selects an applicationdomaintype and not a folder
+                if (auto folder = message["folder"].value<ApplicationDomainType::Ptr>()) {
+                    return folder;
+                }
+                return {};
+            }();
+            if (folder) {
                 SinkLog() << "Synchronizing folder " << folder->resourceInstanceIdentifier() << folder->identifier();
                 auto scope = SyncScope().resourceFilter(folder->resourceInstanceIdentifier()).filter<Mail::Folder>(QVariant::fromValue(folder->identifier()));
                 scope.setType<ApplicationDomain::Mail>();

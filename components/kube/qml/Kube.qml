@@ -87,7 +87,11 @@ ApplicationWindow {
     //Listener
     Kube.Listener {
         filter: Kube.Messages.folderSelection
-        onMessageReceived: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": message.folder})
+        onMessageReceived: {
+            if (message.folder) {
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": message.folder})
+            }
+        }
 
     }
 
