@@ -55,6 +55,11 @@ Kube.View {
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + listItem.x, 0, (details.x + details.width) - listItem.x, (details.y + details.height) - listItem.y)
 
     onFilterChanged: {
+        if (filter) {
+            inboundModel.enableNotifications = false;
+        } else {
+            inboundModel.enableNotifications = true;
+        }
         root.modelFilter = {
             "inbound": root.modelFilter.inbound,
             "recent": root.modelFilter.recent,
