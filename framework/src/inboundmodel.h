@@ -84,6 +84,7 @@ signals:
     void entryAdded(const QVariantMap &message);
     void initialItemsLoaded();
     void filterChanged();
+    void fetchingMore();
 
 private slots:
     void mailRowsInserted(const QModelIndex &parent, int first, int last);

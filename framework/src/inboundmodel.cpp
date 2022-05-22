@@ -803,22 +803,23 @@ QVariant InboundModel::data(const QModelIndex &idx, int role) const
 
 bool InboundModel::canFetchMore(const QModelIndex &parent) const
 {
-    if (mSourceModel && !parent.isValid()) {
-        return mSourceModel->canFetchMore({});
+    if (m_model && !parent.isValid()) {
+        return m_model->canFetchMore({});
     }
     return false;
 }
 
 void InboundModel::fetchMore(const QModelIndex &parent)
 {
-    if (mSourceModel) {
-        mSourceModel->fetchMore({});
+    if (m_model) {
+        emit fetchingMore();
+        m_model->fetchMore({});
     }
 }
 
 void InboundModel::tryFetchMore()
 {
-    if (mSourceModel) {
-        mSourceModel->fetchMore({});
+    if (canFetchMore({})) {
+        fetchMore({});
     }
 }

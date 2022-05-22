@@ -405,13 +405,20 @@ Kube.View {
                             listView.startTime = new Date().getTime()
                         }
 
+                        onFetchingMore: {
+                            enableNotifications = false;
+                        }
+
                         onInitialItemsLoaded: {
                             enableNotifications = true;
-                            //Make sure the view is up-to-date before positioning
-                            listView.forceLayout()
-                            listView.currentIndex = inboundModel.firstRecentIndex();
-                            listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
-                            console.info("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
+                            //Because this is also emitted on fetchMore
+                            if (listView.currentIndex == -1) {
+                                //Make sure the view is up-to-date before positioning
+                                listView.forceLayout()
+                                listView.currentIndex = inboundModel.firstRecentIndex();
+                                listView.positionViewAtIndex(listView.currentIndex, ListView.Center);
+                                console.info("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
+                            }
                         }
                         currentDate: root.currentDate
                     }
