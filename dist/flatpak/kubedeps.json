@@ -181,6 +181,26 @@
                 "mkdir -p /app/share/fonts/google-noto",
                 "install -m 0644 hinted/NotoSans/NotoSans-{Regular,Bold,Italic}.ttf /app/share/fonts/google-noto"
             ]
+        },
+        {
+            "name": "libzstd",
+            "buildsystem": "meson",
+            "subdir" : "build/meson",
+            "config-opts": [
+                "-Dbin_programs=false",
+                "-Dbin_contrib=false"
+            ],
+            "cleanup": [
+                "/bin",
+                "/include"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/facebook/zstd/archive/refs/tags/v1.5.2.tar.gz",
+                    "sha256": "f7de13462f7a82c29ab865820149e778cbfe01087b3a55b5332707abf9db4a6e"
+                }
+            ]
         }
     ]
 }
