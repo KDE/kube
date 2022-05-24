@@ -39,6 +39,7 @@ Kube.View {
         "important": false,
         "folder": null,
         "string": root.filter,
+        "headersOnly": true,
     }
 
     property var currentFolder: null
@@ -66,6 +67,7 @@ Kube.View {
             "important": root.modelFilter.important,
             "folder": root.modelFilter.folder,
             "string": filter,
+            "headersOnly": true
         }
         Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
     }
@@ -219,6 +221,7 @@ Kube.View {
                                 "important": false,
                                 "folder": null,
                                 "string": root.filter,
+                                "headersOnly": true,
                             }
                             accountSwitcher.clearSelection()
                         }
@@ -237,6 +240,7 @@ Kube.View {
                                 "important": false,
                                 "folder": null,
                                 "string": root.filter,
+                                "headersOnly": true,
                             }
                             accountSwitcher.clearSelection()
                         }
@@ -255,6 +259,7 @@ Kube.View {
                                 "important": true,
                                 "folder": null,
                                 "string": root.filter,
+                                "headersOnly": true,
                             }
                             accountSwitcher.clearSelection()
                         }
