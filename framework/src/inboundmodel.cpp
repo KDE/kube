@@ -118,7 +118,7 @@ static bool applyStringFilter(Sink::Query &query, const QString &filterString)
     }
     if (!filterString.isEmpty()) {
         query.filter({}, Sink::QueryBase::Comparator(filterString, Sink::QueryBase::Comparator::Fulltext));
-        query.limit(0);
+        query.limit(100);
     }
     return true;
 }
