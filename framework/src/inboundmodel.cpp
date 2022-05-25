@@ -681,6 +681,7 @@ void InboundModel::setFilter(const QVariantMap &filter)
             .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
             .collect<ApplicationDomain::Mail::Unread>()
             .collect<ApplicationDomain::Mail::Important>();
+        query.limit(100);
         validQuery = true;
     } else if (filter.value("recent").toBool()) {
         query.setFlags(Sink::Query::LiveQuery);
@@ -692,6 +693,7 @@ void InboundModel::setFilter(const QVariantMap &filter)
             .select<ApplicationDomain::Mail::Subject>(Query::Reduce::Selector::Min)
             .collect<ApplicationDomain::Mail::Unread>()
             .collect<ApplicationDomain::Mail::Sent>();
+        query.limit(100);
         validQuery = true;
     }
 
@@ -699,6 +701,8 @@ void InboundModel::setFilter(const QVariantMap &filter)
         query.setFlags(Sink::Query::LiveQuery);
         query.filter<Mail::Draft>(true);
         query.filter<Mail::Trash>(false);
+        query.sort<ApplicationDomain::Mail::Date>();
+        query.limit(100);
         validQuery = true;
     }
 
