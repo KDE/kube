@@ -96,7 +96,7 @@ for i in `seq 1 5000`;
 do
    DATEOFFSET=$((1361234760 + $i))
    DATE=$(date -R -d @$DATEOFFSET.790)
-   sudo echo "$MSG" | sed "s/Message-ID:/Message-ID: <$i@generated.local>/;s/^Subject:/Subject: Subject $i/;s/^Date:/Date: $DATE/" > $FOLDERPATH/$i.
+   echo "$MSG" | sed "s/Message-ID:/Message-ID: <$i@generated.local>/;s/^Subject:/Subject: Subject $i/;s/^Date:/Date: $DATE/" | sudo tee "$FOLDERPATH/$i." > /dev/null
    echo -n "."
 done
 
