@@ -631,7 +631,6 @@ Kube.View {
                 clip: true
                 anchors {
                     fill: parent
-                    margins: Kube.Units.largeSpacing
                 }
                 property date timestamp: details.timestamp
                 property string message: details.message

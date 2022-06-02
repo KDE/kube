@@ -129,7 +129,7 @@ FocusScope {
                 MailViewer {
                     id: sheet
                     anchors.centerIn: parent
-                    width: parent.width - Kube.Units.gridUnit * 2
+                    width: parent.width - Kube.Units.largeSpacing * 2
 
                     mail: model.mail
                     message: model.mimeMessage
