@@ -462,7 +462,7 @@ Kube.View {
                         property bool isMail: model.type == "mail"
                         property var domainObject: model.data.domainObject
                         property bool important: isMail && model.data.important
-                        height: isMail ? Kube.Units.gridUnit * 5 : (Kube.Units.gridUnit * 3 + 2 * Kube.Units.smallSpacing)
+                        height: Kube.Units.gridUnit * 3 + 2 * Kube.Units.smallSpacing
 
                         onDropped: {
                             if (dropAction == Qt.MoveAction) {
@@ -531,6 +531,7 @@ Kube.View {
                                     Kube.IconButton {
                                         id: ignoreButton
                                         visible: root.modelFilter.inbound
+                                        padding: 0
                                         iconName: Kube.Icons.listRemove
                                         onClicked: inboundModel.ignoreSender(delegateRoot.domainObject)
                                         activeFocusOnTab: false
@@ -542,6 +543,7 @@ Kube.View {
                                         id: restoreButton
                                         iconName: Kube.Icons.undo
                                         visible: !!delegateRoot.trash
+                                        padding: 0
                                         onClicked: Kube.Fabric.postMessage(Kube.Messages.restoreFromTrash, {"mail": delegateRoot.domainObject})
                                         activeFocusOnTab: false
                                         tooltip: qsTr("Restore from trash")
@@ -551,6 +553,7 @@ Kube.View {
                                         id: readButton
                                         iconName: Kube.Icons.markAsRead
                                         visible: model.data.unread && !model.data.trash
+                                        padding: 0
                                         onClicked: {
                                             Kube.Fabric.postMessage(Kube.Messages.markAsRead, {"mail": delegateRoot.domainObject})
                                         }
@@ -561,6 +564,7 @@ Kube.View {
                                         id: unreadButton
                                         iconName: Kube.Icons.markAsUnread
                                         visible: !model.data.unread && !model.data.trash
+                                        padding: 0
                                         onClicked: Kube.Fabric.postMessage(Kube.Messages.markAsUnread, {"mail": delegateRoot.domainObject})
                                         activeFocusOnTab: false
                                         tooltip: qsTr("Mark as unread")
@@ -570,6 +574,7 @@ Kube.View {
                                         id: importantButton
                                         iconName: delegateRoot.important ? Kube.Icons.markImportant : Kube.Icons.markUnimportant
                                         visible: !!delegateRoot.domainObject
+                                        padding: 0
                                         onClicked: Kube.Fabric.postMessage(Kube.Messages.setImportant, {"mail": delegateRoot.domainObject, "important": !model.data.important})
                                         activeFocusOnTab: false
                                         tooltip: qsTr("Mark as important")
@@ -580,6 +585,7 @@ Kube.View {
                                         objectName: "deleteButton"
                                         iconName: Kube.Icons.moveToTrash
                                         visible: !!delegateRoot.domainObject
+                                        padding: 0
                                         onClicked: Kube.Fabric.postMessage(Kube.Messages.moveToTrash, {"mail": delegateRoot.domainObject})
                                         activeFocusOnTab: false
                                         tooltip: qsTr("Move to trash")
@@ -598,6 +604,7 @@ Kube.View {
                                     iconName: Kube.Icons.checkbox
                                     activeFocusOnTab: false
                                     tooltip: qsTr("Done!")
+                                    padding: 0
                                 }
                             }
                         }

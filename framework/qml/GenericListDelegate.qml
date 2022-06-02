@@ -104,7 +104,7 @@ Kube.ListDelegate {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
-                leftMargin:  Kube.Units.largeSpacing
+                leftMargin:  Kube.Units.smallSpacing
             }
 
             Kube.Label{
