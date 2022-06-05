@@ -9,7 +9,7 @@ RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar make ninja-build clang 
     kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel gpgme-devel kf5-kcalendarcore-devel \
     cyrus-imapd cyrus-sasl cyrus-sasl-devel cyrus-sasl-plain gnupg2-smime pinentry-gtk \
     google-noto-serif-fonts google-noto-sans-fonts \
-    xorg-x11-server-Xvfb qt5ct binutils-devel libzstd-devel
+    xorg-x11-server-Xvfb qt5ct binutils-devel libzstd-devel mold
 
 RUN useradd -d /home/developer -m developer
 
