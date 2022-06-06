@@ -311,6 +311,63 @@ void InboundModel::initInboundFilter()
     refresh();
 }
 
+template <typename T>
+QSet<T> toSet(const QList<T> &list) {
+    return QSet<T>(list.begin(), list.end());
+}
+
+QList<QRegularExpression> toRegexpList(const QList<QString> &list) {
+    QList<QRegularExpression> result;
+    for (const auto &filter : list) {
+        result.append(QRegularExpression{filter});
+    }
+    return result;
+}
+
+QMap<QString, QString> toStringMap(const QVariantMap &map)
+{
+    QMap<QString, QString> result;
+    for (auto it = map.constBegin(); it != map.constEnd(); it++) {
+        result.insert(it.key(), it.value().toString());
+    }
+    return result;
+}
+
+QVariantMap fromStringMap(const QMap<QString, QString> &map)
+{
+    QVariantMap result;
+    for (auto it = map.constBegin(); it != map.constEnd(); it++) {
+        result.insert(it.key(), QVariant::fromValue(it.value()));
+    }
+    return result;
+}
+
+void InboundModel::setConfig(const QVariantMap &config)
+{
+    configure(
+        toSet(config["senderBlacklist"].toStringList()),
+        toSet(config["toBlacklist"].toStringList()),
+        config["senderNameContainsFilter"].toString(),
+        toStringMap(config["perFolderMimeMessageWhitelistFilter"].toMap()),
+        toRegexpList(config["messageFilter"].toStringList()),
+        config["folderSpecialPurposeBlacklist"].toStringList(),
+        config["folderNameBlacklist"].toStringList()
+    );
+}
+
+QVariantMap InboundModel::config() const
+{
+    return QVariantMap{
+        {"senderBlacklist", QVariant::fromValue(QStringList{senderBlacklist.values()})},
+        {"toBlacklist", QVariant::fromValue(QStringList{toBlacklist.values()})},
+        {"senderNameContainsFilter", QVariant::fromValue(senderNameContainsFilter)},
+        {"perFolderMimeMessageWhitelistFilter", fromStringMap(perFolderMimeMessageWhitelistFilter)},
+        // {"messageFilter", },
+        {"folderSpecialPurposeBlacklist", QVariant::fromValue(QStringList{folderSpecialPurposeBlacklist})},
+        {"folderNameBlacklist", QVariant::fromValue(QStringList{folderNameBlacklist})},
+    };
+}
+
 void InboundModel::configure(
     const QSet<QString> &_senderBlacklist,
     const QSet<QString> &_toBlacklist,
@@ -318,7 +375,7 @@ void InboundModel::configure(
     const QMap<QString, QString> &_perFolderMimeMessageWhitelistFilter,
     const QList<QRegularExpression> &_messageFilter,
     const QList<QString> &_folderSpecialPurposeBlacklist,
-    const QList<QString> &/*_folderNameBlacklist*/
+    const QList<QString> &_folderNameBlacklist
 )
 {
     senderBlacklist = _senderBlacklist;
@@ -327,7 +384,7 @@ void InboundModel::configure(
     perFolderMimeMessageWhitelistFilter = _perFolderMimeMessageWhitelistFilter;
     messageFilter = _messageFilter;
     folderSpecialPurposeBlacklist = _folderSpecialPurposeBlacklist;
-    folderNameBlacklist = _folderSpecialPurposeBlacklist;
+    folderNameBlacklist = _folderNameBlacklist;
 
     saveSettings();
     initInboundFilter();
@@ -348,10 +405,6 @@ void InboundModel::saveSettings()
     settings.setValue("senderNameContainsFilter", QVariant::fromValue(senderNameContainsFilter));
 }
 
-template <typename T>
-QSet<T> toSet(const QList<T> &list) {
-    return QSet<T>(list.begin(), list.end());
-}
 
 void InboundModel::loadSettings()
 {
@@ -363,11 +416,7 @@ void InboundModel::loadSettings()
     folderSpecialPurposeBlacklist = settings.value("folderSpecialPurposeBlacklist").toStringList();
     folderNameBlacklist = settings.value("folderNameBlacklist").toStringList();
     senderNameContainsFilter = settings.value("senderNameContainsFilter").toString();
-
-    messageFilter.clear();
-    for (const auto &filter : settings.value("messageFilter").toStringList()) {
-        messageFilter.append(QRegularExpression{filter});
-    }
+    messageFilter = toRegexpList(settings.value("messageFilter").toStringList());
 
     settings.beginGroup("perFolderMimeMessageWhitelistFilter");
     perFolderMimeMessageWhitelistFilter.clear();

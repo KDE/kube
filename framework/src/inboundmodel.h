@@ -45,6 +45,7 @@ class KUBE_EXPORT InboundModel : public QSortFilterProxyModel
 
     Q_PROPERTY(QDateTime currentDate WRITE setCurrentDate)
     Q_PROPERTY (QVariantMap filter READ filter WRITE setFilter NOTIFY filterChanged)
+    Q_PROPERTY (QVariantMap config READ config WRITE setConfig NOTIFY configChanged)
 
 public:
     InboundModel(QObject *parent = Q_NULLPTR);
@@ -68,6 +69,8 @@ public:
         const QList<QString> &_folderNameBlacklist
     );
 
+    void setConfig(const QVariantMap &);
+    QVariantMap config() const;
 
     void setFilter(const QVariantMap &);
     QVariantMap filter() const;
@@ -84,6 +87,7 @@ signals:
     void entryAdded(const QVariantMap &message);
     void initialItemsLoaded();
     void filterChanged();
+    void configChanged();
     void fetchingMore();
 
 private slots:

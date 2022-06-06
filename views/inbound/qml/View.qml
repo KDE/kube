@@ -225,6 +225,20 @@ Kube.View {
                             }
                             accountSwitcher.clearSelection()
                         }
+                        Kube.IconButton {
+                            anchors {
+                                right: parent.right
+                                verticalCenter: parent.verticalCenter
+                            }
+                            visible: parent.hovered
+                            padding: 0
+                            iconName: Kube.Icons.overflowMenu_inverted
+                            onClicked: {
+                                configComponent.createObject(root).open()
+                            }
+                            activeFocusOnTab: false
+                            tooltip: qsTr("Configure")
+                        }
                     }
                     Kube.TextButton {
                         Layout.fillWidth: true
@@ -988,6 +1002,151 @@ Kube.View {
             onOccurrenceChanged: {
                 //Workaround because we need to create a new controller to reload the occurrence
                 componentRoot.controller = controllerComponent.createObject(parent, {"eventOccurrence": occurrence})
+            }
+        }
+    }
+
+    Component {
+        id: configComponent
+        Kube.Popup {
+            id: configPopup
+            modal: true
+            parent: ApplicationWindow.overlay
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+            x: (parent.width - width)/2
+            y: Kube.Units.largeSpacing
+            width: parent.width / 2
+            height: parent.height - Kube.Units.largeSpacing * 2
+            clip: true
+
+            Flickable {
+                id: flickable
+                anchors.fill: parent
+                ScrollBar.vertical: Kube.ScrollBar {}
+                contentHeight: grid.height
+                contentWidth: parent.width
+
+
+                GridLayout {
+                    id: grid
+                    width: flickable.width
+                    height: childrenRect.height
+                    columns: 2
+                    columnSpacing: Kube.Units.largeSpacing
+                    rowSpacing: Kube.Units.largeSpacing
+
+                    Kube.Label {
+                        text: qsTr("Folder name blacklist")
+                        Layout.alignment: Qt.AlignRight
+                    }
+                    Kube.TextField {
+                        id: folderNameBlacklist
+                        focus: true
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("Comma separated folder names")
+                        text: inboundModel.config.folderNameBlacklist.join(', ')
+                    }
+
+                    Kube.Label {
+                        text: qsTr("Per Folder Mime Message Whitelist")
+                        Layout.alignment: Qt.AlignRight
+                    }
+                    Kube.TextField {
+                        id: perFolderMimeMessageWhitelistFilter
+                        focus: true
+                        Layout.fillWidth: true
+                        placeholderText: JSON.stringify({"foldername1": "filterstring1", "foldername2": "filterstring2",})
+                        text: JSON.stringify(inboundModel.config.perFolderMimeMessageWhitelistFilter)
+                    }
+
+                    Kube.Label {
+                        text: qsTr("Folder special purpose blacklist")
+                        Layout.alignment: Qt.AlignRight
+                    }
+                    Kube.TextField {
+                        id: folderSpecialPurposeBlacklist
+                        focus: true
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("Comma separated special purpose types. Example: drafts, trash, sent")
+                        text: inboundModel.config.folderSpecialPurposeBlacklist.join(', ')
+                    }
+
+                    Kube.Label {
+                        text: qsTr("Sender blacklist")
+                        Layout.alignment: Qt.AlignRight
+                    }
+                    Kube.TextField {
+                        id: senderBlacklist
+                        focus: true
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("Comma separated sender email addresses")
+                        text: inboundModel.config.senderBlacklist.join(', ')
+                    }
+
+                    Kube.Label {
+                        text: qsTr("To blacklist")
+                        Layout.alignment: Qt.AlignRight
+                    }
+                    Kube.TextField {
+                        id: toBlacklist
+                        focus: true
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("Comma separated sender email addresses")
+                        text: inboundModel.config.toBlacklist.join(', ')
+                    }
+
+                    Kube.Label {
+                        text: qsTr("Sender name contains filter")
+                        Layout.alignment: Qt.AlignRight
+                    }
+                    Kube.TextField {
+                        id: senderNameContainsFilter
+                        focus: true
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("Comma separated sender email addresses")
+                        text: inboundModel.config.senderNameContainsFilter
+                    }
+                }
+
+                Keys.onReturnPressed: {
+                    if (loader.item.valid) {
+                        login()
+                    }
+                }
+            }
+
+            Item {
+                id: footer
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    topMargin: Kube.Units.largeSpacing * 2
+                }
+
+                Kube.Button {
+                    anchors.right: parent.right
+                    text: qsTr("Save")
+                    onClicked: {
+                        inboundModel.config = {
+                            "folderNameBlacklist": folderNameBlacklist.text.split(', '),
+                            "folderSpecialPurposeBlacklist": folderSpecialPurposeBlacklist.text.split(', '),
+                            "perFolderMimeMessageWhitelistFilter": JSON.parse(perFolderMimeMessageWhitelistFilter.text),
+                            "senderBlacklist": senderBlacklist.text.split(', '),
+                            "toBlacklist": toBlacklist.text.split(', '),
+                            "senderNameContainsFilter": senderNameContainsFilter.text,
+                        };
+                        configPopup.close()
+
+                    }
+                }
+            }
+
+
+            Kube.ScrollHelper {
+                id: scrollHelper
+                flickable: flickable
+                anchors.fill: parent
             }
         }
     }
