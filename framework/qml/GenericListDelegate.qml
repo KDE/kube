@@ -89,6 +89,7 @@ Kube.ListDelegate {
        property color unreadColor: delegateRoot.disabled ? delegateRoot.disabledTextColor : ((delegateRoot.active && !delegateRoot.highlighted) ? Kube.Colors.highlightColor : delegateRoot.textColor)
 
         Rectangle {
+            id: colorDot
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
@@ -104,7 +105,7 @@ Kube.ListDelegate {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
-                leftMargin:  Kube.Units.smallSpacing
+                leftMargin: colorDot.visible ? Kube.Units.largeSpacing : Kube.Units.smallSpacing
             }
 
             Kube.Label{

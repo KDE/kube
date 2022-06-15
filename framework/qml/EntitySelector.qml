@@ -226,6 +226,7 @@ Kube.InlineAccountSwitcher {
                 anchors {
                     fill: parent
                     leftMargin: Kube.Units.smallSpacing
+                    rightMargin: Kube.Units.smallSpacing
                 }
                 spacing: Kube.Units.smallSpacing
                 Kube.CheckBox {
