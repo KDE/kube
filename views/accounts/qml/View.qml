@@ -68,7 +68,15 @@ FocusScope {
 
                 clip: true
 
-                model: Kube.AccountsModel {}
+                model: Kube.AccountsModel {
+                    //Like onInitialItemsLoaded, but since we're loading synchronously
+                    Component.onCompleted: {
+                        //Trigger the account setup if there are no current accounts
+                        if (rowCount() == 0) {
+                            accountWizardComponent.createObject(root, {requireSetup: true}).open()
+                        }
+                    }
+                }
 
                 onCountChanged: {
                     if (count == 0) {
@@ -121,14 +129,6 @@ FocusScope {
                     }
                 }
 
-                Component.onCompleted: {
-                    //We don't have any accounts setup if accountId is empty, so we trigger the accountWizard
-                    //FIXME: this assumes we load accounts synchronously, which we do right now.
-                    if (accountId == "") {
-                        //Require the setup to be completed since it's the first account
-                        accountWizardComponent.createObject(root, {requireSetup: true}).open()
-                    }
-                }
             }
         }
     }
