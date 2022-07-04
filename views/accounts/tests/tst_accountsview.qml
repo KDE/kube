@@ -43,6 +43,11 @@ ViewTestCase {
     function test_1start() {
         var accountsView = createTemporaryObject(accountsComponent, testCase, {})
         verify(accountsView)
+
+        //Accountswizard autostart
+        var accountWizard = findChild(accountsView, "accountWizard");
+        verify(accountWizard)
+        verify(accountWizard.requireSetup)
     }
 
     function test_2createAccount() {
@@ -72,5 +77,13 @@ ViewTestCase {
         compare(accounts.length, 1)
         var resources = TestStore.loadList("resource", {})
         compare(resources.length, 4)
+
+
+        //No accountswizard autostart
+        var accountsView2 = createTemporaryObject(accountsComponent, testCase, {})
+        verify(accountsView2)
+
+        var accountWizard2 = findChild(accountsView2, "accountWizard");
+        verify(!accountWizard2)
     }
 }
