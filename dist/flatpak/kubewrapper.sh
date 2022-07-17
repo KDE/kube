@@ -9,7 +9,7 @@ kube --lockfile
 # so no lingering around.
 kill $(pidof sink_synchronizer)
 ## gpg-agent returns 2 if another agent was already started.
-if [ $RETVAL -ne 0 ]; then
+if [ $RETVAL -eq 0 ]; then
     gpg-connect-agent killagent /bye
     pkill gpg-agent
 fi
