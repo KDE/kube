@@ -283,10 +283,14 @@ ComposerController::ComposerController()
 
 void ComposerController::findPersonalKey()
 {
-    auto identity = getIdentity();
-    SinkLog() << "Looking for personal key for: " << identity.address();
+    const auto identityAddress = getIdentity().address();
+    if (identityAddress.isEmpty()) {
+        SinkTrace() << "Not looking for personal key because of empty identity.";
+        return;
+    }
+    SinkLog() << "Looking for personal key for: " << identityAddress;
     asyncRun<std::vector<Crypto::Key>>(this, [=] {
-            return Crypto::findKeys({identity.address()}, true);
+            return Crypto::findKeys({identityAddress}, true);
         },
         [this](const std::vector<Crypto::Key> &keys) {
             if (keys.empty()) {
