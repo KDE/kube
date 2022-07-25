@@ -155,12 +155,13 @@ public:
     {
         KMime::Types::Mailbox mb;
         mb.fromUnicodeString(addressee);
+        const auto mbAddress = mb.address();
 
-        if (mb.address().isEmpty()) {
+        if (mbAddress.isEmpty()) {
             return;
         }
 
-        SinkLog() << "Searching key for: " << mb.address();
+        SinkLog() << "Searching key for: " << mbAddress;
 
         mMissingKeys << id;
         setFoundAllKeys(false);
@@ -169,7 +170,7 @@ public:
 
         asyncRun<std::vector<Crypto::Key>>(this,
             [=] {
-                return Crypto::findKeys({mb.address()}, false, fetchRemote);
+                return Crypto::findKeys({mbAddress}, false, fetchRemote);
             },
             [this, addressee, id](const std::vector<Crypto::Key> &keys) {
                 setValue(id, "fetching", false);
@@ -177,7 +178,9 @@ public:
                     if (keys.size() > 1) {
                         SinkWarning() << "Found more than one key, encrypting to all of them.";
                     }
-                    SinkLog() << "Found key: " << keys.front();
+                    for (const auto &key : keys) {
+                        SinkLog() << "Found key: " << key;
+                    }
                     setValue(id, "keyFound", true);
                     setValue(id, "key", QVariant::fromValue(keys));
                     mMissingKeys.remove(id);
