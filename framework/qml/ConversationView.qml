@@ -102,8 +102,8 @@ FocusScope {
                 focus: true
                 activeFocusOnTab: false
                 onActiveFocusChanged: {
-                    if (activeFocus && delegateRoot.index) {
-                        listView.currentIndex = delegateRoot.index
+                    if (activeFocus && index) {
+                        listView.currentIndex = index
                     }
                 }
 
@@ -123,7 +123,9 @@ FocusScope {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton
                     hoverEnabled: true
-                    onEntered: delegateRoot.forceActiveFocus(Qt.MouseFocusReason)
+                    onEntered: {
+                        delegateRoot.forceActiveFocus(Qt.MouseFocusReason)
+                    }
                 }
 
                 MailViewer {
@@ -149,7 +151,7 @@ FocusScope {
                     searchString: root.searchString
                     autoLoadImages: root.autoLoadImages
                     // Collapse all but the latest sent message by default
-                    collapsed: (listView.count > 1) && (delegateRoot.index < (listView.count - 1)) && (draft || sent)
+                    collapsed: (listView.count > 1) && (index < (listView.count - 1)) && (draft || sent)
 
                     states: [
                         State {
