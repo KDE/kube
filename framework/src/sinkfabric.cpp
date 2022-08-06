@@ -97,7 +97,7 @@ public:
             }
             Store::abortSynchronization(scope).exec();
         }
-        if (id == "sendOutbox"/*Kube::Messages::synchronize*/) {
+        if (id == "sendOutbox") {
             Query query;
             query.containsFilter<SinkResource::Capabilities>(ResourceCapabilities::Mail::transport);
             auto job = Store::fetchAll<SinkResource>(query)
@@ -106,25 +106,25 @@ public:
                 });
             job.exec();
         }
-        if (id == "markAsRead"/*Kube::Messages::synchronize*/) {
+        if (id == "markAsRead") {
             if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setUnread(false);
                 Store::modify(*mail).exec();
             }
         }
-        if (id == "markAsUnread"/*Kube::Messages::synchronize*/) {
+        if (id == "markAsUnread") {
             if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setUnread(true);
                 Store::modify(*mail).exec();
             }
         }
-        if (id == "setImportant"/*Kube::Messages::synchronize*/) {
+        if (id == "setImportant") {
             if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setImportant(message["important"].toBool());
                 Store::modify(*mail).exec();
             }
         }
-        if (id == "moveToTrash"/*Kube::Messages::synchronize*/) {
+        if (id == "moveToTrash") {
             if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setTrash(true);
                 Store::modify(*mail).exec();
@@ -136,13 +136,13 @@ public:
                 Store::modify(*mail).exec();
             }
         }
-        if (id == "moveToDrafts"/*Kube::Messages::synchronize*/) {
+        if (id == "moveToDrafts") {
             if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 mail->setDraft(true);
                 Store::modify(*mail).exec();
             }
         }
-        if (id == "moveToFolder"/*Kube::Messages::synchronize*/) {
+        if (id == "moveToFolder") {
             if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 if (message.contains("folderId")) {
                     mail->setFolder(message["folderId"].value<QByteArray>());
