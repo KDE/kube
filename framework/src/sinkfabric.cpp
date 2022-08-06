@@ -142,6 +142,11 @@ public:
                 Store::modify(*mail).exec();
             }
         }
+        if (id == "remove") {
+            if (auto mail = message["mail"].value<Mail::Ptr>()) {
+                Store::remove(*mail).exec();
+            }
+        }
         if (id == "moveToFolder") {
             if (auto mail = message["mail"].value<Mail::Ptr>()) {
                 if (message.contains("folderId")) {
