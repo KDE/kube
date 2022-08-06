@@ -482,6 +482,7 @@ Kube.View {
                             if (dropAction == Qt.MoveAction) {
                                 if (isMail) {
                                     delegateRoot.visible = false
+                                    Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": delegateRoot.domainObject, "folderId": dropTarget.targetId})
                                 } else {
                                     Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"event": delegateRoot.domainObject, "calendarId": dropTarget.targetId})
                                 }

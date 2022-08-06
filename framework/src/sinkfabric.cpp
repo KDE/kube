@@ -144,8 +144,12 @@ public:
         }
         if (id == "moveToFolder"/*Kube::Messages::synchronize*/) {
             if (auto mail = message["mail"].value<Mail::Ptr>()) {
-                auto folder = message["folder"].value<Folder::Ptr>();
-                mail->setFolder(*folder);
+                if (message.contains("folderId")) {
+                    mail->setFolder(message["folderId"].value<QByteArray>());
+                } else {
+                    auto folder = message["folder"].value<Folder::Ptr>();
+                    mail->setFolder(*folder);
+                }
                 Store::modify(*mail).exec();
             }
         }
