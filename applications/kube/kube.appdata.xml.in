@@ -16,6 +16,7 @@
   <name xml:lang="gl">Kube</name>
   <name xml:lang="id">Kube</name>
   <name xml:lang="it">Kube</name>
+  <name xml:lang="ka">Kube</name>
   <name xml:lang="ko">Kube</name>
   <name xml:lang="nl">Kube</name>
   <name xml:lang="pl">Kube</name>
@@ -43,6 +44,7 @@
   <summary xml:lang="gl">Cliente de correo electrónico</summary>
   <summary xml:lang="id">Klien e-mail</summary>
   <summary xml:lang="it">Client di posta elettronica</summary>
+  <summary xml:lang="ka">ელფოსტის კლიენტი</summary>
   <summary xml:lang="ko">이메일 클라이언트</summary>
   <summary xml:lang="nl">E-mailclient</summary>
   <summary xml:lang="pl">Klient pocztowy</summary>
