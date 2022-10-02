@@ -1,0 +1,24 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Language: en\n"
+"X-Qt-Contexts: true\n"
+
+#: ../framework/src/domain/mime/attachmentmodel.cpp:245
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "%n key(s) imported"
+msgid_plural "%n key(s) imported"
+msgstr[0] "%n key imported"
+msgstr[1] "%n keys imported"
+
+#: ../framework/src/domain/mime/attachmentmodel.cpp:249
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "%n key(s) were already imported"
+msgid_plural "%n key(s) were already imported"
+msgstr[0] "%n key was already imported"
+msgstr[1] "%n keys were already imported"

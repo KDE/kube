@@ -1,0 +1,1565 @@
+# Marek Laane <qiilaq69@gmail.com>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"PO-Revision-Date: 2020-03-14 12:01+0200\n"
+"Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
+"Language-Team: Estonian <kde-et@lists.linux.ee>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Qt-Contexts: true\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 19.08.1\n"
+
+#: accounts/fastmail/qml/AccountSettings.qml:26
+msgctxt "AccountSettings|"
+msgid "Connect your FastMail account"
+msgstr "Ühendumine oma FastMaili kontoga"
+
+#: accounts/fastmail/qml/AccountSettings.qml:27
+msgctxt "AccountSettings|"
+msgid ""
+"Please fill in your name and email address. Please note that you require an "
+"app-specific password and cannot use your regular FastMail password."
+msgstr ""
+"Palun anna oma nimi ja e-posti aadress. Palun arvesta, et soovisid kasutada "
+"rakendusepõhist parooli ega saa kasutada oma tavalist FastMaili parooli"
+
+#: accounts/fastmail/qml/AccountSettings.qml:51
+#: accounts/generic/qml/AccountSettings.qml:54
+#: accounts/gmail/qml/AccountSettings.qml:65
+#: accounts/imap/qml/AccountSettings.qml:54
+#: accounts/kolabnow/qml/AccountSettings.qml:54
+msgctxt "AccountSettings|"
+msgid "Name"
+msgstr "Nimi"
+
+#: accounts/fastmail/qml/AccountSettings.qml:59
+#: accounts/generic/qml/AccountSettings.qml:59
+#: accounts/gmail/qml/AccountSettings.qml:70
+#: accounts/imap/qml/AccountSettings.qml:59
+#: accounts/kolabnow/qml/AccountSettings.qml:62
+msgctxt "AccountSettings|"
+msgid "Your name"
+msgstr "Sinu nimi"
+
+#: accounts/fastmail/qml/AccountSettings.qml:67
+#: accounts/generic/qml/AccountSettings.qml:67
+#: accounts/gmail/qml/AccountSettings.qml:78
+#: accounts/imap/qml/AccountSettings.qml:67
+#: accounts/kolabnow/qml/AccountSettings.qml:70
+msgctxt "AccountSettings|"
+msgid "Email address"
+msgstr "E-posti aadress"
+
+#: accounts/fastmail/qml/AccountSettings.qml:80
+#: accounts/generic/qml/AccountSettings.qml:78
+#: accounts/gmail/qml/AccountSettings.qml:89
+#: accounts/imap/qml/AccountSettings.qml:78
+#: accounts/kolabnow/qml/AccountSettings.qml:83
+msgctxt "AccountSettings|"
+msgid "Your email address"
+msgstr "Sinu e-posti aadress"
+
+#: accounts/fastmail/qml/Login.qml:26 accounts/generic/qml/Login.qml:27
+#: accounts/gmail/qml/Login.qml:27 accounts/imap/qml/Login.qml:27
+#: accounts/kolabnow/qml/Login.qml:27
+msgctxt "Login|"
+msgid "Login"
+msgstr ""
+
+#: accounts/fastmail/qml/Login.qml:50 accounts/generic/qml/Login.qml:52
+#: accounts/gmail/qml/Login.qml:49 accounts/imap/qml/Login.qml:49
+#: accounts/kolabnow/qml/Login.qml:52
+msgctxt "Login|"
+msgid "Password"
+msgstr "Parool"
+
+#: accounts/fastmail/qml/Login.qml:59
+msgctxt "Login|"
+msgid "App-specific password for your FastMail account"
+msgstr "Sinu FastMaili konto rakendusepõhine parool"
+
+#: accounts/generic/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your account"
+msgstr "ühendumine oma kontoga"
+
+#: accounts/generic/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username and the "
+"relevant server addresses. For information about the server details, please "
+"contact your email provider."
+msgstr ""
+"Et Kube pääseks sinu kontole ligi, anna siin e-posti aadress, kasutajanimi "
+"ja vajalikud serveriaadressid. Serveri üksikasju päri oma teenusepakkujalt."
+
+#: accounts/generic/qml/AccountSettings.qml:81
+#: accounts/imap/qml/AccountSettings.qml:81
+msgctxt "AccountSettings|"
+msgid "Username"
+msgstr "Kasutajanimi"
+
+#: accounts/generic/qml/AccountSettings.qml:94
+msgctxt "AccountSettings|"
+msgid "Your username for server access."
+msgstr "Sinu kasutajanimi serverisse pääsemiseks."
+
+#: accounts/generic/qml/AccountSettings.qml:98
+msgctxt "AccountSettings|"
+msgid "IMAP address"
+msgstr "IMAP-aadress"
+
+#: accounts/generic/qml/AccountSettings.qml:115
+msgctxt "AccountSettings|"
+msgid "Use Starttls"
+msgstr ""
+
+#: accounts/generic/qml/AccountSettings.qml:125
+msgctxt "AccountSettings|"
+msgid "Authentication Method"
+msgstr ""
+
+#: accounts/generic/qml/AccountSettings.qml:146
+#: accounts/imap/qml/AccountSettings.qml:113
+msgctxt "AccountSettings|"
+msgid "SMTP address"
+msgstr "MTP-aadress"
+
+#: accounts/generic/qml/AccountSettings.qml:161
+msgctxt "AccountSettings|"
+msgid "CardDAV address"
+msgstr "CardDAV-aadress"
+
+#: accounts/generic/qml/AccountSettings.qml:175
+msgctxt "AccountSettings|"
+msgid "CalDAV address"
+msgstr "CalDAV-aadress"
+
+#: accounts/generic/qml/Login.qml:60
+msgctxt "Login|"
+msgid "Password of your account"
+msgstr "Sinu konto parool"
+
+#: accounts/gmail/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your Google account"
+msgstr "Ühendumine oma Google'i kontoga"
+
+#: accounts/gmail/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username and give "
+"the account a title that will be displayed inside Kube."
+msgstr ""
+"Et Kube pääseks sinu kontole ligi, anna siin e-posti aadress, kasutajanimi "
+"ja määra kontole nimi, mida näidatakse Kubes."
+
+#: accounts/gmail/qml/Login.qml:57 accounts/imap/qml/Login.qml:57
+msgctxt "Login|"
+msgid "Password of your IMAP account"
+msgstr "IMAP-konto parool"
+
+#: accounts/imap/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your IMAP account"
+msgstr "Ühendumine oma IMAP-kontoga"
+
+#: accounts/imap/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username, password "
+"and give the account a title that will be displayed inside Kube. For "
+"information about which SMTP, IMAP address, which authentication and port to "
+"be used, please contact your email provider."
+msgstr ""
+"Et Kube pääseks sinu kontole ligi, anna siin e-posti aadress, kasutajanimi "
+"ja määra kontole nimi, mida näidatakse Kubes. Teavet, millist SMTP- ja IMAP-"
+"aadressi ning millist autentimisviisi ja porti tarvitada, saab sulle anda "
+"teenusepakkuja."
+
+#: accounts/imap/qml/AccountSettings.qml:92
+msgctxt "AccountSettings|"
+msgid "Your username for IMAP and SMTP access."
+msgstr "Sinu kasutajanimi IMAP-i ja SMTP kasutamiseks."
+
+#: accounts/imap/qml/AccountSettings.qml:96
+msgctxt "AccountSettings|"
+msgid "IMAP server address"
+msgstr "IMAP-serveri aadress"
+
+#: accounts/kolabnow/qml/AccountSettings.qml:27
+msgctxt "AccountSettings|"
+msgid "Connect your Kolab Now account"
+msgstr "Ühendumine oma Kolab Now kontoga"
+
+#: accounts/kolabnow/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid ""
+"Please fill in your name and email address. No account yet? <a href='https://"
+"kolabnow.com/kube-campaign/'>Sign up now!</a>"
+msgstr ""
+"Palun anna siin nimi ja e-posti aadress. Sul pole veel kontot? <a "
+"href='https://kolabnow.com/kube-campaign/'>Tee see endale kohe!</a>"
+
+#: accounts/kolabnow/qml/Login.qml:61
+msgctxt "Login|"
+msgid "Password of your Kolab Now account"
+msgstr "Kolab Now konto parool"
+
+#: accounts/maildir/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Add your Maildir archive"
+msgstr "Maildir-arhiivi lisamine"
+
+#: accounts/maildir/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your maildir archive, add the path to your archive and "
+"give the account a title that will be displayed inside Kube."
+msgstr ""
+"Et Kube pääseks sinu maildir-arhiivile lugu, anna siin arhiivi asukoht ja "
+"määra kontole nimi, mida näidatakse Kubes."
+
+#: accounts/maildir/qml/AccountSettings.qml:55
+msgctxt "AccountSettings|"
+msgid "Title of Account"
+msgstr "Konto nimi"
+
+#: accounts/maildir/qml/AccountSettings.qml:60
+msgctxt "AccountSettings|"
+msgid "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+msgstr "Kube näitab valitud nime, nt \"Töö\", \"Kodu\" jne"
+
+#: accounts/maildir/qml/AccountSettings.qml:68
+msgctxt "AccountSettings|"
+msgid "Path"
+msgstr "Asukoht"
+
+#: accounts/maildir/qml/AccountSettings.qml:90
+msgctxt "AccountSettings|"
+msgid "Choose a maildir folder"
+msgstr "Maildir-kataloogi valimine"
+
+#: applications/kube/main.cpp:152
+msgctxt "main|"
+msgid ""
+"To automatically unlock the keyring pass in a keyring in the form of "
+"{\"accountId\": {\"resourceId\": \"secret\", *}}"
+msgstr ""
+
+#: components/accounts/qml/AccountWizard.qml:60
+msgctxt "AccountWizard|"
+msgid "Select your new account type"
+msgstr "Uue konto tüübi valimine"
+
+#: components/accounts/qml/AccountWizardPage.qml:137
+msgctxt "AccountWizardPage|"
+msgid "Discard"
+msgstr "Hülga"
+
+#: components/accounts/qml/AccountWizardPage.qml:150
+msgctxt "AccountWizardPage|"
+msgid "Save"
+msgstr "Salvesta"
+
+#: components/kube/qml/Kube.qml:211
+msgctxt "Kube|"
+msgid "Outbox"
+msgstr ""
+
+#: components/kube/qml/Kube.qml:233
+msgctxt "Kube|"
+msgid "Notification view"
+msgstr "Märguandevaade"
+
+#: components/kube/qml/Kube.qml:244
+msgctxt "Kube|"
+msgid "Settings"
+msgstr "Seadistused"
+
+#: components/kube/qml/upgrade.qml:39
+msgctxt "upgrade|"
+msgid "Please wait while Kube is upgrading..."
+msgstr "Palun oota, kuni Kubet uuendatakse ..."
+
+#: components/kube/qml/upgrade.qml:39
+msgctxt "upgrade|"
+msgid "Kube upgraded the storage layer."
+msgstr ""
+
+#: components/kube/qml/upgrade.qml:43
+msgctxt "upgrade|"
+msgid "This might take a while."
+msgstr "See võib võtta veidi aega."
+
+#: components/kube/qml/upgrade.qml:43
+msgctxt "upgrade|"
+msgid "Please exit and restart Kube."
+msgstr "Palun välju ja taaskäivita Kube."
+
+#: components/kube/qml/upgrade.qml:47
+msgctxt "upgrade|"
+msgid "Exit"
+msgstr "Välju"
+
+#: extensions/fileasexpense/qml/main.qml:27
+msgctxt "main|"
+msgid "File as Expense"
+msgstr ""
+
+#: extensions/gpg/qml/main.qml:58
+msgctxt "main|"
+msgid "Enable GPG Keyring Integration"
+msgstr "GPG võtmerõnga lõimimise lubamine"
+
+#: framework/qml/AttachmentDelegate.qml:82
+msgctxt "AttachmentDelegate|"
+msgid "Import key"
+msgstr "Võtme importimine"
+
+#: framework/qml/CalendarSelector.qml:79
+msgctxt "CalendarSelector|"
+msgid "Add calendar"
+msgstr ""
+
+#: framework/qml/ConversationView.qml:158
+#, fuzzy
+#| msgctxt "MailViewer|"
+#| msgid "Downloading message..."
+msgctxt "ConversationView|"
+msgid "Downloading message..."
+msgstr "Kirja allalaadimine ..."
+
+#: framework/qml/ConversationView.qml:162
+#, fuzzy
+#| msgctxt "MailViewer|"
+#| msgid "Failed to download message..."
+msgctxt "ConversationView|"
+msgid "Failed to download message..."
+msgstr "Kirja allalaadimine nurjus ..."
+
+#: framework/qml/EditAccount.qml:89
+msgctxt "EditAccount|"
+msgid "Change Password"
+msgstr "Muuda parooli"
+
+#: framework/qml/EditAccount.qml:124
+msgctxt "EditAccount|"
+msgid "Remove Account"
+msgstr "Eemalda konto"
+
+#: framework/qml/EditAccount.qml:134
+msgctxt "EditAccount|"
+msgid "Save"
+msgstr "Salvesta"
+
+#: framework/qml/LoginAccount.qml:117
+msgctxt "LoginAccount|"
+msgid "Login"
+msgstr "Logi sisse"
+
+#: framework/qml/MailListView.qml:67
+msgctxt "MailListView|"
+msgid "Nothing here..."
+msgstr "Siin pole midagi ..."
+
+#: framework/qml/MailListView.qml:291
+msgctxt "MailListView|"
+msgid "Restore from trash"
+msgstr "Taastamine prügikastist"
+
+#: framework/qml/MailListView.qml:299
+msgctxt "MailListView|"
+msgid "Mark as read"
+msgstr "Märgi loetuks"
+
+#: framework/qml/MailListView.qml:307
+msgctxt "MailListView|"
+msgid "Mark as unread"
+msgstr "Märgi lugemata kirjaks"
+
+#: framework/qml/MailListView.qml:316
+msgctxt "MailListView|"
+msgid "Mark as important"
+msgstr "Märgi tähtsaks"
+
+#: framework/qml/MailListView.qml:326
+msgctxt "MailListView|"
+msgid "Move to trash"
+msgstr "Viska prügikasti"
+
+#: framework/qml/mailpartview/ErrorPart.qml:40
+#, qt-format
+msgctxt "ErrorPart|"
+msgid "An error occurred: %1"
+msgstr "Tekkis tõrge: %1"
+
+#: framework/qml/mailpartview/ICalPart.qml:44
+#: framework/qml/mailpartview/ICalPart.qml:79
+#, qt-format
+msgctxt "ICalPart|"
+msgid "This is an exception for the event originally occurring at: \"%1\""
+msgstr ""
+
+#: framework/qml/mailpartview/ICalPart.qml:55
+#, fuzzy, qt-format
+#| msgctxt "QObject|"
+#| msgid "\"%1\" has been updated"
+msgctxt "ICalPart|"
+msgid "\"%1\" has been cancelled."
+msgstr "\"%1\" on uuendatud"
+
+#: framework/qml/mailpartview/ICalPart.qml:60
+#, fuzzy, qt-format
+#| msgctxt "ICalPart|"
+#| msgid "You have accepted: \"%1\""
+msgctxt "ICalPart|"
+msgid "%1 has accepted: \"%2\""
+msgstr "Sa olid nõus: \"%1\""
+
+#: framework/qml/mailpartview/ICalPart.qml:66
+#, fuzzy, qt-format
+#| msgctxt "ICalPart|"
+#| msgid "You have declined: \"%1\""
+msgctxt "ICalPart|"
+msgid "%1 has declined: \"%2\""
+msgstr "Sa lükkasid tagasi: \"%1\""
+
+#: framework/qml/mailpartview/ICalPart.qml:72
+#, qt-format
+msgctxt "ICalPart|"
+msgid "%1 doesn't yet know about: \"%2\""
+msgstr ""
+
+#: framework/qml/mailpartview/ICalPart.qml:84
+#, qt-format
+msgctxt "ICalPart|"
+msgid "The invitation has been updated: \"%1\""
+msgstr ""
+
+#: framework/qml/mailpartview/ICalPart.qml:89
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You have accepted: \"%1\""
+msgstr "Sa olid nõus: \"%1\""
+
+#: framework/qml/mailpartview/ICalPart.qml:95
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You have declined: \"%1\""
+msgstr "Sa lükkasid tagasi: \"%1\""
+
+#: framework/qml/mailpartview/ICalPart.qml:101
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You've been invited to: \"%1\""
+msgstr "Sind kutsuti üritusele: \"%1\""
+
+#: framework/qml/mailpartview/ICalPart.qml:106
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You are not listed as attendee to: \"%1\""
+msgstr ""
+
+#: framework/qml/mailpartview/ICalPart.qml:151
+msgctxt "ICalPart|"
+msgid "Decline"
+msgstr "Keeldu"
+
+#: framework/qml/mailpartview/ICalPart.qml:158
+msgctxt "ICalPart|"
+msgid "Accept"
+msgstr "Nõustu"
+
+#: framework/qml/mailpartview/ICalPart.qml:165
+msgctxt "ICalPart|"
+msgid "in"
+msgstr ""
+
+#: framework/qml/mailpartview/MailPart.qml:54
+#, qt-format
+msgctxt "MailPart|"
+msgid "sent by %1 on %2"
+msgstr "saatis %1 %2"
+
+#: framework/qml/mailpartview/MailPartModel.qml:53
+#, fuzzy
+#| msgctxt "MailDataModel|"
+#| msgid ""
+#| "This message has been signed but we failed to validate the signature."
+msgctxt "MailPartModel|"
+msgid "This message has been signed but we failed to validate the signature."
+msgstr ""
+"See kiri on allkirjastatud, aga me ei suutnud allkirja ehtsust kontrollida."
+
+#: framework/qml/mailpartview/MailPartModel.qml:55
+#, fuzzy, qt-format
+#| msgctxt "MailDataModel|"
+#| msgid "This message has been signed using the key %1."
+msgctxt "MailPartModel|"
+msgid "This message has been signed using the key %1."
+msgstr "See kiri on allkirjastatud võtmega %1."
+
+#: framework/qml/mailpartview/MailPartModel.qml:56
+#, fuzzy
+#| msgctxt "MailDataModel|"
+#| msgid "The key details are not available."
+msgctxt "MailPartModel|"
+msgid "The key details are not available."
+msgstr "Võtme üksikasju pole saada."
+
+#: framework/qml/mailpartview/MailPartModel.qml:58
+#, fuzzy, qt-format
+#| msgctxt "MailDataModel|"
+#| msgid "This message has been signed using the key %1 by %2."
+msgctxt "MailPartModel|"
+msgid "This message has been signed using the key %1 by %2."
+msgstr "Selle kirja on allkirjastanud võtmega %1 %2."
+
+#: framework/qml/mailpartview/MailPartModel.qml:60
+#, fuzzy
+#| msgctxt "MailDataModel|"
+#| msgid "The key was revoked."
+msgctxt "MailPartModel|"
+msgid "The key was revoked."
+msgstr "Võti on tühistatud."
+
+#: framework/qml/mailpartview/MailPartModel.qml:63
+#, fuzzy
+#| msgctxt "MailDataModel|"
+#| msgid "The key has expired."
+msgctxt "MailPartModel|"
+msgid "The key has expired."
+msgstr "Võti on aegunud."
+
+#: framework/qml/mailpartview/MailPartModel.qml:66
+#, fuzzy
+#| msgctxt "MailDataModel|"
+#| msgid "You are trusting this key."
+msgctxt "MailPartModel|"
+msgid "You are trusting this key."
+msgstr "Sa usaldad seda võtit."
+
+#: framework/qml/mailpartview/MailPartModel.qml:69
+#, fuzzy
+#| msgctxt "MailDataModel|"
+#| msgid "The signature is invalid."
+msgctxt "MailPartModel|"
+msgid "The signature is invalid."
+msgstr "Allkiri on vigane."
+
+#: framework/qml/mailpartview/MailPartModel.qml:89
+#, fuzzy
+#| msgctxt "MailDataModel|"
+#| msgid "This message is encrypted but we don't have the key for it."
+msgctxt "MailPartModel|"
+msgid "This message is encrypted but we don't have the key for it."
+msgstr "Kiri on krüptitud, aga meil ei ole sellele võtit."
+
+#: framework/qml/mailpartview/MailPartModel.qml:89
+#, fuzzy, qt-format
+#| msgctxt "MailDataModel|"
+#| msgid "This message is encrypted to the key: %1"
+msgctxt "MailPartModel|"
+msgid "This message is encrypted to the key: %1"
+msgstr "Kiri on krüptitud võtmele: %1"
+
+#: framework/qml/MailViewer.qml:44
+msgctxt "MailViewer|"
+msgid "Incomplete body..."
+msgstr "Ebatäielik põhitekst ..."
+
+#: framework/qml/MailViewer.qml:195
+msgctxt "MailViewer|"
+msgid "Sent from"
+msgstr "Saatja oli"
+
+#: framework/qml/MailViewer.qml:199
+msgctxt "MailViewer|"
+msgid "Draft from"
+msgstr "Mustandi koostas"
+
+#: framework/qml/MailViewer.qml:213 framework/qml/MailViewer.qml:247
+msgctxt "MailViewer|"
+msgid "Send mail to"
+msgstr "Kirja saaja on"
+
+#: framework/qml/MailViewer.qml:231
+#, qt-format
+msgctxt "MailViewer|"
+msgid "Trash: %1"
+msgstr "Prügikast: %1"
+
+#: framework/qml/MailViewer.qml:383
+msgctxt "MailViewer|"
+msgid "Save attachment"
+msgstr "Manuse salvestamine"
+
+#: framework/qml/MailViewer.qml:473
+msgctxt "MailViewer|"
+msgid "Delete Mail"
+msgstr "Kustuta kiri"
+
+#: framework/qml/MailViewer.qml:473
+msgctxt "MailViewer|"
+msgid "Discard"
+msgstr "Hülga"
+
+#: framework/qml/MailViewer.qml:473
+msgctxt "MailViewer|"
+msgid "Move to trash"
+msgstr "Viska prügikasti"
+
+#: framework/qml/MailViewer.qml:495
+msgctxt "MailViewer|"
+msgid "Share"
+msgstr "Jaga"
+
+#: framework/qml/MailViewer.qml:505
+msgctxt "MailViewer|"
+msgid "Edit"
+msgstr "Muuda"
+
+#: framework/qml/MailViewer.qml:505
+msgctxt "MailViewer|"
+msgid "Reply"
+msgstr "Vasta"
+
+#: framework/qml/Outbox.qml:114
+#, qt-format
+msgctxt "Outbox|"
+msgid "Sending: %1"
+msgstr "Saatmine: %1"
+
+#: framework/qml/Outbox.qml:162
+msgctxt "Outbox|"
+msgid "Send now"
+msgstr "Saada kohe"
+
+#: framework/qml/Outbox.qml:174
+msgctxt "Outbox|"
+msgid "No pending messages"
+msgstr "Ootel kirju pole"
+
+#: framework/qml/SearchPopup.qml:197
+msgctxt "SearchPopup|"
+msgid "Filter..."
+msgstr "Filtreeri ..."
+
+#: framework/qml/SelectableItem.qml:64
+msgctxt "SelectableItem|"
+msgid "Copy"
+msgstr "Kopeeri"
+
+#: framework/qml/SelectableLabel.qml:33
+msgctxt "SelectableLabel|"
+msgid "Copy"
+msgstr "Kopeeri"
+
+#: framework/qml/StatusBar.qml:64
+msgctxt "StatusBar|"
+msgid "Disconnected"
+msgstr "Pole ühendatud"
+
+#: framework/qml/StatusBar.qml:146
+msgctxt "StatusBar|"
+msgid "Abort"
+msgstr "Loobu"
+
+#: framework/qml/TextArea.qml:74
+#, fuzzy
+#| msgctxt "SelectableItem|"
+#| msgid "Copy"
+msgctxt "TextArea|"
+msgid "Copy Link"
+msgstr "Kopeeri"
+
+#: framework/qml/TextArea.qml:74
+msgctxt "TextArea|"
+msgid "Copy Selection"
+msgstr ""
+
+#: framework/src/domain/eventcontroller.cpp:90
+#, qt-format
+msgctxt "QObject|"
+msgid "== %1 =="
+msgstr "== %1 =="
+
+#: framework/src/domain/eventcontroller.cpp:92
+#, qt-format
+msgctxt "QObject|"
+msgid "When: %1"
+msgstr "Millal: %1"
+
+#: framework/src/domain/eventcontroller.cpp:96
+#, qt-format
+msgctxt "QObject|"
+msgid "Where: %1"
+msgstr "Kus: %1"
+
+#: framework/src/domain/eventcontroller.cpp:99
+msgctxt "QObject|"
+msgid "Attendees:"
+msgstr "Osalejad:"
+
+#: framework/src/domain/eventcontroller.cpp:128
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been updated"
+msgstr "\"%1\" on uuendatud"
+
+#: framework/src/domain/eventcontroller.cpp:130
+#, qt-format
+msgctxt "QObject|"
+msgid "You've been invited to: \"%1\""
+msgstr "Sind kutsuti üritusele: \"%1\""
+
+#: framework/src/domain/eventcontroller.cpp:135
+msgctxt "QObject|"
+msgid ""
+"Please find attached an iCalendar file with all the event details which you "
+"can import to your calendar application."
+msgstr ""
+
+#: framework/src/domain/invitationcontroller.cpp:270
+#, qt-format
+msgctxt "QObject|"
+msgid "%1 has accepted the invitation to the following event"
+msgstr "%1 võttis vastu kutse järgmisele sündmusele"
+
+#: framework/src/domain/invitationcontroller.cpp:272
+#, qt-format
+msgctxt "QObject|"
+msgid "%1 has declined the invitation to the following event"
+msgstr "%1 lükkas tagasi kutse järgmisele sündmusele"
+
+#: framework/src/domain/invitationcontroller.cpp:279
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been accepted by %2"
+msgstr ""
+
+#: framework/src/domain/invitationcontroller.cpp:281
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been declined by %2"
+msgstr ""
+
+#: framework/src/domain/mime/attachmentmodel.cpp:181
+msgctxt "QObject|"
+msgid "Failed to save attachment."
+msgstr "Manuse salvestamine nurjus."
+
+#: framework/src/domain/mime/attachmentmodel.cpp:210
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "Saved the attachment to disk: %1"
+msgstr "Manus salvestati kettale: %1"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:221
+msgctxt "AttachmentModel|"
+msgid "Failed to open attachment."
+msgstr "Manuse avamine nurjus."
+
+#: framework/src/domain/mime/attachmentmodel.cpp:226
+msgctxt "AttachmentModel|"
+msgid "Failed to save attachment for opening."
+msgstr "Manuse salvestamine avamiseks nurjus."
+
+#: framework/src/domain/mime/attachmentmodel.cpp:240
+msgctxt "AttachmentModel|"
+msgid "No keys were found in this attachment"
+msgstr "Manuses ei leitud ühtegi võtit"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:245
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "%n key(s) imported"
+msgid_plural "%n key(s) imported"
+msgstr[0] "Imporditi %n võti(t)"
+msgstr[1] "Imporditi %n võti(t)"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:249
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "%n key(s) were already imported"
+msgid_plural "%n key(s) were already imported"
+msgstr[0] "%n võti(t) on juba imporditud"
+msgstr[1] "%n võti(t) on juba imporditud"
+
+#: framework/src/domain/mime/mailtemplates.cpp:127
+msgctxt "QObject|"
+msgid "fwd"
+msgstr "fwd"
+
+#: framework/src/domain/mime/mailtemplates.cpp:155
+msgctxt "QObject|"
+msgid "re"
+msgstr "re"
+
+#: framework/src/domain/mime/partmodel.cpp:468
+msgctxt "PartModel|"
+msgid "No key available."
+msgstr "Võtit pole saada."
+
+#: framework/src/domain/mime/partmodel.cpp:470
+msgctxt "PartModel|"
+msgid "Wrong passphrase."
+msgstr "Vale paroolifraas."
+
+#: framework/src/sinkfabric.cpp:178
+msgctxt "QObject|"
+msgid "Failed to connect to server."
+msgstr "Ühendumine serveriga nurjus."
+
+#: framework/src/sinkfabric.cpp:182
+msgctxt "QObject|"
+msgid "Host not found."
+msgstr "Masinat ei leitud."
+
+#: framework/src/sinkfabric.cpp:186
+msgctxt "QObject|"
+msgid "Failed to login."
+msgstr "Sisselogimine nurjus."
+
+#: framework/src/sinkfabric.cpp:190
+msgctxt "QObject|"
+msgid "Configuration error."
+msgstr "Seadistuse tõrge."
+
+#: framework/src/sinkfabric.cpp:196
+msgctxt "QObject|"
+msgid "No credentials available."
+msgstr "Kasutajatunnuseid pole saada."
+
+#: framework/src/sinkfabric.cpp:230
+msgctxt "QObject|"
+msgid "Failed to send message."
+msgstr "Kirja saatmine nurjus."
+
+#: framework/src/sinkfabric.cpp:244
+msgctxt "QObject|"
+msgid "A message has been sent."
+msgstr "Kiri saadeti ära."
+
+#: views/accounts/qml/View.qml:51
+msgctxt "View|"
+msgid "New Account"
+msgstr "Uus konto"
+
+#: views/calendar/qml/AttendeeListEditor.qml:91
+msgctxt "AttendeeListEditor|"
+msgid "Attending"
+msgstr "Osalemine"
+
+#: views/calendar/qml/AttendeeListEditor.qml:91
+msgctxt "AttendeeListEditor|"
+msgid "Invited"
+msgstr "Kutsutud"
+
+#: views/calendar/qml/AttendeeListEditor.qml:119
+#: views/calendar/qml/AttendeeListEditor.qml:136
+msgctxt "AttendeeListEditor|"
+msgid "Add attendee"
+msgstr ""
+
+#: views/calendar/qml/DateRangeChooser.qml:41
+msgctxt "DateRangeChooser|"
+msgid "until"
+msgstr "kuni"
+
+#: views/calendar/qml/EventEditor.qml:80
+msgctxt "EventEditor|"
+msgid "Event Title"
+msgstr "Sündmuse nimi"
+
+#: views/calendar/qml/EventEditor.qml:110
+msgctxt "EventEditor|"
+msgid "All day"
+msgstr "Kogu päev"
+
+#: views/calendar/qml/EventEditor.qml:121
+msgctxt "EventEditor|"
+msgid "Location"
+msgstr "Asukoht"
+
+#: views/calendar/qml/EventEditor.qml:132
+msgctxt "EventEditor|"
+msgid "Organizer:"
+msgstr "Korraldaja:"
+
+#: views/calendar/qml/EventEditor.qml:182
+msgctxt "EventEditor|"
+msgid "Delete"
+msgstr "Kustuta"
+
+#: views/calendar/qml/EventEditor.qml:191
+msgctxt "EventEditor|"
+msgid "Abort"
+msgstr "Loobu"
+
+#: views/calendar/qml/EventEditor.qml:215
+msgctxt "EventEditor|"
+msgid "Discard Changes"
+msgstr "Tühista muudatused"
+
+#: views/calendar/qml/EventEditor.qml:223
+msgctxt "EventEditor|"
+msgid "Save Changes"
+msgstr "Salvesta muudatused"
+
+#: views/calendar/qml/EventEditor.qml:232
+msgctxt "EventEditor|"
+msgid "Create Event"
+msgstr "Loo sündmus"
+
+#: views/calendar/qml/EventView.qml:76
+#, qt-format
+msgctxt "EventView|"
+msgid "repeats %1"
+msgstr "kordub %1"
+
+#: views/calendar/qml/EventView.qml:85
+#, qt-format
+msgctxt "EventView|"
+msgid "Organizer: %1"
+msgstr "Korraldaja: %1"
+
+#: views/calendar/qml/EventView.qml:95
+msgctxt "EventView|"
+msgid "Attending:"
+msgstr "Osalemine:"
+
+#: views/calendar/qml/EventView.qml:102
+#, qt-format
+msgctxt "EventView|"
+msgid "%1"
+msgstr "%1"
+
+#: views/calendar/qml/EventView.qml:130
+msgctxt "EventView|"
+msgid "Remove"
+msgstr "Eemalda"
+
+#: views/calendar/qml/EventView.qml:141
+msgctxt "EventView|"
+msgid "Edit"
+msgstr "Muuda"
+
+#: views/calendar/qml/View.qml:41
+msgctxt "View|"
+msgid "Jump to next week/month:"
+msgstr "Hüpe järgmisele nädalale/kuule:"
+
+#: views/calendar/qml/View.qml:42
+msgctxt "View|"
+msgid "Jump to previous week/month:"
+msgstr "Hüpe eelmisele nädalale/kuule:"
+
+#: views/calendar/qml/View.qml:103
+msgctxt "View|"
+msgid "New Event"
+msgstr "Uus sündmus"
+
+#: views/calendar/qml/View.qml:118
+msgctxt "View|"
+msgid "Week"
+msgstr "Nädal"
+
+#: views/calendar/qml/View.qml:127
+msgctxt "View|"
+msgid "Month"
+msgstr "Kuu"
+
+#: views/composer/qml/AddresseeListEditor.qml:135
+msgctxt "AddresseeListEditor|"
+msgid "Fetch key from keyserver"
+msgstr "Võtme tõmbamine võtmeserverist"
+
+#: views/composer/qml/AddresseeListEditor.qml:171
+#: views/composer/qml/AddresseeListEditor.qml:188
+msgctxt "AddresseeListEditor|"
+msgid "Add recipient"
+msgstr "Lisa saaja"
+
+#: views/composer/qml/EditorPage.qml:113
+msgctxt "EditorPage|"
+msgid "Remove Formatting"
+msgstr "Eemalda vormindus"
+
+#: views/composer/qml/EditorPage.qml:126
+msgctxt "EditorPage|"
+msgid "Attach file"
+msgstr "Lisa fail"
+
+#: views/composer/qml/EditorPage.qml:135
+msgctxt "EditorPage|"
+msgid "Choose a file to attach"
+msgstr "Lisatava faili valimine"
+
+#: views/composer/qml/EditorPage.qml:156
+msgctxt "EditorPage|"
+msgid "Subject"
+msgstr "Teema"
+
+#: views/composer/qml/EditorPage.qml:171
+msgctxt "EditorPage|"
+msgid "Body"
+msgstr "Põhitekst"
+
+#: views/composer/qml/View.qml:135 views/conversation/qml/View.qml:155
+msgctxt "View|"
+msgid "New Email"
+msgstr "Uus kiri"
+
+#: views/composer/qml/View.qml:144
+msgctxt "View|"
+msgid "Drafts"
+msgstr "Mustandid"
+
+#: views/composer/qml/View.qml:291
+msgctxt "View|"
+msgid "Sending email to:"
+msgstr "Kirja saaja:"
+
+#: views/composer/qml/View.qml:302
+msgctxt "View|"
+msgid "Sending copy to (Cc):"
+msgstr "Koopia (CC) saaja:"
+
+#: views/composer/qml/View.qml:312
+msgctxt "View|"
+msgid "Sending secret copy to (Bcc):"
+msgstr "Pimekoopia (BCC) saaja:"
+
+#: views/composer/qml/View.qml:333
+msgctxt "View|"
+msgid "encrypt"
+msgstr "krüptimine"
+
+#: views/composer/qml/View.qml:344
+msgctxt "View|"
+msgid "sign"
+msgstr "allkirjastamine"
+
+#: views/composer/qml/View.qml:350
+msgctxt "View|"
+msgid ""
+"Encryption is not available because your personal key has not been found."
+msgstr "Krüptimine ei ole võimalik, sest sinu isiklikku võtit ei leitud."
+
+#: views/composer/qml/View.qml:361
+msgctxt "View|"
+msgid "Discard"
+msgstr "Hülga"
+
+#: views/composer/qml/View.qml:368
+msgctxt "View|"
+msgid "Save as Draft"
+msgstr "Salvesta mustandina"
+
+#: views/composer/qml/View.qml:381
+msgctxt "View|"
+msgid "You are sending this from:"
+msgstr ""
+
+#: views/composer/qml/View.qml:407
+msgctxt "View|"
+msgid "Send"
+msgstr "Saada"
+
+#: views/conversation/qml/View.qml:64
+#, fuzzy
+#| msgctxt "View|"
+#| msgid "Jump to next thread:"
+msgctxt "View|"
+msgid "Jump to top of threadlist:"
+msgstr "Hüpe järgmisse lõime:"
+
+#: views/conversation/qml/View.qml:65
+msgctxt "View|"
+msgid "Jump to next thread:"
+msgstr "Hüpe järgmisse lõime:"
+
+#: views/conversation/qml/View.qml:66
+msgctxt "View|"
+msgid "Jump to previous thread:"
+msgstr "Hüpe eelmisse lõime:"
+
+#: views/conversation/qml/View.qml:67
+msgctxt "View|"
+msgid "Jump to next message:"
+msgstr "Hüpe järgmisele kirjale:"
+
+#: views/conversation/qml/View.qml:68
+msgctxt "View|"
+msgid "Jump to previous message:"
+msgstr "Hüpe eelmisele kirjale:"
+
+#: views/conversation/qml/View.qml:69
+msgctxt "View|"
+msgid "Jump to next folder:"
+msgstr "Hüpe järgmisse kausta:"
+
+#: views/conversation/qml/View.qml:70
+msgctxt "View|"
+msgid "Jump to previous folder:"
+msgstr "Hüpe eelmisse kausta:"
+
+#: views/conversation/qml/View.qml:71
+msgctxt "View|"
+msgid "Compose new message:"
+msgstr "Uue kirja koostamine:"
+
+#: views/conversation/qml/View.qml:72
+msgctxt "View|"
+msgid "Reply to the currently focused message:"
+msgstr "Parajasti fookuses kirjale vastamine:"
+
+#: views/conversation/qml/View.qml:73
+msgctxt "View|"
+msgid "Delete the currently focused message:"
+msgstr "Parajasti fookuses kirja kustutamine:"
+
+#: views/conversation/qml/View.qml:74
+msgctxt "View|"
+msgid "Mark the currently focused message as important:"
+msgstr "Parajasti fookuses kirja märkimine tähtsaks:"
+
+#: views/conversation/qml/View.qml:75
+msgctxt "View|"
+msgid "Mark the currently focused message as unread:"
+msgstr "Parajasti fookuses kirja märkimine lugemata kirjaks:"
+
+#: views/conversation/qml/View.qml:76 views/todo/qml/View.qml:106
+msgctxt "View|"
+msgid "Show this help text:"
+msgstr "Selle abiteksti näitamine:"
+
+#: views/inboxcrusher/qml/View.qml:92
+msgctxt "View|"
+msgid "Delete!"
+msgstr "Kustuta!"
+
+#: views/inboxcrusher/qml/View.qml:97
+msgctxt "View|"
+msgid "Reply!"
+msgstr "Vasta!"
+
+#: views/inboxcrusher/qml/View.qml:102
+msgctxt "View|"
+msgid "Flag!"
+msgstr "Lipp!"
+
+#: views/inboxcrusher/qml/View.qml:107
+msgctxt "View|"
+msgid "Previous"
+msgstr "Eelmine"
+
+#: views/inboxcrusher/qml/View.qml:113
+msgctxt "View|"
+msgid "Next"
+msgstr "Järgmine"
+
+#: views/log/qml/View.qml:71
+msgctxt "View|"
+msgid "Nothing here..."
+msgstr "Siin pole midagi ..."
+
+#: views/log/qml/View.qml:118
+msgctxt "View|"
+msgid "Error"
+msgstr "Tõrge"
+
+#: views/log/qml/View.qml:118
+msgctxt "View|"
+msgid "Info"
+msgstr "Teave"
+
+#: views/log/qml/View.qml:220
+msgctxt "View|"
+msgid "Account:"
+msgstr "Konto:"
+
+#: views/log/qml/View.qml:230
+msgctxt "View|"
+msgid "Account Id:"
+msgstr "Konto ID:"
+
+#: views/log/qml/View.qml:240
+msgctxt "View|"
+msgid "Resource Id:"
+msgstr "Ressursi ID:"
+
+#: views/log/qml/View.qml:250
+msgctxt "View|"
+msgid "Timestamp:"
+msgstr "Ajatempel:"
+
+#: views/log/qml/View.qml:258
+msgctxt "View|"
+msgid "Message:"
+msgstr "Kiri:"
+
+#: views/log/qml/View.qml:292
+msgctxt "View|"
+msgid "Failed to login"
+msgstr "Sisselogimine nurjus"
+
+#: views/log/qml/View.qml:298
+#, qt-format
+msgctxt "View|"
+msgid "%1: please check your credentials."
+msgstr "%1: palun kontrolli oma kasutajatunnuseid."
+
+#: views/log/qml/View.qml:304
+msgctxt "View|"
+msgid "Change Password"
+msgstr "Muuda parooli"
+
+#: views/log/qml/View.qml:327
+msgctxt "View|"
+msgid "Host not found"
+msgstr "Masinat ei leitud"
+
+#: views/log/qml/View.qml:333
+#, qt-format
+msgctxt "View|"
+msgid "%1: please check your network connection and settings."
+msgstr "%1: palun kontrolli oma võrguühendust ja -seadistusi."
+
+#: views/log/qml/View.qml:339
+msgctxt "View|"
+msgid "Account Settings"
+msgstr "Konto seadistused"
+
+#: views/log/qml/View.qml:363
+msgctxt "View|"
+msgid "Failed to send the message."
+msgstr "Kirja saatmine nurjus."
+
+#: views/log/qml/View.qml:382 views/log/qml/View.qml:449
+#, qt-format
+msgctxt "View|"
+msgid "Account: %1"
+msgstr "Konto: %1"
+
+#: views/log/qml/View.qml:387 views/log/qml/View.qml:454
+#, qt-format
+msgctxt "View|"
+msgid "Subject: %1"
+msgstr "Teema: %1"
+
+#: views/log/qml/View.qml:392 views/log/qml/View.qml:459
+#, qt-format
+msgctxt "View|"
+msgid "To: %1"
+msgstr "Saaja: %1"
+
+#: views/log/qml/View.qml:398 views/log/qml/View.qml:465
+#, qt-format
+msgctxt "View|"
+msgid "Cc: %1"
+msgstr "Koopia: %1"
+
+#: views/log/qml/View.qml:408
+msgctxt "View|"
+msgid "Try Again"
+msgstr "Proovi uuesti"
+
+#: views/log/qml/View.qml:431
+msgctxt "View|"
+msgid "Succeeded to send the message."
+msgstr "Kirja saatmine õnnestus."
+
+#: views/people/qml/MailListEditor.qml:53
+msgctxt "MailListEditor|"
+msgid "(main)"
+msgstr ""
+
+#: views/people/qml/MailListEditor.qml:84
+#: views/people/qml/MailListEditor.qml:102
+msgctxt "MailListEditor|"
+msgid "Add email"
+msgstr "Lisa e-posti aadress"
+
+#: views/people/qml/People.qml:53
+msgctxt "People|"
+msgid "New Contact"
+msgstr "Uus kontakt"
+
+#: views/people/qml/People.qml:80
+msgctxt "People|"
+msgid "Search..."
+msgstr "Otsi ..."
+
+#: views/people/qml/People.qml:235
+msgctxt "People|"
+msgid "Remove"
+msgstr "Eemalda"
+
+#: views/people/qml/People.qml:249
+msgctxt "People|"
+msgid "Edit"
+msgstr "Muuda"
+
+#: views/people/qml/PersonComposer.qml:98
+msgctxt "PersonComposer|"
+msgid "Choose an Avatar"
+msgstr "Avatari valimine"
+
+#: views/people/qml/PersonComposer.qml:121
+msgctxt "PersonComposer|"
+msgid "First name"
+msgstr "Eesnimi"
+
+#: views/people/qml/PersonComposer.qml:129
+msgctxt "PersonComposer|"
+msgid "Last name"
+msgstr "Perekonnanimi"
+
+#: views/people/qml/PersonComposer.qml:149
+msgctxt "PersonComposer|"
+msgid "Job Title"
+msgstr "Ametinimetus"
+
+#: views/people/qml/PersonComposer.qml:163
+msgctxt "PersonComposer|"
+msgid "Company"
+msgstr "Ettevõte"
+
+#: views/people/qml/PersonComposer.qml:175
+msgctxt "PersonComposer|"
+msgid "Email"
+msgstr "E-posti aadress"
+
+#: views/people/qml/PersonPage.qml:156
+msgctxt "PersonPage|"
+msgid "(main)"
+msgstr ""
+
+#: views/people/qml/PhoneListEditor.qml:43
+msgctxt "PhoneListEditor|"
+msgid "(main)"
+msgstr ""
+
+#: views/people/qml/PhoneListEditor.qml:55
+msgctxt "PhoneListEditor|"
+msgid "Add"
+msgstr "Lisa"
+
+#: views/search/qml/View.qml:59
+msgctxt "View|"
+msgid "Search"
+msgstr "Otsi"
+
+#: views/search/qml/View.qml:85
+msgctxt "View|"
+msgid "Unread"
+msgstr "Lugemata"
+
+#: views/search/qml/View.qml:94
+msgctxt "View|"
+msgid "Important"
+msgstr "Tähtis"
+
+#: views/search/qml/View.qml:100
+#, fuzzy
+#| msgctxt "View|"
+#| msgid "Account:"
+msgctxt "View|"
+msgid "Accounts"
+msgstr "Konto:"
+
+#: views/search/qml/View.qml:161
+msgctxt "View|"
+msgid "Search..."
+msgstr "Otsi ..."
+
+#: views/search/qml/View_new.qml:64
+msgctxt "View_new|"
+msgid "Search"
+msgstr "Otsi"
+
+#: views/search/qml/View_new.qml:113
+msgctxt "View_new|"
+msgid "Search..."
+msgstr "Otsing ..."
+
+#: views/todo/qml/TodoEditor.qml:101
+msgctxt "TodoEditor|"
+msgid "Todo Title"
+msgstr "Ülesande nimi"
+
+#: views/todo/qml/TodoEditor.qml:122
+msgctxt "TodoEditor|"
+msgid "Doing"
+msgstr "Töös"
+
+#: views/todo/qml/TodoEditor.qml:168
+msgctxt "TodoEditor|"
+msgid "Delete"
+msgstr "Kustuta"
+
+#: views/todo/qml/TodoEditor.qml:177
+msgctxt "TodoEditor|"
+msgid "Abort"
+msgstr "Loobu"
+
+#: views/todo/qml/TodoEditor.qml:189
+msgctxt "TodoEditor|"
+msgid "Discard Changes"
+msgstr "Tühista muudatused"
+
+#: views/todo/qml/TodoEditor.qml:197
+msgctxt "TodoEditor|"
+msgid "Save Changes"
+msgstr "Salvesta muudatused"
+
+#: views/todo/qml/TodoEditor.qml:203
+msgctxt "TodoEditor|"
+msgid "Create Todo"
+msgstr "Loo ülesanne"
+
+#: views/todo/qml/TodoView.qml:71
+msgctxt "TodoView|"
+msgid "Due on "
+msgstr ""
+
+#: views/todo/qml/TodoView.qml:77
+msgctxt "TodoView|"
+msgid "Start on "
+msgstr ""
+
+#: views/todo/qml/TodoView.qml:112
+msgctxt "TodoView|"
+msgid "Remove"
+msgstr "Eemalda"
+
+#: views/todo/qml/TodoView.qml:121
+msgctxt "TodoView|"
+msgid "Edit"
+msgstr "Muuda"
+
+#: views/todo/qml/View.qml:100
+msgctxt "View|"
+msgid "Go to top of list:"
+msgstr ""
+
+#: views/todo/qml/View.qml:101
+msgctxt "View|"
+msgid "Go to bottom of list:"
+msgstr ""
+
+#: views/todo/qml/View.qml:102
+msgctxt "View|"
+msgid "Go to next todo:"
+msgstr "Liikumine järgmisele ülesandele:"
+
+#: views/todo/qml/View.qml:103
+msgctxt "View|"
+msgid "Go to previous todo:"
+msgstr "Liikumine eelmisele ülesandele:"
+
+#: views/todo/qml/View.qml:104
+msgctxt "View|"
+msgid "Create new todo:"
+msgstr "Uue ülesande loomine:"
+
+#: views/todo/qml/View.qml:105
+msgctxt "View|"
+msgid "Edit todo:"
+msgstr ""
+
+#: views/todo/qml/View.qml:179
+msgctxt "View|"
+msgid "New Todo"
+msgstr "Uus ülesanne"
+
+#: views/todo/qml/View.qml:197
+msgctxt "View|"
+msgid "Inbox"
+msgstr ""
+
+#: views/todo/qml/View.qml:211
+msgctxt "View|"
+msgid "Doing"
+msgstr "Töös"
+
+#: views/todo/qml/View.qml:225
+msgctxt "View|"
+msgid "All"
+msgstr "Kõik"
+
+#: views/todo/qml/View.qml:326
+msgctxt "View|"
+msgid "Nothing here yet..."
+msgstr "Siin pole veel midagi ..."
+
+#: views/todo/qml/View.qml:330
+msgctxt "View|"
+msgid "Pick some tasks"
+msgstr ""
+
+#: views/todo/qml/View.qml:338
+msgctxt "View|"
+msgid "Add a new task"
+msgstr ""
+
+#: views/todo/qml/View.qml:356
+#, qt-format
+msgctxt "View|"
+msgid "This list is longer than %1 tasks. Focus on the top %1?"
+msgstr ""
+
+#: views/todo/qml/View.qml:468
+msgctxt "View|"
+msgid "Due today"
+msgstr ""
+
+#: views/todo/qml/View.qml:472
+#, qt-format
+msgctxt "View|"
+msgid " (%1 days)"
+msgstr ""
+
+#: views/todo/qml/View.qml:475
+#, qt-format
+msgctxt "View|"
+msgid "Overdue for %1 days"
+msgstr ""
+
+#: views/todo/qml/View.qml:514
+msgctxt "View|"
+msgid "Unpick"
+msgstr ""
+
+#: views/todo/qml/View.qml:514
+msgctxt "View|"
+msgid "Pick"
+msgstr ""
+
+#: views/todo/qml/View.qml:529
+msgctxt "View|"
+msgid "Done!"
+msgstr "Tehtud!"
+
+#~ msgctxt "MimeTreeParser::SignedMessagePart|"
+#~ msgid "Wrong Crypto Plug-In."
+#~ msgstr "Vale krüptoplugin."
+
+#~ msgctxt "MimeTreeParser::EncryptedMessagePart|"
+#~ msgid "Wrong Crypto Plug-In."
+#~ msgstr "Vale krüptoplugin."
+
+#~ msgctxt "MimeTreeParser::EncryptedMessagePart|"
+#~ msgid "Could not decrypt the data: no key found for recipients."
+#~ msgstr "Andmete lahtikrüptimine nurjus: saajatele ei leitud võtit."
+
+#~ msgctxt "MimeTreeParser::EncryptedMessagePart|"
+#~ msgid "Could not decrypt the data."
+#~ msgstr "Andmete lahtikrüptimine nurjus."

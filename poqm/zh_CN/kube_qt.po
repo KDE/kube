@@ -1,0 +1,1500 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: kdeorg\n"
+"PO-Revision-Date: 2022-09-20 01:56\n"
+"Language-Team: Chinese Simplified\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Qt-Contexts: true\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: kdeorg\n"
+"X-Crowdin-Project-ID: 269464\n"
+"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-File: /kf5-trunk/messages/kube/kube_qt.pot\n"
+"X-Crowdin-File-ID: 7984\n"
+
+#: accounts/fastmail/qml/AccountSettings.qml:26
+msgctxt "AccountSettings|"
+msgid "Connect your FastMail account"
+msgstr "连接您的 FastMail 账户"
+
+#: accounts/fastmail/qml/AccountSettings.qml:27
+msgctxt "AccountSettings|"
+msgid ""
+"Please fill in your name and email address. Please note that you require an "
+"app-specific password and cannot use your regular FastMail password."
+msgstr ""
+"请填写您的名字和电子邮件地址。注意：您需要填写应用专用密码，而非您平时使用的 "
+"FastMail 密码。"
+
+#: accounts/fastmail/qml/AccountSettings.qml:51
+#: accounts/generic/qml/AccountSettings.qml:54
+#: accounts/gmail/qml/AccountSettings.qml:65
+#: accounts/imap/qml/AccountSettings.qml:54
+#: accounts/kolabnow/qml/AccountSettings.qml:54
+msgctxt "AccountSettings|"
+msgid "Name"
+msgstr "名字"
+
+#: accounts/fastmail/qml/AccountSettings.qml:59
+#: accounts/generic/qml/AccountSettings.qml:59
+#: accounts/gmail/qml/AccountSettings.qml:70
+#: accounts/imap/qml/AccountSettings.qml:59
+#: accounts/kolabnow/qml/AccountSettings.qml:62
+msgctxt "AccountSettings|"
+msgid "Your name"
+msgstr "您的名字"
+
+#: accounts/fastmail/qml/AccountSettings.qml:67
+#: accounts/generic/qml/AccountSettings.qml:67
+#: accounts/gmail/qml/AccountSettings.qml:78
+#: accounts/imap/qml/AccountSettings.qml:67
+#: accounts/kolabnow/qml/AccountSettings.qml:70
+msgctxt "AccountSettings|"
+msgid "Email address"
+msgstr "电子邮件地址"
+
+#: accounts/fastmail/qml/AccountSettings.qml:80
+#: accounts/generic/qml/AccountSettings.qml:78
+#: accounts/gmail/qml/AccountSettings.qml:89
+#: accounts/imap/qml/AccountSettings.qml:78
+#: accounts/kolabnow/qml/AccountSettings.qml:83
+msgctxt "AccountSettings|"
+msgid "Your email address"
+msgstr "您的电子邮件地址"
+
+#: accounts/fastmail/qml/Login.qml:26 accounts/generic/qml/Login.qml:27
+#: accounts/gmail/qml/Login.qml:27 accounts/imap/qml/Login.qml:27
+#: accounts/kolabnow/qml/Login.qml:27
+msgctxt "Login|"
+msgid "Login"
+msgstr "登录"
+
+#: accounts/fastmail/qml/Login.qml:50 accounts/generic/qml/Login.qml:52
+#: accounts/gmail/qml/Login.qml:49 accounts/imap/qml/Login.qml:49
+#: accounts/kolabnow/qml/Login.qml:52
+msgctxt "Login|"
+msgid "Password"
+msgstr "密码"
+
+#: accounts/fastmail/qml/Login.qml:59
+msgctxt "Login|"
+msgid "App-specific password for your FastMail account"
+msgstr "FastMail 账户的应用专用密码"
+
+#: accounts/generic/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your account"
+msgstr "连接账户"
+
+#: accounts/generic/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username and the "
+"relevant server addresses. For information about the server details, please "
+"contact your email provider."
+msgstr ""
+"为了能让 Kube 访问您的账户，请填写电子邮件地址、用户名和相关服务器的地址。请"
+"您联系邮件服务提供商获知有关服务器的更多信息。"
+
+#: accounts/generic/qml/AccountSettings.qml:81
+#: accounts/imap/qml/AccountSettings.qml:81
+msgctxt "AccountSettings|"
+msgid "Username"
+msgstr "用户名"
+
+#: accounts/generic/qml/AccountSettings.qml:94
+msgctxt "AccountSettings|"
+msgid "Your username for server access."
+msgstr "用于访问服务器的用户名"
+
+#: accounts/generic/qml/AccountSettings.qml:98
+msgctxt "AccountSettings|"
+msgid "IMAP address"
+msgstr "IMAP 地址"
+
+#: accounts/generic/qml/AccountSettings.qml:115
+msgctxt "AccountSettings|"
+msgid "Use Starttls"
+msgstr "使用 Starttls"
+
+#: accounts/generic/qml/AccountSettings.qml:125
+msgctxt "AccountSettings|"
+msgid "Authentication Method"
+msgstr "认证方式"
+
+#: accounts/generic/qml/AccountSettings.qml:146
+#: accounts/imap/qml/AccountSettings.qml:113
+msgctxt "AccountSettings|"
+msgid "SMTP address"
+msgstr "SMTP 地址"
+
+#: accounts/generic/qml/AccountSettings.qml:161
+msgctxt "AccountSettings|"
+msgid "CardDAV address"
+msgstr "CardDAV 地址"
+
+#: accounts/generic/qml/AccountSettings.qml:175
+msgctxt "AccountSettings|"
+msgid "CalDAV address"
+msgstr "CalDAV 地址"
+
+#: accounts/generic/qml/Login.qml:60
+msgctxt "Login|"
+msgid "Password of your account"
+msgstr "账户密码"
+
+#: accounts/gmail/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your Google account"
+msgstr "连接 Google 账户"
+
+#: accounts/gmail/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username and give "
+"the account a title that will be displayed inside Kube."
+msgstr ""
+"为了能让 Kube 访问您的账户，请填写电子邮件地址和用户名，并为此账户起一个用于 "
+"Kube 内部显示的名称。"
+
+#: accounts/gmail/qml/Login.qml:57 accounts/imap/qml/Login.qml:57
+msgctxt "Login|"
+msgid "Password of your IMAP account"
+msgstr "IMAP 账户的密码"
+
+#: accounts/imap/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your IMAP account"
+msgstr "连接 IMAP 账户"
+
+#: accounts/imap/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username, password "
+"and give the account a title that will be displayed inside Kube. For "
+"information about which SMTP, IMAP address, which authentication and port to "
+"be used, please contact your email provider."
+msgstr ""
+"为了能让 Kube 访问您的账户，请填写电子邮件地址、用户名和密码，并为此账户起一"
+"个用于 Kube 内部显示的名称。请您联系邮件服务提供商获知有关 SMTP 地址、IMAP 地"
+"址、认证方式和端口号的信息。"
+
+#: accounts/imap/qml/AccountSettings.qml:92
+msgctxt "AccountSettings|"
+msgid "Your username for IMAP and SMTP access."
+msgstr "用于访问 IMAP 和 SMTP 的用户名。"
+
+#: accounts/imap/qml/AccountSettings.qml:96
+msgctxt "AccountSettings|"
+msgid "IMAP server address"
+msgstr "IMAP 服务器地址"
+
+#: accounts/kolabnow/qml/AccountSettings.qml:27
+msgctxt "AccountSettings|"
+msgid "Connect your Kolab Now account"
+msgstr "连接 Kolab Now 账户"
+
+#: accounts/kolabnow/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid ""
+"Please fill in your name and email address. No account yet? <a href='https://"
+"kolabnow.com/kube-campaign/'>Sign up now!</a>"
+msgstr ""
+"请填写您的名字和电子邮件地址。还没有账户？<a href='https://kolabnow.com/kube-"
+"campaign/'>立刻注册！</a>"
+
+#: accounts/kolabnow/qml/Login.qml:61
+msgctxt "Login|"
+msgid "Password of your Kolab Now account"
+msgstr "Kolab Now 账户的密码"
+
+#: accounts/maildir/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Add your Maildir archive"
+msgstr "添加归档文件夹"
+
+#: accounts/maildir/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your maildir archive, add the path to your archive and "
+"give the account a title that will be displayed inside Kube."
+msgstr ""
+"为了能让 Kube 访问归档邮件目录，请填写归档文件夹的路径，并为此账户起一个用于 "
+"Kube 内部显示的名称。"
+
+#: accounts/maildir/qml/AccountSettings.qml:55
+msgctxt "AccountSettings|"
+msgid "Title of Account"
+msgstr "账户名称"
+
+#: accounts/maildir/qml/AccountSettings.qml:60
+msgctxt "AccountSettings|"
+msgid "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+msgstr "示例：Kube 会显示“工作”“家庭”这种名称"
+
+#: accounts/maildir/qml/AccountSettings.qml:68
+msgctxt "AccountSettings|"
+msgid "Path"
+msgstr "路径"
+
+#: accounts/maildir/qml/AccountSettings.qml:90
+msgctxt "AccountSettings|"
+msgid "Choose a maildir folder"
+msgstr "选择一个邮件目录中的文件夹"
+
+#: applications/kube/main.cpp:152
+msgctxt "main|"
+msgid ""
+"To automatically unlock the keyring pass in a keyring in the form of "
+"{\"accountId\": {\"resourceId\": \"secret\", *}}"
+msgstr ""
+"若要自动解锁密钥环，请传入一个形如 {\"accountId\": {\"resourceId\": \"secret"
+"\", *}} 的密钥环"
+
+#: components/accounts/qml/AccountWizard.qml:60
+msgctxt "AccountWizard|"
+msgid "Select your new account type"
+msgstr "选择新账户的类型"
+
+#: components/accounts/qml/AccountWizardPage.qml:137
+msgctxt "AccountWizardPage|"
+msgid "Discard"
+msgstr "不保存"
+
+#: components/accounts/qml/AccountWizardPage.qml:150
+msgctxt "AccountWizardPage|"
+msgid "Save"
+msgstr "保存"
+
+#: components/kube/qml/Kube.qml:211
+msgctxt "Kube|"
+msgid "Outbox"
+msgstr "发件箱"
+
+#: components/kube/qml/Kube.qml:233
+msgctxt "Kube|"
+msgid "Notification view"
+msgstr "通知视图"
+
+#: components/kube/qml/Kube.qml:244
+msgctxt "Kube|"
+msgid "Settings"
+msgstr "设置"
+
+#: components/kube/qml/upgrade.qml:39
+msgctxt "upgrade|"
+msgid "Please wait while Kube is upgrading..."
+msgstr "Kube 正在升级，请稍候..."
+
+#: components/kube/qml/upgrade.qml:39
+msgctxt "upgrade|"
+msgid "Kube upgraded the storage layer."
+msgstr "Kube 已经升级了存储层。"
+
+#: components/kube/qml/upgrade.qml:43
+msgctxt "upgrade|"
+msgid "This might take a while."
+msgstr "可能需要一段时间。"
+
+#: components/kube/qml/upgrade.qml:43
+msgctxt "upgrade|"
+msgid "Please exit and restart Kube."
+msgstr "请退出并重启 Kube。"
+
+#: components/kube/qml/upgrade.qml:47
+msgctxt "upgrade|"
+msgid "Exit"
+msgstr "退出"
+
+#: extensions/fileasexpense/qml/main.qml:27
+msgctxt "main|"
+msgid "File as Expense"
+msgstr "归档为支出项目"
+
+#: extensions/gpg/qml/main.qml:58
+msgctxt "main|"
+msgid "Enable GPG Keyring Integration"
+msgstr "启用 GPG 密钥环集成"
+
+#: framework/qml/AttachmentDelegate.qml:82
+msgctxt "AttachmentDelegate|"
+msgid "Import key"
+msgstr "导入密钥"
+
+#: framework/qml/CalendarSelector.qml:79
+msgctxt "CalendarSelector|"
+msgid "Add calendar"
+msgstr "添加日历"
+
+#: framework/qml/ConversationView.qml:158
+msgctxt "ConversationView|"
+msgid "Downloading message..."
+msgstr "正在下载消息..."
+
+#: framework/qml/ConversationView.qml:162
+msgctxt "ConversationView|"
+msgid "Failed to download message..."
+msgstr "消息下载失败..."
+
+#: framework/qml/EditAccount.qml:89
+msgctxt "EditAccount|"
+msgid "Change Password"
+msgstr "修改密码"
+
+#: framework/qml/EditAccount.qml:124
+msgctxt "EditAccount|"
+msgid "Remove Account"
+msgstr "删除账户"
+
+#: framework/qml/EditAccount.qml:134
+msgctxt "EditAccount|"
+msgid "Save"
+msgstr "保存"
+
+#: framework/qml/LoginAccount.qml:117
+msgctxt "LoginAccount|"
+msgid "Login"
+msgstr "登录时"
+
+#: framework/qml/MailListView.qml:67
+msgctxt "MailListView|"
+msgid "Nothing here..."
+msgstr "此处还没有任何内容..."
+
+#: framework/qml/MailListView.qml:291
+msgctxt "MailListView|"
+msgid "Restore from trash"
+msgstr "从已删除邮件中恢复"
+
+#: framework/qml/MailListView.qml:299
+msgctxt "MailListView|"
+msgid "Mark as read"
+msgstr "标记为已读"
+
+#: framework/qml/MailListView.qml:307
+msgctxt "MailListView|"
+msgid "Mark as unread"
+msgstr "标记为未读"
+
+#: framework/qml/MailListView.qml:316
+msgctxt "MailListView|"
+msgid "Mark as important"
+msgstr "标记为重要"
+
+#: framework/qml/MailListView.qml:326
+msgctxt "MailListView|"
+msgid "Move to trash"
+msgstr "移至已删除邮件"
+
+#: framework/qml/mailpartview/ErrorPart.qml:40
+#, qt-format
+msgctxt "ErrorPart|"
+msgid "An error occurred: %1"
+msgstr "发生错误：%1"
+
+#: framework/qml/mailpartview/ICalPart.qml:44
+#: framework/qml/mailpartview/ICalPart.qml:79
+#, qt-format
+msgctxt "ICalPart|"
+msgid "This is an exception for the event originally occurring at: \"%1\""
+msgstr "这是一个原发于”%1“的事件异常"
+
+#: framework/qml/mailpartview/ICalPart.qml:55
+#, qt-format
+msgctxt "ICalPart|"
+msgid "\"%1\" has been cancelled."
+msgstr "“%1”已被取消"
+
+#: framework/qml/mailpartview/ICalPart.qml:60
+#, qt-format
+msgctxt "ICalPart|"
+msgid "%1 has accepted: \"%2\""
+msgstr "%1 已接受：“%2”"
+
+#: framework/qml/mailpartview/ICalPart.qml:66
+#, qt-format
+msgctxt "ICalPart|"
+msgid "%1 has declined: \"%2\""
+msgstr "%1 已拒绝：“%2”"
+
+#: framework/qml/mailpartview/ICalPart.qml:72
+#, qt-format
+msgctxt "ICalPart|"
+msgid "%1 doesn't yet know about: \"%2\""
+msgstr "%1 还不知道此邀请：“%2”"
+
+#: framework/qml/mailpartview/ICalPart.qml:84
+#, qt-format
+msgctxt "ICalPart|"
+msgid "The invitation has been updated: \"%1\""
+msgstr "此邀请已被更新：“%1”"
+
+#: framework/qml/mailpartview/ICalPart.qml:89
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You have accepted: \"%1\""
+msgstr "您已接受：“%1”"
+
+#: framework/qml/mailpartview/ICalPart.qml:95
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You have declined: \"%1\""
+msgstr "您已拒绝：“%1”"
+
+#: framework/qml/mailpartview/ICalPart.qml:101
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You've been invited to: \"%1\""
+msgstr "您已被邀请加入：“%1”"
+
+#: framework/qml/mailpartview/ICalPart.qml:106
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You are not listed as attendee to: \"%1\""
+msgstr "您未被列为参与者：“%1”"
+
+#: framework/qml/mailpartview/ICalPart.qml:151
+msgctxt "ICalPart|"
+msgid "Decline"
+msgstr "拒绝"
+
+#: framework/qml/mailpartview/ICalPart.qml:158
+msgctxt "ICalPart|"
+msgid "Accept"
+msgstr "接受"
+
+#: framework/qml/mailpartview/ICalPart.qml:165
+msgctxt "ICalPart|"
+msgid "in"
+msgstr "加入"
+
+#: framework/qml/mailpartview/MailPart.qml:54
+#, qt-format
+msgctxt "MailPart|"
+msgid "sent by %1 on %2"
+msgstr "由 %1 发于 %2"
+
+#: framework/qml/mailpartview/MailPartModel.qml:53
+msgctxt "MailPartModel|"
+msgid "This message has been signed but we failed to validate the signature."
+msgstr "此消息已被签名，但我们无法验证此签名。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:55
+#, qt-format
+msgctxt "MailPartModel|"
+msgid "This message has been signed using the key %1."
+msgstr "此消息已使用密钥 %1 签名。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:56
+msgctxt "MailPartModel|"
+msgid "The key details are not available."
+msgstr "无法获取密钥详情。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:58
+#, qt-format
+msgctxt "MailPartModel|"
+msgid "This message has been signed using the key %1 by %2."
+msgstr "此消息已由 %2 使用密钥 %1 签名。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:60
+msgctxt "MailPartModel|"
+msgid "The key was revoked."
+msgstr "此密钥已被吊销。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:63
+msgctxt "MailPartModel|"
+msgid "The key has expired."
+msgstr "此密钥已过期。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:66
+msgctxt "MailPartModel|"
+msgid "You are trusting this key."
+msgstr "您信任此密钥。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:69
+msgctxt "MailPartModel|"
+msgid "The signature is invalid."
+msgstr "此签名无效。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:89
+msgctxt "MailPartModel|"
+msgid "This message is encrypted but we don't have the key for it."
+msgstr "此消息已加密，但我们没有它的密钥。"
+
+#: framework/qml/mailpartview/MailPartModel.qml:89
+#, qt-format
+msgctxt "MailPartModel|"
+msgid "This message is encrypted to the key: %1"
+msgstr "此消息已使用密钥 %1 加密"
+
+#: framework/qml/MailViewer.qml:44
+msgctxt "MailViewer|"
+msgid "Incomplete body..."
+msgstr "正文仍在加载..."
+
+#: framework/qml/MailViewer.qml:195
+msgctxt "MailViewer|"
+msgid "Sent from"
+msgstr "发自"
+
+#: framework/qml/MailViewer.qml:199
+msgctxt "MailViewer|"
+msgid "Draft from"
+msgstr "草稿来自"
+
+#: framework/qml/MailViewer.qml:213 framework/qml/MailViewer.qml:247
+msgctxt "MailViewer|"
+msgid "Send mail to"
+msgstr "将邮件发送至"
+
+#: framework/qml/MailViewer.qml:231
+#, qt-format
+msgctxt "MailViewer|"
+msgid "Trash: %1"
+msgstr "已删除邮件：%1"
+
+#: framework/qml/MailViewer.qml:383
+msgctxt "MailViewer|"
+msgid "Save attachment"
+msgstr "保存附件"
+
+#: framework/qml/MailViewer.qml:473
+msgctxt "MailViewer|"
+msgid "Delete Mail"
+msgstr "删除邮件"
+
+#: framework/qml/MailViewer.qml:473
+msgctxt "MailViewer|"
+msgid "Discard"
+msgstr "不保存"
+
+#: framework/qml/MailViewer.qml:473
+msgctxt "MailViewer|"
+msgid "Move to trash"
+msgstr "移至已删除邮件"
+
+#: framework/qml/MailViewer.qml:495
+msgctxt "MailViewer|"
+msgid "Share"
+msgstr "共享"
+
+#: framework/qml/MailViewer.qml:505
+msgctxt "MailViewer|"
+msgid "Edit"
+msgstr "编辑"
+
+#: framework/qml/MailViewer.qml:505
+msgctxt "MailViewer|"
+msgid "Reply"
+msgstr "回复"
+
+#: framework/qml/Outbox.qml:114
+#, qt-format
+msgctxt "Outbox|"
+msgid "Sending: %1"
+msgstr "正在发送：%1"
+
+#: framework/qml/Outbox.qml:162
+msgctxt "Outbox|"
+msgid "Send now"
+msgstr "立即发送"
+
+#: framework/qml/Outbox.qml:174
+msgctxt "Outbox|"
+msgid "No pending messages"
+msgstr "没有待处理的消息"
+
+#: framework/qml/SearchPopup.qml:197
+msgctxt "SearchPopup|"
+msgid "Filter..."
+msgstr "过滤..."
+
+#: framework/qml/SelectableItem.qml:64
+msgctxt "SelectableItem|"
+msgid "Copy"
+msgstr "复制"
+
+#: framework/qml/SelectableLabel.qml:33
+msgctxt "SelectableLabel|"
+msgid "Copy"
+msgstr "复制"
+
+#: framework/qml/StatusBar.qml:64
+msgctxt "StatusBar|"
+msgid "Disconnected"
+msgstr "连接已断开"
+
+#: framework/qml/StatusBar.qml:146
+msgctxt "StatusBar|"
+msgid "Abort"
+msgstr "中止"
+
+#: framework/qml/TextArea.qml:74
+msgctxt "TextArea|"
+msgid "Copy Link"
+msgstr "复制链接"
+
+#: framework/qml/TextArea.qml:74
+msgctxt "TextArea|"
+msgid "Copy Selection"
+msgstr "复制选中项"
+
+#: framework/src/domain/eventcontroller.cpp:90
+#, qt-format
+msgctxt "QObject|"
+msgid "== %1 =="
+msgstr "== %1 =="
+
+#: framework/src/domain/eventcontroller.cpp:92
+#, qt-format
+msgctxt "QObject|"
+msgid "When: %1"
+msgstr "时间：%1"
+
+#: framework/src/domain/eventcontroller.cpp:96
+#, qt-format
+msgctxt "QObject|"
+msgid "Where: %1"
+msgstr "地点：%1"
+
+#: framework/src/domain/eventcontroller.cpp:99
+msgctxt "QObject|"
+msgid "Attendees:"
+msgstr "参与者："
+
+#: framework/src/domain/eventcontroller.cpp:128
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been updated"
+msgstr "“%1”已被更新"
+
+#: framework/src/domain/eventcontroller.cpp:130
+#, qt-format
+msgctxt "QObject|"
+msgid "You've been invited to: \"%1\""
+msgstr "您已被邀请加入：“%1”"
+
+#: framework/src/domain/eventcontroller.cpp:135
+msgctxt "QObject|"
+msgid ""
+"Please find attached an iCalendar file with all the event details which you "
+"can import to your calendar application."
+msgstr "请找到一个可导入日历应用的、带有全部日程详情的 iCalendar 文件。"
+
+#: framework/src/domain/invitationcontroller.cpp:270
+#, qt-format
+msgctxt "QObject|"
+msgid "%1 has accepted the invitation to the following event"
+msgstr "%1 已接受以下日程的邀请"
+
+#: framework/src/domain/invitationcontroller.cpp:272
+#, qt-format
+msgctxt "QObject|"
+msgid "%1 has declined the invitation to the following event"
+msgstr "%1 已拒绝以下日程的邀请"
+
+#: framework/src/domain/invitationcontroller.cpp:279
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been accepted by %2"
+msgstr "%2 已接受“%1”"
+
+#: framework/src/domain/invitationcontroller.cpp:281
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been declined by %2"
+msgstr "%2 已拒绝“%1”"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:181
+msgctxt "QObject|"
+msgid "Failed to save attachment."
+msgstr "无法保存附件。"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:210
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "Saved the attachment to disk: %1"
+msgstr "已将附件保存到硬盘上：%1"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:221
+msgctxt "AttachmentModel|"
+msgid "Failed to open attachment."
+msgstr "无法打开附件。"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:226
+msgctxt "AttachmentModel|"
+msgid "Failed to save attachment for opening."
+msgstr "无法保存并打开附件。"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:240
+msgctxt "AttachmentModel|"
+msgid "No keys were found in this attachment"
+msgstr "未在附件中找到密钥"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:245
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "%n key(s) imported"
+msgid_plural "%n key(s) imported"
+msgstr[0] "已导入 %n 个密钥"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:249
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "%n key(s) were already imported"
+msgid_plural "%n key(s) were already imported"
+msgstr[0] "%n 已经被导入过了"
+
+#: framework/src/domain/mime/mailtemplates.cpp:127
+msgctxt "QObject|"
+msgid "fwd"
+msgstr "转发"
+
+#: framework/src/domain/mime/mailtemplates.cpp:155
+msgctxt "QObject|"
+msgid "re"
+msgstr "回复"
+
+#: framework/src/domain/mime/partmodel.cpp:468
+msgctxt "PartModel|"
+msgid "No key available."
+msgstr "无可用密钥"
+
+#: framework/src/domain/mime/partmodel.cpp:470
+msgctxt "PartModel|"
+msgid "Wrong passphrase."
+msgstr "密码错误。"
+
+#: framework/src/sinkfabric.cpp:178
+msgctxt "QObject|"
+msgid "Failed to connect to server."
+msgstr "无法连接至服务器。"
+
+#: framework/src/sinkfabric.cpp:182
+msgctxt "QObject|"
+msgid "Host not found."
+msgstr "未找到主机。"
+
+#: framework/src/sinkfabric.cpp:186
+msgctxt "QObject|"
+msgid "Failed to login."
+msgstr "登录失败。"
+
+#: framework/src/sinkfabric.cpp:190
+msgctxt "QObject|"
+msgid "Configuration error."
+msgstr "配置有误。"
+
+#: framework/src/sinkfabric.cpp:196
+msgctxt "QObject|"
+msgid "No credentials available."
+msgstr "没有可用的凭据。"
+
+#: framework/src/sinkfabric.cpp:230
+msgctxt "QObject|"
+msgid "Failed to send message."
+msgstr "消息发送失败。"
+
+#: framework/src/sinkfabric.cpp:244
+msgctxt "QObject|"
+msgid "A message has been sent."
+msgstr "消息已发送。"
+
+#: views/accounts/qml/View.qml:51
+msgctxt "View|"
+msgid "New Account"
+msgstr "新账户"
+
+#: views/calendar/qml/AttendeeListEditor.qml:91
+msgctxt "AttendeeListEditor|"
+msgid "Attending"
+msgstr "正在参加"
+
+#: views/calendar/qml/AttendeeListEditor.qml:91
+msgctxt "AttendeeListEditor|"
+msgid "Invited"
+msgstr "已发送邀请"
+
+#: views/calendar/qml/AttendeeListEditor.qml:119
+#: views/calendar/qml/AttendeeListEditor.qml:136
+msgctxt "AttendeeListEditor|"
+msgid "Add attendee"
+msgstr "添加参加者"
+
+#: views/calendar/qml/DateRangeChooser.qml:41
+msgctxt "DateRangeChooser|"
+msgid "until"
+msgstr "至"
+
+#: views/calendar/qml/EventEditor.qml:80
+msgctxt "EventEditor|"
+msgid "Event Title"
+msgstr "日程名称"
+
+#: views/calendar/qml/EventEditor.qml:110
+msgctxt "EventEditor|"
+msgid "All day"
+msgstr "全天"
+
+#: views/calendar/qml/EventEditor.qml:121
+msgctxt "EventEditor|"
+msgid "Location"
+msgstr "地点"
+
+#: views/calendar/qml/EventEditor.qml:132
+msgctxt "EventEditor|"
+msgid "Organizer:"
+msgstr "组织者："
+
+#: views/calendar/qml/EventEditor.qml:182
+msgctxt "EventEditor|"
+msgid "Delete"
+msgstr "删除"
+
+#: views/calendar/qml/EventEditor.qml:191
+msgctxt "EventEditor|"
+msgid "Abort"
+msgstr "中止"
+
+#: views/calendar/qml/EventEditor.qml:215
+msgctxt "EventEditor|"
+msgid "Discard Changes"
+msgstr "放弃更改"
+
+#: views/calendar/qml/EventEditor.qml:223
+msgctxt "EventEditor|"
+msgid "Save Changes"
+msgstr "保存更改"
+
+#: views/calendar/qml/EventEditor.qml:232
+msgctxt "EventEditor|"
+msgid "Create Event"
+msgstr "创建日程"
+
+#: views/calendar/qml/EventView.qml:76
+#, qt-format
+msgctxt "EventView|"
+msgid "repeats %1"
+msgstr "重复 %1 次"
+
+#: views/calendar/qml/EventView.qml:85
+#, qt-format
+msgctxt "EventView|"
+msgid "Organizer: %1"
+msgstr "组织者：%1"
+
+#: views/calendar/qml/EventView.qml:95
+msgctxt "EventView|"
+msgid "Attending:"
+msgstr "正在参加："
+
+#: views/calendar/qml/EventView.qml:102
+#, qt-format
+msgctxt "EventView|"
+msgid "%1"
+msgstr "%1"
+
+#: views/calendar/qml/EventView.qml:130
+msgctxt "EventView|"
+msgid "Remove"
+msgstr "删除"
+
+#: views/calendar/qml/EventView.qml:141
+msgctxt "EventView|"
+msgid "Edit"
+msgstr "编辑"
+
+#: views/calendar/qml/View.qml:41
+msgctxt "View|"
+msgid "Jump to next week/month:"
+msgstr "跳转到下周或下月："
+
+#: views/calendar/qml/View.qml:42
+msgctxt "View|"
+msgid "Jump to previous week/month:"
+msgstr "跳转到上周或上月："
+
+#: views/calendar/qml/View.qml:103
+msgctxt "View|"
+msgid "New Event"
+msgstr "新建日程"
+
+#: views/calendar/qml/View.qml:118
+msgctxt "View|"
+msgid "Week"
+msgstr "周"
+
+#: views/calendar/qml/View.qml:127
+msgctxt "View|"
+msgid "Month"
+msgstr "月"
+
+#: views/composer/qml/AddresseeListEditor.qml:135
+msgctxt "AddresseeListEditor|"
+msgid "Fetch key from keyserver"
+msgstr "从密钥服务器获取密钥"
+
+#: views/composer/qml/AddresseeListEditor.qml:171
+#: views/composer/qml/AddresseeListEditor.qml:188
+msgctxt "AddresseeListEditor|"
+msgid "Add recipient"
+msgstr "添加收件人"
+
+#: views/composer/qml/EditorPage.qml:113
+msgctxt "EditorPage|"
+msgid "Remove Formatting"
+msgstr "清除格式"
+
+#: views/composer/qml/EditorPage.qml:126
+msgctxt "EditorPage|"
+msgid "Attach file"
+msgstr "添加附件"
+
+#: views/composer/qml/EditorPage.qml:135
+msgctxt "EditorPage|"
+msgid "Choose a file to attach"
+msgstr "选择要添加的附件"
+
+#: views/composer/qml/EditorPage.qml:156
+msgctxt "EditorPage|"
+msgid "Subject"
+msgstr "主题"
+
+#: views/composer/qml/EditorPage.qml:171
+msgctxt "EditorPage|"
+msgid "Body"
+msgstr "正文"
+
+#: views/composer/qml/View.qml:135 views/conversation/qml/View.qml:155
+msgctxt "View|"
+msgid "New Email"
+msgstr "新邮件"
+
+#: views/composer/qml/View.qml:144
+msgctxt "View|"
+msgid "Drafts"
+msgstr "草稿"
+
+#: views/composer/qml/View.qml:291
+msgctxt "View|"
+msgid "Sending email to:"
+msgstr "正在将电子邮件发送至："
+
+#: views/composer/qml/View.qml:302
+msgctxt "View|"
+msgid "Sending copy to (Cc):"
+msgstr "正在抄送 (Cc) 给："
+
+#: views/composer/qml/View.qml:312
+msgctxt "View|"
+msgid "Sending secret copy to (Bcc):"
+msgstr "正在密送 (Bcc) 给："
+
+#: views/composer/qml/View.qml:333
+msgctxt "View|"
+msgid "encrypt"
+msgstr "加密"
+
+#: views/composer/qml/View.qml:344
+msgctxt "View|"
+msgid "sign"
+msgstr "签名"
+
+#: views/composer/qml/View.qml:350
+msgctxt "View|"
+msgid ""
+"Encryption is not available because your personal key has not been found."
+msgstr "因为无法找到您的个人密钥，所以无法进行加密。"
+
+#: views/composer/qml/View.qml:361
+msgctxt "View|"
+msgid "Discard"
+msgstr "不保存"
+
+#: views/composer/qml/View.qml:368
+msgctxt "View|"
+msgid "Save as Draft"
+msgstr "保存为草稿"
+
+#: views/composer/qml/View.qml:381
+msgctxt "View|"
+msgid "You are sending this from:"
+msgstr "您正使用此地址发送："
+
+#: views/composer/qml/View.qml:407
+msgctxt "View|"
+msgid "Send"
+msgstr "发送"
+
+#: views/conversation/qml/View.qml:64
+msgctxt "View|"
+msgid "Jump to top of threadlist:"
+msgstr "跳转到主题帖列表的顶部："
+
+#: views/conversation/qml/View.qml:65
+msgctxt "View|"
+msgid "Jump to next thread:"
+msgstr "跳转到下一串主题帖"
+
+#: views/conversation/qml/View.qml:66
+msgctxt "View|"
+msgid "Jump to previous thread:"
+msgstr "跳转到上一串主题帖"
+
+#: views/conversation/qml/View.qml:67
+msgctxt "View|"
+msgid "Jump to next message:"
+msgstr "跳转到下一条消息："
+
+#: views/conversation/qml/View.qml:68
+msgctxt "View|"
+msgid "Jump to previous message:"
+msgstr "跳转到上一条消息："
+
+#: views/conversation/qml/View.qml:69
+msgctxt "View|"
+msgid "Jump to next folder:"
+msgstr "跳转到下一个文件夹："
+
+#: views/conversation/qml/View.qml:70
+msgctxt "View|"
+msgid "Jump to previous folder:"
+msgstr "跳转到上一个文件夹："
+
+#: views/conversation/qml/View.qml:71
+msgctxt "View|"
+msgid "Compose new message:"
+msgstr "编写新消息："
+
+#: views/conversation/qml/View.qml:72
+msgctxt "View|"
+msgid "Reply to the currently focused message:"
+msgstr "回复当前查看的消息："
+
+#: views/conversation/qml/View.qml:73
+msgctxt "View|"
+msgid "Delete the currently focused message:"
+msgstr "删除当前查看的消息："
+
+#: views/conversation/qml/View.qml:74
+msgctxt "View|"
+msgid "Mark the currently focused message as important:"
+msgstr "将当前查看的消息标记为重要："
+
+#: views/conversation/qml/View.qml:75
+msgctxt "View|"
+msgid "Mark the currently focused message as unread:"
+msgstr "将当前查看的消息标记为未读："
+
+#: views/conversation/qml/View.qml:76 views/todo/qml/View.qml:106
+msgctxt "View|"
+msgid "Show this help text:"
+msgstr "显示此帮助信息："
+
+#: views/inboxcrusher/qml/View.qml:92
+msgctxt "View|"
+msgid "Delete!"
+msgstr "删除！"
+
+#: views/inboxcrusher/qml/View.qml:97
+msgctxt "View|"
+msgid "Reply!"
+msgstr "回复！"
+
+#: views/inboxcrusher/qml/View.qml:102
+msgctxt "View|"
+msgid "Flag!"
+msgstr "旗标！"
+
+#: views/inboxcrusher/qml/View.qml:107
+msgctxt "View|"
+msgid "Previous"
+msgstr "上一封"
+
+#: views/inboxcrusher/qml/View.qml:113
+msgctxt "View|"
+msgid "Next"
+msgstr "下一封"
+
+#: views/log/qml/View.qml:71
+msgctxt "View|"
+msgid "Nothing here..."
+msgstr "此处还没有任何内容..."
+
+#: views/log/qml/View.qml:118
+msgctxt "View|"
+msgid "Error"
+msgstr "错误"
+
+#: views/log/qml/View.qml:118
+msgctxt "View|"
+msgid "Info"
+msgstr "信息"
+
+#: views/log/qml/View.qml:220
+msgctxt "View|"
+msgid "Account:"
+msgstr "账户："
+
+#: views/log/qml/View.qml:230
+msgctxt "View|"
+msgid "Account Id:"
+msgstr "账户 Id："
+
+#: views/log/qml/View.qml:240
+msgctxt "View|"
+msgid "Resource Id:"
+msgstr "资源 Id："
+
+#: views/log/qml/View.qml:250
+msgctxt "View|"
+msgid "Timestamp:"
+msgstr "时间戳："
+
+#: views/log/qml/View.qml:258
+msgctxt "View|"
+msgid "Message:"
+msgstr "消息："
+
+#: views/log/qml/View.qml:292
+msgctxt "View|"
+msgid "Failed to login"
+msgstr "登录失败"
+
+#: views/log/qml/View.qml:298
+#, qt-format
+msgctxt "View|"
+msgid "%1: please check your credentials."
+msgstr "%1：请检查您的凭据。"
+
+#: views/log/qml/View.qml:304
+msgctxt "View|"
+msgid "Change Password"
+msgstr "修改密码"
+
+#: views/log/qml/View.qml:327
+msgctxt "View|"
+msgid "Host not found"
+msgstr "未找到主机"
+
+#: views/log/qml/View.qml:333
+#, qt-format
+msgctxt "View|"
+msgid "%1: please check your network connection and settings."
+msgstr "%1：请检查您的网络连接和设置。"
+
+#: views/log/qml/View.qml:339
+msgctxt "View|"
+msgid "Account Settings"
+msgstr "账户设置"
+
+#: views/log/qml/View.qml:363
+msgctxt "View|"
+msgid "Failed to send the message."
+msgstr "消息发送失败。"
+
+#: views/log/qml/View.qml:382 views/log/qml/View.qml:449
+#, qt-format
+msgctxt "View|"
+msgid "Account: %1"
+msgstr "账户：%1"
+
+#: views/log/qml/View.qml:387 views/log/qml/View.qml:454
+#, qt-format
+msgctxt "View|"
+msgid "Subject: %1"
+msgstr "主题：%1"
+
+#: views/log/qml/View.qml:392 views/log/qml/View.qml:459
+#, qt-format
+msgctxt "View|"
+msgid "To: %1"
+msgstr "收件人： %1"
+
+#: views/log/qml/View.qml:398 views/log/qml/View.qml:465
+#, qt-format
+msgctxt "View|"
+msgid "Cc: %1"
+msgstr "抄送：%1"
+
+#: views/log/qml/View.qml:408
+msgctxt "View|"
+msgid "Try Again"
+msgstr "重试"
+
+#: views/log/qml/View.qml:431
+msgctxt "View|"
+msgid "Succeeded to send the message."
+msgstr "消息发送成功。"
+
+#: views/people/qml/MailListEditor.qml:53
+msgctxt "MailListEditor|"
+msgid "(main)"
+msgstr "(主体)"
+
+#: views/people/qml/MailListEditor.qml:84
+#: views/people/qml/MailListEditor.qml:102
+msgctxt "MailListEditor|"
+msgid "Add email"
+msgstr "新建邮件"
+
+#: views/people/qml/People.qml:53
+msgctxt "People|"
+msgid "New Contact"
+msgstr "新建联系人"
+
+#: views/people/qml/People.qml:80
+msgctxt "People|"
+msgid "Search..."
+msgstr "搜索..."
+
+#: views/people/qml/People.qml:235
+msgctxt "People|"
+msgid "Remove"
+msgstr "删除"
+
+#: views/people/qml/People.qml:249
+msgctxt "People|"
+msgid "Edit"
+msgstr "编辑"
+
+#: views/people/qml/PersonComposer.qml:98
+msgctxt "PersonComposer|"
+msgid "Choose an Avatar"
+msgstr "选择头像"
+
+#: views/people/qml/PersonComposer.qml:121
+msgctxt "PersonComposer|"
+msgid "First name"
+msgstr "名字"
+
+#: views/people/qml/PersonComposer.qml:129
+msgctxt "PersonComposer|"
+msgid "Last name"
+msgstr "姓氏"
+
+#: views/people/qml/PersonComposer.qml:149
+msgctxt "PersonComposer|"
+msgid "Job Title"
+msgstr "职位头衔"
+
+#: views/people/qml/PersonComposer.qml:163
+msgctxt "PersonComposer|"
+msgid "Company"
+msgstr "公司"
+
+#: views/people/qml/PersonComposer.qml:175
+msgctxt "PersonComposer|"
+msgid "Email"
+msgstr "邮件地址"
+
+#: views/people/qml/PersonPage.qml:156
+msgctxt "PersonPage|"
+msgid "(main)"
+msgstr "(主体)"
+
+#: views/people/qml/PhoneListEditor.qml:43
+msgctxt "PhoneListEditor|"
+msgid "(main)"
+msgstr "(主体)"
+
+#: views/people/qml/PhoneListEditor.qml:55
+msgctxt "PhoneListEditor|"
+msgid "Add"
+msgstr "添加"
+
+#: views/search/qml/View.qml:59
+msgctxt "View|"
+msgid "Search"
+msgstr "搜索"
+
+#: views/search/qml/View.qml:85
+msgctxt "View|"
+msgid "Unread"
+msgstr "未读"
+
+#: views/search/qml/View.qml:94
+msgctxt "View|"
+msgid "Important"
+msgstr "重要"
+
+#: views/search/qml/View.qml:100
+msgctxt "View|"
+msgid "Accounts"
+msgstr "账户"
+
+#: views/search/qml/View.qml:161
+msgctxt "View|"
+msgid "Search..."
+msgstr "搜索..."
+
+#: views/search/qml/View_new.qml:64
+msgctxt "View_new|"
+msgid "Search"
+msgstr "搜索"
+
+#: views/search/qml/View_new.qml:113
+msgctxt "View_new|"
+msgid "Search..."
+msgstr "搜索..."
+
+#: views/todo/qml/TodoEditor.qml:101
+msgctxt "TodoEditor|"
+msgid "Todo Title"
+msgstr "待办事项标题"
+
+#: views/todo/qml/TodoEditor.qml:122
+msgctxt "TodoEditor|"
+msgid "Doing"
+msgstr "正在进行"
+
+#: views/todo/qml/TodoEditor.qml:168
+msgctxt "TodoEditor|"
+msgid "Delete"
+msgstr "删除"
+
+#: views/todo/qml/TodoEditor.qml:177
+msgctxt "TodoEditor|"
+msgid "Abort"
+msgstr "中止"
+
+#: views/todo/qml/TodoEditor.qml:189
+msgctxt "TodoEditor|"
+msgid "Discard Changes"
+msgstr "放弃更改"
+
+#: views/todo/qml/TodoEditor.qml:197
+msgctxt "TodoEditor|"
+msgid "Save Changes"
+msgstr "保存更改"
+
+#: views/todo/qml/TodoEditor.qml:203
+msgctxt "TodoEditor|"
+msgid "Create Todo"
+msgstr "创建待办事项"
+
+#: views/todo/qml/TodoView.qml:71
+msgctxt "TodoView|"
+msgid "Due on "
+msgstr "截止至 "
+
+#: views/todo/qml/TodoView.qml:77
+msgctxt "TodoView|"
+msgid "Start on "
+msgstr "开始于 "
+
+#: views/todo/qml/TodoView.qml:112
+msgctxt "TodoView|"
+msgid "Remove"
+msgstr "删除"
+
+#: views/todo/qml/TodoView.qml:121
+msgctxt "TodoView|"
+msgid "Edit"
+msgstr "编辑"
+
+#: views/todo/qml/View.qml:100
+msgctxt "View|"
+msgid "Go to top of list:"
+msgstr "跳转至列表顶部："
+
+#: views/todo/qml/View.qml:101
+msgctxt "View|"
+msgid "Go to bottom of list:"
+msgstr "跳转至列表底部："
+
+#: views/todo/qml/View.qml:102
+msgctxt "View|"
+msgid "Go to next todo:"
+msgstr "跳转到下一条待办事项："
+
+#: views/todo/qml/View.qml:103
+msgctxt "View|"
+msgid "Go to previous todo:"
+msgstr "跳转到上一条待办事项："
+
+#: views/todo/qml/View.qml:104
+msgctxt "View|"
+msgid "Create new todo:"
+msgstr "新建待办事项："
+
+#: views/todo/qml/View.qml:105
+msgctxt "View|"
+msgid "Edit todo:"
+msgstr "编辑待办事项："
+
+#: views/todo/qml/View.qml:179
+msgctxt "View|"
+msgid "New Todo"
+msgstr "新建待办事项"
+
+#: views/todo/qml/View.qml:197
+msgctxt "View|"
+msgid "Inbox"
+msgstr "收件箱"
+
+#: views/todo/qml/View.qml:211
+msgctxt "View|"
+msgid "Doing"
+msgstr "正在进行"
+
+#: views/todo/qml/View.qml:225
+msgctxt "View|"
+msgid "All"
+msgstr "全部"
+
+#: views/todo/qml/View.qml:326
+msgctxt "View|"
+msgid "Nothing here yet..."
+msgstr "此处还没有任何内容..."
+
+#: views/todo/qml/View.qml:330
+msgctxt "View|"
+msgid "Pick some tasks"
+msgstr "选择一些任务"
+
+#: views/todo/qml/View.qml:338
+msgctxt "View|"
+msgid "Add a new task"
+msgstr "添加新任务"
+
+#: views/todo/qml/View.qml:356
+#, qt-format
+msgctxt "View|"
+msgid "This list is longer than %1 tasks. Focus on the top %1?"
+msgstr "这份列表长于 %1 项任务，要先专注于前 %1 项吗？"
+
+#: views/todo/qml/View.qml:468
+msgctxt "View|"
+msgid "Due today"
+msgstr "今日截止"
+
+#: views/todo/qml/View.qml:472
+#, qt-format
+msgctxt "View|"
+msgid " (%1 days)"
+msgstr " (剩余 %1 天)"
+
+#: views/todo/qml/View.qml:475
+#, qt-format
+msgctxt "View|"
+msgid "Overdue for %1 days"
+msgstr "超过截止日期 %1 天"
+
+#: views/todo/qml/View.qml:514
+msgctxt "View|"
+msgid "Unpick"
+msgstr "取消选择"
+
+#: views/todo/qml/View.qml:514
+msgctxt "View|"
+msgid "Pick"
+msgstr "选择"
+
+#: views/todo/qml/View.qml:529
+msgctxt "View|"
+msgid "Done!"
+msgstr "完成！"
