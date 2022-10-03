@@ -467,7 +467,7 @@ msgstr "Heu estat convidat a: «%1»"
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You are not listed as attendee to: \"%1\""
-msgstr "No esteu a la llista de convidats a: «%1»"
+msgstr "No esteu en la llista de convidats a: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:151
 msgctxt "ICalPart|"
