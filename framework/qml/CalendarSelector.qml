@@ -47,6 +47,6 @@ Kube.EntitySelector {
     }
 
     onEntityRemoved: {
-        entityController.remove(entity)
+        entityController.remove(entityType, entity)
     }
 }

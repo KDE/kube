@@ -295,13 +295,13 @@ Kube.View {
                     id: entityController
                 }
                 onEntityCreated: {
-                    entityController.create({type: "folder", account: accountId, entity: {
+                    entityController.create({type: entityType, account: accountId, entity: {
                         "name": text,
                         "enabled": true,
                     }})
                 }
                 onEntityRemoved: {
-                    entityController.remove(entity)
+                    entityController.remove(entityType, entity)
                 }
                 onCurrentEntityChanged: {
                     Kube.Fabric.postMessage(Kube.Messages.folderSelection, {

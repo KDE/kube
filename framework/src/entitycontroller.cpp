@@ -90,8 +90,14 @@ void EntityController::create(const QVariantMap &map)
     job.exec();
 }
 
-void EntityController::remove(const QVariant &entity)
+void EntityController::remove(const QString &type, const QVariant &entity)
 {
-    //FIXME hardcoding calendar is not a great idea
-    Sink::Store::remove<Sink::ApplicationDomain::Calendar>(*entity.value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()).exec();
+    if (type == "calendar") {
+        Sink::Store::remove<Sink::ApplicationDomain::Calendar>(*entity.value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()).exec();
+    } else if (type == "folder") {
+        Sink::Store::remove<Sink::ApplicationDomain::Folder>(*entity.value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>()).exec();
+    } else {
+        //Not implemented
+        Q_ASSERT(false);
+    }
 }
