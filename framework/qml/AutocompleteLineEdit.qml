@@ -109,7 +109,7 @@ Kube.TextField {
 
         Kube.ListView {
             id: listView
-            contentHeight: count * (root.height + spacing)
+            contentHeight: model.count * (root.height + spacing)
             height: Math.min(contentHeight, Kube.Units.gridUnit * 20)
             width: parent.width
             interactive: true
