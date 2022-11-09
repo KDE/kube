@@ -159,8 +159,8 @@ FocusScope {
         }
 
         FocusScope {
+            Layout.fillWidth: true
             height: Kube.Units.gridUnit +  Kube.Units.smallSpacing * 2
-            width: parent.width
             focus: true
 
             Kube.TextButton {
