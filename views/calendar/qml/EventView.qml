@@ -78,6 +78,7 @@ FocusScope {
 
                 Kube.SelectableLabel {
                     text: "@" + controller.location
+                    copyText: controller.location
                     visible: controller.location
                 }
 
