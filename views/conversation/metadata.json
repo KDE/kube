@@ -1,4 +1,5 @@
 {
     "icon": "mail-message-inverted",
-    "tooltip": "Follow conversations."
+    "tooltip": "Follow conversations.",
+    "hidden": false
 }

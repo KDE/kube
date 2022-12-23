@@ -132,11 +132,11 @@ ApplicationWindow {
         onActivated: kubeViews.showView("composer")
     }
     Shortcut {
-        sequences: ['g,c']
-        onActivated: kubeViews.showView("conversation")
+        sequences: ['g,i']
+        onActivated: kubeViews.showView("inbound")
     }
     Shortcut {
-        sequences: ['g,e']
+        sequences: ['g,c']
         onActivated: kubeViews.showView("calendar")
     }
     Shortcut {
@@ -188,7 +188,7 @@ ApplicationWindow {
                     model: Kube.ExtensionModel {
                         id: extensionModel
                         extensionPoint: "views"
-                        sortOrder: ["search", "composer", "inbound", "conversation", "people"]
+                        sortOrder: ["search", "composer", "inbound", "people"]
                     }
                     Kube.IconButton {
                         id: button
