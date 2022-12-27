@@ -34,6 +34,7 @@ PositiveButton 1.0 PositiveButton.qml
 TextButton 1.0 TextButton.qml
 TextField 1.0 TextField.qml
 TextArea 1.0 TextArea.qml
+ScrollableTextArea 1.0 ScrollableTextArea.qml
 RequiredTextField 1.0 RequiredTextField.qml
 PasswordField 1.0 PasswordField.qml
 TextEditor 1.0 TextEditor.qml

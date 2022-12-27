@@ -85,25 +85,12 @@ FocusScope {
                     opacity: 0.5
                 }
 
-                Flickable {
-                    id: flickable
-                    Layout.fillWidth: true
+                Kube.ScrollableTextArea {
+                    id: textArea
                     Layout.fillHeight: true
-                    boundsBehavior: Flickable.StopAtBounds
-                    ScrollBar.horizontal: Kube.ScrollBar {  }
-                    contentHeight: textArea.height
-                    contentWidth: textArea.width
-                    clip: true
-                    Kube.TextArea {
-                        id: textArea
-                        width: flickable.width
-                        text: Kube.HtmlUtils.toHtml(controller.description)
-                        textFormat: Kube.TextArea.RichText
-                    }
-                    Kube.ScrollHelper {
-                        anchors.fill: parent
-                        flickable: flickable
-                    }
+                    Layout.fillWidth: true
+                    text: Kube.HtmlUtils.toHtml(controller.description)
+                    textFormat: Kube.TextArea.RichText
                 }
 
                 RowLayout {
