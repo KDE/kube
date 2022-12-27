@@ -202,7 +202,7 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
     Sink::Store::create(sinkEvent).exec().waitForFinished();
 }
 
-static void createTodo(const QVariantMap &object, const QByteArray &calendarId, const QByteArray &resourceId)
+static void createTodo(const QVariantMap &object, const QByteArray &calendarId, const QByteArray &resourceId, const QByteArray &parentUid = {})
 {
     using Sink::ApplicationDomain::ApplicationDomainType;
     using Sink::ApplicationDomain::Todo;
@@ -218,6 +218,10 @@ static void createTodo(const QVariantMap &object, const QByteArray &calendarId, 
         uid = QUuid::createUuid().toString();
     }
     calcoreEvent->setUid(uid);
+
+    if (!parentUid.isEmpty()) {
+        calcoreEvent->setRelatedTo(parentUid);
+    }
 
     auto summary = object["summary"].toString();
     calcoreEvent->setSummary(summary);
@@ -246,6 +250,10 @@ static void createTodo(const QVariantMap &object, const QByteArray &calendarId, 
     sinkEvent.setCalendar(calendarId);
 
     Sink::Store::create(sinkEvent).exec().waitForFinished();
+
+    iterateOverObjects(object.value("subtodos").toList(),
+        [calendarId, resourceId, uid](const QVariantMap &object) { createTodo(object, calendarId, resourceId, uid.toUtf8()); });
+
 }
 
 static void createCalendar(const QVariantMap &object)

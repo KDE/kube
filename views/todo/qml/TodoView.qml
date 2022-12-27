@@ -93,6 +93,36 @@ FocusScope {
                     textFormat: Kube.TextArea.RichText
                 }
 
+                Kube.ListView {
+                    id: subTodoView
+                    width: parent.width
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    model: Kube.TodoModel {
+                        id: todoModel
+                        filter: {
+                            "calendars": [controller.calendarId],
+                            "parentUid": controller.uid
+                        }
+                    }
+
+                    delegate: Kube.TodoListDelegate {
+                        summary: model.summary
+                        complete: model.complete
+                        doing: model.doing
+                        important: model.important
+                        date: model.date
+                        dueDate: model.dueDate
+                        domainObject: model.domainObject
+                        bold: model.doing && root.state != "doing"
+
+                        height: Kube.Units.gridUnit * 2 + 2 * Kube.Units.smallSpacing
+                        subText: null
+                        subtextVisible: false
+                        currentDate: Kube.Context.currentDate
+                    }
+                }
+
                 RowLayout {
                     width: parent.width
                     Kube.Button {

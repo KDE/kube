@@ -119,12 +119,14 @@ void TodoController::loadTodo(const QVariant &variant)
     mTodo = variant;
     if (auto todo = variant.value<ApplicationDomain::Todo::Ptr>()) {
         setCalendar(ApplicationDomainType::Ptr::create(ApplicationDomainType::createEntity<ApplicationDomain::Calendar>(todo->resourceInstanceIdentifier(), todo->getCalendar())));
+        setCalendarId(todo->getCalendar());
 
         auto icalTodo = KCalCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalCore::Todo>();
         if(!icalTodo) {
             SinkWarning() << "Invalid ICal to process, ignoring...";
             return;
         }
+        setUid(icalTodo->uid().toUtf8());
         setSummary(icalTodo->summary());
         setDescription(icalTodo->description());
         setLocation(icalTodo->location());

@@ -66,6 +66,11 @@ void TodoSourceModel::setFilter(const QVariantMap &filter)
     }
     query.filter<Todo::Calendar>(Query::Comparator(QVariant::fromValue(calendarFilter), Query::Comparator::In));
 
+    const auto parentUid = filter.value("parentUid").toByteArray();
+    if (!parentUid.isEmpty()) {
+        query.filter<Todo::ParentUid>(parentUid);
+    }
+
     if (filter.value("doing").toBool()) {
         query.filter<Todo::Status>("INPROCESS");
     } else if (filter.value("inbox").toBool()) {

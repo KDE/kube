@@ -70,7 +70,15 @@ ApplicationWindow {
                         summary: "Todo start",
                         start: "2018-04-09T14:03:00",
                         description: "<pre>Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<pre>",
-                        doing: true
+                        doing: true,
+                        subtodos: [
+                            {
+                                resource: "caldavresource",
+                                summary: "subtodo",
+                                start: "2018-04-09T14:03:00",
+                                description: "<pre>Hi Mélanie,\n\nI'm sorry to start this on such late notice, but we'd like to get Foo and boo to woo next week, because the following weeks are unfortunately not possible for us.\n<pre>",
+                            }
+                        ]
                     },
                     {
                         resource: "caldavresource",
