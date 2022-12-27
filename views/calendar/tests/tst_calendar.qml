@@ -34,12 +34,16 @@ ViewTestCase {
         id: calendarViewComponent
         View {
             focus: true
-            currentDate: "2018-04-11T13:04:03"
-            autoUpdateDate: false
         }
     }
 
+    function initTestcase() {
+        Kube.Context.autoUpdateDate = false
+        Kube.Context.currentDate = "2018-04-11T13:04:03"
+    }
+
     function test_1start() {
+
         var view = createTemporaryObject(calendarViewComponent, testCase, {})
         verify(view)
     }

@@ -326,11 +326,11 @@ ApplicationWindow {
             }],
         }
         TestStore.setup(initialState)
+        Kube.Context.autoUpdateDate = false
+        Kube.Context.currentDate = "2018-04-11T13:04:03"
     }
 
     View {
         anchors.fill: parent
-        currentDate: "2018-04-11T13:04:03"
-        autoUpdateDate: false
     }
 }

@@ -354,6 +354,8 @@ blockquote {
             }]
         }
         TestStore.setup(initialState)
+        Kube.Context.autoUpdateDate = false
+        Kube.Context.currentDate = "2018-04-11T13:04:03"
     }
     Shortcut {
         sequence: StandardKey.Refresh
@@ -364,8 +366,5 @@ blockquote {
     View {
         id: view
         anchors.fill: parent
-
-        currentDate: "2018-04-08T13:04:03"
-        autoUpdateDate: false
     }
 }

@@ -31,9 +31,6 @@ Kube.View {
     property var currentFolder: null
     property var currentFolderIdentifier: null
 
-    property date currentDate: new Date()
-    property bool autoUpdateDate: true
-
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + todoView.parent.x, 0, todoView.parent.width + todoDetails.parent.width, height)
 
@@ -148,12 +145,6 @@ Kube.View {
     }
 
     ButtonGroup { id: viewButtonGroup }
-
-    Timer {
-        running: autoUpdateDate
-        interval: 2000; repeat: true
-        onTriggered: root.currentDate = new Date()
-    }
 
     Controls1.SplitView {
         Layout.fillWidth: true
@@ -306,7 +297,7 @@ Kube.View {
                     dotColor: model.color
                     bold: model.doing && root.state != "doing"
 
-                    currentDate: root.currentDate
+                    currentDate: Kube.Context.currentDate
                 }
             }
         }

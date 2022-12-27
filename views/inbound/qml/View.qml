@@ -27,9 +27,6 @@ import "dateutils.js" as DateUtils
 Kube.View {
     id: root
 
-    property date currentDate: new Date()
-    property bool autoUpdateDate: true
-
     property bool pendingError: false
     property bool pendingNotification: false
 
@@ -105,12 +102,6 @@ Kube.View {
                 "string": root.filter,
             }
         }
-    }
-
-    Timer {
-        running: autoUpdateDate
-        interval: 2000; repeat: true
-        onTriggered: root.currentDate = new Date()
     }
 
     Kube.Listener {
@@ -444,7 +435,7 @@ Kube.View {
                                 console.info("Initial items loaded: " + (new Date().getTime() - listView.startTime) + " ms")
                             }
                         }
-                        currentDate: root.currentDate
+                        currentDate: Kube.Context.currentDate
                     }
 
                     onCurrentItemChanged: {
@@ -521,7 +512,7 @@ Kube.View {
 
                         mainText: model.data.subject
                         subText: isMail ? model.data.senderName : model.data.calendar
-                        dateText: isMail ? formatDateTime(model.data.date) : formatStartDateTime(model.data.date, root.currentDate)
+                        dateText: isMail ? formatDateTime(model.data.date) : formatStartDateTime(model.data.date, Kube.Context.currentDate)
                         active: model.data.unread
                         disabled: model.data.complete
                         strikeout: model.data.complete ? model.data.complete : false

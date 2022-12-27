@@ -27,6 +27,14 @@ Item {
     id:root
 
     property string currentAccountId
+    property date currentDate: new Date()
+    property bool autoUpdateDate: true
+
+    Timer {
+        running: autoUpdateDate
+        interval: 2000; repeat: true
+        onTriggered: root.currentDate = new Date()
+    }
 
     Kube.Listener {
         filter: Kube.Messages.accountSelection

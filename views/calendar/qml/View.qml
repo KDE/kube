@@ -27,9 +27,7 @@ import "dateutils.js" as DateUtils
 Kube.View {
     id: root
 
-    property date currentDate: new Date()
-    property date selectedDate: currentDate
-    property bool autoUpdateDate: true
+    property date selectedDate: Kube.Context.currentDate
 
     onRefresh: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "calendar"})
@@ -70,13 +68,6 @@ Kube.View {
         }
     }
     RowLayout {
-
-        Timer {
-            running: autoUpdateDate
-            interval: 2000; repeat: true
-            onTriggered: root.currentDate = new Date()
-        }
-
         Kube.LeftSidebar {
             Layout.fillHeight: parent.height
             buttons: [
@@ -87,7 +78,7 @@ Kube.View {
                    Layout.fillWidth: true
                    focus: true
                    text: qsTr("New Event")
-                   onClicked: eventPopup.createObject(root, {start: DateUtils.sameDay(root.currentDate, root.selectedDate) ? root.currentDate : root.selectedDate}).open()
+                   onClicked: eventPopup.createObject(root, {start: DateUtils.sameDay(Kube.Context.currentDate, root.selectedDate) ? Kube.Context.currentDate : root.selectedDate}).open()
                },
                RowLayout {
                    Layout.fillWidth: true
@@ -115,11 +106,11 @@ Kube.View {
                },
                DateView {
                    Layout.fillWidth: true
-                   date: root.currentDate
+                   date: Kube.Context.currentDate
                    MouseArea {
                        anchors.fill: parent
                        onClicked: {
-                           root.selectedDate = root.currentDate
+                           root.selectedDate = Kube.Context.currentDate
                        }
                    }
                },
@@ -148,7 +139,7 @@ Kube.View {
             visible: weekViewButton.checked
             Layout.fillHeight: true
             Layout.fillWidth: true
-            currentDate: root.currentDate
+            currentDate: Kube.Context.currentDate
             startDate: DateUtils.getFirstDayOfWeek(root.selectedDate)
             calendarFilter: accountSwitcher.enabledEntities
         }
@@ -157,7 +148,7 @@ Kube.View {
             visible: monthViewButton.checked
             Layout.fillHeight: true
             Layout.fillWidth: true
-            currentDate: root.currentDate
+            currentDate: Kube.Context.currentDate
             startDate: DateUtils.getFirstDayOfWeek(DateUtils.getFirstDayOfMonth(root.selectedDate))
             month: root.selectedDate.getMonth()
             calendarFilter: accountSwitcher.enabledEntities
