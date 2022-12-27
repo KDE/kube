@@ -45,7 +45,6 @@ Kube.TextField {
     }
 
     onEditingFinished: {
-        console.warn("on editing finished")
         accept()
     }
 

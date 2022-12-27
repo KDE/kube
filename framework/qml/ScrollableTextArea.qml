@@ -35,8 +35,6 @@ Flickable {
     Kube.TextArea {
         id: textArea
         width: flickable.width
-        text: Kube.HtmlUtils.toHtml(controller.description)
-        textFormat: Kube.TextArea.RichText
     }
     Kube.ScrollHelper {
         anchors.fill: parent
