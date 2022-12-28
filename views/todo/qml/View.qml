@@ -144,6 +144,11 @@ Kube.View {
         onActivated: root.showHelp()
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.todoEditor
+        onMessageReceived: editorPopup.createObject(root, message).open()
+    }
+
     ButtonGroup { id: viewButtonGroup }
 
     Controls1.SplitView {
@@ -315,6 +320,8 @@ Kube.View {
         id: editorPopup
         Kube.Popup {
             id: popup
+
+            property alias parentUid: editor.parentUid
 
             x: root.width * 0.15
             y: root.height * 0.15

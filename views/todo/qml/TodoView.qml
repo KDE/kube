@@ -87,7 +87,8 @@ FocusScope {
 
                 Kube.ScrollableTextArea {
                     id: textArea
-                    Layout.fillHeight: true
+                    Layout.preferredHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.fillWidth: true
                     text: Kube.HtmlUtils.toHtml(controller.description)
                     textFormat: Kube.TextArea.RichText
@@ -96,8 +97,9 @@ FocusScope {
                 Kube.ListView {
                     id: subTodoView
                     width: parent.width
+                    Layout.preferredHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
                     model: Kube.TodoModel {
                         id: todoModel
                         filter: {
@@ -109,18 +111,32 @@ FocusScope {
                     delegate: Kube.TodoListDelegate {
                         summary: model.summary
                         complete: model.complete
-                        doing: model.doing
-                        important: model.important
                         date: model.date
                         dueDate: model.dueDate
                         domainObject: model.domainObject
-                        bold: model.doing && root.state != "doing"
 
                         height: Kube.Units.gridUnit * 2 + 2 * Kube.Units.smallSpacing
                         subText: null
                         subtextVisible: false
                         currentDate: Kube.Context.currentDate
+                        pickerActive: false
                     }
+                }
+
+                Kube.TextButton {
+                    id: button
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                    text: "+ " + qsTr("Add subtodo")
+                    textColor: Kube.Colors.highlightColor
+                    focus: true
+                    onClicked: {
+                        Kube.Fabric.postMessage(Kube.Messages.todoEditor, {"parentUid": controller.uid})
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                 }
 
                 RowLayout {

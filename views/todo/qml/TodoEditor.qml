@@ -31,9 +31,11 @@ FocusScope {
     property var controller: Kube.TodoController {
         complete: false
         doing: root.doing
+        parentUid: root.parentUid
     }
     property var accountId: null
     property var currentFolder: null
+    property var parentUid: null
 
     Settings {
         id: settings

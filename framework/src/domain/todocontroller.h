@@ -48,6 +48,7 @@ class KUBE_EXPORT TodoController : public Kube::Controller
     KUBE_CONTROLLER_PROPERTY(Sink::ApplicationDomain::ApplicationDomainType::Ptr, Calendar, calendar)
     KUBE_CONTROLLER_PROPERTY(QByteArray, CalendarId, calendarId)
     KUBE_CONTROLLER_PROPERTY(QByteArray, Uid, uid)
+    KUBE_CONTROLLER_PROPERTY(QByteArray, ParentUid, parentUid)
 
     KUBE_CONTROLLER_ACTION(save)
 

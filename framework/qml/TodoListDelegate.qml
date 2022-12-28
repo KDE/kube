@@ -33,6 +33,7 @@ Kube.GenericListDelegate {
     property var date
     property var dueDate
     property var domainObject
+    property var pickerActive: true
 
     property date currentDate
 
@@ -85,6 +86,7 @@ Kube.GenericListDelegate {
         Kube.IconButton {
             iconName: doing ? Kube.Icons.undo : Kube.Icons.addNew
             activeFocusOnTab: false
+            visible: delegateRoot.pickerActive
             tooltip: doing ? qsTr("Unpick") : qsTr("Pick")
             onClicked: {
                 var controller = controllerComponent.createObject(parent, {"todo": domainObject});

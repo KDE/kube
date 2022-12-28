@@ -25,6 +25,7 @@ ListView {
     id: root
     property Item mouseProxy: scrollHelper
     property int availableWidth: scrollBar.visible ? width - scrollBar.width: width
+    implicitHeight: contentHeight
 
     clip: true
     ScrollBar.vertical: Kube.ScrollBar { id: scrollBar }

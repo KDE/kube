@@ -49,6 +49,7 @@ void TodoController::save()
 
     auto populateTodo = [this](KCalCore::Todo& todo) {
         todo.setSummary(getSummary());
+        todo.setRelatedTo(getParentUid());
         todo.setDescription(getDescription());
         todo.setDtStart(getStart());
         todo.setDtDue(getDue());
@@ -127,6 +128,7 @@ void TodoController::loadTodo(const QVariant &variant)
             return;
         }
         setUid(icalTodo->uid().toUtf8());
+        setParentUid(icalTodo->relatedTo().toUtf8());
         setSummary(icalTodo->summary());
         setDescription(icalTodo->description());
         setLocation(icalTodo->location());

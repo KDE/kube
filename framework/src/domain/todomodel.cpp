@@ -69,6 +69,8 @@ void TodoSourceModel::setFilter(const QVariantMap &filter)
     const auto parentUid = filter.value("parentUid").toByteArray();
     if (!parentUid.isEmpty()) {
         query.filter<Todo::ParentUid>(parentUid);
+    } else {
+        query.filter<Todo::ParentUid>("");
     }
 
     if (filter.value("doing").toBool()) {

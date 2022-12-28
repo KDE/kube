@@ -26,6 +26,7 @@ Flickable {
 
     property alias text: textArea.text
     property alias textFormat: textArea.textFormat
+    property alias implicitHeight: textArea.implicitHeight
 
     boundsBehavior: Flickable.StopAtBounds
     ScrollBar.horizontal: Kube.ScrollBar {  }
