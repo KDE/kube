@@ -214,91 +214,81 @@ Kube.View {
                 }
             }
         }
-
-        Rectangle {
-            width: Kube.Units.gridUnit * 18
+        Kube.ListView {
+            id: todoView
             Layout.fillHeight: true
+            Layout.minimumWidth: Kube.Units.gridUnit * 10
 
-            color: "transparent"
-            border.width: 1
-            border.color: Kube.Colors.buttonColor
+            onCurrentItemChanged: {
+                if (currentItem) {
+                    var currentData = currentItem.currentData;
+                    todoDetails.controller = controllerComponent.createObject(parent, {"todo": currentData.domainObject})
+                }
+            }
 
-            Kube.ListView {
-                id: todoView
-                anchors.fill: parent
-                Layout.minimumWidth: Kube.Units.gridUnit * 10
+            Keys.onPressed: {
+                //Not implemented as a shortcut because we want it only to apply if we have the focus
+                if (event.text == "d" || event.key == Qt.Key_Delete) {
+                    todoDetails.controller.remove()
+                } else if (event.key == Qt.Key_Return) {
+                    todoDetails.controller.complete = !todoDetails.controller.complete;
+                    todoDetails.controller.saveAction.execute();
+                } else if (event.key == Qt.Key_Home) {
+                    todoView.currentIndex = 0
+                }
+            }
 
-                onCurrentItemChanged: {
-                    if (currentItem) {
-                        var currentData = currentItem.currentData;
-                        todoDetails.controller = controllerComponent.createObject(parent, {"todo": currentData.domainObject})
+            Column {
+                anchors.centerIn: parent
+                visible: todoView.count === 0
+                Kube.Label {
+                    text: qsTr("Nothing here yet...")
+                }
+                Kube.PositiveButton {
+                    visible: doingViewButton.checked
+                    text: qsTr("Pick some tasks")
+                    onClicked: {
+                        allViewButton.checked = true
+                        allViewButton.clicked()
                     }
                 }
-
-                Keys.onPressed: {
-                    //Not implemented as a shortcut because we want it only to apply if we have the focus
-                    if (event.text == "d" || event.key == Qt.Key_Delete) {
-                        todoDetails.controller.remove()
-                    } else if (event.key == Qt.Key_Return) {
-                        todoDetails.controller.complete = !todoDetails.controller.complete;
-                        todoDetails.controller.saveAction.execute();
-                    } else if (event.key == Qt.Key_Home) {
-                        todoView.currentIndex = 0
-                    }
+                Kube.PositiveButton {
+                    visible: allViewButton.checked
+                    text: qsTr("Add a new task")
+                    onClicked: editorPopup.createObject(root, {}).open()
                 }
+            }
 
-                Column {
+            model: Kube.TodoModel {
+                id: todoModel
+            }
+
+            footerPositioning: ListView.OverlayFooter
+            footer: Rectangle {
+                property int taskLimit: 5
+                visible: doingViewButton.checked && todoView.count > taskLimit
+                color: Kube.Colors.warningColor
+                height: Kube.Units.gridUnit * 2
+                width: parent. width
+                Label {
                     anchors.centerIn: parent
-                    visible: todoView.count === 0
-                    Kube.Label {
-                        text: qsTr("Nothing here yet...")
-                    }
-                    Kube.PositiveButton {
-                        visible: doingViewButton.checked
-                        text: qsTr("Pick some tasks")
-                        onClicked: {
-                            allViewButton.checked = true
-                            allViewButton.clicked()
-                        }
-                    }
-                    Kube.PositiveButton {
-                        visible: allViewButton.checked
-                        text: qsTr("Add a new task")
-                        onClicked: editorPopup.createObject(root, {}).open()
-                    }
+                    text: qsTr("This list is longer than %1 tasks. Focus on the top %1?").arg(taskLimit)
                 }
+            }
 
-                model: Kube.TodoModel {
-                    id: todoModel
-                }
+            delegate: Kube.TodoListDelegate {
+                summary: model.summary
+                complete: model.complete
+                doing: model.doing
+                important: model.important
+                calendar: model.calendar
+                date: model.date
+                dueDate: model.dueDate
+                domainObject: model.domainObject
+                dotColor: model.color
+                bold: model.doing && root.state != "doing"
 
-                footerPositioning: ListView.OverlayFooter
-                footer: Rectangle {
-                    property int taskLimit: 5
-                    visible: doingViewButton.checked && todoView.count > taskLimit
-                    color: Kube.Colors.warningColor
-                    height: Kube.Units.gridUnit * 2
-                    width: parent. width
-                    Label {
-                        anchors.centerIn: parent
-                        text: qsTr("This list is longer than %1 tasks. Focus on the top %1?").arg(taskLimit)
-                    }
-                }
-
-                delegate: Kube.TodoListDelegate {
-                    summary: model.summary
-                    complete: model.complete
-                    doing: model.doing
-                    important: model.important
-                    calendar: model.calendar
-                    date: model.date
-                    dueDate: model.dueDate
-                    domainObject: model.domainObject
-                    dotColor: model.color
-                    bold: model.doing && root.state != "doing"
-
-                    currentDate: Kube.Context.currentDate
-                }
+                currentDate: Kube.Context.currentDate
             }
         }
         Rectangle {
