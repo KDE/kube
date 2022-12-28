@@ -25,7 +25,6 @@
 #include <QList>
 #include <QSet>
 #include <QSharedPointer>
-#include <QTimer>
 #include <QDateTime>
 #include "debouncer.h"
 
