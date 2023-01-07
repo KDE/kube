@@ -1,17 +1,18 @@
 # Simon Depiets <sdepiets@gmail.com>, 2018, 2019, 2020.
 # Xavier Besnard <xavier.besnard@neuf.fr>, 2021.
+# Xavier BESNARD <xavier.besnard]neuf.fr>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kube_qt\n"
-"PO-Revision-Date: 2021-02-22 12:49+0100\n"
-"Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
-"Language-Team: French <kde-francophone@kde.org>\n"
+"PO-Revision-Date: 2023-01-06 17:06+0100\n"
+"Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
+"Language-Team: fr\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 20.12.2\n"
+"X-Generator: Lokalize 22.12.0\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -124,7 +125,7 @@ msgstr "Adresse IMAP"
 #: accounts/generic/qml/AccountSettings.qml:115
 msgctxt "AccountSettings|"
 msgid "Use Starttls"
-msgstr "Utiliser « Starttls »"
+msgstr "Utiliser « StartTLS »"
 
 #: accounts/generic/qml/AccountSettings.qml:125
 msgctxt "AccountSettings|"
@@ -140,12 +141,12 @@ msgstr "Adresse SMTP"
 #: accounts/generic/qml/AccountSettings.qml:161
 msgctxt "AccountSettings|"
 msgid "CardDAV address"
-msgstr "Adresse CardDAV"
+msgstr "Adresse « CardDAV »"
 
 #: accounts/generic/qml/AccountSettings.qml:175
 msgctxt "AccountSettings|"
 msgid "CalDAV address"
-msgstr "Adresse CalDAV"
+msgstr "Adresse « CalDAV »"
 
 #: accounts/generic/qml/Login.qml:60
 msgctxt "Login|"
@@ -204,7 +205,7 @@ msgstr "Adresse du serveur IMAP"
 #: accounts/kolabnow/qml/AccountSettings.qml:27
 msgctxt "AccountSettings|"
 msgid "Connect your Kolab Now account"
-msgstr "Connecter votre compte Kolab Now"
+msgstr "Se connecter à votre compte « Kolab Now »"
 
 #: accounts/kolabnow/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
@@ -219,12 +220,12 @@ msgstr ""
 #: accounts/kolabnow/qml/Login.qml:61
 msgctxt "Login|"
 msgid "Password of your Kolab Now account"
-msgstr "Mot de passe de votre compte Kolab Now"
+msgstr "Mot de passe de votre compte « Kolab Now »"
 
 #: accounts/maildir/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
 msgid "Add your Maildir archive"
-msgstr "Ajouter votre archive Maildir"
+msgstr "Ajouter votre archive « Maildir »"
 
 #: accounts/maildir/qml/AccountSettings.qml:29
 msgctxt "AccountSettings|"
@@ -232,7 +233,7 @@ msgid ""
 "To let Kube access your maildir archive, add the path to your archive and "
 "give the account a title that will be displayed inside Kube."
 msgstr ""
-"Pour permettre à Kube d'accéder à votre archive maildir, ajoutez "
+"Pour permettre à Kube d'accéder à votre archive « maildir », ajoutez "
 "l'emplacement de votre archive et attribuez au compte un nom qui sera "
 "affiché dans Kube."
 
@@ -264,7 +265,7 @@ msgid ""
 "{\"accountId\": {\"resourceId\": \"secret\", *}}"
 msgstr ""
 "Pour débloquer automatiquement le mot de passe d'un trousseau de clés sous "
-"la forme { « ID compte » : { « ID resource » : « mot-de-passe », *}}"
+"la forme { « ID compte » : { « ID ressource » : « mot-de-passe », *}}"
 
 #: components/accounts/qml/AccountWizard.qml:60
 msgctxt "AccountWizard|"
@@ -701,8 +702,9 @@ msgid ""
 "Please find attached an iCalendar file with all the event details which you "
 "can import to your calendar application."
 msgstr ""
-"Vous trouverez ci-joint un fichier iCalendar contenant les détails de tous "
-"les évènements, que vous pouvez importer dans votre application d'agenda."
+"Vous trouverez ci-joint un fichier « iCalendar » contenant les détails de "
+"tous les évènements, que vous pouvez importer dans votre application "
+"d'agenda."
 
 #: framework/src/domain/invitationcontroller.cpp:270
 #, qt-format
