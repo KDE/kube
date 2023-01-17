@@ -1208,7 +1208,7 @@ msgstr "%1: comproveu la vostra connexió i la configuració de la xarxa."
 #: views/log/qml/View.qml:339
 msgctxt "View|"
 msgid "Account Settings"
-msgstr "Configuració del compte"
+msgstr "Configureu el compte"
 
 #: views/log/qml/View.qml:363
 msgctxt "View|"
