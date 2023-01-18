@@ -68,6 +68,7 @@ FocusScope {
         PropertyChanges { target: discardButton; visible: true }
         PropertyChanges { target: createButton; visible: false }
         PropertyChanges { target: calendarSelector; visible: false }
+        PropertyChanges { target: subtodoButton; visible: true }
     },
     State {
         name: "new"
@@ -77,6 +78,7 @@ FocusScope {
         PropertyChanges { target: discardButton; visible: false }
         PropertyChanges { target: createButton; visible: true }
         PropertyChanges { target: calendarSelector; visible: true }
+        PropertyChanges { target: subtodoButton; visible: false }
     }
     ]
 
@@ -94,7 +96,47 @@ FocusScope {
 
         ColumnLayout {
 
-            spacing: Kube.Units.largeSpacing
+            spacing: Kube.Units.smallSpacing
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Kube.Units.smallSpacing
+
+                Kube.Label {
+                    visible: calendarSelector.visible
+                    text: qsTr("Create in:")
+                }
+                Kube.EntityComboBox {
+                    id: calendarSelector
+                    accountId: root.accountId
+                    type: "calendar"
+                    filter: {"contentTypes": "todo", "enabled": true}
+                    initialSelection: root.currentFolder ? root.currentFolder : settings.lastUsedTodolist
+                    onSelected: {
+                        if (!root.editMode) {
+                            controller.calendar = entity
+                            settings.lastUsedTodolist = identifier
+                        }
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                Kube.CheckBox {
+                    checked: controller.doing
+                    onCheckedChanged: {
+                        if (controller.doing != checked) {
+                            controller.doing = checked
+                        }
+                    }
+                }
+
+                Kube.Label {
+                    text: qsTr("Doing")
+                }
+            }
 
             Kube.HeaderField {
                 id: titleEdit
@@ -109,53 +151,62 @@ FocusScope {
                 }
             }
 
-            ColumnLayout {
-                RowLayout {
-                    spacing: Kube.Units.smallSpacing
-                    Kube.CheckBox {
-                        checked: controller.doing
-                        onCheckedChanged: {
-                            if (controller.doing != checked) {
-                                controller.doing = checked
-                            }
-                        }
+            Kube.TextEditor {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumHeight: Kube.Units.gridUnit * 4
+                activeFocusOnTab: true
+
+                border.width: 0
+
+                placeholderText: "Description"
+                initialText: controller.description
+                onTextChanged: controller.description = text
+
+                Keys.onEscapePressed: calendarSelector.forceActiveFocus(Qt.TabFocusReason)
+            }
+
+            Item {
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
+
+            Kube.ListView {
+                id: subTodoView
+                width: parent.width
+                Layout.preferredHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
+                Layout.fillWidth: true
+                model: Kube.TodoModel {
+                    id: todoModel
+                    filter: {
+                        "calendars": [controller.calendarId],
+                        "parentUid": controller.uid
                     }
-                    Kube.Label {
-                        text: qsTr("Doing")
-                    }
+                }
+
+                delegate: Kube.TodoListDelegate {
+                    summary: model.summary
+                    complete: model.complete
+                    date: model.date
+                    dueDate: model.dueDate
+                    domainObject: model.domainObject
+
+                    height: Kube.Units.gridUnit * 2 + 2 * Kube.Units.smallSpacing
+                    subText: null
+                    subtextVisible: false
+                    currentDate: Kube.Context.currentDate
+                    pickerActive: false
                 }
             }
 
-            ColumnLayout {
-                spacing: Kube.Units.smallSpacing
-                Layout.fillWidth: true
-
-                Kube.TextEditor {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.minimumHeight: Kube.Units.gridUnit * 4
-                    activeFocusOnTab: true
-
-                    placeholderText: "Description"
-                    initialText: controller.description
-                    onTextChanged: controller.description = text
-
-                    Keys.onEscapePressed: calendarSelector.forceActiveFocus(Qt.TabFocusReason)
-                }
-
-                Kube.EntityComboBox {
-                    id: calendarSelector
-                    Layout.fillWidth: true
-                    accountId: root.accountId
-                    type: "calendar"
-                    filter: {"contentTypes": "todo", "enabled": true}
-                    initialSelection: root.currentFolder ? root.currentFolder : settings.lastUsedTodolist
-                    onSelected: {
-                        if (!root.editMode) {
-                            controller.calendar = entity
-                            settings.lastUsedTodolist = identifier
-                        }
-                    }
+            Kube.TextButton {
+                id: subtodoButton
+                text: "+ " + qsTr("Add subtodo")
+                textColor: Kube.Colors.highlightColor
+                focus: true
+                onClicked: {
+                    Kube.Fabric.postMessage(Kube.Messages.todoEditor, {"parentUid": controller.uid})
                 }
             }
         }

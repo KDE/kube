@@ -302,9 +302,10 @@ Kube.View {
 
             color: Kube.Colors.paperWhite
 
-            TodoView {
+            TodoEditor {
                 id: todoDetails
                 anchors.fill: parent
+                editMode: true
                 // onDone: popup.close()
             }
         }
@@ -330,14 +331,18 @@ Kube.View {
             height: root.height * 0.7
             padding: 0
             closePolicy: Popup.NoAutoClose
-            TodoEditor {
-                id: editor
-                focus: true
+            Rectangle {
                 anchors.fill: parent
-                accountId: root.currentAccount
-                currentFolder: root.currentFolderIdentifier
-                doing: doingViewButton.checked
-                onDone: popup.close()
+                color: Kube.Colors.paperWhite
+                TodoEditor {
+                    id: editor
+                    focus: true
+                    anchors.fill: parent
+                    accountId: root.currentAccount
+                    currentFolder: root.currentFolderIdentifier
+                    doing: doingViewButton.checked
+                    onDone: popup.close()
+                }
             }
         }
     }
