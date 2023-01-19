@@ -26,7 +26,7 @@
 #include <KAsync/Async>
 
 #define KUBE_CONTROLLER_PROPERTY(TYPE, NAME, LOWERCASENAME) \
-    public: Q_PROPERTY(TYPE LOWERCASENAME MEMBER m##NAME NOTIFY LOWERCASENAME##Changed) \
+    public: Q_PROPERTY(TYPE LOWERCASENAME READ get##NAME WRITE setInternal##NAME NOTIFY LOWERCASENAME##Changed) \
     Q_SIGNALS: void LOWERCASENAME##Changed(); \
     private: TYPE m##NAME; \
     public: \
@@ -35,6 +35,7 @@
         typedef TYPE Type; \
     }; \
     void set##NAME(const TYPE &value) { setProperty(NAME::name, QVariant::fromValue(value)); } \
+    void setInternal##NAME(const TYPE &value) { if (m##NAME != value) {m##NAME = value; emit LOWERCASENAME##Changed(); propertyChanged(NAME::name);} } \
     void clear##NAME() { setProperty(NAME::name, QVariant{}); } \
     TYPE get##NAME() const { return m##NAME; } \
 
@@ -91,6 +92,7 @@ signals:
 class Controller : public QObject, public QQmlParserStatus {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
+    Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modifiedChanged)
 
 public:
     Controller() = default;
@@ -100,6 +102,9 @@ public:
 
     void classBegin() override;
     void componentComplete() override;
+    bool modified() const;
+    void setModified(bool);
+    void propertyChanged(const QByteArray &);
 
 public slots:
     virtual void clear();
@@ -108,9 +113,13 @@ signals:
     void done();
     void error();
     void cleared();
+    void modifiedChanged();
 
 protected:
     void run(const KAsync::Job<void> &job);
+
+private:
+    bool mModified{false};
 };
 
 class KUBE_EXPORT ListPropertyController : public QObject

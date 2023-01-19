@@ -57,6 +57,7 @@ public:
 
     Q_INVOKABLE void loadTodo(const QVariant &todo);
     Q_INVOKABLE void remove();
+    Q_INVOKABLE void reload();
 
     QVariant getTodo() const;
 

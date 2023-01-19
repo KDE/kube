@@ -50,6 +50,11 @@ FocusScope {
         root.done()
     }
 
+    function discard() {
+        controller.reload()
+        root.done()
+    }
+
     implicitWidth: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
     implicitHeight: contentLayout.implicitHeight + buttons.implicitHeight + 2 * Kube.Units.largeSpacing
     Keys.onEscapePressed: root.done()
@@ -239,14 +244,14 @@ FocusScope {
 
             Kube.Button {
                 id: discardButton
+                enabled: controller.modified
                 text: qsTr("Discard Changes")
-                onClicked: {
-                    root.done()
-                }
+                onClicked: root.discard()
             }
 
             Kube.PositiveButton {
                 id: saveButton
+                enabled: controller.modified
                 text: qsTr("Save Changes")
                 onClicked: root.save()
             }

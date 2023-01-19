@@ -113,6 +113,11 @@ void TodoController::updateSaveAction()
     saveAction()->setEnabled(!getSummary().isEmpty());
 }
 
+void TodoController::reload()
+{
+    loadTodo(mTodo);
+}
+
 void TodoController::loadTodo(const QVariant &variant)
 {
     using namespace Sink;
@@ -147,6 +152,7 @@ void TodoController::loadTodo(const QVariant &variant)
     } else {
         qWarning() << "Not a todo" << variant;
     }
+    setModified(false);
 }
 
 void TodoController::remove()
