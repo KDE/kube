@@ -87,34 +87,15 @@ Item {
                 onTextChanged: controller.summary = text
             }
 
-            ColumnLayout {
+            DateRangeChooser {
                 id: dateAndTimeChooser
-
-                spacing: Kube.Units.smallSpacing
-
-                DateRangeChooser {
-                    Layout.fillWidth: true
-                    enableTime: !controller.allDay
-                    initialStart: root.editMode ? controller.start : root.start
-                    initialEnd: root.editMode ? controller.end : DateUtils.addMinutesToDate(root.start, 30)
-                    onStartChanged: controller.start = start
-                    onEndChanged: controller.end = end
-                }
-
-                RowLayout {
-                    spacing: Kube.Units.smallSpacing
-                    Kube.CheckBox {
-                        checked: controller.allDay
-                        onCheckedChanged: {
-                            if (controller.allDay != checked) {
-                                controller.allDay = checked
-                            }
-                        }
-                    }
-                    Kube.Label {
-                        text: qsTr("All day")
-                    }
-                }
+                Layout.fillWidth: true
+                initialStart: root.editMode ? controller.start : root.start
+                initialEnd: root.editMode ? controller.end : DateUtils.addMinutesToDate(root.start, 30)
+                allDay: controller.allDay
+                onStartChanged: controller.start = start
+                onEndChanged: controller.end = end
+                onAllDayChanged: controller.allDay = allDay
             }
 
             ColumnLayout {

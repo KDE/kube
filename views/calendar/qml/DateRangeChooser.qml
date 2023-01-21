@@ -24,9 +24,9 @@ import org.kube.framework 1.0 as Kube
 RowLayout {
     id: root
 
-    property bool enableTime
     property alias initialStart: startDate.initialValue
     property alias initialEnd: endDate.initialValue
+    property alias allDay: checkBox.checked
     property date start
     property date end
 
@@ -34,7 +34,7 @@ RowLayout {
     DateTimeChooser {
         id: startDate
         objectName: "startDate"
-        enableTime: root.enableTime
+        enableTime: !root.allDay
         onDateTimeChanged: root.start = dateTime
     }
     Kube.Label {
@@ -43,8 +43,23 @@ RowLayout {
     DateTimeChooser {
         id: endDate
         objectName: "endDate"
-        enableTime: root.enableTime
+        enableTime: !root.allDay
         notBefore: startDate.dateTime
         onDateTimeChanged: root.end = dateTime
+    }
+
+    Item {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+    }
+
+    RowLayout {
+        spacing: Kube.Units.smallSpacing
+        Kube.CheckBox {
+            id: checkBox
+        }
+        Kube.Label {
+            text: qsTr("All day")
+        }
     }
 }

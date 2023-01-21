@@ -46,12 +46,13 @@ RowLayout {
         timeEdit.setNotBefore(notBeforeRounded)
     }
 
-    Kube.Button {
+    Kube.TextButton {
         id: button
 
         Layout.preferredWidth: implicitWidth
 
         text: selector.selectedDate.toLocaleDateString()
+        textColor: Kube.Colors.highlightColor
 
         onClicked: {
             popup.open()
