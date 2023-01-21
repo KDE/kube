@@ -76,6 +76,7 @@ public:
 
     void init() override;
     Q_INVOKABLE void remove();
+    Q_INVOKABLE void reload();
 
     Completer *attendeeCompleter() const;
     Selector *identitySelector() const;

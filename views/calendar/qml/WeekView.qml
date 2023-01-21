@@ -318,13 +318,18 @@ FocusScope {
                                             width: Math.min(eventView.implicitWidth, parent.width - 2 * Kube.Units.gridUnit)
                                             height: Math.min(eventView.implicitHeight, parent.height - 2 * Kube.Units.gridUnit)
                                             padding: 0
-                                            EventView {
-                                                id: eventView
+                                            Rectangle {
                                                 anchors.fill: parent
-                                                controller: Kube.EventController {
-                                                    eventOccurrence: model.modelData.eventOccurrence
+                                                color: Kube.Colors.paperWhite
+                                                EventEditor {
+                                                    id: eventView
+                                                    anchors.fill: parent
+                                                    editMode: true
+                                                    controller: Kube.EventController {
+                                                        eventOccurrence: model.modelData.eventOccurrence
+                                                    }
+                                                    onDone: popup.close()
                                                 }
-                                                onDone: popup.close()
                                             }
                                         }
                                     }

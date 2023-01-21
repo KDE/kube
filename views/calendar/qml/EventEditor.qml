@@ -34,6 +34,11 @@ Item {
 
     signal done()
 
+    function discard() {
+        controller.reload()
+        root.done()
+    }
+
     implicitWidth: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
     implicitHeight: contentLayout.implicitHeight + buttons.implicitHeight + 2 * Kube.Units.largeSpacing
 
@@ -161,14 +166,26 @@ Item {
 
             }
 
-            Kube.TextEditor {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.minimumHeight: Kube.Units.gridUnit * 4
+            ColumnLayout {
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: Kube.Colors.buttonColor
+                }
 
-                placeholderText: "Description"
-                initialText: controller.description
-                onTextChanged: controller.description = text
+                Kube.TextEditor {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: Kube.Units.gridUnit * 4
+
+                    border.width: 0
+
+                    placeholderText: "Description"
+                    initialText: controller.description
+                    onTextChanged: controller.description = text
+
+                    Keys.onEscapePressed: calendarSelector.forceActiveFocus(Qt.TabFocusReason)
+                }
             }
         }
 
@@ -212,14 +229,14 @@ Item {
 
             Kube.Button {
                 id: discardButton
+                enabled: controller.modified
                 text: qsTr("Discard Changes")
-                onClicked: {
-                    root.done()
-                }
+                onClicked: root.discard()
             }
 
             Kube.PositiveButton {
                 id: saveButton
+                enabled: controller.modified
                 text: qsTr("Save Changes")
                 onClicked: {
                     controller.saveAction.execute()

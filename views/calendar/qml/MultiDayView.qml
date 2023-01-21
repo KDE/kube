@@ -244,12 +244,18 @@ Item {
                                                         width: eventView.width
                                                         height: eventView.height
                                                         padding: 0
-                                                        EventView {
-                                                            id: eventView
-                                                            controller: Kube.EventController {
-                                                                eventOccurrence: model.modelData.eventOccurrence
+                                                        Rectangle {
+                                                            anchors.fill: parent
+                                                            color: Kube.Colors.paperWhite
+                                                            EventEditor {
+                                                                id: eventView
+                                                                anchors.fill: parent
+                                                                editMode: true
+                                                                controller: Kube.EventController {
+                                                                    eventOccurrence: model.modelData.eventOccurrence
+                                                                }
+                                                                onDone: popup.close()
                                                             }
-                                                            onDone: popup.close()
                                                         }
                                                     }
                                                 }

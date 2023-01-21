@@ -174,11 +174,15 @@ Kube.View {
             width: root.width * 0.7
             height: root.height * 0.7
             padding: 0
-            EventEditor {
-                id: editor
+            Rectangle {
                 anchors.fill: parent
-                onDone: popup.close()
-                accountId: Kube.Context.currentAccountId
+                color: Kube.Colors.paperWhite
+                EventEditor {
+                    id: editor
+                    anchors.fill: parent
+                    onDone: popup.close()
+                    accountId: Kube.Context.currentAccountId
+                }
             }
         }
     }

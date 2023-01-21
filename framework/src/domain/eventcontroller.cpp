@@ -374,6 +374,12 @@ void EventController::init()
         setStart(occurrence.start);
         setEnd(occurrence.end);
     }
+    setModified(false);
+}
+
+void EventController::reload()
+{
+    init();
 }
 
 void EventController::remove()
