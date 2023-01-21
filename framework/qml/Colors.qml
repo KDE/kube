@@ -47,7 +47,6 @@ Item {
     property string highlightColor: plasmaBlue
     property string highlightedTextColor: paperWhite
     property string buttonColor: alternateGrey
-    property string buttonBorderColor: "#7f8c8d"
     property string positiveColor: nobleFir
     property string warningColor: bewareOrange
     property string negativeColor: dangerRed
