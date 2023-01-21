@@ -102,7 +102,6 @@ FocusScope {
 
                 color: Kube.Colors.textColor
                 font.family: Kube.Font.fontFamily
-                font.pointSize: Kube.Units.largeFontSize
                 selectionColor: Kube.Colors.highlightColor
                 padding: Kube.Units.smallSpacing
                 MouseArea {
