@@ -37,7 +37,7 @@ T.Button {
     height: implicitHeight
 
     implicitWidth: Math.max(Units.gridUnit, contentItem.implicitWidth + leftPadding + rightPadding)
-    implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
+    implicitHeight: Units.gridUnit + topPadding + bottomPadding
 
     padding: Units.largeSpacing
     topPadding: Units.smallSpacing

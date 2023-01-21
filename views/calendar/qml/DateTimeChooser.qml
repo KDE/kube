@@ -46,13 +46,12 @@ RowLayout {
         timeEdit.setNotBefore(notBeforeRounded)
     }
 
-    Kube.TextButton {
+    Kube.Button {
         id: button
 
         Layout.preferredWidth: implicitWidth
 
         text: selector.selectedDate.toLocaleDateString()
-        textColor: Kube.Colors.highlightColor
 
         onClicked: {
             popup.open()
@@ -88,7 +87,7 @@ RowLayout {
 
         visible: enableTime
 
-        Layout.preferredWidth: Kube.Units.gridUnit * 4
+        Layout.preferredWidth: Kube.Units.gridUnit * 3
 
         function generateTimes(start, delta) {
             var d = new Date(2000, 1, 1, start.getHours(), start.getMinutes(), start.getSeconds())

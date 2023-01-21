@@ -41,7 +41,7 @@ T.ComboBox {
 
     contentItem: Kube.Label {
         leftPadding: Kube.Units.smallSpacing
-        rightPadding: Kube.Units.largeSpacing
+        rightPadding: Kube.Units.smallSpacing
 
         text: root.displayText
         horizontalAlignment: Text.AlignLeft
