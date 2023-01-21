@@ -63,7 +63,7 @@ T.ComboBox {
 
     popup: T.Popup {
         width: root.width
-        implicitHeight: Math.min(Kube.Units.gridUnit * 5, contentItem.implicitHeight)
+        implicitHeight: Math.min(Kube.Units.gridUnit * 10, contentItem.implicitHeight)
 
         contentItem: Kube.ListView {
             clip: true
