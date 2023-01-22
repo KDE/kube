@@ -21,7 +21,7 @@ import QtQuick.Layouts 1
 import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
-RowLayout {
+ColumnLayout {
     id: root
 
     property alias initialStart: startDate.initialValue
@@ -30,36 +30,41 @@ RowLayout {
     property date start
     property date end
 
-    spacing: Kube.Units.largeSpacing
-    DateTimeChooser {
-        id: startDate
-        objectName: "startDate"
-        enableTime: !root.allDay
-        onDateTimeChanged: root.start = dateTime
-    }
-    Kube.Label {
-        text: qsTr("until")
-    }
-    DateTimeChooser {
-        id: endDate
-        objectName: "endDate"
-        enableTime: !root.allDay
-        notBefore: startDate.dateTime
-        onDateTimeChanged: root.end = dateTime
-    }
+    spacing: Kube.Units.smallSpacing
 
-    Item {
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-    }
 
     RowLayout {
         spacing: Kube.Units.smallSpacing
-        Kube.CheckBox {
-            id: checkBox
-        }
         Kube.Label {
-            text: qsTr("All day")
+            text: qsTr("from")
+        }
+        DateTimeChooser {
+            id: startDate
+            objectName: "startDate"
+            enableTime: !root.allDay
+            onDateTimeChanged: root.start = dateTime
+        }
+        RowLayout {
+            spacing: Kube.Units.smallSpacing
+            Kube.CheckBox {
+                id: checkBox
+            }
+            Kube.Label {
+                text: qsTr("All day")
+            }
+        }
+    }
+    RowLayout {
+        spacing: Kube.Units.smallSpacing
+        Kube.Label {
+            text: qsTr("until")
+        }
+        DateTimeChooser {
+            id: endDate
+            objectName: "endDate"
+            enableTime: !root.allDay
+            notBefore: startDate.dateTime
+            onDateTimeChanged: root.end = dateTime
         }
     }
 }
