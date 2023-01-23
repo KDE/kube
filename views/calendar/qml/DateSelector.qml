@@ -112,7 +112,7 @@ Item {
                 text: model.day
                 font: grid.font
                 color: root.textColor
-                height: implicitHeight
+                height: Kube.Units.gridUnit / 4 * 3
 
                 Rectangle {
                     anchors {
@@ -126,7 +126,7 @@ Item {
                         (selectedEnd && day >= selectedDate.getDate() && day <= selectedEnd.getDate() && month === selectedDate.getMonth());
                     }
                     width: Kube.Units.gridUnit
-                    height: 3
+                    height: 2
                     color: Kube.Colors.plasmaBlue
                     opacity: 0.6
                     visible: dateIsInRange(model.day, model.month, root.selectedDate, root.selectedEnd)
