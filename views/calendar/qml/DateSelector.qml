@@ -24,14 +24,17 @@ import org.kube.framework 1.0 as Kube
 Item {
     id: root
     property date selectedDate
+    property var selectedEnd: null
     property date notBefore: new Date(0) //Earliest possible by epoch
     property color backgroundColor: Kube.Colors.darkBackgroundColor
     property color textColor: Kube.Colors.highlightedTextColor
     property bool invertIcons: true
+    property bool rangeSelection: false
 
     signal next()
     signal previous()
     signal selected(date date)
+    signal endSelected(date date)
 
     implicitWidth: Math.max(grid.implicitWidth, dateLabel.implicitWidth + 2 * Kube.Units.gridUnit)
     implicitHeight: column.implicitHeight
@@ -117,17 +120,34 @@ Item {
                         right: parent.right
                         bottom: parent.bottom
                     }
+                    function dateIsInRange(day, month, selectedDate, selectedEnd) {
+                        return (day === selectedDate.getDate() && month === selectedDate.getMonth()) ||
+                        // (selectedEnd && day === selectedEnd.getDate() && month === selectedEnd.getMonth()) ||
+                        (selectedEnd && day >= selectedDate.getDate() && day <= selectedEnd.getDate() && month === selectedDate.getMonth());
+                    }
                     width: Kube.Units.gridUnit
                     height: 3
                     color: Kube.Colors.plasmaBlue
                     opacity: 0.6
-                    visible: model.day === root.selectedDate.getDate() && model.month === root.selectedDate.getMonth()
+                    visible: dateIsInRange(model.day, model.month, root.selectedDate, root.selectedEnd)
                 }
             }
 
             onClicked: {
-                if (date.getTime() >= root.notBefore.getTime()) {
-                    root.selected(date)
+                if (
+                    root.rangeSelection && root.selectedDate && !root.selectedEnd &&
+                    date.getTime() >= root.selectedDate.getTime()
+                ) {
+                    //Select the end of the range
+                    root.selectedEnd = date
+                    root.endSelected(date)
+                } else {
+                    if (date.getTime() >= root.notBefore.getTime()) {
+                        //Set the start
+                        root.selectedEnd = null
+                        root.selected(date)
+                        root.endSelected(date)
+                    }
                 }
             }
         }
