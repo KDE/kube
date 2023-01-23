@@ -241,8 +241,8 @@ Item {
                                                         parent: ApplicationWindow.overlay
                                                         x: Math.round((parent.width - width) / 2)
                                                         y: Math.round((parent.height - height) / 2)
-                                                        width: eventView.width
-                                                        height: eventView.height
+                                                        width: eventView.implicitWidth
+                                                        height: eventView.implicitWidth
                                                         padding: 0
                                                         Rectangle {
                                                             anchors.fill: parent
