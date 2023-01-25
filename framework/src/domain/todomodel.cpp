@@ -65,13 +65,7 @@ void TodoSourceModel::setFilter(const QVariantMap &filter)
         query.resourceFilter<SinkResource::Account>(account);
     }
     query.filter<Todo::Calendar>(Query::Comparator(QVariant::fromValue(calendarFilter), Query::Comparator::In));
-
-    const auto parentUid = filter.value("parentUid").toByteArray();
-    if (!parentUid.isEmpty()) {
-        query.filter<Todo::ParentUid>(parentUid);
-    } else {
-        query.filter<Todo::ParentUid>("");
-    }
+    query.filter<Todo::ParentUid>(filter.value("parentUid"));
 
     if (filter.value("doing").toBool()) {
         query.filter<Todo::Status>("INPROCESS");
