@@ -31,44 +31,41 @@ FocusScope {
 
     property alias count: listView.count
 
-    implicitHeight: flow.height + lineEdit.height
-    height: implicitHeight
+    implicitHeight: listView.implicitHeight + lineEdit.height
 
-    Column {
+    ColumnLayout {
         anchors.fill: parent
 
         spacing: Kube.Units.smallSpacing
 
-        Flow {
-            id: flow
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
+        Kube.ListView {
+            id: listView
+            Layout.fillWidth: true
+            Layout.fillHeight: true
             spacing: Kube.Units.smallSpacing
+            currentIndex: -1
 
+            model: controller.model
+            delegate: Kube.ListDelegate {
+                height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
+                selectionEnabled: false
 
-            Repeater {
-                id: listView
+                Rectangle {
+                    anchors.fill: parent
+                    color: Kube.Colors.darkBackgroundColor
+                    opacity: 0.7
+                }
 
-                model: controller.model
-                delegate: Item {
-                    height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
-                    width: label.width + status.width + Kube.Units.gridUnit + Kube.Units.largeSpacing + Kube.Units.smallSpacing * 3
-
-                    Rectangle {
-                        anchors.fill: parent
-                        color: Kube.Colors.darkBackgroundColor
-                        opacity: 0.7
+                RowLayout {
+                    anchors {
+                        fill: parent
+                        leftMargin: Kube.Units.smallSpacing
+                        rightMargin: Kube.Units.smallSpacing
                     }
+                    spacing: Kube.Units.smallSpacing
 
                     Kube.Label {
-                        id: label
-                        anchors {
-                            left: parent.left
-                            leftMargin: Kube.Units.smallSpacing
-                            verticalCenter: parent.verticalCenter
-                        }
+                        Layout.maximumWidth: parent.width - statusLabel.width - iconButton.width - 4 * Kube.Units.smallSpacing
                         text: model.name
                         elide: Text.ElideRight
                         color: Kube.Colors.highlightedTextColor
@@ -81,24 +78,20 @@ FocusScope {
                         ToolTip.text: text
                     }
 
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                    }
+
                     Kube.Label {
-                        id: status
-                        anchors {
-                            left: label.right
-                            leftMargin: Kube.Units.largeSpacing
-                            verticalCenter: parent.verticalCenter
-                        }
+                        id: statusLabel
                         text: model.status == Kube.EventController.Accepted ? qsTr("Attending") : qsTr("Invited")
                         font.italic: true
                         font.pointSize: Kube.Units.smallFontSize
                         color: Kube.Colors.highlightedTextColor
                     }
                     Kube.IconButton {
-                        anchors {
-                            left: status.right
-                            leftMargin: Kube.Units.smallSpacing
-                            verticalCenter: parent.verticalCenter
-                        }
+                        id: iconButton
                         height: Kube.Units.gridUnit
                         width: height
                         onClicked: root.controller.remove(model.id)

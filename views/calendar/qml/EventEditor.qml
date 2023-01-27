@@ -137,21 +137,16 @@ Item {
 
                 AttendeeListEditor {
                     id: attendees
-                    Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
                     focus: true
                     activeFocusOnTab: true
                     controller: root.controller.attendees
                     completer: root.controller.attendeeCompleter
                 }
 
-            }
-
-            ColumnLayout {
-                Rectangle {
+                Kube.SeparatorLine {
                     Layout.fillWidth: true
-                    height: 1
-                    color: Kube.Colors.buttonColor
                 }
 
                 Kube.TextEditor {
