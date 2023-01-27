@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019 Christian Mollekopf, <mollekopf@kolabsys.com>
+ *  Copyright (C) 2023 Christian Mollekopf, <christian@mkpf.ch>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,24 +17,8 @@
  */
 
 import QtQuick 2.7
-import QtQuick.Controls 2
 
-import org.kube.framework 1.0 as Kube
-
-Kube.TextField {
-    id: root
-    font.bold: true
-    font.pointSize: Kube.Units.largeFontSize
-    background: Rectangle {
-        id: background
-        color: Kube.Colors.viewBackgroundColor
-        Kube.SeparatorLine {
-            anchors {
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-            }
-            color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
-        }
-    }
+Rectangle {
+    height: 1
+    color: Colors.buttonColor
 }
