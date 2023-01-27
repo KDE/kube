@@ -70,7 +70,20 @@ ApplicationWindow {
                         summary: "Short event1!",
                         starts: "2018-04-09T14:03:00",
                         organizer: "organizer@example.org",
-                        attendees: [{email: "attendee1@example.org"}, {email: "identity@example.org"}]
+                        location: "This is a rather long location description and Fantasyroad 209 in Somewhere.",
+                        attendees: [
+                            {email: "attendee1@example.org"},
+                            {email: "attendee2@example.org"},
+                            {email: "attendee3@example.org"},
+                            {email: "attendee4@example.org"},
+                            {email: "attendee5@example.org"},
+                            {email: "attendee6@example.org"},
+                            {email: "attendee7@example.org"},
+                            {email: "attendee8@example.org"},
+                            {email: "attendee9@example.org"},
+                            {email: "verylongattendee-withanotherlongname@vereeeeerylong.org"},
+                            {email: "identity@example.org"}
+                        ]
                     },
                     {
                         resource: "caldavresource",

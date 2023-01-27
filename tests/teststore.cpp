@@ -171,8 +171,11 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
     calcoreEvent->setSummary(summary);
 
     if (object.contains("description")) {
-        auto description = object["description"].toString();
-        calcoreEvent->setDescription(description);
+        calcoreEvent->setDescription(object["description"].toString());
+    }
+
+    if (object.contains("location")) {
+        calcoreEvent->setLocation(object["location"].toString());
     }
 
     auto startTime = object["starts"].toDateTime();
