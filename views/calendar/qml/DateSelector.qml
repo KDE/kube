@@ -18,6 +18,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 2.2
 import Qt.labs.calendar 1.0
+import QtQuick.Layouts 1.3
 
 import org.kube.framework 1.0 as Kube
 
@@ -105,6 +106,18 @@ Item {
             year: root.selectedDate.getFullYear()
             locale: Qt.locale()
 
+            contentItem: GridLayout {
+                rows: 6
+                columns: 7
+                rowSpacing: grid.spacing
+                columnSpacing: grid.spacing
+
+                Repeater {
+                    model: grid.source
+                    delegate: grid.delegate
+                }
+            }
+
             delegate: Text {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -112,7 +125,8 @@ Item {
                 text: model.day
                 font: grid.font
                 color: root.textColor
-                height: Kube.Units.gridUnit / 4 * 3
+                Layout.preferredHeight: Kube.Units.gridUnit / 4 * 3
+                Layout.fillWidth: true
 
                 Rectangle {
                     anchors {
@@ -125,7 +139,6 @@ Item {
                         // (selectedEnd && day === selectedEnd.getDate() && month === selectedEnd.getMonth()) ||
                         (selectedEnd && day >= selectedDate.getDate() && day <= selectedEnd.getDate() && month === selectedDate.getMonth());
                     }
-                    width: Kube.Units.gridUnit
                     height: 2
                     color: Kube.Colors.plasmaBlue
                     opacity: 0.6
