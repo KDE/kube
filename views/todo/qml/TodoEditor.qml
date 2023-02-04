@@ -60,6 +60,7 @@ FocusScope {
     Keys.onEscapePressed: root.done()
 
     Shortcut {
+        enabled: root.visible
         sequences: [StandardKey.Save]
         onActivated: root.save()
     }
@@ -168,7 +169,7 @@ FocusScope {
                 initialText: controller.description
                 onTextChanged: controller.description = text
 
-                Keys.onEscapePressed: calendarSelector.forceActiveFocus(Qt.TabFocusReason)
+                Keys.onEscapePressed: saveButton.forceActiveFocus(Qt.TabFocusReason)
             }
 
             Item {
