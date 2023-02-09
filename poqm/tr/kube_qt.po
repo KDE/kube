@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2023-01-21 14:43+0300\n"
+"PO-Revision-Date: 2023-02-08 20:17+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Qt-Contexts: true\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
@@ -69,7 +69,7 @@ msgstr "E-posta adresiniz"
 #: accounts/kolabnow/qml/Login.qml:27
 msgctxt "Login|"
 msgid "Login"
-msgstr "Giriş"
+msgstr "Kullanıcı adı"
 
 #: accounts/fastmail/qml/Login.qml:50 accounts/generic/qml/Login.qml:52
 #: accounts/gmail/qml/Login.qml:49 accounts/imap/qml/Login.qml:49
@@ -360,7 +360,7 @@ msgstr "Kaydet"
 #: framework/qml/LoginAccount.qml:117
 msgctxt "LoginAccount|"
 msgid "Login"
-msgstr "Giriş Yap"
+msgstr "Oturum Aç"
 
 #: framework/qml/MailListView.qml:67
 msgctxt "MailListView|"
@@ -789,7 +789,7 @@ msgstr "Makine bulunamadı."
 #: framework/src/sinkfabric.cpp:186
 msgctxt "QObject|"
 msgid "Failed to login."
-msgstr "Giriş yapılamadı."
+msgstr "Oturum açılamadı."
 
 #: framework/src/sinkfabric.cpp:190
 msgctxt "QObject|"
@@ -1170,7 +1170,7 @@ msgstr "İleti:"
 #: views/log/qml/View.qml:292
 msgctxt "View|"
 msgid "Failed to login"
-msgstr "Giriş yapılamadı"
+msgstr "Oturum açılamadı"
 
 #: views/log/qml/View.qml:298
 #, qt-format
