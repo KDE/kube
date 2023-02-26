@@ -43,13 +43,13 @@ Kube.View {
 
     Shortcut {
         enabled: root.isCurrentView
-        sequences: ['j', StandardKey.Forward]
+        sequences: ['j', StandardKey.Forward, StandardKey.MoveToNextLine, StandardKey.MoveToNextChar]
         onActivated: root.goToNext()
     }
 
     Shortcut {
         enabled: root.isCurrentView
-        sequences: ['k', StandardKey.Back]
+        sequences: ['k', StandardKey.Back, StandardKey.MoveToPreviousLine, StandardKey.MoveToPreviousChar]
         onActivated: root.goToPrevious()
     }
 
