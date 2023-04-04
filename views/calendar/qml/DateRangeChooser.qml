@@ -131,8 +131,8 @@ ColumnLayout {
                     rangeSelection: true
                     selectedDate: root.start
                     selectedEnd: root.end
-                    onSelected: root.start = date
-                    onEndSelected: root.end = date
+                    onSelected: root.start = DateUtils.applyTimeFromDate(date, root.start)
+                    onEndSelected: root.end = DateUtils.applyTimeFromDate(date, root.end)
                     onNext: root.start = DateUtils.nextMonth(selectedDate)
                     onPrevious: root.start = DateUtils.previousMonth(selectedDate)
                 }
