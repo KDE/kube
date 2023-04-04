@@ -96,7 +96,7 @@ T.ComboBox {
             onClicked: {
                 root.currentIndex = root.highlightedIndex
                 root.activated(root.highlightedIndex)
-                popup.close()
+                root.popup.close()
             }
         }
     }
