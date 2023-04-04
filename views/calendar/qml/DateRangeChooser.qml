@@ -39,6 +39,15 @@ ColumnLayout {
     property date start: initialStart
     property date end: initialEnd
 
+    function setAllDay() {
+        if (DateUtils.sameDay(start, end)) {
+            // Default to true when switching to multiday
+            root.allDay = false
+        } else {
+            root.allDay = true
+        }
+    }
+
     property var notBefore: new Date(0)
     spacing: Kube.Units.smallSpacing
 
@@ -131,8 +140,14 @@ ColumnLayout {
                     rangeSelection: true
                     selectedDate: root.start
                     selectedEnd: root.end
-                    onSelected: root.start = DateUtils.applyTimeFromDate(date, root.start)
-                    onEndSelected: root.end = DateUtils.applyTimeFromDate(date, root.end)
+                    onSelected: {
+                        root.start = DateUtils.applyTimeFromDate(date, root.start)
+                        root.setAllDay()
+                    }
+                    onEndSelected: {
+                        root.end = DateUtils.applyTimeFromDate(date, root.end)
+                        root.setAllDay()
+                    }
                     onNext: root.start = DateUtils.nextMonth(selectedDate)
                     onPrevious: root.start = DateUtils.previousMonth(selectedDate)
                 }
