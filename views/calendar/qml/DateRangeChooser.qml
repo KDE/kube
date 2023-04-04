@@ -51,19 +51,23 @@ ColumnLayout {
             var startDate = start.toLocaleDateString();
             if (allDay) {
                 if (DateUtils.sameDay(start, end)) {
+                    // Tuesday, April 4, 2023
                     return startDate;
                 } else {
+                    // Tuesday, April 4, 2023 - Wednesday, April 12, 2023
                     return startDate + " " +
                         " - " +
                         end.toLocaleDateString();
                 }
             }
             if (DateUtils.sameDay(start, end)) {
+                // Tuesday, April 4, 2023 12:30 - 13:00
                 return startDate + " " +
                     start.toLocaleTimeString(Qt.locale(), "hh:mm") +
                     " - " +
                     end.toLocaleTimeString(Qt.locale(), "hh:mm");
             }
+            // Tuesday, April 4, 2023 12:30 - Wednesday, April 12, 2023 13:00
             return startDate + " " +
                 start.toLocaleTimeString(Qt.locale(), "hh:mm") +
                 " - " +
@@ -81,13 +85,43 @@ ColumnLayout {
             id: popup
 
             x: button.x
-            y: button.y + button.height
-            width: selector.implicitWidth + Kube.Units.largeSpacing * 7
-            height: selector.implicitHeight + Kube.Units.largeSpacing * 4
-            modal: true
+            y: button.y
+            width: Math.max(selector.implicitWidth + Kube.Units.largeSpacing * 7, button.width)
+            height: buttonOverlay.height + layout.implicitHeight + 2 * Kube.Units.smallSpacing
+            modal: false
             focus: true
-            ColumnLayout {
+            padding: 0
+            background: Rectangle {
                 anchors.fill: parent
+                color: Kube.Colors.viewBackgroundColor
+                border.color: Kube.Colors.buttonColor
+                border.width: 1
+            }
+            Kube.Button {
+                id: buttonOverlay
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                height: button.height
+                text: button.formatString(root.start, root.end, root.allDay)
+                onClicked: popup.close()
+            }
+
+            ColumnLayout {
+                id: layout
+                anchors {
+                    top: buttonOverlay.bottom
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    topMargin: Kube.Units.smallSpacing
+                    leftMargin: Kube.Units.smallSpacing
+                    rightMargin: Kube.Units.smallSpacing
+                    bottomMargin: Kube.Units.smallSpacing
+                }
+
                 DateSelector {
                     id: selector
                     notBefore: root.notBefore
@@ -102,45 +136,42 @@ ColumnLayout {
                     onNext: root.start = DateUtils.nextMonth(selectedDate)
                     onPrevious: root.start = DateUtils.previousMonth(selectedDate)
                 }
+
                 RowLayout {
-                    RowLayout {
-                        visible: !root.allDay
-                        Kube.Label {
-                            text: qsTr("from")
-                        }
-                        TimeSelector {
-                            id: startDate
-                            Layout.preferredWidth: Kube.Units.gridUnit * 3
-                            objectName: "startDate"
-                            dateTime: root.start
-                            onDateTimeChanged: {
-                                console.warn("end changed" + dateTime.toLocaleTimeString(Qt.locale(), "hh:mm"))
-                                root.start = dateTime
-                            }
-                        }
-                        Kube.Label {
-                            text: qsTr("to")
-                        }
-                        TimeSelector {
-                            id: endDate
-                            Layout.preferredWidth: Kube.Units.gridUnit * 3
-                            objectName: "endDate"
-                            dateTime: root.end
-                            notBefore: root.start
-                            onDateTimeChanged: {
-                                console.warn("end changed" + dateTime.toLocaleTimeString(Qt.locale(), "hh:mm"))
-                                root.end = dateTime
-                            }
+                    spacing: Kube.Units.smallSpacing
+                    Kube.CheckBox {
+                        id: checkBox
+                    }
+                    Kube.Label {
+                        text: qsTr("All day")
+                    }
+                }
+
+                RowLayout {
+                    visible: !root.allDay
+                    Kube.Label {
+                        text: qsTr("begins")
+                    }
+                    TimeSelector {
+                        id: startDate
+                        Layout.preferredWidth: Kube.Units.gridUnit * 3
+                        objectName: "startDate"
+                        dateTime: root.start
+                        onDateTimeChanged: {
+                            root.start = dateTime
                         }
                     }
-
-                    RowLayout {
-                        spacing: Kube.Units.smallSpacing
-                        Kube.CheckBox {
-                            id: checkBox
-                        }
-                        Kube.Label {
-                            text: qsTr("All day")
+                    Kube.Label {
+                        text: qsTr("ends")
+                    }
+                    TimeSelector {
+                        id: endDate
+                        Layout.preferredWidth: Kube.Units.gridUnit * 3
+                        objectName: "endDate"
+                        dateTime: root.end
+                        notBefore: root.start
+                        onDateTimeChanged: {
+                            root.end = dateTime
                         }
                     }
                 }
