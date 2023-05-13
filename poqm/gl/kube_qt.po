@@ -1,8 +1,8 @@
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2019, 2020.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2019, 2020, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2020-02-16 08:47+0100\n"
+"PO-Revision-Date: 2023-05-12 11:04+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.08.3\n"
+"X-Generator: Lokalize 23.04.0\n"
 "X-Qt-Contexts: true\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
@@ -119,12 +119,12 @@ msgstr "Enderezo de IMAP"
 #: accounts/generic/qml/AccountSettings.qml:115
 msgctxt "AccountSettings|"
 msgid "Use Starttls"
-msgstr ""
+msgstr "Usar Starttls"
 
 #: accounts/generic/qml/AccountSettings.qml:125
 msgctxt "AccountSettings|"
 msgid "Authentication Method"
-msgstr ""
+msgstr "Método de autenticación"
 
 #: accounts/generic/qml/AccountSettings.qml:146
 #: accounts/imap/qml/AccountSettings.qml:113
@@ -249,6 +249,7 @@ msgctxt "AccountSettings|"
 msgid "Choose a maildir folder"
 msgstr "Seleccionar un cartafol de Maildir"
 
+# well-spelled: identificadorDaConta, identificadorDoRecurso
 #: applications/kube/main.cpp:152
 msgctxt "main|"
 msgid ""
@@ -329,25 +330,16 @@ msgid "Import key"
 msgstr "Importar unha chave"
 
 #: framework/qml/CalendarSelector.qml:79
-#, fuzzy
-#| msgctxt "AttendeeListEditor|"
-#| msgid "Add attendee"
 msgctxt "CalendarSelector|"
 msgid "Add calendar"
-msgstr "Engadir un asistente"
+msgstr "Engadir un calendario"
 
 #: framework/qml/ConversationView.qml:158
-#, fuzzy
-#| msgctxt "MailViewer|"
-#| msgid "Downloading message..."
 msgctxt "ConversationView|"
 msgid "Downloading message..."
 msgstr "Descargando a mensaxe…"
 
 #: framework/qml/ConversationView.qml:162
-#, fuzzy
-#| msgctxt "MailViewer|"
-#| msgid "Failed to download message..."
 msgctxt "ConversationView|"
 msgid "Failed to download message..."
 msgstr "Non se puido descargar a mensaxe…"
@@ -413,43 +405,37 @@ msgstr "Produciuse un erro: %1"
 #, qt-format
 msgctxt "ICalPart|"
 msgid "This is an exception for the event originally occurring at: \"%1\""
-msgstr ""
+msgstr "Isto é unha excepción do evento que ocorreu orixinalmente en: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:55
-#, fuzzy, qt-format
-#| msgctxt "QObject|"
-#| msgid "\"%1\" has been updated"
+#, qt-format
 msgctxt "ICalPart|"
 msgid "\"%1\" has been cancelled."
-msgstr "Actualizouse «%1»"
+msgstr "Cancelouse «%1»."
 
 #: framework/qml/mailpartview/ICalPart.qml:60
-#, fuzzy, qt-format
-#| msgctxt "ICalPart|"
-#| msgid "You have accepted: \"%1\""
+#, qt-format
 msgctxt "ICalPart|"
 msgid "%1 has accepted: \"%2\""
-msgstr "Aceptou: «%1»"
+msgstr "%1 aceptou: «%2»"
 
 #: framework/qml/mailpartview/ICalPart.qml:66
-#, fuzzy, qt-format
-#| msgctxt "ICalPart|"
-#| msgid "You have declined: \"%1\""
+#, qt-format
 msgctxt "ICalPart|"
 msgid "%1 has declined: \"%2\""
-msgstr "Rexeitou: «%1»"
+msgstr "%1 rexeitou: «%2»"
 
 #: framework/qml/mailpartview/ICalPart.qml:72
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 doesn't yet know about: \"%2\""
-msgstr ""
+msgstr "%1 aínda non sabe: «%2»"
 
 #: framework/qml/mailpartview/ICalPart.qml:84
 #, qt-format
 msgctxt "ICalPart|"
 msgid "The invitation has been updated: \"%1\""
-msgstr ""
+msgstr "Actualizouse a invitación: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:89
 #, qt-format
@@ -473,7 +459,7 @@ msgstr "Invitárono a: «%1»"
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You are not listed as attendee to: \"%1\""
-msgstr ""
+msgstr "Non está na lista de asistentes de: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:151
 msgctxt "ICalPart|"
@@ -497,82 +483,54 @@ msgid "sent by %1 on %2"
 msgstr "enviada por %1 o %2"
 
 #: framework/qml/mailpartview/MailPartModel.qml:53
-#, fuzzy
-#| msgctxt "MailDataModel|"
-#| msgid ""
-#| "This message has been signed but we failed to validate the signature."
 msgctxt "MailPartModel|"
 msgid "This message has been signed but we failed to validate the signature."
 msgstr "A mensaxe está asinada pero non se puido validar a sinatura."
 
 #: framework/qml/mailpartview/MailPartModel.qml:55
-#, fuzzy, qt-format
-#| msgctxt "MailDataModel|"
-#| msgid "This message has been signed using the key %1."
+#, qt-format
 msgctxt "MailPartModel|"
 msgid "This message has been signed using the key %1."
 msgstr "A mensaxe asinouse coa chave %1."
 
 #: framework/qml/mailpartview/MailPartModel.qml:56
-#, fuzzy
-#| msgctxt "MailDataModel|"
-#| msgid "The key details are not available."
 msgctxt "MailPartModel|"
 msgid "The key details are not available."
 msgstr "Os detalles da chave non están dispoñíbeis."
 
 #: framework/qml/mailpartview/MailPartModel.qml:58
-#, fuzzy, qt-format
-#| msgctxt "MailDataModel|"
-#| msgid "This message has been signed using the key %1 by %2."
+#, qt-format
 msgctxt "MailPartModel|"
 msgid "This message has been signed using the key %1 by %2."
 msgstr "A mensaxe asinouse coa chave %1, de %2."
 
 #: framework/qml/mailpartview/MailPartModel.qml:60
-#, fuzzy
-#| msgctxt "MailDataModel|"
-#| msgid "The key was revoked."
 msgctxt "MailPartModel|"
 msgid "The key was revoked."
 msgstr "A chave revogouse."
 
 #: framework/qml/mailpartview/MailPartModel.qml:63
-#, fuzzy
-#| msgctxt "MailDataModel|"
-#| msgid "The key has expired."
 msgctxt "MailPartModel|"
 msgid "The key has expired."
 msgstr "A chave caducou."
 
 #: framework/qml/mailpartview/MailPartModel.qml:66
-#, fuzzy
-#| msgctxt "MailDataModel|"
-#| msgid "You are trusting this key."
 msgctxt "MailPartModel|"
 msgid "You are trusting this key."
 msgstr "Está a confiar nesta chave."
 
 #: framework/qml/mailpartview/MailPartModel.qml:69
-#, fuzzy
-#| msgctxt "MailDataModel|"
-#| msgid "The signature is invalid."
 msgctxt "MailPartModel|"
 msgid "The signature is invalid."
 msgstr "A sinatura é incorrecta."
 
 #: framework/qml/mailpartview/MailPartModel.qml:89
-#, fuzzy
-#| msgctxt "MailDataModel|"
-#| msgid "This message is encrypted but we don't have the key for it."
 msgctxt "MailPartModel|"
 msgid "This message is encrypted but we don't have the key for it."
 msgstr "A mensaxe está cifrada pero non temos a súa chave."
 
 #: framework/qml/mailpartview/MailPartModel.qml:89
-#, fuzzy, qt-format
-#| msgctxt "MailDataModel|"
-#| msgid "This message is encrypted to the key: %1"
+#, qt-format
 msgctxt "MailPartModel|"
 msgid "This message is encrypted to the key: %1"
 msgstr "A mensaxe está cifrada para a chave: %1"
@@ -680,17 +638,14 @@ msgid "Abort"
 msgstr "Interromper"
 
 #: framework/qml/TextArea.qml:74
-#, fuzzy
-#| msgctxt "SelectableItem|"
-#| msgid "Copy"
 msgctxt "TextArea|"
 msgid "Copy Link"
-msgstr "Copiar"
+msgstr "Copiar a ligazón"
 
 #: framework/qml/TextArea.qml:74
 msgctxt "TextArea|"
 msgid "Copy Selection"
-msgstr ""
+msgstr "Copiar a selección"
 
 #: framework/src/domain/eventcontroller.cpp:90
 #, qt-format
@@ -1084,12 +1039,9 @@ msgid "Send"
 msgstr "Enviar"
 
 #: views/conversation/qml/View.qml:64
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Jump to next thread:"
 msgctxt "View|"
 msgid "Jump to top of threadlist:"
-msgstr "Saltar ao seguinte fío:"
+msgstr "Saltar ao inicio da lista de fíos:"
 
 #: views/conversation/qml/View.qml:65
 msgctxt "View|"
@@ -1379,12 +1331,9 @@ msgid "Important"
 msgstr "Importante"
 
 #: views/search/qml/View.qml:100
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Account:"
 msgctxt "View|"
 msgid "Accounts"
-msgstr "Conta:"
+msgstr "Contas"
 
 #: views/search/qml/View.qml:161
 msgctxt "View|"
@@ -1439,12 +1388,12 @@ msgstr "Crear unha tarefa"
 #: views/todo/qml/TodoView.qml:71
 msgctxt "TodoView|"
 msgid "Due on "
-msgstr ""
+msgstr "Límite"
 
 #: views/todo/qml/TodoView.qml:77
 msgctxt "TodoView|"
 msgid "Start on "
-msgstr ""
+msgstr "Comezo"
 
 #: views/todo/qml/TodoView.qml:112
 msgctxt "TodoView|"
@@ -1459,12 +1408,12 @@ msgstr "Editar"
 #: views/todo/qml/View.qml:100
 msgctxt "View|"
 msgid "Go to top of list:"
-msgstr ""
+msgstr "Ir ao principio da lista:"
 
 #: views/todo/qml/View.qml:101
 msgctxt "View|"
 msgid "Go to bottom of list:"
-msgstr ""
+msgstr "Ir ao final da lista:"
 
 #: views/todo/qml/View.qml:102
 msgctxt "View|"
@@ -1484,7 +1433,7 @@ msgstr "Crear unha nova tarefa:"
 #: views/todo/qml/View.qml:105
 msgctxt "View|"
 msgid "Edit todo:"
-msgstr ""
+msgstr "Editar a tarefa:"
 
 #: views/todo/qml/View.qml:179
 msgctxt "View|"
@@ -1494,7 +1443,7 @@ msgstr "Nova tarefa"
 #: views/todo/qml/View.qml:197
 msgctxt "View|"
 msgid "Inbox"
-msgstr ""
+msgstr "Entrada"
 
 #: views/todo/qml/View.qml:211
 msgctxt "View|"
@@ -1525,24 +1474,24 @@ msgstr "Engadir unha nova tarefa"
 #, qt-format
 msgctxt "View|"
 msgid "This list is longer than %1 tasks. Focus on the top %1?"
-msgstr ""
+msgstr "Esta lista ten máis de %1 tarefas. Quere centrarse nas primeiras %1?"
 
 #: views/todo/qml/View.qml:468
 msgctxt "View|"
 msgid "Due today"
-msgstr ""
+msgstr "Para hoxe"
 
 #: views/todo/qml/View.qml:472
 #, qt-format
 msgctxt "View|"
 msgid " (%1 days)"
-msgstr ""
+msgstr " (%1 días)"
 
 #: views/todo/qml/View.qml:475
 #, qt-format
 msgctxt "View|"
 msgid "Overdue for %1 days"
-msgstr ""
+msgstr "Remata en %1 días"
 
 #: views/todo/qml/View.qml:514
 msgctxt "View|"
