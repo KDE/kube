@@ -1,6 +1,9 @@
+# Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kube_qt\n"
+"PO-Revision-Date: 2023-05-27 00:48-0700\n"
+"Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -721,6 +724,7 @@ msgctxt "AttachmentModel|"
 msgid "%n key(s) imported"
 msgid_plural "%n key(s) imported"
 msgstr[0] ""
+msgstr[1] ""
 
 #: framework/src/domain/mime/attachmentmodel.cpp:249
 #, qt-format
@@ -728,6 +732,7 @@ msgctxt "AttachmentModel|"
 msgid "%n key(s) were already imported"
 msgid_plural "%n key(s) were already imported"
 msgstr[0] ""
+msgstr[1] ""
 
 #: framework/src/domain/mime/mailtemplates.cpp:127
 msgctxt "QObject|"
