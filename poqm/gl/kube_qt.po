@@ -159,7 +159,7 @@ msgid ""
 "the account a title that will be displayed inside Kube."
 msgstr ""
 "Para que Kube poida acceder á súa conta, introduza o seu enderezo de correo "
-"electrónico e nome de usuario e déalle á conta un título que mostrar dentro "
+"electrónico e nome de usuario e déalle á conta un título que amosar dentro "
 "de Kube."
 
 #: accounts/gmail/qml/Login.qml:57 accounts/imap/qml/Login.qml:57
@@ -182,7 +182,7 @@ msgid ""
 msgstr ""
 "Para permitir a Kube acceder á súa conta, introduza o seu enderezo de correo "
 "electrónico, nome de usuario, contrasinal, e déalle un título á conta para "
-"mostrar dentro de Kube. Se necesita información sobre se usar un enderezo de "
+"amosar dentro de Kube. Se necesita información sobre se usar un enderezo de "
 "SMTP ou de IMAP ou sobre o tipo de autenticación e porto que usar, contacte "
 "co seu fornecedor de correo electrónico."
 
@@ -227,7 +227,7 @@ msgid ""
 "give the account a title that will be displayed inside Kube."
 msgstr ""
 "Para que Kube poida acceder ao seu arquivo de Maildir, engada a ruta do "
-"arquivo e déalle á conta un título que mostrar dentro de Kube."
+"arquivo e déalle á conta un título que amosar dentro de Kube."
 
 #: accounts/maildir/qml/AccountSettings.qml:55
 msgctxt "AccountSettings|"
@@ -237,7 +237,7 @@ msgstr "Título da conta"
 #: accounts/maildir/qml/AccountSettings.qml:60
 msgctxt "AccountSettings|"
 msgid "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
-msgstr "P. ex. «Traballo», «Casa». Mostrarase en Kube como nome."
+msgstr "P. ex. «Traballo», «Casa». Amosarase en Kube como nome."
 
 #: accounts/maildir/qml/AccountSettings.qml:68
 msgctxt "AccountSettings|"
@@ -1101,7 +1101,7 @@ msgstr "Marcar a mensaxe que ten o foco como non lida:"
 #: views/conversation/qml/View.qml:76 views/todo/qml/View.qml:106
 msgctxt "View|"
 msgid "Show this help text:"
-msgstr "Mostrar este texto de axuda:"
+msgstr "Amosar este texto de axuda:"
 
 #: views/inboxcrusher/qml/View.qml:92
 msgctxt "View|"
