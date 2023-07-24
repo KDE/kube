@@ -1,8 +1,8 @@
-# Shinjo Park <kde@peremen.name>, 2019, 2020, 2021.
+# Shinjo Park <kde@peremen.name>, 2019, 2020, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2021-05-22 19:56+0200\n"
+"PO-Revision-Date: 2023-07-24 00:03+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 20.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 "X-Qt-Contexts: true\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
@@ -683,7 +683,7 @@ msgctxt "QObject|"
 msgid ""
 "Please find attached an iCalendar file with all the event details which you "
 "can import to your calendar application."
-msgstr "달력 프로그램으로 가져올 수 있는 첨부된 iCalendar 파일을 참조하십시오."
+msgstr "캘린더 앱으로 가져올 수 있는 첨부된 iCalendar 파일을 참조하십시오."
 
 #: framework/src/domain/invitationcontroller.cpp:270
 #, qt-format
