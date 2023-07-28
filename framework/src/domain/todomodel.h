@@ -28,7 +28,7 @@
 #include <QDateTime>
 #include "debouncer.h"
 
-namespace KCalCore {
+namespace KCalendarCore {
     class Incidence;
 }
 namespace Sink {
@@ -92,7 +92,7 @@ private:
         QDateTime start;
         QDateTime due;
         QDateTime completed;
-        QSharedPointer<KCalCore::Incidence> incidence;
+        QSharedPointer<KCalendarCore::Incidence> incidence;
         QByteArray color;
         QString calendarName;
         QString status;

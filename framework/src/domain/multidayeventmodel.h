@@ -30,7 +30,7 @@
 #include "eventoccurrencemodel.h"
 #include "debouncer.h"
 
-namespace KCalCore {
+namespace KCalendarCore {
     class MemoryCalendar;
     class Incidence;
 }

@@ -5,8 +5,8 @@
 #include <sink/test.h>
 #include <sink/store.h>
 #include <sink/resourcecontrol.h>
-#include <KCalCore/Event>
-#include <KCalCore/ICalFormat>
+#include <KCalendarCore/Event>
+#include <KCalendarCore/ICalFormat>
 #include "mailtemplates.h"
 
 #include "inboundmodel.h"
@@ -39,20 +39,20 @@ private slots:
         const QDateTime start{{2018, 04, 17}, {6, 0, 0}};
         {
             auto event1 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event1");
             calcoreEvent->setSummary("summary1");
             calcoreEvent->setDescription("description");
             calcoreEvent->setDtStart(start);
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
-            event1.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event1.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event1.setCalendar(calendar1);
             VERIFYEXEC(Sink::Store::create(event1));
         }
         {
             auto event2 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event2");
             calcoreEvent->setSummary("summary2");
             calcoreEvent->setDescription("description");
@@ -60,7 +60,7 @@ private slots:
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
             calcoreEvent->recurrence()->setDaily(2);
-            event2.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event2.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event2.setCalendar(calendar1);
             VERIFYEXEC(Sink::Store::create(event2));
         }
@@ -89,7 +89,7 @@ private slots:
 
         {
 
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event1");
             calcoreEvent->setSummary("summary1");
             calcoreEvent->setDescription("description");
@@ -98,7 +98,7 @@ private slots:
             calcoreEvent->setAllDay(false);
 
             const auto event = model.index(3, 0, {}).data(model.roleNames().key("data")).toMap()["domainObject"].value<Sink::ApplicationDomain::Event::Ptr>();
-            event->setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event->setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
             QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
             QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));

@@ -6,8 +6,8 @@
 #include <sink/test.h>
 #include <sink/store.h>
 #include <sink/resourcecontrol.h>
-#include <KCalCore/Event>
-#include <KCalCore/ICalFormat>
+#include <KCalendarCore/Event>
+#include <KCalendarCore/ICalFormat>
 
 #include "eventoccurrencemodel.h"
 #include "multidayeventmodel.h"
@@ -40,21 +40,21 @@ private slots:
         const QDateTime start{{2018, 04, 17}, {6, 0, 0}};
         {
             auto event1 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event1");
             calcoreEvent->setSummary("summary1");
             calcoreEvent->setDescription("description");
             calcoreEvent->setDtStart(start);
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
-            event1.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event1.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event1.setCalendar(calendar1);
             Sink::Store::create(event1).exec().waitForFinished();
         }
         {
             //1st indent level
             auto event2 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event2");
             calcoreEvent->setSummary("summary2");
             calcoreEvent->setDescription("description");
@@ -62,83 +62,83 @@ private slots:
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
             calcoreEvent->recurrence()->setDaily(1);
-            event2.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event2.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event2.setCalendar(calendar1);
             Sink::Store::create(event2).exec().waitForFinished();
         }
         {
             //2rd indent level
             auto event3 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event3");
             calcoreEvent->setSummary("summary3");
             calcoreEvent->setDtStart(start.addDays(1));
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
-            event3.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event3.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event3.setCalendar(calendar1);
             Sink::Store::create(event3).exec().waitForFinished();
         }
         {
             auto event4 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event4");
             calcoreEvent->setSummary("summary4");
             calcoreEvent->setDtStart(start.addDays(2));
             calcoreEvent->setAllDay(true);
-            event4.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event4.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event4.setCalendar(calendar1);
             Sink::Store::create(event4).exec().waitForFinished();
         }
         {
             //all day event 2 with duration of two days
             auto event4 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event4.1");
             calcoreEvent->setSummary("summary4.1");
             calcoreEvent->setDtStart(start.addDays(2));
             calcoreEvent->setDtEnd(start.addDays(3));
             calcoreEvent->setAllDay(true);
-            event4.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event4.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event4.setCalendar(calendar1);
             Sink::Store::create(event4).exec().waitForFinished();
         }
         {
             auto event1 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event5");
             calcoreEvent->setSummary("summary5");
             calcoreEvent->setDescription("description");
             calcoreEvent->setDtStart(start);
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
-            event1.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event1.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event1.setCalendar(calendar1);
             Sink::Store::create(event1).exec().waitForFinished();
         }
         {
             //3rd indent level
             auto event6 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event6");
             calcoreEvent->setSummary("summary6");
             calcoreEvent->setDtStart(start.addDays(1));
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
-            event6.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event6.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event6.setCalendar(calendar1);
             Sink::Store::create(event6).exec().waitForFinished();
         }
         {
             //Start matches end of previous event
             auto event7 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event7");
             calcoreEvent->setSummary("summary7");
             calcoreEvent->setDtStart(start.addDays(1).addSecs(3600));
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
-            event7.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event7.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event7.setCalendar(calendar1);
             Sink::Store::create(event7).exec().waitForFinished();
         }
@@ -215,10 +215,10 @@ private slots:
             //Test modification
             {
                 const auto event = model.index(0, 0, {}).data(EventOccurrenceModel::Event).value<Sink::ApplicationDomain::Event::Ptr>();
-                auto calcoreEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
+                auto calcoreEvent = KCalendarCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalendarCore::Event>();
                 calcoreEvent->setSummary("modified");
 
-                event->setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+                event->setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
                 QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
                 QSignalSpy rowsInsertedSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
@@ -261,13 +261,13 @@ private slots:
         {
             //all day event 2 with duration of two days
             auto event4 = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event1");
             calcoreEvent->setSummary("summary1");
             calcoreEvent->setDtStart(start.addDays(2));
             calcoreEvent->setDtEnd(start.addDays(9));
             calcoreEvent->setAllDay(true);
-            event4.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event4.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event4.setCalendar(calendar1);
             Sink::Store::create(event4).exec().waitForFinished();
         }
@@ -340,7 +340,7 @@ private slots:
         const QDateTime start{{2018, 04, 17}, {6, 0, 0}};
         {
             auto event = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event");
             calcoreEvent->setSummary("summary2");
             calcoreEvent->setDescription("description");
@@ -348,7 +348,7 @@ private slots:
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
             calcoreEvent->recurrence()->setDaily(1);
-            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event.setCalendar(calendar1);
             Sink::Store::create(event).exec().waitForFinished();
         }
@@ -356,7 +356,7 @@ private slots:
         //Exception
         {
             auto event = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event");
             calcoreEvent->setSummary("summary2");
             calcoreEvent->setDescription("description");
@@ -364,7 +364,7 @@ private slots:
             calcoreEvent->setDtStart(start.addDays(2).addSecs(3600));
             calcoreEvent->setDuration(7200);
             calcoreEvent->setAllDay(false);
-            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event.setCalendar(calendar1);
             Sink::Store::create(event).exec().waitForFinished();
         }
@@ -406,7 +406,7 @@ private slots:
         //Monthly recurrence
         {
             auto event = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event");
             calcoreEvent->setSummary("summary2");
             calcoreEvent->setDescription("description");
@@ -414,7 +414,7 @@ private slots:
             calcoreEvent->setDuration(3600);
             calcoreEvent->setAllDay(false);
             calcoreEvent->recurrence()->setMonthly(1);
-            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event.setCalendar(calendar1);
             Sink::Store::create(event).exec().waitForFinished();
         }
@@ -422,7 +422,7 @@ private slots:
         //Recurs on saturday, exception on the following monday
         {
             auto event = ApplicationDomainType::createEntity<Event>(resource.identifier());
-            auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+            auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
             calcoreEvent->setUid("event");
             calcoreEvent->setSummary("summary2");
             calcoreEvent->setDescription("description");
@@ -430,7 +430,7 @@ private slots:
             calcoreEvent->setDtStart(QDateTime{{2021, 5, 3}, {15, 0, 0}});
             calcoreEvent->setDuration(7200);
             calcoreEvent->setAllDay(false);
-            event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+            event.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
             event.setCalendar(calendar1);
             Sink::Store::create(event).exec().waitForFinished();
         }

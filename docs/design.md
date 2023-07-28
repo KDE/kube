@@ -128,7 +128,7 @@ Store/Load/Shared stuff (attachments, events, ....)
 Same as files? Import/Export calendar data
 
 ### RFC implementations
-* iCal: KCalCore
+* iCal: KCalendarCore
 * vCard: KContacts
 * iTip: extract from kdepim repo
 * SMTP: based on libcurl

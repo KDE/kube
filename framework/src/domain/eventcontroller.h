@@ -30,7 +30,7 @@
 #include "completer.h"
 #include "selector.h"
 
-namespace KCalCore {
+namespace KCalendarCore {
     class Event;
 };
 
@@ -81,11 +81,11 @@ public:
     Completer *attendeeCompleter() const;
     Selector *identitySelector() const;
 
-    static QString eventToBody(const KCalCore::Event &event);
+    static QString eventToBody(const KCalendarCore::Event &event);
 
 protected:
-    void populateFromEvent(const KCalCore::Event &event);
-    void saveToEvent(KCalCore::Event &event);
+    void populateFromEvent(const KCalendarCore::Event &event);
+    void saveToEvent(KCalendarCore::Event &event);
 
 private slots:
     void updateSaveAction();

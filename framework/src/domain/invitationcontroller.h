@@ -28,7 +28,7 @@
 
 #include "eventcontroller.h"
 
-#include <KCalCore/Event>
+#include <KCalendarCore/Event>
 class KUBE_EXPORT InvitationController : public EventController
 {
     Q_OBJECT
@@ -64,11 +64,11 @@ public:
     Q_INVOKABLE void loadICal(const QString &message);
 
 private:
-    void handleRequest(KCalCore::Event::Ptr icalEvent);
-    void handleReply(KCalCore::Event::Ptr icalEvent);
-    void handleCancellation(KCalCore::Event::Ptr icalEvent);
+    void handleRequest(KCalendarCore::Event::Ptr icalEvent);
+    void handleReply(KCalendarCore::Event::Ptr icalEvent);
+    void handleCancellation(KCalendarCore::Event::Ptr icalEvent);
     void storeEvent(ParticipantStatus);
     KAsync::Job<ParticipantStatus> findAttendeeStatus();
     Sink::ApplicationDomain::Event mExistingEvent;
-    KCalCore::Event::Ptr mLoadedIcalEvent;
+    KCalendarCore::Event::Ptr mLoadedIcalEvent;
 };

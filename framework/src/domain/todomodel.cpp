@@ -26,7 +26,7 @@
 
 #include <QMetaEnum>
 
-#include <KCalCore/ICalFormat>
+#include <KCalendarCore/ICalFormat>
 
 #include <entitycache.h>
 
@@ -111,7 +111,7 @@ void TodoSourceModel::updateFromSource()
         for (int i = 0; i < mSourceModel->rowCount(); ++i) {
             auto todo = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Todo::Ptr>();
             //Parse the todo
-            if(auto icalTodo = KCalCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalCore::Todo>()) {
+            if(auto icalTodo = KCalendarCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalendarCore::Todo>()) {
                 mTodos.append({icalTodo->dtStart(), icalTodo->dtDue(), icalTodo->completed(), icalTodo, getColor(todo->getCalendar()), getCalendarName(todo->getCalendar()), todo->getStatus(), todo, todo->getPriority()});
             } else {
                 SinkWarning() << "Invalid ICal to process, ignoring...";

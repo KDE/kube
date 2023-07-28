@@ -23,8 +23,8 @@
 #include <sink/store.h>
 #include <sink/log.h>
 
-#include <KCalCore/ICalFormat>
-#include <KCalCore/Todo>
+#include <KCalendarCore/ICalFormat>
+#include <KCalendarCore/Todo>
 #include <QUuid>
 
 using namespace Sink::ApplicationDomain;
@@ -47,7 +47,7 @@ void TodoController::save()
         return;
     }
 
-    auto populateTodo = [this](KCalCore::Todo& todo) {
+    auto populateTodo = [this](KCalendarCore::Todo& todo) {
         todo.setSummary(getSummary());
         todo.setRelatedTo(getParentUid());
         todo.setDescription(getDescription());
@@ -57,7 +57,7 @@ void TodoController::save()
             todo.setCompleted(true);
         } else if (getDoing()) {
             todo.setCompleted(false);
-            todo.setStatus(KCalCore::Incidence::StatusInProcess);
+            todo.setStatus(KCalendarCore::Incidence::StatusInProcess);
         } else {
             todo.setCompleted(false);
         }
@@ -67,14 +67,14 @@ void TodoController::save()
         Todo todo = *e;
 
         //Apply the changed properties on top of what's existing
-        auto calcoreTodo = KCalCore::ICalFormat().readIncidence(todo.getIcal()).dynamicCast<KCalCore::Todo>();
+        auto calcoreTodo = KCalendarCore::ICalFormat().readIncidence(todo.getIcal()).dynamicCast<KCalendarCore::Todo>();
         if(!calcoreTodo) {
             SinkWarning() << "Invalid ICal to process, ignoring...";
             return;
         }
         populateTodo(*calcoreTodo);
 
-        todo.setIcal(KCalCore::ICalFormat().toICalString(calcoreTodo).toUtf8());
+        todo.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreTodo).toUtf8());
         todo.setCalendar(*calendar);
 
         auto job = Store::modify(todo)
@@ -89,11 +89,11 @@ void TodoController::save()
     } else {
         Todo todo(calendar->resourceInstanceIdentifier());
 
-        auto calcoreTodo = QSharedPointer<KCalCore::Todo>::create();
+        auto calcoreTodo = QSharedPointer<KCalendarCore::Todo>::create();
         calcoreTodo->setUid(QUuid::createUuid().toString());
         populateTodo(*calcoreTodo);
 
-        todo.setIcal(KCalCore::ICalFormat().toICalString(calcoreTodo).toUtf8());
+        todo.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreTodo).toUtf8());
         todo.setCalendar(*calendar);
 
         auto job = Store::create(todo)
@@ -127,7 +127,7 @@ void TodoController::loadTodo(const QVariant &variant)
         setCalendar(ApplicationDomainType::Ptr::create(ApplicationDomainType::createEntity<ApplicationDomain::Calendar>(todo->resourceInstanceIdentifier(), todo->getCalendar())));
         setCalendarId(todo->getCalendar());
 
-        auto icalTodo = KCalCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalCore::Todo>();
+        auto icalTodo = KCalendarCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalendarCore::Todo>();
         if(!icalTodo) {
             SinkWarning() << "Invalid ICal to process, ignoring...";
             return;
@@ -139,10 +139,10 @@ void TodoController::loadTodo(const QVariant &variant)
         setLocation(icalTodo->location());
         setStart(icalTodo->dtStart());
         setDue(icalTodo->dtDue());
-        if (icalTodo->status() == KCalCore::Incidence::StatusCompleted) {
+        if (icalTodo->status() == KCalendarCore::Incidence::StatusCompleted) {
             setComplete(true);
             setDoing(false);
-        } else if (icalTodo->status() == KCalCore::Incidence::StatusInProcess) {
+        } else if (icalTodo->status() == KCalendarCore::Incidence::StatusInProcess) {
             setComplete(false);
             setDoing(true);
         } else {

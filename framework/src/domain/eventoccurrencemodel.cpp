@@ -28,9 +28,9 @@
 
 #include <QMetaEnum>
 
-#include <KCalCore/ICalFormat>
-#include <KCalCore/OccurrenceIterator>
-#include <KCalCore/MemoryCalendar>
+#include <KCalendarCore/ICalFormat>
+#include <KCalendarCore/OccurrenceIterator>
+#include <KCalendarCore/MemoryCalendar>
 
 #include <entitycache.h>
 
@@ -146,15 +146,15 @@ void EventOccurrenceModel::updateFromSource()
     QList<Occurrence> newEvents;
 
     if (mSourceModel) {
-        QMap<QByteArray, KCalCore::Incidence::Ptr> recurringEvents;
-        QMultiMap<QByteArray, KCalCore::Incidence::Ptr> exceptions;
+        QMap<QByteArray, KCalendarCore::Incidence::Ptr> recurringEvents;
+        QMultiMap<QByteArray, KCalendarCore::Incidence::Ptr> exceptions;
         QMap<QByteArray, QSharedPointer<Sink::ApplicationDomain::Event>> events;
         for (int i = 0; i < mSourceModel->rowCount(); ++i) {
             auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Event::Ptr>();
             Q_ASSERT(event);
 
             //Parse the event
-            auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
+            auto icalEvent = KCalendarCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalendarCore::Event>();
             if(!icalEvent) {
                 SinkWarning() << "Invalid ICal to process, ignoring...";
                 continue;
@@ -175,12 +175,12 @@ void EventOccurrenceModel::updateFromSource()
         }
         //process all recurring events and their exceptions.
         for (const auto &uid : recurringEvents.keys()) {
-            KCalCore::MemoryCalendar calendar{QTimeZone::systemTimeZone()};
+            KCalendarCore::MemoryCalendar calendar{QTimeZone::systemTimeZone()};
             calendar.addIncidence(recurringEvents.value(uid));
             for (const auto &event : exceptions.values(uid)) {
                 calendar.addIncidence(event);
             }
-            KCalCore::OccurrenceIterator occurrenceIterator{calendar, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
+            KCalendarCore::OccurrenceIterator occurrenceIterator{calendar, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
             while (occurrenceIterator.hasNext()) {
                 occurrenceIterator.next();
                 const auto incidence = occurrenceIterator.incidence();
@@ -195,7 +195,7 @@ void EventOccurrenceModel::updateFromSource()
         }
         //Process all exceptions that had no main event present in the current query
         for (const auto &uid : exceptions.keys()) {
-            const auto icalEvent = exceptions.value(uid).dynamicCast<KCalCore::Event>();
+            const auto icalEvent = exceptions.value(uid).dynamicCast<KCalendarCore::Event>();
             Q_ASSERT(icalEvent);
             const auto event = events.value(icalEvent->instanceIdentifier().toLatin1());
             if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {

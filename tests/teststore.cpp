@@ -24,9 +24,9 @@
 
 #include <kmime/kmime_message.h>
 
-#include <KCalCore/Event>
-#include <KCalCore/Todo>
-#include <KCalCore/ICalFormat>
+#include <KCalendarCore/Event>
+#include <KCalendarCore/Todo>
+#include <KCalendarCore/ICalFormat>
 #include <KContacts/VCardConverter>
 
 #include <QDebug>
@@ -157,7 +157,7 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
 
     auto sinkEvent = ApplicationDomainType::createEntity<Event>(resourceId);
 
-    auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+    auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
 
     QString uid;
     if (object.contains("uid")) {
@@ -194,11 +194,11 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
     if (object.contains("attendees")) {
         for (const auto &attendee : object["attendees"].toList()) {
             auto map = attendee.toMap();
-            calcoreEvent->addAttendee(KCalCore::Attendee(map["name"].toString(), map["email"].toString(), true, KCalCore::Attendee::NeedsAction, KCalCore::Attendee::ReqParticipant, QString{}));
+            calcoreEvent->addAttendee(KCalendarCore::Attendee(map["name"].toString(), map["email"].toString(), true, KCalendarCore::Attendee::NeedsAction, KCalendarCore::Attendee::ReqParticipant, QString{}));
         }
     }
 
-    sinkEvent.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+    sinkEvent.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
     sinkEvent.setCalendar(calendarId);
 
@@ -212,7 +212,7 @@ static void createTodo(const QVariantMap &object, const QByteArray &calendarId, 
 
     auto sinkEvent = ApplicationDomainType::createEntity<Todo>(resourceId);
 
-    auto calcoreEvent = QSharedPointer<KCalCore::Todo>::create();
+    auto calcoreEvent = QSharedPointer<KCalendarCore::Todo>::create();
 
     QString uid;
     if (object.contains("uid")) {
@@ -238,17 +238,17 @@ static void createTodo(const QVariantMap &object, const QByteArray &calendarId, 
 
     if (object["doing"].toBool()) {
         calcoreEvent->setCompleted(false);
-        calcoreEvent->setStatus(KCalCore::Incidence::StatusInProcess);
+        calcoreEvent->setStatus(KCalendarCore::Incidence::StatusInProcess);
     }
     if (object["done"].toBool()) {
         calcoreEvent->setCompleted(true);
-        calcoreEvent->setStatus(KCalCore::Incidence::StatusCompleted);
+        calcoreEvent->setStatus(KCalendarCore::Incidence::StatusCompleted);
     }
     if (object["needsAction"].toBool()) {
-        calcoreEvent->setStatus(KCalCore::Incidence::StatusNeedsAction);
+        calcoreEvent->setStatus(KCalendarCore::Incidence::StatusNeedsAction);
     }
 
-    sinkEvent.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+    sinkEvent.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
     sinkEvent.setCalendar(calendarId);
 
