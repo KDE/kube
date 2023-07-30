@@ -20,6 +20,8 @@ import QtQuick.Controls 2.2
 import Qt.labs.calendar 1.0
 import QtQuick.Layouts 1.3
 
+import "dateutils.js" as DateUtils
+
 import org.kube.framework 1.0 as Kube
 
 Item {
@@ -32,8 +34,16 @@ Item {
     property bool invertIcons: true
     property bool rangeSelection: false
 
-    signal next()
-    signal previous()
+
+    // Private
+    property date currentDate: selectedDate
+
+    function next() {
+        root.currentDate = DateUtils.nextMonth(root.currentDate)
+    }
+    function previous() {
+        root.currentDate = DateUtils.previousMonth(root.currentDate)
+    }
     signal selected(date date)
     signal endSelected(date date)
 
@@ -78,7 +88,7 @@ Item {
                 }
                 color: root.textColor
                 font.bold: true
-                text: root.selectedDate.toLocaleString(Qt.locale(), "MMMM yyyy")
+                text: root.currentDate.toLocaleString(Qt.locale(), "MMMM yyyy")
             }
             Kube.IconButton {
                 anchors {
@@ -102,8 +112,8 @@ Item {
                 right: parent.right
             }
 
-            month: root.selectedDate.getMonth()
-            year: root.selectedDate.getFullYear()
+            month: root.currentDate.getMonth()
+            year: root.currentDate.getFullYear()
             locale: Qt.locale()
 
             contentItem: GridLayout {

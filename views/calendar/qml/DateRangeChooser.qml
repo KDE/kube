@@ -148,8 +148,6 @@ ColumnLayout {
                         root.end = DateUtils.applyTimeFromDate(date, root.end)
                         root.setAllDay()
                     }
-                    onNext: root.start = DateUtils.nextMonth(selectedDate)
-                    onPrevious: root.start = DateUtils.previousMonth(selectedDate)
                 }
 
                 RowLayout {

@@ -121,8 +121,12 @@ Kube.View {
                    onSelected: {
                        root.selectedDate = date
                    }
-                   onNext: root.goToNext()
-                   onPrevious: root.goToPrevious()
+                   function next() {
+                        root.goToNext()
+                   }
+                   function previous() {
+                        root.goToPrevious()
+                   }
                }
             ]
 
