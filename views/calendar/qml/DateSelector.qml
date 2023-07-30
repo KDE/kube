@@ -135,9 +135,24 @@ Item {
                         bottom: parent.bottom
                     }
                     function dateIsInRange(day, month, selectedDate, selectedEnd) {
-                        return (day === selectedDate.getDate() && month === selectedDate.getMonth()) ||
-                        // (selectedEnd && day === selectedEnd.getDate() && month === selectedEnd.getMonth()) ||
-                        (selectedEnd && day >= selectedDate.getDate() && day <= selectedEnd.getDate() && month === selectedDate.getMonth());
+                        const startMonth = selectedDate.getMonth();
+                        const startDay = selectedDate.getDate();
+                        if (day === startDay && month === startMonth) {
+                            return true;
+                        }
+                        if (selectedEnd) {
+                            const endMonth = selectedEnd.getMonth();
+                            const endDay = selectedEnd.getDate();
+                            if (
+                                (month < endMonth && month === startMonth && day >= startDay) ||
+                                (month > startMonth && month < endMonth) ||
+                                (month > startMonth && month === endMonth && day <= endDay) ||
+                                (month === startMonth && day >= startDay && day <= endDay)
+                            ) {
+                                return true;
+                            }
+                        }
+                        return false;
                     }
                     height: 2
                     color: Kube.Colors.plasmaBlue
