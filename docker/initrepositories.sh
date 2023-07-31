@@ -37,7 +37,6 @@ if [ -d sink ]; then
     git clone kde:sink
 fi
 cd sink
-git checkout develop
 git pull
 cd ..
 
@@ -45,6 +44,5 @@ if [ -d kube ]; then
     git clone kde:kube
 fi
 cd kube
-git checkout develop
 git pull
 cd ..

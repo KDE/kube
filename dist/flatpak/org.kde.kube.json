@@ -110,7 +110,7 @@
             "name": "sink",
             "buildsystem": "cmake-ninja",
             "sources": [
-                { "type": "git", "url": "git://anongit.kde.org/sink.git", "branch": "develop" }
+                { "type": "git", "url": "git://anongit.kde.org/sink.git", "branch": "master" }
             ],
             "modules": [
                 {
@@ -125,7 +125,7 @@
             "config-opts": ["-DENABLE_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "name": "kube",
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kube.git", "branch": "develop" } ]
+            "sources": [ { "type": "git", "url": "git://anongit.kde.org/kube.git", "branch": "master" } ]
         },
         {
             "name": "kubewrapper",
