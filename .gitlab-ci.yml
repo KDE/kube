@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2020-2023 Laurent Montel <montel@kde.org>
+# SPDX-License-Identifier: CC0-1.0
+
+include:
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/reuse-lint.yml
+  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux.yml
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd.yml
+  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows.yml

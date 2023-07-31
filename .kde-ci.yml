@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
+
+Dependencies:
+- 'on': ['Linux/Qt5', 'FreeBSD/Qt5', 'Windows/Qt5']
+  'require':
+    'frameworks/extra-cmake-modules': '@latest'
+    'frameworks/kcoreaddons': '@latest'
+    'frameworks/kcontacts': '@latest'
+    'frameworks/sonnet': '@latest'
+    'frameworks/kcalendarcore': '@latest'
+    'pim/kimap2' : '@latest'
+    'pim/kdav2' : '@latest'
+    'pim/mimetreeparser' : '@latest'
+    'pim/sink' : '@latest'
+    'libraries/kasync' : '@latest'
+
+Options:
+  require-passing-tests-on: [ 'Linux/Qt5']
