@@ -26,77 +26,105 @@
                 }
             ]
         },
+        {
+            "name": "binutils",
+            "config-opts": [
+                "--prefix=/app",
+                "--enable-shared",
+                "--with-system-zlib",
+                "--enable-multilib",
+                "--enable-64-bit-bfd"
+            ],
+            "sources": [ { "type": "archive", "url": "https://ftpmirror.gnu.org/binutils/binutils-2.38.tar.gz", "sha256": "b3f1dc5b17e75328f19bd88250bee2ef9f91fc8cbb7bd48bdb31390338636052"} ]
+        },
         "gpgme.json",
         {
             "name": "extra-cmake-modules",
             "cleanup-platform": ["*"],
             "buildsystem": "cmake-ninja",
             "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/extra-cmake-modules.git", "branch": "v5.67.0" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/extra-cmake-modules.git", "branch": "v5.85.0" } ]
         },
         {
             "name": "ki18n",
             "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/ki18n.git", "branch": "v5.67.0" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/ki18n.git", "branch": "v5.85.0" } ]
         },
         {
             "name": "kconfig",
             "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kconfig.git", "branch": "v5.67.0" } ]
-        },
-        {
-            "name": "attica",
-            "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
-            "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/attica.git", "branch": "v5.67.0" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kconfig.git", "branch": "v5.85.0" } ]
         },
         {
             "name": "kcoreaddons",
             "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kcoreaddons.git", "branch": "v5.67.0" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kcoreaddons.git", "branch": "v5.85.0" } ]
         },
         {
             "name": "karchive",
             "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib", "-DCMAKE_DISABLE_FIND_PACKAGE_Qt5Test=TRUE"],
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/karchive.git", "branch": "v5.67.0" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/karchive.git", "branch": "v5.85.0" } ]
         },
         {
             "name": "kcodecs",
             "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kcodecs.git", "branch": "v5.67.0" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kcodecs.git", "branch": "v5.85.0" } ]
         },
         {
-            "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib", "-DSONNET_USE_WIDGETS=OFF", "-DBUILD_QCH=OFF"],
             "name": "sonnet",
+            "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib", "-DSONNET_USE_WIDGETS=OFF", "-DBUILD_QCH=OFF"],
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/sonnet.git", "branch": "v5.67.0" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/sonnet.git", "branch": "v5.85.0" } ]
         },
         {
+            "name": "kcontacts",
             "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kcontacts.git", "branch": "v5.85.0" } ]
+        },
+        {
+            "name": "kcalcore",
+            "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kcalendarcore.git", "branch": "v5.85.0" } ],
+            "modules": [
+                {
+                    "name": "libical",
+                    "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
+                    "buildsystem": "cmake-ninja",
+                    "sources": [ { "type": "git", "url": "https://github.com/libical/libical.git", "branch": "v3.0.10" } ],
+                    "cleanup": [
+                        "/share/gtk-doc"
+                    ]
+                }
+            ]
+        },
+        {
             "name": "kasync",
+            "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
             "buildsystem": "cmake-ninja",
             "sources": [ { "type": "git", "url": "https://invent.kde.org/libraries/kasync.git", "branch": "v0.3.0" } ]
         },
         {
-            "config-opts": ["-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_INSTALL_LIBDIR=lib", "-DFLATBUFFERS_BUILD_TESTS=OFF", "-DFLATBUFFERS_BUILD_FLATC=ON"],
             "name": "flatbuffers",
+            "config-opts": ["-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_INSTALL_LIBDIR=lib", "-DFLATBUFFERS_BUILD_TESTS=OFF", "-DFLATBUFFERS_BUILD_FLATC=ON"],
             "buildsystem": "cmake-ninja",
             "sources": [ { "type": "git", "url": "https://github.com/google/flatbuffers.git", "branch": "v1.10.0" } ]
         },
         {
-            "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "name": "kmime",
+            "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/pim/kmime.git", "branch": "Applications/19.08" } ]
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/pim/kmime.git", "branch": "v21.08.0" } ]
         },
         {
-            "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "name": "kimap2",
+            "config-opts": ["-DBUILD_TESTING=OFF", "-DCMAKE_INSTALL_LIBDIR=lib"],
             "buildsystem": "cmake-ninja",
             "sources": [ { "type": "git", "url": "https://invent.kde.org/pim/kimap2.git", "branch": "master" } ],
             "modules": [
@@ -107,34 +135,14 @@
             ]
         },
         {
-            "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
-            "name": "kcontacts",
-            "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kcontacts.git", "branch": "Applications/19.04" } ]
-        },
-        {
-            "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
-            "name": "kcalcore",
-            "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/frameworks/kcalendarcore.git", "branch": "Applications/19.08" } ],
-            "modules": [
-                {
-                    "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
-                    "name": "libical",
-                    "buildsystem": "cmake-ninja",
-                    "sources": [ { "type": "git", "url": "https://github.com/libical/libical.git", "branch": "v2.0.0" } ]
-                }
-            ]
-        },
-        {
-            "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
             "name": "kdav2",
+            "config-opts": ["-DCMAKE_INSTALL_LIBDIR=lib"],
             "buildsystem": "cmake-ninja",
             "sources": [ { "type": "git", "url": "https://invent.kde.org/pim/kdav2.git", "branch": "master" } ]
         },
         {
             "name": "lmdb",
-            "sources": [ { "type": "git", "url": "git://github.com/LMDB/lmdb.git", "branch": "LMDB_0.9.23"}],
+            "sources": [ { "type": "git", "url": "https://github.com/LMDB/lmdb.git", "branch": "LMDB_0.9.23"}],
             "no-autogen": true,
             "make-install-args": ["prefix=/app"],
             "subdir" : "libraries/liblmdb"
@@ -172,6 +180,26 @@
             "build-commands": [
                 "mkdir -p /app/share/fonts/google-noto",
                 "install -m 0644 hinted/NotoSans/NotoSans-{Regular,Bold,Italic}.ttf /app/share/fonts/google-noto"
+            ]
+        },
+        {
+            "name": "libzstd",
+            "buildsystem": "meson",
+            "subdir" : "build/meson",
+            "config-opts": [
+                "-Dbin_programs=false",
+                "-Dbin_contrib=false"
+            ],
+            "cleanup": [
+                "/bin",
+                "/include"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/facebook/zstd/archive/refs/tags/v1.5.2.tar.gz",
+                    "sha256": "f7de13462f7a82c29ab865820149e778cbfe01087b3a55b5332707abf9db4a6e"
+                }
             ]
         }
     ]

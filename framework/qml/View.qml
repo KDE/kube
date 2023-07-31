@@ -81,9 +81,13 @@ FocusScope {
     //This signal will be emitted once all initial properties have been set and the view is ready to load
     signal setup()
 
+    //This signal will be emitted once the view is activated
+    signal activated()
+
     StackView.onActivated: {
         root.isCurrentView = true
         root.refresh()
+        root.activated()
         showSearchOverlay(true)
     }
 

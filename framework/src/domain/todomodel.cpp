@@ -26,7 +26,7 @@
 
 #include <QMetaEnum>
 
-#include <KCalCore/ICalFormat>
+#include <KCalendarCore/ICalFormat>
 
 #include <entitycache.h>
 
@@ -34,10 +34,9 @@ using namespace Sink;
 
 TodoSourceModel::TodoSourceModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}, {ApplicationDomain::Calendar::Name::name}})}
+    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}, {ApplicationDomain::Calendar::Name::name}})},
+    mUpdateFromSourceDebouncer{100, [this] { this->updateFromSource(); }, this}
 {
-    mRefreshTimer.setSingleShot(true);
-    QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &TodoSourceModel::updateFromSource);
 }
 
 static QList<QByteArray> toList(const QVariant &variant) {
@@ -66,6 +65,7 @@ void TodoSourceModel::setFilter(const QVariantMap &filter)
         query.resourceFilter<SinkResource::Account>(account);
     }
     query.filter<Todo::Calendar>(Query::Comparator(QVariant::fromValue(calendarFilter), Query::Comparator::In));
+    query.filter<Todo::ParentUid>(filter.value("parentUid"));
 
     if (filter.value("doing").toBool()) {
         query.filter<Todo::Status>("INPROCESS");
@@ -98,11 +98,7 @@ void TodoSourceModel::setFilter(const QVariantMap &filter)
 
 void TodoSourceModel::refreshView()
 {
-    if (!mRefreshTimer.isActive()) {
-        //Instant update, but then only refresh every 50ms max.
-        updateFromSource();
-        mRefreshTimer.start(50);
-    }
+    mUpdateFromSourceDebouncer.trigger();
 }
 
 void TodoSourceModel::updateFromSource()
@@ -115,7 +111,7 @@ void TodoSourceModel::updateFromSource()
         for (int i = 0; i < mSourceModel->rowCount(); ++i) {
             auto todo = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Todo::Ptr>();
             //Parse the todo
-            if(auto icalTodo = KCalCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalCore::Todo>()) {
+            if(auto icalTodo = KCalendarCore::ICalFormat().readIncidence(todo->getIcal()).dynamicCast<KCalendarCore::Todo>()) {
                 mTodos.append({icalTodo->dtStart(), icalTodo->dtDue(), icalTodo->completed(), icalTodo, getColor(todo->getCalendar()), getCalendarName(todo->getCalendar()), todo->getStatus(), todo, todo->getPriority()});
             } else {
                 SinkWarning() << "Invalid ICal to process, ignoring...";
@@ -300,10 +296,10 @@ bool TodoModel::lessThan(const QModelIndex &left, const QModelIndex &right) cons
     const auto leftScore = left.data(TodoSourceModel::Relevance).toInt();
     const auto rightScore = right.data(TodoSourceModel::Relevance).toInt();
     if (leftScore == rightScore) {
-        const auto leftDate = left.data(TodoSourceModel::SortDate);
-        const auto rightDate = right.data(TodoSourceModel::SortDate);
+        const auto leftDate = left.data(TodoSourceModel::SortDate).toDateTime();
+        const auto rightDate = right.data(TodoSourceModel::SortDate).toDateTime();
         if (leftDate == rightDate) {
-            return left.data(TodoSourceModel::Summary) < right.data(TodoSourceModel::Summary);
+            return left.data(TodoSourceModel::Summary).toString() < right.data(TodoSourceModel::Summary).toString();
         }
         return leftDate < rightDate;
     }

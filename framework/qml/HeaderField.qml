@@ -28,13 +28,12 @@ Kube.TextField {
     background: Rectangle {
         id: background
         color: Kube.Colors.viewBackgroundColor
-        Rectangle {
+        Kube.SeparatorLine {
             anchors {
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
             }
-            height: 1
             color: root.activeFocus ? Kube.Colors.highlightColor : Kube.Colors.buttonColor
         }
     }

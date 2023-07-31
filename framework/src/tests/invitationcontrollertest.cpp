@@ -5,10 +5,10 @@
 #include <sink/resourcecontrol.h>
 
 #include <QDateTime>
-#include <KCalCore/ICalFormat>
-#include <KCalCore/ScheduleMessage>
-#include <KCalCore/Event>
-#include <KCalCore/Attendee>
+#include <KCalendarCore/ICalFormat>
+#include <KCalendarCore/ScheduleMessage>
+#include <KCalendarCore/Event>
+#include <KCalendarCore/Attendee>
 #include <KMime/Message>
 #include "invitationcontroller.h"
 
@@ -30,22 +30,22 @@ class InvitationControllerTest : public QObject
         bool recurring = false;
         QDateTime recurrenceId = {};
         bool cancelled = false;
-        KCalCore::iTIPMethod method = KCalCore::iTIPRequest;
+        KCalendarCore::iTIPMethod method = KCalendarCore::iTIPRequest;
     };
 
     QString createInvitation(const Invitation &invitation)
     {
-        auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+        auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
         calcoreEvent->setUid(invitation.uid);
         calcoreEvent->setSummary(invitation.summary);
         calcoreEvent->setDescription("description");
         calcoreEvent->setLocation("location");
         calcoreEvent->setDtStart(invitation.dtStart);
         calcoreEvent->setOrganizer("organizer@test.com");
-        calcoreEvent->addAttendee(KCalCore::Attendee("John Doe", "attendee1@test.com", true, KCalCore::Attendee::NeedsAction));
+        calcoreEvent->addAttendee(KCalendarCore::Attendee("John Doe", "attendee1@test.com", true, KCalendarCore::Attendee::NeedsAction));
         calcoreEvent->setRevision(invitation.revision);
         if (invitation.cancelled) {
-            calcoreEvent->setStatus(KCalCore::Incidence::StatusCanceled);
+            calcoreEvent->setStatus(KCalendarCore::Incidence::StatusCanceled);
         }
 
         if (invitation.recurring) {
@@ -55,7 +55,7 @@ class InvitationControllerTest : public QObject
             calcoreEvent->setRecurrenceId(invitation.recurrenceId);
         }
 
-        return KCalCore::ICalFormat{}.createScheduleMessage(calcoreEvent, invitation.method);
+        return KCalendarCore::ICalFormat{}.createScheduleMessage(calcoreEvent, invitation.method);
     }
 
 private slots:
@@ -110,13 +110,13 @@ private slots:
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 1);
 
-            auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
+            auto event = KCalendarCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalendarCore::Event>();
             QVERIFY(event);
             QCOMPARE(event->uid().toUtf8(), uid);
             QCOMPARE(event->organizer().fullName(), QLatin1String{"organizer@test.com"});
 
             const auto attendee = event->attendeeByMail("attendee1@test.com");
-            QCOMPARE(attendee.status(), KCalCore::Attendee::Accepted);
+            QCOMPARE(attendee.status(), KCalendarCore::Attendee::Accepted);
 
             //Ensure the mail is sent to the organizer
             QTRY_COMPARE(Sink::Store::read<Mail>(Sink::Query{}.resourceFilter(mailtransportResourceId)).size(), 1);
@@ -157,7 +157,7 @@ private slots:
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 1);
 
-            auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
+            auto event = KCalendarCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalendarCore::Event>();
             QVERIFY(event);
             QCOMPARE(event->uid().toUtf8(), uid);
             QCOMPARE(event->summary(), QLatin1String{"summary2"});
@@ -201,7 +201,7 @@ private slots:
             auto list = Sink::Store::read<Event>(Sink::Query{}.filter<Event::Calendar>(calendar));
             QCOMPARE(list.size(), 1);
 
-            auto event = KCalCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalCore::Event>();
+            auto event = KCalendarCore::ICalFormat().readIncidence(list.first().getIcal()).dynamicCast<KCalendarCore::Event>();
             QVERIFY(event);
             QCOMPARE(event->uid().toUtf8(), uid);
             QCOMPARE(event->organizer().fullName(), QLatin1String{"organizer@test.com"});
@@ -240,7 +240,7 @@ private slots:
             QCOMPARE(list.size(), 2);
 
             for (const auto &entry : list) {
-                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                auto event = KCalendarCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalendarCore::Event>();
                 QVERIFY(event);
                 QCOMPARE(event->uid().toUtf8(), uid);
                 if (event->recurrenceId().isValid()) {
@@ -274,7 +274,7 @@ private slots:
             QCOMPARE(list.size(), 2);
 
             for (const auto &entry : list) {
-                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                auto event = KCalendarCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalendarCore::Event>();
                 QVERIFY(event);
                 QCOMPARE(event->uid().toUtf8(), uid);
                 if (event->recurrenceId().isValid()) {
@@ -308,7 +308,7 @@ private slots:
             QCOMPARE(list.size(), 2);
 
             for (const auto &entry : list) {
-                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                auto event = KCalendarCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalendarCore::Event>();
                 QVERIFY(event);
                 QCOMPARE(event->uid().toUtf8(), uid);
                 if (event->recurrenceId().isValid()) {
@@ -344,15 +344,15 @@ private slots:
             QCOMPARE(list.size(), 2);
 
             for (const auto &entry : list) {
-                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                auto event = KCalendarCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalendarCore::Event>();
                 QVERIFY(event);
                 QCOMPARE(event->uid().toUtf8(), uid);
                 if (event->recurrenceId().isValid()) {
                     QCOMPARE(event->summary(), QLatin1String{"exceptionSummary2"});
-                    QCOMPARE(event->status(), KCalCore::Incidence::StatusCanceled);
+                    QCOMPARE(event->status(), KCalendarCore::Incidence::StatusCanceled);
                 } else {
                     QCOMPARE(event->summary(), QLatin1String{"summary2"});
-                    QCOMPARE(event->status(), KCalCore::Incidence::StatusNone);
+                    QCOMPARE(event->status(), KCalendarCore::Incidence::StatusNone);
                 }
             }
         }
@@ -382,15 +382,15 @@ private slots:
             QCOMPARE(list.size(), 2);
 
             for (const auto &entry : list) {
-                auto event = KCalCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalCore::Event>();
+                auto event = KCalendarCore::ICalFormat().readIncidence(entry.getIcal()).dynamicCast<KCalendarCore::Event>();
                 QVERIFY(event);
                 QCOMPARE(event->uid().toUtf8(), uid);
                 if (event->recurrenceId().isValid()) {
                     QCOMPARE(event->summary(), QLatin1String{"exceptionSummary2"});
-                    QCOMPARE(event->status(), KCalCore::Incidence::StatusCanceled);
+                    QCOMPARE(event->status(), KCalendarCore::Incidence::StatusCanceled);
                 } else {
                     QCOMPARE(event->summary(), QLatin1String{"summary2"});
-                    QCOMPARE(event->status(), KCalCore::Incidence::StatusCanceled);
+                    QCOMPARE(event->status(), KCalendarCore::Incidence::StatusCanceled);
                 }
             }
         }
@@ -431,7 +431,7 @@ private slots:
         //Cancellation per rfc
         {
             InvitationController controller;
-            const auto ical = createInvitation({.uid = uid, .summary = "summary", .revision = 1, .method = KCalCore::iTIPCancel});
+            const auto ical = createInvitation({.uid = uid, .summary = "summary", .revision = 1, .method = KCalendarCore::iTIPCancel});
             controller.loadICal(ical);
 
             QTRY_COMPARE(controller.getMethod(), InvitationController::Cancel);
@@ -451,7 +451,7 @@ private slots:
         Sink::Store::create(calendar).exec().waitForFinished();
 
         const QByteArray uid{"uid1"};
-        const auto ical = createInvitation({.uid = uid, .summary = "summary", .method = KCalCore::iTIPReply});
+        const auto ical = createInvitation({.uid = uid, .summary = "summary", .method = KCalendarCore::iTIPReply});
 
         {
             InvitationController controller;

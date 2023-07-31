@@ -41,7 +41,7 @@ T.ComboBox {
 
     contentItem: Kube.Label {
         leftPadding: Kube.Units.smallSpacing
-        rightPadding: Kube.Units.largeSpacing
+        rightPadding: Kube.Units.smallSpacing
 
         text: root.displayText
         horizontalAlignment: Text.AlignLeft
@@ -63,7 +63,7 @@ T.ComboBox {
 
     popup: T.Popup {
         width: root.width
-        implicitHeight: Math.min(Kube.Units.gridUnit * 5, contentItem.implicitHeight)
+        implicitHeight: Math.min(Kube.Units.gridUnit * 10, contentItem.implicitHeight)
 
         contentItem: Kube.ListView {
             clip: true
@@ -96,7 +96,7 @@ T.ComboBox {
             onClicked: {
                 root.currentIndex = root.highlightedIndex
                 root.activated(root.highlightedIndex)
-                popup.close()
+                root.popup.close()
             }
         }
     }

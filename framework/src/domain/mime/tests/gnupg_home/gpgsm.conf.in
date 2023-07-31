@@ -1,0 +1,10 @@
+
+###+++--- GPGConf ---+++###
+disable-crl-checks
+debug-level basic
+faked-system-time 20130110T154812
+log-file @CMAKE_CURRENT_BINARY_DIR@/gpgsm.log
+###+++--- GPGConf ---+++### Tue 29 Jun 2010 10:23:13 AM EDT
+# GPGConf edited this configuration file.
+# It will disable options before this marked block, but it will
+# never change anything below these lines.

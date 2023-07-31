@@ -25,10 +25,10 @@
 #include <QList>
 #include <QSet>
 #include <QSharedPointer>
-#include <QTimer>
 #include <QDateTime>
+#include "debouncer.h"
 
-namespace KCalCore {
+namespace KCalendarCore {
     class Incidence;
 }
 namespace Sink {
@@ -86,13 +86,13 @@ private:
     QSet<QByteArray> mCalendarFilter;
     QSharedPointer<EntityCacheInterface> mCalendarCache;
 
-    QTimer mRefreshTimer;
+    Debouncer mUpdateFromSourceDebouncer;
 
     struct Occurrence {
         QDateTime start;
         QDateTime due;
         QDateTime completed;
-        QSharedPointer<KCalCore::Incidence> incidence;
+        QSharedPointer<KCalendarCore::Incidence> incidence;
         QByteArray color;
         QString calendarName;
         QString status;

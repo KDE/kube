@@ -122,10 +122,7 @@ FocusScope {
             spacing: 2
             Repeater {
                 id: repeater
-                onCountChanged: {
-                    for (var i = 0; i < count; i++) {
-                        itemAt(i).index = i
-                    }
+                onItemAdded: {
                     root.scrollToEnd = true
                     flickable.scrollToIndex(root.currentIndex)
                 }

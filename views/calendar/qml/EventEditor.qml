@@ -34,6 +34,11 @@ Item {
 
     signal done()
 
+    function discard() {
+        controller.reload()
+        root.done()
+    }
+
     implicitWidth: contentLayout.implicitWidth + 2 * Kube.Units.largeSpacing
     implicitHeight: contentLayout.implicitHeight + buttons.implicitHeight + 2 * Kube.Units.largeSpacing
 
@@ -82,34 +87,15 @@ Item {
                 onTextChanged: controller.summary = text
             }
 
-            ColumnLayout {
+            DateRangeChooser {
                 id: dateAndTimeChooser
-
-                spacing: Kube.Units.smallSpacing
-
-                DateRangeChooser {
-                    Layout.fillWidth: true
-                    enableTime: !controller.allDay
-                    initialStart: root.editMode ? controller.start : root.start
-                    initialEnd: root.editMode ? controller.end : DateUtils.addMinutesToDate(root.start, 30)
-                    onStartChanged: controller.start = start
-                    onEndChanged: controller.end = end
-                }
-
-                RowLayout {
-                    spacing: Kube.Units.smallSpacing
-                    Kube.CheckBox {
-                        checked: controller.allDay
-                        onCheckedChanged: {
-                            if (controller.allDay != checked) {
-                                controller.allDay = checked
-                            }
-                        }
-                    }
-                    Kube.Label {
-                        text: qsTr("All day")
-                    }
-                }
+                Layout.fillWidth: true
+                initialStart: root.editMode ? controller.start : root.start
+                initialEnd: root.editMode ? controller.end : DateUtils.addMinutesToDate(root.start, 30)
+                allDay: controller.allDay
+                onStartChanged: controller.start = start
+                onEndChanged: controller.end = end
+                onAllDayChanged: controller.allDay = allDay
             }
 
             ColumnLayout {
@@ -151,24 +137,31 @@ Item {
 
                 AttendeeListEditor {
                     id: attendees
-                    Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
                     focus: true
                     activeFocusOnTab: true
                     controller: root.controller.attendees
                     completer: root.controller.attendeeCompleter
                 }
 
-            }
+                Kube.SeparatorLine {
+                    Layout.fillWidth: true
+                }
 
-            Kube.TextEditor {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.minimumHeight: Kube.Units.gridUnit * 4
+                Kube.TextEditor {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: Kube.Units.gridUnit * 4
 
-                placeholderText: "Description"
-                initialText: controller.description
-                onTextChanged: controller.description = text
+                    border.width: 0
+
+                    placeholderText: "Description"
+                    initialText: controller.description
+                    onTextChanged: controller.description = text
+
+                    Keys.onEscapePressed: calendarSelector.forceActiveFocus(Qt.TabFocusReason)
+                }
             }
         }
 
@@ -212,14 +205,14 @@ Item {
 
             Kube.Button {
                 id: discardButton
+                enabled: controller.modified
                 text: qsTr("Discard Changes")
-                onClicked: {
-                    root.done()
-                }
+                onClicked: root.discard()
             }
 
             Kube.PositiveButton {
                 id: saveButton
+                enabled: controller.modified
                 text: qsTr("Save Changes")
                 onClicked: {
                     controller.saveAction.execute()

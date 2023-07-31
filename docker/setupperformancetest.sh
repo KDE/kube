@@ -55,7 +55,7 @@ Received: from build.kde.org (build.kde.org [IPv6:2a01:4f8:160:9363::5])
 Received: from localhost ([127.0.0.1]) by build.kde.org with esmtp (Exim 4.72)
  (envelope-from <null@kde.org>) id 1UF7SV-0000gs-11
  for nepomuk@kde.org; Mon, 11 Mar 2013 18:28:27 +0000
-Date: Mon, 11 Mar 2013 18:28:27 +0000 (UTC)
+Date:
 From: KDE CI System  <null@kde.org>
 To: nepomuk@kde.org
 Message-ID:
@@ -63,7 +63,7 @@ MIME-Version: 1.0
 X-Jenkins-Job: nepomuk-core_stable
 X-Jenkins-Result: UNSTABLE
 X-Scanned-By: MIMEDefang 2.71 on 46.4.96.248
-Subject: [Nepomuk] Jenkins build is still unstable: nepomuk-core_stable #158
+Subject:
 X-BeenThere: nepomuk@kde.org
 X-Mailman-Version: 2.1.14
 Precedence: list
@@ -94,7 +94,10 @@ EOF
 FOLDERPATH=/var/spool/imap/d/user/doe/test
 for i in `seq 1 5000`;
 do
-   sudo echo "$MSG" | sed "s/Message-ID:/Message-ID: <$i>/" > $FOLDERPATH/$i.
+   DATEOFFSET=$((1361234760 + $i))
+   DATE=$(date -R -d @$DATEOFFSET.790)
+   echo "$MSG" | sed "s/Message-ID:/Message-ID: <$i@generated.local>/;s/^Subject:/Subject: Subject $i/;s/^Date:/Date: $DATE/" | sudo tee "$FOLDERPATH/$i." > /dev/null
+   echo -n "."
 done
 
 sudo chown -R cyrus:mail $FOLDERPATH

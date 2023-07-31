@@ -11,6 +11,9 @@ MouseArea {
     property alias timeout: hideTimer.interval
     property alias background: bg.color
 
+    parent: ApplicationWindow.overlay
+    z: 1.0
+
     function hide() {
         if (hideTimer.running)
             hideTimer.stop()

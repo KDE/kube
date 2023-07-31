@@ -370,7 +370,7 @@ Controls1.SplitView {
                     Repeater {
                         model: Kube.MailListModel {
                             filter: {
-                                "singleMail": componentRoot.parent ? componentRoot.parent.entityId : null,
+                                "entityId": componentRoot.parent ? componentRoot.parent.entityId : null,
                                 "headersOnly": true,
                                 "fetchMails": true
                             }
@@ -437,7 +437,7 @@ Controls1.SplitView {
                     Repeater {
                         model: Kube.MailListModel {
                             filter: {
-                                "singleMail": componentRoot.parent ? componentRoot.parent.entityId : null,
+                                "entityId": componentRoot.parent ? componentRoot.parent.entityId : null,
                                 "headersOnly": true,
                                 "fetchMails": true
                             }

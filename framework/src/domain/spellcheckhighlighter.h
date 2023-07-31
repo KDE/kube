@@ -29,7 +29,7 @@ public:
     SpellcheckHighlighter(QTextDocument *parent);
 
 protected:
-    void highlightBlock(const QString &text);
+    void highlightBlock(const QString &text) override;
 
 private:
     void autodetectLanguage(const QString &sentence);

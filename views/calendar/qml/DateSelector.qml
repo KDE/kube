@@ -18,20 +18,34 @@
 import QtQuick 2.4
 import QtQuick.Controls 2.2
 import Qt.labs.calendar 1.0
+import QtQuick.Layouts 1.3
+
+import "dateutils.js" as DateUtils
 
 import org.kube.framework 1.0 as Kube
 
 Item {
     id: root
     property date selectedDate
+    property var selectedEnd: null
     property date notBefore: new Date(0) //Earliest possible by epoch
     property color backgroundColor: Kube.Colors.darkBackgroundColor
     property color textColor: Kube.Colors.highlightedTextColor
     property bool invertIcons: true
+    property bool rangeSelection: false
 
-    signal next()
-    signal previous()
+
+    // Private
+    property date currentDate: selectedDate
+
+    function next() {
+        root.currentDate = DateUtils.nextMonth(root.currentDate)
+    }
+    function previous() {
+        root.currentDate = DateUtils.previousMonth(root.currentDate)
+    }
     signal selected(date date)
+    signal endSelected(date date)
 
     implicitWidth: Math.max(grid.implicitWidth, dateLabel.implicitWidth + 2 * Kube.Units.gridUnit)
     implicitHeight: column.implicitHeight
@@ -74,7 +88,7 @@ Item {
                 }
                 color: root.textColor
                 font.bold: true
-                text: root.selectedDate.toLocaleString(Qt.locale(), "MMMM yyyy")
+                text: root.currentDate.toLocaleString(Qt.locale(), "MMMM yyyy")
             }
             Kube.IconButton {
                 anchors {
@@ -98,9 +112,21 @@ Item {
                 right: parent.right
             }
 
-            month: root.selectedDate.getMonth()
-            year: root.selectedDate.getFullYear()
+            month: root.currentDate.getMonth()
+            year: root.currentDate.getFullYear()
             locale: Qt.locale()
+
+            contentItem: GridLayout {
+                rows: 6
+                columns: 7
+                rowSpacing: grid.spacing
+                columnSpacing: grid.spacing
+
+                Repeater {
+                    model: grid.source
+                    delegate: grid.delegate
+                }
+            }
 
             delegate: Text {
                 horizontalAlignment: Text.AlignHCenter
@@ -109,6 +135,8 @@ Item {
                 text: model.day
                 font: grid.font
                 color: root.textColor
+                Layout.preferredHeight: Kube.Units.gridUnit / 4 * 3
+                Layout.fillWidth: true
 
                 Rectangle {
                     anchors {
@@ -116,17 +144,48 @@ Item {
                         right: parent.right
                         bottom: parent.bottom
                     }
-                    width: Kube.Units.gridUnit
-                    height: 3
+                    function dateIsInRange(day, month, selectedDate, selectedEnd) {
+                        const startMonth = selectedDate.getMonth();
+                        const startDay = selectedDate.getDate();
+                        if (day === startDay && month === startMonth) {
+                            return true;
+                        }
+                        if (selectedEnd) {
+                            const endMonth = selectedEnd.getMonth();
+                            const endDay = selectedEnd.getDate();
+                            if (
+                                (month < endMonth && month === startMonth && day >= startDay) ||
+                                (month > startMonth && month < endMonth) ||
+                                (month > startMonth && month === endMonth && day <= endDay) ||
+                                (month === startMonth && day >= startDay && day <= endDay)
+                            ) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    height: 2
                     color: Kube.Colors.plasmaBlue
                     opacity: 0.6
-                    visible: model.day === root.selectedDate.getDate() && model.month === root.selectedDate.getMonth()
+                    visible: dateIsInRange(model.day, model.month, root.selectedDate, root.selectedEnd)
                 }
             }
 
             onClicked: {
-                if (date.getTime() >= root.notBefore.getTime()) {
-                    root.selected(date)
+                if (
+                    root.rangeSelection && root.selectedDate && !root.selectedEnd &&
+                    date.getTime() >= root.selectedDate.getTime()
+                ) {
+                    //Select the end of the range
+                    root.selectedEnd = date
+                    root.endSelected(date)
+                } else {
+                    if (date.getTime() >= root.notBefore.getTime()) {
+                        //Set the start
+                        root.selectedEnd = null
+                        root.selected(date)
+                        root.endSelected(date)
+                    }
                 }
             }
         }

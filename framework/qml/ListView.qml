@@ -17,7 +17,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.7
+import QtQuick 2.15
 import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
@@ -25,17 +25,21 @@ ListView {
     id: root
     property Item mouseProxy: scrollHelper
     property int availableWidth: scrollBar.visible ? width - scrollBar.width: width
+    implicitHeight: contentHeight
 
     clip: true
     ScrollBar.vertical: Kube.ScrollBar { id: scrollBar }
     highlightMoveDuration: 100
 
     add: Transition {
-        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 100 }
+        // FIXME Even though we handle interrupted transitions in the displaced handler,
+        // we still occasionally end up with invisible items (e.g. when starting into the inbound view)
+        // NumberAnimation { property: "opacity"; from: 0.1; to: 1.0; duration: 100 }
     }
 
     displaced: Transition {
-        NumberAnimation { properties: "x,y"; duration: 50 }
+        //FIXME This causes some delegates to be invisible every now and then (no idea why)
+        // NumberAnimation { properties: "x,y"; duration: 50 }
         //Handle interrupted add transitions
         NumberAnimation { property: "opacity"; to: 1.0; }
     }
@@ -52,6 +56,14 @@ ListView {
         id: scrollHelper
         flickable: root
         anchors.fill: root
+    }
+
+    onAtYEndChanged: {
+        //The fetchMore logic doesn't work in the inbound view (not sure why, it should).
+        //However, this does pretty much the same and works.
+        if (atYEnd && model && typeof model.tryFetchMore === "function") {
+            model.tryFetchMore()
+        }
     }
 }
 

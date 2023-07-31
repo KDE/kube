@@ -63,6 +63,7 @@ add_library(kubeframework SHARED
     viewhighlighter.cpp
     file.cpp
     logmodel.cpp
+    inboundmodel.cpp
     entitymodel.cpp
     entitycontroller.cpp
     )

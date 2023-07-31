@@ -49,7 +49,41 @@ ApplicationWindow {
                     id: "resource2",
                     account: "account1",
                     type: "mailtransport"
+                },
+                {
+                    id: "carddavresource",
+                    account: "account1",
+                    type: "carddav",
                 }],
+            addressbooks: [{
+                id: "addressbook0",
+                resource: "carddavresource",
+                name: "Addressbook(wrong)"
+            },
+            {
+                id: "addressbook1",
+                resource: "carddavresource",
+                name: "Default Addressbook",
+
+                generator: {
+                    count: 100,
+                    key: "key",
+                    template: {
+                        resource: "carddavresource",
+                        givenname: "key",
+                        familyname: "Doe",
+                        email: ["key@example.org"],
+                    }
+                },
+
+                contacts: [{
+                    resource: "carddavresource",
+                    uid: "uid1",
+                    givenname: "John",
+                    familyname: "Doe",
+                    email: ["doe@example.org"],
+                }],
+            }],
             folders: [{
                     id: "folder1",
                     resource: "resource1",

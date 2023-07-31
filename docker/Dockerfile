@@ -1,4 +1,4 @@
-FROM fedora:33
+FROM fedora:37
 
 RUN dnf -y update
 
@@ -9,7 +9,7 @@ RUN dnf -y install gcc-c++ git doxygen cmake bzr vim tar make ninja-build clang 
     kf5-ki18n-devel kf5-kcodecs-devel kf5-kcontacts-devel kf5-kmime-devel gpgme-devel kf5-kcalendarcore-devel \
     cyrus-imapd cyrus-sasl cyrus-sasl-devel cyrus-sasl-plain gnupg2-smime pinentry-gtk \
     google-noto-serif-fonts google-noto-sans-fonts \
-    xorg-x11-server-Xvfb qt5ct
+    xorg-x11-server-Xvfb qt5ct binutils-devel libzstd-devel mold
 
 RUN useradd -d /home/developer -m developer
 
@@ -59,6 +59,7 @@ ADD setupperformancetest.sh /home/developer/setupperformancetest.sh
 ADD setupgoogletest.sh /home/developer/setupgoogletest.sh
 ADD kubeunlocked.sh /home/developer/kubeunlocked.sh
 ADD initrepositories.sh /home/developer/initrepositories.sh
+ADD generatemessages.sh /home/developer/generatemessages.sh
 
 ADD keyconfig /home/developer/keyconfig
 ADD gpg-agent.conf /home/developer/.gnupg/gpg-agent.conf

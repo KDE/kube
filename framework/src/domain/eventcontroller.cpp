@@ -24,8 +24,8 @@
 #include <sink/log.h>
 
 #include <KMime/Message>
-#include <KCalCore/ICalFormat>
-#include <KCalCore/Event>
+#include <KCalendarCore/ICalFormat>
+#include <KCalendarCore/Event>
 #include <QUuid>
 
 #include "eventoccurrencemodel.h"
@@ -49,7 +49,7 @@ static QString assembleEmailAddress(const QString &name, const QString &email) {
     return mb.prettyAddress();
 }
 
-static std::pair<QStringList, QStringList> getRecipients(const QString &organizerEmail, const KCalCore::Attendee::List &attendees)
+static std::pair<QStringList, QStringList> getRecipients(const QString &organizerEmail, const KCalendarCore::Attendee::List &attendees)
 {
     QStringList to;
     QStringList cc;
@@ -67,15 +67,15 @@ static std::pair<QStringList, QStringList> getRecipients(const QString &organize
         }
 
         //No updates if the attendee has already declined
-        if (a.status() == KCalCore::Attendee::Declined) {
+        if (a.status() == KCalendarCore::Attendee::Declined) {
             SinkTrace() << "Already declined: " << a.fullName();
             continue;
         }
 
         const auto prettyAddress = assembleEmailAddress(a.name(), email);
 
-        if (a.role() == KCalCore::Attendee::OptParticipant ||
-            a.role() == KCalCore::Attendee::NonParticipant) {
+        if (a.role() == KCalendarCore::Attendee::OptParticipant ||
+            a.role() == KCalendarCore::Attendee::NonParticipant) {
             cc << prettyAddress;
         } else {
             to << prettyAddress;
@@ -84,7 +84,7 @@ static std::pair<QStringList, QStringList> getRecipients(const QString &organize
     return {to, cc};
 }
 
-QString EventController::eventToBody(const KCalCore::Event &event)
+QString EventController::eventToBody(const KCalendarCore::Event &event)
 {
     QString body;
     body.append(QObject::tr("== %1 ==").arg(event.summary()));
@@ -104,7 +104,7 @@ QString EventController::eventToBody(const KCalCore::Event &event)
     return body;
 }
 
-static void sendInvitation(const QByteArray &accountId, const QString &from, KCalCore::Event::Ptr event, bool isUpdate = false)
+static void sendInvitation(const QByteArray &accountId, const QString &from, KCalendarCore::Event::Ptr event, bool isUpdate = false)
 {
     const auto attendees = event->attendees();
     if (attendees.isEmpty()) {
@@ -139,7 +139,7 @@ static void sendInvitation(const QByteArray &accountId, const QString &from, KCa
         {to, cc, {}},
         subject,
         body,
-        KCalCore::ICalFormat{}.createScheduleMessage(event, KCalCore::iTIPRequest)
+        KCalendarCore::ICalFormat{}.createScheduleMessage(event, KCalendarCore::iTIPRequest)
     );
 
     SinkTrace() << "Msg " << msg->encodedContent();
@@ -236,7 +236,7 @@ void EventController::save()
         Sink::ApplicationDomain::Event event = *occurrence.domainObject;
 
         //Apply the changed properties on top of what's existing
-        auto calcoreEvent = KCalCore::ICalFormat().readIncidence(event.getIcal()).dynamicCast<KCalCore::Event>();
+        auto calcoreEvent = KCalendarCore::ICalFormat().readIncidence(event.getIcal()).dynamicCast<KCalendarCore::Event>();
         if(!calcoreEvent) {
             SinkWarning() << "Invalid ICal to process, ignoring...";
             return;
@@ -247,7 +247,7 @@ void EventController::save()
         //Bump the sequence number
         calcoreEvent->setRevision(calcoreEvent->revision() + 1);
 
-        event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+        event.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
         event.setCalendar(*calendar);
 
         //We ignore the case where we are not the organizer because we turn those read-only via the ourEvent property
@@ -265,11 +265,11 @@ void EventController::save()
     } else {
         Sink::ApplicationDomain::Event event(calendar->resourceInstanceIdentifier());
 
-        auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+        auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
         calcoreEvent->setUid(QUuid::createUuid().toString());
         saveToEvent(*calcoreEvent);
 
-        event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+        event.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
         event.setCalendar(*calendar);
 
         sendInvitation(getAccountId(), getOrganizer(), calcoreEvent);
@@ -291,32 +291,32 @@ void EventController::updateSaveAction()
     saveAction()->setEnabled(!getSummary().isEmpty());
 }
 
-static EventController::ParticipantStatus toStatus(KCalCore::Attendee::PartStat status) {
+static EventController::ParticipantStatus toStatus(KCalendarCore::Attendee::PartStat status) {
     switch(status) {
-        case KCalCore::Attendee::Accepted:
+        case KCalendarCore::Attendee::Accepted:
             return EventController::Accepted;
-        case KCalCore::Attendee::Declined:
+        case KCalendarCore::Attendee::Declined:
             return EventController::Declined;
-        case KCalCore::Attendee::NeedsAction:
+        case KCalendarCore::Attendee::NeedsAction:
         default:
             break;
     }
     return EventController::Unknown;
 }
 
-static KCalCore::Attendee::PartStat fromStatus(EventController::ParticipantStatus status) {
+static KCalendarCore::Attendee::PartStat fromStatus(EventController::ParticipantStatus status) {
     switch(status) {
         case EventController::Accepted:
-            return KCalCore::Attendee::Accepted;
+            return KCalendarCore::Attendee::Accepted;
         case EventController::Declined:
-            return KCalCore::Attendee::Declined;
+            return KCalendarCore::Attendee::Declined;
         default:
             break;
     }
-    return KCalCore::Attendee::NeedsAction;
+    return KCalendarCore::Attendee::NeedsAction;
 }
 
-void EventController::populateFromEvent(const KCalCore::Event &event)
+void EventController::populateFromEvent(const KCalendarCore::Event &event)
 {
     setSummary(event.summary());
     setDescription(event.description());
@@ -331,7 +331,7 @@ void EventController::populateFromEvent(const KCalCore::Event &event)
     }
 }
 
-void EventController::saveToEvent(KCalCore::Event &event)
+void EventController::saveToEvent(KCalendarCore::Event &event)
 {
     event.setSummary(getSummary());
     event.setDescription(getDescription());
@@ -342,13 +342,13 @@ void EventController::saveToEvent(KCalCore::Event &event)
     event.setOrganizer(getOrganizer());
 
     event.clearAttendees();
-    KCalCore::Attendee::List attendees;
+    KCalendarCore::Attendee::List attendees;
     attendeesController()->traverse([&] (const QVariantMap &map) {
         bool rsvp = true;
-        KCalCore::Attendee::PartStat status = fromStatus(map["status"].value<ParticipantStatus>());
-        KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant;
+        KCalendarCore::Attendee::PartStat status = fromStatus(map["status"].value<ParticipantStatus>());
+        KCalendarCore::Attendee::Role role = KCalendarCore::Attendee::ReqParticipant;
         const auto [name, email] = parseEmailAddress(map["name"].toString());
-        event.addAttendee(KCalCore::Attendee(name, email, rsvp, status, role, QString{}));
+        event.addAttendee(KCalendarCore::Attendee(name, email, rsvp, status, role, QString{}));
     });
 }
 
@@ -365,7 +365,7 @@ void EventController::init()
 
         setCalendar(ApplicationDomainType::Ptr::create(ApplicationDomainType::createEntity<ApplicationDomain::Calendar>(event.resourceInstanceIdentifier(), event.getCalendar())));
 
-        auto icalEvent = KCalCore::ICalFormat().readIncidence(event.getIcal()).dynamicCast<KCalCore::Event>();
+        auto icalEvent = KCalendarCore::ICalFormat().readIncidence(event.getIcal()).dynamicCast<KCalendarCore::Event>();
         if(!icalEvent) {
             SinkWarning() << "Invalid ICal to process, ignoring...";
             return;
@@ -374,6 +374,12 @@ void EventController::init()
         setStart(occurrence.start);
         setEnd(occurrence.end);
     }
+    setModified(false);
+}
+
+void EventController::reload()
+{
+    init();
 }
 
 void EventController::remove()

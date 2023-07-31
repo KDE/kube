@@ -24,9 +24,9 @@
 
 #include <kmime/kmime_message.h>
 
-#include <KCalCore/Event>
-#include <KCalCore/Todo>
-#include <KCalCore/ICalFormat>
+#include <KCalendarCore/Event>
+#include <KCalendarCore/Todo>
+#include <KCalendarCore/ICalFormat>
 #include <KContacts/VCardConverter>
 
 #include <QDebug>
@@ -157,7 +157,7 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
 
     auto sinkEvent = ApplicationDomainType::createEntity<Event>(resourceId);
 
-    auto calcoreEvent = QSharedPointer<KCalCore::Event>::create();
+    auto calcoreEvent = QSharedPointer<KCalendarCore::Event>::create();
 
     QString uid;
     if (object.contains("uid")) {
@@ -171,8 +171,11 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
     calcoreEvent->setSummary(summary);
 
     if (object.contains("description")) {
-        auto description = object["description"].toString();
-        calcoreEvent->setDescription(description);
+        calcoreEvent->setDescription(object["description"].toString());
+    }
+
+    if (object.contains("location")) {
+        calcoreEvent->setLocation(object["location"].toString());
     }
 
     auto startTime = object["starts"].toDateTime();
@@ -191,25 +194,25 @@ static void createEvent(const QVariantMap &object, const QByteArray &calendarId,
     if (object.contains("attendees")) {
         for (const auto &attendee : object["attendees"].toList()) {
             auto map = attendee.toMap();
-            calcoreEvent->addAttendee(KCalCore::Attendee(map["name"].toString(), map["email"].toString(), true, KCalCore::Attendee::NeedsAction, KCalCore::Attendee::ReqParticipant, QString{}));
+            calcoreEvent->addAttendee(KCalendarCore::Attendee(map["name"].toString(), map["email"].toString(), true, KCalendarCore::Attendee::NeedsAction, KCalendarCore::Attendee::ReqParticipant, QString{}));
         }
     }
 
-    sinkEvent.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+    sinkEvent.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
     sinkEvent.setCalendar(calendarId);
 
     Sink::Store::create(sinkEvent).exec().waitForFinished();
 }
 
-static void createTodo(const QVariantMap &object, const QByteArray &calendarId, const QByteArray &resourceId)
+static void createTodo(const QVariantMap &object, const QByteArray &calendarId, const QByteArray &resourceId, const QByteArray &parentUid = {})
 {
     using Sink::ApplicationDomain::ApplicationDomainType;
     using Sink::ApplicationDomain::Todo;
 
     auto sinkEvent = ApplicationDomainType::createEntity<Todo>(resourceId);
 
-    auto calcoreEvent = QSharedPointer<KCalCore::Todo>::create();
+    auto calcoreEvent = QSharedPointer<KCalendarCore::Todo>::create();
 
     QString uid;
     if (object.contains("uid")) {
@@ -218,6 +221,10 @@ static void createTodo(const QVariantMap &object, const QByteArray &calendarId, 
         uid = QUuid::createUuid().toString();
     }
     calcoreEvent->setUid(uid);
+
+    if (!parentUid.isEmpty()) {
+        calcoreEvent->setRelatedTo(parentUid);
+    }
 
     auto summary = object["summary"].toString();
     calcoreEvent->setSummary(summary);
@@ -231,21 +238,25 @@ static void createTodo(const QVariantMap &object, const QByteArray &calendarId, 
 
     if (object["doing"].toBool()) {
         calcoreEvent->setCompleted(false);
-        calcoreEvent->setStatus(KCalCore::Incidence::StatusInProcess);
+        calcoreEvent->setStatus(KCalendarCore::Incidence::StatusInProcess);
     }
     if (object["done"].toBool()) {
         calcoreEvent->setCompleted(true);
-        calcoreEvent->setStatus(KCalCore::Incidence::StatusCompleted);
+        calcoreEvent->setStatus(KCalendarCore::Incidence::StatusCompleted);
     }
     if (object["needsAction"].toBool()) {
-        calcoreEvent->setStatus(KCalCore::Incidence::StatusNeedsAction);
+        calcoreEvent->setStatus(KCalendarCore::Incidence::StatusNeedsAction);
     }
 
-    sinkEvent.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+    sinkEvent.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
     sinkEvent.setCalendar(calendarId);
 
     Sink::Store::create(sinkEvent).exec().waitForFinished();
+
+    iterateOverObjects(object.value("subtodos").toList(),
+        [calendarId, resourceId, uid](const QVariantMap &object) { createTodo(object, calendarId, resourceId, uid.toUtf8()); });
+
 }
 
 static void createCalendar(const QVariantMap &object)
@@ -311,6 +322,22 @@ static void createAddressbook(const QVariantMap &object)
     auto addressbook = ApplicationDomainType::createEntity<Addressbook>(resourceId);
     addressbook.setName(object["name"].toString());
     Sink::Store::create(addressbook).exec().waitForFinished();
+
+    if (object.contains("generator")) {
+        const auto generator = object.value("generator").toMap();
+        const auto _template = generator["template"].toMap();
+        const auto count = generator["count"].toInt();
+        const auto key = generator["key"].toString();
+
+        for (int i = 0; i < count; i++) {
+            auto _object = _template;
+            const auto replacement = key + QString::number(i);
+            _object.insert("givenname", _object["givenname"].toString().replace(key, replacement));
+            _object.insert("email", _object["email"].toStringList().replaceInStrings(key, replacement));
+
+            createContact(_object, addressbook.identifier(), resourceId);
+        }
+    }
 
     iterateOverObjects(object.value("contacts").toList(), [=](const QVariantMap &object) {
         createContact(object, addressbook.identifier(), resourceId);

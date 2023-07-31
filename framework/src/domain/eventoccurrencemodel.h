@@ -26,10 +26,10 @@
 #include <QList>
 #include <QSet>
 #include <QSharedPointer>
-#include <QTimer>
 #include <QDateTime>
+#include "debouncer.h"
 
-namespace KCalCore {
+namespace KCalendarCore {
     class MemoryCalendar;
     class Incidence;
 }
@@ -89,12 +89,16 @@ public:
     struct Occurrence {
         QDateTime start;
         QDateTime end;
-        QSharedPointer<KCalCore::Incidence> incidence;
+        QSharedPointer<KCalendarCore::Incidence> incidence;
         QByteArray color;
         bool allDay;
         QSharedPointer<Sink::ApplicationDomain::Event> domainObject;
     };
 
+    bool initialItemsComplete() const;
+
+signals:
+    void initialItemsLoaded();
 
 private:
     void updateQuery();
@@ -110,10 +114,11 @@ private:
     int mLength{0};
     QSharedPointer<EntityCacheInterface> mCalendarCache;
 
-    QTimer mRefreshTimer;
+    Debouncer mUpdateFromSourceDebouncer;
 
     QList<Occurrence> mEvents;
     QVariantMap mFilter;
+    bool mInitialItemsLoaded{false};
 };
 
 Q_DECLARE_METATYPE(EventOccurrenceModel::Occurrence);

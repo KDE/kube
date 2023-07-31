@@ -3,9 +3,13 @@ module org.kube.framework
 ConversationView 1.0 ConversationView.qml
 ConversationListView 1.0 ConversationListView.qml
 CalendarSelector 1.0 CalendarSelector.qml
+EntitySelector 1.0 EntitySelector.qml
 EntityComboBox 1.0 EntityComboBox.qml
 FolderListView 1.0 FolderListView.qml
 MailListView 1.0 MailListView.qml
+MailListDelegate 1.0 MailListDelegate.qml
+TodoListDelegate 1.0 TodoListDelegate.qml
+GenericListDelegate 1.0 GenericListDelegate.qml
 MailViewer 1.0 MailViewer.qml
 InlineAccountSwitcher 1.0 InlineAccountSwitcher.qml
 NewAccountDialog 1.0 NewAccountDialog.qml
@@ -20,6 +24,7 @@ IconButton 1.0 IconButton.qml
 AbstractButton 1.0 AbstractButton.qml
 Button 1.0 Button.qml
 Popup 1.0 Popup.qml
+ScrollablePopup 1.0 ScrollablePopup.qml
 ProgressBar 1.0 ProgressBar.qml
 StatusBar 1.0 StatusBar.qml
 ComboBox 1.0 ComboBox.qml
@@ -29,12 +34,15 @@ PositiveButton 1.0 PositiveButton.qml
 TextButton 1.0 TextButton.qml
 TextField 1.0 TextField.qml
 TextArea 1.0 TextArea.qml
+ScrollableTextArea 1.0 ScrollableTextArea.qml
 RequiredTextField 1.0 RequiredTextField.qml
 PasswordField 1.0 PasswordField.qml
 TextEditor 1.0 TextEditor.qml
 HeaderField 1.0 HeaderField.qml
+SeparatorLine 1.0 SeparatorLine.qml
 ToolTip 1.0 ToolTip.qml
 Label 1.0 Label.qml
+LeftSidebar 1.0 LeftSidebar.qml
 ScrollBar 1.0 ScrollBar.qml
 SelectableLabel 1.0 SelectableLabel.qml
 SelectableItem 1.0 SelectableItem.qml

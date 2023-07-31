@@ -63,8 +63,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtbase.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtbase.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 },
                 {
                     "type": "patch",
@@ -73,15 +73,6 @@
                 {
                     "type": "patch",
                     "path": "patch/qtbase-use-wayland-on-gnome.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patch/qtbase-qsequentialiterable-appendable.patch"
-                },
-                {
-                    "//TODO": "Temporary fix for https://github.com/flatpak/flatpak/issues/3397.",
-                    "type": "patch",
-                    "path": "patch/qtbase-revert-correct-handling-for-xdg-runtime-dir.patch"
                 },
                 {
                     "type": "shell",
@@ -104,16 +95,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtdeclarative.git",
-                    "branch": "v5.14.2"
-                },
-                {
-                    "type": "patch",
-                    "path": "patch/qtdeclarative-use-python3.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "patch/qtdeclarative-fix-sets.patch"
+                    "url": "https://github.com/qt/qtdeclarative.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -129,8 +112,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qttools.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qttools.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -141,14 +124,20 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtscript.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtscript.git",
+                    "branch": "v5.15.4-lts"
                 }
             ]
         },
         {
             "name" : "qt5-qtwebengine",
             "buildsystem" : "qmake",
+            "build-options" : {
+                "append-path": "/usr/lib/sdk/node14/bin",
+                "env": [
+                  "npm_config_nodedir=/usr/lib/sdk/node14"
+                ]
+            },
             "cleanup" : [
                 "/bin",
                 "/mkspecs"
@@ -212,12 +201,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtwebengine.git",
-                    "branch": "v5.14.2"
-                },
-                {
-                    "type" : "patch",
-                    "path" : "patch/webengineresources.patch"
+                    "url": "https://github.com/qt/qtwebengine.git",
+                    "branch": "v5.15.4-lts"
                 }
             ]
         },
@@ -228,8 +213,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtsvg.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtsvg.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -240,8 +225,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtx11extras.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtx11extras.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -252,8 +237,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtquickcontrols.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtquickcontrols.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -264,8 +249,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtquickcontrols2.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtquickcontrols2.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -276,8 +261,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtgraphicaleffects.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtgraphicaleffects.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -288,8 +273,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtxmlpatterns.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtxmlpatterns.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -300,8 +285,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtimageformats.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtimageformats.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -312,12 +297,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtwayland.git",
-                    "branch": "v5.14.2"
-                },
-                {
-                    "type": "patch",
-                    "path": "patch/qtwayland-use-gnome-platform-theme-on-gnome-based-desktops.patch"
+                    "url": "https://github.com/qt/qtwayland.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         },
@@ -328,8 +309,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://code.qt.io/qt/qtnetworkauth.git",
-                    "branch": "v5.14.2"
+                    "url": "https://github.com/qt/qtnetworkauth.git",
+                    "branch": "v5.15.4-lts-lgpl"
                 }
             ]
         }

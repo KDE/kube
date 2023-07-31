@@ -25,6 +25,7 @@ StackView {
     property string currentViewName: currentItem ? currentItem.objectName : ""
     property variant extensionModel: null
     property bool dontFocus: false
+    property bool loading: false
 
     /*
      * We maintain the view's lifetimes separately from the StackView in the viewDict.
@@ -38,7 +39,7 @@ StackView {
     }
 
     function pushView(view, properties, name) {
-        var item = push(view, properties, StackView.Immediate)
+        var item = push(view, properties ? Object.assign({}, properties, {visible: true}) : {visible: true}, StackView.Immediate)
         item.parent = root
         item.anchors.fill = root
         item.objectName = name
@@ -55,11 +56,24 @@ StackView {
         var component = createComponent(name)
         function finishCreation() {
             if (component.status == Component.Ready) {
-                var view = component.createObject(root, properties ? properties : {});
-                viewDict[name] = view
-                if (push) {
-                    pushView(view, properties, name)
+                root.loading = true;
+                var incubator = component.incubateObject(root, properties ? Object.assign({}, properties, {visible: false}) : {visible: false});
+
+                function finishObjectCreation(status) {
+                    root.loading = false;
+                    var view = incubator.object;
+                    viewDict[name] = view
+                    if (push) {
+                        pushView(view, properties, name)
+                    }
                 }
+
+                if (incubator.status != Component.Ready) {
+                    incubator.onStatusChanged = finishObjectCreation
+                } else {
+                    finishObjectCreation();
+                }
+
             } else {
                 console.error("Error while loading the component:", component.errorString())
             }

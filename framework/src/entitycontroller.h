@@ -32,5 +32,5 @@ public:
     virtual ~EntityController() = default;
 
     Q_INVOKABLE void create(const QVariantMap &data);
-    Q_INVOKABLE void remove(const QVariant &entity);
+    Q_INVOKABLE void remove(const QString &type, const QVariant &entity);
 };

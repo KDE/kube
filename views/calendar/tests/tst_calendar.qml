@@ -34,12 +34,16 @@ ViewTestCase {
         id: calendarViewComponent
         View {
             focus: true
-            currentDate: "2018-04-11T13:04:03"
-            autoUpdateDate: false
         }
     }
 
+    function initTestcase() {
+        Kube.Context.autoUpdateDate = false
+        Kube.Context.currentDate = "2018-04-11T13:04:03"
+    }
+
     function test_1start() {
+
         var view = createTemporaryObject(calendarViewComponent, testCase, {})
         verify(view)
     }
@@ -104,7 +108,7 @@ ViewTestCase {
         var calendarSelector = findChild(view, "calendarSelector");
         verify(calendarSelector)
         //Only testable from qt 5.14 on
-        // tryCompare(calendarSelector, "enabledCalendars", ["calendar1"])
+        // tryCompare(calendarSelector, "enabledEntities", ["calendar1"])
 
         var weekView = findChild(view, "weekView");
         verify(weekView)

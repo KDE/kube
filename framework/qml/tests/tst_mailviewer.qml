@@ -65,9 +65,14 @@ TestCase {
         verify(htmlPart)
 
         tryVerify(function(){ return htmlView.loadProgress == 100})
+        tryVerify(function(){ return htmlPart.loaded})
 
-        tryVerify(function(){ return (1300 > htmlPart.contentWidth && htmlPart.contentWidth > 1200)})
-        tryVerify(function(){ return (2700 > htmlPart.contentHeight && htmlPart.contentHeight > 2600)})
+        // What it used to return...
+        // tryVerify(function(){ return (1300 > htmlPart.contentWidth && htmlPart.contentWidth > 1200)})
+        // tryVerify(function(){ return (2700 > htmlPart.contentHeight && htmlPart.contentHeight > 2600)})
+        tryVerify(function(){ return (400 > htmlPart.contentWidth && htmlPart.contentWidth > 300)})
+        // Because of the 4000 limit that we have implemented
+        tryVerify(function(){ return (4100 > htmlPart.contentHeight && htmlPart.contentHeight > 3900)})
     }
 
     Component {
@@ -362,9 +367,12 @@ blockquote {
         var htmlView = findChild(htmlPart, "htmlView");
         verify(htmlView)
         tryVerify(function(){ return htmlView.loadProgress == 100})
+        tryVerify(function(){ return htmlPart.loaded})
 
-        tryVerify(function(){ return (1300 > htmlPart.contentWidth && htmlPart.contentWidth > 1200)})
-        tryVerify(function(){ console.warn("height", htmlPart.contentHeight); return (2800 > htmlPart.contentHeight && htmlPart.contentHeight > 2700)})
+        // tryVerify(function(){ return (1300 > htmlPart.contentWidth && htmlPart.contentWidth > 1200)})
+        // tryVerify(function(){ return (2800 > htmlPart.contentHeight && htmlPart.contentHeight > 2700)})
+        tryVerify(function(){ return (500 > htmlPart.contentWidth && htmlPart.contentWidth > 400)})
+        tryVerify(function(){ return (4100 > htmlPart.contentHeight && htmlPart.contentHeight > 3900)})
     }
 
 

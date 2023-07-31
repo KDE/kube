@@ -80,6 +80,22 @@ void Controller::run(const KAsync::Job<void> &job)
     jobToExec.exec();
 }
 
+void Controller::propertyChanged(const QByteArray &property)
+{
+    mModified = true;
+    emit modifiedChanged();
+}
+
+bool Controller::modified() const
+{
+    return mModified;
+}
+
+void Controller::setModified(bool modified)
+{
+    mModified = modified;
+    emit modifiedChanged();
+}
 
 static void traverse(const QStandardItemModel *model, const std::function<bool(QStandardItem *item)> &f)
 {

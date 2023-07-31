@@ -31,8 +31,7 @@ FocusScope {
     property bool encrypt: false
     property alias label: heading.text
 
-    implicitHeight: heading.height + listView.height + lineEdit.height + 2 * Kube.Units.smallSpacing
-    height: implicitHeight
+    implicitHeight: heading.height + listView.contentHeight + lineEdit.height + 2 * Kube.Units.smallSpacing
 
     DropArea {
         anchors.fill: parent
@@ -50,7 +49,7 @@ FocusScope {
         }
     }
 
-    Column {
+    ColumnLayout {
         anchors.fill: parent
 
         spacing: Kube.Units.smallSpacing
@@ -59,14 +58,12 @@ FocusScope {
             id: heading
         }
 
-        ListView {
+        Kube.ListView {
             id: listView
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
             contentHeight: contentItem.childrenRect.height
-            height: contentHeight
             spacing: Kube.Units.smallSpacing
             model: controller.model
             delegate: Rectangle {
@@ -74,7 +71,7 @@ FocusScope {
                 property var recipientId: model.id
                 property var name: model.name
                 height: Kube.Units.gridUnit + Kube.Units.smallSpacing * 2 //smallSpacing for padding
-                width: parent.width
+                width: ListView.view.availableWidth
                 color: Kube.Colors.buttonColor
 
                 MouseArea {
@@ -162,8 +159,8 @@ FocusScope {
         }
 
         FocusScope {
+            Layout.fillWidth: true
             height: Kube.Units.gridUnit +  Kube.Units.smallSpacing * 2
-            width: parent.width
             focus: true
 
             Kube.TextButton {

@@ -26,11 +26,11 @@
 #include <QList>
 #include <QSet>
 #include <QSharedPointer>
-#include <QTimer>
 #include <QDateTime>
 #include "eventoccurrencemodel.h"
+#include "debouncer.h"
 
-namespace KCalCore {
+namespace KCalendarCore {
     class MemoryCalendar;
     class Incidence;
 }
@@ -65,6 +65,9 @@ public:
 private:
     QList<QModelIndex> sortedEventsFromSourceModel(const QDate &rowStart) const;
     QVariantList layoutLines(const QDate &rowStart) const;
+    void reset();
+
     EventOccurrenceModel *mSourceModel{nullptr};
     int mPeriodLength{7};
+    Debouncer mUpdateFromSourceDebouncer;
 };

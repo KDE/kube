@@ -17,7 +17,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 2
 
 import org.kube.framework 1.0 as Kube
@@ -36,7 +36,11 @@ FocusScope {
     property string initialText
     property string placeholderText
     onInitialTextChanged: {
-        edit.text = initialText
+        //Avoid loosing the cursor position if we don't have to
+        //This codepath is triggered on save
+        if (edit.text != initialText) {
+            edit.text = initialText
+        }
     }
 
     function clearFormatting() {
@@ -102,7 +106,6 @@ FocusScope {
 
                 color: Kube.Colors.textColor
                 font.family: Kube.Font.fontFamily
-                font.pointSize: Kube.Units.largeFontSize
                 selectionColor: Kube.Colors.highlightColor
                 padding: Kube.Units.smallSpacing
                 MouseArea {

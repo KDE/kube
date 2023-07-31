@@ -45,7 +45,6 @@ Kube.TextField {
     }
 
     onEditingFinished: {
-        console.warn("on editing finished")
         accept()
     }
 
@@ -105,11 +104,12 @@ Kube.TextField {
         padding: 0
         width: root.width
         contentHeight: listView.height
+        height: contentHeight
 
-        ListView {
+        Kube.ListView {
             id: listView
-            contentHeight: contentItem.childrenRect.height
-            height: contentHeight
+            contentHeight: model.count * (root.height + spacing)
+            height: Math.min(contentHeight, Kube.Units.gridUnit * 20)
             width: parent.width
             interactive: true
             model: root.model
@@ -133,7 +133,7 @@ Kube.TextField {
                             accept()
                         }
                     }
-                    Kube.Label{
+                    Kube.Label {
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: parent.left

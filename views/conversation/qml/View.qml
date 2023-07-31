@@ -39,6 +39,15 @@ Kube.View {
         Kube.Fabric.postMessage(Kube.Messages.searchString, {"searchString": filter})
     }
 
+    Kube.Listener {
+        filter: Kube.Messages.folderSelection
+        onMessageReceived: {
+            //TODO we don't currently expect this to be changed outside of this view.
+            //Otherwise we'd have to select the correct entry in the listview
+            root.currentFolder = message.folder
+        }
+    }
+
     onRefresh: {
         if (!!root.currentFolder) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": root.currentFolder});
@@ -49,7 +58,7 @@ Kube.View {
     }
 
     onCurrentFolderChanged: {
-        if (!!currentFolder) {
+        if (!!root.currentFolder) {
             root.important = false
         }
     }
@@ -136,44 +145,31 @@ Kube.View {
     Controls1.SplitView {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Rectangle {
-            width: Kube.Units.gridUnit * 10
+
+        Kube.LeftSidebar {
             Layout.fillHeight: parent.height
-            color: Kube.Colors.darkBackgroundColor
-
-            Kube.PositiveButton {
-                id: newMailButton
-                objectName: "newMailButton"
-
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    margins: Kube.Units.largeSpacing
+            buttons: [
+                Kube.PositiveButton {
+                    objectName: "newMailButton"
+                    Layout.fillWidth: true
+                    focus: true
+                    text: qsTr("New Email")
+                    onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {})
                 }
-                focus: true
-                text: qsTr("New Email")
-                onClicked: Kube.Fabric.postMessage(Kube.Messages.compose, {})
-            }
+            ]
 
             Kube.InlineAccountSwitcher {
                 id: accountFolderview
                 activeFocusOnTab: true
-                anchors {
-                    top: newMailButton.bottom
-                    topMargin: Kube.Units.largeSpacing
-                    bottom: statusBarContainer.top
-                    left: parent.left
-                    leftMargin: Kube.Units.largeSpacing
-                    right: parent.right
-                    rightMargin: Kube.Units.largeSpacing
-                }
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
                 delegate: ColumnLayout {
                     id: delegateRoot
 
-                    function currentChanged() {
-                        if (delegateRoot.parent.isCurrent) {
+                    function currentChanged(isCurrent) {
+                        if (isCurrent) {
                             //Reset important on account switch
                             root.important = false
                             //Necessary to re-select folder on account change (so the maillist is updated)
@@ -222,11 +218,9 @@ Kube.View {
 
                         function indexSelected(currentIndex) {
                             if (!!currentIndex && currentIndex.valid) {
-                                root.currentFolder = model.data(currentIndex, Kube.FolderListModel.DomainObject)
-                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": root.currentFolder,
+                                Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": model.data(currentIndex, Kube.FolderListModel.DomainObject),
                                                                                         "trash": model.data(currentIndex, Kube.FolderListModel.Trash)})
                             } else {
-                                root.currentFolder = null
                                 Kube.Fabric.postMessage(Kube.Messages.folderSelection, {"folder": null,
                                                                                         "trash": false})
                             }
@@ -243,40 +237,6 @@ Kube.View {
                             Kube.Fabric.postMessage(Kube.Messages.moveToFolder, {"mail": drop.source.mail, "folder": folder})
                             drop.accept(Qt.MoveAction)
                         }
-                    }
-                }
-            }
-
-            Item {
-                id: statusBarContainer
-                anchors {
-                    topMargin: Kube.Units.smallSpacing
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: parent.right
-                }
-                height: childrenRect.height
-
-                Rectangle {
-                    id: border
-                    visible: statusBar.visible
-                    anchors {
-                        right: parent.right
-                        left: parent.left
-                        margins: Kube.Units.smallSpacing
-                    }
-                    height: 1
-                    color: Kube.Colors.viewBackgroundColor
-                    opacity: 0.3
-                }
-                Kube.StatusBar {
-                    id: statusBar
-                    accountId: Kube.Context.currentAccountId
-                    height: Kube.Units.gridUnit * 2
-                    anchors {
-                        top: border.bottom
-                        left: statusBarContainer.left
-                        right: statusBarContainer.right
                     }
                 }
             }

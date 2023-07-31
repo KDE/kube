@@ -70,7 +70,20 @@ ApplicationWindow {
                         summary: "Short event1!",
                         starts: "2018-04-09T14:03:00",
                         organizer: "organizer@example.org",
-                        attendees: [{email: "attendee1@example.org"}, {email: "identity@example.org"}]
+                        location: "This is a rather long location description and Fantasyroad 209 in Somewhere.",
+                        attendees: [
+                            {email: "attendee1@example.org"},
+                            {email: "attendee2@example.org"},
+                            {email: "attendee3@example.org"},
+                            {email: "attendee4@example.org"},
+                            {email: "attendee5@example.org"},
+                            {email: "attendee6@example.org"},
+                            {email: "attendee7@example.org"},
+                            {email: "attendee8@example.org"},
+                            {email: "attendee9@example.org"},
+                            {email: "verylongattendee-withanotherlongname@vereeeeerylong.org"},
+                            {email: "identity@example.org"}
+                        ]
                     },
                     {
                         resource: "caldavresource",
@@ -83,6 +96,41 @@ ApplicationWindow {
                         resource: "caldavresource",
                         summary: "Short event3!",
                         starts: "2018-04-09T14:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event4!",
+                        starts: "2018-04-09T15:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event5!",
+                        starts: "2018-04-09T16:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event6!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event7!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event8!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event9!",
+                        starts: "2018-05-08T12:03:00",
+                    },
+                    {
+                        resource: "caldavresource",
+                        summary: "Short event10!",
+                        starts: "2018-05-08T12:03:00",
                     },
                     {
                         resource: "caldavresource",
@@ -291,11 +339,11 @@ ApplicationWindow {
             }],
         }
         TestStore.setup(initialState)
+        Kube.Context.autoUpdateDate = false
+        Kube.Context.currentDate = "2018-04-11T13:04:03"
     }
 
     View {
         anchors.fill: parent
-        currentDate: "2018-04-11T13:04:03"
-        autoUpdateDate: false
     }
 }

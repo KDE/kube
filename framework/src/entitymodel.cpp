@@ -69,6 +69,24 @@ int EntityModel::findIndex(const QByteArray &property, const QVariant &value) co
     return -1;
 }
 
+static QStringList toStringList(const QVariantList &list)
+{
+    QStringList s;
+    for (const auto &e : list) {
+        s << e.toString();
+    }
+    return s;
+}
+
+static QString getName(const Sink::ApplicationDomain::ApplicationDomainType &entity)
+{
+    const auto path = entity.getProperty("nameCollected").toList();
+    if (!path.isEmpty()) {
+        return toStringList(path).join(" > ") + " > "+ entity.getProperty("name").toString();
+    }
+    return entity.getProperty("name").toString();
+}
+
 QVariant EntityModel::data(const QModelIndex &idx, int role) const
 {
     auto srcIdx = mapToSource(idx);
@@ -78,6 +96,8 @@ QVariant EntityModel::data(const QModelIndex &idx, int role) const
             return entity->identifier();
         } else if (roleName == "object") {
             return QVariant::fromValue(entity);
+        } else if (roleName == "name") {
+            return getName(*entity);
         } else {
             return entity->getProperty(roleName);
         }
@@ -86,8 +106,39 @@ QVariant EntityModel::data(const QModelIndex &idx, int role) const
     return {};
 }
 
+
+static int getPriority(const Sink::ApplicationDomain::Folder &folder)
+{
+    const auto specialPurpose = folder.getSpecialPurpose();
+    if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::inbox)) {
+        return 5;
+    } else if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::drafts)) {
+        return 6;
+    } else if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::sent)) {
+        return 7;
+    } else if (specialPurpose.contains(Sink::ApplicationDomain::SpecialPurpose::Mail::trash)) {
+        return 8;
+    } else if (!specialPurpose.isEmpty()) {
+        return 9;
+    }
+    return 10;
+}
+
 bool EntityModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
 {
+    if (mSortRole == "customMail") {
+        const auto leftFolder = sourceLeft.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
+        const auto rightFolder = sourceRight.data(Sink::Store::DomainObjectRole).value<Sink::ApplicationDomain::Folder::Ptr>();
+        if (leftFolder && rightFolder) {
+            const auto leftPriority = getPriority(*leftFolder);
+            const auto rightPriority = getPriority(*rightFolder);
+            if (leftPriority == rightPriority) {
+                return getName(*leftFolder) < getName(*rightFolder);
+            }
+            return leftPriority < rightPriority;
+        }
+    }
+
     auto left = sourceLeft.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
     auto right = sourceRight.data(Sink::Store::DomainObjectBaseRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
     const auto leftProperty =  left->getProperty(mSortRole.toUtf8()).toString();
@@ -105,7 +156,12 @@ void EntityModel::runQuery(const Query &query)
     } else if (mType == "addressbook") {
         mModel = Store::loadModel<Addressbook>(query);
     } else if (mType == "folder") {
-        mModel = Store::loadModel<Folder>(query);
+        auto q = query;
+        if (mSortRole == "customMail") {
+            q.request<Folder::SpecialPurpose>();
+        }
+        q.resolveReference("parent").collect<Folder::Name>();
+        mModel = Store::loadModel<Folder>(q);
     } else if (mType == "todo") {
         mModel = Store::loadModel<Todo>(query);
     } else {
@@ -201,7 +257,7 @@ void EntityModel::setType(const QString &type)
 
 QString EntityModel::type() const
 {
-    return {};
+    return mType;
 }
 
 void EntityModel::setRoles(const QStringList &roles)
@@ -220,10 +276,19 @@ void EntityModel::setRoles(const QStringList &roles)
     updateQuery();
 }
 
+
+static QStringList toStringList(const QByteArrayList &list)
+{
+    QStringList s;
+    for (const auto &e : list) {
+        s << e;
+    }
+    return s;
+}
+
 QStringList EntityModel::roles() const
 {
-    // return mRoleNames.values();
-    return {};
+    return toStringList(mRoleNames.values());
 }
 
 void EntityModel::setFilter(const QVariantMap &filter)
@@ -234,7 +299,7 @@ void EntityModel::setFilter(const QVariantMap &filter)
 
 QVariantMap EntityModel::filter() const
 {
-    return {};
+    return mFilter;
 }
 
 void EntityModel::setSortRole(const QString &sortRole)
@@ -247,7 +312,6 @@ QString EntityModel::sortRole() const
 {
     return mSortRole;
 }
-
 
 QVariantMap EntityModel::data(int row) const
 {
@@ -264,13 +328,28 @@ bool EntityModel::setData(const QModelIndex &index, const QVariant &value, int r
         return false;
     }
     const auto entity = EntityModel::data(index, ObjectRole).value<Sink::ApplicationDomain::ApplicationDomainType::Ptr>();
-    //FIXME hardcoding calendar is not a great idea here.
-    Sink::ApplicationDomain::Calendar modifiedEntity{*entity};
-    const auto propertyName = mRoleNames.value(role);
-    modifiedEntity.setProperty(propertyName, value.toBool());
-    //Ignore if we didn't modify anything.
-    if (!modifiedEntity.changedProperties().isEmpty()) {
-        Sink::Store::modify(modifiedEntity).exec();
+    if (mType == "calendar") {
+        Sink::ApplicationDomain::Calendar modifiedEntity{*entity};
+        //Reset because we e.g. nameCollected shows up in here
+        modifiedEntity.setChangedProperties({});
+        const auto propertyName = mRoleNames.value(role);
+        modifiedEntity.setProperty(propertyName, value.toBool());
+        //Ignore if we didn't modify anything.
+        if (!modifiedEntity.changedProperties().isEmpty()) {
+            Sink::Store::modify(modifiedEntity).exec();
+        }
+    } else if (mType == "folder") {
+        Sink::ApplicationDomain::Folder modifiedEntity{*entity};
+        //Reset because we e.g. nameCollected shows up in here
+        modifiedEntity.setChangedProperties({});
+        const auto propertyName = mRoleNames.value(role);
+        modifiedEntity.setProperty(propertyName, value.toBool());
+        //Ignore if we didn't modify anything.
+        if (!modifiedEntity.changedProperties().isEmpty()) {
+            Sink::Store::modify(modifiedEntity).exec();
+        }
+    } else {
+        qWarning() << "Type is not implemented " << mType;
     }
     return true;
 }

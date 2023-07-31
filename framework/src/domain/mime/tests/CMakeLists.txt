@@ -1,3 +1,4 @@
+add_subdirectory(gnupg_home)
 add_definitions( -DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../testdata" )
 
 include_directories(

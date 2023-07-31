@@ -29,7 +29,7 @@
 class KUBE_EXPORT MailListModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY (QVariantMap filter READ filter WRITE setFilter)
+    Q_PROPERTY (QVariantMap filter READ filter WRITE setFilter NOTIFY filterChanged)
     Q_PROPERTY (bool threaded MEMBER mIsThreaded) //READONLY
 
 public:
@@ -76,6 +76,10 @@ public:
 
     void setFilter(const QVariantMap &);
     QVariantMap filter() const;
+
+signals:
+    void initialItemsLoaded();
+    void filterChanged();
 
 private:
     void fetchMail(Sink::ApplicationDomain::Mail::Ptr mail);

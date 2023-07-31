@@ -23,9 +23,9 @@
 #include <sink/store.h>
 #include <sink/log.h>
 
-#include <KCalCore/ICalFormat>
-#include <KCalCore/MemoryCalendar>
-#include <KCalCore/Event>
+#include <KCalendarCore/ICalFormat>
+#include <KCalendarCore/MemoryCalendar>
+#include <KCalendarCore/Event>
 #include <QUuid>
 
 #include "mailtemplates.h"
@@ -47,7 +47,7 @@ static QString assembleEmailAddress(const QString &name, const QString &email) {
     return mb.prettyAddress();
 }
 
-static KAsync::Job<std::pair<Sink::ApplicationDomain::Event, KCalCore::Event::Ptr>> findExistingEvents(const QByteArray &uid, const QString &instanceIdentifier)
+static KAsync::Job<std::pair<Sink::ApplicationDomain::Event, KCalendarCore::Event::Ptr>> findExistingEvents(const QByteArray &uid, const QString &instanceIdentifier)
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
@@ -58,16 +58,16 @@ static KAsync::Job<std::pair<Sink::ApplicationDomain::Event, KCalCore::Event::Pt
     return Store::fetchAll<Event>(query).then([=](const QList<Event::Ptr> &events) {
         //Find the matching occurrence in case of exceptions
         for (const auto &e : events) {
-            auto ical = KCalCore::ICalFormat().readIncidence(e->getIcal()).dynamicCast<KCalCore::Event>();
+            auto ical = KCalendarCore::ICalFormat().readIncidence(e->getIcal()).dynamicCast<KCalendarCore::Event>();
             if (ical && ical->instanceIdentifier() == instanceIdentifier) {
                 return std::pair(*e, ical);
             }
         }
-        return std::pair<Event, KCalCore::Event::Ptr>{};
+        return std::pair<Event, KCalendarCore::Event::Ptr>{};
     });
 }
 
-void InvitationController::handleReply(KCalCore::Event::Ptr icalEvent)
+void InvitationController::handleReply(KCalendarCore::Event::Ptr icalEvent)
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
@@ -78,9 +78,9 @@ void InvitationController::handleReply(KCalCore::Event::Ptr icalEvent)
 
     if (!attendees.isEmpty()) {
         auto attendee = attendees.first();
-        if (attendee.status() == KCalCore::Attendee::Declined) {
+        if (attendee.status() == KCalendarCore::Attendee::Declined) {
             setState(ParticipantStatus::Declined);
-        } else if (attendee.status() == KCalCore::Attendee::Accepted) {
+        } else if (attendee.status() == KCalendarCore::Attendee::Accepted) {
             setState(ParticipantStatus::Accepted);
         } else {
             setState(ParticipantStatus::Unknown);
@@ -94,7 +94,7 @@ void InvitationController::handleReply(KCalCore::Event::Ptr icalEvent)
     setUid(icalEvent->uid().toUtf8());
 }
 
-void InvitationController::handleCancellation(KCalCore::Event::Ptr icalEvent)
+void InvitationController::handleCancellation(KCalendarCore::Event::Ptr icalEvent)
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
@@ -103,7 +103,7 @@ void InvitationController::handleCancellation(KCalCore::Event::Ptr icalEvent)
     setState(InvitationController::Cancelled);
 
     findExistingEvents(icalEvent->uid().toUtf8(), icalEvent->instanceIdentifier())
-    .then([this, icalEvent](const std::pair<Event, KCalCore::Event::Ptr> &pair) {
+    .then([this, icalEvent](const std::pair<Event, KCalendarCore::Event::Ptr> &pair) {
         const auto [event, localEvent] = pair;
         if (localEvent) {
             mExistingEvent = event;
@@ -157,7 +157,7 @@ KAsync::Job<EventController::ParticipantStatus> InvitationController::findAttend
     return job;
 }
 
-void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
+void InvitationController::handleRequest(KCalendarCore::Event::Ptr icalEvent)
 {
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
@@ -165,7 +165,7 @@ void InvitationController::handleRequest(KCalCore::Event::Ptr icalEvent)
     setMethod(InvitationMethod::Request);
 
     findExistingEvents(icalEvent->uid().toUtf8(), icalEvent->instanceIdentifier())
-    .then([this, icalEvent](const std::pair<Event, KCalCore::Event::Ptr> &pair) {
+    .then([this, icalEvent](const std::pair<Event, KCalendarCore::Event::Ptr> &pair) {
         const auto [event, localEvent] = pair;
         if (localEvent) {
             mExistingEvent = event;
@@ -216,13 +216,13 @@ void InvitationController::loadICal(const QString &ical)
     using namespace Sink;
     using namespace Sink::ApplicationDomain;
 
-    KCalCore::Calendar::Ptr calendar(new KCalCore::MemoryCalendar{QTimeZone::systemTimeZone()});
-    auto msg = KCalCore::ICalFormat{}.parseScheduleMessage(calendar, ical.toUtf8());
+    KCalendarCore::Calendar::Ptr calendar(new KCalendarCore::MemoryCalendar{QTimeZone::systemTimeZone()});
+    auto msg = KCalendarCore::ICalFormat{}.parseScheduleMessage(calendar, ical.toUtf8());
     if (!msg) {
         SinkWarning() << "Invalid schedule message to process, ignoring...";
         return;
     }
-    auto icalEvent = msg->event().dynamicCast<KCalCore::Event>();
+    auto icalEvent = msg->event().dynamicCast<KCalendarCore::Event>();
     if(!icalEvent) {
         SinkWarning() << "Invalid ICal to process, ignoring...";
         return;
@@ -231,19 +231,19 @@ void InvitationController::loadICal(const QString &ical)
     mLoadedIcalEvent = icalEvent;
 
     switch (msg->method()) {
-        case KCalCore::iTIPRequest:
+        case KCalendarCore::iTIPRequest:
             //Roundcube sends cancellations not as METHOD=CANCEL, but instead updates the event status.
-            if (icalEvent->status() == KCalCore::Incidence::StatusCanceled) {
+            if (icalEvent->status() == KCalendarCore::Incidence::StatusCanceled) {
                 handleCancellation(icalEvent);
                 break;
             }
 
             handleRequest(icalEvent);
             break;
-        case KCalCore::iTIPReply:
+        case KCalendarCore::iTIPReply:
             handleReply(icalEvent);
             break;
-        case KCalCore::iTIPCancel:
+        case KCalendarCore::iTIPCancel:
             handleCancellation(icalEvent);
             break;
         default:
@@ -252,7 +252,7 @@ void InvitationController::loadICal(const QString &ical)
 
 }
 
-static void sendIMipReply(const QByteArray &accountId, const QString &from, const QString &fromName, KCalCore::Event::Ptr event, KCalCore::Attendee::PartStat status)
+static void sendIMipReply(const QByteArray &accountId, const QString &from, const QString &fromName, KCalendarCore::Event::Ptr event, KCalendarCore::Attendee::PartStat status)
 {
     const auto organizerEmail = event->organizer().fullName();
 
@@ -261,12 +261,12 @@ static void sendIMipReply(const QByteArray &accountId, const QString &from, cons
         return;
     }
 
-    auto reply = KCalCore::Event::Ptr::create(*event);
+    auto reply = KCalendarCore::Event::Ptr::create(*event);
     reply->clearAttendees();
-    reply->addAttendee(KCalCore::Attendee(fromName, from, false, status));
+    reply->addAttendee(KCalendarCore::Attendee(fromName, from, false, status));
 
     QString body;
-    if (status == KCalCore::Attendee::Accepted) {
+    if (status == KCalendarCore::Attendee::Accepted) {
         body.append(QObject::tr("%1 has accepted the invitation to the following event").arg(fromName));
     } else {
         body.append(QObject::tr("%1 has declined the invitation to the following event").arg(fromName));
@@ -275,7 +275,7 @@ static void sendIMipReply(const QByteArray &accountId, const QString &from, cons
     body.append(EventController::eventToBody(*reply));
 
     QString subject;
-    if (status == KCalCore::Attendee::Accepted) {
+    if (status == KCalendarCore::Attendee::Accepted) {
         subject = QObject::tr("\"%1\" has been accepted by %2").arg(event->summary()).arg(fromName);
     } else {
         subject = QObject::tr("\"%1\" has been declined by %2").arg(event->summary()).arg(fromName);
@@ -286,7 +286,7 @@ static void sendIMipReply(const QByteArray &accountId, const QString &from, cons
         {{organizerEmail}, {}, {}},
         subject,
         body,
-        KCalCore::ICalFormat{}.createScheduleMessage(reply, KCalCore::iTIPReply)
+        KCalendarCore::ICalFormat{}.createScheduleMessage(reply, KCalendarCore::iTIPReply)
     );
 
     SinkTrace() << "Msg " << msg->encodedContent();
@@ -340,7 +340,7 @@ void InvitationController::storeEvent(ParticipantStatus status)
             calcoreEvent->setUid(getUid());
             saveToEvent(*calcoreEvent);
 
-            sendIMipReply(accountId, fromAddress, fromName, calcoreEvent, status == InvitationController::Accepted ? KCalCore::Attendee::Accepted : KCalCore::Attendee::Declined);
+            sendIMipReply(accountId, fromAddress, fromName, calcoreEvent, status == InvitationController::Accepted ? KCalendarCore::Attendee::Accepted : KCalendarCore::Attendee::Declined);
 
             if (mExistingEvent.identifier().isEmpty()) {
                 const auto calendar = getCalendar();
@@ -350,7 +350,7 @@ void InvitationController::storeEvent(ParticipantStatus status)
                 }
 
                 Event event(calendar->resourceInstanceIdentifier());
-                event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+                event.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
                 event.setCalendar(*calendar);
 
                 return Store::create(event)
@@ -363,7 +363,7 @@ void InvitationController::storeEvent(ParticipantStatus status)
                     });
             } else {
                 Event event(mExistingEvent);
-                event.setIcal(KCalCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
+                event.setIcal(KCalendarCore::ICalFormat().toICalString(calcoreEvent).toUtf8());
 
                 return Store::modify(event)
                     .then([=] (const KAsync::Error &error) {

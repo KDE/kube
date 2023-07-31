@@ -27,10 +27,43 @@
 #include <QVariant>
 #include <QMap>
 #include <QDebug>
+#include "async.h"
 
 using namespace Kube;
 
 Q_GLOBAL_STATIC(Keyring, sKeyring);
+
+
+static void storeSecret(const QByteArray &accountId, const std::vector<Crypto::Key> &keys, const QVariantMap &secret)
+{
+    QByteArray secretBA;
+    QDataStream stream(&secretBA, QIODevice::WriteOnly);
+    stream << secret;
+    if (auto result = Crypto::signAndEncrypt(secretBA, keys, {})) {
+        QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
+        settings.setValue(accountId, result.value());
+    } else {
+        qWarning() << "Failed to encrypt account secret " << accountId;
+    }
+}
+
+static QVariantMap loadSecret(const QByteArray &accountId)
+{
+    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
+
+    QByteArray secretBA;
+    const auto encrypted = settings.value(accountId).value<QByteArray>();
+    if (encrypted.isEmpty()) {
+        return {};
+    }
+    Crypto::decryptAndVerify(Crypto::OpenPGP, encrypted, secretBA);
+
+    QVariantMap map;
+    QDataStream stream(&secretBA, QIODevice::ReadOnly);
+    stream >> map;
+    return map;
+}
+
 
 Keyring::Keyring()
     : QObject()
@@ -53,9 +86,38 @@ void Keyring::unlock(const QByteArray &accountId)
     mUnlocked.insert(accountId);
 }
 
+void Keyring::addPassword(const QByteArray &resourceId, const QString &password)
+{
+    Sink::SecretStore::instance().insert(resourceId, password);
+}
+
 void Keyring::tryUnlock(const QByteArray &accountId)
 {
-    AccountKeyring{accountId}.load();
+    if (isUnlocked(accountId)) {
+        qInfo() << "Already unlocked" << accountId;
+        return;
+    }
+
+    asyncRun<QVariantMap>(this, [=] {
+            return loadSecret(accountId);
+        },
+        [=](const QVariantMap &secrets) {
+            for (const auto &resource : secrets.keys()) {
+                //"accountSecret" is a magic value from the gpg extension for a key that is used for all resources of the same account.
+                //We ignore it to avoid pretending the account is unlocked.
+                if (resource == "accountSecret") {
+                    continue;
+                }
+                auto secret = secrets.value(resource);
+                if (secret.isValid()) {
+                    addPassword(resource.toLatin1(), secret.toString());
+                    unlock(accountId);
+                } else {
+                    qWarning() << "Found no stored secret for " << resource;
+                }
+            }
+            emit unlocked(accountId);
+        });
 }
 
 AccountKeyring::AccountKeyring(const QByteArray &accountId, QObject *parent)
@@ -64,36 +126,9 @@ AccountKeyring::AccountKeyring(const QByteArray &accountId, QObject *parent)
 {
 }
 
-static void storeSecret(const QByteArray &accountId, const std::vector<Crypto::Key> &keys, const QVariantMap &secret)
-{
-    QByteArray secretBA;
-    QDataStream stream(&secretBA, QIODevice::WriteOnly);
-    stream << secret;
-    if (auto result = Crypto::signAndEncrypt(secretBA, keys, {})) {
-        QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
-        settings.setValue(accountId, result.value());
-    } else {
-        qWarning() << "Failed to encrypt account secret " << accountId;
-    }
-}
-
-static QVariantMap loadSecret(const QByteArray &accountId)
-{
-    QSettings settings(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString("/kube/secrets.ini"), QSettings::IniFormat);
-
-    QByteArray secretBA;
-    decryptAndVerify(Crypto::OpenPGP, settings.value(accountId).value<QByteArray>(), secretBA);
-
-    QVariantMap map;
-    QDataStream stream(&secretBA, QIODevice::ReadOnly);
-    stream >> map;
-    return map;
-}
-
-
 void AccountKeyring::addPassword(const QByteArray &resourceId, const QString &password)
 {
-    Sink::SecretStore::instance().insert(resourceId, password);
+    Keyring::instance()->addPassword(resourceId, password);
     Keyring::instance()->unlock(mAccountIdentifier);
     //FIXME: We keep track of secrets stored via this account for when we persist it,
     //because we have no other good means to do so.
@@ -111,19 +146,25 @@ void AccountKeyring::save(const std::vector<Crypto::Key> &keys)
 
 void AccountKeyring::load()
 {
-    const auto secrets = loadSecret(mAccountIdentifier);
-    for (const auto &resource : secrets.keys()) {
-        //"accountSecret" is a magic value from the gpg extension for a key that is used for all resources of the same account.
-        //We ignore it to avoid pretending the account is unlocked.
-        if (resource == "accountSecret") {
-            continue;
-        }
-        auto secret = secrets.value(resource);
-        if (secret.isValid()) {
-            qWarning() << "Found stored secret for " << resource;
-            addPassword(resource.toLatin1(), secret.toString());
-        } else {
-            qWarning() << "Found no stored secret for " << resource;
-        }
-    }
+    asyncRun<QVariantMap>(this, [=] {
+            const auto secrets = loadSecret(mAccountIdentifier);
+            return secrets;
+        },
+        [this](const QVariantMap &secrets) {
+            for (const auto &resource : secrets.keys()) {
+                //"accountSecret" is a magic value from the gpg extension for a key that is used for all resources of the same account.
+                //We ignore it to avoid pretending the account is unlocked.
+                if (resource == "accountSecret") {
+                    continue;
+                }
+                auto secret = secrets.value(resource);
+                if (secret.isValid()) {
+                    qWarning() << "Found stored secret for " << resource;
+                    addPassword(resource.toLatin1(), secret.toString());
+                } else {
+                    qWarning() << "Found no stored secret for " << resource;
+                }
+            }
+            emit loaded();
+        });
 }

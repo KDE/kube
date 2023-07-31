@@ -38,68 +38,23 @@
 #include <QFont>
 #include <QFontInfo>
 #include <QDebug>
-#include <QTimer>
+#include <QElapsedTimer>
+#include <QQuickWindow>
 #include <QQmlContext>
 #include <QStandardPaths>
 #include <QLockFile>
 #include <QDir>
 #include <QWindow>
+#include <QTimer>
 #include <sink/store.h>
 
-#include "backtrace.h"
+#define BACKWARD_HAS_BFD 1
+#define BACKWARD_HAS_UNWIND 1
+#include "backward.h"
 #include "framework/src/keyring.h"
 #include "framework/src/fabric.h"
 #include "kube_version.h"
 #include "dbusinterface.h"
-
-static int sCounter = 0;
-
-void crashHandler(int signal)
-{
-    //Guard against crashing in here
-    if (sCounter > 1) {
-        std::_Exit(EXIT_FAILURE);
-    }
-    sCounter++;
-
-    if (signal == SIGABRT) {
-        std::cerr << "SIGABRT received\n";
-    } else if (signal == SIGSEGV) {
-        std::cerr << "SIGSEV received\n";
-    } else {
-        std::cerr << "Unexpected signal " << signal << " received\n";
-    }
-
-    printStacktrace();
-
-    std::fprintf(stdout, "Sleeping for 10s to attach a debugger: gdb attach %i\n", getpid());
-    std::this_thread::sleep_for(std::chrono::seconds(10));
-
-    // std::system("exec gdb -p \"$PPID\" -ex \"thread apply all bt\"");
-    // This only works if we actually have xterm and X11 available
-    // std::system("exec xterm -e gdb -p \"$PPID\"");
-
-    std::_Exit(EXIT_FAILURE);
-}
-
-void terminateHandler()
-{
-    // std::exception_ptr exptr = std::current_exception();
-    // if (exptr != 0)
-    // {
-    //     // the only useful feature of std::exception_ptr is that it can be rethrown...
-    //     try {
-    //         std::rethrow_exception(exptr);
-    //     } catch (std::exception &ex) {
-    //         std::fprintf(stderr, "Terminated due to exception: %s\n", ex.what());
-    //     } catch (...) {
-    //         std::fprintf(stderr, "Terminated due to unknown exception\n");
-    //     }
-    // } else {
-        std::fprintf(stderr, "Terminated due to unknown reason.\n");
-    // }
-    std::abort();
-}
 
 
 QString findFile(const QString file, const QStringList importPathList)
@@ -115,9 +70,10 @@ QString findFile(const QString file, const QStringList importPathList)
 
 int main(int argc, char *argv[])
 {
-    std::signal(SIGSEGV, crashHandler);
-    std::signal(SIGABRT, crashHandler);
-    std::set_terminate(terminateHandler);
+    backward::SignalHandling sh;
+
+    QElapsedTimer startupTimer;
+    startupTimer.start();
 
     //Instead of QtWebEngine::initialize();
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
@@ -152,12 +108,20 @@ int main(int argc, char *argv[])
         QCoreApplication::translate("main", "To automatically unlock the keyring pass in a keyring in the form of {\"accountId\": {\"resourceId\": \"secret\", *}}"), "keyring dictionary"}
     );
     parser.addOption({{"l", "lockfile"}, "Use a lockfile to enforce that only a single instance can be started.", ""});
-    parser.addOption({"view", "Start with the given view active.", "value", "conversation"});
+    parser.addOption({{"s", "segfault"}, "segfault.", ""});
+    parser.addOption({"view", "Start with the given view active.", "value", "inbound"});
     parser.process(app);
 
+    qInfo() << "Startuptime: starting" << startupTimer.elapsed();
 
     //Only relevant for flatpak
     DBusInterface interface;
+
+    //For testing of the backtrace generator
+    if (parser.isSet("segfault")) {
+        QCommandLineParser *parser2 = nullptr;
+        parser2->addHelpOption();
+    }
 
     if (parser.isSet("lockfile")) {
         if (!interface.registerService()) {
@@ -171,7 +135,7 @@ int main(int argc, char *argv[])
         }
         QObject::connect(&interface, &DBusInterface::activated, [&] (const QString &view) {
             qDebug() << "Activated " << view;
-            for (auto w : QApplication::topLevelWindows()) {
+            for (auto w : QGuiApplication::topLevelWindows()) {
                 //QWindow::alert and QWindow::requestActivate don't work with wayland. But hide and show does.
                 w->setVisible(false);
                 w->setVisible(true);
@@ -181,6 +145,7 @@ int main(int argc, char *argv[])
             }
         });
     }
+    qInfo() << "Startuptime: Registered dbus interface" << startupTimer.elapsed();
 
     if (parser.isSet("keyring")) {
         auto keyringDict = parser.value("keyring");
@@ -193,10 +158,12 @@ int main(int argc, char *argv[])
         for (const auto &accountId : object.keys()) {
             auto dict = object.value(accountId).toObject();
             for (const auto &resourceId : dict.keys()) {
-                Kube::AccountKeyring{accountId.toUtf8()}.addPassword(resourceId.toUtf8(), dict.value(resourceId).toString().toUtf8());
+                Kube::Keyring::instance()->addPassword(resourceId.toUtf8(), dict.value(resourceId).toString().toUtf8());
             }
+            Kube::Keyring::instance()->unlock(accountId.toUtf8());
         }
     }
+    qInfo() << "Startuptime: Unlocked keyring" << startupTimer.elapsed();
 
     {
         QQmlContext *rootContext = nullptr;
@@ -215,15 +182,20 @@ int main(int argc, char *argv[])
             return app.exec();
         }
     }
+    qInfo() << "Startuptime: Upgraded" << startupTimer.elapsed();
 
     //Try unlocking all available accounts on startup
-    Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>({})
-        .then([](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
-            for (const auto &account : accounts) {
-                Kube::Keyring::instance()->tryUnlock(account->identifier());
-            }
-        }).exec();
+    QTimer::singleShot(0, [] {
+        Sink::Store::fetchAll<Sink::ApplicationDomain::SinkAccount>({})
+            .then([](const QList<Sink::ApplicationDomain::SinkAccount::Ptr> &accounts) {
+                for (const auto &account : accounts) {
+                    qWarning() << "Found account " << account->identifier();
+                    Kube::Keyring::instance()->tryUnlock(account->identifier());
+                }
+            }).exec();
+    });
 
+    qInfo() << "Startuptime: Initializing engine" << startupTimer.elapsed();
     QQmlApplicationEngine engine;
     //For windows
     engine.addImportPath(QCoreApplication::applicationDirPath() + QStringLiteral("/../qml"));
@@ -238,6 +210,27 @@ int main(int argc, char *argv[])
         { "defaultView", QVariant::fromValue(parser.value("view")) }
     });
     engine.load(QUrl::fromLocalFile(mainFile));
+    qInfo() << "Startuptime: Loaded main QML file" << startupTimer.elapsed();
+
+    for (auto w : QGuiApplication::topLevelWindows()) {
+        QQuickWindow *window;
+        if (w->isVisible()) {
+            window = qobject_cast<QQuickWindow*>(w);
+            static QMetaObject::Connection conn = QObject::connect(window, &QQuickWindow::frameSwapped, &app, [&app, &startupTimer]() {
+                // this is a queued signal, so there may be still one in the queue after calling disconnect()
+                if (conn) {
+#if defined(Q_CC_MSVC)
+                    app.disconnect(conn); // MSVC cannot distinguish between static and non-static overloads in lambdas
+#else
+                    Q_UNUSED(app);
+                    QObject::disconnect(conn);
+#endif
+                    qInfo() << "Startuptime: Startup complete" << startupTimer.elapsed();
+                }
+            });
+        }
+    }
+
     return app.exec();
 }
 

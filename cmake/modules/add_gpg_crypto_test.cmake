@@ -3,8 +3,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-set( MIMETREEPARSERRELPATH framework/src/domain/mime/mimetreeparser)
-set( GNUPGHOME ${CMAKE_BINARY_DIR}/${MIMETREEPARSERRELPATH}/tests/gnupg_home )
+set( GNUPGHOME ${CMAKE_BINARY_DIR}/framework/src/domain/mime/tests/gnupg_home )
 add_definitions( -DGNUPGHOME="${GNUPGHOME}" )
 
 macro (ADD_GPG_CRYPTO_TEST _target _testname)

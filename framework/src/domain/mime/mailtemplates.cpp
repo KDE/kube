@@ -899,6 +899,7 @@ QString MailTemplates::plaintextContent(const KMime::Message::Ptr &msg)
 {
     MimeTreeParser::ObjectTreeParser otp;
     otp.parseObjectTree(msg.data());
+    otp.decryptAndVerify();
     const auto plain = otp.plainTextContent();
     if (plain.isEmpty()) {
         //Maybe not as good as the webengine version, but works at least for simple html content
@@ -911,6 +912,7 @@ QString MailTemplates::body(const KMime::Message::Ptr &msg, bool &isHtml)
 {
     MimeTreeParser::ObjectTreeParser otp;
     otp.parseObjectTree(msg.data());
+    otp.decryptAndVerify();
     const auto html = otp.htmlContent();
     if (html.isEmpty()) {
         isHtml = false;

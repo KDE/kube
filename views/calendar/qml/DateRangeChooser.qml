@@ -21,30 +21,174 @@ import QtQuick.Layouts 1
 import QtQuick.Controls 2
 import org.kube.framework 1.0 as Kube
 
-RowLayout {
+
+import "dateutils.js" as DateUtils
+
+ColumnLayout {
     id: root
 
-    property bool enableTime
-    property alias initialStart: startDate.initialValue
-    property alias initialEnd: endDate.initialValue
-    property date start
-    property date end
+    property date initialStart
+    onInitialStartChanged: {
+        startDate.dateTime = initialStart
+    }
+    property date initialEnd
+    onInitialEndChanged: {
+        endDate.dateTime = initialEnd
+    }
+    property alias allDay: checkBox.checked
+    property date start: initialStart
+    property date end: initialEnd
 
-    spacing: Kube.Units.largeSpacing
-    DateTimeChooser {
-        id: startDate
-        objectName: "startDate"
-        enableTime: root.enableTime
-        onDateTimeChanged: root.start = dateTime
+    function setAllDay() {
+        if (DateUtils.sameDay(start, end)) {
+            // Default to true when switching to multiday
+            root.allDay = false
+        } else {
+            root.allDay = true
+        }
     }
-    Kube.Label {
-        text: qsTr("until")
-    }
-    DateTimeChooser {
-        id: endDate
-        objectName: "endDate"
-        enableTime: root.enableTime
-        notBefore: startDate.dateTime
-        onDateTimeChanged: root.end = dateTime
+
+    property var notBefore: new Date(0)
+    spacing: Kube.Units.smallSpacing
+
+    Kube.Button {
+        id: button
+
+        Layout.preferredWidth: implicitWidth
+
+        function formatString(start, end, allDay) {
+            var startDate = start.toLocaleDateString();
+            if (allDay) {
+                if (DateUtils.sameDay(start, end)) {
+                    // Tuesday, April 4, 2023
+                    return startDate;
+                } else {
+                    // Tuesday, April 4, 2023 - Wednesday, April 12, 2023
+                    return startDate + " " +
+                        " - " +
+                        end.toLocaleDateString();
+                }
+            }
+            if (DateUtils.sameDay(start, end)) {
+                // Tuesday, April 4, 2023 12:30 - 13:00
+                return startDate + " " +
+                    start.toLocaleTimeString(Qt.locale(), "hh:mm") +
+                    " - " +
+                    end.toLocaleTimeString(Qt.locale(), "hh:mm");
+            }
+            // Tuesday, April 4, 2023 12:30 - Wednesday, April 12, 2023 13:00
+            return startDate + " " +
+                start.toLocaleTimeString(Qt.locale(), "hh:mm") +
+                " - " +
+                end.toLocaleDateString() + " " +
+                end.toLocaleTimeString(Qt.locale(), "hh:mm");
+        }
+
+        text: formatString(root.start, root.end, root.allDay)
+
+        onClicked: {
+            popup.open()
+        }
+
+        Kube.Popup {
+            id: popup
+
+            x: button.x
+            y: button.y
+            width: Math.max(selector.implicitWidth + Kube.Units.largeSpacing * 7, button.width)
+            height: buttonOverlay.height + layout.implicitHeight + 2 * Kube.Units.smallSpacing
+            modal: false
+            focus: true
+            padding: 0
+            background: Rectangle {
+                anchors.fill: parent
+                color: Kube.Colors.viewBackgroundColor
+                border.color: Kube.Colors.buttonColor
+                border.width: 1
+            }
+            Kube.Button {
+                id: buttonOverlay
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                height: button.height
+                text: button.formatString(root.start, root.end, root.allDay)
+                onClicked: popup.close()
+            }
+
+            ColumnLayout {
+                id: layout
+                anchors {
+                    top: buttonOverlay.bottom
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    topMargin: Kube.Units.smallSpacing
+                    leftMargin: Kube.Units.smallSpacing
+                    rightMargin: Kube.Units.smallSpacing
+                    bottomMargin: Kube.Units.smallSpacing
+                }
+
+                DateSelector {
+                    id: selector
+                    notBefore: root.notBefore
+                    backgroundColor: Kube.Colors.backgroundColor
+                    textColor: Kube.Colors.textColor
+                    invertIcons: false
+                    rangeSelection: true
+                    selectedDate: root.start
+                    selectedEnd: root.end
+                    onSelected: {
+                        root.start = DateUtils.applyTimeFromDate(date, root.start)
+                        root.setAllDay()
+                    }
+                    onEndSelected: {
+                        root.end = DateUtils.applyTimeFromDate(date, root.end)
+                        root.setAllDay()
+                    }
+                }
+
+                RowLayout {
+                    spacing: Kube.Units.smallSpacing
+                    Kube.CheckBox {
+                        id: checkBox
+                    }
+                    Kube.Label {
+                        text: qsTr("All day")
+                    }
+                }
+
+                RowLayout {
+                    visible: !root.allDay
+                    Kube.Label {
+                        text: qsTr("begins")
+                    }
+                    TimeSelector {
+                        id: startDate
+                        Layout.preferredWidth: Kube.Units.gridUnit * 3
+                        objectName: "startDate"
+                        dateTime: root.start
+                        onDateTimeChanged: {
+                            root.start = dateTime
+                        }
+                    }
+                    Kube.Label {
+                        text: qsTr("ends")
+                    }
+                    TimeSelector {
+                        id: endDate
+                        Layout.preferredWidth: Kube.Units.gridUnit * 3
+                        objectName: "endDate"
+                        dateTime: root.end
+                        notBefore: root.start
+                        onDateTimeChanged: {
+                            root.end = dateTime
+                        }
+                    }
+                }
+            }
+        }
     }
 }

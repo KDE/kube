@@ -31,11 +31,9 @@ Item {
         anchors {
             top: parent.top
             left: parent.left
-            margins: 5
+            right: parent.right
         }
-        spacing: 5
         height: contentHeight
-        width: parent.width - 10
         interactive: false
         model: MailPartModel {
             id: visualModel

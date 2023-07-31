@@ -31,17 +31,16 @@ std::pair<QString, bool> PartModel::trim(const QString &text)
     //The delimiters have <p>.? prefixed including the .? because sometimes we get a byte order mark <feff> (seen with user-agent: Microsoft-MacOutlook/10.1d.0.190908)
     //We match both regulard withspace with \s and non-breaking spaces with \u00A0
     const QList<QRegularExpression> delimiters{
-        //English
         QRegularExpression{"<p>.?-+Original(\\s|\u00A0)Message-+", QRegularExpression::CaseInsensitiveOption},
+
+        //Forwarded
+        QRegularExpression{"<p>.?Von:.*</p>", QRegularExpression::CaseInsensitiveOption},
+        QRegularExpression{"<p>.?From:.*</p>", QRegularExpression::CaseInsensitiveOption},
+        //Reply
         //The remainder is not quoted
         QRegularExpression{"<p>.?On.*wrote:", QRegularExpression::CaseInsensitiveOption},
         //The remainder is quoted
         QRegularExpression{"&gt; On.*wrote:", QRegularExpression::CaseInsensitiveOption},
-
-        //German
-        //Forwarded
-        QRegularExpression{"<p>.?Von:.*</p>", QRegularExpression::CaseInsensitiveOption},
-        //Reply
         QRegularExpression{"<p>.?Am.*schrieb.*:</p>", QRegularExpression::CaseInsensitiveOption},
         //Signature
         QRegularExpression{"<p>.?--(\\s|\u00A0)<br>", QRegularExpression::CaseInsensitiveOption}

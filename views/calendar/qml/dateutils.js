@@ -107,3 +107,8 @@ function getFirstDayOfMonth(date) {
     return d
 }
 
+function applyTimeFromDate(newDate, date) {
+    newDate.setHours(date.getHours(), date.getMinutes())
+    return newDate;
+}
+

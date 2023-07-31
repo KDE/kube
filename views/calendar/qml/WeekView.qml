@@ -34,6 +34,8 @@ FocusScope {
     property date startDate: currentDate
     property var calendarFilter
 
+    readonly property int horizontalSpacing: Kube.Units.smallSpacing
+
     Item {
         anchors {
             top: parent.top
@@ -67,6 +69,7 @@ FocusScope {
                 left: parent.left
                 leftMargin: Kube.Units.gridUnit * 2
             }
+            horizontalSpacing: root.horizontalSpacing
 
             dayWidth: root.dayWidth
             daysToShow: root.daysToShow
@@ -100,6 +103,7 @@ FocusScope {
 
             anchors {
                 top: daylong.bottom
+                topMargin: 2
             }
 
             Layout.fillWidth: true
@@ -108,6 +112,9 @@ FocusScope {
 
             contentHeight: root.hourHeight * 24
             contentWidth: width
+
+            //Position the view starting at 8:00, but with the label visible
+            contentY: root.hourHeight * 8 - 10
 
             clip: true
             boundsBehavior: Flickable.StopAtBounds
@@ -178,7 +185,7 @@ FocusScope {
                         Rectangle {
                             anchors.fill: parent
                             color: Kube.Colors.buttonColor
-                            opacity: 0.2
+                            opacity: 0.4
                             visible: isInPast
                         }
 
@@ -235,7 +242,7 @@ FocusScope {
                                     rightMargin: Kube.Units.smallSpacing
                                 }
                                 radius: 2
-                                width: root.dayWidth - Kube.Units.smallSpacing * 2 - Kube.Units.gridUnit * model.modelData.indentation
+                                width: root.dayWidth - root.horizontalSpacing * 2 - Kube.Units.gridUnit * model.modelData.indentation
                                 height: Math.max(root.hourHeight * 0.5, root.hourHeight * model.modelData.duration)
                                 y: root.hourHeight * model.modelData.starts
                                 x: Kube.Units.gridUnit * model.modelData.indentation
@@ -266,6 +273,7 @@ FocusScope {
                                         }
                                         text: model.modelData.text
                                         color: Kube.Colors.textColor
+                                        font.weight: Font.Medium
                                         wrapMode: Text.Wrap
                                         elide: Text.ElideRight
                                         //Only show two lines if we have either space for three or there is no dateLabel
@@ -310,13 +318,18 @@ FocusScope {
                                             width: Math.min(eventView.implicitWidth, parent.width - 2 * Kube.Units.gridUnit)
                                             height: Math.min(eventView.implicitHeight, parent.height - 2 * Kube.Units.gridUnit)
                                             padding: 0
-                                            EventView {
-                                                id: eventView
+                                            Rectangle {
                                                 anchors.fill: parent
-                                                controller: Kube.EventController {
-                                                    eventOccurrence: model.modelData.eventOccurrence
+                                                color: Kube.Colors.paperWhite
+                                                EventEditor {
+                                                    id: eventView
+                                                    anchors.fill: parent
+                                                    editMode: true
+                                                    controller: Kube.EventController {
+                                                        eventOccurrence: model.modelData.eventOccurrence
+                                                    }
+                                                    onDone: popup.close()
                                                 }
-                                                onDone: popup.close()
                                             }
                                         }
                                     }

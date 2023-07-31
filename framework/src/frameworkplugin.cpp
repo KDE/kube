@@ -53,6 +53,7 @@
 #include "viewhighlighter.h"
 #include "file.h"
 #include "logmodel.h"
+#include "inboundmodel.h"
 #include "entitymodel.h"
 #include "entitycontroller.h"
 #include "qquicktreemodeladaptor.h"
@@ -207,6 +208,7 @@ void FrameworkPlugin::registerTypes (const char *uri)
     qmlRegisterType<PeopleModel>(uri, 1, 0,"PeopleModel");
     qmlRegisterType<TextDocumentHandler>(uri, 1, 0, "TextDocumentHandler");
     qmlRegisterType<LogModel>(uri, 1, 0, "LogModel");
+    qmlRegisterType<InboundModel>(uri, 1, 0, "InboundModel");
     qmlRegisterType<EntityModel>(uri, 1, 0, "EntityModel");
     qmlRegisterType<EntityLoader>(uri, 1, 0, "EntityLoader");
     qmlRegisterType<EntityController>(uri, 1, 0, "EntityController");

@@ -1,6 +1,5 @@
 #include <QTest>
 #include <QDebug>
-#include <QSignalSpy>
 #include <functional>
 #include <QStandardPaths>
 #include <QDir>

@@ -34,6 +34,10 @@ public:
     Q_INVOKABLE bool isUnlocked(const QByteArray &accountId);
     Q_INVOKABLE void unlock(const QByteArray &accountId);
     Q_INVOKABLE void tryUnlock(const QByteArray &accountId);
+    void addPassword(const QByteArray &resourceId, const QString &password);
+
+signals:
+    void unlocked(const QByteArray &accountId);
 
 private:
     Q_DISABLE_COPY(Keyring);
@@ -47,6 +51,9 @@ public:
     void addPassword(const QByteArray &resourceId, const QString &password);
     void save(const std::vector<Crypto::Key> &keys);
     void load();
+
+signals:
+    void loaded();
 
 private:
     Q_DISABLE_COPY(AccountKeyring);

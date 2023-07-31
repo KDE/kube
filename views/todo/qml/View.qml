@@ -28,10 +28,8 @@ import org.kube.framework 1.0 as Kube
 Kube.View {
     id: root
     property string currentAccount: Kube.Context.currentAccountId
-    property variant currentFolder: null
-
-    property date currentDate: new Date()
-    property bool autoUpdateDate: true
+    property var currentFolder: null
+    property var currentFolderIdentifier: null
 
     //We have to hardcode because all the mapToItem/mapFromItem functions are garbage
     searchArea: Qt.rect(ApplicationWindow.window.sidebarWidth + todoView.parent.x, 0, todoView.parent.width + todoDetails.parent.width, height)
@@ -49,10 +47,11 @@ Kube.View {
         State {
             name: "inbox"
             PropertyChanges {target: root; currentFolder: null}
+            PropertyChanges {target: root; currentFolderIdentifier: null}
             StateChangeScript {script: accountSwitcher.clearSelection()}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
-                "calendars": accountSwitcher.enabledCalendars,
+                "calendars": accountSwitcher.enabledEntities,
                 "inbox": true,
                 "string": root.filter
             }}
@@ -60,10 +59,11 @@ Kube.View {
         State {
             name: "doing"
             PropertyChanges {target: root; currentFolder: null}
+            PropertyChanges {target: root; currentFolderIdentifier: null}
             StateChangeScript {script: accountSwitcher.clearSelection()}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
-                "calendars": accountSwitcher.enabledCalendars,
+                "calendars": accountSwitcher.enabledEntities,
                 "doing": true,
                 "string": root.filter
             }}
@@ -71,19 +71,21 @@ Kube.View {
         State {
             name: "all"
             PropertyChanges {target: root; currentFolder: null}
+            PropertyChanges {target: root; currentFolderIdentifier: null}
             StateChangeScript {script: accountSwitcher.clearSelection()}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
-                "calendars": accountSwitcher.enabledCalendars,
+                "calendars": accountSwitcher.enabledEntities,
                 "string": root.filter
             }}
         },
         State {
             name: "calendar"
-            PropertyChanges {target: root; currentFolder: accountSwitcher.currentCalendar}
+            PropertyChanges {target: root; currentFolder: accountSwitcher.currentEntity}
+            PropertyChanges {target: root; currentFolderIdentifier: accountSwitcher.currentEntityIdentifier}
             PropertyChanges {target: todoModel; filter: {
                 "account": accountSwitcher.currentAccount,
-                "calendars": [root.currentFolder],
+                "calendars": [accountSwitcher.currentEntityIdentifier],
                 "string": root.filter
             }}
         }
@@ -142,400 +144,156 @@ Kube.View {
         onActivated: root.showHelp()
     }
 
-    ButtonGroup { id: viewButtonGroup }
-
-    Timer {
-        running: autoUpdateDate
-        interval: 2000; repeat: true
-        onTriggered: root.currentDate = new Date()
+    Kube.Listener {
+        filter: Kube.Messages.todoEditor
+        onMessageReceived: editorPopup.createObject(root, message).open()
     }
+
+    ButtonGroup { id: viewButtonGroup }
 
     Controls1.SplitView {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Rectangle {
-            width: Kube.Units.gridUnit * 10
+
+        Kube.LeftSidebar {
             Layout.fillHeight: parent.height
-            color: Kube.Colors.darkBackgroundColor
-
-            Column {
-                id: topLayout
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    margins: Kube.Units.largeSpacing
-                }
-
+            buttons: [
                 Kube.PositiveButton {
                     id: newMailButton
                     objectName: "newMailButton"
 
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
+                    Layout.fillWidth: true
                     focus: true
                     text: qsTr("New Todo")
                     onClicked: editorPopup.createObject(root, {}).open()
-                }
+                },
 
-                Item {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
+                ColumnLayout {
+                    Kube.TextButton {
+                        id: inboxViewButton
+                        Layout.fillWidth: true
+                        text: qsTr("Inbox")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.state == "inbox"
+                        horizontalAlignment: Text.AlignHLeft
+                        ButtonGroup.group: viewButtonGroup
+                        onClicked: root.state = "inbox"
                     }
-                    height: Kube.Units.gridUnit
-                }
-
-                Kube.TextButton {
-                    id: inboxViewButton
-                    anchors {
-                        left: parent.left
-                        right: parent.right
+                    Kube.TextButton {
+                        id: doingViewButton
+                        Layout.fillWidth: true
+                        text: qsTr("Doing")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.state == "doing"
+                        horizontalAlignment: Text.AlignHLeft
+                        ButtonGroup.group: viewButtonGroup
+                        onClicked: root.state = "doing"
                     }
-                    text: qsTr("Inbox")
-                    textColor: Kube.Colors.highlightedTextColor
-                    checkable: true
-                    checked: root.state == "inbox"
-                    horizontalAlignment: Text.AlignHLeft
-                    ButtonGroup.group: viewButtonGroup
-                    onClicked: root.state = "inbox"
-                }
-                Kube.TextButton {
-                    id: doingViewButton
-                    anchors {
-                        left: parent.left
-                        right: parent.right
+                    Kube.TextButton {
+                        id: allViewButton
+                        Layout.fillWidth: true
+                        text: qsTr("All")
+                        textColor: Kube.Colors.highlightedTextColor
+                        checkable: true
+                        checked: root.state == "all"
+                        horizontalAlignment: Text.AlignHLeft
+                        ButtonGroup.group: viewButtonGroup
+                        onClicked: root.state = "all"
                     }
-                    text: qsTr("Doing")
-                    textColor: Kube.Colors.highlightedTextColor
-                    checkable: true
-                    checked: root.state == "doing"
-                    horizontalAlignment: Text.AlignHLeft
-                    ButtonGroup.group: viewButtonGroup
-                    onClicked: root.state = "doing"
                 }
-                Kube.TextButton {
-                    id: allViewButton
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    text: qsTr("All")
-                    textColor: Kube.Colors.highlightedTextColor
-                    checkable: true
-                    checked: root.state == "all"
-                    horizontalAlignment: Text.AlignHLeft
-                    ButtonGroup.group: viewButtonGroup
-                    onClicked: root.state = "all"
-                }
-            }
+            ]
 
             Kube.CalendarSelector {
                 id: accountSwitcher
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 activeFocusOnTab: true
                 selectionEnabled: true
-                anchors {
-                    top: topLayout.bottom
-                    topMargin: Kube.Units.largeSpacing
-                    bottom: statusBarContainer.top
-                    left: topLayout.left
-                    right: parent.right
-                    rightMargin: Kube.Units.largeSpacing
-                }
                 contentType: "todo"
-                onCurrentCalendarChanged: {
-                    if (currentCalendar) {
+                onCurrentEntityChanged: {
+                    if (currentEntity) {
                         root.state = "calendar"
                     }
                 }
             }
+        }
+        Kube.ListView {
+            id: todoView
+            Layout.fillHeight: true
+            Layout.minimumWidth: Kube.Units.gridUnit * 10
 
-            Item {
-                id: statusBarContainer
-                anchors {
-                    topMargin: Kube.Units.smallSpacing
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: parent.right
-                }
-                height: childrenRect.height
-
-                Rectangle {
-                    id: border
-                    visible: statusBar.visible
-                    anchors {
-                        right: parent.right
-                        left: parent.left
-                        margins: Kube.Units.smallSpacing
-                    }
-                    height: 1
-                    color: Kube.Colors.viewBackgroundColor
-                    opacity: 0.3
-                }
-                Kube.StatusBar {
-                    id: statusBar
-                    accountId: root.currentAccount
-                    height: Kube.Units.gridUnit * 2
-                    anchors {
-                        top: border.bottom
-                        left: statusBarContainer.left
-                        right: statusBarContainer.right
-                    }
+            onCurrentItemChanged: {
+                if (currentItem) {
+                    var currentData = currentItem.currentData;
+                    todoDetails.controller = controllerComponent.createObject(parent, {"todo": currentData.domainObject})
                 }
             }
-        }
 
-        Rectangle {
-            width: Kube.Units.gridUnit * 18
-            Layout.fillHeight: parent.height
+            Keys.onPressed: {
+                //Not implemented as a shortcut because we want it only to apply if we have the focus
+                if (event.text == "d" || event.key == Qt.Key_Delete) {
+                    todoDetails.controller.remove()
+                } else if (event.key == Qt.Key_Return) {
+                    todoDetails.controller.complete = !todoDetails.controller.complete;
+                    todoDetails.controller.saveAction.execute();
+                } else if (event.key == Qt.Key_Home) {
+                    todoView.currentIndex = 0
+                }
+            }
 
-            color: "transparent"
-            border.width: 1
-            border.color: Kube.Colors.buttonColor
-
-            Kube.ListView {
-                id: todoView
-                anchors.fill: parent
-                Layout.minimumWidth: Kube.Units.gridUnit * 10
-
-                onCurrentItemChanged: {
-                    if (currentItem) {
-                        var currentData = currentItem.currentData;
-                        todoDetails.controller = controllerComponent.createObject(parent, {"todo": currentData.domainObject})
+            Column {
+                anchors.centerIn: parent
+                visible: todoView.count === 0
+                Kube.Label {
+                    text: qsTr("Nothing here yet...")
+                }
+                Kube.PositiveButton {
+                    visible: doingViewButton.checked
+                    text: qsTr("Pick some tasks")
+                    onClicked: {
+                        allViewButton.checked = true
+                        allViewButton.clicked()
                     }
                 }
-
-                Keys.onPressed: {
-                    //Not implemented as a shortcut because we want it only to apply if we have the focus
-                    if (event.text == "d" || event.key == Qt.Key_Delete) {
-                        todoDetails.controller.remove()
-                    } else if (event.key == Qt.Key_Return) {
-                        todoDetails.controller.complete = !todoDetails.controller.complete;
-                        todoDetails.controller.saveAction.execute();
-                    } else if (event.key == Qt.Key_Home) {
-                        todoView.currentIndex = 0
-                    }
+                Kube.PositiveButton {
+                    visible: allViewButton.checked
+                    text: qsTr("Add a new task")
+                    onClicked: editorPopup.createObject(root, {}).open()
                 }
+            }
 
-                Column {
+            model: Kube.TodoModel {
+                id: todoModel
+            }
+
+            footerPositioning: ListView.OverlayFooter
+            footer: Rectangle {
+                property int taskLimit: 5
+                visible: doingViewButton.checked && todoView.count > taskLimit
+                color: Kube.Colors.warningColor
+                height: Kube.Units.gridUnit * 2
+                width: parent. width
+                Label {
                     anchors.centerIn: parent
-                    visible: todoView.count === 0
-                    Kube.Label {
-                        text: qsTr("Nothing here yet...")
-                    }
-                    Kube.PositiveButton {
-                        visible: doingViewButton.checked
-                        text: qsTr("Pick some tasks")
-                        onClicked: {
-                            allViewButton.checked = true
-                            allViewButton.clicked()
-                        }
-                    }
-                    Kube.PositiveButton {
-                        visible: allViewButton.checked
-                        text: qsTr("Add a new task")
-                        onClicked: editorPopup.createObject(root, {}).open()
-                    }
+                    text: qsTr("This list is longer than %1 tasks. Focus on the top %1?").arg(taskLimit)
                 }
+            }
 
-                model: Kube.TodoModel {
-                    id: todoModel
-                }
+            delegate: Kube.TodoListDelegate {
+                summary: model.summary
+                complete: model.complete
+                doing: model.doing
+                important: model.important
+                calendar: model.calendar
+                date: model.date
+                dueDate: model.dueDate
+                domainObject: model.domainObject
+                dotColor: model.color
+                bold: model.doing && root.state != "doing"
 
-                footerPositioning: ListView.OverlayFooter
-                footer: Rectangle {
-                    property int taskLimit: 5
-                    visible: doingViewButton.checked && todoView.count > taskLimit
-                    color: Kube.Colors.warningColor
-                    height: Kube.Units.gridUnit * 2
-                    width: parent. width
-                    Label {
-                        anchors.centerIn: parent
-                        text: qsTr("This list is longer than %1 tasks. Focus on the top %1?").arg(taskLimit)
-                    }
-                }
-
-                delegate: Kube.ListDelegate {
-                    id: delegateRoot
-                    property bool buttonsVisible: delegateRoot.hovered
-
-                    width: todoView.availableWidth
-                    height: Kube.Units.gridUnit * 3 + 2 * Kube.Units.smallSpacing
-
-                    color: Kube.Colors.viewBackgroundColor
-                    border.color: Kube.Colors.backgroundColor
-                    border.width: 1
-
-
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        drag.target: parent
-                        drag.filterChildren: true
-                        onReleased: {
-                            if (parent.Drag.drop() == Qt.MoveAction) {
-                                Kube.Fabric.postMessage(Kube.Messages.moveToCalendar, {"todo": model.domainObject, "calendarId": parent.Drag.target.calendarId})
-                            }
-                        }
-                        onClicked: delegateRoot.clicked()
-                    }
-
-                    states: [
-                        State {
-                            name: "dnd"
-                            when: mouseArea.drag.active
-
-                            PropertyChanges {target: mouseArea; cursorShape: Qt.ClosedHandCursor}
-                            PropertyChanges {target: delegateRoot; opacity: 0.5}
-                            ParentChange {target: delegateRoot; parent: root; x: x; y: y}
-                        }
-                    ]
-
-                    Drag.active: mouseArea.drag.active
-                    Drag.hotSpot.x: mouseArea.mouseX
-                    Drag.hotSpot.y: mouseArea.mouseY
-                    Drag.source: delegateRoot
-
-                    Item {
-                        id: content
-
-                        anchors {
-                            fill: parent
-                            margins: Kube.Units.smallSpacing
-                        }
-
-                        Rectangle {
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                left: parent.left
-                            }
-                            width: Kube.Units.smallSpacing
-                            height: width
-                            radius: width / 2
-
-                            color: model.color
-                        }
-                        Column {
-                            anchors {
-                                verticalCenter: parent.verticalCenter
-                                left: parent.left
-                                leftMargin:  Kube.Units.largeSpacing
-                            }
-
-                            Kube.Label{
-                                width: content.width - Kube.Units.gridUnit * 3
-                                text: model.summary
-                                color: model.complete ? delegateRoot.disabledTextColor : delegateRoot.textColor
-                                font.strikeout: model.complete
-                                font.bold: model.doing && root.state != "doing"
-                                maximumLineCount: 2
-                                wrapMode: Text.WordWrap
-                                elide: Text.ElideRight
-                            }
-                            Kube.Label {
-                                visible: delegateRoot.hovered
-                                text: model.calendar
-                                color: delegateRoot.disabledTextColor
-                                font.italic: true
-                                width: delegateRoot.width - Kube.Units.gridUnit * 3
-                                elide: Text.ElideRight
-                            }
-                        }
-
-                        Kube.Label {
-                            id: date
-                            anchors {
-                                right: parent.right
-                                bottom: parent.bottom
-                            }
-
-                            function sameDay(date1, date2) {
-                                return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
-                            }
-
-                            function daysSince(date1, date2) {
-                                //FIXME this is not going to work at month borders
-                                return (date1.getDate() - date2.getDate())
-                            }
-
-                            //TODO deal with start dates
-                            function formatDueDateTime(date) {
-                                const today = root.currentDate
-                                if (sameDay(date, today)) {
-                                    return qsTr("Due today")
-                                }
-                                const nextWeekToday = today.getTime() + ((24*60*60*1000) * 7);
-                                if (date.getTime() < nextWeekToday && date.getTime() > today.getTime()) {
-                                    return Qt.formatDateTime(date, "dddd") + qsTr(" (%1 days)").arg(daysSince(date, today))
-                                }
-                                if (date.getTime() < today.getTime()) {
-                                    return qsTr("Overdue for %1 days").arg(daysSince(today, date))
-                                }
-                                return Qt.formatDateTime(date, "dd MMM yyyy")
-                            }
-
-                            visible: !isNaN(model.date) && !delegateRoot.buttonsVisible
-                            text: (!isNaN(model.dueDate) && !model.complete) ? formatDueDateTime(model.dueDate) : Qt.formatDateTime(model.date, "dd MMM yyyy")
-                            font.italic: true
-                            color: delegateRoot.disabledTextColor
-                            font.pointSize: Kube.Units.tinyFontSize
-                        }
-                    }
-
-                    Kube.Icon {
-                        anchors {
-                            right: parent.right
-                            verticalCenter: parent.verticalCenter
-                            margins: Kube.Units.smallSpacing
-                        }
-
-                        visible:  model.important && !delegateRoot.buttonsVisible
-                        iconName: Kube.Icons.isImportant
-                    }
-
-                    Column {
-                        id: buttons
-
-                        anchors {
-                            right: parent.right
-                            margins: Kube.Units.smallSpacing
-                            verticalCenter: parent.verticalCenter
-                        }
-
-                        visible: delegateRoot.buttonsVisible
-                        opacity: 0.7
-
-                        Kube.IconButton {
-                            iconName: model.doing ? Kube.Icons.undo : Kube.Icons.addNew
-                            activeFocusOnTab: false
-                            tooltip: model.doing ? qsTr("Unpick") : qsTr("Pick")
-                            onClicked: {
-                                var controller = controllerComponent.createObject(parent, {"todo": model.domainObject});
-                                if (controller.complete) {
-                                    controller.complete = false
-                                }
-                                controller.doing = !controller.doing;
-                                controller.saveAction.execute();
-                            }
-                        }
-
-                        Kube.IconButton {
-                            iconName: Kube.Icons.checkbox
-                            checked: model.complete
-                            activeFocusOnTab: false
-                            tooltip: qsTr("Done!")
-                            onClicked: {
-                                var controller = controllerComponent.createObject(parent, {"todo": model.domainObject});
-                                controller.complete = !controller.complete;
-                                controller.saveAction.execute();
-                            }
-                        }
-
-                    }
-                }
+                currentDate: Kube.Context.currentDate
             }
         }
         Rectangle {
@@ -544,9 +302,10 @@ Kube.View {
 
             color: Kube.Colors.paperWhite
 
-            TodoView {
+            TodoEditor {
                 id: todoDetails
                 anchors.fill: parent
+                editMode: true
                 // onDone: popup.close()
             }
         }
@@ -563,6 +322,8 @@ Kube.View {
         Kube.Popup {
             id: popup
 
+            property alias parentUid: editor.parentUid
+
             x: root.width * 0.15
             y: root.height * 0.15
 
@@ -570,14 +331,18 @@ Kube.View {
             height: root.height * 0.7
             padding: 0
             closePolicy: Popup.NoAutoClose
-            TodoEditor {
-                id: editor
-                focus: true
+            Rectangle {
                 anchors.fill: parent
-                accountId: root.currentAccount
-                currentFolder: root.currentFolder
-                doing: doingViewButton.checked
-                onDone: popup.close()
+                color: Kube.Colors.paperWhite
+                TodoEditor {
+                    id: editor
+                    focus: true
+                    anchors.fill: parent
+                    accountId: root.currentAccount
+                    currentFolder: root.currentFolderIdentifier
+                    doing: doingViewButton.checked
+                    onDone: popup.close()
+                }
             }
         }
     }

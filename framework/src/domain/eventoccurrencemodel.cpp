@@ -28,20 +28,23 @@
 
 #include <QMetaEnum>
 
-#include <KCalCore/ICalFormat>
-#include <KCalCore/OccurrenceIterator>
-#include <KCalCore/MemoryCalendar>
+#include <KCalendarCore/ICalFormat>
+#include <KCalendarCore/OccurrenceIterator>
+#include <KCalendarCore/MemoryCalendar>
 
 #include <entitycache.h>
+
+#include <algorithm>
+#include <vector>
+#include <iterator>
 
 using namespace Sink;
 
 EventOccurrenceModel::EventOccurrenceModel(QObject *parent)
     : QAbstractItemModel(parent),
-    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}})}
+    mCalendarCache{EntityCache<ApplicationDomain::Calendar>::Ptr::create(QByteArrayList{{ApplicationDomain::Calendar::Color::name}})},
+    mUpdateFromSourceDebouncer{100,[this] { this->updateFromSource(); }, this}
 {
-    mRefreshTimer.setSingleShot(true);
-    QObject::connect(&mRefreshTimer, &QTimer::timeout, this, &EventOccurrenceModel::updateFromSource);
 }
 
 void EventOccurrenceModel::setStart(const QDate &start)
@@ -86,7 +89,9 @@ void EventOccurrenceModel::setFilter(const QVariantMap &filter)
 void EventOccurrenceModel::updateQuery()
 {
     using namespace Sink::ApplicationDomain;
+    mInitialItemsLoaded = false;
     if (mCalendarFilter.isEmpty() || !mLength || !mStart.isValid()) {
+        mSourceModel.clear();
         refreshView();
         return;
     }
@@ -104,6 +109,21 @@ void EventOccurrenceModel::updateQuery()
 
     query.filter<Event::StartTime, Event::EndTime>(Sink::Query::Comparator(QVariantList{mStart, mEnd}, Sink::Query::Comparator::Overlap));
 
+    query.setPostQueryFilter([=, filter = mFilter, calendarFilter = mCalendarFilter] (const ApplicationDomain::ApplicationDomainType &entity){
+        const Sink::ApplicationDomain::Event event(entity);
+        if (!calendarFilter.contains(event.getCalendar())) {
+            return false;
+        }
+
+        for (auto it = filter.constBegin(); it!= filter.constEnd(); it++) {
+            if (event.getProperty(it.key().toLatin1()) != it.value()) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
     mSourceModel = Store::loadModel<ApplicationDomain::Event>(query);
 
     QObject::connect(mSourceModel.data(), &QAbstractItemModel::dataChanged, this, &EventOccurrenceModel::refreshView);
@@ -118,42 +138,23 @@ void EventOccurrenceModel::updateQuery()
 
 void EventOccurrenceModel::refreshView()
 {
-    if (!mRefreshTimer.isActive()) {
-        //Instant update, but then only refresh every 50ms max.
-        updateFromSource();
-        mRefreshTimer.start(50);
-    }
+    mUpdateFromSourceDebouncer.trigger();
 }
 
 void EventOccurrenceModel::updateFromSource()
 {
-    beginResetModel();
-
-    mEvents.clear();
+    QList<Occurrence> newEvents;
 
     if (mSourceModel) {
-        QMap<QByteArray, KCalCore::Incidence::Ptr> recurringEvents;
-        QMultiMap<QByteArray, KCalCore::Incidence::Ptr> exceptions;
+        QMap<QByteArray, KCalendarCore::Incidence::Ptr> recurringEvents;
+        QMultiMap<QByteArray, KCalendarCore::Incidence::Ptr> exceptions;
         QMap<QByteArray, QSharedPointer<Sink::ApplicationDomain::Event>> events;
         for (int i = 0; i < mSourceModel->rowCount(); ++i) {
             auto event = mSourceModel->index(i, 0).data(Sink::Store::DomainObjectRole).value<ApplicationDomain::Event::Ptr>();
-            const bool skip = [&] {
-                if (!mCalendarFilter.contains(event->getCalendar())) {
-                    return true;
-                }
-                for (auto it = mFilter.constBegin(); it!= mFilter.constEnd(); it++) {
-                    if (event->getProperty(it.key().toLatin1()) != it.value()) {
-                        return true;
-                    }
-                }
-                return false;
-            }();
-            if (skip) {
-                continue;
-            }
+            Q_ASSERT(event);
 
             //Parse the event
-            auto icalEvent = KCalCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalCore::Event>();
+            auto icalEvent = KCalendarCore::ICalFormat().readIncidence(event->getIcal()).dynamicCast<KCalendarCore::Event>();
             if(!icalEvent) {
                 SinkWarning() << "Invalid ICal to process, ignoring...";
                 continue;
@@ -168,32 +169,94 @@ void EventOccurrenceModel::updateFromSource()
                 events.insert(icalEvent->instanceIdentifier().toLatin1(), event);
             } else {
                 if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
-                    mEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
+                    newEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
                 }
             }
         }
         //process all recurring events and their exceptions.
         for (const auto &uid : recurringEvents.keys()) {
-            KCalCore::MemoryCalendar calendar{QTimeZone::systemTimeZone()};
+            KCalendarCore::MemoryCalendar calendar{QTimeZone::systemTimeZone()};
             calendar.addIncidence(recurringEvents.value(uid));
             for (const auto &event : exceptions.values(uid)) {
                 calendar.addIncidence(event);
             }
-            KCalCore::OccurrenceIterator occurrenceIterator{calendar, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
+            KCalendarCore::OccurrenceIterator occurrenceIterator{calendar, QDateTime{mStart, {0, 0, 0}}, QDateTime{mEnd, {12, 59, 59}}};
             while (occurrenceIterator.hasNext()) {
                 occurrenceIterator.next();
                 const auto incidence = occurrenceIterator.incidence();
+                Q_ASSERT(incidence);
                 const auto event = events.value(incidence->instanceIdentifier().toLatin1());
                 const auto start = occurrenceIterator.occurrenceStartDate();
                 const auto end = incidence->endDateForStart(start);
                 if (start.date() < mEnd && end.date() >= mStart) {
-                    mEvents.append({start, end, incidence, getColor(event->getCalendar()), event->getAllDay(), event});
+                    newEvents.append({start, end, incidence, getColor(event->getCalendar()), event->getAllDay(), event});
                 }
+            }
+        }
+        //Process all exceptions that had no main event present in the current query
+        for (const auto &uid : exceptions.keys()) {
+            const auto icalEvent = exceptions.value(uid).dynamicCast<KCalendarCore::Event>();
+            Q_ASSERT(icalEvent);
+            const auto event = events.value(icalEvent->instanceIdentifier().toLatin1());
+            if (icalEvent->dtStart().date() < mEnd && icalEvent->dtEnd().date() >= mStart) {
+                newEvents.append({icalEvent->dtStart(), icalEvent->dtEnd(), icalEvent, getColor(event->getCalendar()), event->getAllDay(), event});
             }
         }
     }
 
-    endResetModel();
+    {
+        auto it = std::begin(mEvents);
+        while (it != std::end(mEvents)) {
+            const auto event = *it;
+            auto itToRemove = std::find_if(std::begin(newEvents), std::end(newEvents), [&] (const auto &e) {
+                Q_ASSERT(e.incidence);
+                Q_ASSERT(event.incidence);
+                return e.incidence->uid() == event.incidence->uid() && e.start == event.start;
+            });
+            // Can't find the vevent in newEvents anymore, so remove from list
+            if (itToRemove == std::end(newEvents)) {
+                //Removed
+                const int startIndex = std::distance(std::begin(mEvents), it);
+                beginRemoveRows(QModelIndex(), startIndex, startIndex);
+                it = mEvents.erase(it);
+                endRemoveRows();
+            } else {
+                it++;
+            }
+        }
+    }
+
+    for (auto newIt = std::begin(newEvents); newIt != std::end(newEvents); newIt++) {
+        const auto event = *newIt;
+        auto it = std::find_if(std::begin(mEvents), std::end(mEvents), [&] (const auto &e) {
+            Q_ASSERT(e.incidence);
+            return e.incidence->uid() == event.incidence->uid() && e.start == event.start;
+        });
+        if (it == std::end(mEvents)) {
+            //New event
+            const int startIndex = std::distance(std::begin(newEvents), newIt);
+            beginInsertRows(QModelIndex(), startIndex, startIndex);
+            mEvents.insert(startIndex, event);
+            endInsertRows();
+        } else {
+            if (*(newIt->incidence) != *(it->incidence)) {
+                const int startIndex = std::distance(std::begin(mEvents), it);
+                mEvents[startIndex] = event;
+                emit dataChanged(index(startIndex, 0), index(startIndex, 0), {});
+            }
+        }
+    }
+
+    if (!mInitialItemsLoaded && (!mSourceModel || mSourceModel->data({}, Sink::Store::ChildrenFetchedRole).toBool())) {
+        mInitialItemsLoaded = true;
+        emit initialItemsLoaded();
+    }
+}
+
+
+bool EventOccurrenceModel::initialItemsComplete() const
+{
+    return mInitialItemsLoaded;
 }
 
 QModelIndex EventOccurrenceModel::index(int row, int column, const QModelIndex &parent) const

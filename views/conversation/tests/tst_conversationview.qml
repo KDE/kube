@@ -167,6 +167,8 @@ ViewTestCase {
         listView.currentIndex = 0
         var currentItem = listView.currentItem
         verify(currentItem)
+        //Pretend we're hovering over the delegate so the button becomes visible
+        currentItem.buttonsVisible = true
 
         var deleteButton = findChild(currentItem, "deleteButton");
         verify(deleteButton)

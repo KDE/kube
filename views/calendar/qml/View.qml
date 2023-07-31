@@ -27,9 +27,7 @@ import "dateutils.js" as DateUtils
 Kube.View {
     id: root
 
-    property date currentDate: new Date()
-    property date selectedDate: currentDate
-    property bool autoUpdateDate: true
+    property date selectedDate: Kube.Context.currentDate
 
     onRefresh: {
         Kube.Fabric.postMessage(Kube.Messages.synchronize, {"type": "calendar"})
@@ -45,13 +43,13 @@ Kube.View {
 
     Shortcut {
         enabled: root.isCurrentView
-        sequences: ['j', StandardKey.Forward]
+        sequences: ['j', StandardKey.Forward, StandardKey.MoveToNextLine, StandardKey.MoveToNextChar]
         onActivated: root.goToNext()
     }
 
     Shortcut {
         enabled: root.isCurrentView
-        sequences: ['k', StandardKey.Back]
+        sequences: ['k', StandardKey.Back, StandardKey.MoveToPreviousLine, StandardKey.MoveToPreviousChar]
         onActivated: root.goToPrevious()
     }
 
@@ -70,144 +68,74 @@ Kube.View {
         }
     }
     RowLayout {
+        Kube.LeftSidebar {
+            Layout.fillHeight: parent.height
+            buttons: [
+               Kube.PositiveButton {
+                   id: newEventButton
+                   objectName: "newEventButton"
 
-        Timer {
-            running: autoUpdateDate
-            interval: 2000; repeat: true
-            onTriggered: root.currentDate = new Date()
-        }
-
-        Rectangle {
-            Layout.fillHeight: true
-            width: Kube.Units.gridUnit * 10
-            color: Kube.Colors.darkBackgroundColor
-
-            Column {
-                id: topLayout
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    margins: Kube.Units.largeSpacing
-                }
-                spacing: Kube.Units.largeSpacing
-                Kube.PositiveButton {
-                    id: newEventButton
-                    objectName: "newEventButton"
-
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    focus: true
-                    text: qsTr("New Event")
-                    onClicked: eventPopup.createObject(root, {start: DateUtils.sameDay(root.currentDate, root.selectedDate) ? root.currentDate : root.selectedDate}).open()
-                }
-                RowLayout {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    spacing: Kube.Units.smallSpacing
-                    ButtonGroup {
-                        id: viewButtonGroup
-                    }
-                    Kube.TextButton {
-                        id: weekViewButton
-                        Layout.fillWidth: true
-                        text: qsTr("Week")
-                        textColor: Kube.Colors.highlightedTextColor
-                        checkable: true
-                        checked: true
-                        ButtonGroup.group: viewButtonGroup
-                    }
-                    Kube.TextButton {
-                        id: monthViewButton
-                        Layout.fillWidth: true
-                        text: qsTr("Month")
-                        textColor: Kube.Colors.highlightedTextColor
-                        checkable: true
-                        ButtonGroup.group: viewButtonGroup
-                    }
-                }
-                DateView {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    date: root.currentDate
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            root.selectedDate = root.currentDate
-                        }
-                    }
-                }
-
-                DateSelector {
-                    id: dateSelector
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    selectedDate: root.selectedDate
-                    onSelected: {
-                        root.selectedDate = date
-                    }
-                    onNext: root.goToNext()
-                    onPrevious: root.goToPrevious()
-                }
-            }
+                   Layout.fillWidth: true
+                   focus: true
+                   text: qsTr("New Event")
+                   onClicked: eventPopup.createObject(root, {start: DateUtils.sameDay(Kube.Context.currentDate, root.selectedDate) ? Kube.Context.currentDate : root.selectedDate}).open()
+               },
+               RowLayout {
+                   Layout.fillWidth: true
+                   spacing: Kube.Units.smallSpacing
+                   ButtonGroup {
+                       id: viewButtonGroup
+                   }
+                   Kube.TextButton {
+                       id: weekViewButton
+                       Layout.fillWidth: true
+                       text: qsTr("Week")
+                       textColor: Kube.Colors.highlightedTextColor
+                       checkable: true
+                       checked: true
+                       ButtonGroup.group: viewButtonGroup
+                   }
+                   Kube.TextButton {
+                       id: monthViewButton
+                       Layout.fillWidth: true
+                       text: qsTr("Month")
+                       textColor: Kube.Colors.highlightedTextColor
+                       checkable: true
+                       ButtonGroup.group: viewButtonGroup
+                   }
+               },
+               DateView {
+                   Layout.fillWidth: true
+                   date: Kube.Context.currentDate
+                   MouseArea {
+                       anchors.fill: parent
+                       onClicked: {
+                           root.selectedDate = Kube.Context.currentDate
+                       }
+                   }
+               },
+               DateSelector {
+                   id: dateSelector
+                   Layout.fillWidth: true
+                   selectedDate: root.selectedDate
+                   onSelected: {
+                       root.selectedDate = date
+                   }
+                   function next() {
+                        root.goToNext()
+                   }
+                   function previous() {
+                        root.goToPrevious()
+                   }
+               }
+            ]
 
             Kube.CalendarSelector {
                 id: accountSwitcher
                 objectName: "calendarSelector"
-
-                //Grow from the button but don't go over topLayout
-                anchors {
-                    bottom: statusBarContainer.top
-                    left: topLayout.left
-                    right: parent.right
-                    bottomMargin: Kube.Units.largeSpacing
-                    rightMargin: Kube.Units.largeSpacing
-                }
-
-                height: parent.height - (topLayout.y + topLayout.height) - Kube.Units.largeSpacing - anchors.bottomMargin - statusBarContainer.height
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 contentType: "event"
-            }
-
-            Item {
-                id: statusBarContainer
-                anchors {
-                    topMargin: Kube.Units.smallSpacing
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: parent.right
-                }
-                height: childrenRect.height
-
-                Rectangle {
-                    id: border
-                    visible: statusBar.visible
-                    anchors {
-                        right: parent.right
-                        left: parent.left
-                        margins: Kube.Units.smallSpacing
-                    }
-                    height: 1
-                    color: Kube.Colors.viewBackgroundColor
-                    opacity: 0.3
-                }
-                Kube.StatusBar {
-                    id: statusBar
-                    accountId: Kube.Context.currentAccountId
-                    height: Kube.Units.gridUnit * 2
-                    anchors {
-                        top: border.bottom
-                        left: statusBarContainer.left
-                        right: statusBarContainer.right
-                    }
-                }
             }
         }
 
@@ -215,19 +143,19 @@ Kube.View {
             visible: weekViewButton.checked
             Layout.fillHeight: true
             Layout.fillWidth: true
-            currentDate: root.currentDate
+            currentDate: Kube.Context.currentDate
             startDate: DateUtils.getFirstDayOfWeek(root.selectedDate)
-            calendarFilter: accountSwitcher.enabledCalendars
+            calendarFilter: accountSwitcher.enabledEntities
         }
 
         MonthView {
             visible: monthViewButton.checked
             Layout.fillHeight: true
             Layout.fillWidth: true
-            currentDate: root.currentDate
+            currentDate: Kube.Context.currentDate
             startDate: DateUtils.getFirstDayOfWeek(DateUtils.getFirstDayOfMonth(root.selectedDate))
             month: root.selectedDate.getMonth()
-            calendarFilter: accountSwitcher.enabledCalendars
+            calendarFilter: accountSwitcher.enabledEntities
         }
     }
 
@@ -250,11 +178,15 @@ Kube.View {
             width: root.width * 0.7
             height: root.height * 0.7
             padding: 0
-            EventEditor {
-                id: editor
+            Rectangle {
                 anchors.fill: parent
-                onDone: popup.close()
-                accountId: Kube.Context.currentAccountId
+                color: Kube.Colors.paperWhite
+                EventEditor {
+                    id: editor
+                    anchors.fill: parent
+                    onDone: popup.close()
+                    accountId: Kube.Context.currentAccountId
+                }
             }
         }
     }

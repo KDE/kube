@@ -155,12 +155,13 @@ public:
     {
         KMime::Types::Mailbox mb;
         mb.fromUnicodeString(addressee);
+        const auto mbAddress = mb.address();
 
-        if (mb.address().isEmpty()) {
+        if (mbAddress.isEmpty()) {
             return;
         }
 
-        SinkLog() << "Searching key for: " << mb.address();
+        SinkLog() << "Searching key for: " << mbAddress;
 
         mMissingKeys << id;
         setFoundAllKeys(false);
@@ -169,7 +170,7 @@ public:
 
         asyncRun<std::vector<Crypto::Key>>(this,
             [=] {
-                return Crypto::findKeys({mb.address()}, false, fetchRemote);
+                return Crypto::findKeys({mbAddress}, false, fetchRemote);
             },
             [this, addressee, id](const std::vector<Crypto::Key> &keys) {
                 setValue(id, "fetching", false);
@@ -177,7 +178,9 @@ public:
                     if (keys.size() > 1) {
                         SinkWarning() << "Found more than one key, encrypting to all of them.";
                     }
-                    SinkLog() << "Found key: " << keys.front();
+                    for (const auto &key : keys) {
+                        SinkLog() << "Found key: " << key;
+                    }
                     setValue(id, "keyFound", true);
                     setValue(id, "key", QVariant::fromValue(keys));
                     mMissingKeys.remove(id);
@@ -204,7 +207,17 @@ public:
     {
         // Support adding multiple addresses separated by comma
         for (const auto &part : KEmailAddress::splitAddressList(map.value("name").toString())) {
-            Kube::ListPropertyController::add({{"name", part.trimmed()}});
+            const auto address = part.trimmed();
+
+            //Validation
+            KMime::Types::Mailbox mb;
+            mb.fromUnicodeString(address);
+            if (mb.address().isEmpty()) {
+                SinkTrace() << "Ignoring invalid address " << address;
+                continue;
+            }
+
+            Kube::ListPropertyController::add({{"name", address}});
         }
     }
 signals:
@@ -273,10 +286,14 @@ ComposerController::ComposerController()
 
 void ComposerController::findPersonalKey()
 {
-    auto identity = getIdentity();
-    SinkLog() << "Looking for personal key for: " << identity.address();
+    const auto identityAddress = getIdentity().address();
+    if (identityAddress.isEmpty()) {
+        SinkTrace() << "Not looking for personal key because of empty identity.";
+        return;
+    }
+    SinkLog() << "Looking for personal key for: " << identityAddress;
     asyncRun<std::vector<Crypto::Key>>(this, [=] {
-            return Crypto::findKeys({identity.address()}, true);
+            return Crypto::findKeys({identityAddress}, true);
         },
         [this](const std::vector<Crypto::Key> &keys) {
             if (keys.empty()) {

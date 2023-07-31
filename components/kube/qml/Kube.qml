@@ -29,7 +29,7 @@ ApplicationWindow {
     id: app
 
     property int sidebarWidth: Kube.Units.gridUnit + Kube.Units.largeSpacing
-    property string defaultView: "conversation"
+    property string defaultView: "inbound"
 
     height: Screen.desktopAvailableHeight * 0.8
     width: Screen.desktopAvailableWidth * 0.8
@@ -45,18 +45,21 @@ ApplicationWindow {
         id: accountFactory
     }
 
+    Component.onCompleted: {
+        Kube.Keyring.unlocked.connect(function (accountId) {
+            if (!Kube.Keyring.isUnlocked(accountId)) {
+                if (accountFactory.requiresKeyring) {
+                    Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": accountId})
+                }
+            }
+        })
+    }
+
     onCurrentAccountChanged: {
         accountFactory.accountId = currentAccount
 
         Kube.Keyring.tryUnlock(currentAccount)
 
-        if (!Kube.Keyring.isUnlocked(currentAccount)) {
-            if (accountFactory.requiresKeyring) {
-                Kube.Fabric.postMessage(Kube.Messages.requestLogin, {"accountId": currentAccount})
-            } else {
-                Kube.Keyring.unlock(currentAccount)
-            }
-        }
 
         if (!!currentAccount) {
             Kube.Fabric.postMessage(Kube.Messages.synchronize, {"accountId": currentAccount})
@@ -84,7 +87,11 @@ ApplicationWindow {
     //Listener
     Kube.Listener {
         filter: Kube.Messages.folderSelection
-        onMessageReceived: Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": message.folder})
+        onMessageReceived: {
+            if (message.folder) {
+                Kube.Fabric.postMessage(Kube.Messages.synchronize, {"folder": message.folder})
+            }
+        }
 
     }
 
@@ -125,11 +132,11 @@ ApplicationWindow {
         onActivated: kubeViews.showView("composer")
     }
     Shortcut {
-        sequences: ['g,c']
-        onActivated: kubeViews.showView("conversation")
+        sequences: ['g,i']
+        onActivated: kubeViews.showView("inbound")
     }
     Shortcut {
-        sequences: ['g,e']
+        sequences: ['g,c']
         onActivated: kubeViews.showView("calendar")
     }
     Shortcut {
@@ -181,7 +188,7 @@ ApplicationWindow {
                     model: Kube.ExtensionModel {
                         id: extensionModel
                         extensionPoint: "views"
-                        sortOrder: ["search", "composer", "conversation", "people"]
+                        sortOrder: ["search", "composer", "inbound", "people"]
                     }
                     Kube.IconButton {
                         id: button

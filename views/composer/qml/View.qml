@@ -286,9 +286,14 @@ Kube.View {
                 Layout.maximumWidth: parent.width
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.minimumHeight: Kube.Units.gridUnit
 
                 AddresseeListEditor {
+                    id: addressListEditorTo
                     label: qsTr("Sending email to:")
+                    Layout.minimumHeight: Kube.Units.gridUnit
+                    //FIXME workaround for height of all entries in this ColumnLayout to grow over the size of the layout
+                    Layout.maximumHeight: parent.height - addressListEditorCc.height - addressListEditorBcc.height
                     Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
                     focus: true
@@ -299,7 +304,11 @@ Kube.View {
                 }
 
                 AddresseeListEditor {
+                    id: addressListEditorCc
                     label: qsTr("Sending copy to (Cc):")
+                    Layout.minimumHeight: Kube.Units.gridUnit
+                    //FIXME workaround for height of all entries in this ColumnLayout to grow over the size of the layout
+                    Layout.maximumHeight: parent.height - addressListEditorTo.height - addressListEditorBcc.height
                     Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
                     activeFocusOnTab: true
@@ -309,7 +318,11 @@ Kube.View {
                 }
 
                 AddresseeListEditor {
+                    id: addressListEditorBcc
                     label: qsTr("Sending secret copy to (Bcc):")
+                    Layout.minimumHeight: Kube.Units.gridUnit
+                    //FIXME workaround for height of all entries in this ColumnLayout to grow over the size of the layout
+                    Layout.maximumHeight: parent.height - addressListEditorCc.height - addressListEditorBcc.height
                     Layout.preferredHeight: implicitHeight
                     Layout.fillWidth: true
                     activeFocusOnTab: true
@@ -318,6 +331,7 @@ Kube.View {
                     completer: composerController.recipientCompleter
                 }
                 Item {
+                    Layout.preferredHeight: 0
                     width: parent.width
                     Layout.fillHeight: true
                 }

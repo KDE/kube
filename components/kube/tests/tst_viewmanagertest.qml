@@ -53,28 +53,33 @@ ViewTestCase {
         var viewManager = createTemporaryObject(viewManagerComponent, viewmanagerTestcase, {})
 
         viewManager.showView("view1", {test: "test1"})
+        tryCompare(viewManager, "loading", false)
         compare(viewManager.currentViewName, "view1")
         compare(viewManager.currentItem.test, "test1")
         compare(viewManager.depth, 1)
 
         viewManager.showView("view2", {test: "test2"})
+        tryCompare(viewManager, "loading", false)
         compare(viewManager.currentViewName, "view2")
         compare(viewManager.currentItem.test, "test2")
         compare(viewManager.depth, 2)
 
         viewManager.replaceView("view3", {test: "test3"})
+        tryCompare(viewManager, "loading", false)
         compare(viewManager.currentViewName, "view3")
         compare(viewManager.currentItem.test, "test3")
         compare(viewManager.depth, 2)
 
         //Switch back to the old view (properties are maintained)
         viewManager.showView("view2")
+        tryCompare(viewManager, "loading", false)
         compare(viewManager.currentViewName, "view2")
         compare(viewManager.currentItem.test, "test2")
         compare(viewManager.depth, 2)
 
         //And replace view3 (properties are not maintained)
         viewManager.replaceView("view3", {test: "test4"})
+        tryCompare(viewManager, "loading", false)
         compare(viewManager.currentViewName, "view3")
         compare(viewManager.currentItem.test, "test4")
         compare(viewManager.depth, 2)
@@ -95,11 +100,13 @@ ViewTestCase {
         viewManager.prepareViewInBackground("backgroundView", {test: "background"})
 
         viewManager.showView("view1", {test: "test1"})
+        tryCompare(viewManager, "loading", false)
         compare(viewManager.currentViewName, "view1")
         compare(viewManager.currentItem.test, "test1")
         compare(viewManager.depth, 1)
 
         viewManager.showView("backgroundView")
+        tryCompare(viewManager, "loading", false)
         compare(viewManager.currentViewName, "backgroundView")
         compare(viewManager.currentItem.test, "background")
         compare(viewManager.depth, 2)
