@@ -245,7 +245,7 @@ msgctxt "AccountSettings|"
 msgid "Choose a maildir folder"
 msgstr "Choose a maildir folder"
 
-#: applications/kube/main.cpp:152
+#: applications/kube/main.cpp:108
 msgctxt "main|"
 msgid ""
 "To automatically unlock the keyring pass in a keyring in the form of "
@@ -269,17 +269,17 @@ msgctxt "AccountWizardPage|"
 msgid "Save"
 msgstr "Save"
 
-#: components/kube/qml/Kube.qml:211
+#: components/kube/qml/Kube.qml:218
 msgctxt "Kube|"
 msgid "Outbox"
 msgstr "Outbox"
 
-#: components/kube/qml/Kube.qml:233
+#: components/kube/qml/Kube.qml:240
 msgctxt "Kube|"
 msgid "Notification view"
 msgstr "Notification view"
 
-#: components/kube/qml/Kube.qml:244
+#: components/kube/qml/Kube.qml:251
 msgctxt "Kube|"
 msgid "Settings"
 msgstr "Settings"
@@ -324,17 +324,12 @@ msgctxt "AttachmentDelegate|"
 msgid "Import key"
 msgstr "Import key"
 
-#: framework/qml/CalendarSelector.qml:79
-msgctxt "CalendarSelector|"
-msgid "Add calendar"
-msgstr "Add calendar"
-
-#: framework/qml/ConversationView.qml:158
+#: framework/qml/ConversationView.qml:159
 msgctxt "ConversationView|"
 msgid "Downloading message..."
 msgstr "Downloading message..."
 
-#: framework/qml/ConversationView.qml:162
+#: framework/qml/ConversationView.qml:163
 msgctxt "ConversationView|"
 msgid "Failed to download message..."
 msgstr "Failed to download message..."
@@ -354,40 +349,63 @@ msgctxt "EditAccount|"
 msgid "Save"
 msgstr "Save"
 
+#: framework/qml/EntitySelector.qml:103
+#, fuzzy
+#| msgctxt "PhoneListEditor|"
+#| msgid "Add"
+msgctxt "EntitySelector|"
+msgid "Add"
+msgstr "Add"
+
 #: framework/qml/LoginAccount.qml:117
 msgctxt "LoginAccount|"
 msgid "Login"
 msgstr "Login"
 
-#: framework/qml/MailListView.qml:67
-msgctxt "MailListView|"
-msgid "Nothing here..."
-msgstr "Nothing here..."
-
-#: framework/qml/MailListView.qml:291
-msgctxt "MailListView|"
+#: framework/qml/MailListDelegate.qml:84
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Restore from trash"
+msgctxt "MailListDelegate|"
 msgid "Restore from trash"
 msgstr "Restore from wastebin "
 
-#: framework/qml/MailListView.qml:299
-msgctxt "MailListView|"
+#: framework/qml/MailListDelegate.qml:92
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Mark as read"
+msgctxt "MailListDelegate|"
 msgid "Mark as read"
 msgstr "Mark as read"
 
-#: framework/qml/MailListView.qml:307
-msgctxt "MailListView|"
+#: framework/qml/MailListDelegate.qml:101
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Mark as unread"
+msgctxt "MailListDelegate|"
 msgid "Mark as unread"
 msgstr "Mark as unread"
 
-#: framework/qml/MailListView.qml:316
-msgctxt "MailListView|"
+#: framework/qml/MailListDelegate.qml:110
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Mark as important"
+msgctxt "MailListDelegate|"
 msgid "Mark as important"
 msgstr "Mark as important"
 
-#: framework/qml/MailListView.qml:326
-msgctxt "MailListView|"
+#: framework/qml/MailListDelegate.qml:120
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Move to trash"
+msgctxt "MailListDelegate|"
 msgid "Move to trash"
 msgstr "Move to wastebin"
+
+#: framework/qml/MailListView.qml:68
+msgctxt "MailListView|"
+msgid "Nothing here..."
+msgstr "Nothing here..."
 
 #: framework/qml/mailpartview/ErrorPart.qml:40
 #, qt-format
@@ -535,58 +553,58 @@ msgctxt "MailViewer|"
 msgid "Incomplete body..."
 msgstr "Incomplete body..."
 
-#: framework/qml/MailViewer.qml:195
+#: framework/qml/MailViewer.qml:202
 msgctxt "MailViewer|"
 msgid "Sent from"
 msgstr "Sent from"
 
-#: framework/qml/MailViewer.qml:199
+#: framework/qml/MailViewer.qml:206
 msgctxt "MailViewer|"
 msgid "Draft from"
 msgstr "Draft from"
 
-#: framework/qml/MailViewer.qml:213 framework/qml/MailViewer.qml:247
+#: framework/qml/MailViewer.qml:220 framework/qml/MailViewer.qml:254
 msgctxt "MailViewer|"
 msgid "Send mail to"
 msgstr "Send mail to"
 
-#: framework/qml/MailViewer.qml:231
+#: framework/qml/MailViewer.qml:238
 #, qt-format
 msgctxt "MailViewer|"
 msgid "Trash: %1"
 msgstr "Wastebin: %1"
 
-#: framework/qml/MailViewer.qml:383
+#: framework/qml/MailViewer.qml:390
 msgctxt "MailViewer|"
 msgid "Save attachment"
 msgstr "Save attachment"
 
-#: framework/qml/MailViewer.qml:473
+#: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Delete Mail"
 msgstr "Delete Mail"
 
-#: framework/qml/MailViewer.qml:473
+#: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Discard"
 msgstr "Discard"
 
-#: framework/qml/MailViewer.qml:473
+#: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Move to trash"
 msgstr "Move to wastebin"
 
-#: framework/qml/MailViewer.qml:495
+#: framework/qml/MailViewer.qml:502
 msgctxt "MailViewer|"
 msgid "Share"
 msgstr "Share"
 
-#: framework/qml/MailViewer.qml:505
+#: framework/qml/MailViewer.qml:512
 msgctxt "MailViewer|"
 msgid "Edit"
 msgstr "Edit"
 
-#: framework/qml/MailViewer.qml:505
+#: framework/qml/MailViewer.qml:512
 msgctxt "MailViewer|"
 msgid "Reply"
 msgstr "Reply"
@@ -606,6 +624,22 @@ msgstr "Send now"
 msgctxt "Outbox|"
 msgid "No pending messages"
 msgstr "No pending messages"
+
+#: framework/qml/ScrollablePopup.qml:70
+#, fuzzy
+#| msgctxt "AccountWizardPage|"
+#| msgid "Discard"
+msgctxt "ScrollablePopup|"
+msgid "Discard"
+msgstr "Discard"
+
+#: framework/qml/ScrollablePopup.qml:75
+#, fuzzy
+#| msgctxt "AccountWizardPage|"
+#| msgid "Save"
+msgctxt "ScrollablePopup|"
+msgid "Save"
+msgstr "Save"
 
 #: framework/qml/SearchPopup.qml:197
 msgctxt "SearchPopup|"
@@ -641,6 +675,54 @@ msgstr "Copy Link"
 msgctxt "TextArea|"
 msgid "Copy Selection"
 msgstr "Copy Selection"
+
+#: framework/qml/TodoListDelegate.qml:66
+#, fuzzy
+#| msgctxt "View|"
+#| msgid "Due today"
+msgctxt "TodoListDelegate|"
+msgid "Due today"
+msgstr "Due today"
+
+#: framework/qml/TodoListDelegate.qml:70
+#, fuzzy, qt-format
+#| msgctxt "View|"
+#| msgid " (%1 days)"
+msgctxt "TodoListDelegate|"
+msgid " (%1 days)"
+msgstr " (%1 days)"
+
+#: framework/qml/TodoListDelegate.qml:73
+#, fuzzy, qt-format
+#| msgctxt "View|"
+#| msgid "Overdue for %1 days"
+msgctxt "TodoListDelegate|"
+msgid "Overdue for %1 days"
+msgstr "Overdue for %1 days"
+
+#: framework/qml/TodoListDelegate.qml:90
+#, fuzzy
+#| msgctxt "View|"
+#| msgid "Unpick"
+msgctxt "TodoListDelegate|"
+msgid "Unpick"
+msgstr "Unpick"
+
+#: framework/qml/TodoListDelegate.qml:90
+#, fuzzy
+#| msgctxt "View|"
+#| msgid "Pick"
+msgctxt "TodoListDelegate|"
+msgid "Pick"
+msgstr "Pick"
+
+#: framework/qml/TodoListDelegate.qml:105
+#, fuzzy
+#| msgctxt "View|"
+#| msgid "Done!"
+msgctxt "TodoListDelegate|"
+msgid "Done!"
+msgstr "Done!"
 
 #: framework/src/domain/eventcontroller.cpp:90
 #, qt-format
@@ -762,47 +844,61 @@ msgctxt "QObject|"
 msgid "re"
 msgstr "re"
 
-#: framework/src/domain/mime/partmodel.cpp:468
+#: framework/src/domain/mime/partmodel.cpp:467
 msgctxt "PartModel|"
 msgid "No key available."
 msgstr "No key available."
 
-#: framework/src/domain/mime/partmodel.cpp:470
+#: framework/src/domain/mime/partmodel.cpp:469
 msgctxt "PartModel|"
 msgid "Wrong passphrase."
 msgstr "Wrong passphrase."
 
-#: framework/src/sinkfabric.cpp:178
+#: framework/src/inboundmodel.cpp:432 framework/src/inboundmodel.cpp:822
+#, qt-format
+msgctxt "QObject|"
+msgid "A new message is available: %1"
+msgstr ""
+
+#: framework/src/inboundmodel.cpp:513
+#, fuzzy, qt-format
+#| msgctxt "QObject|"
+#| msgid "No credentials available."
+msgctxt "QObject|"
+msgid "A new event is available: %1"
+msgstr "No credentials available."
+
+#: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
 msgid "Failed to connect to server."
 msgstr "Failed to connect to server."
 
-#: framework/src/sinkfabric.cpp:182
+#: framework/src/sinkfabric.cpp:201
 msgctxt "QObject|"
 msgid "Host not found."
 msgstr "Host not found."
 
-#: framework/src/sinkfabric.cpp:186
+#: framework/src/sinkfabric.cpp:205
 msgctxt "QObject|"
 msgid "Failed to login."
 msgstr "Failed to login."
 
-#: framework/src/sinkfabric.cpp:190
+#: framework/src/sinkfabric.cpp:209
 msgctxt "QObject|"
 msgid "Configuration error."
 msgstr "Configuration error."
 
-#: framework/src/sinkfabric.cpp:196
+#: framework/src/sinkfabric.cpp:215
 msgctxt "QObject|"
 msgid "No credentials available."
 msgstr "No credentials available."
 
-#: framework/src/sinkfabric.cpp:230
+#: framework/src/sinkfabric.cpp:249
 msgctxt "QObject|"
 msgid "Failed to send message."
 msgstr "Failed to send message."
 
-#: framework/src/sinkfabric.cpp:244
+#: framework/src/sinkfabric.cpp:263
 msgctxt "QObject|"
 msgid "A message has been sent."
 msgstr "A message has been sent."
@@ -812,137 +908,145 @@ msgctxt "View|"
 msgid "New Account"
 msgstr "New Account"
 
-#: views/calendar/qml/AttendeeListEditor.qml:91
+#: views/calendar/qml/AttendeeListEditor.qml:88
 msgctxt "AttendeeListEditor|"
 msgid "Attending"
 msgstr "Attending"
 
-#: views/calendar/qml/AttendeeListEditor.qml:91
+#: views/calendar/qml/AttendeeListEditor.qml:88
 msgctxt "AttendeeListEditor|"
 msgid "Invited"
 msgstr "Invited"
 
-#: views/calendar/qml/AttendeeListEditor.qml:119
-#: views/calendar/qml/AttendeeListEditor.qml:136
+#: views/calendar/qml/AttendeeListEditor.qml:112
+#: views/calendar/qml/AttendeeListEditor.qml:129
 msgctxt "AttendeeListEditor|"
 msgid "Add attendee"
 msgstr "Add attendee"
 
-#: views/calendar/qml/DateRangeChooser.qml:41
+#: views/calendar/qml/DateRangeChooser.qml:159
+#, fuzzy
+#| msgctxt "EventEditor|"
+#| msgid "All day"
 msgctxt "DateRangeChooser|"
-msgid "until"
-msgstr "until"
+msgid "All day"
+msgstr "All day"
 
-#: views/calendar/qml/EventEditor.qml:80
+#: views/calendar/qml/DateRangeChooser.qml:166
+msgctxt "DateRangeChooser|"
+msgid "begins"
+msgstr ""
+
+#: views/calendar/qml/DateRangeChooser.qml:178
+msgctxt "DateRangeChooser|"
+msgid "ends"
+msgstr ""
+
+#: views/calendar/qml/EventEditor.qml:85
 msgctxt "EventEditor|"
 msgid "Event Title"
 msgstr "Event Title"
 
-#: views/calendar/qml/EventEditor.qml:110
-msgctxt "EventEditor|"
-msgid "All day"
-msgstr "All day"
-
-#: views/calendar/qml/EventEditor.qml:121
+#: views/calendar/qml/EventEditor.qml:107
 msgctxt "EventEditor|"
 msgid "Location"
 msgstr "Location"
 
-#: views/calendar/qml/EventEditor.qml:132
+#: views/calendar/qml/EventEditor.qml:118
 msgctxt "EventEditor|"
 msgid "Organizer:"
 msgstr "Organiser:"
 
-#: views/calendar/qml/EventEditor.qml:182
+#: views/calendar/qml/EventEditor.qml:175
 msgctxt "EventEditor|"
 msgid "Delete"
 msgstr "Delete"
 
-#: views/calendar/qml/EventEditor.qml:191
+#: views/calendar/qml/EventEditor.qml:184
 msgctxt "EventEditor|"
 msgid "Abort"
 msgstr "Abort"
 
-#: views/calendar/qml/EventEditor.qml:215
+#: views/calendar/qml/EventEditor.qml:209
 msgctxt "EventEditor|"
 msgid "Discard Changes"
 msgstr "Discard Changes"
 
-#: views/calendar/qml/EventEditor.qml:223
+#: views/calendar/qml/EventEditor.qml:216
 msgctxt "EventEditor|"
 msgid "Save Changes"
 msgstr "Save Changes"
 
-#: views/calendar/qml/EventEditor.qml:232
+#: views/calendar/qml/EventEditor.qml:225
 msgctxt "EventEditor|"
 msgid "Create Event"
 msgstr "Create Event"
 
-#: views/calendar/qml/EventView.qml:76
+#: views/calendar/qml/EventView.qml:76 views/inbound/qml/EventView.qml:84
 #, qt-format
 msgctxt "EventView|"
 msgid "repeats %1"
 msgstr "repeats %1"
 
-#: views/calendar/qml/EventView.qml:85
+#: views/calendar/qml/EventView.qml:86 views/inbound/qml/EventView.qml:93
 #, qt-format
 msgctxt "EventView|"
 msgid "Organizer: %1"
 msgstr "Organiser: %1"
 
-#: views/calendar/qml/EventView.qml:95
+#: views/calendar/qml/EventView.qml:96 views/inbound/qml/EventView.qml:103
 msgctxt "EventView|"
 msgid "Attending:"
 msgstr "Attending:"
 
-#: views/calendar/qml/EventView.qml:102
+#: views/calendar/qml/EventView.qml:103 views/inbound/qml/EventView.qml:110
 #, qt-format
 msgctxt "EventView|"
 msgid "%1"
 msgstr "%1"
 
-#: views/calendar/qml/EventView.qml:130
+#: views/calendar/qml/EventView.qml:119
 msgctxt "EventView|"
 msgid "Remove"
 msgstr "Remove"
 
-#: views/calendar/qml/EventView.qml:141
+#: views/calendar/qml/EventView.qml:130
 msgctxt "EventView|"
 msgid "Edit"
 msgstr "Edit"
 
-#: views/calendar/qml/View.qml:41
+#: views/calendar/qml/View.qml:39
 msgctxt "View|"
 msgid "Jump to next week/month:"
 msgstr "Jump to next week/month:"
 
-#: views/calendar/qml/View.qml:42
+#: views/calendar/qml/View.qml:40
 msgctxt "View|"
 msgid "Jump to previous week/month:"
 msgstr "Jump to previous week/month:"
 
-#: views/calendar/qml/View.qml:103
+#: views/calendar/qml/View.qml:80
 msgctxt "View|"
 msgid "New Event"
 msgstr "New Event"
 
-#: views/calendar/qml/View.qml:118
+#: views/calendar/qml/View.qml:92
 msgctxt "View|"
 msgid "Week"
 msgstr "Week"
 
-#: views/calendar/qml/View.qml:127
+#: views/calendar/qml/View.qml:101
 msgctxt "View|"
 msgid "Month"
 msgstr "Month"
 
-#: views/composer/qml/AddresseeListEditor.qml:135
+#: views/composer/qml/AddresseeListEditor.qml:132
 msgctxt "AddresseeListEditor|"
 msgid "Fetch key from keyserver"
 msgstr "Fetch key from keyserver"
 
-#: views/composer/qml/AddresseeListEditor.qml:171
-#: views/composer/qml/AddresseeListEditor.qml:188
+#: views/composer/qml/AddresseeListEditor.qml:168
+#: views/composer/qml/AddresseeListEditor.qml:185
 msgctxt "AddresseeListEditor|"
 msgid "Add recipient"
 msgstr "Add recipient"
@@ -972,7 +1076,8 @@ msgctxt "EditorPage|"
 msgid "Body"
 msgstr "Body"
 
-#: views/composer/qml/View.qml:135 views/conversation/qml/View.qml:155
+#: views/composer/qml/View.qml:135 views/conversation/qml/View.qml:156
+#: views/inbound/qml/View.qml:197
 msgctxt "View|"
 msgid "New Email"
 msgstr "New Email"
@@ -982,122 +1087,376 @@ msgctxt "View|"
 msgid "Drafts"
 msgstr "Drafts"
 
-#: views/composer/qml/View.qml:291
+#: views/composer/qml/View.qml:293
 msgctxt "View|"
 msgid "Sending email to:"
 msgstr "Sending email to:"
 
-#: views/composer/qml/View.qml:302
+#: views/composer/qml/View.qml:308
 msgctxt "View|"
 msgid "Sending copy to (Cc):"
 msgstr "Sending copy to (Cc):"
 
-#: views/composer/qml/View.qml:312
+#: views/composer/qml/View.qml:322
 msgctxt "View|"
 msgid "Sending secret copy to (Bcc):"
 msgstr "Sending secret copy to (Bcc):"
 
-#: views/composer/qml/View.qml:333
+#: views/composer/qml/View.qml:347
 msgctxt "View|"
 msgid "encrypt"
 msgstr "encrypt"
 
-#: views/composer/qml/View.qml:344
+#: views/composer/qml/View.qml:358
 msgctxt "View|"
 msgid "sign"
 msgstr "sign"
 
-#: views/composer/qml/View.qml:350
+#: views/composer/qml/View.qml:364
 msgctxt "View|"
 msgid ""
 "Encryption is not available because your personal key has not been found."
 msgstr ""
 "Encryption is not available because your personal key has not been found."
 
-#: views/composer/qml/View.qml:361
+#: views/composer/qml/View.qml:375
 msgctxt "View|"
 msgid "Discard"
 msgstr "Discard"
 
-#: views/composer/qml/View.qml:368
+#: views/composer/qml/View.qml:382
 msgctxt "View|"
 msgid "Save as Draft"
 msgstr "Save as Draft"
 
-#: views/composer/qml/View.qml:381
+#: views/composer/qml/View.qml:395
 msgctxt "View|"
 msgid "You are sending this from:"
 msgstr "You are sending this from:"
 
-#: views/composer/qml/View.qml:407
+#: views/composer/qml/View.qml:421
 msgctxt "View|"
 msgid "Send"
 msgstr "Send"
 
-#: views/conversation/qml/View.qml:64
+#: views/conversation/qml/View.qml:73 views/inbound/qml/View.qml:114
 msgctxt "View|"
 msgid "Jump to top of threadlist:"
 msgstr "Jump to top of thread list:"
 
-#: views/conversation/qml/View.qml:65
+#: views/conversation/qml/View.qml:74 views/inbound/qml/View.qml:115
 msgctxt "View|"
 msgid "Jump to next thread:"
 msgstr "Jump to next thread:"
 
-#: views/conversation/qml/View.qml:66
+#: views/conversation/qml/View.qml:75 views/inbound/qml/View.qml:116
 msgctxt "View|"
 msgid "Jump to previous thread:"
 msgstr "Jump to previous thread:"
 
-#: views/conversation/qml/View.qml:67
+#: views/conversation/qml/View.qml:76 views/inbound/qml/View.qml:117
 msgctxt "View|"
 msgid "Jump to next message:"
 msgstr "Jump to next message:"
 
-#: views/conversation/qml/View.qml:68
+#: views/conversation/qml/View.qml:77 views/inbound/qml/View.qml:118
 msgctxt "View|"
 msgid "Jump to previous message:"
 msgstr "Jump to previous message:"
 
-#: views/conversation/qml/View.qml:69
+#: views/conversation/qml/View.qml:78 views/inbound/qml/View.qml:119
 msgctxt "View|"
 msgid "Jump to next folder:"
 msgstr "Jump to next folder:"
 
-#: views/conversation/qml/View.qml:70
+#: views/conversation/qml/View.qml:79 views/inbound/qml/View.qml:120
 msgctxt "View|"
 msgid "Jump to previous folder:"
 msgstr "Jump to previous folder:"
 
-#: views/conversation/qml/View.qml:71
+#: views/conversation/qml/View.qml:80 views/inbound/qml/View.qml:121
 msgctxt "View|"
 msgid "Compose new message:"
 msgstr "Compose new message:"
 
-#: views/conversation/qml/View.qml:72
+#: views/conversation/qml/View.qml:81 views/inbound/qml/View.qml:122
 msgctxt "View|"
 msgid "Reply to the currently focused message:"
 msgstr "Reply to the currently focused message:"
 
-#: views/conversation/qml/View.qml:73
+#: views/conversation/qml/View.qml:82 views/inbound/qml/View.qml:123
 msgctxt "View|"
 msgid "Delete the currently focused message:"
 msgstr "Delete the currently focused message:"
 
-#: views/conversation/qml/View.qml:74
+#: views/conversation/qml/View.qml:83 views/inbound/qml/View.qml:124
 msgctxt "View|"
 msgid "Mark the currently focused message as important:"
 msgstr "Mark the currently focused message as important:"
 
-#: views/conversation/qml/View.qml:75
+#: views/conversation/qml/View.qml:84 views/inbound/qml/View.qml:125
 msgctxt "View|"
 msgid "Mark the currently focused message as unread:"
 msgstr "Mark the currently focused message as unread:"
 
-#: views/conversation/qml/View.qml:76 views/todo/qml/View.qml:106
+#: views/conversation/qml/View.qml:85 views/inbound/qml/View.qml:126
+#: views/todo/qml/View.qml:108
 msgctxt "View|"
 msgid "Show this help text:"
 msgstr "Show this help text:"
+
+#: views/inbound/qml/View.qml:203
+#, fuzzy
+#| msgctxt "View|"
+#| msgid "Inbox"
+msgctxt "View|"
+msgid "Inbound"
+msgstr "Inbox"
+
+#: views/inbound/qml/View.qml:231
+#, fuzzy
+#| msgctxt "QObject|"
+#| msgid "Configuration error."
+msgctxt "View|"
+msgid "Configure"
+msgstr "Configuration error."
+
+#: views/inbound/qml/View.qml:236
+msgctxt "View|"
+msgid "Recent"
+msgstr ""
+
+#: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
+msgctxt "View|"
+msgid "Important"
+msgstr "Important"
+
+#: views/inbound/qml/View.qml:347 views/log/qml/View.qml:71
+msgctxt "View|"
+msgid "Nothing here..."
+msgstr "Nothing here..."
+
+#: views/inbound/qml/View.qml:485
+msgctxt "View|"
+msgid "Today, "
+msgstr ""
+
+#: views/inbound/qml/View.qml:490
+msgctxt "View|"
+msgid "Tomorrow, "
+msgstr ""
+
+#: views/inbound/qml/View.qml:493
+#, fuzzy, qt-format
+#| msgctxt "View|"
+#| msgid " (%1 days)"
+msgctxt "View|"
+msgid " (in %1 days)"
+msgstr " (%1 days)"
+
+#: views/inbound/qml/View.qml:496
+#, fuzzy, qt-format
+#| msgctxt "View|"
+#| msgid " (%1 days)"
+msgctxt "View|"
+msgid "%1 days ago"
+msgstr " (%1 days)"
+
+#: views/inbound/qml/View.qml:544
+msgctxt "View|"
+msgid "Ignore sender"
+msgstr ""
+
+#: views/inbound/qml/View.qml:555
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Restore from trash"
+msgctxt "View|"
+msgid "Restore from trash"
+msgstr "Restore from wastebin "
+
+#: views/inbound/qml/View.qml:566
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Mark as read"
+msgctxt "View|"
+msgid "Mark as read"
+msgstr "Mark as read"
+
+#: views/inbound/qml/View.qml:576
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Mark as unread"
+msgctxt "View|"
+msgid "Mark as unread"
+msgstr "Mark as unread"
+
+#: views/inbound/qml/View.qml:586
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Mark as important"
+msgctxt "View|"
+msgid "Mark as important"
+msgstr "Mark as important"
+
+#: views/inbound/qml/View.qml:597
+#, fuzzy
+#| msgctxt "MailListView|"
+#| msgid "Move to trash"
+msgctxt "View|"
+msgid "Move to trash"
+msgstr "Move to wastebin"
+
+#: views/inbound/qml/View.qml:612
+msgctxt "View|"
+msgid "Done!"
+msgstr "Done!"
+
+#: views/inbound/qml/View.qml:701 views/log/qml/View.qml:220
+msgctxt "View|"
+msgid "Account:"
+msgstr "Account:"
+
+#: views/inbound/qml/View.qml:711 views/log/qml/View.qml:230
+msgctxt "View|"
+msgid "Account Id:"
+msgstr "Account ID:"
+
+#: views/inbound/qml/View.qml:721 views/log/qml/View.qml:240
+msgctxt "View|"
+msgid "Resource Id:"
+msgstr "Resource ID:"
+
+#: views/inbound/qml/View.qml:731 views/log/qml/View.qml:250
+msgctxt "View|"
+msgid "Timestamp:"
+msgstr "Timestamp:"
+
+#: views/inbound/qml/View.qml:739 views/log/qml/View.qml:258
+msgctxt "View|"
+msgid "Message:"
+msgstr "Message:"
+
+#: views/inbound/qml/View.qml:773 views/log/qml/View.qml:292
+msgctxt "View|"
+msgid "Failed to login"
+msgstr "Failed to login"
+
+#: views/inbound/qml/View.qml:779 views/log/qml/View.qml:298
+#, qt-format
+msgctxt "View|"
+msgid "%1: please check your credentials."
+msgstr "%1: please check your credentials."
+
+#: views/inbound/qml/View.qml:785 views/log/qml/View.qml:304
+msgctxt "View|"
+msgid "Change Password"
+msgstr "Change Password"
+
+#: views/inbound/qml/View.qml:808 views/log/qml/View.qml:327
+msgctxt "View|"
+msgid "Host not found"
+msgstr "Host not found"
+
+#: views/inbound/qml/View.qml:814 views/log/qml/View.qml:333
+#, qt-format
+msgctxt "View|"
+msgid "%1: please check your network connection and settings."
+msgstr "%1: please check your network connection and settings."
+
+#: views/inbound/qml/View.qml:820 views/log/qml/View.qml:339
+msgctxt "View|"
+msgid "Account Settings"
+msgstr "Account Settings"
+
+#: views/inbound/qml/View.qml:844 views/log/qml/View.qml:363
+msgctxt "View|"
+msgid "Failed to send the message."
+msgstr "Failed to send the message."
+
+#: views/inbound/qml/View.qml:863 views/inbound/qml/View.qml:930
+#: views/log/qml/View.qml:382 views/log/qml/View.qml:449
+#, qt-format
+msgctxt "View|"
+msgid "Account: %1"
+msgstr "Account: %1"
+
+#: views/inbound/qml/View.qml:868 views/inbound/qml/View.qml:935
+#: views/log/qml/View.qml:387 views/log/qml/View.qml:454
+#, qt-format
+msgctxt "View|"
+msgid "Subject: %1"
+msgstr "Subject: %1"
+
+#: views/inbound/qml/View.qml:873 views/inbound/qml/View.qml:940
+#: views/log/qml/View.qml:392 views/log/qml/View.qml:459
+#, qt-format
+msgctxt "View|"
+msgid "To: %1"
+msgstr "To: %1"
+
+#: views/inbound/qml/View.qml:879 views/inbound/qml/View.qml:946
+#: views/log/qml/View.qml:398 views/log/qml/View.qml:465
+#, qt-format
+msgctxt "View|"
+msgid "Cc: %1"
+msgstr "CC: %1"
+
+#: views/inbound/qml/View.qml:889 views/log/qml/View.qml:408
+msgctxt "View|"
+msgid "Try Again"
+msgstr "Try Again"
+
+#: views/inbound/qml/View.qml:912 views/log/qml/View.qml:431
+msgctxt "View|"
+msgid "Succeeded to send the message."
+msgstr "Succeeded to send the message."
+
+#: views/inbound/qml/View.qml:1027
+msgctxt "View|"
+msgid "Folder name blacklist"
+msgstr ""
+
+#: views/inbound/qml/View.qml:1034
+msgctxt "View|"
+msgid "Comma separated folder names"
+msgstr ""
+
+#: views/inbound/qml/View.qml:1039
+msgctxt "View|"
+msgid "Per Folder Mime Message Whitelist"
+msgstr ""
+
+#: views/inbound/qml/View.qml:1051
+msgctxt "View|"
+msgid "Folder special purpose blacklist"
+msgstr ""
+
+#: views/inbound/qml/View.qml:1058
+msgctxt "View|"
+msgid "Comma separated special purpose types. Example: drafts, trash, sent"
+msgstr ""
+
+#: views/inbound/qml/View.qml:1063
+msgctxt "View|"
+msgid "Sender blacklist"
+msgstr ""
+
+#: views/inbound/qml/View.qml:1070 views/inbound/qml/View.qml:1082
+#: views/inbound/qml/View.qml:1094
+msgctxt "View|"
+msgid "Comma separated sender email addresses"
+msgstr ""
+
+#: views/inbound/qml/View.qml:1075
+msgctxt "View|"
+msgid "To blacklist"
+msgstr ""
+
+#: views/inbound/qml/View.qml:1087
+msgctxt "View|"
+msgid "Sender name contains filter"
+msgstr ""
 
 #: views/inboxcrusher/qml/View.qml:92
 msgctxt "View|"
@@ -1124,11 +1483,6 @@ msgctxt "View|"
 msgid "Next"
 msgstr "Next"
 
-#: views/log/qml/View.qml:71
-msgctxt "View|"
-msgid "Nothing here..."
-msgstr "Nothing here..."
-
 #: views/log/qml/View.qml:118
 msgctxt "View|"
 msgid "Error"
@@ -1138,102 +1492,6 @@ msgstr "Error"
 msgctxt "View|"
 msgid "Info"
 msgstr "Info"
-
-#: views/log/qml/View.qml:220
-msgctxt "View|"
-msgid "Account:"
-msgstr "Account:"
-
-#: views/log/qml/View.qml:230
-msgctxt "View|"
-msgid "Account Id:"
-msgstr "Account ID:"
-
-#: views/log/qml/View.qml:240
-msgctxt "View|"
-msgid "Resource Id:"
-msgstr "Resource ID:"
-
-#: views/log/qml/View.qml:250
-msgctxt "View|"
-msgid "Timestamp:"
-msgstr "Timestamp:"
-
-#: views/log/qml/View.qml:258
-msgctxt "View|"
-msgid "Message:"
-msgstr "Message:"
-
-#: views/log/qml/View.qml:292
-msgctxt "View|"
-msgid "Failed to login"
-msgstr "Failed to login"
-
-#: views/log/qml/View.qml:298
-#, qt-format
-msgctxt "View|"
-msgid "%1: please check your credentials."
-msgstr "%1: please check your credentials."
-
-#: views/log/qml/View.qml:304
-msgctxt "View|"
-msgid "Change Password"
-msgstr "Change Password"
-
-#: views/log/qml/View.qml:327
-msgctxt "View|"
-msgid "Host not found"
-msgstr "Host not found"
-
-#: views/log/qml/View.qml:333
-#, qt-format
-msgctxt "View|"
-msgid "%1: please check your network connection and settings."
-msgstr "%1: please check your network connection and settings."
-
-#: views/log/qml/View.qml:339
-msgctxt "View|"
-msgid "Account Settings"
-msgstr "Account Settings"
-
-#: views/log/qml/View.qml:363
-msgctxt "View|"
-msgid "Failed to send the message."
-msgstr "Failed to send the message."
-
-#: views/log/qml/View.qml:382 views/log/qml/View.qml:449
-#, qt-format
-msgctxt "View|"
-msgid "Account: %1"
-msgstr "Account: %1"
-
-#: views/log/qml/View.qml:387 views/log/qml/View.qml:454
-#, qt-format
-msgctxt "View|"
-msgid "Subject: %1"
-msgstr "Subject: %1"
-
-#: views/log/qml/View.qml:392 views/log/qml/View.qml:459
-#, qt-format
-msgctxt "View|"
-msgid "To: %1"
-msgstr "To: %1"
-
-#: views/log/qml/View.qml:398 views/log/qml/View.qml:465
-#, qt-format
-msgctxt "View|"
-msgid "Cc: %1"
-msgstr "CC: %1"
-
-#: views/log/qml/View.qml:408
-msgctxt "View|"
-msgid "Try Again"
-msgstr "Try Again"
-
-#: views/log/qml/View.qml:431
-msgctxt "View|"
-msgid "Succeeded to send the message."
-msgstr "Succeeded to send the message."
 
 #: views/people/qml/MailListEditor.qml:53
 msgctxt "MailListEditor|"
@@ -1321,11 +1579,6 @@ msgctxt "View|"
 msgid "Unread"
 msgstr "Unread"
 
-#: views/search/qml/View.qml:94
-msgctxt "View|"
-msgid "Important"
-msgstr "Important"
-
 #: views/search/qml/View.qml:100
 msgctxt "View|"
 msgid "Accounts"
@@ -1346,163 +1599,148 @@ msgctxt "View_new|"
 msgid "Search..."
 msgstr "Search..."
 
-#: views/todo/qml/TodoEditor.qml:101
+#: views/todo/qml/TodoEditor.qml:113
+#, fuzzy
+#| msgctxt "EventEditor|"
+#| msgid "Create Event"
+msgctxt "TodoEditor|"
+msgid "Create in:"
+msgstr "Create Event"
+
+#: views/todo/qml/TodoEditor.qml:143
+msgctxt "TodoEditor|"
+msgid "Doing"
+msgstr "Doing"
+
+#: views/todo/qml/TodoEditor.qml:151
 msgctxt "TodoEditor|"
 msgid "Todo Title"
 msgstr "To-do Title"
 
-#: views/todo/qml/TodoEditor.qml:122
+#: views/todo/qml/TodoEditor.qml:211
 msgctxt "TodoEditor|"
-msgid "Doing"
-msgstr "Doing"
+msgid "Add subtodo"
+msgstr ""
 
-#: views/todo/qml/TodoEditor.qml:168
+#: views/todo/qml/TodoEditor.qml:227
 msgctxt "TodoEditor|"
 msgid "Delete"
 msgstr "Delete"
 
-#: views/todo/qml/TodoEditor.qml:177
+#: views/todo/qml/TodoEditor.qml:236
 msgctxt "TodoEditor|"
 msgid "Abort"
 msgstr "Abort"
 
-#: views/todo/qml/TodoEditor.qml:189
+#: views/todo/qml/TodoEditor.qml:249
 msgctxt "TodoEditor|"
 msgid "Discard Changes"
 msgstr "Discard Changes"
 
-#: views/todo/qml/TodoEditor.qml:197
+#: views/todo/qml/TodoEditor.qml:256
 msgctxt "TodoEditor|"
 msgid "Save Changes"
 msgstr "Save Changes"
 
-#: views/todo/qml/TodoEditor.qml:203
+#: views/todo/qml/TodoEditor.qml:262
 msgctxt "TodoEditor|"
 msgid "Create Todo"
 msgstr "Create Todo"
 
-#: views/todo/qml/TodoView.qml:71
-msgctxt "TodoView|"
-msgid "Due on "
-msgstr "Due on "
-
-#: views/todo/qml/TodoView.qml:77
-msgctxt "TodoView|"
-msgid "Start on "
-msgstr "Start on "
-
-#: views/todo/qml/TodoView.qml:112
-msgctxt "TodoView|"
-msgid "Remove"
-msgstr "Remove"
-
-#: views/todo/qml/TodoView.qml:121
-msgctxt "TodoView|"
-msgid "Edit"
-msgstr "Edit"
-
-#: views/todo/qml/View.qml:100
+#: views/todo/qml/View.qml:102
 msgctxt "View|"
 msgid "Go to top of list:"
 msgstr "Go to top of list:"
 
-#: views/todo/qml/View.qml:101
+#: views/todo/qml/View.qml:103
 msgctxt "View|"
 msgid "Go to bottom of list:"
 msgstr "Go to bottom of list:"
 
-#: views/todo/qml/View.qml:102
+#: views/todo/qml/View.qml:104
 msgctxt "View|"
 msgid "Go to next todo:"
 msgstr "Go to next to-do:"
 
-#: views/todo/qml/View.qml:103
+#: views/todo/qml/View.qml:105
 msgctxt "View|"
 msgid "Go to previous todo:"
 msgstr "Go to previous to-do:"
 
-#: views/todo/qml/View.qml:104
+#: views/todo/qml/View.qml:106
 msgctxt "View|"
 msgid "Create new todo:"
 msgstr "Create new to-do:"
 
-#: views/todo/qml/View.qml:105
+#: views/todo/qml/View.qml:107
 msgctxt "View|"
 msgid "Edit todo:"
 msgstr "Edit todo:"
 
-#: views/todo/qml/View.qml:179
+#: views/todo/qml/View.qml:167
 msgctxt "View|"
 msgid "New Todo"
 msgstr "New To-do"
 
-#: views/todo/qml/View.qml:197
+#: views/todo/qml/View.qml:175
 msgctxt "View|"
 msgid "Inbox"
 msgstr "Inbox"
 
-#: views/todo/qml/View.qml:211
+#: views/todo/qml/View.qml:186
 msgctxt "View|"
 msgid "Doing"
 msgstr "Doing"
 
-#: views/todo/qml/View.qml:225
+#: views/todo/qml/View.qml:197
 msgctxt "View|"
 msgid "All"
 msgstr "All"
 
-#: views/todo/qml/View.qml:326
+#: views/todo/qml/View.qml:250
 msgctxt "View|"
 msgid "Nothing here yet..."
 msgstr "Nothing here yet..."
 
-#: views/todo/qml/View.qml:330
+#: views/todo/qml/View.qml:254
 msgctxt "View|"
 msgid "Pick some tasks"
 msgstr "Pick some tasks"
 
-#: views/todo/qml/View.qml:338
+#: views/todo/qml/View.qml:262
 msgctxt "View|"
 msgid "Add a new task"
 msgstr "Add a new task"
 
-#: views/todo/qml/View.qml:356
+#: views/todo/qml/View.qml:280
 #, qt-format
 msgctxt "View|"
 msgid "This list is longer than %1 tasks. Focus on the top %1?"
 msgstr "This list is longer than %1 tasks. Focus on the top %1?"
 
-#: views/todo/qml/View.qml:468
-msgctxt "View|"
-msgid "Due today"
-msgstr "Due today"
+#~ msgctxt "CalendarSelector|"
+#~ msgid "Add calendar"
+#~ msgstr "Add calendar"
 
-#: views/todo/qml/View.qml:472
-#, qt-format
-msgctxt "View|"
-msgid " (%1 days)"
-msgstr " (%1 days)"
+#~ msgctxt "DateRangeChooser|"
+#~ msgid "until"
+#~ msgstr "until"
 
-#: views/todo/qml/View.qml:475
-#, qt-format
-msgctxt "View|"
-msgid "Overdue for %1 days"
-msgstr "Overdue for %1 days"
+#~ msgctxt "TodoView|"
+#~ msgid "Due on "
+#~ msgstr "Due on "
 
-#: views/todo/qml/View.qml:514
-msgctxt "View|"
-msgid "Unpick"
-msgstr "Unpick"
+#~ msgctxt "TodoView|"
+#~ msgid "Start on "
+#~ msgstr "Start on "
 
-#: views/todo/qml/View.qml:514
-msgctxt "View|"
-msgid "Pick"
-msgstr "Pick"
+#~ msgctxt "TodoView|"
+#~ msgid "Remove"
+#~ msgstr "Remove"
 
-#: views/todo/qml/View.qml:529
-msgctxt "View|"
-msgid "Done!"
-msgstr "Done!"
+#~ msgctxt "TodoView|"
+#~ msgid "Edit"
+#~ msgstr "Edit"
 
 #~ msgctxt "MimeTreeParser::SignedMessagePart|"
 #~ msgid "Wrong Crypto Plug-In."
