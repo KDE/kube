@@ -1,8 +1,8 @@
-# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2018, 2019, 2020, 2021.
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2018, 2019, 2020, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2021-02-21 14:30+0100\n"
+"PO-Revision-Date: 2023-08-01 08:39+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -350,9 +350,6 @@ msgid "Save"
 msgstr "Spara"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
 msgstr "Lägg till"
@@ -363,41 +360,26 @@ msgid "Login"
 msgstr "Inloggning"
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
 msgstr "Återställ från papperskorgen"
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
 msgstr "Markera som läst"
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
 msgstr "Markera som oläst"
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
 msgstr "Markera som viktig"
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
 msgstr "Flytta till papperskorgen"
@@ -627,17 +609,11 @@ msgid "No pending messages"
 msgstr "Inga väntande brev"
 
 #: framework/qml/ScrollablePopup.qml:70
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "ScrollablePopup|"
 msgid "Discard"
 msgstr "Kasta"
 
 #: framework/qml/ScrollablePopup.qml:75
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Save"
 msgctxt "ScrollablePopup|"
 msgid "Save"
 msgstr "Spara"
@@ -678,49 +654,33 @@ msgid "Copy Selection"
 msgstr "Kopiera markering"
 
 #: framework/qml/TodoListDelegate.qml:66
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Due today"
 msgctxt "TodoListDelegate|"
 msgid "Due today"
 msgstr "Färdig idag"
 
 #: framework/qml/TodoListDelegate.qml:70
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
 msgstr " (%1 dagar)"
 
 #: framework/qml/TodoListDelegate.qml:73
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid "Overdue for %1 days"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid "Overdue for %1 days"
 msgstr "Försenad %1 dagar"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Unpick"
 msgctxt "TodoListDelegate|"
 msgid "Unpick"
 msgstr "Välj inte"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Pick"
 msgctxt "TodoListDelegate|"
 msgid "Pick"
 msgstr "Välj"
 
 #: framework/qml/TodoListDelegate.qml:105
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Done!"
 msgctxt "TodoListDelegate|"
 msgid "Done!"
 msgstr "Klar!"
@@ -859,15 +819,13 @@ msgstr "Felaktig lösenordsfras."
 #, qt-format
 msgctxt "QObject|"
 msgid "A new message is available: %1"
-msgstr ""
+msgstr "Ett nytt brev är tillgängligt: %1"
 
 #: framework/src/inboundmodel.cpp:513
-#, fuzzy, qt-format
-#| msgctxt "QObject|"
-#| msgid "No credentials available."
+#, qt-format
 msgctxt "QObject|"
 msgid "A new event is available: %1"
-msgstr "Ingen behörighetsinformation tillgänglig."
+msgstr "En ny händelse är tillgänglig: %1"
 
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
@@ -926,9 +884,6 @@ msgid "Add attendee"
 msgstr "Lägg till deltagare"
 
 #: views/calendar/qml/DateRangeChooser.qml:159
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "All day"
 msgctxt "DateRangeChooser|"
 msgid "All day"
 msgstr "Hela dagen"
@@ -936,12 +891,12 @@ msgstr "Hela dagen"
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
 msgid "begins"
-msgstr ""
+msgstr "börjar"
 
 #: views/calendar/qml/DateRangeChooser.qml:178
 msgctxt "DateRangeChooser|"
 msgid "ends"
-msgstr ""
+msgstr "slutar"
 
 #: views/calendar/qml/EventEditor.qml:85
 msgctxt "EventEditor|"
@@ -1207,25 +1162,19 @@ msgid "Show this help text:"
 msgstr "Visa den här hjälptexten:"
 
 #: views/inbound/qml/View.qml:203
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Inbox"
 msgctxt "View|"
 msgid "Inbound"
-msgstr "Inkorg"
+msgstr "Inkommande"
 
 #: views/inbound/qml/View.qml:231
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Configuration error."
 msgctxt "View|"
 msgid "Configure"
-msgstr "Inställningsfel."
+msgstr "Anpassa"
 
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
 msgid "Recent"
-msgstr ""
+msgstr "Senaste"
 
 #: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
 msgctxt "View|"
@@ -1240,70 +1189,51 @@ msgstr "Ingenting här..."
 #: views/inbound/qml/View.qml:485
 msgctxt "View|"
 msgid "Today, "
-msgstr ""
+msgstr "Idag, "
 
 #: views/inbound/qml/View.qml:490
 msgctxt "View|"
 msgid "Tomorrow, "
-msgstr ""
+msgstr "Imorgon, "
 
 #: views/inbound/qml/View.qml:493
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr " (%1 dagar)"
+msgstr " (om %1 dagar)"
 
 #: views/inbound/qml/View.qml:496
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr " (%1 dagar)"
+msgstr "för %1 dagar sedan"
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "Ignorera avsändare"
 
 #: views/inbound/qml/View.qml:555
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "View|"
 msgid "Restore from trash"
 msgstr "Återställ från papperskorgen"
 
 #: views/inbound/qml/View.qml:566
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "View|"
 msgid "Mark as read"
 msgstr "Markera som läst"
 
 #: views/inbound/qml/View.qml:576
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "View|"
 msgid "Mark as unread"
 msgstr "Markera som oläst"
 
 #: views/inbound/qml/View.qml:586
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "View|"
 msgid "Mark as important"
 msgstr "Markera som viktig"
 
 #: views/inbound/qml/View.qml:597
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Move to trash"
 msgstr "Flytta till papperskorgen"
@@ -1416,48 +1346,50 @@ msgstr "Skickade brevet med lyckat resultat."
 #: views/inbound/qml/View.qml:1027
 msgctxt "View|"
 msgid "Folder name blacklist"
-msgstr ""
+msgstr "Svartlista med korgnamn"
 
 #: views/inbound/qml/View.qml:1034
 msgctxt "View|"
 msgid "Comma separated folder names"
-msgstr ""
+msgstr "Korgnamn åtskilda med kommatecken"
 
 #: views/inbound/qml/View.qml:1039
 msgctxt "View|"
 msgid "Per Folder Mime Message Whitelist"
-msgstr ""
+msgstr "Korgbaserad vitlista med Mime-brev"
 
 #: views/inbound/qml/View.qml:1051
 msgctxt "View|"
 msgid "Folder special purpose blacklist"
-msgstr ""
+msgstr "Svartlista med specialiserade korgar"
 
 #: views/inbound/qml/View.qml:1058
 msgctxt "View|"
 msgid "Comma separated special purpose types. Example: drafts, trash, sent"
 msgstr ""
+"Specialiserade typer åtskilda av kommatecken. Exempel: utkast, papperskorg, "
+"skickade"
 
 #: views/inbound/qml/View.qml:1063
 msgctxt "View|"
 msgid "Sender blacklist"
-msgstr ""
+msgstr "Svartlista med avsändare"
 
 #: views/inbound/qml/View.qml:1070 views/inbound/qml/View.qml:1082
 #: views/inbound/qml/View.qml:1094
 msgctxt "View|"
 msgid "Comma separated sender email addresses"
-msgstr ""
+msgstr "Avsändarnas e-postadresser åtskilda med kommatecken"
 
 #: views/inbound/qml/View.qml:1075
 msgctxt "View|"
 msgid "To blacklist"
-msgstr ""
+msgstr "Lägg till i svartlista"
 
 #: views/inbound/qml/View.qml:1087
 msgctxt "View|"
 msgid "Sender name contains filter"
-msgstr ""
+msgstr "Avsändarens namn innehåller filter"
 
 #: views/inboxcrusher/qml/View.qml:92
 msgctxt "View|"
@@ -1601,12 +1533,9 @@ msgid "Search..."
 msgstr "Sök..."
 
 #: views/todo/qml/TodoEditor.qml:113
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "Create Event"
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr "Skapa händelse"
+msgstr "Skapa i:"
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
@@ -1621,7 +1550,7 @@ msgstr "Uppgiftsrubrik"
 #: views/todo/qml/TodoEditor.qml:211
 msgctxt "TodoEditor|"
 msgid "Add subtodo"
-msgstr ""
+msgstr "Lägg till deluppgift"
 
 #: views/todo/qml/TodoEditor.qml:227
 msgctxt "TodoEditor|"

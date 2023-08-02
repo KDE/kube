@@ -3,11 +3,11 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2019, 2020, 2021.
+# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2019, 2020, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kube_qt\n"
-"PO-Revision-Date: 2021-02-21 09:24+0200\n"
+"PO-Revision-Date: 2023-08-01 09:47+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Qt-Contexts: true\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 20.11.70\n"
+"X-Generator: Lokalize 20.12.0\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
@@ -366,9 +366,6 @@ msgid "Save"
 msgstr "Зберегти"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
 msgstr "Додати"
@@ -379,41 +376,26 @@ msgid "Login"
 msgstr "Увійти"
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
 msgstr "Відновити зі смітника"
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
 msgstr "Позначити як прочитане"
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
 msgstr "Позначити як непрочитане"
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
 msgstr "Позначити як важливе"
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
 msgstr "Пересунути до смітника"
@@ -644,17 +626,11 @@ msgid "No pending messages"
 msgstr "Немає повідомлень у черзі"
 
 #: framework/qml/ScrollablePopup.qml:70
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "ScrollablePopup|"
 msgid "Discard"
 msgstr "Відкинути"
 
 #: framework/qml/ScrollablePopup.qml:75
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Save"
 msgctxt "ScrollablePopup|"
 msgid "Save"
 msgstr "Зберегти"
@@ -695,52 +671,36 @@ msgid "Copy Selection"
 msgstr "Копіювати позначене"
 
 #: framework/qml/TodoListDelegate.qml:66
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Due today"
 msgctxt "TodoListDelegate|"
 msgid "Due today"
 msgstr "Призначено на сьогодні"
 
 #: framework/qml/TodoListDelegate.qml:70
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
 msgstr " (%1 днів)"
 
 #: framework/qml/TodoListDelegate.qml:73
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid "Overdue for %1 days"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid "Overdue for %1 days"
 msgstr "Прострочено на %1 днів"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Unpick"
 msgctxt "TodoListDelegate|"
 msgid "Unpick"
 msgstr "Скасувати вибір"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Pick"
 msgctxt "TodoListDelegate|"
 msgid "Pick"
 msgstr "Вибрати"
 
 #: framework/qml/TodoListDelegate.qml:105
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Done!"
 msgctxt "TodoListDelegate|"
 msgid "Done!"
-msgstr "Готово!"
+msgstr "Виконано!"
 
 #: framework/src/domain/eventcontroller.cpp:90
 #, qt-format
@@ -880,15 +840,13 @@ msgstr "Помилковий пароль."
 #, qt-format
 msgctxt "QObject|"
 msgid "A new message is available: %1"
-msgstr ""
+msgstr "Доступне нове повідомлення: %1"
 
 #: framework/src/inboundmodel.cpp:513
-#, fuzzy, qt-format
-#| msgctxt "QObject|"
-#| msgid "No credentials available."
+#, qt-format
 msgctxt "QObject|"
 msgid "A new event is available: %1"
-msgstr "Немає реєстраційних даних."
+msgstr "Доступна нова подія: %1"
 
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
@@ -947,9 +905,6 @@ msgid "Add attendee"
 msgstr "Додати учасника"
 
 #: views/calendar/qml/DateRangeChooser.qml:159
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "All day"
 msgctxt "DateRangeChooser|"
 msgid "All day"
 msgstr "Весь день"
@@ -957,12 +912,12 @@ msgstr "Весь день"
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
 msgid "begins"
-msgstr ""
+msgstr "починається"
 
 #: views/calendar/qml/DateRangeChooser.qml:178
 msgctxt "DateRangeChooser|"
 msgid "ends"
-msgstr ""
+msgstr "завершується"
 
 #: views/calendar/qml/EventEditor.qml:85
 msgctxt "EventEditor|"
@@ -1229,25 +1184,19 @@ msgid "Show this help text:"
 msgstr "Показати це довідкове повідомлення:"
 
 #: views/inbound/qml/View.qml:203
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Inbox"
 msgctxt "View|"
 msgid "Inbound"
-msgstr "Вхідні"
+msgstr "Вхідне"
 
 #: views/inbound/qml/View.qml:231
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Configuration error."
 msgctxt "View|"
 msgid "Configure"
-msgstr "Помилка налаштовування."
+msgstr "Налаштувати"
 
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
 msgid "Recent"
-msgstr ""
+msgstr "Нещодавні"
 
 #: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
 msgctxt "View|"
@@ -1262,70 +1211,51 @@ msgstr "Тут нічого немає…"
 #: views/inbound/qml/View.qml:485
 msgctxt "View|"
 msgid "Today, "
-msgstr ""
+msgstr "Сьогодні, "
 
 #: views/inbound/qml/View.qml:490
 msgctxt "View|"
 msgid "Tomorrow, "
-msgstr ""
+msgstr "Завтра, "
 
 #: views/inbound/qml/View.qml:493
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr " (%1 днів)"
+msgstr " (за %1 днів)"
 
 #: views/inbound/qml/View.qml:496
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr " (%1 днів)"
+msgstr "%1 дні тому"
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "Ігнорувати відправника"
 
 #: views/inbound/qml/View.qml:555
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "View|"
 msgid "Restore from trash"
 msgstr "Відновити зі смітника"
 
 #: views/inbound/qml/View.qml:566
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "View|"
 msgid "Mark as read"
 msgstr "Позначити як прочитане"
 
 #: views/inbound/qml/View.qml:576
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "View|"
 msgid "Mark as unread"
 msgstr "Позначити як непрочитане"
 
 #: views/inbound/qml/View.qml:586
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "View|"
 msgid "Mark as important"
 msgstr "Позначити як важливе"
 
 #: views/inbound/qml/View.qml:597
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Move to trash"
 msgstr "Пересунути до смітника"
@@ -1440,48 +1370,50 @@ msgstr "Повідомлення надіслано."
 #: views/inbound/qml/View.qml:1027
 msgctxt "View|"
 msgid "Folder name blacklist"
-msgstr ""
+msgstr "«Чорний» список тек"
 
 #: views/inbound/qml/View.qml:1034
 msgctxt "View|"
 msgid "Comma separated folder names"
-msgstr ""
+msgstr "Список відокремлених комами назв тек"
 
 #: views/inbound/qml/View.qml:1039
 msgctxt "View|"
 msgid "Per Folder Mime Message Whitelist"
-msgstr ""
+msgstr "«Білий» список типів MIME повідомлень для окремих тек"
 
 #: views/inbound/qml/View.qml:1051
 msgctxt "View|"
 msgid "Folder special purpose blacklist"
-msgstr ""
+msgstr "«Чорний» список тек особливого призначення"
 
 #: views/inbound/qml/View.qml:1058
 msgctxt "View|"
 msgid "Comma separated special purpose types. Example: drafts, trash, sent"
 msgstr ""
+"Список відокремлених комами типів особливого призначення. Приклад: drafts, "
+"trash, sent"
 
 #: views/inbound/qml/View.qml:1063
 msgctxt "View|"
 msgid "Sender blacklist"
-msgstr ""
+msgstr "«Чорний» список відправників"
 
 #: views/inbound/qml/View.qml:1070 views/inbound/qml/View.qml:1082
 #: views/inbound/qml/View.qml:1094
 msgctxt "View|"
 msgid "Comma separated sender email addresses"
-msgstr ""
+msgstr "Список відокремлених комами адрес електронної пошти відправників"
 
 #: views/inbound/qml/View.qml:1075
 msgctxt "View|"
 msgid "To blacklist"
-msgstr ""
+msgstr "До «чорного» списку"
 
 #: views/inbound/qml/View.qml:1087
 msgctxt "View|"
 msgid "Sender name contains filter"
-msgstr ""
+msgstr "Ім'я відправника містить фільтр"
 
 #: views/inboxcrusher/qml/View.qml:92
 msgctxt "View|"
@@ -1625,12 +1557,9 @@ msgid "Search..."
 msgstr "Шукати…"
 
 #: views/todo/qml/TodoEditor.qml:113
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "Create Event"
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr "Створити запис події"
+msgstr "Створити в:"
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
@@ -1645,7 +1574,7 @@ msgstr "Заголовок завдання"
 #: views/todo/qml/TodoEditor.qml:211
 msgctxt "TodoEditor|"
 msgid "Add subtodo"
-msgstr ""
+msgstr "Додати підзавдання"
 
 #: views/todo/qml/TodoEditor.qml:227
 msgctxt "TodoEditor|"
