@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Qt-Contexts: true\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
@@ -310,7 +310,7 @@ msgstr "გასაღების შემოტანა"
 #: framework/qml/ConversationView.qml:159
 msgctxt "ConversationView|"
 msgid "Downloading message..."
-msgstr ""
+msgstr "შეტყობინების გადმოწრა..."
 
 #: framework/qml/ConversationView.qml:163
 msgctxt "ConversationView|"
@@ -333,9 +333,6 @@ msgid "Save"
 msgstr "შენახვა"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
 msgstr "დამატება"
@@ -346,44 +343,29 @@ msgid "Login"
 msgstr "შესვლა"
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
 msgstr "სანაგვე ყუთიდან აღდგენა"
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
-msgstr "მონიშნე როგორც წაკითხული"
+msgstr "წაკითხულად მონიშვნა"
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
-msgstr "მონიშნე როგორც წაუკითხავი"
+msgstr "წაუკითხავად მონიშვნა"
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
 msgstr "მნიშვნელოვნად მონიშვნა"
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
-msgstr "სანაგვეში გადატანა"
+msgstr "სანაგვე ყუთში გადატანა"
 
 #: framework/qml/MailListView.qml:68
 msgctxt "MailListView|"
@@ -407,19 +389,19 @@ msgstr ""
 #, qt-format
 msgctxt "ICalPart|"
 msgid "\"%1\" has been cancelled."
-msgstr ""
+msgstr "\"%1\" გაუქმდა."
 
 #: framework/qml/mailpartview/ICalPart.qml:60
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 has accepted: \"%2\""
-msgstr ""
+msgstr "%1 მიღებულია: \"%2\""
 
 #: framework/qml/mailpartview/ICalPart.qml:66
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 has declined: \"%2\""
-msgstr ""
+msgstr "%1 უარყოფილია: \"%2\""
 
 #: framework/qml/mailpartview/ICalPart.qml:72
 #, qt-format
@@ -437,13 +419,13 @@ msgstr ""
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You have accepted: \"%1\""
-msgstr ""
+msgstr "მიიღეთ: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:95
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You have declined: \"%1\""
-msgstr ""
+msgstr "უარყავით: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:101
 #, qt-format
@@ -476,7 +458,7 @@ msgstr ""
 #, qt-format
 msgctxt "MailPart|"
 msgid "sent by %1 on %2"
-msgstr ""
+msgstr "გაგზავნილია %1-ის მიერ. თარიღი %2"
 
 #: framework/qml/mailpartview/MailPartModel.qml:53
 msgctxt "MailPartModel|"
@@ -487,49 +469,49 @@ msgstr ""
 #, qt-format
 msgctxt "MailPartModel|"
 msgid "This message has been signed using the key %1."
-msgstr ""
+msgstr "ეს შეტყობინება ხელმოწერილია გასაღებით %1."
 
 #: framework/qml/mailpartview/MailPartModel.qml:56
 msgctxt "MailPartModel|"
 msgid "The key details are not available."
-msgstr ""
+msgstr "გასაღების დეტალები ხელმიუწვდომელია."
 
 #: framework/qml/mailpartview/MailPartModel.qml:58
 #, qt-format
 msgctxt "MailPartModel|"
 msgid "This message has been signed using the key %1 by %2."
-msgstr ""
+msgstr "ეს შეტყობინება ხელმოწერილია გასაღებით %1, %2-ის მიერ."
 
 #: framework/qml/mailpartview/MailPartModel.qml:60
 msgctxt "MailPartModel|"
 msgid "The key was revoked."
-msgstr ""
+msgstr "გასაღები გაუქმებულია."
 
 #: framework/qml/mailpartview/MailPartModel.qml:63
 msgctxt "MailPartModel|"
 msgid "The key has expired."
-msgstr ""
+msgstr "გასაღების ვადაგასულია."
 
 #: framework/qml/mailpartview/MailPartModel.qml:66
 msgctxt "MailPartModel|"
 msgid "You are trusting this key."
-msgstr ""
+msgstr "თქვენ ენდობით ამ გასაღებს."
 
 #: framework/qml/mailpartview/MailPartModel.qml:69
 msgctxt "MailPartModel|"
 msgid "The signature is invalid."
-msgstr ""
+msgstr "ხელმოწერა არასწორია."
 
 #: framework/qml/mailpartview/MailPartModel.qml:89
 msgctxt "MailPartModel|"
 msgid "This message is encrypted but we don't have the key for it."
-msgstr ""
+msgstr "შეტყობინება დაშიფრულია, მაგრამ მისი გასაღები არ გვაქვს."
 
 #: framework/qml/mailpartview/MailPartModel.qml:89
 #, qt-format
 msgctxt "MailPartModel|"
 msgid "This message is encrypted to the key: %1"
-msgstr ""
+msgstr "შეტყობინება დაშიფრულია ამ გასაღებამდე: %1"
 
 #: framework/qml/MailViewer.qml:44
 msgctxt "MailViewer|"
@@ -575,7 +557,7 @@ msgstr "გაუქმება"
 #: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Move to trash"
-msgstr "სანაგვეში გადატანა"
+msgstr "სანაგვე ყუთში გადატანა"
 
 #: framework/qml/MailViewer.qml:502
 msgctxt "MailViewer|"
@@ -609,17 +591,11 @@ msgid "No pending messages"
 msgstr "შეტყობინებები დარჩენილი არაა"
 
 #: framework/qml/ScrollablePopup.qml:70
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "ScrollablePopup|"
 msgid "Discard"
 msgstr "გაუქმება"
 
 #: framework/qml/ScrollablePopup.qml:75
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Save"
 msgctxt "ScrollablePopup|"
 msgid "Save"
 msgstr "შენახვა"
@@ -677,25 +653,16 @@ msgid "Overdue for %1 days"
 msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Unpick"
 msgctxt "TodoListDelegate|"
 msgid "Unpick"
-msgstr "აღების გაუქმება"
+msgstr "არჩევის გაუქმება"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Pick"
 msgctxt "TodoListDelegate|"
 msgid "Pick"
 msgstr "აირჩიეთ"
 
 #: framework/qml/TodoListDelegate.qml:105
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Done!"
 msgctxt "TodoListDelegate|"
 msgid "Done!"
 msgstr "მზადაა!"
@@ -790,7 +757,7 @@ msgstr ""
 #: framework/src/domain/mime/attachmentmodel.cpp:240
 msgctxt "AttachmentModel|"
 msgid "No keys were found in this attachment"
-msgstr ""
+msgstr "ამ მიმაგრებულ ფაილში გასაღებები ვერ ვიპოვე"
 
 #: framework/src/domain/mime/attachmentmodel.cpp:245
 #, qt-format
@@ -811,12 +778,12 @@ msgstr[1] ""
 #: framework/src/domain/mime/mailtemplates.cpp:127
 msgctxt "QObject|"
 msgid "fwd"
-msgstr ""
+msgstr "გადგზ"
 
 #: framework/src/domain/mime/mailtemplates.cpp:155
 msgctxt "QObject|"
 msgid "re"
-msgstr ""
+msgstr "პას"
 
 #: framework/src/domain/mime/partmodel.cpp:467
 msgctxt "PartModel|"
@@ -835,12 +802,10 @@ msgid "A new message is available: %1"
 msgstr ""
 
 #: framework/src/inboundmodel.cpp:513
-#, fuzzy, qt-format
-#| msgctxt "QObject|"
-#| msgid "No credentials available."
+#, qt-format
 msgctxt "QObject|"
 msgid "A new event is available: %1"
-msgstr "მომხმ/პაროლი მიუწვდომელია."
+msgstr "ხელმისაწვდომია ახალი მოვლენა: %1"
 
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
@@ -899,9 +864,6 @@ msgid "Add attendee"
 msgstr "დამსწრის დამატება"
 
 #: views/calendar/qml/DateRangeChooser.qml:159
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "All day"
 msgctxt "DateRangeChooser|"
 msgid "All day"
 msgstr "მთელი დღე"
@@ -909,12 +871,12 @@ msgstr "მთელი დღე"
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
 msgid "begins"
-msgstr ""
+msgstr "იწყება"
 
 #: views/calendar/qml/DateRangeChooser.qml:178
 msgctxt "DateRangeChooser|"
 msgid "ends"
-msgstr ""
+msgstr "სრულდება"
 
 #: views/calendar/qml/EventEditor.qml:85
 msgctxt "EventEditor|"
@@ -992,12 +954,12 @@ msgstr "ჩასწორება"
 #: views/calendar/qml/View.qml:39
 msgctxt "View|"
 msgid "Jump to next week/month:"
-msgstr ""
+msgstr "შემდეგ კვირაზე/თვეზე გადასვლა:"
 
 #: views/calendar/qml/View.qml:40
 msgctxt "View|"
 msgid "Jump to previous week/month:"
-msgstr ""
+msgstr "წინა კვირაზე/თვეზე გადასვლა:"
 
 #: views/calendar/qml/View.qml:80
 msgctxt "View|"
@@ -1179,25 +1141,19 @@ msgid "Show this help text:"
 msgstr ""
 
 #: views/inbound/qml/View.qml:203
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Inbox"
 msgctxt "View|"
 msgid "Inbound"
-msgstr "საფოსტო ყუთი"
+msgstr "შემომავალი"
 
 #: views/inbound/qml/View.qml:231
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Configuration error."
 msgctxt "View|"
 msgid "Configure"
-msgstr "კონფიგურაციის შეცდომა."
+msgstr "მორგება"
 
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
 msgid "Recent"
-msgstr ""
+msgstr "Ბოლო"
 
 #: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
 msgctxt "View|"
@@ -1212,69 +1168,54 @@ msgstr "აქ არაფერია..."
 #: views/inbound/qml/View.qml:485
 msgctxt "View|"
 msgid "Today, "
-msgstr ""
+msgstr "დღეს. "
 
 #: views/inbound/qml/View.qml:490
 msgctxt "View|"
 msgid "Tomorrow, "
-msgstr ""
+msgstr "ხვალ, "
 
 #: views/inbound/qml/View.qml:493
 #, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr ""
+msgstr " (%1 დღეში)"
 
 #: views/inbound/qml/View.qml:496
 #, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr ""
+msgstr "%1 დღის წინ"
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "გამომგზავნის იგნორი"
 
 #: views/inbound/qml/View.qml:555
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "View|"
 msgid "Restore from trash"
 msgstr "სანაგვე ყუთიდან აღდგენა"
 
 #: views/inbound/qml/View.qml:566
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "View|"
 msgid "Mark as read"
-msgstr "მონიშნე როგორც წაკითხული"
+msgstr "წაკითხულად მონიშვნა"
 
 #: views/inbound/qml/View.qml:576
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "View|"
 msgid "Mark as unread"
-msgstr "მონიშნე როგორც წაუკითხავი"
+msgstr "წაუკითხავად მონიშვნა"
 
 #: views/inbound/qml/View.qml:586
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "View|"
 msgid "Mark as important"
 msgstr "მნიშვნელოვნად მონიშვნა"
 
 #: views/inbound/qml/View.qml:597
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Move to trash"
-msgstr "სანაგვეში გადატანა"
+msgstr "სანაგვე ყუთში გადატანა"
 
 #: views/inbound/qml/View.qml:612
 msgctxt "View|"
@@ -1569,12 +1510,9 @@ msgid "Search..."
 msgstr "ძებნა..."
 
 #: views/todo/qml/TodoEditor.qml:113
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "Create Event"
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr "მოვლენის შექმნა"
+msgstr "შექმნის მდებარეობა:"
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
-"PO-Revision-Date: 2023-07-30 07:09\n"
+"PO-Revision-Date: 2023-08-02 12:40\n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -350,12 +350,9 @@ msgid "Save"
 msgstr "保存"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
-msgstr "添加"
+msgstr ""
 
 #: framework/qml/LoginAccount.qml:117
 msgctxt "LoginAccount|"
@@ -363,44 +360,29 @@ msgid "Login"
 msgstr "登录时"
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
-msgstr "从已删除邮件中恢复"
+msgstr ""
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
-msgstr "标记为已读"
+msgstr ""
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
-msgstr "标记为未读"
+msgstr ""
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
-msgstr "标记为重要"
+msgstr ""
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
-msgstr "移至已删除邮件"
+msgstr ""
 
 #: framework/qml/MailListView.qml:68
 msgctxt "MailListView|"
@@ -626,20 +608,14 @@ msgid "No pending messages"
 msgstr "没有待处理的消息"
 
 #: framework/qml/ScrollablePopup.qml:70
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "ScrollablePopup|"
 msgid "Discard"
-msgstr "不保存"
+msgstr ""
 
 #: framework/qml/ScrollablePopup.qml:75
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Save"
 msgctxt "ScrollablePopup|"
 msgid "Save"
-msgstr "保存"
+msgstr ""
 
 #: framework/qml/SearchPopup.qml:197
 msgctxt "SearchPopup|"
@@ -677,52 +653,36 @@ msgid "Copy Selection"
 msgstr "复制选中项"
 
 #: framework/qml/TodoListDelegate.qml:66
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Due today"
 msgctxt "TodoListDelegate|"
 msgid "Due today"
-msgstr "今日截止"
+msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:70
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
-msgstr " (剩余 %1 天)"
+msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:73
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid "Overdue for %1 days"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid "Overdue for %1 days"
-msgstr "超过截止日期 %1 天"
+msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Unpick"
 msgctxt "TodoListDelegate|"
 msgid "Unpick"
-msgstr "取消选择"
+msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Pick"
 msgctxt "TodoListDelegate|"
 msgid "Pick"
-msgstr "选择"
+msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:105
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Done!"
 msgctxt "TodoListDelegate|"
 msgid "Done!"
-msgstr "完成！"
+msgstr ""
 
 #: framework/src/domain/eventcontroller.cpp:90
 #, qt-format
@@ -857,12 +817,10 @@ msgid "A new message is available: %1"
 msgstr ""
 
 #: framework/src/inboundmodel.cpp:513
-#, fuzzy, qt-format
-#| msgctxt "QObject|"
-#| msgid "No credentials available."
+#, qt-format
 msgctxt "QObject|"
 msgid "A new event is available: %1"
-msgstr "没有可用的凭据。"
+msgstr ""
 
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
@@ -921,12 +879,9 @@ msgid "Add attendee"
 msgstr "添加参加者"
 
 #: views/calendar/qml/DateRangeChooser.qml:159
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "All day"
 msgctxt "DateRangeChooser|"
 msgid "All day"
-msgstr "全天"
+msgstr ""
 
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
@@ -1201,20 +1156,14 @@ msgid "Show this help text:"
 msgstr "显示此帮助信息："
 
 #: views/inbound/qml/View.qml:203
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Inbox"
 msgctxt "View|"
 msgid "Inbound"
-msgstr "收件箱"
+msgstr ""
 
 #: views/inbound/qml/View.qml:231
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Configuration error."
 msgctxt "View|"
 msgid "Configure"
-msgstr "配置有误。"
+msgstr ""
 
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
@@ -1242,20 +1191,16 @@ msgid "Tomorrow, "
 msgstr ""
 
 #: views/inbound/qml/View.qml:493
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr " (剩余 %1 天)"
+msgstr ""
 
 #: views/inbound/qml/View.qml:496
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr " (剩余 %1 天)"
+msgstr ""
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
@@ -1263,44 +1208,29 @@ msgid "Ignore sender"
 msgstr ""
 
 #: views/inbound/qml/View.qml:555
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "View|"
 msgid "Restore from trash"
-msgstr "从已删除邮件中恢复"
+msgstr ""
 
 #: views/inbound/qml/View.qml:566
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "View|"
 msgid "Mark as read"
-msgstr "标记为已读"
+msgstr ""
 
 #: views/inbound/qml/View.qml:576
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "View|"
 msgid "Mark as unread"
-msgstr "标记为未读"
+msgstr ""
 
 #: views/inbound/qml/View.qml:586
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "View|"
 msgid "Mark as important"
-msgstr "标记为重要"
+msgstr ""
 
 #: views/inbound/qml/View.qml:597
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Move to trash"
-msgstr "移至已删除邮件"
+msgstr ""
 
 #: views/inbound/qml/View.qml:612
 msgctxt "View|"
@@ -1595,12 +1525,9 @@ msgid "Search..."
 msgstr "搜索..."
 
 #: views/todo/qml/TodoEditor.qml:113
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "Create Event"
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr "创建日程"
+msgstr ""
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
@@ -1712,27 +1639,3 @@ msgstr "添加新任务"
 msgctxt "View|"
 msgid "This list is longer than %1 tasks. Focus on the top %1?"
 msgstr "这份列表长于 %1 项任务，要先专注于前 %1 项吗？"
-
-#~ msgctxt "CalendarSelector|"
-#~ msgid "Add calendar"
-#~ msgstr "添加日历"
-
-#~ msgctxt "DateRangeChooser|"
-#~ msgid "until"
-#~ msgstr "至"
-
-#~ msgctxt "TodoView|"
-#~ msgid "Due on "
-#~ msgstr "截止至 "
-
-#~ msgctxt "TodoView|"
-#~ msgid "Start on "
-#~ msgstr "开始于 "
-
-#~ msgctxt "TodoView|"
-#~ msgid "Remove"
-#~ msgstr "删除"
-
-#~ msgctxt "TodoView|"
-#~ msgid "Edit"
-#~ msgstr "编辑"
