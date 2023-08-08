@@ -1248,7 +1248,7 @@ msgstr "계정 ID:"
 #: views/inbound/qml/View.qml:721 views/log/qml/View.qml:240
 msgctxt "View|"
 msgid "Resource Id:"
-msgstr "자원 ID:"
+msgstr "리소스 ID:"
 
 #: views/inbound/qml/View.qml:731 views/log/qml/View.qml:250
 msgctxt "View|"
