@@ -333,12 +333,9 @@ msgid "Save"
 msgstr "Uložit"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
-msgstr "Přidat"
+msgstr ""
 
 #: framework/qml/LoginAccount.qml:117
 msgctxt "LoginAccount|"
@@ -346,44 +343,29 @@ msgid "Login"
 msgstr "Přihlašovací jméno"
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
-msgstr "Obnovit z koše"
+msgstr ""
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
-msgstr "Označit jako přečtené"
+msgstr ""
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
-msgstr "Označit jako nepřečtené"
+msgstr ""
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
-msgstr "Označit jako důležité"
+msgstr ""
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
-msgstr "Přesunout do koše"
+msgstr ""
 
 #: framework/qml/MailListView.qml:68
 msgctxt "MailListView|"
@@ -609,20 +591,14 @@ msgid "No pending messages"
 msgstr ""
 
 #: framework/qml/ScrollablePopup.qml:70
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "ScrollablePopup|"
 msgid "Discard"
-msgstr "Zahodit"
+msgstr ""
 
 #: framework/qml/ScrollablePopup.qml:75
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Save"
 msgctxt "ScrollablePopup|"
 msgid "Save"
-msgstr "Uložit"
+msgstr ""
 
 #: framework/qml/SearchPopup.qml:197
 msgctxt "SearchPopup|"
@@ -660,20 +636,15 @@ msgid "Copy Selection"
 msgstr "Zkopírovat výběr"
 
 #: framework/qml/TodoListDelegate.qml:66
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Due today"
 msgctxt "TodoListDelegate|"
 msgid "Due today"
-msgstr "Končí dnes"
+msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:70
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
-msgstr " (%1 dny)"
+msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:73
 #, qt-format
@@ -687,20 +658,14 @@ msgid "Unpick"
 msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Pick"
 msgctxt "TodoListDelegate|"
 msgid "Pick"
-msgstr "Výběr"
+msgstr ""
 
 #: framework/qml/TodoListDelegate.qml:105
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Done!"
 msgctxt "TodoListDelegate|"
 msgid "Done!"
-msgstr "Hotovo"
+msgstr ""
 
 #: framework/src/domain/eventcontroller.cpp:90
 #, qt-format
@@ -897,12 +862,9 @@ msgid "Add attendee"
 msgstr ""
 
 #: views/calendar/qml/DateRangeChooser.qml:159
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "All day"
 msgctxt "DateRangeChooser|"
 msgid "All day"
-msgstr "Celý den"
+msgstr ""
 
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
@@ -1177,20 +1139,14 @@ msgid "Show this help text:"
 msgstr ""
 
 #: views/inbound/qml/View.qml:203
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Inbox"
 msgctxt "View|"
 msgid "Inbound"
-msgstr "Příchozí"
+msgstr ""
 
 #: views/inbound/qml/View.qml:231
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Configuration error."
 msgctxt "View|"
 msgid "Configure"
-msgstr "Chyba nastavení."
+msgstr ""
 
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
@@ -1218,20 +1174,16 @@ msgid "Tomorrow, "
 msgstr ""
 
 #: views/inbound/qml/View.qml:493
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr " (%1 dny)"
+msgstr ""
 
 #: views/inbound/qml/View.qml:496
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr " (%1 dny)"
+msgstr ""
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
@@ -1239,44 +1191,29 @@ msgid "Ignore sender"
 msgstr ""
 
 #: views/inbound/qml/View.qml:555
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "View|"
 msgid "Restore from trash"
-msgstr "Obnovit z koše"
+msgstr ""
 
 #: views/inbound/qml/View.qml:566
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "View|"
 msgid "Mark as read"
-msgstr "Označit jako přečtené"
+msgstr ""
 
 #: views/inbound/qml/View.qml:576
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "View|"
 msgid "Mark as unread"
-msgstr "Označit jako nepřečtené"
+msgstr ""
 
 #: views/inbound/qml/View.qml:586
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "View|"
 msgid "Mark as important"
-msgstr "Označit jako důležité"
+msgstr ""
 
 #: views/inbound/qml/View.qml:597
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Move to trash"
-msgstr "Přesunout do koše"
+msgstr ""
 
 #: views/inbound/qml/View.qml:612
 msgctxt "View|"
@@ -1571,12 +1508,9 @@ msgid "Search..."
 msgstr "Hledat..."
 
 #: views/todo/qml/TodoEditor.qml:113
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "Create Event"
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr "Vytvořit událost"
+msgstr ""
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
@@ -1688,23 +1622,3 @@ msgstr "Přidat nový úkol"
 msgctxt "View|"
 msgid "This list is longer than %1 tasks. Focus on the top %1?"
 msgstr ""
-
-#~ msgctxt "CalendarSelector|"
-#~ msgid "Add calendar"
-#~ msgstr "Přidat kalendář"
-
-#~ msgctxt "DateRangeChooser|"
-#~ msgid "until"
-#~ msgstr "do"
-
-#~ msgctxt "TodoView|"
-#~ msgid "Start on "
-#~ msgstr "Počáteční datum "
-
-#~ msgctxt "TodoView|"
-#~ msgid "Remove"
-#~ msgstr "Odstranit"
-
-#~ msgctxt "TodoView|"
-#~ msgid "Edit"
-#~ msgstr "Upravit"
