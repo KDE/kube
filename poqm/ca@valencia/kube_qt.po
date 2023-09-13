@@ -986,12 +986,12 @@ msgstr "Edita"
 #: views/calendar/qml/View.qml:39
 msgctxt "View|"
 msgid "Jump to next week/month:"
-msgstr "Salta a la setmana/mes següent:"
+msgstr "Salta fins a la setmana/mes següent:"
 
 #: views/calendar/qml/View.qml:40
 msgctxt "View|"
 msgid "Jump to previous week/month:"
-msgstr "Salta a la setmana/mes anterior:"
+msgstr "Salta fins a la setmana/mes anterior:"
 
 #: views/calendar/qml/View.qml:80
 msgctxt "View|"
@@ -1111,7 +1111,7 @@ msgstr "Envia"
 #: views/conversation/qml/View.qml:73 views/inbound/qml/View.qml:114
 msgctxt "View|"
 msgid "Jump to top of threadlist:"
-msgstr "Salta a la part superior de la llista de fils:"
+msgstr "Salta fins a la part superior de la llista de fils:"
 
 #: views/conversation/qml/View.qml:74 views/inbound/qml/View.qml:115
 msgctxt "View|"
