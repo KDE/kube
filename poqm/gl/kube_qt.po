@@ -337,7 +337,7 @@ msgstr "Descargando a mensaxe…"
 #: framework/qml/ConversationView.qml:163
 msgctxt "ConversationView|"
 msgid "Failed to download message..."
-msgstr "Non se puido descargar a mensaxe…"
+msgstr "Non foi posíbel descargar a mensaxe…"
 
 #: framework/qml/EditAccount.qml:89
 msgctxt "EditAccount|"
@@ -618,7 +618,7 @@ msgstr "Responder"
 #, qt-format
 msgctxt "Outbox|"
 msgid "Sending: %1"
-msgstr "Estase a enviar: %1"
+msgstr "Enviando: %1"
 
 #: framework/qml/Outbox.qml:162
 msgctxt "Outbox|"
@@ -800,7 +800,7 @@ msgstr "%2 rexeitou «%1»"
 #: framework/src/domain/mime/attachmentmodel.cpp:181
 msgctxt "QObject|"
 msgid "Failed to save attachment."
-msgstr "Non se puido gardar o anexo."
+msgstr "Non foi posíbel gardar o anexo."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:210
 #, qt-format
@@ -811,12 +811,12 @@ msgstr "O anexo gardouse no disco: %1"
 #: framework/src/domain/mime/attachmentmodel.cpp:221
 msgctxt "AttachmentModel|"
 msgid "Failed to open attachment."
-msgstr "Non se puido abrir o anexo."
+msgstr "Non foi posíbel abrir o anexo."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:226
 msgctxt "AttachmentModel|"
 msgid "Failed to save attachment for opening."
-msgstr "Non se puido gardar o anexo para abrilo."
+msgstr "Non foi posíbel gardar o anexo para abrilo."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:240
 msgctxt "AttachmentModel|"
@@ -876,7 +876,7 @@ msgstr "Non hai credenciais dispoñíbeis."
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
 msgid "Failed to connect to server."
-msgstr "Non se puido conectar ao servidor:"
+msgstr "Non foi posíbel conectar ao servidor:"
 
 #: framework/src/sinkfabric.cpp:201
 msgctxt "QObject|"
@@ -886,7 +886,7 @@ msgstr "Non se atopou o servidor."
 #: framework/src/sinkfabric.cpp:205
 msgctxt "QObject|"
 msgid "Failed to login."
-msgstr "Non se puido acceder."
+msgstr "Non foi posíbel acceder."
 
 #: framework/src/sinkfabric.cpp:209
 msgctxt "QObject|"
@@ -901,7 +901,7 @@ msgstr "Non hai credenciais dispoñíbeis."
 #: framework/src/sinkfabric.cpp:249
 msgctxt "QObject|"
 msgid "Failed to send message."
-msgstr "Non se puido enviar a mensaxe."
+msgstr "Non foi posíbel enviar a mensaxe."
 
 #: framework/src/sinkfabric.cpp:263
 msgctxt "QObject|"
@@ -1121,7 +1121,7 @@ msgstr "asinar"
 msgctxt "View|"
 msgid ""
 "Encryption is not available because your personal key has not been found."
-msgstr "Non se pode cifrar porque non se atopou a súa chave persoal."
+msgstr "Non é posíbel cifrar porque non se atopou a súa chave persoal."
 
 #: views/composer/qml/View.qml:375
 msgctxt "View|"
@@ -1344,7 +1344,7 @@ msgstr "Mensaxe:"
 #: views/inbound/qml/View.qml:773 views/log/qml/View.qml:292
 msgctxt "View|"
 msgid "Failed to login"
-msgstr "Non se puido acceder"
+msgstr "Non foi posíbel acceder"
 
 #: views/inbound/qml/View.qml:779 views/log/qml/View.qml:298
 #, qt-format
@@ -1376,7 +1376,7 @@ msgstr "Configuración da conta"
 #: views/inbound/qml/View.qml:844 views/log/qml/View.qml:363
 msgctxt "View|"
 msgid "Failed to send the message."
-msgstr "Non se puido enviar a mensaxe."
+msgstr "Non foi posíbel enviar a mensaxe."
 
 #: views/inbound/qml/View.qml:863 views/inbound/qml/View.qml:930
 #: views/log/qml/View.qml:382 views/log/qml/View.qml:449
