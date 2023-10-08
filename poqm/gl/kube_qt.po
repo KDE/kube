@@ -1,8 +1,8 @@
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2019, 2020, 2023.
+# SPDX-FileCopyrightText: 2023 Adrián Chaves (Gallaecio)
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2023-06-17 10:12+0200\n"
+"PO-Revision-Date: 2023-10-07 20:43+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.2\n"
+"X-Generator: Lokalize 23.08.1\n"
 "X-Qt-Contexts: true\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
@@ -96,7 +96,7 @@ msgid ""
 "contact your email provider."
 msgstr ""
 "Para permitir a Kube acceder á súa conta, introduza o seu enderezo de correo "
-"electrónico, nome de usuario, e os enderezos de servidor relevantes. Se "
+"electrónico, nome de usuaria, e os enderezos de servidor relevantes. Se "
 "necesita información sobre os detalles do servidor, contacte co seu "
 "fornecedor de correo electrónico."
 
@@ -104,12 +104,12 @@ msgstr ""
 #: accounts/imap/qml/AccountSettings.qml:81
 msgctxt "AccountSettings|"
 msgid "Username"
-msgstr "Nome de usuario"
+msgstr "Nome de usuaria"
 
 #: accounts/generic/qml/AccountSettings.qml:94
 msgctxt "AccountSettings|"
 msgid "Your username for server access."
-msgstr "O seu nome de usuario para acceder ao servidor."
+msgstr "O seu nome de usuaria para acceder ao servidor."
 
 #: accounts/generic/qml/AccountSettings.qml:98
 msgctxt "AccountSettings|"
@@ -159,7 +159,7 @@ msgid ""
 "the account a title that will be displayed inside Kube."
 msgstr ""
 "Para que Kube poida acceder á súa conta, introduza o seu enderezo de correo "
-"electrónico e nome de usuario e déalle á conta un título que amosar dentro "
+"electrónico e nome de usuaria e déalle á conta un título que amosar dentro "
 "de Kube."
 
 #: accounts/gmail/qml/Login.qml:57 accounts/imap/qml/Login.qml:57
@@ -181,7 +181,7 @@ msgid ""
 "be used, please contact your email provider."
 msgstr ""
 "Para permitir a Kube acceder á súa conta, introduza o seu enderezo de correo "
-"electrónico, nome de usuario, contrasinal, e déalle un título á conta para "
+"electrónico, nome de usuaria, contrasinal, e déalle un título á conta para "
 "amosar dentro de Kube. Se necesita información sobre se usar un enderezo de "
 "SMTP ou de IMAP ou sobre o tipo de autenticación e porto que usar, contacte "
 "co seu fornecedor de correo electrónico."
@@ -189,7 +189,7 @@ msgstr ""
 #: accounts/imap/qml/AccountSettings.qml:92
 msgctxt "AccountSettings|"
 msgid "Your username for IMAP and SMTP access."
-msgstr "O seu nome de usuario para acceder a IMAP e SMTP."
+msgstr "O seu nome de usuaria para acceder a IMAP e SMTP."
 
 #: accounts/imap/qml/AccountSettings.qml:96
 msgctxt "AccountSettings|"
@@ -249,6 +249,7 @@ msgctxt "AccountSettings|"
 msgid "Choose a maildir folder"
 msgstr "Seleccionar un cartafol de Maildir"
 
+# skip-rule: trasno-login2_reverse
 # well-spelled: identificadorDaConta, identificadorDoRecurso
 #: applications/kube/main.cpp:108
 msgctxt "main|"
@@ -355,9 +356,6 @@ msgid "Save"
 msgstr "Gardar"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
 msgstr "Engadir"
@@ -368,41 +366,26 @@ msgid "Login"
 msgstr "Acceso"
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
 msgstr "Restaurar do lixo"
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
 msgstr "Marcar como lida"
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
 msgstr "Marcar como non lida"
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
 msgstr "Marcar como importante"
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
 msgstr "Botar no lixo."
@@ -423,7 +406,7 @@ msgstr "Produciuse un erro: %1"
 #, qt-format
 msgctxt "ICalPart|"
 msgid "This is an exception for the event originally occurring at: \"%1\""
-msgstr "Isto é unha excepción do evento que ocorreu orixinalmente en: «%1»"
+msgstr "Isto é unha excepción do evento que se produciu orixinalmente en: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:55
 #, qt-format
@@ -503,7 +486,7 @@ msgstr "enviada por %1 o %2"
 #: framework/qml/mailpartview/MailPartModel.qml:53
 msgctxt "MailPartModel|"
 msgid "This message has been signed but we failed to validate the signature."
-msgstr "A mensaxe está asinada pero non se puido validar a sinatura."
+msgstr "A mensaxe está asinada pero produciuse un erro ao validar a sinatura."
 
 #: framework/qml/mailpartview/MailPartModel.qml:55
 #, qt-format
@@ -631,17 +614,11 @@ msgid "No pending messages"
 msgstr "Non hai mensaxes pendentes"
 
 #: framework/qml/ScrollablePopup.qml:70
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "ScrollablePopup|"
 msgid "Discard"
 msgstr "Descartar"
 
 #: framework/qml/ScrollablePopup.qml:75
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Save"
 msgctxt "ScrollablePopup|"
 msgid "Save"
 msgstr "Gardar"
@@ -682,49 +659,33 @@ msgid "Copy Selection"
 msgstr "Copiar a selección"
 
 #: framework/qml/TodoListDelegate.qml:66
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Due today"
 msgctxt "TodoListDelegate|"
 msgid "Due today"
 msgstr "Para hoxe"
 
 #: framework/qml/TodoListDelegate.qml:70
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
 msgstr " (%1 días)"
 
 #: framework/qml/TodoListDelegate.qml:73
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid "Overdue for %1 days"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid "Overdue for %1 days"
 msgstr "Remata en %1 días"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Unpick"
 msgctxt "TodoListDelegate|"
 msgid "Unpick"
 msgstr "Retirar da escolla"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Pick"
 msgctxt "TodoListDelegate|"
 msgid "Pick"
 msgstr "Escoller"
 
 #: framework/qml/TodoListDelegate.qml:105
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Done!"
 msgctxt "TodoListDelegate|"
 msgid "Done!"
 msgstr "Feito!"
@@ -863,20 +824,18 @@ msgstr "A frase de paso é incorrecta."
 #, qt-format
 msgctxt "QObject|"
 msgid "A new message is available: %1"
-msgstr ""
+msgstr "Hai unha nova mensaxe dispoñíbel: %1"
 
 #: framework/src/inboundmodel.cpp:513
-#, fuzzy, qt-format
-#| msgctxt "QObject|"
-#| msgid "No credentials available."
+#, qt-format
 msgctxt "QObject|"
 msgid "A new event is available: %1"
-msgstr "Non hai credenciais dispoñíbeis."
+msgstr "Hai un novo evento dispoñíbel: %1"
 
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
 msgid "Failed to connect to server."
-msgstr "Non foi posíbel conectar ao servidor:"
+msgstr "Non foi posíbel conectar ao servidor."
 
 #: framework/src/sinkfabric.cpp:201
 msgctxt "QObject|"
@@ -930,9 +889,6 @@ msgid "Add attendee"
 msgstr "Engadir un asistente"
 
 #: views/calendar/qml/DateRangeChooser.qml:159
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "All day"
 msgctxt "DateRangeChooser|"
 msgid "All day"
 msgstr "Todo o día"
@@ -940,12 +896,12 @@ msgstr "Todo o día"
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
 msgid "begins"
-msgstr ""
+msgstr "comeza"
 
 #: views/calendar/qml/DateRangeChooser.qml:178
 msgctxt "DateRangeChooser|"
 msgid "ends"
-msgstr ""
+msgstr "remata"
 
 #: views/calendar/qml/EventEditor.qml:85
 msgctxt "EventEditor|"
@@ -960,7 +916,7 @@ msgstr "Lugar"
 #: views/calendar/qml/EventEditor.qml:118
 msgctxt "EventEditor|"
 msgid "Organizer:"
-msgstr "Organizador:"
+msgstr "Organización:"
 
 #: views/calendar/qml/EventEditor.qml:175
 msgctxt "EventEditor|"
@@ -997,7 +953,7 @@ msgstr "repítese %1"
 #, qt-format
 msgctxt "EventView|"
 msgid "Organizer: %1"
-msgstr "Organizador: %1"
+msgstr "Organización: %1"
 
 #: views/calendar/qml/EventView.qml:96 views/inbound/qml/EventView.qml:103
 msgctxt "EventView|"
@@ -1210,25 +1166,19 @@ msgid "Show this help text:"
 msgstr "Amosar este texto de axuda:"
 
 #: views/inbound/qml/View.qml:203
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Inbox"
 msgctxt "View|"
 msgid "Inbound"
-msgstr "Entrada"
+msgstr "Entrante"
 
 #: views/inbound/qml/View.qml:231
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Configuration error."
 msgctxt "View|"
 msgid "Configure"
-msgstr "Erro de configuración."
+msgstr "Configurar"
 
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
 msgid "Recent"
-msgstr ""
+msgstr "Recente"
 
 #: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
 msgctxt "View|"
@@ -1243,70 +1193,51 @@ msgstr "Aquí non hai nada…"
 #: views/inbound/qml/View.qml:485
 msgctxt "View|"
 msgid "Today, "
-msgstr ""
+msgstr "Hoxe, "
 
 #: views/inbound/qml/View.qml:490
 msgctxt "View|"
 msgid "Tomorrow, "
-msgstr ""
+msgstr "Mañá, "
 
 #: views/inbound/qml/View.qml:493
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr " (%1 días)"
+msgstr " (en %1 días)"
 
 #: views/inbound/qml/View.qml:496
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr " (%1 días)"
+msgstr "Hai %1 días"
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "Ignorar a remitente"
 
 #: views/inbound/qml/View.qml:555
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "View|"
 msgid "Restore from trash"
 msgstr "Restaurar do lixo"
 
 #: views/inbound/qml/View.qml:566
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "View|"
 msgid "Mark as read"
 msgstr "Marcar como lida"
 
 #: views/inbound/qml/View.qml:576
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "View|"
 msgid "Mark as unread"
 msgstr "Marcar como non lida"
 
 #: views/inbound/qml/View.qml:586
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "View|"
 msgid "Mark as important"
 msgstr "Marcar como importante"
 
 #: views/inbound/qml/View.qml:597
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Move to trash"
 msgstr "Botar no lixo."
@@ -1334,7 +1265,7 @@ msgstr "Identificador de recurso:"
 #: views/inbound/qml/View.qml:731 views/log/qml/View.qml:250
 msgctxt "View|"
 msgid "Timestamp:"
-msgstr "Data e hora:"
+msgstr "Marca de tempo:"
 
 #: views/inbound/qml/View.qml:739 views/log/qml/View.qml:258
 msgctxt "View|"
@@ -1419,48 +1350,50 @@ msgstr "A mensaxe enviouse correctamente."
 #: views/inbound/qml/View.qml:1027
 msgctxt "View|"
 msgid "Folder name blacklist"
-msgstr ""
+msgstr "Lista de prohibición de nomes de cartafol"
 
 #: views/inbound/qml/View.qml:1034
 msgctxt "View|"
 msgid "Comma separated folder names"
-msgstr ""
+msgstr "Nomes de cartafoles separados por comas."
 
 #: views/inbound/qml/View.qml:1039
 msgctxt "View|"
 msgid "Per Folder Mime Message Whitelist"
-msgstr ""
+msgstr "Lista de permisión de mensaxes por MIME de cartafol"
 
 #: views/inbound/qml/View.qml:1051
 msgctxt "View|"
 msgid "Folder special purpose blacklist"
-msgstr ""
+msgstr "Lista de prohibición de propósito especial de cartafoles."
 
 #: views/inbound/qml/View.qml:1058
 msgctxt "View|"
 msgid "Comma separated special purpose types. Example: drafts, trash, sent"
 msgstr ""
+"Tipos de propósito especial separados por coma. Exemplo: borradores, lixo, "
+"enviado."
 
 #: views/inbound/qml/View.qml:1063
 msgctxt "View|"
 msgid "Sender blacklist"
-msgstr ""
+msgstr "Lista de prohibición de remitentes"
 
 #: views/inbound/qml/View.qml:1070 views/inbound/qml/View.qml:1082
 #: views/inbound/qml/View.qml:1094
 msgctxt "View|"
 msgid "Comma separated sender email addresses"
-msgstr ""
+msgstr "Enderezos de correo electrónico de remitentes separados por comas."
 
 #: views/inbound/qml/View.qml:1075
 msgctxt "View|"
 msgid "To blacklist"
-msgstr ""
+msgstr "Lista de prohibición de destinatarias"
 
 #: views/inbound/qml/View.qml:1087
 msgctxt "View|"
 msgid "Sender name contains filter"
-msgstr ""
+msgstr "Filtro de contido do nome das destinatarias"
 
 #: views/inboxcrusher/qml/View.qml:92
 msgctxt "View|"
@@ -1604,12 +1537,9 @@ msgid "Search..."
 msgstr "Buscar…"
 
 #: views/todo/qml/TodoEditor.qml:113
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "Create Event"
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr "Crear un evento"
+msgstr "Crear en:"
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
@@ -1624,7 +1554,7 @@ msgstr "Título da tarefa"
 #: views/todo/qml/TodoEditor.qml:211
 msgctxt "TodoEditor|"
 msgid "Add subtodo"
-msgstr ""
+msgstr "Engadir unha subtarefa"
 
 #: views/todo/qml/TodoEditor.qml:227
 msgctxt "TodoEditor|"
