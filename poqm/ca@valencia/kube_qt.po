@@ -394,7 +394,7 @@ msgstr "Marca com a important"
 #: framework/qml/MailListDelegate.qml:120
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
-msgstr "Mou a la paperera"
+msgstr "Mou cap a dins de la paperera"
 
 #: framework/qml/MailListView.qml:68
 msgctxt "MailListView|"
@@ -587,7 +587,7 @@ msgstr "Descarta"
 #: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Move to trash"
-msgstr "Mou a la paperera"
+msgstr "Mou cap a dins de la paperera"
 
 #: framework/qml/MailViewer.qml:502
 msgctxt "MailViewer|"
@@ -1111,27 +1111,27 @@ msgstr "Envia"
 #: views/conversation/qml/View.qml:73 views/inbound/qml/View.qml:114
 msgctxt "View|"
 msgid "Jump to top of threadlist:"
-msgstr "Salta fins a la part superior de la llista de fils:"
+msgstr "Salta a la part superior de la llista de fils:"
 
 #: views/conversation/qml/View.qml:74 views/inbound/qml/View.qml:115
 msgctxt "View|"
 msgid "Jump to next thread:"
-msgstr "Salta al fil següent:"
+msgstr "Salta fins al fil següent:"
 
 #: views/conversation/qml/View.qml:75 views/inbound/qml/View.qml:116
 msgctxt "View|"
 msgid "Jump to previous thread:"
-msgstr "Salta al fil anterior:"
+msgstr "Salta fins al fil anterior:"
 
 #: views/conversation/qml/View.qml:76 views/inbound/qml/View.qml:117
 msgctxt "View|"
 msgid "Jump to next message:"
-msgstr "Salta al missatge següent:"
+msgstr "Salta fins al missatge següent:"
 
 #: views/conversation/qml/View.qml:77 views/inbound/qml/View.qml:118
 msgctxt "View|"
 msgid "Jump to previous message:"
-msgstr "Salta al missatge anterior:"
+msgstr "Salta fins al missatge anterior:"
 
 #: views/conversation/qml/View.qml:78 views/inbound/qml/View.qml:119
 msgctxt "View|"
@@ -1249,7 +1249,7 @@ msgstr "Marca com a important"
 #: views/inbound/qml/View.qml:597
 msgctxt "View|"
 msgid "Move to trash"
-msgstr "Mou a la paperera"
+msgstr "Mou cap a dins de la paperera"
 
 #: views/inbound/qml/View.qml:612
 msgctxt "View|"
@@ -1593,22 +1593,22 @@ msgstr "Crea una tasca pendent"
 #: views/todo/qml/View.qml:102
 msgctxt "View|"
 msgid "Go to top of list:"
-msgstr "Ves a la part superior de la llista:"
+msgstr "Ves fins a la part superior de la llista:"
 
 #: views/todo/qml/View.qml:103
 msgctxt "View|"
 msgid "Go to bottom of list:"
-msgstr "Ves a la part inferior de la llista:"
+msgstr "Ves fins a la part inferior de la llista:"
 
 #: views/todo/qml/View.qml:104
 msgctxt "View|"
 msgid "Go to next todo:"
-msgstr "Ves a la tasca pendent següent:"
+msgstr "Ves fins a la tasca pendent següent:"
 
 #: views/todo/qml/View.qml:105
 msgctxt "View|"
 msgid "Go to previous todo:"
-msgstr "Ves a la tasca pendent anterior:"
+msgstr "Ves fins a la tasca pendent anterior:"
 
 #: views/todo/qml/View.qml:106
 msgctxt "View|"
