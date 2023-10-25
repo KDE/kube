@@ -739,7 +739,7 @@ msgid ""
 "can import to your calendar application."
 msgstr ""
 "S'adjunta un fitxer iCalendar amb tots els detalls de l'esdeveniment que "
-"podeu importar a la vostra aplicació de calendari."
+"podeu importar cap a la vostra aplicació de calendari."
 
 #: framework/src/domain/invitationcontroller.cpp:270
 #, qt-format
