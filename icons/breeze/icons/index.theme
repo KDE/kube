@@ -26,6 +26,7 @@ Name[sl]=Kube
 Name[sv]=Kube
 Name[tr]=Kube
 Name[uk]=Kube
+Name[x-test]=xxKubexx
 Name[zh_CN]=Kube
 Name[zh_TW]=Kube
 
@@ -56,6 +57,7 @@ Comment[sl]=Tema Kube
 Comment[sv]=Kube tema
 Comment[tr]=Kube Teması
 Comment[uk]=Тема Kube
+Comment[x-test]=xxKube Themexx
 Comment[zh_CN]=Kube 主题
 Comment[zh_TW]=Kube 主題
 
