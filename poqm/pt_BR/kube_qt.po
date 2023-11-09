@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kube_qt\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"PO-Revision-Date: 2023-09-18 10:14-0300\n"
+"PO-Revision-Date: 2023-11-08 15:47-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -1220,7 +1220,7 @@ msgstr "%1 dias atrás"
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "Ignorar remetente"
 
 #: views/inbound/qml/View.qml:555
 msgctxt "View|"
