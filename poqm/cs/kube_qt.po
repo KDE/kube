@@ -1,8 +1,8 @@
-# Vit Pelcak <vit@pelcak.org>, 2018, 2019, 2020, 2021, 2023.
+# SPDX-FileCopyrightText: 2018, 2019, 2020, 2021, 2023 Vit Pelcak <vit@pelcak.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2023-06-15 13:57+0200\n"
+"PO-Revision-Date: 2023-11-09 15:50+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 23.04.2\n"
+"X-Generator: Lokalize 23.08.2\n"
 "X-Qt-Contexts: true\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
@@ -335,7 +335,7 @@ msgstr "Uložit"
 #: framework/qml/EntitySelector.qml:103
 msgctxt "EntitySelector|"
 msgid "Add"
-msgstr ""
+msgstr "Přidat"
 
 #: framework/qml/LoginAccount.qml:117
 msgctxt "LoginAccount|"
@@ -345,27 +345,27 @@ msgstr "Přihlašovací jméno"
 #: framework/qml/MailListDelegate.qml:84
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
-msgstr ""
+msgstr "Obnovit z koše"
 
 #: framework/qml/MailListDelegate.qml:92
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
-msgstr ""
+msgstr "Označit jako přečtené"
 
 #: framework/qml/MailListDelegate.qml:101
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
-msgstr ""
+msgstr "Označit jako nepřečtené"
 
 #: framework/qml/MailListDelegate.qml:110
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
-msgstr ""
+msgstr "Označit jako důležité"
 
 #: framework/qml/MailListDelegate.qml:120
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
-msgstr ""
+msgstr "Přesunout do koše"
 
 #: framework/qml/MailListView.qml:68
 msgctxt "MailListView|"
@@ -593,12 +593,12 @@ msgstr ""
 #: framework/qml/ScrollablePopup.qml:70
 msgctxt "ScrollablePopup|"
 msgid "Discard"
-msgstr ""
+msgstr "Zahodit"
 
 #: framework/qml/ScrollablePopup.qml:75
 msgctxt "ScrollablePopup|"
 msgid "Save"
-msgstr ""
+msgstr "Uložit"
 
 #: framework/qml/SearchPopup.qml:197
 msgctxt "SearchPopup|"
@@ -638,13 +638,13 @@ msgstr "Zkopírovat výběr"
 #: framework/qml/TodoListDelegate.qml:66
 msgctxt "TodoListDelegate|"
 msgid "Due today"
-msgstr ""
+msgstr "Končí dnes"
 
 #: framework/qml/TodoListDelegate.qml:70
 #, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
-msgstr ""
+msgstr " (%1 dny)"
 
 #: framework/qml/TodoListDelegate.qml:73
 #, qt-format
@@ -665,7 +665,7 @@ msgstr ""
 #: framework/qml/TodoListDelegate.qml:105
 msgctxt "TodoListDelegate|"
 msgid "Done!"
-msgstr ""
+msgstr "Hotovo."
 
 #: framework/src/domain/eventcontroller.cpp:90
 #, qt-format
@@ -797,13 +797,13 @@ msgstr ""
 #, qt-format
 msgctxt "QObject|"
 msgid "A new message is available: %1"
-msgstr ""
+msgstr "Je dostupná nová zpráva: %1"
 
 #: framework/src/inboundmodel.cpp:513
 #, qt-format
 msgctxt "QObject|"
 msgid "A new event is available: %1"
-msgstr ""
+msgstr "Je dostupná nová událost: %1"
 
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
@@ -864,7 +864,7 @@ msgstr ""
 #: views/calendar/qml/DateRangeChooser.qml:159
 msgctxt "DateRangeChooser|"
 msgid "All day"
-msgstr ""
+msgstr "Celý den"
 
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
@@ -1141,17 +1141,17 @@ msgstr ""
 #: views/inbound/qml/View.qml:203
 msgctxt "View|"
 msgid "Inbound"
-msgstr ""
+msgstr "Příchozí"
 
 #: views/inbound/qml/View.qml:231
 msgctxt "View|"
 msgid "Configure"
-msgstr ""
+msgstr "Nastavit"
 
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
 msgid "Recent"
-msgstr ""
+msgstr "Nedávné"
 
 #: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
 msgctxt "View|"
@@ -1166,54 +1166,54 @@ msgstr ""
 #: views/inbound/qml/View.qml:485
 msgctxt "View|"
 msgid "Today, "
-msgstr ""
+msgstr "Dnes, "
 
 #: views/inbound/qml/View.qml:490
 msgctxt "View|"
 msgid "Tomorrow, "
-msgstr ""
+msgstr "Zítra, "
 
 #: views/inbound/qml/View.qml:493
 #, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr ""
+msgstr " (za %1 dny)"
 
 #: views/inbound/qml/View.qml:496
 #, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr ""
+msgstr "Před %1 dny"
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "Ignorovat odesílatele"
 
 #: views/inbound/qml/View.qml:555
 msgctxt "View|"
 msgid "Restore from trash"
-msgstr ""
+msgstr "Obnovit z koše"
 
 #: views/inbound/qml/View.qml:566
 msgctxt "View|"
 msgid "Mark as read"
-msgstr ""
+msgstr "Označit jako přečtené"
 
 #: views/inbound/qml/View.qml:576
 msgctxt "View|"
 msgid "Mark as unread"
-msgstr ""
+msgstr "Označit jako nepřečtené"
 
 #: views/inbound/qml/View.qml:586
 msgctxt "View|"
 msgid "Mark as important"
-msgstr ""
+msgstr "Označit jako důležité"
 
 #: views/inbound/qml/View.qml:597
 msgctxt "View|"
 msgid "Move to trash"
-msgstr ""
+msgstr "Přesunout do koše"
 
 #: views/inbound/qml/View.qml:612
 msgctxt "View|"
@@ -1359,7 +1359,7 @@ msgstr ""
 #: views/inbound/qml/View.qml:1075
 msgctxt "View|"
 msgid "To blacklist"
-msgstr ""
+msgstr "Do zakázaných (blacklist)"
 
 #: views/inbound/qml/View.qml:1087
 msgctxt "View|"
@@ -1510,7 +1510,7 @@ msgstr "Hledat..."
 #: views/todo/qml/TodoEditor.qml:113
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr ""
+msgstr "Vytvořit v:"
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
