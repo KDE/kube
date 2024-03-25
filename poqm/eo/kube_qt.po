@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kube\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-05 13:43+0100\n"
-"PO-Revision-Date: 2024-02-26 21:30+0100\n"
+"PO-Revision-Date: 2024-03-24 10:34+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo.org>\n"
 "Language: eo\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
 msgid "Connect your FastMail account"
-msgstr ""
+msgstr "Konekti vian FastMail-konton"
 
 #: accounts/fastmail/qml/AccountSettings.qml:27
 msgctxt "AccountSettings|"
@@ -84,12 +84,12 @@ msgstr "Pasvorto"
 #: accounts/fastmail/qml/Login.qml:59
 msgctxt "Login|"
 msgid "App-specific password for your FastMail account"
-msgstr ""
+msgstr "Pasvorto specifa por via FastMail-konto"
 
 #: accounts/generic/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
 msgid "Connect your account"
-msgstr ""
+msgstr "Konekti vian konton"
 
 #: accounts/generic/qml/AccountSettings.qml:29
 msgctxt "AccountSettings|"
@@ -108,17 +108,17 @@ msgstr "Uzantnomo"
 #: accounts/generic/qml/AccountSettings.qml:94
 msgctxt "AccountSettings|"
 msgid "Your username for server access."
-msgstr ""
+msgstr "Via uzantnomo por servila aliro."
 
 #: accounts/generic/qml/AccountSettings.qml:98
 msgctxt "AccountSettings|"
 msgid "IMAP address"
-msgstr ""
+msgstr "IMAP-adreso"
 
 #: accounts/generic/qml/AccountSettings.qml:115
 msgctxt "AccountSettings|"
 msgid "Use Starttls"
-msgstr ""
+msgstr "Uzi Starttls"
 
 #: accounts/generic/qml/AccountSettings.qml:125
 msgctxt "AccountSettings|"
@@ -129,27 +129,27 @@ msgstr "Aŭtentikiga Metodo"
 #: accounts/imap/qml/AccountSettings.qml:113
 msgctxt "AccountSettings|"
 msgid "SMTP address"
-msgstr ""
+msgstr "SMTP-adreso"
 
 #: accounts/generic/qml/AccountSettings.qml:161
 msgctxt "AccountSettings|"
 msgid "CardDAV address"
-msgstr ""
+msgstr "CardDAV-adreso"
 
 #: accounts/generic/qml/AccountSettings.qml:175
 msgctxt "AccountSettings|"
 msgid "CalDAV address"
-msgstr ""
+msgstr "CalDAV-adreso"
 
 #: accounts/generic/qml/Login.qml:60
 msgctxt "Login|"
 msgid "Password of your account"
-msgstr ""
+msgstr "Pasvorto de via konto"
 
 #: accounts/gmail/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
 msgid "Connect your Google account"
-msgstr ""
+msgstr "Konekti vian Google-konton"
 
 #: accounts/gmail/qml/AccountSettings.qml:29
 msgctxt "AccountSettings|"
@@ -161,12 +161,12 @@ msgstr ""
 #: accounts/gmail/qml/Login.qml:57 accounts/imap/qml/Login.qml:57
 msgctxt "Login|"
 msgid "Password of your IMAP account"
-msgstr ""
+msgstr "Pasvorto de via IMAP-konto"
 
 #: accounts/imap/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
 msgid "Connect your IMAP account"
-msgstr ""
+msgstr "Konekti vian IMAP-konton"
 
 #: accounts/imap/qml/AccountSettings.qml:29
 msgctxt "AccountSettings|"
@@ -180,17 +180,17 @@ msgstr ""
 #: accounts/imap/qml/AccountSettings.qml:92
 msgctxt "AccountSettings|"
 msgid "Your username for IMAP and SMTP access."
-msgstr ""
+msgstr "Via uzantnomo por IMAP kaj SMTP-aliro."
 
 #: accounts/imap/qml/AccountSettings.qml:96
 msgctxt "AccountSettings|"
 msgid "IMAP server address"
-msgstr ""
+msgstr "IMAP servilo adreso"
 
 #: accounts/kolabnow/qml/AccountSettings.qml:27
 msgctxt "AccountSettings|"
 msgid "Connect your Kolab Now account"
-msgstr ""
+msgstr "Konekti vian Kolab Now konton"
 
 #: accounts/kolabnow/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
@@ -202,12 +202,12 @@ msgstr ""
 #: accounts/kolabnow/qml/Login.qml:61
 msgctxt "Login|"
 msgid "Password of your Kolab Now account"
-msgstr ""
+msgstr "Pasvorto de via konto Kolab Now"
 
 #: accounts/maildir/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
 msgid "Add your Maildir archive"
-msgstr ""
+msgstr "Aldoni vian Maildir-arkivon"
 
 #: accounts/maildir/qml/AccountSettings.qml:29
 msgctxt "AccountSettings|"
@@ -219,12 +219,12 @@ msgstr ""
 #: accounts/maildir/qml/AccountSettings.qml:55
 msgctxt "AccountSettings|"
 msgid "Title of Account"
-msgstr ""
+msgstr "Titolo de Konto"
 
 #: accounts/maildir/qml/AccountSettings.qml:60
 msgctxt "AccountSettings|"
 msgid "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
-msgstr ""
+msgstr "ekz. \"Labo\", \"Hejmo\" kiu estos montrita en Kube kiel nomo"
 
 #: accounts/maildir/qml/AccountSettings.qml:68
 msgctxt "AccountSettings|"
@@ -234,7 +234,7 @@ msgstr "Vojo"
 #: accounts/maildir/qml/AccountSettings.qml:90
 msgctxt "AccountSettings|"
 msgid "Choose a maildir folder"
-msgstr ""
+msgstr "Elekti maildir-dosierujon"
 
 #: applications/kube/main.cpp:108
 msgctxt "main|"
@@ -246,7 +246,7 @@ msgstr ""
 #: components/accounts/qml/AccountWizard.qml:60
 msgctxt "AccountWizard|"
 msgid "Select your new account type"
-msgstr ""
+msgstr "Elekti vian novan kontan tipon"
 
 #: components/accounts/qml/AccountWizardPage.qml:137
 msgctxt "AccountWizardPage|"
@@ -266,7 +266,7 @@ msgstr "Elirkesto"
 #: components/kube/qml/Kube.qml:240
 msgctxt "Kube|"
 msgid "Notification view"
-msgstr ""
+msgstr "Sciiga vido"
 
 #: components/kube/qml/Kube.qml:251
 msgctxt "Kube|"
@@ -276,22 +276,22 @@ msgstr "Agordoj"
 #: components/kube/qml/upgrade.qml:39
 msgctxt "upgrade|"
 msgid "Please wait while Kube is upgrading..."
-msgstr ""
+msgstr "Bonvolu atendi dum Kube ĝisdatigas..."
 
 #: components/kube/qml/upgrade.qml:39
 msgctxt "upgrade|"
 msgid "Kube upgraded the storage layer."
-msgstr ""
+msgstr "Kube ĝisdatigis la konservan tavolon."
 
 #: components/kube/qml/upgrade.qml:43
 msgctxt "upgrade|"
 msgid "This might take a while."
-msgstr ""
+msgstr "Ĉi tio eble daŭros iom da tempo."
 
 #: components/kube/qml/upgrade.qml:43
 msgctxt "upgrade|"
 msgid "Please exit and restart Kube."
-msgstr ""
+msgstr "Bonvolu eliri kaj rekomenci Kube."
 
 #: components/kube/qml/upgrade.qml:47
 msgctxt "upgrade|"
@@ -301,12 +301,12 @@ msgstr "Eliri"
 #: extensions/fileasexpense/qml/main.qml:27
 msgctxt "main|"
 msgid "File as Expense"
-msgstr ""
+msgstr "Dosiero kiel Elspezo"
 
 #: extensions/gpg/qml/main.qml:58
 msgctxt "main|"
 msgid "Enable GPG Keyring Integration"
-msgstr ""
+msgstr "Ebligi GPG-ŝlosilringan integriĝon"
 
 #: framework/qml/AttachmentDelegate.qml:82
 msgctxt "AttachmentDelegate|"
@@ -316,12 +316,12 @@ msgstr "Importi ŝlosilon"
 #: framework/qml/ConversationView.qml:159
 msgctxt "ConversationView|"
 msgid "Downloading message..."
-msgstr ""
+msgstr "Elŝutante mesaĝon..."
 
 #: framework/qml/ConversationView.qml:163
 msgctxt "ConversationView|"
 msgid "Failed to download message..."
-msgstr ""
+msgstr "Malsukcesis elŝuti mesaĝon..."
 
 #: framework/qml/EditAccount.qml:89
 msgctxt "EditAccount|"
@@ -351,22 +351,22 @@ msgstr "Ensaluti"
 #: framework/qml/MailListDelegate.qml:84
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
-msgstr ""
+msgstr "Restarigi el rubujo"
 
 #: framework/qml/MailListDelegate.qml:92
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
-msgstr ""
+msgstr "Marki kiel legita"
 
 #: framework/qml/MailListDelegate.qml:101
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
-msgstr ""
+msgstr "Marki kiel nelegita"
 
 #: framework/qml/MailListDelegate.qml:110
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
-msgstr ""
+msgstr "Marki kiel grava"
 
 #: framework/qml/MailListDelegate.qml:120
 msgctxt "MailListDelegate|"
@@ -376,7 +376,7 @@ msgstr "Movi al rubujo"
 #: framework/qml/MailListView.qml:68
 msgctxt "MailListView|"
 msgid "Nothing here..."
-msgstr ""
+msgstr "Nenio ĉi tie..."
 
 #: framework/qml/mailpartview/ErrorPart.qml:40
 #, qt-format
@@ -389,61 +389,61 @@ msgstr "Eraro okazis: %1"
 #, qt-format
 msgctxt "ICalPart|"
 msgid "This is an exception for the event originally occurring at: \"%1\""
-msgstr ""
+msgstr "Ĉi tio estas escepto por la okazaĵo origine okazanta ĉe: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:55
 #, qt-format
 msgctxt "ICalPart|"
 msgid "\"%1\" has been cancelled."
-msgstr ""
+msgstr "\"%1\" estas nuligita."
 
 #: framework/qml/mailpartview/ICalPart.qml:60
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 has accepted: \"%2\""
-msgstr ""
+msgstr "%1 akceptis: \"%2\""
 
 #: framework/qml/mailpartview/ICalPart.qml:66
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 has declined: \"%2\""
-msgstr ""
+msgstr "%1 malakceptis: \"%2\""
 
 #: framework/qml/mailpartview/ICalPart.qml:72
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 doesn't yet know about: \"%2\""
-msgstr ""
+msgstr "%1 ankoraŭ ne scias pri: \"%2\""
 
 #: framework/qml/mailpartview/ICalPart.qml:84
 #, qt-format
 msgctxt "ICalPart|"
 msgid "The invitation has been updated: \"%1\""
-msgstr ""
+msgstr "La invito estas ĝisdatigita: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:89
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You have accepted: \"%1\""
-msgstr ""
+msgstr "Vi akceptis: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:95
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You have declined: \"%1\""
-msgstr ""
+msgstr "Vi rifuzis: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:101
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You've been invited to: \"%1\""
-msgstr ""
+msgstr "Vi estis invitita al: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:106
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You are not listed as attendee to: \"%1\""
-msgstr ""
+msgstr "Vi ne estas listigita kiel partoprenanto al: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:151
 msgctxt "ICalPart|"
@@ -470,6 +470,7 @@ msgstr "sendita de %1 sur %2"
 msgctxt "MailPartModel|"
 msgid "This message has been signed but we failed to validate the signature."
 msgstr ""
+"Ĉi tiu mesaĝo estis subskribita sed ni ne sukcesis validigi la subskribon."
 
 #: framework/qml/mailpartview/MailPartModel.qml:55
 #, qt-format
@@ -522,28 +523,28 @@ msgstr "Ĉi tiu mesaĝo estas ĉifrita al la ŝlosilo: %1"
 #: framework/qml/MailViewer.qml:44
 msgctxt "MailViewer|"
 msgid "Incomplete body..."
-msgstr ""
+msgstr "Nekompleta korpo..."
 
 #: framework/qml/MailViewer.qml:202
 msgctxt "MailViewer|"
 msgid "Sent from"
-msgstr ""
+msgstr "Sendita de"
 
 #: framework/qml/MailViewer.qml:206
 msgctxt "MailViewer|"
 msgid "Draft from"
-msgstr ""
+msgstr "Malneto el"
 
 #: framework/qml/MailViewer.qml:220 framework/qml/MailViewer.qml:254
 msgctxt "MailViewer|"
 msgid "Send mail to"
-msgstr ""
+msgstr "Sendi poŝton al"
 
 #: framework/qml/MailViewer.qml:238
 #, qt-format
 msgctxt "MailViewer|"
 msgid "Trash: %1"
-msgstr ""
+msgstr "Rubujo: %1"
 
 #: framework/qml/MailViewer.qml:390
 msgctxt "MailViewer|"
@@ -553,7 +554,7 @@ msgstr "Konservi aldonaĵon"
 #: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Delete Mail"
-msgstr ""
+msgstr "Forigi Poŝton"
 
 #: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
@@ -594,7 +595,7 @@ msgstr "Sendi nun"
 #: framework/qml/Outbox.qml:174
 msgctxt "Outbox|"
 msgid "No pending messages"
-msgstr ""
+msgstr "Neniuj pritraktataj mesaĝoj"
 
 #: framework/qml/ScrollablePopup.qml:70
 msgctxt "ScrollablePopup|"
@@ -644,24 +645,24 @@ msgstr "Kopii Elekton"
 #: framework/qml/TodoListDelegate.qml:66
 msgctxt "TodoListDelegate|"
 msgid "Due today"
-msgstr ""
+msgstr "Paga hodiaŭ"
 
 #: framework/qml/TodoListDelegate.qml:70
 #, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
-msgstr ""
+msgstr " (%1 tagoj)"
 
 #: framework/qml/TodoListDelegate.qml:73
 #, qt-format
 msgctxt "TodoListDelegate|"
 msgid "Overdue for %1 days"
-msgstr ""
+msgstr "Malfruis %1 tagoj"
 
 #: framework/qml/TodoListDelegate.qml:90
 msgctxt "TodoListDelegate|"
 msgid "Unpick"
-msgstr ""
+msgstr "Malelekti"
 
 #: framework/qml/TodoListDelegate.qml:90
 msgctxt "TodoListDelegate|"
@@ -683,13 +684,13 @@ msgstr "== %1 =="
 #, qt-format
 msgctxt "QObject|"
 msgid "When: %1"
-msgstr ""
+msgstr "Kiam: %1"
 
 #: framework/src/domain/eventcontroller.cpp:96
 #, qt-format
 msgctxt "QObject|"
 msgid "Where: %1"
-msgstr ""
+msgstr "Kie: %1"
 
 #: framework/src/domain/eventcontroller.cpp:99
 msgctxt "QObject|"
@@ -700,13 +701,13 @@ msgstr "Ĉeestantoj:"
 #, qt-format
 msgctxt "QObject|"
 msgid "\"%1\" has been updated"
-msgstr ""
+msgstr "\"%1\" estas ĝisdatigita"
 
 #: framework/src/domain/eventcontroller.cpp:130
 #, qt-format
 msgctxt "QObject|"
 msgid "You've been invited to: \"%1\""
-msgstr ""
+msgstr "Vi estis invitita al: \"%1\""
 
 #: framework/src/domain/eventcontroller.cpp:135
 msgctxt "QObject|"
@@ -719,25 +720,25 @@ msgstr ""
 #, qt-format
 msgctxt "QObject|"
 msgid "%1 has accepted the invitation to the following event"
-msgstr ""
+msgstr "%1 akceptis la inviton al la sekva evento"
 
 #: framework/src/domain/invitationcontroller.cpp:272
 #, qt-format
 msgctxt "QObject|"
 msgid "%1 has declined the invitation to the following event"
-msgstr ""
+msgstr "%1 malakceptis la inviton al la sekva evento"
 
 #: framework/src/domain/invitationcontroller.cpp:279
 #, qt-format
 msgctxt "QObject|"
 msgid "\"%1\" has been accepted by %2"
-msgstr ""
+msgstr "\"%1\" estis akceptita de %2"
 
 #: framework/src/domain/invitationcontroller.cpp:281
 #, qt-format
 msgctxt "QObject|"
 msgid "\"%1\" has been declined by %2"
-msgstr ""
+msgstr "\"%1\" estis malakceptita de %2"
 
 #: framework/src/domain/mime/attachmentmodel.cpp:181
 msgctxt "QObject|"
@@ -748,7 +749,7 @@ msgstr "Malsukcesis konservi aldonaĵon."
 #, qt-format
 msgctxt "AttachmentModel|"
 msgid "Saved the attachment to disk: %1"
-msgstr ""
+msgstr "Konservis la aldonaĵon al disko: %1"
 
 #: framework/src/domain/mime/attachmentmodel.cpp:221
 msgctxt "AttachmentModel|"
@@ -758,7 +759,7 @@ msgstr "Malsukcesis malfermi aldonaĵon."
 #: framework/src/domain/mime/attachmentmodel.cpp:226
 msgctxt "AttachmentModel|"
 msgid "Failed to save attachment for opening."
-msgstr ""
+msgstr "Malsukcesis konservi aldonaĵon por malfermi."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:240
 msgctxt "AttachmentModel|"
@@ -771,6 +772,7 @@ msgctxt "AttachmentModel|"
 msgid "%n key(s) imported"
 msgid_plural "%n key(s) imported"
 msgstr[0] ""
+msgstr[1] ""
 
 #: framework/src/domain/mime/attachmentmodel.cpp:249
 #, qt-format
@@ -778,21 +780,22 @@ msgctxt "AttachmentModel|"
 msgid "%n key(s) were already imported"
 msgid_plural "%n key(s) were already imported"
 msgstr[0] ""
+msgstr[1] ""
 
 #: framework/src/domain/mime/mailtemplates.cpp:127
 msgctxt "QObject|"
 msgid "fwd"
-msgstr ""
+msgstr "fwd"
 
 #: framework/src/domain/mime/mailtemplates.cpp:155
 msgctxt "QObject|"
 msgid "re"
-msgstr ""
+msgstr "re"
 
 #: framework/src/domain/mime/partmodel.cpp:467
 msgctxt "PartModel|"
 msgid "No key available."
-msgstr ""
+msgstr "Neniu ŝlosilo disponebla."
 
 #: framework/src/domain/mime/partmodel.cpp:469
 msgctxt "PartModel|"
@@ -803,18 +806,18 @@ msgstr "Erara pasfrazo."
 #, qt-format
 msgctxt "QObject|"
 msgid "A new message is available: %1"
-msgstr ""
+msgstr "Nova mesaĝo disponeblas: %1"
 
 #: framework/src/inboundmodel.cpp:513
 #, qt-format
 msgctxt "QObject|"
 msgid "A new event is available: %1"
-msgstr ""
+msgstr "Nova evento disponeblas: %1"
 
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
 msgid "Failed to connect to server."
-msgstr ""
+msgstr "Malsukcesis konekti al servilo."
 
 #: framework/src/sinkfabric.cpp:201
 msgctxt "QObject|"
@@ -824,27 +827,27 @@ msgstr "Gastiganto ne trovita."
 #: framework/src/sinkfabric.cpp:205
 msgctxt "QObject|"
 msgid "Failed to login."
-msgstr ""
+msgstr "Malsukcesis ensaluti."
 
 #: framework/src/sinkfabric.cpp:209
 msgctxt "QObject|"
 msgid "Configuration error."
-msgstr ""
+msgstr "Eraro de agordo."
 
 #: framework/src/sinkfabric.cpp:215
 msgctxt "QObject|"
 msgid "No credentials available."
-msgstr ""
+msgstr "Neniuj akreditaĵoj haveblaj."
 
 #: framework/src/sinkfabric.cpp:249
 msgctxt "QObject|"
 msgid "Failed to send message."
-msgstr ""
+msgstr "Malsukcesis sendi mesaĝon."
 
 #: framework/src/sinkfabric.cpp:263
 msgctxt "QObject|"
 msgid "A message has been sent."
-msgstr ""
+msgstr "Mesaĝo estis sendita."
 
 #: views/accounts/qml/View.qml:51
 msgctxt "View|"
@@ -865,7 +868,7 @@ msgstr "Invititaj"
 #: views/calendar/qml/AttendeeListEditor.qml:129
 msgctxt "AttendeeListEditor|"
 msgid "Add attendee"
-msgstr ""
+msgstr "Aldoni partoprenanton"
 
 #: views/calendar/qml/DateRangeChooser.qml:159
 msgctxt "DateRangeChooser|"
@@ -875,12 +878,12 @@ msgstr "Tuta tago"
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
 msgid "begins"
-msgstr ""
+msgstr "komenciĝas"
 
 #: views/calendar/qml/DateRangeChooser.qml:178
 msgctxt "DateRangeChooser|"
 msgid "ends"
-msgstr ""
+msgstr "finiĝas"
 
 #: views/calendar/qml/EventEditor.qml:85
 msgctxt "EventEditor|"
@@ -926,13 +929,13 @@ msgstr "Krei Eventon"
 #, qt-format
 msgctxt "EventView|"
 msgid "repeats %1"
-msgstr ""
+msgstr "ripetas %1"
 
 #: views/calendar/qml/EventView.qml:86 views/inbound/qml/EventView.qml:93
 #, qt-format
 msgctxt "EventView|"
 msgid "Organizer: %1"
-msgstr ""
+msgstr "Organizanto: %1"
 
 #: views/calendar/qml/EventView.qml:96 views/inbound/qml/EventView.qml:103
 msgctxt "EventView|"
@@ -958,17 +961,17 @@ msgstr "Redakti"
 #: views/calendar/qml/View.qml:39
 msgctxt "View|"
 msgid "Jump to next week/month:"
-msgstr ""
+msgstr "Salti al venonta semajno/monato:"
 
 #: views/calendar/qml/View.qml:40
 msgctxt "View|"
 msgid "Jump to previous week/month:"
-msgstr ""
+msgstr "Salti al antaŭa semajno/monato:"
 
 #: views/calendar/qml/View.qml:80
 msgctxt "View|"
 msgid "New Event"
-msgstr ""
+msgstr "Nova Evento"
 
 #: views/calendar/qml/View.qml:92
 msgctxt "View|"
@@ -983,13 +986,13 @@ msgstr "Monato"
 #: views/composer/qml/AddresseeListEditor.qml:132
 msgctxt "AddresseeListEditor|"
 msgid "Fetch key from keyserver"
-msgstr ""
+msgstr "Preni ŝlosilon de ŝlosilservilo"
 
 #: views/composer/qml/AddresseeListEditor.qml:168
 #: views/composer/qml/AddresseeListEditor.qml:185
 msgctxt "AddresseeListEditor|"
 msgid "Add recipient"
-msgstr ""
+msgstr "Aldoni ricevonton"
 
 #: views/composer/qml/EditorPage.qml:113
 msgctxt "EditorPage|"
@@ -999,12 +1002,12 @@ msgstr "Forigi Formatadon"
 #: views/composer/qml/EditorPage.qml:126
 msgctxt "EditorPage|"
 msgid "Attach file"
-msgstr ""
+msgstr "Alfiksi dosieron"
 
 #: views/composer/qml/EditorPage.qml:135
 msgctxt "EditorPage|"
 msgid "Choose a file to attach"
-msgstr ""
+msgstr "Elekti dosieron por alfiksi"
 
 #: views/composer/qml/EditorPage.qml:156
 msgctxt "EditorPage|"
@@ -1020,7 +1023,7 @@ msgstr "Korpo"
 #: views/inbound/qml/View.qml:197
 msgctxt "View|"
 msgid "New Email"
-msgstr ""
+msgstr "Nova Retpoŝto"
 
 #: views/composer/qml/View.qml:144
 msgctxt "View|"
@@ -1030,17 +1033,17 @@ msgstr "Malnetoj"
 #: views/composer/qml/View.qml:293
 msgctxt "View|"
 msgid "Sending email to:"
-msgstr ""
+msgstr "Sendante retpoŝton al:"
 
 #: views/composer/qml/View.qml:308
 msgctxt "View|"
 msgid "Sending copy to (Cc):"
-msgstr ""
+msgstr "Sendante kopion al (Cc):"
 
 #: views/composer/qml/View.qml:322
 msgctxt "View|"
 msgid "Sending secret copy to (Bcc):"
-msgstr ""
+msgstr "Sendante sekretan kopion al (Bcc):"
 
 #: views/composer/qml/View.qml:347
 msgctxt "View|"
@@ -1066,12 +1069,12 @@ msgstr "Forĵeti"
 #: views/composer/qml/View.qml:382
 msgctxt "View|"
 msgid "Save as Draft"
-msgstr ""
+msgstr "Konservi kiel Malneto"
 
 #: views/composer/qml/View.qml:395
 msgctxt "View|"
 msgid "You are sending this from:"
-msgstr ""
+msgstr "Vi sendas ĉi tion de:"
 
 #: views/composer/qml/View.qml:421
 msgctxt "View|"
@@ -1081,73 +1084,73 @@ msgstr "Sendi"
 #: views/conversation/qml/View.qml:73 views/inbound/qml/View.qml:114
 msgctxt "View|"
 msgid "Jump to top of threadlist:"
-msgstr ""
+msgstr "Salti al la supro de fadenlisto:"
 
 #: views/conversation/qml/View.qml:74 views/inbound/qml/View.qml:115
 msgctxt "View|"
 msgid "Jump to next thread:"
-msgstr ""
+msgstr "Salti al la sekva fadeno:"
 
 #: views/conversation/qml/View.qml:75 views/inbound/qml/View.qml:116
 msgctxt "View|"
 msgid "Jump to previous thread:"
-msgstr ""
+msgstr "Salti al antaŭa fadeno:"
 
 #: views/conversation/qml/View.qml:76 views/inbound/qml/View.qml:117
 msgctxt "View|"
 msgid "Jump to next message:"
-msgstr ""
+msgstr "Salti al sekva mesaĝo:"
 
 #: views/conversation/qml/View.qml:77 views/inbound/qml/View.qml:118
 msgctxt "View|"
 msgid "Jump to previous message:"
-msgstr ""
+msgstr "Salti al antaŭa mesaĝo:"
 
 #: views/conversation/qml/View.qml:78 views/inbound/qml/View.qml:119
 msgctxt "View|"
 msgid "Jump to next folder:"
-msgstr ""
+msgstr "Salti al sekva dosierujo:"
 
 #: views/conversation/qml/View.qml:79 views/inbound/qml/View.qml:120
 msgctxt "View|"
 msgid "Jump to previous folder:"
-msgstr ""
+msgstr "Salti al antaŭa dosierujo:"
 
 #: views/conversation/qml/View.qml:80 views/inbound/qml/View.qml:121
 msgctxt "View|"
 msgid "Compose new message:"
-msgstr ""
+msgstr "Verki novan mesaĝon:"
 
 #: views/conversation/qml/View.qml:81 views/inbound/qml/View.qml:122
 msgctxt "View|"
 msgid "Reply to the currently focused message:"
-msgstr ""
+msgstr "Respondi al la nun fokusita mesaĝo:"
 
 #: views/conversation/qml/View.qml:82 views/inbound/qml/View.qml:123
 msgctxt "View|"
 msgid "Delete the currently focused message:"
-msgstr ""
+msgstr "Forigi la nun fokusitan mesaĝon:"
 
 #: views/conversation/qml/View.qml:83 views/inbound/qml/View.qml:124
 msgctxt "View|"
 msgid "Mark the currently focused message as important:"
-msgstr ""
+msgstr "Marki la nun fokusitan mesaĝon kiel grava:"
 
 #: views/conversation/qml/View.qml:84 views/inbound/qml/View.qml:125
 msgctxt "View|"
 msgid "Mark the currently focused message as unread:"
-msgstr ""
+msgstr "Marki la nun fokusitan mesaĝon kiel nelegitan:"
 
 #: views/conversation/qml/View.qml:85 views/inbound/qml/View.qml:126
 #: views/todo/qml/View.qml:108
 msgctxt "View|"
 msgid "Show this help text:"
-msgstr ""
+msgstr "Montri ĉi tiun helptekston:"
 
 #: views/inbound/qml/View.qml:203
 msgctxt "View|"
 msgid "Inbound"
-msgstr ""
+msgstr "Eniranta"
 
 #: views/inbound/qml/View.qml:231
 msgctxt "View|"
@@ -1167,54 +1170,54 @@ msgstr "Grava"
 #: views/inbound/qml/View.qml:347 views/log/qml/View.qml:71
 msgctxt "View|"
 msgid "Nothing here..."
-msgstr ""
+msgstr "Nenio ĉi tie..."
 
 #: views/inbound/qml/View.qml:485
 msgctxt "View|"
 msgid "Today, "
-msgstr ""
+msgstr "Hodiaŭ,"
 
 #: views/inbound/qml/View.qml:490
 msgctxt "View|"
 msgid "Tomorrow, "
-msgstr ""
+msgstr "Morgaŭ,"
 
 #: views/inbound/qml/View.qml:493
 #, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr ""
+msgstr " (en %1 tagoj)"
 
 #: views/inbound/qml/View.qml:496
 #, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr ""
+msgstr "antaŭ %1 tagoj"
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "Ignori sendinton"
 
 #: views/inbound/qml/View.qml:555
 msgctxt "View|"
 msgid "Restore from trash"
-msgstr ""
+msgstr "Restarigi el rubujo"
 
 #: views/inbound/qml/View.qml:566
 msgctxt "View|"
 msgid "Mark as read"
-msgstr ""
+msgstr "Marki kiel legita"
 
 #: views/inbound/qml/View.qml:576
 msgctxt "View|"
 msgid "Mark as unread"
-msgstr ""
+msgstr "Marki kiel nelegita"
 
 #: views/inbound/qml/View.qml:586
 msgctxt "View|"
 msgid "Mark as important"
-msgstr ""
+msgstr "Marki kiel grava"
 
 #: views/inbound/qml/View.qml:597
 msgctxt "View|"
@@ -1234,17 +1237,17 @@ msgstr "Konto:"
 #: views/inbound/qml/View.qml:711 views/log/qml/View.qml:230
 msgctxt "View|"
 msgid "Account Id:"
-msgstr ""
+msgstr "Konto Id:"
 
 #: views/inbound/qml/View.qml:721 views/log/qml/View.qml:240
 msgctxt "View|"
 msgid "Resource Id:"
-msgstr ""
+msgstr "Rimedo Id:"
 
 #: views/inbound/qml/View.qml:731 views/log/qml/View.qml:250
 msgctxt "View|"
 msgid "Timestamp:"
-msgstr ""
+msgstr "Tempostampo:"
 
 #: views/inbound/qml/View.qml:739 views/log/qml/View.qml:258
 msgctxt "View|"
@@ -1254,13 +1257,13 @@ msgstr "Mesaĝo:"
 #: views/inbound/qml/View.qml:773 views/log/qml/View.qml:292
 msgctxt "View|"
 msgid "Failed to login"
-msgstr ""
+msgstr "Malsukcesis ensaluti"
 
 #: views/inbound/qml/View.qml:779 views/log/qml/View.qml:298
 #, qt-format
 msgctxt "View|"
 msgid "%1: please check your credentials."
-msgstr ""
+msgstr "%1: bonvolu kontroli viajn akreditaĵojn."
 
 #: views/inbound/qml/View.qml:785 views/log/qml/View.qml:304
 msgctxt "View|"
@@ -1276,7 +1279,7 @@ msgstr "Gastiganto ne trovita"
 #, qt-format
 msgctxt "View|"
 msgid "%1: please check your network connection and settings."
-msgstr ""
+msgstr "%1: bonvolu kontroli vian retkonekton kaj agordojn."
 
 #: views/inbound/qml/View.qml:820 views/log/qml/View.qml:339
 msgctxt "View|"
@@ -1286,7 +1289,7 @@ msgstr "Kontagordoj"
 #: views/inbound/qml/View.qml:844 views/log/qml/View.qml:363
 msgctxt "View|"
 msgid "Failed to send the message."
-msgstr ""
+msgstr "Malsukcesis sendi la mesaĝon."
 
 #: views/inbound/qml/View.qml:863 views/inbound/qml/View.qml:930
 #: views/log/qml/View.qml:382 views/log/qml/View.qml:449
@@ -1314,7 +1317,7 @@ msgstr "Al: %1"
 #, qt-format
 msgctxt "View|"
 msgid "Cc: %1"
-msgstr ""
+msgstr "Cc: %1"
 
 #: views/inbound/qml/View.qml:889 views/log/qml/View.qml:408
 msgctxt "View|"
@@ -1324,68 +1327,69 @@ msgstr "Provi denove"
 #: views/inbound/qml/View.qml:912 views/log/qml/View.qml:431
 msgctxt "View|"
 msgid "Succeeded to send the message."
-msgstr ""
+msgstr "Sukcesis sendi la mesaĝon."
 
 #: views/inbound/qml/View.qml:1027
 msgctxt "View|"
 msgid "Folder name blacklist"
-msgstr ""
+msgstr "Dosierujo nomo nigra listo"
 
 #: views/inbound/qml/View.qml:1034
 msgctxt "View|"
 msgid "Comma separated folder names"
-msgstr ""
+msgstr "Komo disigitaj dosierujoj nomoj"
 
 #: views/inbound/qml/View.qml:1039
 msgctxt "View|"
 msgid "Per Folder Mime Message Whitelist"
-msgstr ""
+msgstr "Per Dosierujo Mime Mesaĝo Blanka Listo"
 
 #: views/inbound/qml/View.qml:1051
 msgctxt "View|"
 msgid "Folder special purpose blacklist"
-msgstr ""
+msgstr "Dosierujo speciala celo nigra listo"
 
 #: views/inbound/qml/View.qml:1058
 msgctxt "View|"
 msgid "Comma separated special purpose types. Example: drafts, trash, sent"
 msgstr ""
+"Komo apartigis specialcelajn tipojn. Ekzemplo: malnetoj, rubujo, sendita"
 
 #: views/inbound/qml/View.qml:1063
 msgctxt "View|"
 msgid "Sender blacklist"
-msgstr ""
+msgstr "Nigra listo de sendintoj"
 
 #: views/inbound/qml/View.qml:1070 views/inbound/qml/View.qml:1082
 #: views/inbound/qml/View.qml:1094
 msgctxt "View|"
 msgid "Comma separated sender email addresses"
-msgstr ""
+msgstr "Komo apartigis sendintajn retadresojn"
 
 #: views/inbound/qml/View.qml:1075
 msgctxt "View|"
 msgid "To blacklist"
-msgstr ""
+msgstr "Al nigra listo"
 
 #: views/inbound/qml/View.qml:1087
 msgctxt "View|"
 msgid "Sender name contains filter"
-msgstr ""
+msgstr "Sendanto nomo enhavas filtrilon"
 
 #: views/inboxcrusher/qml/View.qml:92
 msgctxt "View|"
 msgid "Delete!"
-msgstr ""
+msgstr "Forigu!"
 
 #: views/inboxcrusher/qml/View.qml:97
 msgctxt "View|"
 msgid "Reply!"
-msgstr ""
+msgstr "Respondu!"
 
 #: views/inboxcrusher/qml/View.qml:102
 msgctxt "View|"
 msgid "Flag!"
-msgstr ""
+msgstr "Flago!"
 
 #: views/inboxcrusher/qml/View.qml:107
 msgctxt "View|"
@@ -1410,7 +1414,7 @@ msgstr "Informo"
 #: views/people/qml/MailListEditor.qml:53
 msgctxt "MailListEditor|"
 msgid "(main)"
-msgstr ""
+msgstr "(ĉefa)"
 
 #: views/people/qml/MailListEditor.qml:84
 #: views/people/qml/MailListEditor.qml:102
@@ -1441,22 +1445,22 @@ msgstr "Redakti"
 #: views/people/qml/PersonComposer.qml:98
 msgctxt "PersonComposer|"
 msgid "Choose an Avatar"
-msgstr ""
+msgstr "Elekti Avataron"
 
 #: views/people/qml/PersonComposer.qml:121
 msgctxt "PersonComposer|"
 msgid "First name"
-msgstr ""
+msgstr "Antaŭnomo"
 
 #: views/people/qml/PersonComposer.qml:129
 msgctxt "PersonComposer|"
 msgid "Last name"
-msgstr ""
+msgstr "Familia nomo"
 
 #: views/people/qml/PersonComposer.qml:149
 msgctxt "PersonComposer|"
 msgid "Job Title"
-msgstr ""
+msgstr "Labortitolo"
 
 #: views/people/qml/PersonComposer.qml:163
 msgctxt "PersonComposer|"
@@ -1471,12 +1475,12 @@ msgstr "Retpoŝto"
 #: views/people/qml/PersonPage.qml:156
 msgctxt "PersonPage|"
 msgid "(main)"
-msgstr ""
+msgstr "(ĉefa)"
 
 #: views/people/qml/PhoneListEditor.qml:43
 msgctxt "PhoneListEditor|"
 msgid "(main)"
-msgstr ""
+msgstr "(ĉefa)"
 
 #: views/people/qml/PhoneListEditor.qml:55
 msgctxt "PhoneListEditor|"
@@ -1521,17 +1525,17 @@ msgstr "Krei en:"
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
 msgid "Doing"
-msgstr ""
+msgstr "Farante"
 
 #: views/todo/qml/TodoEditor.qml:151
 msgctxt "TodoEditor|"
 msgid "Todo Title"
-msgstr ""
+msgstr "Ĉio Titolo"
 
 #: views/todo/qml/TodoEditor.qml:211
 msgctxt "TodoEditor|"
 msgid "Add subtodo"
-msgstr ""
+msgstr "Aldoni subfarendaĵon"
 
 #: views/todo/qml/TodoEditor.qml:227
 msgctxt "TodoEditor|"
@@ -1561,37 +1565,37 @@ msgstr "Krei Farendon"
 #: views/todo/qml/View.qml:102
 msgctxt "View|"
 msgid "Go to top of list:"
-msgstr ""
+msgstr "Iri al la supro de listo:"
 
 #: views/todo/qml/View.qml:103
 msgctxt "View|"
 msgid "Go to bottom of list:"
-msgstr ""
+msgstr "Iri al la fundo de la listo:"
 
 #: views/todo/qml/View.qml:104
 msgctxt "View|"
 msgid "Go to next todo:"
-msgstr ""
+msgstr "Iri al sekva aĵo:"
 
 #: views/todo/qml/View.qml:105
 msgctxt "View|"
 msgid "Go to previous todo:"
-msgstr ""
+msgstr "Iri al antaŭa aĵo:"
 
 #: views/todo/qml/View.qml:106
 msgctxt "View|"
 msgid "Create new todo:"
-msgstr ""
+msgstr "Krei novan aĵon:"
 
 #: views/todo/qml/View.qml:107
 msgctxt "View|"
 msgid "Edit todo:"
-msgstr ""
+msgstr "Redakti ĉion:"
 
 #: views/todo/qml/View.qml:167
 msgctxt "View|"
 msgid "New Todo"
-msgstr ""
+msgstr "Nova Ĉio"
 
 #: views/todo/qml/View.qml:175
 msgctxt "View|"
@@ -1601,7 +1605,7 @@ msgstr "Enirkesto"
 #: views/todo/qml/View.qml:186
 msgctxt "View|"
 msgid "Doing"
-msgstr ""
+msgstr "Farante"
 
 #: views/todo/qml/View.qml:197
 msgctxt "View|"
@@ -1611,12 +1615,12 @@ msgstr "Ĉiuj"
 #: views/todo/qml/View.qml:250
 msgctxt "View|"
 msgid "Nothing here yet..."
-msgstr ""
+msgstr "Nenio ĉi tie ankoraŭ..."
 
 #: views/todo/qml/View.qml:254
 msgctxt "View|"
 msgid "Pick some tasks"
-msgstr ""
+msgstr "Elekti kelkajn taskojn"
 
 #: views/todo/qml/View.qml:262
 msgctxt "View|"
@@ -1627,4 +1631,4 @@ msgstr "Aldoni novan taskon"
 #, qt-format
 msgctxt "View|"
 msgid "This list is longer than %1 tasks. Focus on the top %1?"
-msgstr ""
+msgstr "Ĉi tiu listo estas pli longa ol %1 taskoj. Ĉu fokusigi la supran %1?"
