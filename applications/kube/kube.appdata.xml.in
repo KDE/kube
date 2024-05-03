@@ -61,6 +61,10 @@
   <summary xml:lang="x-test">xxE-mail clientxx</summary>
   <summary xml:lang="zh-CN">邮件客户端</summary>
   <summary xml:lang="zh-TW">E-Mail 用戶端</summary>
+  <developer>
+    <name>KDE</name>
+    <url>https://kde.org/</url>
+  </developer>
   <description>
     <p>Kube is a modern communication and collaboration client built with QtQuick on top of a high performance, low resource usage core. It provides online and offline access to all your mail, contacts, calendars, notes, todo's and more. With a strong focus on usability, the team works with designers and UX experts from the ground up, to build a product that is not only visually appealing but also a joy to use.</p>
     <p xml:lang="ca">El Kube és un client modern de comunicació i col·laboració construït amb el «QtQuick» sobre un nucli amb alt rendiment i que empra pocs recursos. Proporciona accés en línia i fora de línia a tots els vostres correus, contactes, calendaris, notes, tasques pendents i més. Amb un enfocament fort en la usabilitat, l'equip ha treballat amb dissenyadors i experts d'UX des del començament, per a construir un producte que no només és visualment atractiu, sinó també agradable d'emprar.</p>
@@ -112,8 +116,15 @@
   <url type="homepage">@KUBE_APPDATA_HOMEPAGE@</url>
   <url type="bugtracker">@KUBE_APPDATA_BUGTRACKER@</url>
   <url type="help">@KUBE_APPDATA_HELP@</url>
+  <url type="vcs-browser">https://invent.kde.org/pim/kube</url>
   <project_group>@KUBE_APPDATA_PROJECTGROUP@</project_group>
   <provides>
     <binary>kube</binary>
   </provides>
+  <categories>
+    <category>Qt</category>
+    <category>KDE</category>
+    <category>Office</category>
+    <category>Email</category>
+  </categories>
 </component>
