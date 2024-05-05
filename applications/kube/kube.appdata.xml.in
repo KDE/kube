@@ -61,8 +61,8 @@
   <summary xml:lang="x-test">xxE-mail clientxx</summary>
   <summary xml:lang="zh-CN">邮件客户端</summary>
   <summary xml:lang="zh-TW">E-Mail 用戶端</summary>
-  <developer id="kde.org">
-    <name>KDE</name>
+  <developer id="org.kde">
+    <name translate="no">KDE</name>
     <url>https://kde.org/</url>
   </developer>
   <description>
