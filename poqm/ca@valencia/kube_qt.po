@@ -299,7 +299,7 @@ msgstr "Configuració"
 #: components/kube/qml/upgrade.qml:39
 msgctxt "upgrade|"
 msgid "Please wait while Kube is upgrading..."
-msgstr "Espereu mentre Kube s'actualitza..."
+msgstr "Espereu mentre Kube s'actualitza…"
 
 #: components/kube/qml/upgrade.qml:39
 msgctxt "upgrade|"
@@ -339,12 +339,12 @@ msgstr "Importa la clau"
 #: framework/qml/ConversationView.qml:159
 msgctxt "ConversationView|"
 msgid "Downloading message..."
-msgstr "S'està baixant el missatge..."
+msgstr "S'està baixant el missatge…"
 
 #: framework/qml/ConversationView.qml:163
 msgctxt "ConversationView|"
 msgid "Failed to download message..."
-msgstr "No s'ha pogut baixar el missatge..."
+msgstr "No s'ha pogut baixar el missatge…"
 
 #: framework/qml/EditAccount.qml:89
 msgctxt "EditAccount|"
@@ -399,7 +399,7 @@ msgstr "Mou cap a dins de la paperera"
 #: framework/qml/MailListView.qml:68
 msgctxt "MailListView|"
 msgid "Nothing here..."
-msgstr "Res ací..."
+msgstr "Res ací…"
 
 #: framework/qml/mailpartview/ErrorPart.qml:40
 #, qt-format
@@ -546,7 +546,7 @@ msgstr "Este missatge està encriptat amb la clau: %1"
 #: framework/qml/MailViewer.qml:44
 msgctxt "MailViewer|"
 msgid "Incomplete body..."
-msgstr "Cos incomplet..."
+msgstr "Cos incomplet…"
 
 #: framework/qml/MailViewer.qml:202
 msgctxt "MailViewer|"
@@ -633,7 +633,7 @@ msgstr "Guarda"
 #: framework/qml/SearchPopup.qml:197
 msgctxt "SearchPopup|"
 msgid "Filter..."
-msgstr "Filtre..."
+msgstr "Filtre…"
 
 #: framework/qml/SelectableItem.qml:64
 msgctxt "SelectableItem|"
@@ -1096,7 +1096,7 @@ msgstr "Descarta"
 #: views/composer/qml/View.qml:382
 msgctxt "View|"
 msgid "Save as Draft"
-msgstr "Anomena i guarda esborrany"
+msgstr "Anomena i guarda com a esborrany"
 
 #: views/composer/qml/View.qml:395
 msgctxt "View|"
@@ -1197,7 +1197,7 @@ msgstr "Important"
 #: views/inbound/qml/View.qml:347 views/log/qml/View.qml:71
 msgctxt "View|"
 msgid "Nothing here..."
-msgstr "Res ací..."
+msgstr "Res ací…"
 
 #: views/inbound/qml/View.qml:485
 msgctxt "View|"
@@ -1458,7 +1458,7 @@ msgstr "Contacte nou"
 #: views/people/qml/People.qml:80
 msgctxt "People|"
 msgid "Search..."
-msgstr "Busca..."
+msgstr "Busca…"
 
 #: views/people/qml/People.qml:235
 msgctxt "People|"
@@ -1533,7 +1533,7 @@ msgstr "Comptes"
 #: views/search/qml/View.qml:161
 msgctxt "View|"
 msgid "Search..."
-msgstr "Busca..."
+msgstr "Busca…"
 
 #: views/search/qml/View_new.qml:64
 msgctxt "View_new|"
@@ -1543,7 +1543,7 @@ msgstr "Busca"
 #: views/search/qml/View_new.qml:113
 msgctxt "View_new|"
 msgid "Search..."
-msgstr "Busca..."
+msgstr "Busca…"
 
 #: views/todo/qml/TodoEditor.qml:113
 msgctxt "TodoEditor|"
@@ -1643,7 +1643,7 @@ msgstr "Tot"
 #: views/todo/qml/View.qml:250
 msgctxt "View|"
 msgid "Nothing here yet..."
-msgstr "Res ací..."
+msgstr "Res ací…"
 
 #: views/todo/qml/View.qml:254
 msgctxt "View|"
