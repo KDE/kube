@@ -1,17 +1,17 @@
-# Steve Allewell <steve.allewell@gmail.com>, 2020, 2021.
+# SPDX-FileCopyrightText: 2020, 2021, 2024 Steve Allewell <steve.allewell@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2021-04-03 16:15+0100\n"
+"PO-Revision-Date: 2024-05-24 17:34+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
-"Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
+"Language-Team: British English\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Qt-Contexts: true\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 20.12.3\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
@@ -350,9 +350,6 @@ msgid "Save"
 msgstr "Save"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
 msgstr "Add"
@@ -363,41 +360,26 @@ msgid "Login"
 msgstr "Login"
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
 msgstr "Restore from wastebin "
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
 msgstr "Mark as read"
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
 msgstr "Mark as unread"
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
 msgstr "Mark as important"
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
 msgstr "Move to wastebin"
@@ -626,17 +608,11 @@ msgid "No pending messages"
 msgstr "No pending messages"
 
 #: framework/qml/ScrollablePopup.qml:70
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "ScrollablePopup|"
 msgid "Discard"
 msgstr "Discard"
 
 #: framework/qml/ScrollablePopup.qml:75
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Save"
 msgctxt "ScrollablePopup|"
 msgid "Save"
 msgstr "Save"
@@ -677,49 +653,33 @@ msgid "Copy Selection"
 msgstr "Copy Selection"
 
 #: framework/qml/TodoListDelegate.qml:66
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Due today"
 msgctxt "TodoListDelegate|"
 msgid "Due today"
 msgstr "Due today"
 
 #: framework/qml/TodoListDelegate.qml:70
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
 msgstr " (%1 days)"
 
 #: framework/qml/TodoListDelegate.qml:73
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid "Overdue for %1 days"
+#, qt-format
 msgctxt "TodoListDelegate|"
 msgid "Overdue for %1 days"
 msgstr "Overdue for %1 days"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Unpick"
 msgctxt "TodoListDelegate|"
 msgid "Unpick"
 msgstr "Unpick"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Pick"
 msgctxt "TodoListDelegate|"
 msgid "Pick"
 msgstr "Pick"
 
 #: framework/qml/TodoListDelegate.qml:105
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Done!"
 msgctxt "TodoListDelegate|"
 msgid "Done!"
 msgstr "Done!"
@@ -858,15 +818,13 @@ msgstr "Wrong passphrase."
 #, qt-format
 msgctxt "QObject|"
 msgid "A new message is available: %1"
-msgstr ""
+msgstr "A new message is available: %1"
 
 #: framework/src/inboundmodel.cpp:513
-#, fuzzy, qt-format
-#| msgctxt "QObject|"
-#| msgid "No credentials available."
+#, qt-format
 msgctxt "QObject|"
 msgid "A new event is available: %1"
-msgstr "No credentials available."
+msgstr "A new event is available: %1"
 
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
@@ -925,9 +883,6 @@ msgid "Add attendee"
 msgstr "Add attendee"
 
 #: views/calendar/qml/DateRangeChooser.qml:159
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "All day"
 msgctxt "DateRangeChooser|"
 msgid "All day"
 msgstr "All day"
@@ -935,12 +890,12 @@ msgstr "All day"
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
 msgid "begins"
-msgstr ""
+msgstr "begins"
 
 #: views/calendar/qml/DateRangeChooser.qml:178
 msgctxt "DateRangeChooser|"
 msgid "ends"
-msgstr ""
+msgstr "ends"
 
 #: views/calendar/qml/EventEditor.qml:85
 msgctxt "EventEditor|"
@@ -1206,25 +1161,19 @@ msgid "Show this help text:"
 msgstr "Show this help text:"
 
 #: views/inbound/qml/View.qml:203
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Inbox"
 msgctxt "View|"
 msgid "Inbound"
-msgstr "Inbox"
+msgstr "Inbound"
 
 #: views/inbound/qml/View.qml:231
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Configuration error."
 msgctxt "View|"
 msgid "Configure"
-msgstr "Configuration error."
+msgstr "Configure"
 
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
 msgid "Recent"
-msgstr ""
+msgstr "Recent"
 
 #: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
 msgctxt "View|"
@@ -1239,70 +1188,51 @@ msgstr "Nothing here..."
 #: views/inbound/qml/View.qml:485
 msgctxt "View|"
 msgid "Today, "
-msgstr ""
+msgstr "Today, "
 
 #: views/inbound/qml/View.qml:490
 msgctxt "View|"
 msgid "Tomorrow, "
-msgstr ""
+msgstr "Tomorrow, "
 
 #: views/inbound/qml/View.qml:493
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid " (in %1 days)"
-msgstr " (%1 days)"
+msgstr " (in %1 days)"
 
 #: views/inbound/qml/View.qml:496
-#, fuzzy, qt-format
-#| msgctxt "View|"
-#| msgid " (%1 days)"
+#, qt-format
 msgctxt "View|"
 msgid "%1 days ago"
-msgstr " (%1 days)"
+msgstr "%1 days ago"
 
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "Ignore sender"
 
 #: views/inbound/qml/View.qml:555
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "View|"
 msgid "Restore from trash"
 msgstr "Restore from wastebin "
 
 #: views/inbound/qml/View.qml:566
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "View|"
 msgid "Mark as read"
 msgstr "Mark as read"
 
 #: views/inbound/qml/View.qml:576
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "View|"
 msgid "Mark as unread"
 msgstr "Mark as unread"
 
 #: views/inbound/qml/View.qml:586
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "View|"
 msgid "Mark as important"
 msgstr "Mark as important"
 
 #: views/inbound/qml/View.qml:597
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Move to trash"
 msgstr "Move to wastebin"
@@ -1415,48 +1345,48 @@ msgstr "Succeeded to send the message."
 #: views/inbound/qml/View.qml:1027
 msgctxt "View|"
 msgid "Folder name blacklist"
-msgstr ""
+msgstr "Folder name blacklist"
 
 #: views/inbound/qml/View.qml:1034
 msgctxt "View|"
 msgid "Comma separated folder names"
-msgstr ""
+msgstr "Comma separated folder names"
 
 #: views/inbound/qml/View.qml:1039
 msgctxt "View|"
 msgid "Per Folder Mime Message Whitelist"
-msgstr ""
+msgstr "Per Folder Mime Message Whitelist"
 
 #: views/inbound/qml/View.qml:1051
 msgctxt "View|"
 msgid "Folder special purpose blacklist"
-msgstr ""
+msgstr "Folder special purpose blacklist"
 
 #: views/inbound/qml/View.qml:1058
 msgctxt "View|"
 msgid "Comma separated special purpose types. Example: drafts, trash, sent"
-msgstr ""
+msgstr "Comma separated special purpose types. Example: drafts, trash, sent"
 
 #: views/inbound/qml/View.qml:1063
 msgctxt "View|"
 msgid "Sender blacklist"
-msgstr ""
+msgstr "Sender blacklist"
 
 #: views/inbound/qml/View.qml:1070 views/inbound/qml/View.qml:1082
 #: views/inbound/qml/View.qml:1094
 msgctxt "View|"
 msgid "Comma separated sender email addresses"
-msgstr ""
+msgstr "Comma separated sender email addresses"
 
 #: views/inbound/qml/View.qml:1075
 msgctxt "View|"
 msgid "To blacklist"
-msgstr ""
+msgstr "To blacklist"
 
 #: views/inbound/qml/View.qml:1087
 msgctxt "View|"
 msgid "Sender name contains filter"
-msgstr ""
+msgstr "Sender name contains filter"
 
 #: views/inboxcrusher/qml/View.qml:92
 msgctxt "View|"
@@ -1600,12 +1530,9 @@ msgid "Search..."
 msgstr "Search..."
 
 #: views/todo/qml/TodoEditor.qml:113
-#, fuzzy
-#| msgctxt "EventEditor|"
-#| msgid "Create Event"
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr "Create Event"
+msgstr "Create in:"
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
@@ -1620,7 +1547,7 @@ msgstr "To-do Title"
 #: views/todo/qml/TodoEditor.qml:211
 msgctxt "TodoEditor|"
 msgid "Add subtodo"
-msgstr ""
+msgstr "Add subtodo"
 
 #: views/todo/qml/TodoEditor.qml:227
 msgctxt "TodoEditor|"
