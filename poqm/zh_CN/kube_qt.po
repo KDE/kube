@@ -803,7 +803,7 @@ msgstr "回复"
 #: framework/src/domain/mime/partmodel.cpp:467
 msgctxt "PartModel|"
 msgid "No key available."
-msgstr "无可用密钥"
+msgstr "没有可用的密钥。"
 
 #: framework/src/domain/mime/partmodel.cpp:469
 msgctxt "PartModel|"
