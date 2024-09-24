@@ -32,6 +32,7 @@ std::pair<QString, bool> PartModel::trim(const QString &text)
     //We match both regulard withspace with \s and non-breaking spaces with \u00A0
     const QList<QRegularExpression> delimiters{
         QRegularExpression{"<p>.?-+Original(\\s|\u00A0)Message-+", QRegularExpression::CaseInsensitiveOption},
+        QRegularExpression{"<p>.?-+Ursprüngliche(\\s|\u00A0)Nachricht-+", QRegularExpression::CaseInsensitiveOption},
 
         //Forwarded
         QRegularExpression{"<p>.?Von:.*</p>", QRegularExpression::CaseInsensitiveOption},
