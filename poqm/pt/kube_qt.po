@@ -847,12 +847,12 @@ msgctxt "QObject|"
 msgid "re"
 msgstr "resp"
 
-#: framework/src/domain/mime/partmodel.cpp:467
+#: framework/src/domain/mime/partmodel.cpp:468
 msgctxt "PartModel|"
 msgid "No key available."
 msgstr "Não está disponível nenhuma chave."
 
-#: framework/src/domain/mime/partmodel.cpp:469
+#: framework/src/domain/mime/partmodel.cpp:470
 msgctxt "PartModel|"
 msgid "Wrong passphrase."
 msgstr "A senha é inválida."

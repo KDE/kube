@@ -785,12 +785,12 @@ msgctxt "QObject|"
 msgid "re"
 msgstr ""
 
-#: framework/src/domain/mime/partmodel.cpp:467
+#: framework/src/domain/mime/partmodel.cpp:468
 msgctxt "PartModel|"
 msgid "No key available."
 msgstr ""
 
-#: framework/src/domain/mime/partmodel.cpp:469
+#: framework/src/domain/mime/partmodel.cpp:470
 msgctxt "PartModel|"
 msgid "Wrong passphrase."
 msgstr ""
