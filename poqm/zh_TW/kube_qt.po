@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2024-07-14 17:12+0900\n"
+"PO-Revision-Date: 2024-10-07 15:07+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Qt-Contexts: true\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 24.04.70\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
@@ -310,7 +310,7 @@ msgstr "離開"
 #: extensions/fileasexpense/qml/main.qml:27
 msgctxt "main|"
 msgid "File as Expense"
-msgstr ""
+msgstr "記錄為支出"
 
 #: extensions/gpg/qml/main.qml:58
 msgctxt "main|"
@@ -536,12 +536,12 @@ msgstr "不完整的本文…"
 #: framework/qml/MailViewer.qml:202
 msgctxt "MailViewer|"
 msgid "Sent from"
-msgstr ""
+msgstr "寄件者"
 
 #: framework/qml/MailViewer.qml:206
 msgctxt "MailViewer|"
 msgid "Draft from"
-msgstr ""
+msgstr "草稿來源"
 
 #: framework/qml/MailViewer.qml:220 framework/qml/MailViewer.qml:254
 msgctxt "MailViewer|"
@@ -793,12 +793,12 @@ msgstr[0] "% 個金鑰原本就已匯入"
 #: framework/src/domain/mime/mailtemplates.cpp:127
 msgctxt "QObject|"
 msgid "fwd"
-msgstr ""
+msgstr "fwd"
 
 #: framework/src/domain/mime/mailtemplates.cpp:155
 msgctxt "QObject|"
 msgid "re"
-msgstr ""
+msgstr "re"
 
 #: framework/src/domain/mime/partmodel.cpp:468
 msgctxt "PartModel|"
@@ -1396,17 +1396,17 @@ msgstr "回覆！"
 #: views/inboxcrusher/qml/View.qml:102
 msgctxt "View|"
 msgid "Flag!"
-msgstr ""
+msgstr "標記！"
 
 #: views/inboxcrusher/qml/View.qml:107
 msgctxt "View|"
 msgid "Previous"
-msgstr ""
+msgstr "上一步"
 
 #: views/inboxcrusher/qml/View.qml:113
 msgctxt "View|"
 msgid "Next"
-msgstr ""
+msgstr "下一步"
 
 #: views/log/qml/View.qml:118
 msgctxt "View|"
