@@ -461,7 +461,7 @@ msgstr "Heu declinat: «%1»"
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You've been invited to: \"%1\""
-msgstr "Heu estat convidat a: «%1»"
+msgstr "Heu sigut convidat a: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:106
 #, qt-format
@@ -730,7 +730,7 @@ msgstr "S'ha actualitzat «%1»"
 #, qt-format
 msgctxt "QObject|"
 msgid "You've been invited to: \"%1\""
-msgstr "Heu estat convidat a: «%1»"
+msgstr "Heu sigut convidat a: «%1»"
 
 #: framework/src/domain/eventcontroller.cpp:135
 msgctxt "QObject|"
@@ -1032,7 +1032,7 @@ msgstr "Adjunta un fitxer"
 #: views/composer/qml/EditorPage.qml:135
 msgctxt "EditorPage|"
 msgid "Choose a file to attach"
-msgstr "Escolliu un fitxer que calga adjuntar"
+msgstr "Trieu un fitxer que calga adjuntar"
 
 #: views/composer/qml/EditorPage.qml:156
 msgctxt "EditorPage|"
@@ -1349,7 +1349,7 @@ msgstr "CC: %1"
 #: views/inbound/qml/View.qml:889 views/log/qml/View.qml:408
 msgctxt "View|"
 msgid "Try Again"
-msgstr "Torna-ho a intentar"
+msgstr "Torneu-ho a provar"
 
 #: views/inbound/qml/View.qml:912 views/log/qml/View.qml:431
 msgctxt "View|"
