@@ -29,6 +29,13 @@ RUN rm /etc/localtime; ln -s /usr/share/zoneinfo/Europe/Zurich /etc/localtime
 #DBus For KCacheGrind
 RUN dbus-uuidgen --ensure
 
+RUN dnf -y install wget unzip
+
+RUN wget https://github.com/google/flatbuffers/releases/download/v2.0.8/Linux.flatc.binary.clang++-12.zip && \
+    unzip Linux.flatc.binary.clang++-12.zip && \
+    mv flatc /usr/local/bin/ && \
+    rm Linux.flatc.binary.clang++-12.zip
+
 # setup developer account
 RUN echo 'developer ALL=NOPASSWD: ALL' >> /etc/sudoers
 USER developer
