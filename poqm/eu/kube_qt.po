@@ -1,14 +1,14 @@
 # Translation for kube_qt.po to Euskara/Basque (eu).
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the original file.
-# KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>.
+# SPDX-FileCopyrightText: 2025 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
 # SPDX-FileCopyrightText: 2025 Iñigo Salvador Azurmendi <xalba@ni.eus>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2025-08-15 02:13+0200\n"
+"PO-Revision-Date: 2025-08-16 01:51+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -16,13 +16,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Qt-Contexts: true\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 25.04.3\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
 msgid "Connect your FastMail account"
-msgstr ""
+msgstr "Konektatu zure FastMail kontua"
 
 #: accounts/fastmail/qml/AccountSettings.qml:27
 msgctxt "AccountSettings|"
@@ -30,6 +30,9 @@ msgid ""
 "Please fill in your name and email address. Please note that you require an "
 "app-specific password and cannot use your regular FastMail password."
 msgstr ""
+"Mesedez, bete zure izena eta e-posta helbidea. Mesedez, kontuan izan "
+"aplikazioaren berariazko pasahitz bat erabili behar duzula eta ezin duzula "
+"zure FastMail pasahitz arrunta erabili."
 
 #: accounts/fastmail/qml/AccountSettings.qml:51
 #: accounts/generic/qml/AccountSettings.qml:54
@@ -70,10 +73,9 @@ msgstr "Zure e-posta helbidea"
 #: accounts/fastmail/qml/Login.qml:26 accounts/generic/qml/Login.qml:27
 #: accounts/gmail/qml/Login.qml:27 accounts/imap/qml/Login.qml:27
 #: accounts/kolabnow/qml/Login.qml:27
-#, fuzzy
 msgctxt "Login|"
 msgid "Login"
-msgstr "Saio-hastea"
+msgstr "Saioan sartu"
 
 #: accounts/fastmail/qml/Login.qml:50 accounts/generic/qml/Login.qml:52
 #: accounts/gmail/qml/Login.qml:49 accounts/imap/qml/Login.qml:49
@@ -85,7 +87,7 @@ msgstr "Pasahitza"
 #: accounts/fastmail/qml/Login.qml:59
 msgctxt "Login|"
 msgid "App-specific password for your FastMail account"
-msgstr ""
+msgstr "Zure FastMail konturako aplikazioaren berariazko pasahitza"
 
 #: accounts/generic/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
@@ -99,6 +101,10 @@ msgid ""
 "relevant server addresses. For information about the server details, please "
 "contact your email provider."
 msgstr ""
+"Kube-ri zure kontuan sartzen uzteko, bete e-posta helbidea, erabiltzaile-"
+"izena eta zerbitzariaren beharrezko helbideak. Zerbitzariaren xehetasunei "
+"buruzko informaziorako, mesedez, jar zaitez zure e-posta hornitzailearekin "
+"harremanean."
 
 #: accounts/generic/qml/AccountSettings.qml:81
 #: accounts/imap/qml/AccountSettings.qml:81
@@ -109,7 +115,7 @@ msgstr "Erabiltzaile-izena"
 #: accounts/generic/qml/AccountSettings.qml:94
 msgctxt "AccountSettings|"
 msgid "Your username for server access."
-msgstr ""
+msgstr "Zerbitzarian sartzeko zure erabiltzaile-izena."
 
 #: accounts/generic/qml/AccountSettings.qml:98
 msgctxt "AccountSettings|"
@@ -158,6 +164,8 @@ msgid ""
 "To let Kube access your account, fill in email address, username and give "
 "the account a title that will be displayed inside Kube."
 msgstr ""
+"Kube-ri zure kontuan sartzen uzteko, bete e-posta helbidea, erabiltzaile-"
+"izena eta eman kontuari, Kube barruan erakutsiko den, izenburu bat."
 
 #: accounts/gmail/qml/Login.qml:57 accounts/imap/qml/Login.qml:57
 msgctxt "Login|"
@@ -177,11 +185,16 @@ msgid ""
 "information about which SMTP, IMAP address, which authentication and port to "
 "be used, please contact your email provider."
 msgstr ""
+"Kube-ri zure kontuan sartzen uzteko, bete e-posta helbidea, erabiltzaile-"
+"izena, pasahitza eta eman kontuari, Kube barruan erakutsiko den, izenburu "
+"bat. Erabili behar den SMTP, IMAP helbide, autentifikazio eta atakari "
+"buruzko informaziorako, mesedez, jarri zure e-posta hornitzailearekin "
+"harremanean."
 
 #: accounts/imap/qml/AccountSettings.qml:92
 msgctxt "AccountSettings|"
 msgid "Your username for IMAP and SMTP access."
-msgstr ""
+msgstr "IMAP eta SMTP sarbiderako zure erabiltzaile-izena."
 
 #: accounts/imap/qml/AccountSettings.qml:96
 msgctxt "AccountSettings|"
@@ -218,6 +231,8 @@ msgid ""
 "To let Kube access your maildir archive, add the path to your archive and "
 "give the account a title that will be displayed inside Kube."
 msgstr ""
+"Kube-ri zure maildir artxiboan sartzen uzteko, gehitu zure artxiborako bide-"
+"izena eta eman kontuari, Kube barruan erakutsiko den, izenburu bat."
 
 #: accounts/maildir/qml/AccountSettings.qml:55
 msgctxt "AccountSettings|"
@@ -245,6 +260,8 @@ msgid ""
 "To automatically unlock the keyring pass in a keyring in the form of "
 "{\"accountId\": {\"resourceId\": \"secret\", *}}"
 msgstr ""
+"Gago-eraztun bateko pasahitza giltzapetik automatikoki askatzeko, era "
+"honetan {\"kontuID\": {\"baliabideID\": \"sekretua\", *}}"
 
 #: components/accounts/qml/AccountWizard.qml:60
 msgctxt "AccountWizard|"
@@ -304,7 +321,7 @@ msgstr "Irten"
 #: extensions/fileasexpense/qml/main.qml:27
 msgctxt "main|"
 msgid "File as Expense"
-msgstr ""
+msgstr "Fitxategia gastu gisa"
 
 #: extensions/gpg/qml/main.qml:58
 msgctxt "main|"
@@ -347,10 +364,9 @@ msgid "Add"
 msgstr "Gehitu"
 
 #: framework/qml/LoginAccount.qml:117
-#, fuzzy
 msgctxt "LoginAccount|"
 msgid "Login"
-msgstr "Saio-hastea"
+msgstr "Saioan sartu"
 
 #: framework/qml/MailListDelegate.qml:84
 msgctxt "MailListDelegate|"
@@ -394,6 +410,7 @@ msgstr "Errore bat gertatu da: %1"
 msgctxt "ICalPart|"
 msgid "This is an exception for the event originally occurring at: \"%1\""
 msgstr ""
+"Hau jatorrian hemen gertatu behar duen ekitaldiaren salbuespen bat da: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:55
 #, qt-format
@@ -447,7 +464,7 @@ msgstr "Hontara gonbidatu zaituzte: \"%1\""
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You are not listed as attendee to: \"%1\""
-msgstr ""
+msgstr "Ez zaude partaide gisa hemen: \"%1\""
 
 #: framework/qml/mailpartview/ICalPart.qml:151
 msgctxt "ICalPart|"
@@ -460,13 +477,12 @@ msgid "Accept"
 msgstr "Onartu"
 
 #: framework/qml/mailpartview/ICalPart.qml:165
-#, fuzzy
 msgctxt "ICalPart|"
 msgid "in"
-msgstr "in"
+msgstr "hemen"
 
 #: framework/qml/mailpartview/MailPart.qml:54
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "MailPart|"
 msgid "sent by %1 on %2"
 msgstr "%1(e)k %2(e)an bidalia"
@@ -474,22 +490,21 @@ msgstr "%1(e)k %2(e)an bidalia"
 #: framework/qml/mailpartview/MailPartModel.qml:53
 msgctxt "MailPartModel|"
 msgid "This message has been signed but we failed to validate the signature."
-msgstr ""
+msgstr "Mezu hau sinatu egin da baina ezin izan dugu sinadura baliozkotu."
 
 #: framework/qml/mailpartview/MailPartModel.qml:55
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "MailPartModel|"
 msgid "This message has been signed using the key %1."
 msgstr "Mezu hau %1 gakoa erabiliz sinatu da."
 
 #: framework/qml/mailpartview/MailPartModel.qml:56
-#, fuzzy
 msgctxt "MailPartModel|"
 msgid "The key details are not available."
 msgstr "Gakoaren xehetasuna ez daude erabilgarri."
 
 #: framework/qml/mailpartview/MailPartModel.qml:58
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "MailPartModel|"
 msgid "This message has been signed using the key %1 by %2."
 msgstr "Mezu hau %2(r)en %1 gakoa erabiliz sinatu da."
@@ -533,17 +548,17 @@ msgstr "Gorputz osatugabea..."
 #: framework/qml/MailViewer.qml:202
 msgctxt "MailViewer|"
 msgid "Sent from"
-msgstr ""
+msgstr "Nondik bidalia"
 
 #: framework/qml/MailViewer.qml:206
 msgctxt "MailViewer|"
 msgid "Draft from"
-msgstr ""
+msgstr "Zirriborroa nondik"
 
 #: framework/qml/MailViewer.qml:220 framework/qml/MailViewer.qml:254
 msgctxt "MailViewer|"
 msgid "Send mail to"
-msgstr ""
+msgstr "Bidali e-posta hona"
 
 #: framework/qml/MailViewer.qml:238
 #, qt-format
@@ -600,7 +615,7 @@ msgstr "Bidali orain"
 #: framework/qml/Outbox.qml:174
 msgctxt "Outbox|"
 msgid "No pending messages"
-msgstr ""
+msgstr "Ez dago mezurik zain"
 
 #: framework/qml/ScrollablePopup.qml:70
 msgctxt "ScrollablePopup|"
@@ -633,7 +648,6 @@ msgid "Disconnected"
 msgstr "Deskonektatuta"
 
 #: framework/qml/StatusBar.qml:146
-#, fuzzy
 msgctxt "StatusBar|"
 msgid "Abort"
 msgstr "Abortatu"
@@ -651,7 +665,7 @@ msgstr "Kopiatu hautapena"
 #: framework/qml/TodoListDelegate.qml:66
 msgctxt "TodoListDelegate|"
 msgid "Due today"
-msgstr ""
+msgstr "Gaur mugaeguna"
 
 #: framework/qml/TodoListDelegate.qml:70
 #, qt-format
@@ -663,18 +677,17 @@ msgstr " (%1 egun)"
 #, qt-format
 msgctxt "TodoListDelegate|"
 msgid "Overdue for %1 days"
-msgstr ""
+msgstr "%1 egunez atzeratuta"
 
 #: framework/qml/TodoListDelegate.qml:90
 msgctxt "TodoListDelegate|"
 msgid "Unpick"
-msgstr ""
+msgstr "Desautatu"
 
 #: framework/qml/TodoListDelegate.qml:90
-#, fuzzy
 msgctxt "TodoListDelegate|"
 msgid "Pick"
-msgstr "Aukeratu"
+msgstr "Hautatu"
 
 #: framework/qml/TodoListDelegate.qml:105
 msgctxt "TodoListDelegate|"
@@ -722,30 +735,32 @@ msgid ""
 "Please find attached an iCalendar file with all the event details which you "
 "can import to your calendar application."
 msgstr ""
+"Erantsita aurkituko duzu ekitaldiaren xehetasun guztiak dituen iCalendar "
+"fitxategi bat, zure egutegi aplikaziora inporta ditzakezularik."
 
 #: framework/src/domain/invitationcontroller.cpp:270
 #, qt-format
 msgctxt "QObject|"
 msgid "%1 has accepted the invitation to the following event"
-msgstr ""
+msgstr "%1(e)k ondoko ekitaldiaren gonbidapena onartu du"
 
 #: framework/src/domain/invitationcontroller.cpp:272
 #, qt-format
 msgctxt "QObject|"
 msgid "%1 has declined the invitation to the following event"
-msgstr ""
+msgstr "%1(e)k ondoko ekitaldiaren gonbidapenari uko egin dio"
 
 #: framework/src/domain/invitationcontroller.cpp:279
 #, qt-format
 msgctxt "QObject|"
 msgid "\"%1\" has been accepted by %2"
-msgstr ""
+msgstr "%2(e)k \"%1\" onartu du"
 
 #: framework/src/domain/invitationcontroller.cpp:281
 #, qt-format
 msgctxt "QObject|"
 msgid "\"%1\" has been declined by %2"
-msgstr ""
+msgstr "%2(e)k \"%1\"(e)ri uko egin dio"
 
 #: framework/src/domain/mime/attachmentmodel.cpp:181
 msgctxt "QObject|"
@@ -786,23 +801,20 @@ msgstr[1] "%n gako inportatu dira"
 msgctxt "AttachmentModel|"
 msgid "%n key(s) were already imported"
 msgid_plural "%n key(s) were already imported"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "dagoeneko gako %n inportatu da"
+msgstr[1] "dagoeneko %n gako inportatu dira"
 
 #: framework/src/domain/mime/mailtemplates.cpp:127
-#, fuzzy
 msgctxt "QObject|"
 msgid "fwd"
 msgstr "fwd"
 
 #: framework/src/domain/mime/mailtemplates.cpp:155
-#, fuzzy
 msgctxt "QObject|"
 msgid "re"
 msgstr "re"
 
 #: framework/src/domain/mime/partmodel.cpp:468
-#, fuzzy
 msgctxt "PartModel|"
 msgid "No key available."
 msgstr "Ez dago gako erabilgarririk."
@@ -837,7 +849,7 @@ msgstr "Ostalaria ez da aurkitu."
 #: framework/src/sinkfabric.cpp:205
 msgctxt "QObject|"
 msgid "Failed to login."
-msgstr ""
+msgstr "Saioan sartzea huts egin du."
 
 #: framework/src/sinkfabric.cpp:209
 msgctxt "QObject|"
@@ -847,7 +859,7 @@ msgstr "Konfigurazio errorea."
 #: framework/src/sinkfabric.cpp:215
 msgctxt "QObject|"
 msgid "No credentials available."
-msgstr ""
+msgstr "Ez dago egiaztagiririk erabilgarri."
 
 #: framework/src/sinkfabric.cpp:249
 msgctxt "QObject|"
@@ -865,13 +877,11 @@ msgid "New Account"
 msgstr "Kontu berria"
 
 #: views/calendar/qml/AttendeeListEditor.qml:88
-#, fuzzy
 msgctxt "AttendeeListEditor|"
 msgid "Attending"
-msgstr "Agertuko da"
+msgstr "Bertaratutakoak"
 
 #: views/calendar/qml/AttendeeListEditor.qml:88
-#, fuzzy
 msgctxt "AttendeeListEditor|"
 msgid "Invited"
 msgstr "Gonbidatuta"
@@ -918,7 +928,6 @@ msgid "Delete"
 msgstr "Ezabatu"
 
 #: views/calendar/qml/EventEditor.qml:184
-#, fuzzy
 msgctxt "EventEditor|"
 msgid "Abort"
 msgstr "Abortatu"
@@ -939,10 +948,10 @@ msgid "Create Event"
 msgstr "Sortu ekitaldia"
 
 #: views/calendar/qml/EventView.qml:76 views/inbound/qml/EventView.qml:84
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "EventView|"
 msgid "repeats %1"
-msgstr "errepikatu"
+msgstr "%1 errepikatzen da"
 
 #: views/calendar/qml/EventView.qml:86 views/inbound/qml/EventView.qml:93
 #, qt-format
@@ -999,7 +1008,7 @@ msgstr "Hilabetea"
 #: views/composer/qml/AddresseeListEditor.qml:132
 msgctxt "AddresseeListEditor|"
 msgid "Fetch key from keyserver"
-msgstr ""
+msgstr "Eskuratu gakoa gako-zerbitzaritik"
 
 #: views/composer/qml/AddresseeListEditor.qml:168
 #: views/composer/qml/AddresseeListEditor.qml:185
@@ -1046,17 +1055,17 @@ msgstr "Zirriborroak"
 #: views/composer/qml/View.qml:293
 msgctxt "View|"
 msgid "Sending email to:"
-msgstr ""
+msgstr "E-posta nori bidali:"
 
 #: views/composer/qml/View.qml:308
 msgctxt "View|"
 msgid "Sending copy to (Cc):"
-msgstr ""
+msgstr "Kopia (Cc) hona bidaltzea:"
 
 #: views/composer/qml/View.qml:322
 msgctxt "View|"
 msgid "Sending secret copy to (Bcc):"
-msgstr ""
+msgstr "Ezkutuko kopia (Bcc) hona bidaltzea:"
 
 #: views/composer/qml/View.qml:347
 msgctxt "View|"
@@ -1073,6 +1082,7 @@ msgctxt "View|"
 msgid ""
 "Encryption is not available because your personal key has not been found."
 msgstr ""
+"Zifratzea ez dago erabilgarri, zure gako pertsonala ez duelako aurkitu."
 
 #: views/composer/qml/View.qml:375
 msgctxt "View|"
@@ -1087,7 +1097,7 @@ msgstr "Gorde zirriborro gisa"
 #: views/composer/qml/View.qml:395
 msgctxt "View|"
 msgid "You are sending this from:"
-msgstr ""
+msgstr "Hau hemendik bidaltzen ari zara:"
 
 #: views/composer/qml/View.qml:421
 msgctxt "View|"
@@ -1210,7 +1220,7 @@ msgstr "Duela %1 egun"
 #: views/inbound/qml/View.qml:544
 msgctxt "View|"
 msgid "Ignore sender"
-msgstr ""
+msgstr "Ezikusi bidaltzailea"
 
 #: views/inbound/qml/View.qml:555
 msgctxt "View|"
@@ -1270,13 +1280,13 @@ msgstr "Mezua:"
 #: views/inbound/qml/View.qml:773 views/log/qml/View.qml:292
 msgctxt "View|"
 msgid "Failed to login"
-msgstr ""
+msgstr "Saioan sartzea huts egin du"
 
 #: views/inbound/qml/View.qml:779 views/log/qml/View.qml:298
 #, qt-format
 msgctxt "View|"
 msgid "%1: please check your credentials."
-msgstr ""
+msgstr "%1: mesedez, egiaztatu zure egiaztagiriak."
 
 #: views/inbound/qml/View.qml:785 views/log/qml/View.qml:304
 msgctxt "View|"
@@ -1345,7 +1355,7 @@ msgstr "Mezua ondo bidali da."
 #: views/inbound/qml/View.qml:1027
 msgctxt "View|"
 msgid "Folder name blacklist"
-msgstr ""
+msgstr "Karpetan izenen zerrenda-beltza"
 
 #: views/inbound/qml/View.qml:1034
 msgctxt "View|"
@@ -1355,22 +1365,24 @@ msgstr "Komaz bereizitako karpeta-izenak"
 #: views/inbound/qml/View.qml:1039
 msgctxt "View|"
 msgid "Per Folder Mime Message Whitelist"
-msgstr ""
+msgstr "Karpetako MIME mezuen zerrenda-zuria"
 
 #: views/inbound/qml/View.qml:1051
 msgctxt "View|"
 msgid "Folder special purpose blacklist"
-msgstr ""
+msgstr "Erabilera berezirako karpeten zerrenda-beltza"
 
 #: views/inbound/qml/View.qml:1058
 msgctxt "View|"
 msgid "Comma separated special purpose types. Example: drafts, trash, sent"
 msgstr ""
+"Komaz bereizitako helburu bereziko motak. Adibidez: zirriborroak, "
+"zakarrontzia, bidalita"
 
 #: views/inbound/qml/View.qml:1063
 msgctxt "View|"
 msgid "Sender blacklist"
-msgstr ""
+msgstr "Bidaltzaile zerrenda-beltza"
 
 #: views/inbound/qml/View.qml:1070 views/inbound/qml/View.qml:1082
 #: views/inbound/qml/View.qml:1094
@@ -1381,7 +1393,7 @@ msgstr "Komaz bereizitako bidaltzaile e-posta helbideak"
 #: views/inbound/qml/View.qml:1075
 msgctxt "View|"
 msgid "To blacklist"
-msgstr ""
+msgstr "Zerrenda beltzera"
 
 #: views/inbound/qml/View.qml:1087
 msgctxt "View|"
@@ -1555,7 +1567,6 @@ msgid "Delete"
 msgstr "Ezabatu"
 
 #: views/todo/qml/TodoEditor.qml:236
-#, fuzzy
 msgctxt "TodoEditor|"
 msgid "Abort"
 msgstr "Abortatu"
