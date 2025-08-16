@@ -12,6 +12,7 @@
   <name xml:lang="eo">Kube</name>
   <name xml:lang="es">Kube</name>
   <name xml:lang="et">Kube</name>
+  <name xml:lang="eu">Kube</name>
   <name xml:lang="fi">Kube</name>
   <name xml:lang="fr">Kube</name>
   <name xml:lang="gl">Kube</name>
@@ -41,6 +42,7 @@
   <summary xml:lang="eo">Retpoŝta kliento</summary>
   <summary xml:lang="es">Cliente de correo electrónico</summary>
   <summary xml:lang="et">E-posti klient</summary>
+  <summary xml:lang="eu">E-posta bezeroa</summary>
   <summary xml:lang="fi">Sähköpostiohjelma</summary>
   <summary xml:lang="fr">Client de courrier électronique</summary>
   <summary xml:lang="gl">Cliente de correo electrónico</summary>
