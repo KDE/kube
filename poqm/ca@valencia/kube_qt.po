@@ -255,7 +255,7 @@ msgstr "Camí"
 #: accounts/maildir/qml/AccountSettings.qml:90
 msgctxt "AccountSettings|"
 msgid "Choose a maildir folder"
-msgstr "Seleccioneu una carpeta «maildir»"
+msgstr "Trieu una carpeta «maildir»"
 
 #: applications/kube/main.cpp:108
 msgctxt "main|"
@@ -269,7 +269,7 @@ msgstr ""
 #: components/accounts/qml/AccountWizard.qml:60
 msgctxt "AccountWizard|"
 msgid "Select your new account type"
-msgstr "Seleccioneu el tipus del compte nou"
+msgstr "Trieu el tipus del compte nou"
 
 #: components/accounts/qml/AccountWizardPage.qml:137
 msgctxt "AccountWizardPage|"
@@ -1032,7 +1032,7 @@ msgstr "Adjunta un fitxer"
 #: views/composer/qml/EditorPage.qml:135
 msgctxt "EditorPage|"
 msgid "Choose a file to attach"
-msgstr "Trieu un fitxer que calga adjuntar"
+msgstr "Trieu un fitxer a adjuntar"
 
 #: views/composer/qml/EditorPage.qml:156
 msgctxt "EditorPage|"
@@ -1473,7 +1473,7 @@ msgstr "Edita"
 #: views/people/qml/PersonComposer.qml:98
 msgctxt "PersonComposer|"
 msgid "Choose an Avatar"
-msgstr "Seleccioneu un avatar"
+msgstr "Trieu un avatar"
 
 #: views/people/qml/PersonComposer.qml:121
 msgctxt "PersonComposer|"
@@ -1648,7 +1648,7 @@ msgstr "Res ací…"
 #: views/todo/qml/View.qml:254
 msgctxt "View|"
 msgid "Pick some tasks"
-msgstr "Selecciona diverses tasques"
+msgstr "Tria diverses tasques"
 
 #: views/todo/qml/View.qml:262
 msgctxt "View|"
