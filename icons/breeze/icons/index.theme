@@ -1,5 +1,6 @@
 [Icon Theme]
 Name=Kube
+Name[ar]=كيوب
 Name[ca]=Kube
 Name[ca@valencia]=Kube
 Name[cs]=Kube
@@ -31,6 +32,7 @@ Name[zh_CN]=Kube
 Name[zh_TW]=Kube
 
 Comment=Kube Theme
+Comment[ar]=سمة كيوب
 Comment[ca]=Tema del Kube
 Comment[ca@valencia]=Tema de Kube
 Comment[cs]=Motiv Kube
