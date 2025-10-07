@@ -1,0 +1,1654 @@
+# SPDX-FileCopyrightText: 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"PO-Revision-Date: 2025-10-06 13:57+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
+"X-Qt-Contexts: true\n"
+
+#: accounts/fastmail/qml/AccountSettings.qml:26
+msgctxt "AccountSettings|"
+msgid "Connect your FastMail account"
+msgstr "اتصل بحساب البريد إلكترونيّ"
+
+#: accounts/fastmail/qml/AccountSettings.qml:27
+msgctxt "AccountSettings|"
+msgid ""
+"Please fill in your name and email address. Please note that you require an "
+"app-specific password and cannot use your regular FastMail password."
+msgstr ""
+"املأ اسمك وعنوان بريدك الإلكتروني. لاحظ أنك تحتاج إلى كلمة سر خاصة بالتطبيق "
+"ولا يمكنك استعمال كلمة سر فاست‌ميل العادية."
+
+#: accounts/fastmail/qml/AccountSettings.qml:51
+#: accounts/generic/qml/AccountSettings.qml:54
+#: accounts/gmail/qml/AccountSettings.qml:65
+#: accounts/imap/qml/AccountSettings.qml:54
+#: accounts/kolabnow/qml/AccountSettings.qml:54
+msgctxt "AccountSettings|"
+msgid "Name"
+msgstr "الاسم"
+
+#: accounts/fastmail/qml/AccountSettings.qml:59
+#: accounts/generic/qml/AccountSettings.qml:59
+#: accounts/gmail/qml/AccountSettings.qml:70
+#: accounts/imap/qml/AccountSettings.qml:59
+#: accounts/kolabnow/qml/AccountSettings.qml:62
+msgctxt "AccountSettings|"
+msgid "Your name"
+msgstr "اسمك"
+
+#: accounts/fastmail/qml/AccountSettings.qml:67
+#: accounts/generic/qml/AccountSettings.qml:67
+#: accounts/gmail/qml/AccountSettings.qml:78
+#: accounts/imap/qml/AccountSettings.qml:67
+#: accounts/kolabnow/qml/AccountSettings.qml:70
+msgctxt "AccountSettings|"
+msgid "Email address"
+msgstr "عنوان بريد إلكتروني"
+
+#: accounts/fastmail/qml/AccountSettings.qml:80
+#: accounts/generic/qml/AccountSettings.qml:78
+#: accounts/gmail/qml/AccountSettings.qml:89
+#: accounts/imap/qml/AccountSettings.qml:78
+#: accounts/kolabnow/qml/AccountSettings.qml:83
+msgctxt "AccountSettings|"
+msgid "Your email address"
+msgstr "عنوان بريدك الإلكتروني"
+
+#: accounts/fastmail/qml/Login.qml:26 accounts/generic/qml/Login.qml:27
+#: accounts/gmail/qml/Login.qml:27 accounts/imap/qml/Login.qml:27
+#: accounts/kolabnow/qml/Login.qml:27
+msgctxt "Login|"
+msgid "Login"
+msgstr "ولوج"
+
+#: accounts/fastmail/qml/Login.qml:50 accounts/generic/qml/Login.qml:52
+#: accounts/gmail/qml/Login.qml:49 accounts/imap/qml/Login.qml:49
+#: accounts/kolabnow/qml/Login.qml:52
+msgctxt "Login|"
+msgid "Password"
+msgstr "كلمة السّر"
+
+#: accounts/fastmail/qml/Login.qml:59
+msgctxt "Login|"
+msgid "App-specific password for your FastMail account"
+msgstr "كلمة سر خاصة بالتطبيق لحسابك في فاست‌ميل"
+
+#: accounts/generic/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your account"
+msgstr "اتصل بحسابك"
+
+#: accounts/generic/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username and the "
+"relevant server addresses. For information about the server details, please "
+"contact your email provider."
+msgstr ""
+"للسماح لكيوب بالوصول إلى حسابك، املأ عنوان البريد الإلكتروني، واسم المستخدم، "
+"وعناوين الخادم ذات الصلة. للحصول على معلومات حول تفاصيل الخادم، يرجى الاتصال "
+"بمزود البريد الإلكتروني."
+
+#: accounts/generic/qml/AccountSettings.qml:81
+#: accounts/imap/qml/AccountSettings.qml:81
+msgctxt "AccountSettings|"
+msgid "Username"
+msgstr "اسم المستخدم"
+
+#: accounts/generic/qml/AccountSettings.qml:94
+msgctxt "AccountSettings|"
+msgid "Your username for server access."
+msgstr "اسم المستخدم الخاص بك للوصول إلى الخادم."
+
+#: accounts/generic/qml/AccountSettings.qml:98
+msgctxt "AccountSettings|"
+msgid "IMAP address"
+msgstr "عنوان IMAP"
+
+#: accounts/generic/qml/AccountSettings.qml:115
+msgctxt "AccountSettings|"
+msgid "Use Starttls"
+msgstr "استعمل بدء ‌الاستيثاق"
+
+#: accounts/generic/qml/AccountSettings.qml:125
+msgctxt "AccountSettings|"
+msgid "Authentication Method"
+msgstr "طريقة الاستيثاق"
+
+#: accounts/generic/qml/AccountSettings.qml:146
+#: accounts/imap/qml/AccountSettings.qml:113
+msgctxt "AccountSettings|"
+msgid "SMTP address"
+msgstr "عنوان SMTP"
+
+#: accounts/generic/qml/AccountSettings.qml:161
+msgctxt "AccountSettings|"
+msgid "CardDAV address"
+msgstr "عنوان CardDAV"
+
+#: accounts/generic/qml/AccountSettings.qml:175
+msgctxt "AccountSettings|"
+msgid "CalDAV address"
+msgstr "عنوان CalDAV"
+
+#: accounts/generic/qml/Login.qml:60
+msgctxt "Login|"
+msgid "Password of your account"
+msgstr "كلمة سر حسابك"
+
+#: accounts/gmail/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your Google account"
+msgstr "اتصل بحسابك في جوجل"
+
+#: accounts/gmail/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username and give "
+"the account a title that will be displayed inside Kube."
+msgstr ""
+"للسماح لكيوب بالوصول إلى حسابك، املأ عنوان البريد الإلكتروني، واسم المستخدم، "
+"وأعطِ الحساب عنوانًا يُعرض داخل كيوب."
+
+#: accounts/gmail/qml/Login.qml:57 accounts/imap/qml/Login.qml:57
+msgctxt "Login|"
+msgid "Password of your IMAP account"
+msgstr "كلمة سر حسابك في IMAP"
+
+#: accounts/imap/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Connect your IMAP account"
+msgstr "اتصل بحسابك في IMAP"
+
+#: accounts/imap/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your account, fill in email address, username, password "
+"and give the account a title that will be displayed inside Kube. For "
+"information about which SMTP, IMAP address, which authentication and port to "
+"be used, please contact your email provider."
+msgstr ""
+"للسماح لكيوب بالوصول إلى حسابك، املأ عنوان البريد الإلكتروني، واسم المستخدم، "
+"وكلمة السر، وأعطِ الحساب عنوانًا يُعرض داخل كيوب. للحصول على معلومات حول SMTP "
+"وعنوان IMAP والاستيثاق والمنفذ المراد استخدامه، يرجى الاتصال بمزود البريد "
+"الإلكتروني."
+
+#: accounts/imap/qml/AccountSettings.qml:92
+msgctxt "AccountSettings|"
+msgid "Your username for IMAP and SMTP access."
+msgstr "اسم المستخدم الخاص بك للوصول إلى IMAP و SMTP."
+
+#: accounts/imap/qml/AccountSettings.qml:96
+msgctxt "AccountSettings|"
+msgid "IMAP server address"
+msgstr "عنوان خادم IMAP"
+
+#: accounts/kolabnow/qml/AccountSettings.qml:27
+msgctxt "AccountSettings|"
+msgid "Connect your Kolab Now account"
+msgstr "اتصل بحسابك في كولاب الآن"
+
+#: accounts/kolabnow/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid ""
+"Please fill in your name and email address. No account yet? <a href='https://"
+"kolabnow.com/kube-campaign/'>Sign up now!</a>"
+msgstr ""
+"املأ اسمك وعنوان بريدك الإلكتروني. ليس لديك حساب بعد؟ <a href='https://"
+"kolabnow.com/kube-campaign/'>سجّل الآن!</a>"
+
+#: accounts/kolabnow/qml/Login.qml:61
+msgctxt "Login|"
+msgid "Password of your Kolab Now account"
+msgstr "كلمة سر حسابك في كولاب الآن"
+
+#: accounts/maildir/qml/AccountSettings.qml:28
+msgctxt "AccountSettings|"
+msgid "Add your Maildir archive"
+msgstr "أضف أرشيف Maildir الخاص بك"
+
+#: accounts/maildir/qml/AccountSettings.qml:29
+msgctxt "AccountSettings|"
+msgid ""
+"To let Kube access your maildir archive, add the path to your archive and "
+"give the account a title that will be displayed inside Kube."
+msgstr ""
+"للسماح لكيوب بالوصول إلى أرشيف maildir الخاص بك، أضف المسار إلى أرشيفك وأعطِ "
+"الحساب عنوانًا يُعرض داخل كيوب."
+
+#: accounts/maildir/qml/AccountSettings.qml:55
+msgctxt "AccountSettings|"
+msgid "Title of Account"
+msgstr "عنوان الحساب"
+
+#: accounts/maildir/qml/AccountSettings.qml:60
+msgctxt "AccountSettings|"
+msgid "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
+msgstr "مثل «العمل»، «المنزل» يعرض في كيوب كاسم"
+
+#: accounts/maildir/qml/AccountSettings.qml:68
+msgctxt "AccountSettings|"
+msgid "Path"
+msgstr "المسار"
+
+#: accounts/maildir/qml/AccountSettings.qml:90
+msgctxt "AccountSettings|"
+msgid "Choose a maildir folder"
+msgstr "اختر مجلد maildir"
+
+#: applications/kube/main.cpp:108
+msgctxt "main|"
+msgid ""
+"To automatically unlock the keyring pass in a keyring in the form of "
+"{\"accountId\": {\"resourceId\": \"secret\", *}}"
+msgstr ""
+"لفتح سلسلة المفاتيح آليًّا، مرّر في سلسلة مفاتيح بالصيغة: {\"accountId\": "
+"{\"resourceId\": \"secret\", *}}"
+
+#: components/accounts/qml/AccountWizard.qml:60
+msgctxt "AccountWizard|"
+msgid "Select your new account type"
+msgstr "اختر نوع حسابك الجديد"
+
+#: components/accounts/qml/AccountWizardPage.qml:137
+msgctxt "AccountWizardPage|"
+msgid "Discard"
+msgstr "أهمِل"
+
+#: components/accounts/qml/AccountWizardPage.qml:150
+msgctxt "AccountWizardPage|"
+msgid "Save"
+msgstr "احفظ"
+
+#: components/kube/qml/Kube.qml:218
+msgctxt "Kube|"
+msgid "Outbox"
+msgstr "الصادر"
+
+#: components/kube/qml/Kube.qml:240
+msgctxt "Kube|"
+msgid "Notification view"
+msgstr "عرض الإشعارات"
+
+#: components/kube/qml/Kube.qml:251
+msgctxt "Kube|"
+msgid "Settings"
+msgstr "إعدادات"
+
+#: components/kube/qml/upgrade.qml:39
+msgctxt "upgrade|"
+msgid "Please wait while Kube is upgrading..."
+msgstr "الرجاء الانتظار ريثما يرقّي كيوب..."
+
+#: components/kube/qml/upgrade.qml:39
+msgctxt "upgrade|"
+msgid "Kube upgraded the storage layer."
+msgstr "كيوب رقّى طبقة التخزين."
+
+#: components/kube/qml/upgrade.qml:43
+msgctxt "upgrade|"
+msgid "This might take a while."
+msgstr "قد يستغرق هذا بعض الوقت."
+
+#: components/kube/qml/upgrade.qml:43
+msgctxt "upgrade|"
+msgid "Please exit and restart Kube."
+msgstr "اخرج وأعد تشغيل كيوب."
+
+#: components/kube/qml/upgrade.qml:47
+msgctxt "upgrade|"
+msgid "Exit"
+msgstr "اخرج"
+
+#: extensions/fileasexpense/qml/main.qml:27
+msgctxt "main|"
+msgid "File as Expense"
+msgstr "قدّم كنفقة"
+
+#: extensions/gpg/qml/main.qml:58
+msgctxt "main|"
+msgid "Enable GPG Keyring Integration"
+msgstr "فعّل دمج سلسلة مفاتيح GPG"
+
+#: framework/qml/AttachmentDelegate.qml:82
+msgctxt "AttachmentDelegate|"
+msgid "Import key"
+msgstr "استورد مفتاحًا"
+
+#: framework/qml/ConversationView.qml:159
+msgctxt "ConversationView|"
+msgid "Downloading message..."
+msgstr "ينزّل الرّسالة..."
+
+#: framework/qml/ConversationView.qml:163
+msgctxt "ConversationView|"
+msgid "Failed to download message..."
+msgstr "فشلت في تنزيل الرسالة..."
+
+#: framework/qml/EditAccount.qml:89
+msgctxt "EditAccount|"
+msgid "Change Password"
+msgstr "غيّر كلمة السر"
+
+#: framework/qml/EditAccount.qml:124
+msgctxt "EditAccount|"
+msgid "Remove Account"
+msgstr "أزل الحساب"
+
+#: framework/qml/EditAccount.qml:134
+msgctxt "EditAccount|"
+msgid "Save"
+msgstr "احفظ"
+
+#: framework/qml/EntitySelector.qml:103
+msgctxt "EntitySelector|"
+msgid "Add"
+msgstr "أضف"
+
+#: framework/qml/LoginAccount.qml:117
+msgctxt "LoginAccount|"
+msgid "Login"
+msgstr "ولوج"
+
+#: framework/qml/MailListDelegate.qml:84
+msgctxt "MailListDelegate|"
+msgid "Restore from trash"
+msgstr "استرجع من المهملات"
+
+#: framework/qml/MailListDelegate.qml:92
+msgctxt "MailListDelegate|"
+msgid "Mark as read"
+msgstr "علّم كمقروءة"
+
+#: framework/qml/MailListDelegate.qml:101
+msgctxt "MailListDelegate|"
+msgid "Mark as unread"
+msgstr "علّم كَغَير مقروءة"
+
+#: framework/qml/MailListDelegate.qml:110
+msgctxt "MailListDelegate|"
+msgid "Mark as important"
+msgstr "علّم كَهَامّة"
+
+#: framework/qml/MailListDelegate.qml:120
+msgctxt "MailListDelegate|"
+msgid "Move to trash"
+msgstr "انقل إلى المهملات"
+
+#: framework/qml/MailListView.qml:68
+msgctxt "MailListView|"
+msgid "Nothing here..."
+msgstr "لا يوجد شيء هنا..."
+
+#: framework/qml/mailpartview/ErrorPart.qml:40
+#, qt-format
+msgctxt "ErrorPart|"
+msgid "An error occurred: %1"
+msgstr "حدث خطأ: %1"
+
+#: framework/qml/mailpartview/ICalPart.qml:44
+#: framework/qml/mailpartview/ICalPart.qml:79
+#, qt-format
+msgctxt "ICalPart|"
+msgid "This is an exception for the event originally occurring at: \"%1\""
+msgstr "هذا استثناء للحدث الذي يقع مبدئيًّا في: «%1»"
+
+#: framework/qml/mailpartview/ICalPart.qml:55
+#, qt-format
+msgctxt "ICalPart|"
+msgid "\"%1\" has been cancelled."
+msgstr "«%1» أُلغيت."
+
+#: framework/qml/mailpartview/ICalPart.qml:60
+#, qt-format
+msgctxt "ICalPart|"
+msgid "%1 has accepted: \"%2\""
+msgstr "%1 قبلت: «%2»"
+
+#: framework/qml/mailpartview/ICalPart.qml:66
+#, qt-format
+msgctxt "ICalPart|"
+msgid "%1 has declined: \"%2\""
+msgstr "%1 رفضت: «%2»"
+
+#: framework/qml/mailpartview/ICalPart.qml:72
+#, qt-format
+msgctxt "ICalPart|"
+msgid "%1 doesn't yet know about: \"%2\""
+msgstr "%1 لا تعرف بعد عن: «%2»"
+
+#: framework/qml/mailpartview/ICalPart.qml:84
+#, qt-format
+msgctxt "ICalPart|"
+msgid "The invitation has been updated: \"%1\""
+msgstr "التّحديث على الدّعوة: «%1»"
+
+#: framework/qml/mailpartview/ICalPart.qml:89
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You have accepted: \"%1\""
+msgstr "أنت قبلت: «%1»"
+
+#: framework/qml/mailpartview/ICalPart.qml:95
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You have declined: \"%1\""
+msgstr "أنت رفضت: «%1»"
+
+#: framework/qml/mailpartview/ICalPart.qml:101
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You've been invited to: \"%1\""
+msgstr "أنت دُعيت إلى: «%1»"
+
+#: framework/qml/mailpartview/ICalPart.qml:106
+#, qt-format
+msgctxt "ICalPart|"
+msgid "You are not listed as attendee to: \"%1\""
+msgstr "أنت لست مدرجًا كحاضر في: «%1»"
+
+#: framework/qml/mailpartview/ICalPart.qml:151
+msgctxt "ICalPart|"
+msgid "Decline"
+msgstr "ارفض"
+
+#: framework/qml/mailpartview/ICalPart.qml:158
+msgctxt "ICalPart|"
+msgid "Accept"
+msgstr "اقبل"
+
+#: framework/qml/mailpartview/ICalPart.qml:165
+msgctxt "ICalPart|"
+msgid "in"
+msgstr "في"
+
+#: framework/qml/mailpartview/MailPart.qml:54
+#, qt-format
+msgctxt "MailPart|"
+msgid "sent by %1 on %2"
+msgstr "أرسلها %1 في %2"
+
+#: framework/qml/mailpartview/MailPartModel.qml:53
+msgctxt "MailPartModel|"
+msgid "This message has been signed but we failed to validate the signature."
+msgstr "هذه الرسالة وُقِّعت لكننا فشلنا في المصادقة على التوقيع."
+
+#: framework/qml/mailpartview/MailPartModel.qml:55
+#, qt-format
+msgctxt "MailPartModel|"
+msgid "This message has been signed using the key %1."
+msgstr "وُقِّعت هذه الرسالة باستعمال المفتاح %1."
+
+#: framework/qml/mailpartview/MailPartModel.qml:56
+msgctxt "MailPartModel|"
+msgid "The key details are not available."
+msgstr "تفاصيل المفتاح غير متوفّرة."
+
+#: framework/qml/mailpartview/MailPartModel.qml:58
+#, qt-format
+msgctxt "MailPartModel|"
+msgid "This message has been signed using the key %1 by %2."
+msgstr "وُقِّعت هذه الرسالة باستعمال المفتاح %1 من قبل %2."
+
+#: framework/qml/mailpartview/MailPartModel.qml:60
+msgctxt "MailPartModel|"
+msgid "The key was revoked."
+msgstr "المفتاح  أُلغي."
+
+#: framework/qml/mailpartview/MailPartModel.qml:63
+msgctxt "MailPartModel|"
+msgid "The key has expired."
+msgstr "المفتاح انتهت صلاحيته."
+
+#: framework/qml/mailpartview/MailPartModel.qml:66
+msgctxt "MailPartModel|"
+msgid "You are trusting this key."
+msgstr "أنت تثق بهذا المفتاح."
+
+#: framework/qml/mailpartview/MailPartModel.qml:69
+msgctxt "MailPartModel|"
+msgid "The signature is invalid."
+msgstr "التوقيع غير صالح."
+
+#: framework/qml/mailpartview/MailPartModel.qml:89
+msgctxt "MailPartModel|"
+msgid "This message is encrypted but we don't have the key for it."
+msgstr "هذه الرسالة معماة لكن ليس لدينا مفتاحها."
+
+#: framework/qml/mailpartview/MailPartModel.qml:89
+#, qt-format
+msgctxt "MailPartModel|"
+msgid "This message is encrypted to the key: %1"
+msgstr "هذه الرسالة معماة بالمفتاح: %1"
+
+#: framework/qml/MailViewer.qml:44
+msgctxt "MailViewer|"
+msgid "Incomplete body..."
+msgstr "متن غير كامل..."
+
+#: framework/qml/MailViewer.qml:202
+msgctxt "MailViewer|"
+msgid "Sent from"
+msgstr "أُرسلت من"
+
+#: framework/qml/MailViewer.qml:206
+msgctxt "MailViewer|"
+msgid "Draft from"
+msgstr "مسودة من"
+
+#: framework/qml/MailViewer.qml:220 framework/qml/MailViewer.qml:254
+msgctxt "MailViewer|"
+msgid "Send mail to"
+msgstr "أرسل بريدًا إلى"
+
+#: framework/qml/MailViewer.qml:238
+#, qt-format
+msgctxt "MailViewer|"
+msgid "Trash: %1"
+msgstr "المهملات: %1"
+
+#: framework/qml/MailViewer.qml:390
+msgctxt "MailViewer|"
+msgid "Save attachment"
+msgstr "احفظ المرفق"
+
+#: framework/qml/MailViewer.qml:480
+msgctxt "MailViewer|"
+msgid "Delete Mail"
+msgstr "احذف البريد"
+
+#: framework/qml/MailViewer.qml:480
+msgctxt "MailViewer|"
+msgid "Discard"
+msgstr "أهمِل"
+
+#: framework/qml/MailViewer.qml:480
+msgctxt "MailViewer|"
+msgid "Move to trash"
+msgstr "انقل إلى المهملات"
+
+#: framework/qml/MailViewer.qml:502
+msgctxt "MailViewer|"
+msgid "Share"
+msgstr "شارك"
+
+#: framework/qml/MailViewer.qml:512
+msgctxt "MailViewer|"
+msgid "Edit"
+msgstr "حرّر"
+
+#: framework/qml/MailViewer.qml:512
+msgctxt "MailViewer|"
+msgid "Reply"
+msgstr "ردّ"
+
+#: framework/qml/Outbox.qml:114
+#, qt-format
+msgctxt "Outbox|"
+msgid "Sending: %1"
+msgstr "يُرسل: %1"
+
+#: framework/qml/Outbox.qml:162
+msgctxt "Outbox|"
+msgid "Send now"
+msgstr "أرسل الآن"
+
+#: framework/qml/Outbox.qml:174
+msgctxt "Outbox|"
+msgid "No pending messages"
+msgstr "لا رسائل معلّقة"
+
+#: framework/qml/ScrollablePopup.qml:70
+msgctxt "ScrollablePopup|"
+msgid "Discard"
+msgstr "أهمِل"
+
+#: framework/qml/ScrollablePopup.qml:75
+msgctxt "ScrollablePopup|"
+msgid "Save"
+msgstr "احفظ"
+
+#: framework/qml/SearchPopup.qml:197
+msgctxt "SearchPopup|"
+msgid "Filter..."
+msgstr "رشّح..."
+
+#: framework/qml/SelectableItem.qml:64
+msgctxt "SelectableItem|"
+msgid "Copy"
+msgstr "انسخ"
+
+#: framework/qml/SelectableLabel.qml:33
+msgctxt "SelectableLabel|"
+msgid "Copy"
+msgstr "انسخ"
+
+#: framework/qml/StatusBar.qml:64
+msgctxt "StatusBar|"
+msgid "Disconnected"
+msgstr "قطع الاتصال"
+
+#: framework/qml/StatusBar.qml:146
+msgctxt "StatusBar|"
+msgid "Abort"
+msgstr "أجهض"
+
+#: framework/qml/TextArea.qml:74
+msgctxt "TextArea|"
+msgid "Copy Link"
+msgstr "انسخ الرابط"
+
+#: framework/qml/TextArea.qml:74
+msgctxt "TextArea|"
+msgid "Copy Selection"
+msgstr "انسخ التحديد"
+
+#: framework/qml/TodoListDelegate.qml:66
+msgctxt "TodoListDelegate|"
+msgid "Due today"
+msgstr "مستحق اليوم"
+
+#: framework/qml/TodoListDelegate.qml:70
+#, qt-format
+msgctxt "TodoListDelegate|"
+msgid " (%1 days)"
+msgstr " (%1 يوم)"
+
+#: framework/qml/TodoListDelegate.qml:73
+#, qt-format
+msgctxt "TodoListDelegate|"
+msgid "Overdue for %1 days"
+msgstr "متأخر %1 يومًا"
+
+#: framework/qml/TodoListDelegate.qml:90
+msgctxt "TodoListDelegate|"
+msgid "Unpick"
+msgstr "أبطل الاختيار"
+
+#: framework/qml/TodoListDelegate.qml:90
+msgctxt "TodoListDelegate|"
+msgid "Pick"
+msgstr "اختر"
+
+#: framework/qml/TodoListDelegate.qml:105
+msgctxt "TodoListDelegate|"
+msgid "Done!"
+msgstr "تم!"
+
+#: framework/src/domain/eventcontroller.cpp:90
+#, qt-format
+msgctxt "QObject|"
+msgid "== %1 =="
+msgstr "== %1 =="
+
+#: framework/src/domain/eventcontroller.cpp:92
+#, qt-format
+msgctxt "QObject|"
+msgid "When: %1"
+msgstr "متى: %1"
+
+#: framework/src/domain/eventcontroller.cpp:96
+#, qt-format
+msgctxt "QObject|"
+msgid "Where: %1"
+msgstr "أين: %1"
+
+#: framework/src/domain/eventcontroller.cpp:99
+msgctxt "QObject|"
+msgid "Attendees:"
+msgstr "الحضور:"
+
+#: framework/src/domain/eventcontroller.cpp:128
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been updated"
+msgstr "حُدّث «%1»"
+
+#: framework/src/domain/eventcontroller.cpp:130
+#, qt-format
+msgctxt "QObject|"
+msgid "You've been invited to: \"%1\""
+msgstr "أنت دُعيت إلى: «%1»"
+
+#: framework/src/domain/eventcontroller.cpp:135
+msgctxt "QObject|"
+msgid ""
+"Please find attached an iCalendar file with all the event details which you "
+"can import to your calendar application."
+msgstr ""
+"يرجى إيجاد ملف iCalendar مرفق يحتوي على كافة تفاصيل الحدث والذي يمكنك "
+"استيراده إلى تطبيق التقويم الخاص بك."
+
+#: framework/src/domain/invitationcontroller.cpp:270
+#, qt-format
+msgctxt "QObject|"
+msgid "%1 has accepted the invitation to the following event"
+msgstr "%1 قبلت الدّعوة إلى الحدث التالي"
+
+#: framework/src/domain/invitationcontroller.cpp:272
+#, qt-format
+msgctxt "QObject|"
+msgid "%1 has declined the invitation to the following event"
+msgstr "%1 رفضت الدّعوة إلى الحدث التالي"
+
+#: framework/src/domain/invitationcontroller.cpp:279
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been accepted by %2"
+msgstr "«%1» قُبلت من %2"
+
+#: framework/src/domain/invitationcontroller.cpp:281
+#, qt-format
+msgctxt "QObject|"
+msgid "\"%1\" has been declined by %2"
+msgstr "«%1» رُفضت من %2"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:181
+msgctxt "QObject|"
+msgid "Failed to save attachment."
+msgstr "فشلت في حفظ تحميل المرفق."
+
+#: framework/src/domain/mime/attachmentmodel.cpp:210
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "Saved the attachment to disk: %1"
+msgstr "حفظ المرفق على القرص: %1"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:221
+msgctxt "AttachmentModel|"
+msgid "Failed to open attachment."
+msgstr "فشلت في فتح تحميل المرفق."
+
+#: framework/src/domain/mime/attachmentmodel.cpp:226
+msgctxt "AttachmentModel|"
+msgid "Failed to save attachment for opening."
+msgstr "فشلت في حفظ المرفق للفتح."
+
+#: framework/src/domain/mime/attachmentmodel.cpp:240
+msgctxt "AttachmentModel|"
+msgid "No keys were found in this attachment"
+msgstr "لم يُعثر على مفاتيح في هذا المرفق"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:245
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "%n key(s) imported"
+msgid_plural "%n key(s) imported"
+msgstr[0] "استورد %n مفتاح"
+msgstr[1] "استورد %n مفتاح"
+msgstr[2] "استورد مفتاحان"
+msgstr[3] "استورد %n مفاتيح"
+msgstr[4] "استورد %n مفتاحًا"
+msgstr[5] "استورد %n مفتاح"
+
+#: framework/src/domain/mime/attachmentmodel.cpp:249
+#, qt-format
+msgctxt "AttachmentModel|"
+msgid "%n key(s) were already imported"
+msgid_plural "%n key(s) were already imported"
+msgstr[0] "%n مفتاح مستورد أصلًا"
+msgstr[1] "%n مفتاح مستورد أصلًا"
+msgstr[2] "مفتاحان مستوردان أصلًا"
+msgstr[3] "%n مفاتيح مستوردة أصلًا"
+msgstr[4] "%n مفتاحًا مستوردًا أصلًا"
+msgstr[5] "%n مفتاح مستورد أصلًا"
+
+#: framework/src/domain/mime/mailtemplates.cpp:127
+msgctxt "QObject|"
+msgid "fwd"
+msgstr "أعد التوجيه"
+
+#: framework/src/domain/mime/mailtemplates.cpp:155
+msgctxt "QObject|"
+msgid "re"
+msgstr "ردّ"
+
+#: framework/src/domain/mime/partmodel.cpp:468
+msgctxt "PartModel|"
+msgid "No key available."
+msgstr "لا مفتاح متوفر."
+
+#: framework/src/domain/mime/partmodel.cpp:470
+msgctxt "PartModel|"
+msgid "Wrong passphrase."
+msgstr "عبارة مرور خاطئة"
+
+#: framework/src/inboundmodel.cpp:432 framework/src/inboundmodel.cpp:822
+#, qt-format
+msgctxt "QObject|"
+msgid "A new message is available: %1"
+msgstr "رسالة جديدة متوفرة: %1"
+
+#: framework/src/inboundmodel.cpp:513
+#, qt-format
+msgctxt "QObject|"
+msgid "A new event is available: %1"
+msgstr "حدث جديد متوفر: %1"
+
+#: framework/src/sinkfabric.cpp:197
+msgctxt "QObject|"
+msgid "Failed to connect to server."
+msgstr "فشل الاتصال بالخادم: "
+
+#: framework/src/sinkfabric.cpp:201
+msgctxt "QObject|"
+msgid "Host not found."
+msgstr "المضيف غير موجود."
+
+#: framework/src/sinkfabric.cpp:205
+msgctxt "QObject|"
+msgid "Failed to login."
+msgstr "فشل في تسجيل الولوج."
+
+#: framework/src/sinkfabric.cpp:209
+msgctxt "QObject|"
+msgid "Configuration error."
+msgstr "خطأ في الضبط."
+
+#: framework/src/sinkfabric.cpp:215
+msgctxt "QObject|"
+msgid "No credentials available."
+msgstr "لا يوجد بيانات اعتماد متوفرة."
+
+#: framework/src/sinkfabric.cpp:249
+msgctxt "QObject|"
+msgid "Failed to send message."
+msgstr "فشلت في إرسال الرسالة."
+
+#: framework/src/sinkfabric.cpp:263
+msgctxt "QObject|"
+msgid "A message has been sent."
+msgstr "أُرسلت رسالة."
+
+#: views/accounts/qml/View.qml:51
+msgctxt "View|"
+msgid "New Account"
+msgstr "حساب جديد"
+
+#: views/calendar/qml/AttendeeListEditor.qml:88
+msgctxt "AttendeeListEditor|"
+msgid "Attending"
+msgstr "سأحضر"
+
+#: views/calendar/qml/AttendeeListEditor.qml:88
+msgctxt "AttendeeListEditor|"
+msgid "Invited"
+msgstr "مدعو"
+
+#: views/calendar/qml/AttendeeListEditor.qml:112
+#: views/calendar/qml/AttendeeListEditor.qml:129
+msgctxt "AttendeeListEditor|"
+msgid "Add attendee"
+msgstr "أضف حضور"
+
+#: views/calendar/qml/DateRangeChooser.qml:159
+msgctxt "DateRangeChooser|"
+msgid "All day"
+msgstr "طول اليوم"
+
+#: views/calendar/qml/DateRangeChooser.qml:166
+msgctxt "DateRangeChooser|"
+msgid "begins"
+msgstr "يبدأ"
+
+#: views/calendar/qml/DateRangeChooser.qml:178
+msgctxt "DateRangeChooser|"
+msgid "ends"
+msgstr "ينتهي"
+
+#: views/calendar/qml/EventEditor.qml:85
+msgctxt "EventEditor|"
+msgid "Event Title"
+msgstr "عنوان الحدث"
+
+#: views/calendar/qml/EventEditor.qml:107
+msgctxt "EventEditor|"
+msgid "Location"
+msgstr "المكان"
+
+#: views/calendar/qml/EventEditor.qml:118
+msgctxt "EventEditor|"
+msgid "Organizer:"
+msgstr "المنظّم:"
+
+#: views/calendar/qml/EventEditor.qml:175
+msgctxt "EventEditor|"
+msgid "Delete"
+msgstr "احذف"
+
+#: views/calendar/qml/EventEditor.qml:184
+msgctxt "EventEditor|"
+msgid "Abort"
+msgstr "أجهض"
+
+#: views/calendar/qml/EventEditor.qml:209
+msgctxt "EventEditor|"
+msgid "Discard Changes"
+msgstr "ارفض التّغييرات"
+
+#: views/calendar/qml/EventEditor.qml:216
+msgctxt "EventEditor|"
+msgid "Save Changes"
+msgstr "احفظ التّغييرات"
+
+#: views/calendar/qml/EventEditor.qml:225
+msgctxt "EventEditor|"
+msgid "Create Event"
+msgstr "أنشئ حدثاً"
+
+#: views/calendar/qml/EventView.qml:76 views/inbound/qml/EventView.qml:84
+#, qt-format
+msgctxt "EventView|"
+msgid "repeats %1"
+msgstr "يتكرّر %1"
+
+#: views/calendar/qml/EventView.qml:86 views/inbound/qml/EventView.qml:93
+#, qt-format
+msgctxt "EventView|"
+msgid "Organizer: %1"
+msgstr "المنظّم: %1"
+
+#: views/calendar/qml/EventView.qml:96 views/inbound/qml/EventView.qml:103
+msgctxt "EventView|"
+msgid "Attending:"
+msgstr "حاضر:"
+
+#: views/calendar/qml/EventView.qml:103 views/inbound/qml/EventView.qml:110
+#, qt-format
+msgctxt "EventView|"
+msgid "%1"
+msgstr "%1"
+
+#: views/calendar/qml/EventView.qml:119
+msgctxt "EventView|"
+msgid "Remove"
+msgstr "أزل"
+
+#: views/calendar/qml/EventView.qml:130
+msgctxt "EventView|"
+msgid "Edit"
+msgstr "حرّر"
+
+#: views/calendar/qml/View.qml:39
+msgctxt "View|"
+msgid "Jump to next week/month:"
+msgstr "اقفز إلى الأسبوع/الشهر التالي:"
+
+#: views/calendar/qml/View.qml:40
+msgctxt "View|"
+msgid "Jump to previous week/month:"
+msgstr "اقفز إلى الأسبوع/الشهر السابق:"
+
+#: views/calendar/qml/View.qml:80
+msgctxt "View|"
+msgid "New Event"
+msgstr "حدث جديد"
+
+#: views/calendar/qml/View.qml:92
+msgctxt "View|"
+msgid "Week"
+msgstr "الأسبوع"
+
+#: views/calendar/qml/View.qml:101
+msgctxt "View|"
+msgid "Month"
+msgstr "الشهر"
+
+#: views/composer/qml/AddresseeListEditor.qml:132
+msgctxt "AddresseeListEditor|"
+msgid "Fetch key from keyserver"
+msgstr "اجلب مفتاحًا من خادم المفاتيح"
+
+#: views/composer/qml/AddresseeListEditor.qml:168
+#: views/composer/qml/AddresseeListEditor.qml:185
+msgctxt "AddresseeListEditor|"
+msgid "Add recipient"
+msgstr "أضف مستقبلا"
+
+#: views/composer/qml/EditorPage.qml:113
+msgctxt "EditorPage|"
+msgid "Remove Formatting"
+msgstr "أزل التنسيق"
+
+#: views/composer/qml/EditorPage.qml:126
+msgctxt "EditorPage|"
+msgid "Attach file"
+msgstr "أرفق ملفًّا"
+
+#: views/composer/qml/EditorPage.qml:135
+msgctxt "EditorPage|"
+msgid "Choose a file to attach"
+msgstr "اختر ملفًّا لإرفاقه"
+
+#: views/composer/qml/EditorPage.qml:156
+msgctxt "EditorPage|"
+msgid "Subject"
+msgstr "الموضوع"
+
+#: views/composer/qml/EditorPage.qml:171
+msgctxt "EditorPage|"
+msgid "Body"
+msgstr "المتن"
+
+#: views/composer/qml/View.qml:135 views/conversation/qml/View.qml:156
+#: views/inbound/qml/View.qml:197
+msgctxt "View|"
+msgid "New Email"
+msgstr "بريد إلكتروني جديد"
+
+#: views/composer/qml/View.qml:144
+msgctxt "View|"
+msgid "Drafts"
+msgstr "المسودّات"
+
+#: views/composer/qml/View.qml:293
+msgctxt "View|"
+msgid "Sending email to:"
+msgstr "يُرسل بريدًا إلكترونيًّا إلى:"
+
+#: views/composer/qml/View.qml:308
+msgctxt "View|"
+msgid "Sending copy to (Cc):"
+msgstr "يُرسل نسخة إلى (نسخة كربونية):"
+
+#: views/composer/qml/View.qml:322
+msgctxt "View|"
+msgid "Sending secret copy to (Bcc):"
+msgstr "يُرسل نسخة سرية إلى (نسخة كربونية مخفية):"
+
+#: views/composer/qml/View.qml:347
+msgctxt "View|"
+msgid "encrypt"
+msgstr "عمِّ"
+
+#: views/composer/qml/View.qml:358
+msgctxt "View|"
+msgid "sign"
+msgstr "وقّع"
+
+#: views/composer/qml/View.qml:364
+msgctxt "View|"
+msgid ""
+"Encryption is not available because your personal key has not been found."
+msgstr "التشفير غير متوفر لأن مفتاحك الشخصي لم يُعثر عليه."
+
+#: views/composer/qml/View.qml:375
+msgctxt "View|"
+msgid "Discard"
+msgstr "أهمِل"
+
+#: views/composer/qml/View.qml:382
+msgctxt "View|"
+msgid "Save as Draft"
+msgstr "احفظ كمسودّة"
+
+#: views/composer/qml/View.qml:395
+msgctxt "View|"
+msgid "You are sending this from:"
+msgstr "أنت ترسل هذا من:"
+
+#: views/composer/qml/View.qml:421
+msgctxt "View|"
+msgid "Send"
+msgstr "أرسل"
+
+#: views/conversation/qml/View.qml:73 views/inbound/qml/View.qml:114
+msgctxt "View|"
+msgid "Jump to top of threadlist:"
+msgstr "اقفز إلى أعلى قائمة التسلسل:"
+
+#: views/conversation/qml/View.qml:74 views/inbound/qml/View.qml:115
+msgctxt "View|"
+msgid "Jump to next thread:"
+msgstr "اقفز إلى التسلسل التالي:"
+
+#: views/conversation/qml/View.qml:75 views/inbound/qml/View.qml:116
+msgctxt "View|"
+msgid "Jump to previous thread:"
+msgstr "اقفز إلى التسلسل السابق:"
+
+#: views/conversation/qml/View.qml:76 views/inbound/qml/View.qml:117
+msgctxt "View|"
+msgid "Jump to next message:"
+msgstr "اقفز إلى الرسالة التالية:"
+
+#: views/conversation/qml/View.qml:77 views/inbound/qml/View.qml:118
+msgctxt "View|"
+msgid "Jump to previous message:"
+msgstr "اقفز إلى الرسالة السابقة:"
+
+#: views/conversation/qml/View.qml:78 views/inbound/qml/View.qml:119
+msgctxt "View|"
+msgid "Jump to next folder:"
+msgstr "اقفز إلى المجلد التالي:"
+
+#: views/conversation/qml/View.qml:79 views/inbound/qml/View.qml:120
+msgctxt "View|"
+msgid "Jump to previous folder:"
+msgstr "اقفز إلى المجلد السابق:"
+
+#: views/conversation/qml/View.qml:80 views/inbound/qml/View.qml:121
+msgctxt "View|"
+msgid "Compose new message:"
+msgstr "ألّف رسالة جديدة:"
+
+#: views/conversation/qml/View.qml:81 views/inbound/qml/View.qml:122
+msgctxt "View|"
+msgid "Reply to the currently focused message:"
+msgstr "ردّ على الرسالة المركّز عليها حاليًّا:"
+
+#: views/conversation/qml/View.qml:82 views/inbound/qml/View.qml:123
+msgctxt "View|"
+msgid "Delete the currently focused message:"
+msgstr "احذف الرسالة المركّز عليها حاليًّا:"
+
+#: views/conversation/qml/View.qml:83 views/inbound/qml/View.qml:124
+msgctxt "View|"
+msgid "Mark the currently focused message as important:"
+msgstr "علّم الرسالة المركّز عليها حاليًّا كَهَامّة:"
+
+#: views/conversation/qml/View.qml:84 views/inbound/qml/View.qml:125
+msgctxt "View|"
+msgid "Mark the currently focused message as unread:"
+msgstr "علّم الرسالة المركّز عليها حاليًّا كَغَير مقروءة:"
+
+#: views/conversation/qml/View.qml:85 views/inbound/qml/View.qml:126
+#: views/todo/qml/View.qml:108
+msgctxt "View|"
+msgid "Show this help text:"
+msgstr "اعرض نص المساعدة هذا:"
+
+#: views/inbound/qml/View.qml:203
+msgctxt "View|"
+msgid "Inbound"
+msgstr "الوارد"
+
+#: views/inbound/qml/View.qml:231
+msgctxt "View|"
+msgid "Configure"
+msgstr "اضبط"
+
+#: views/inbound/qml/View.qml:236
+msgctxt "View|"
+msgid "Recent"
+msgstr "الحديثة"
+
+#: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
+msgctxt "View|"
+msgid "Important"
+msgstr "مهمّة"
+
+#: views/inbound/qml/View.qml:347 views/log/qml/View.qml:71
+msgctxt "View|"
+msgid "Nothing here..."
+msgstr "لا يوجد شيء هنا..."
+
+#: views/inbound/qml/View.qml:485
+msgctxt "View|"
+msgid "Today, "
+msgstr "اليوم، "
+
+#: views/inbound/qml/View.qml:490
+msgctxt "View|"
+msgid "Tomorrow, "
+msgstr "الغد، "
+
+#: views/inbound/qml/View.qml:493
+#, qt-format
+msgctxt "View|"
+msgid " (in %1 days)"
+msgstr " (في %1 يوم)"
+
+#: views/inbound/qml/View.qml:496
+#, qt-format
+msgctxt "View|"
+msgid "%1 days ago"
+msgstr "قبل %1 يوم"
+
+#: views/inbound/qml/View.qml:544
+msgctxt "View|"
+msgid "Ignore sender"
+msgstr "تجاهل المرسل"
+
+#: views/inbound/qml/View.qml:555
+msgctxt "View|"
+msgid "Restore from trash"
+msgstr "استرجع من المهملات"
+
+#: views/inbound/qml/View.qml:566
+msgctxt "View|"
+msgid "Mark as read"
+msgstr "علّم كمقروءة"
+
+#: views/inbound/qml/View.qml:576
+msgctxt "View|"
+msgid "Mark as unread"
+msgstr "علّم كَغَير مقروءة"
+
+#: views/inbound/qml/View.qml:586
+msgctxt "View|"
+msgid "Mark as important"
+msgstr "علّم كَهَامّة"
+
+#: views/inbound/qml/View.qml:597
+msgctxt "View|"
+msgid "Move to trash"
+msgstr "انقل إلى المهملات"
+
+#: views/inbound/qml/View.qml:612
+msgctxt "View|"
+msgid "Done!"
+msgstr "تم!"
+
+#: views/inbound/qml/View.qml:701 views/log/qml/View.qml:220
+msgctxt "View|"
+msgid "Account:"
+msgstr "الحساب:"
+
+#: views/inbound/qml/View.qml:711 views/log/qml/View.qml:230
+msgctxt "View|"
+msgid "Account Id:"
+msgstr "م‌ت الحساب:"
+
+#: views/inbound/qml/View.qml:721 views/log/qml/View.qml:240
+msgctxt "View|"
+msgid "Resource Id:"
+msgstr "م‌ت المورد:"
+
+#: views/inbound/qml/View.qml:731 views/log/qml/View.qml:250
+msgctxt "View|"
+msgid "Timestamp:"
+msgstr "الختم الزمني:"
+
+#: views/inbound/qml/View.qml:739 views/log/qml/View.qml:258
+msgctxt "View|"
+msgid "Message:"
+msgstr "الرسالة:"
+
+#: views/inbound/qml/View.qml:773 views/log/qml/View.qml:292
+msgctxt "View|"
+msgid "Failed to login"
+msgstr "فشل في تسجيل الولوج"
+
+#: views/inbound/qml/View.qml:779 views/log/qml/View.qml:298
+#, qt-format
+msgctxt "View|"
+msgid "%1: please check your credentials."
+msgstr "%1: يرجى التحقق من بيانات الاعتماد الخاصة بك."
+
+#: views/inbound/qml/View.qml:785 views/log/qml/View.qml:304
+msgctxt "View|"
+msgid "Change Password"
+msgstr "غيّر كلمة السر"
+
+#: views/inbound/qml/View.qml:808 views/log/qml/View.qml:327
+msgctxt "View|"
+msgid "Host not found"
+msgstr "المضيف غير موجود"
+
+#: views/inbound/qml/View.qml:814 views/log/qml/View.qml:333
+#, qt-format
+msgctxt "View|"
+msgid "%1: please check your network connection and settings."
+msgstr "%1: يرجى التحقق من اتصال الشبكة والإعدادات الخاصة بك."
+
+#: views/inbound/qml/View.qml:820 views/log/qml/View.qml:339
+msgctxt "View|"
+msgid "Account Settings"
+msgstr "إعدادات الحساب"
+
+#: views/inbound/qml/View.qml:844 views/log/qml/View.qml:363
+msgctxt "View|"
+msgid "Failed to send the message."
+msgstr "فشلت في إرسال الرسالة."
+
+#: views/inbound/qml/View.qml:863 views/inbound/qml/View.qml:930
+#: views/log/qml/View.qml:382 views/log/qml/View.qml:449
+#, qt-format
+msgctxt "View|"
+msgid "Account: %1"
+msgstr "الحساب: %1"
+
+#: views/inbound/qml/View.qml:868 views/inbound/qml/View.qml:935
+#: views/log/qml/View.qml:387 views/log/qml/View.qml:454
+#, qt-format
+msgctxt "View|"
+msgid "Subject: %1"
+msgstr "الموضوع: %1"
+
+#: views/inbound/qml/View.qml:873 views/inbound/qml/View.qml:940
+#: views/log/qml/View.qml:392 views/log/qml/View.qml:459
+#, qt-format
+msgctxt "View|"
+msgid "To: %1"
+msgstr "إلى: %1"
+
+#: views/inbound/qml/View.qml:879 views/inbound/qml/View.qml:946
+#: views/log/qml/View.qml:398 views/log/qml/View.qml:465
+#, qt-format
+msgctxt "View|"
+msgid "Cc: %1"
+msgstr "ن‌ك: %1"
+
+#: views/inbound/qml/View.qml:889 views/log/qml/View.qml:408
+msgctxt "View|"
+msgid "Try Again"
+msgstr "جرّب مجدّدًا"
+
+#: views/inbound/qml/View.qml:912 views/log/qml/View.qml:431
+msgctxt "View|"
+msgid "Succeeded to send the message."
+msgstr "نجحت في إرسال الرسالة."
+
+#: views/inbound/qml/View.qml:1027
+msgctxt "View|"
+msgid "Folder name blacklist"
+msgstr "القائمة السوداء لأسماء المجلدات"
+
+#: views/inbound/qml/View.qml:1034
+msgctxt "View|"
+msgid "Comma separated folder names"
+msgstr "أسماء مجلدات مفصولة بفواصل"
+
+#: views/inbound/qml/View.qml:1039
+msgctxt "View|"
+msgid "Per Folder Mime Message Whitelist"
+msgstr "القائمة البيضاء لرسائل Mime لكل مجلد"
+
+#: views/inbound/qml/View.qml:1051
+msgctxt "View|"
+msgid "Folder special purpose blacklist"
+msgstr "القائمة السوداء للغرض الخاص للمجلد"
+
+#: views/inbound/qml/View.qml:1058
+msgctxt "View|"
+msgid "Comma separated special purpose types. Example: drafts, trash, sent"
+msgstr "أنواع الغرض الخاص مفصولة بفواصل. مثال: مسودّات، مهملات، مُرسل"
+
+#: views/inbound/qml/View.qml:1063
+msgctxt "View|"
+msgid "Sender blacklist"
+msgstr "القائمة السوداء للمرسلين"
+
+#: views/inbound/qml/View.qml:1070 views/inbound/qml/View.qml:1082
+#: views/inbound/qml/View.qml:1094
+msgctxt "View|"
+msgid "Comma separated sender email addresses"
+msgstr "عناوين بريد إلكتروني للمرسل مفصولة بفواصل"
+
+#: views/inbound/qml/View.qml:1075
+msgctxt "View|"
+msgid "To blacklist"
+msgstr "إلى القائمة السوداء"
+
+#: views/inbound/qml/View.qml:1087
+msgctxt "View|"
+msgid "Sender name contains filter"
+msgstr "فلتر اسم المرسل يحتوي على"
+
+#: views/inboxcrusher/qml/View.qml:92
+msgctxt "View|"
+msgid "Delete!"
+msgstr "احذف!"
+
+#: views/inboxcrusher/qml/View.qml:97
+msgctxt "View|"
+msgid "Reply!"
+msgstr "ردّ!"
+
+#: views/inboxcrusher/qml/View.qml:102
+msgctxt "View|"
+msgid "Flag!"
+msgstr "علم!"
+
+#: views/inboxcrusher/qml/View.qml:107
+msgctxt "View|"
+msgid "Previous"
+msgstr "السابق"
+
+#: views/inboxcrusher/qml/View.qml:113
+msgctxt "View|"
+msgid "Next"
+msgstr "التالي"
+
+#: views/log/qml/View.qml:118
+msgctxt "View|"
+msgid "Error"
+msgstr "خطأ"
+
+#: views/log/qml/View.qml:118
+msgctxt "View|"
+msgid "Info"
+msgstr "معلومات"
+
+#: views/people/qml/MailListEditor.qml:53
+msgctxt "MailListEditor|"
+msgid "(main)"
+msgstr "(الرئيسي)"
+
+#: views/people/qml/MailListEditor.qml:84
+#: views/people/qml/MailListEditor.qml:102
+msgctxt "MailListEditor|"
+msgid "Add email"
+msgstr "أضف بريدًا إلكترونيًّا"
+
+#: views/people/qml/People.qml:53
+msgctxt "People|"
+msgid "New Contact"
+msgstr "متراسل جديد"
+
+#: views/people/qml/People.qml:80
+msgctxt "People|"
+msgid "Search..."
+msgstr "ابحث..."
+
+#: views/people/qml/People.qml:235
+msgctxt "People|"
+msgid "Remove"
+msgstr "أزل"
+
+#: views/people/qml/People.qml:249
+msgctxt "People|"
+msgid "Edit"
+msgstr "حرّر"
+
+#: views/people/qml/PersonComposer.qml:98
+msgctxt "PersonComposer|"
+msgid "Choose an Avatar"
+msgstr "اختر صورة رمزية"
+
+#: views/people/qml/PersonComposer.qml:121
+msgctxt "PersonComposer|"
+msgid "First name"
+msgstr "الاسم الأول"
+
+#: views/people/qml/PersonComposer.qml:129
+msgctxt "PersonComposer|"
+msgid "Last name"
+msgstr "اسم العائلة"
+
+#: views/people/qml/PersonComposer.qml:149
+msgctxt "PersonComposer|"
+msgid "Job Title"
+msgstr "المسمى الوظيفي"
+
+#: views/people/qml/PersonComposer.qml:163
+msgctxt "PersonComposer|"
+msgid "Company"
+msgstr "الشركة"
+
+#: views/people/qml/PersonComposer.qml:175
+msgctxt "PersonComposer|"
+msgid "Email"
+msgstr "البريد الإلكترونيّ"
+
+#: views/people/qml/PersonPage.qml:156
+msgctxt "PersonPage|"
+msgid "(main)"
+msgstr "(الرئيس)"
+
+#: views/people/qml/PhoneListEditor.qml:43
+msgctxt "PhoneListEditor|"
+msgid "(main)"
+msgstr "(الرئيس)"
+
+#: views/people/qml/PhoneListEditor.qml:55
+msgctxt "PhoneListEditor|"
+msgid "Add"
+msgstr "أضف"
+
+#: views/search/qml/View.qml:59
+msgctxt "View|"
+msgid "Search"
+msgstr "ابحث"
+
+#: views/search/qml/View.qml:85
+msgctxt "View|"
+msgid "Unread"
+msgstr "غير المقروء"
+
+#: views/search/qml/View.qml:100
+msgctxt "View|"
+msgid "Accounts"
+msgstr "الحسابات"
+
+#: views/search/qml/View.qml:161
+msgctxt "View|"
+msgid "Search..."
+msgstr "ابحث..."
+
+#: views/search/qml/View_new.qml:64
+msgctxt "View_new|"
+msgid "Search"
+msgstr "ابحث"
+
+#: views/search/qml/View_new.qml:113
+msgctxt "View_new|"
+msgid "Search..."
+msgstr "ابحث..."
+
+#: views/todo/qml/TodoEditor.qml:113
+msgctxt "TodoEditor|"
+msgid "Create in:"
+msgstr "أنشئ في:"
+
+#: views/todo/qml/TodoEditor.qml:143
+msgctxt "TodoEditor|"
+msgid "Doing"
+msgstr "أفعل"
+
+#: views/todo/qml/TodoEditor.qml:151
+msgctxt "TodoEditor|"
+msgid "Todo Title"
+msgstr "عنوان المهمة"
+
+#: views/todo/qml/TodoEditor.qml:211
+msgctxt "TodoEditor|"
+msgid "Add subtodo"
+msgstr "أضف مهمة فرعية"
+
+#: views/todo/qml/TodoEditor.qml:227
+msgctxt "TodoEditor|"
+msgid "Delete"
+msgstr "احذف"
+
+#: views/todo/qml/TodoEditor.qml:236
+msgctxt "TodoEditor|"
+msgid "Abort"
+msgstr "أجهض"
+
+#: views/todo/qml/TodoEditor.qml:249
+msgctxt "TodoEditor|"
+msgid "Discard Changes"
+msgstr "ارفض التّغييرات"
+
+#: views/todo/qml/TodoEditor.qml:256
+msgctxt "TodoEditor|"
+msgid "Save Changes"
+msgstr "احفظ التّغييرات"
+
+#: views/todo/qml/TodoEditor.qml:262
+msgctxt "TodoEditor|"
+msgid "Create Todo"
+msgstr "إنشاء المهامّ"
+
+#: views/todo/qml/View.qml:102
+msgctxt "View|"
+msgid "Go to top of list:"
+msgstr "اذهب إلى أعلى القائمة:"
+
+#: views/todo/qml/View.qml:103
+msgctxt "View|"
+msgid "Go to bottom of list:"
+msgstr "اذهب إلى أسفل القائمة:"
+
+#: views/todo/qml/View.qml:104
+msgctxt "View|"
+msgid "Go to next todo:"
+msgstr "اذهب إلى المهمة التالية:"
+
+#: views/todo/qml/View.qml:105
+msgctxt "View|"
+msgid "Go to previous todo:"
+msgstr "اذهب إلى المهمة السابقة:"
+
+#: views/todo/qml/View.qml:106
+msgctxt "View|"
+msgid "Create new todo:"
+msgstr "أنشئ مهمة جديدة:"
+
+#: views/todo/qml/View.qml:107
+msgctxt "View|"
+msgid "Edit todo:"
+msgstr "حرّر المهمة:"
+
+#: views/todo/qml/View.qml:167
+msgctxt "View|"
+msgid "New Todo"
+msgstr "مهمة جديدة"
+
+#: views/todo/qml/View.qml:175
+msgctxt "View|"
+msgid "Inbox"
+msgstr "صندوق الوارد"
+
+#: views/todo/qml/View.qml:186
+msgctxt "View|"
+msgid "Doing"
+msgstr "أفعل"
+
+#: views/todo/qml/View.qml:197
+msgctxt "View|"
+msgid "All"
+msgstr "الكلّ"
+
+#: views/todo/qml/View.qml:250
+msgctxt "View|"
+msgid "Nothing here yet..."
+msgstr "لا يوجد شيء هنا بعد..."
+
+#: views/todo/qml/View.qml:254
+msgctxt "View|"
+msgid "Pick some tasks"
+msgstr "اختر بعض المهام"
+
+#: views/todo/qml/View.qml:262
+msgctxt "View|"
+msgid "Add a new task"
+msgstr "أضف مهمة جديدة"
+
+#: views/todo/qml/View.qml:280
+#, qt-format
+msgctxt "View|"
+msgid "This list is longer than %1 tasks. Focus on the top %1?"
+msgstr "هذه القائمة أطول من %1 مهمة. هل تركّز على الـ %1 الأوائل؟"
