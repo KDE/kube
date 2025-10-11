@@ -1,4 +1,4 @@
-# Burkhard Lück <lueck@hube-lueck.de>, 2018, 2019, 2021.
+# SPDX-FileCopyrightText: 2018, 2019, 2021 Burkhard Lück <lueck@hube-lueck.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kube_qt\n"
