@@ -178,14 +178,21 @@ Kube.View {
             width: root.width * 0.7
             height: root.height * 0.7
             padding: 0
-            Rectangle {
+            MouseArea {
                 anchors.fill: parent
-                color: Kube.Colors.paperWhite
-                EventEditor {
-                    id: editor
+                // This dummy event handler and MouseArea are required to prevent clicks to propagate through the popup to the parent.
+                // The MouseArea shouldn't be required at all. Should we move it to Kube.Popup?
+                onClicked: {
+                }
+                Rectangle {
                     anchors.fill: parent
-                    onDone: popup.close()
-                    accountId: Kube.Context.currentAccountId
+                    color: Kube.Colors.paperWhite
+                    EventEditor {
+                        id: editor
+                        anchors.fill: parent
+                        onDone: popup.close()
+                        accountId: Kube.Context.currentAccountId
+                    }
                 }
             }
         }
