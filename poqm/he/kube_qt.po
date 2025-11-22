@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2025-11-20 18:41+0200\n"
+"PO-Revision-Date: 2025-11-21 21:05+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Qt-Contexts: true\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 25.08.3\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
@@ -535,119 +535,119 @@ msgstr ""
 #: framework/qml/MailViewer.qml:202
 msgctxt "MailViewer|"
 msgid "Sent from"
-msgstr ""
+msgstr "נשלח מ־"
 
 #: framework/qml/MailViewer.qml:206
 msgctxt "MailViewer|"
 msgid "Draft from"
-msgstr ""
+msgstr "טיוטה מ־"
 
 #: framework/qml/MailViewer.qml:220 framework/qml/MailViewer.qml:254
 msgctxt "MailViewer|"
 msgid "Send mail to"
-msgstr ""
+msgstr "שליחת דוא״ל אל"
 
 #: framework/qml/MailViewer.qml:238
 #, qt-format
 msgctxt "MailViewer|"
 msgid "Trash: %1"
-msgstr ""
+msgstr "אשפה: %1"
 
 #: framework/qml/MailViewer.qml:390
 msgctxt "MailViewer|"
 msgid "Save attachment"
-msgstr ""
+msgstr "שמירת קובץ מצורף"
 
 #: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Delete Mail"
-msgstr ""
+msgstr "מחיקת הודעה"
 
 #: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Discard"
-msgstr ""
+msgstr "התעלמות"
 
 #: framework/qml/MailViewer.qml:480
 msgctxt "MailViewer|"
 msgid "Move to trash"
-msgstr ""
+msgstr "העברה לאשפה"
 
 #: framework/qml/MailViewer.qml:502
 msgctxt "MailViewer|"
 msgid "Share"
-msgstr ""
+msgstr "שיתוף"
 
 #: framework/qml/MailViewer.qml:512
 msgctxt "MailViewer|"
 msgid "Edit"
-msgstr ""
+msgstr "עריכה"
 
 #: framework/qml/MailViewer.qml:512
 msgctxt "MailViewer|"
 msgid "Reply"
-msgstr ""
+msgstr "תגובה"
 
 #: framework/qml/Outbox.qml:114
 #, qt-format
 msgctxt "Outbox|"
 msgid "Sending: %1"
-msgstr ""
+msgstr "נשלח: %1"
 
 #: framework/qml/Outbox.qml:162
 msgctxt "Outbox|"
 msgid "Send now"
-msgstr ""
+msgstr "שליחה כעת"
 
 #: framework/qml/Outbox.qml:174
 msgctxt "Outbox|"
 msgid "No pending messages"
-msgstr ""
+msgstr "אין הודעות ממתינות"
 
 #: framework/qml/ScrollablePopup.qml:70
 msgctxt "ScrollablePopup|"
 msgid "Discard"
-msgstr ""
+msgstr "התעלמות"
 
 #: framework/qml/ScrollablePopup.qml:75
 msgctxt "ScrollablePopup|"
 msgid "Save"
-msgstr ""
+msgstr "שמירה"
 
 #: framework/qml/SearchPopup.qml:197
 msgctxt "SearchPopup|"
 msgid "Filter..."
-msgstr ""
+msgstr "סינון…"
 
 #: framework/qml/SelectableItem.qml:64
 msgctxt "SelectableItem|"
 msgid "Copy"
-msgstr ""
+msgstr "העתקה"
 
 #: framework/qml/SelectableLabel.qml:33
 msgctxt "SelectableLabel|"
 msgid "Copy"
-msgstr ""
+msgstr "העתקה"
 
 #: framework/qml/StatusBar.qml:64
 msgctxt "StatusBar|"
 msgid "Disconnected"
-msgstr ""
+msgstr "מנותק"
 
 #: framework/qml/StatusBar.qml:146
 msgctxt "StatusBar|"
 msgid "Abort"
-msgstr ""
+msgstr "ביטול גורף"
 
 #: framework/qml/TextArea.qml:74
 msgctxt "TextArea|"
 msgid "Copy Link"
-msgstr ""
+msgstr "העתקת קישור"
 
 #: framework/qml/TextArea.qml:74
 msgctxt "TextArea|"
 msgid "Copy Selection"
-msgstr ""
+msgstr "העתקת הבחירה"
 
 #: framework/qml/TodoListDelegate.qml:66
 msgctxt "TodoListDelegate|"
@@ -658,7 +658,7 @@ msgstr ""
 #, qt-format
 msgctxt "TodoListDelegate|"
 msgid " (%1 days)"
-msgstr ""
+msgstr " (%1 ימים)"
 
 #: framework/qml/TodoListDelegate.qml:73
 #, qt-format
@@ -679,42 +679,42 @@ msgstr ""
 #: framework/qml/TodoListDelegate.qml:105
 msgctxt "TodoListDelegate|"
 msgid "Done!"
-msgstr ""
+msgstr "בוצע!"
 
 #: framework/src/domain/eventcontroller.cpp:90
 #, qt-format
 msgctxt "QObject|"
 msgid "== %1 =="
-msgstr ""
+msgstr "== %1 =="
 
 #: framework/src/domain/eventcontroller.cpp:92
 #, qt-format
 msgctxt "QObject|"
 msgid "When: %1"
-msgstr ""
+msgstr "מתי: %1"
 
 #: framework/src/domain/eventcontroller.cpp:96
 #, qt-format
 msgctxt "QObject|"
 msgid "Where: %1"
-msgstr ""
+msgstr "איפה: %1"
 
 #: framework/src/domain/eventcontroller.cpp:99
 msgctxt "QObject|"
 msgid "Attendees:"
-msgstr ""
+msgstr "משתתפים:"
 
 #: framework/src/domain/eventcontroller.cpp:128
 #, qt-format
 msgctxt "QObject|"
 msgid "\"%1\" has been updated"
-msgstr ""
+msgstr "„%1” עודכן"
 
 #: framework/src/domain/eventcontroller.cpp:130
 #, qt-format
 msgctxt "QObject|"
 msgid "You've been invited to: \"%1\""
-msgstr ""
+msgstr "הוזמנת אל: „%1”"
 
 #: framework/src/domain/eventcontroller.cpp:135
 msgctxt "QObject|"
@@ -745,41 +745,41 @@ msgstr ""
 #, qt-format
 msgctxt "QObject|"
 msgid "\"%1\" has been declined by %2"
-msgstr ""
+msgstr "„%1” נדחתה על ידי %2"
 
 #: framework/src/domain/mime/attachmentmodel.cpp:181
 msgctxt "QObject|"
 msgid "Failed to save attachment."
-msgstr ""
+msgstr "שמירת הקובץ המצורף נכשלה."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:210
 #, qt-format
 msgctxt "AttachmentModel|"
 msgid "Saved the attachment to disk: %1"
-msgstr ""
+msgstr "הקובץ המצורף נשמר לכונן: %1"
 
 #: framework/src/domain/mime/attachmentmodel.cpp:221
 msgctxt "AttachmentModel|"
 msgid "Failed to open attachment."
-msgstr ""
+msgstr "פתיחת הקובץ המצורף נכשלה."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:226
 msgctxt "AttachmentModel|"
 msgid "Failed to save attachment for opening."
-msgstr ""
+msgstr "שמירת התמונה לפתיחה נכשלה."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:240
 msgctxt "AttachmentModel|"
 msgid "No keys were found in this attachment"
-msgstr ""
+msgstr "לא נמצאו מפתחות בקובץ המצורף הזה"
 
 #: framework/src/domain/mime/attachmentmodel.cpp:245
 #, qt-format
 msgctxt "AttachmentModel|"
 msgid "%n key(s) imported"
 msgid_plural "%n key(s) imported"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "מפתח יובא"
+msgstr[1] "%n מפתחות יובא"
 
 #: framework/src/domain/mime/attachmentmodel.cpp:249
 #, qt-format
@@ -834,12 +834,12 @@ msgstr "המארח לא נמצא."
 #: framework/src/sinkfabric.cpp:205
 msgctxt "QObject|"
 msgid "Failed to login."
-msgstr ""
+msgstr "הכניסה נכשלה."
 
 #: framework/src/sinkfabric.cpp:209
 msgctxt "QObject|"
 msgid "Configuration error."
-msgstr ""
+msgstr "שגיאת הגדרות."
 
 #: framework/src/sinkfabric.cpp:215
 msgctxt "QObject|"
@@ -1040,17 +1040,17 @@ msgstr "טיוטות"
 #: views/composer/qml/View.qml:293
 msgctxt "View|"
 msgid "Sending email to:"
-msgstr ""
+msgstr "הדוא״ל נשלח אל:"
 
 #: views/composer/qml/View.qml:308
 msgctxt "View|"
 msgid "Sending copy to (Cc):"
-msgstr ""
+msgstr "עותק (Cc) נשלח אל:"
 
 #: views/composer/qml/View.qml:322
 msgctxt "View|"
 msgid "Sending secret copy to (Bcc):"
-msgstr ""
+msgstr "עותק סמוי (Bcc) נשלח אל:"
 
 #: views/composer/qml/View.qml:347
 msgctxt "View|"
@@ -1066,52 +1066,52 @@ msgstr "חתימה"
 msgctxt "View|"
 msgid ""
 "Encryption is not available because your personal key has not been found."
-msgstr ""
+msgstr "הצפנה לא זמינה כיוון שהמפתח האישי שלך לא נמצא."
 
 #: views/composer/qml/View.qml:375
 msgctxt "View|"
 msgid "Discard"
-msgstr ""
+msgstr "התעלמות"
 
 #: views/composer/qml/View.qml:382
 msgctxt "View|"
 msgid "Save as Draft"
-msgstr ""
+msgstr "שמירה כטיוטה"
 
 #: views/composer/qml/View.qml:395
 msgctxt "View|"
 msgid "You are sending this from:"
-msgstr ""
+msgstr "השליחה מתבצעת דרך:"
 
 #: views/composer/qml/View.qml:421
 msgctxt "View|"
 msgid "Send"
-msgstr ""
+msgstr "שליחה"
 
 #: views/conversation/qml/View.qml:73 views/inbound/qml/View.qml:114
 msgctxt "View|"
 msgid "Jump to top of threadlist:"
-msgstr ""
+msgstr "קפיצה לראש רשימת השרשורים:"
 
 #: views/conversation/qml/View.qml:74 views/inbound/qml/View.qml:115
 msgctxt "View|"
 msgid "Jump to next thread:"
-msgstr ""
+msgstr "קפיצה לשרשור הבא:"
 
 #: views/conversation/qml/View.qml:75 views/inbound/qml/View.qml:116
 msgctxt "View|"
 msgid "Jump to previous thread:"
-msgstr ""
+msgstr "קפיצה לשרשור הקודם:"
 
 #: views/conversation/qml/View.qml:76 views/inbound/qml/View.qml:117
 msgctxt "View|"
 msgid "Jump to next message:"
-msgstr ""
+msgstr "קפיצה להודעה הבאה:"
 
 #: views/conversation/qml/View.qml:77 views/inbound/qml/View.qml:118
 msgctxt "View|"
 msgid "Jump to previous message:"
-msgstr ""
+msgstr "קפיצה להודעה הקודמת:"
 
 #: views/conversation/qml/View.qml:78 views/inbound/qml/View.qml:119
 msgctxt "View|"
