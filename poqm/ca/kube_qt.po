@@ -3,14 +3,14 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# SPDX-FileCopyrightText: 2018, 2019, 2020 Antoni Bella Pérez <antonibella5@yahoo.com>
+# SPDX-FileCopyrightText: 2018, 2019, 2020, 2025 Antoni Bella Pérez <antonibella5@yahoo.com>
 # SPDX-FileCopyrightText: 2018, 2019, 2020, 2021, 2023, 2024 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kube\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"PO-Revision-Date: 2024-03-29 08:54+0100\n"
-"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
+"PO-Revision-Date: 2025-12-27 16:40+0100\n"
+"Last-Translator: Antoni Bella Pérez <antonibella5@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Qt-Contexts: true\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.1\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
@@ -1301,7 +1301,7 @@ msgstr "Canvia la contrasenya"
 #: views/inbound/qml/View.qml:808 views/log/qml/View.qml:327
 msgctxt "View|"
 msgid "Host not found"
-msgstr "No s'ha trobat el servidor remot"
+msgstr "No s'ha trobat el servidor"
 
 #: views/inbound/qml/View.qml:814 views/log/qml/View.qml:333
 #, qt-format

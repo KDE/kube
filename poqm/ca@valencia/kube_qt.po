@@ -3,14 +3,14 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# SPDX-FileCopyrightText: 2018, 2019, 2020 Antoni Bella Pérez <antonibella5@yahoo.com>
+# SPDX-FileCopyrightText: 2018, 2019, 2020, 2025 Antoni Bella Pérez <antonibella5@yahoo.com>
 # SPDX-FileCopyrightText: 2018, 2019, 2020, 2021, 2023, 2024 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kube\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"PO-Revision-Date: 2024-03-29 08:54+0100\n"
-"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
+"PO-Revision-Date: 2025-12-27 16:40+0100\n"
+"Last-Translator: Antoni Bella Pérez <antonibella5@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Qt-Contexts: true\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.1\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
@@ -344,7 +344,7 @@ msgstr "S'està baixant el missatge…"
 #: framework/qml/ConversationView.qml:163
 msgctxt "ConversationView|"
 msgid "Failed to download message..."
-msgstr "No s'ha pogut baixar el missatge…"
+msgstr "Ha fallat mentre es baixava el missatge…"
 
 #: framework/qml/EditAccount.qml:89
 msgctxt "EditAccount|"
@@ -493,7 +493,8 @@ msgstr "enviat per %1 a %2"
 #: framework/qml/mailpartview/MailPartModel.qml:53
 msgctxt "MailPartModel|"
 msgid "This message has been signed but we failed to validate the signature."
-msgstr "Este missatge s'ha signat, però ha fallat en validar la signatura."
+msgstr ""
+"Este missatge s'ha signat, però ha fallat mentre es validava la signatura."
 
 #: framework/qml/mailpartview/MailPartModel.qml:55
 #, qt-format
@@ -768,7 +769,7 @@ msgstr "%2 ha declinat «%1»"
 #: framework/src/domain/mime/attachmentmodel.cpp:181
 msgctxt "QObject|"
 msgid "Failed to save attachment."
-msgstr "No s'ha pogut guardar l'adjunt."
+msgstr "Ha fallat mentre es guardava l'adjunt."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:210
 #, qt-format
@@ -779,12 +780,12 @@ msgstr "S'ha guardat l'adjunt al disc: %1"
 #: framework/src/domain/mime/attachmentmodel.cpp:221
 msgctxt "AttachmentModel|"
 msgid "Failed to open attachment."
-msgstr "No s'ha pogut obrir l'adjunt."
+msgstr "Ha fallat mentre s'obria l'adjunt."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:226
 msgctxt "AttachmentModel|"
 msgid "Failed to save attachment for opening."
-msgstr "No s'ha pogut guardar l'adjunt per a obrir-lo."
+msgstr "Ha fallat mentre es guardava l'adjunt per a obrir-lo."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:240
 msgctxt "AttachmentModel|"
@@ -842,17 +843,17 @@ msgstr "Hi ha disponible un esdeveniment nou: %1"
 #: framework/src/sinkfabric.cpp:197
 msgctxt "QObject|"
 msgid "Failed to connect to server."
-msgstr "No s'ha pogut connectar amb el servidor."
+msgstr "Ha fallat mentre es connectava amb el servidor."
 
 #: framework/src/sinkfabric.cpp:201
 msgctxt "QObject|"
 msgid "Host not found."
-msgstr "No s'ha trobat el servidor."
+msgstr "No s'ha trobat l'amfitrió."
 
 #: framework/src/sinkfabric.cpp:205
 msgctxt "QObject|"
 msgid "Failed to login."
-msgstr "No s'ha pogut iniciar la sessió."
+msgstr "Ha fallat mentre s'iniciava la sessió."
 
 #: framework/src/sinkfabric.cpp:209
 msgctxt "QObject|"
@@ -867,7 +868,7 @@ msgstr "No hi ha disponible cap credencial."
 #: framework/src/sinkfabric.cpp:249
 msgctxt "QObject|"
 msgid "Failed to send message."
-msgstr "No s'ha pogut enviar el missatge."
+msgstr "Ha fallat mentre s'enviava el missatge."
 
 #: framework/src/sinkfabric.cpp:263
 msgctxt "QObject|"
@@ -1284,7 +1285,7 @@ msgstr "Missatge:"
 #: views/inbound/qml/View.qml:773 views/log/qml/View.qml:292
 msgctxt "View|"
 msgid "Failed to login"
-msgstr "No s'ha pogut iniciar la sessió"
+msgstr "Ha fallat mentre s'iniciava la sessió"
 
 #: views/inbound/qml/View.qml:779 views/log/qml/View.qml:298
 #, qt-format
@@ -1300,7 +1301,7 @@ msgstr "Canvia la contrasenya"
 #: views/inbound/qml/View.qml:808 views/log/qml/View.qml:327
 msgctxt "View|"
 msgid "Host not found"
-msgstr "No s'ha trobat el servidor remot"
+msgstr "No s'ha trobat l'amfitrió"
 
 #: views/inbound/qml/View.qml:814 views/log/qml/View.qml:333
 #, qt-format
@@ -1316,7 +1317,7 @@ msgstr "Configureu el compte"
 #: views/inbound/qml/View.qml:844 views/log/qml/View.qml:363
 msgctxt "View|"
 msgid "Failed to send the message."
-msgstr "No s'ha pogut enviar el missatge."
+msgstr "Ha fallat mentre s'enviava el missatge."
 
 #: views/inbound/qml/View.qml:863 views/inbound/qml/View.qml:930
 #: views/log/qml/View.qml:382 views/log/qml/View.qml:449
