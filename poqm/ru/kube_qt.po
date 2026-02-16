@@ -1,9 +1,9 @@
-# Alexander Yavorsky <kekcuha@gmail.com>, 2018.
+# SPDX-FileCopyrightText: 2018, 2026 Alexander Yavorsky <kekcuha@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2018-10-20 20:33+0300\n"
-"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
+"PO-Revision-Date: 2026-02-15 08:06+0200\n"
+"Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -12,15 +12,12 @@ msgstr ""
 "X-Qt-Contexts: true\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "Connect your GMail account"
 msgctxt "AccountSettings|"
 msgid "Connect your FastMail account"
-msgstr "Подключить учётную запись GMail"
+msgstr "Подключить учётную запись FastMail"
 
 #: accounts/fastmail/qml/AccountSettings.qml:27
 msgctxt "AccountSettings|"
@@ -28,6 +25,8 @@ msgid ""
 "Please fill in your name and email address. Please note that you require an "
 "app-specific password and cannot use your regular FastMail password."
 msgstr ""
+"Укажите имя и адрес электронной почты. Для доступа требуется пароль "
+"приложения, а не обычный пароль FastMail."
 
 #: accounts/fastmail/qml/AccountSettings.qml:51
 #: accounts/generic/qml/AccountSettings.qml:54
@@ -85,15 +84,12 @@ msgstr "Пароль"
 #| msgid "Password of your IMAP account"
 msgctxt "Login|"
 msgid "App-specific password for your FastMail account"
-msgstr "Пароль для учётной записи IMAP"
+msgstr "Пароль приложения для учётной записи FastMail"
 
 #: accounts/generic/qml/AccountSettings.qml:28
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "Connect your IMAP account"
 msgctxt "AccountSettings|"
 msgid "Connect your account"
-msgstr "Подключить учётную запись IMAP"
+msgstr "Подключить учётную запись"
 
 #: accounts/generic/qml/AccountSettings.qml:29
 msgctxt "AccountSettings|"
@@ -102,35 +98,35 @@ msgid ""
 "relevant server addresses. For information about the server details, please "
 "contact your email provider."
 msgstr ""
+"Для доступа Kube к учётной записи укажите адрес электронной почты, имя "
+"пользователя и соответствующие адреса серверов. Подробности о серверах можно "
+"получить у поставщика услуг электронной почты."
 
 #: accounts/generic/qml/AccountSettings.qml:81
 #: accounts/imap/qml/AccountSettings.qml:81
 msgctxt "AccountSettings|"
 msgid "Username"
-msgstr ""
+msgstr "Имя пользователя"
 
 #: accounts/generic/qml/AccountSettings.qml:94
 msgctxt "AccountSettings|"
 msgid "Your username for server access."
-msgstr ""
+msgstr "Имя пользователя для доступа к серверу."
 
 #: accounts/generic/qml/AccountSettings.qml:98
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "SMTP address"
 msgctxt "AccountSettings|"
 msgid "IMAP address"
-msgstr "Адрес сервера SMTP"
+msgstr "Адрес сервера IMAP"
 
 #: accounts/generic/qml/AccountSettings.qml:115
 msgctxt "AccountSettings|"
 msgid "Use Starttls"
-msgstr ""
+msgstr "Использовать StartTLS"
 
 #: accounts/generic/qml/AccountSettings.qml:125
 msgctxt "AccountSettings|"
 msgid "Authentication Method"
-msgstr ""
+msgstr "Способ проверки подлинности"
 
 #: accounts/generic/qml/AccountSettings.qml:146
 #: accounts/imap/qml/AccountSettings.qml:113
@@ -139,36 +135,24 @@ msgid "SMTP address"
 msgstr "Адрес сервера SMTP"
 
 #: accounts/generic/qml/AccountSettings.qml:161
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "Email address"
 msgctxt "AccountSettings|"
 msgid "CardDAV address"
-msgstr "Адрес электронной почты"
+msgstr "Адрес CardDAV"
 
 #: accounts/generic/qml/AccountSettings.qml:175
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "Email address"
 msgctxt "AccountSettings|"
 msgid "CalDAV address"
-msgstr "Адрес электронной почты"
+msgstr "Адрес CalDAV"
 
 #: accounts/generic/qml/Login.qml:60
-#, fuzzy
-#| msgctxt "Login|"
-#| msgid "Password of your IMAP account"
 msgctxt "Login|"
 msgid "Password of your account"
-msgstr "Пароль для учётной записи IMAP"
+msgstr "Пароль учётной записи"
 
 #: accounts/gmail/qml/AccountSettings.qml:28
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "Connect your GMail account"
 msgctxt "AccountSettings|"
 msgid "Connect your Google account"
-msgstr "Подключить учётную запись GMail"
+msgstr "Подключить учётную запись Google"
 
 #: accounts/gmail/qml/AccountSettings.qml:29
 msgctxt "AccountSettings|"
@@ -176,6 +160,8 @@ msgid ""
 "To let Kube access your account, fill in email address, username and give "
 "the account a title that will be displayed inside Kube."
 msgstr ""
+"Для доступа Kube к учётной записи укажите адрес электронной почты, имя "
+"пользователя и задайте заголовок, который будет отображаться в Kube."
 
 #: accounts/gmail/qml/Login.qml:57 accounts/imap/qml/Login.qml:57
 msgctxt "Login|"
@@ -195,11 +181,15 @@ msgid ""
 "information about which SMTP, IMAP address, which authentication and port to "
 "be used, please contact your email provider."
 msgstr ""
+"Для доступа Kube к учётной записи укажите адрес электронной почты, имя "
+"пользователя, пароль и задайте название, которое будет отображаться в Kube. "
+"Информацию о SMTP- и IMAP-адресах, аутентификации и портах следует уточнить "
+"у поставщика услуг электронной почты."
 
 #: accounts/imap/qml/AccountSettings.qml:92
 msgctxt "AccountSettings|"
 msgid "Your username for IMAP and SMTP access."
-msgstr ""
+msgstr "Имя пользователя для доступа по IMAP и SMTP."
 
 #: accounts/imap/qml/AccountSettings.qml:96
 msgctxt "AccountSettings|"
@@ -217,16 +207,18 @@ msgid ""
 "Please fill in your name and email address. No account yet? <a href='https://"
 "kolabnow.com/kube-campaign/'>Sign up now!</a>"
 msgstr ""
+"Введите имя и адрес электронной почты. Нет учётной записи? <a href='https:// "
+"kolabnow.com/kube-campaign/'>Зарегистрироваться!</a>"
 
 #: accounts/kolabnow/qml/Login.qml:61
 msgctxt "Login|"
 msgid "Password of your Kolab Now account"
-msgstr ""
+msgstr "Пароль учётной записи Kolab Now"
 
 #: accounts/maildir/qml/AccountSettings.qml:28
 msgctxt "AccountSettings|"
 msgid "Add your Maildir archive"
-msgstr ""
+msgstr "Добавление архива Maildir"
 
 #: accounts/maildir/qml/AccountSettings.qml:29
 msgctxt "AccountSettings|"
@@ -234,16 +226,20 @@ msgid ""
 "To let Kube access your maildir archive, add the path to your archive and "
 "give the account a title that will be displayed inside Kube."
 msgstr ""
+"Для доступа Kube к архиву maildir добавьте путь к архиву и задайте заголовок "
+"учётной записи, который будет отображаться в Kube."
 
 #: accounts/maildir/qml/AccountSettings.qml:55
 msgctxt "AccountSettings|"
 msgid "Title of Account"
-msgstr ""
+msgstr "Название учётной записи"
 
 #: accounts/maildir/qml/AccountSettings.qml:60
 msgctxt "AccountSettings|"
 msgid "E.g. \"Work\", \"Home\" that will be displayed in Kube as name"
 msgstr ""
+"Например, «Работа» или «Дом», которые будут отображаться в Kube в качестве "
+"названия"
 
 #: accounts/maildir/qml/AccountSettings.qml:68
 msgctxt "AccountSettings|"
@@ -253,7 +249,7 @@ msgstr "Путь"
 #: accounts/maildir/qml/AccountSettings.qml:90
 msgctxt "AccountSettings|"
 msgid "Choose a maildir folder"
-msgstr ""
+msgstr "Выбрать папку Maildir"
 
 #: applications/kube/main.cpp:108
 msgctxt "main|"
@@ -261,6 +257,8 @@ msgid ""
 "To automatically unlock the keyring pass in a keyring in the form of "
 "{\"accountId\": {\"resourceId\": \"secret\", *}}"
 msgstr ""
+"Для автоматической разблокировки пароля связки ключей в виде  {\"accountId"
+"\": {\"resourceId\": \"secret\", *}}"
 
 #: components/accounts/qml/AccountWizard.qml:60
 msgctxt "AccountWizard|"
@@ -310,7 +308,7 @@ msgstr "Это займёт некоторое время."
 #: components/kube/qml/upgrade.qml:43
 msgctxt "upgrade|"
 msgid "Please exit and restart Kube."
-msgstr ""
+msgstr "Завершите работу и перезапустите Kube."
 
 #: components/kube/qml/upgrade.qml:47
 msgctxt "upgrade|"
@@ -320,12 +318,12 @@ msgstr "Выход"
 #: extensions/fileasexpense/qml/main.qml:27
 msgctxt "main|"
 msgid "File as Expense"
-msgstr ""
+msgstr "Файл как расход"
 
 #: extensions/gpg/qml/main.qml:58
 msgctxt "main|"
 msgid "Enable GPG Keyring Integration"
-msgstr ""
+msgstr "Включить интеграцию с хранилищем ключей GPG"
 
 #: framework/qml/AttachmentDelegate.qml:82
 msgctxt "AttachmentDelegate|"
@@ -335,12 +333,12 @@ msgstr "Импортировать ключ"
 #: framework/qml/ConversationView.qml:159
 msgctxt "ConversationView|"
 msgid "Downloading message..."
-msgstr ""
+msgstr "Загрузка сообщения…"
 
 #: framework/qml/ConversationView.qml:163
 msgctxt "ConversationView|"
 msgid "Failed to download message..."
-msgstr ""
+msgstr "Не удалось загрузить сообщение…"
 
 #: framework/qml/EditAccount.qml:89
 msgctxt "EditAccount|"
@@ -358,9 +356,6 @@ msgid "Save"
 msgstr "Сохранить"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
 msgstr "Добавить"
@@ -371,49 +366,34 @@ msgid "Login"
 msgstr ""
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Restore from trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
 msgstr "Восстановить из корзины"
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
 msgstr "Отметить как прочитанное"
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
-msgstr "Отметить как непрочитанное"
+msgstr "Пометить как непрочитанное"
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
 msgstr "Отметить как важное"
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
-msgstr "Удалить в корзину"
+msgstr "Переместить в корзину"
 
 #: framework/qml/MailListView.qml:68
 msgctxt "MailListView|"
 msgid "Nothing here..."
-msgstr ""
+msgstr "Здесь ничего нет…"
 
 #: framework/qml/mailpartview/ErrorPart.qml:40
 #, qt-format
@@ -426,104 +406,104 @@ msgstr "Произошла ошибка: %1"
 #, qt-format
 msgctxt "ICalPart|"
 msgid "This is an exception for the event originally occurring at: \"%1\""
-msgstr ""
+msgstr "Это исключение для события, изначально запланированного на: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:55
 #, qt-format
 msgctxt "ICalPart|"
 msgid "\"%1\" has been cancelled."
-msgstr ""
+msgstr "«%1» отменено."
 
 #: framework/qml/mailpartview/ICalPart.qml:60
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 has accepted: \"%2\""
-msgstr ""
+msgstr "%1 принял(а): «%2»"
 
 #: framework/qml/mailpartview/ICalPart.qml:66
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 has declined: \"%2\""
-msgstr ""
+msgstr "%1 отклонил(а): «%2»"
 
 #: framework/qml/mailpartview/ICalPart.qml:72
 #, qt-format
 msgctxt "ICalPart|"
 msgid "%1 doesn't yet know about: \"%2\""
-msgstr ""
+msgstr "%1 ещё не уверен(а) насчёт «%2»"
 
 #: framework/qml/mailpartview/ICalPart.qml:84
 #, qt-format
 msgctxt "ICalPart|"
 msgid "The invitation has been updated: \"%1\""
-msgstr ""
+msgstr "Приглашение обновлено: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:89
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You have accepted: \"%1\""
-msgstr ""
+msgstr "Вы приняли: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:95
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You have declined: \"%1\""
-msgstr ""
+msgstr "Вы отклонили: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:101
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You've been invited to: \"%1\""
-msgstr ""
+msgstr "Вы приглашены на: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:106
 #, qt-format
 msgctxt "ICalPart|"
 msgid "You are not listed as attendee to: \"%1\""
-msgstr ""
+msgstr "Вы не указаны в списке участников события: «%1»"
 
 #: framework/qml/mailpartview/ICalPart.qml:151
 msgctxt "ICalPart|"
 msgid "Decline"
-msgstr ""
+msgstr "Отклонить"
 
 #: framework/qml/mailpartview/ICalPart.qml:158
 msgctxt "ICalPart|"
 msgid "Accept"
-msgstr ""
+msgstr "Принять"
 
 #: framework/qml/mailpartview/ICalPart.qml:165
 msgctxt "ICalPart|"
 msgid "in"
-msgstr ""
+msgstr "в"
 
 #: framework/qml/mailpartview/MailPart.qml:54
 #, qt-format
 msgctxt "MailPart|"
 msgid "sent by %1 on %2"
-msgstr ""
+msgstr "отправлено %1, %2"
 
 #: framework/qml/mailpartview/MailPartModel.qml:53
 msgctxt "MailPartModel|"
 msgid "This message has been signed but we failed to validate the signature."
-msgstr ""
+msgstr "Сообщение подписано, но не удалось проверить подпись."
 
 #: framework/qml/mailpartview/MailPartModel.qml:55
 #, qt-format
 msgctxt "MailPartModel|"
 msgid "This message has been signed using the key %1."
-msgstr ""
+msgstr "Это сообщение подписано ключом «%1»."
 
 #: framework/qml/mailpartview/MailPartModel.qml:56
 msgctxt "MailPartModel|"
 msgid "The key details are not available."
-msgstr ""
+msgstr "Сведения о ключе недоступны."
 
 #: framework/qml/mailpartview/MailPartModel.qml:58
 #, qt-format
 msgctxt "MailPartModel|"
 msgid "This message has been signed using the key %1 by %2."
-msgstr ""
+msgstr "Это сообщение подписано ключом «%1» пользователем «%2»."
 
 #: framework/qml/mailpartview/MailPartModel.qml:60
 #, fuzzy
