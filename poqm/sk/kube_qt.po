@@ -12,8 +12,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 2.0\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 2.0\n"
 "X-Qt-Contexts: true\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
@@ -84,9 +84,6 @@ msgid "App-specific password for your FastMail account"
 msgstr ""
 
 #: accounts/generic/qml/AccountSettings.qml:28
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Connection lost."
 msgctxt "AccountSettings|"
 msgid "Connect your account"
 msgstr "Spojenie stratené."
@@ -111,9 +108,6 @@ msgid "Your username for server access."
 msgstr ""
 
 #: accounts/generic/qml/AccountSettings.qml:98
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "Email address"
 msgctxt "AccountSettings|"
 msgid "IMAP address"
 msgstr "E-mailová adresa"
@@ -135,17 +129,11 @@ msgid "SMTP address"
 msgstr ""
 
 #: accounts/generic/qml/AccountSettings.qml:161
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "Email address"
 msgctxt "AccountSettings|"
 msgid "CardDAV address"
 msgstr "E-mailová adresa"
 
 #: accounts/generic/qml/AccountSettings.qml:175
-#, fuzzy
-#| msgctxt "AccountSettings|"
-#| msgid "Email address"
 msgctxt "AccountSettings|"
 msgid "CalDAV address"
 msgstr "E-mailová adresa"
@@ -323,17 +311,11 @@ msgid "Import key"
 msgstr "Importovať kľúč"
 
 #: framework/qml/ConversationView.qml:159
-#, fuzzy
-#| msgctxt "MailViewer|"
-#| msgid "Downloading message..."
 msgctxt "ConversationView|"
 msgid "Downloading message..."
 msgstr "Sťahujem správu..."
 
 #: framework/qml/ConversationView.qml:163
-#, fuzzy
-#| msgctxt "MailViewer|"
-#| msgid "Downloading message..."
 msgctxt "ConversationView|"
 msgid "Failed to download message..."
 msgstr "Sťahujem správu..."
@@ -354,9 +336,6 @@ msgid "Save"
 msgstr "Uložiť"
 
 #: framework/qml/EntitySelector.qml:103
-#, fuzzy
-#| msgctxt "PhoneListEditor|"
-#| msgid "Add"
 msgctxt "EntitySelector|"
 msgid "Add"
 msgstr "Pridať"
@@ -367,41 +346,26 @@ msgid "Login"
 msgstr "Prihlásenie"
 
 #: framework/qml/MailListDelegate.qml:84
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Restore from trash"
 msgstr "Presunúť do koša"
 
 #: framework/qml/MailListDelegate.qml:92
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "MailListDelegate|"
 msgid "Mark as read"
 msgstr "Označiť ako prečítané"
 
 #: framework/qml/MailListDelegate.qml:101
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "MailListDelegate|"
 msgid "Mark as unread"
 msgstr "Označiť ako neprečítané"
 
 #: framework/qml/MailListDelegate.qml:110
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "MailListDelegate|"
 msgid "Mark as important"
 msgstr "Označiť ako dôležité"
 
 #: framework/qml/MailListDelegate.qml:120
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailListDelegate|"
 msgid "Move to trash"
 msgstr "Presunúť do koša"
@@ -481,7 +445,7 @@ msgstr ""
 #: framework/qml/mailpartview/ICalPart.qml:151
 msgctxt "ICalPart|"
 msgid "Decline"
-msgstr ""
+msgstr "Odmietnuť"
 
 #: framework/qml/mailpartview/ICalPart.qml:158
 msgctxt "ICalPart|"
@@ -489,9 +453,6 @@ msgid "Accept"
 msgstr ""
 
 #: framework/qml/mailpartview/ICalPart.qml:165
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "sign"
 msgctxt "ICalPart|"
 msgid "in"
 msgstr "podpis"
@@ -500,7 +461,7 @@ msgstr "podpis"
 #, qt-format
 msgctxt "MailPart|"
 msgid "sent by %1 on %2"
-msgstr ""
+msgstr "odoslané %1 na %2"
 
 #: framework/qml/mailpartview/MailPartModel.qml:53
 msgctxt "MailPartModel|"
@@ -516,7 +477,7 @@ msgstr ""
 #: framework/qml/mailpartview/MailPartModel.qml:56
 msgctxt "MailPartModel|"
 msgid "The key details are not available."
-msgstr ""
+msgstr "Podrobnosti o kľúči nie sú k dispozícii."
 
 #: framework/qml/mailpartview/MailPartModel.qml:58
 #, qt-format
@@ -542,7 +503,7 @@ msgstr ""
 #: framework/qml/mailpartview/MailPartModel.qml:69
 msgctxt "MailPartModel|"
 msgid "The signature is invalid."
-msgstr ""
+msgstr "Podpis nie je platný."
 
 #: framework/qml/mailpartview/MailPartModel.qml:89
 msgctxt "MailPartModel|"
@@ -566,9 +527,6 @@ msgid "Sent from"
 msgstr ""
 
 #: framework/qml/MailViewer.qml:206
-#, fuzzy
-#| msgctxt "MailViewer|"
-#| msgid "Draft: %1"
 msgctxt "MailViewer|"
 msgid "Draft from"
 msgstr "Návrh: %1"
@@ -595,17 +553,11 @@ msgid "Delete Mail"
 msgstr ""
 
 #: framework/qml/MailViewer.qml:480
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "MailViewer|"
 msgid "Discard"
 msgstr "Zahodiť"
 
 #: framework/qml/MailViewer.qml:480
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "MailViewer|"
 msgid "Move to trash"
 msgstr "Presunúť do koša"
@@ -632,9 +584,6 @@ msgid "Sending: %1"
 msgstr "Odosiela sa: %1"
 
 #: framework/qml/Outbox.qml:162
-#, fuzzy
-#| msgctxt "Outbox|"
-#| msgid "Send Now"
 msgctxt "Outbox|"
 msgid "Send now"
 msgstr "Poslať teraz"
@@ -645,25 +594,16 @@ msgid "No pending messages"
 msgstr ""
 
 #: framework/qml/ScrollablePopup.qml:70
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "ScrollablePopup|"
 msgid "Discard"
 msgstr "Zahodiť"
 
 #: framework/qml/ScrollablePopup.qml:75
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Save"
 msgctxt "ScrollablePopup|"
 msgid "Save"
 msgstr "Uložiť"
 
 #: framework/qml/SearchPopup.qml:197
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Filter..."
 msgctxt "SearchPopup|"
 msgid "Filter..."
 msgstr "Filter..."
@@ -686,15 +626,12 @@ msgstr "Odpojený"
 #: framework/qml/StatusBar.qml:146
 msgctxt "StatusBar|"
 msgid "Abort"
-msgstr ""
+msgstr "Prerušiť"
 
 #: framework/qml/TextArea.qml:74
-#, fuzzy
-#| msgctxt "SelectableItem|"
-#| msgid "Copy"
 msgctxt "TextArea|"
 msgid "Copy Link"
-msgstr "Kopírovať"
+msgstr "Kopírovať odkaz"
 
 #: framework/qml/TextArea.qml:74
 msgctxt "TextArea|"
@@ -726,23 +663,21 @@ msgstr ""
 #: framework/qml/TodoListDelegate.qml:90
 msgctxt "TodoListDelegate|"
 msgid "Pick"
-msgstr ""
+msgstr "Výber"
 
 #: framework/qml/TodoListDelegate.qml:105
 msgctxt "TodoListDelegate|"
 msgid "Done!"
-msgstr ""
+msgstr "Hotovo!"
 
 #: framework/src/domain/eventcontroller.cpp:90
 #, qt-format
 msgctxt "QObject|"
 msgid "== %1 =="
-msgstr ""
+msgstr "== %1 =="
 
 #: framework/src/domain/eventcontroller.cpp:92
-#, fuzzy, qt-format
-#| msgctxt "MailViewer|"
-#| msgid "Sent: %1"
+#, qt-format
 msgctxt "QObject|"
 msgid "When: %1"
 msgstr "Odoslané: %1"
@@ -804,7 +739,7 @@ msgstr ""
 #: framework/src/domain/mime/attachmentmodel.cpp:181
 msgctxt "QObject|"
 msgid "Failed to save attachment."
-msgstr ""
+msgstr "Nepodarilo sa save attachment."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:210
 #, qt-format
@@ -815,7 +750,7 @@ msgstr ""
 #: framework/src/domain/mime/attachmentmodel.cpp:221
 msgctxt "AttachmentModel|"
 msgid "Failed to open attachment."
-msgstr ""
+msgstr "Nepodarilo sa open attachment."
 
 #: framework/src/domain/mime/attachmentmodel.cpp:226
 msgctxt "AttachmentModel|"
@@ -863,7 +798,7 @@ msgstr ""
 #: framework/src/domain/mime/partmodel.cpp:470
 msgctxt "PartModel|"
 msgid "Wrong passphrase."
-msgstr ""
+msgstr "Nesprávne heslo."
 
 #: framework/src/inboundmodel.cpp:432 framework/src/inboundmodel.cpp:822
 #, qt-format
@@ -920,7 +855,7 @@ msgstr "Nový účet"
 #: views/calendar/qml/AttendeeListEditor.qml:88
 msgctxt "AttendeeListEditor|"
 msgid "Attending"
-msgstr ""
+msgstr "Zúčastní sa"
 
 #: views/calendar/qml/AttendeeListEditor.qml:88
 msgctxt "AttendeeListEditor|"
@@ -936,7 +871,7 @@ msgstr ""
 #: views/calendar/qml/DateRangeChooser.qml:159
 msgctxt "DateRangeChooser|"
 msgid "All day"
-msgstr ""
+msgstr "Celý deň"
 
 #: views/calendar/qml/DateRangeChooser.qml:166
 msgctxt "DateRangeChooser|"
@@ -951,7 +886,7 @@ msgstr ""
 #: views/calendar/qml/EventEditor.qml:85
 msgctxt "EventEditor|"
 msgid "Event Title"
-msgstr ""
+msgstr "Názov udalosti"
 
 #: views/calendar/qml/EventEditor.qml:107
 msgctxt "EventEditor|"
@@ -961,12 +896,9 @@ msgstr ""
 #: views/calendar/qml/EventEditor.qml:118
 msgctxt "EventEditor|"
 msgid "Organizer:"
-msgstr ""
+msgstr "Organizátor: "
 
 #: views/calendar/qml/EventEditor.qml:175
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Delete"
 msgctxt "EventEditor|"
 msgid "Delete"
 msgstr "Vymazať"
@@ -974,15 +906,12 @@ msgstr "Vymazať"
 #: views/calendar/qml/EventEditor.qml:184
 msgctxt "EventEditor|"
 msgid "Abort"
-msgstr ""
+msgstr "Prerušiť"
 
 #: views/calendar/qml/EventEditor.qml:209
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "EventEditor|"
 msgid "Discard Changes"
-msgstr "Zahodiť"
+msgstr "Zahodiť zmeny"
 
 #: views/calendar/qml/EventEditor.qml:216
 msgctxt "EventEditor|"
@@ -990,12 +919,9 @@ msgid "Save Changes"
 msgstr ""
 
 #: views/calendar/qml/EventEditor.qml:225
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "New Event"
 msgctxt "EventEditor|"
 msgid "Create Event"
-msgstr "Nová udalosť"
+msgstr "Vytvoriť udalosť"
 
 #: views/calendar/qml/EventView.qml:76 views/inbound/qml/EventView.qml:84
 #, qt-format
@@ -1010,9 +936,6 @@ msgid "Organizer: %1"
 msgstr ""
 
 #: views/calendar/qml/EventView.qml:96 views/inbound/qml/EventView.qml:103
-#, fuzzy
-#| msgctxt "Outbox|"
-#| msgid "Sending: %1"
 msgctxt "EventView|"
 msgid "Attending:"
 msgstr "Odosiela sa: %1"
@@ -1029,9 +952,6 @@ msgid "Remove"
 msgstr ""
 
 #: views/calendar/qml/EventView.qml:130
-#, fuzzy
-#| msgctxt "MailViewer|"
-#| msgid "Edit"
 msgctxt "EventView|"
 msgid "Edit"
 msgstr "Upraviť"
@@ -1054,12 +974,12 @@ msgstr "Nová udalosť"
 #: views/calendar/qml/View.qml:92
 msgctxt "View|"
 msgid "Week"
-msgstr ""
+msgstr "Týždeň"
 
 #: views/calendar/qml/View.qml:101
 msgctxt "View|"
 msgid "Month"
-msgstr ""
+msgstr "Mesiac"
 
 #: views/composer/qml/AddresseeListEditor.qml:132
 msgctxt "AddresseeListEditor|"
@@ -1075,12 +995,9 @@ msgstr "Pridať prijímateľa"
 #: views/composer/qml/EditorPage.qml:113
 msgctxt "EditorPage|"
 msgid "Remove Formatting"
-msgstr ""
+msgstr "Odstrániť formátovanie"
 
 #: views/composer/qml/EditorPage.qml:126
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Attach File"
 msgctxt "EditorPage|"
 msgid "Attach file"
 msgstr "Pripojiť súbor"
@@ -1091,9 +1008,6 @@ msgid "Choose a file to attach"
 msgstr ""
 
 #: views/composer/qml/EditorPage.qml:156
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Subject: %1"
 msgctxt "EditorPage|"
 msgid "Subject"
 msgstr "Predmet: %1"
@@ -1237,9 +1151,6 @@ msgid "Inbound"
 msgstr ""
 
 #: views/inbound/qml/View.qml:231
-#, fuzzy
-#| msgctxt "QObject|"
-#| msgid "Configuration error."
 msgctxt "View|"
 msgid "Configure"
 msgstr "Konfiguračná chyba."
@@ -1247,12 +1158,9 @@ msgstr "Konfiguračná chyba."
 #: views/inbound/qml/View.qml:236
 msgctxt "View|"
 msgid "Recent"
-msgstr ""
+msgstr "Nedávne"
 
 #: views/inbound/qml/View.qml:255 views/search/qml/View.qml:94
-#, fuzzy
-#| msgctxt "AttachmentDelegate|"
-#| msgid "Import key"
 msgctxt "View|"
 msgid "Important"
 msgstr "Importovať kľúč"
@@ -1290,41 +1198,26 @@ msgid "Ignore sender"
 msgstr ""
 
 #: views/inbound/qml/View.qml:555
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Restore from trash"
 msgstr "Presunúť do koša"
 
 #: views/inbound/qml/View.qml:566
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as read"
 msgctxt "View|"
 msgid "Mark as read"
 msgstr "Označiť ako prečítané"
 
 #: views/inbound/qml/View.qml:576
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as unread"
 msgctxt "View|"
 msgid "Mark as unread"
 msgstr "Označiť ako neprečítané"
 
 #: views/inbound/qml/View.qml:586
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Mark as important"
 msgctxt "View|"
 msgid "Mark as important"
 msgstr "Označiť ako dôležité"
 
 #: views/inbound/qml/View.qml:597
-#, fuzzy
-#| msgctxt "MailListView|"
-#| msgid "Move to trash"
 msgctxt "View|"
 msgid "Move to trash"
 msgstr "Presunúť do koša"
@@ -1332,7 +1225,7 @@ msgstr "Presunúť do koša"
 #: views/inbound/qml/View.qml:612
 msgctxt "View|"
 msgid "Done!"
-msgstr ""
+msgstr "Hotovo!"
 
 #: views/inbound/qml/View.qml:701 views/log/qml/View.qml:220
 msgctxt "View|"
@@ -1481,25 +1374,16 @@ msgid "Sender name contains filter"
 msgstr ""
 
 #: views/inboxcrusher/qml/View.qml:92
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Delete"
 msgctxt "View|"
 msgid "Delete!"
 msgstr "Vymazať"
 
 #: views/inboxcrusher/qml/View.qml:97
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Reply"
 msgctxt "View|"
 msgid "Reply!"
 msgstr "Odpovedať"
 
 #: views/inboxcrusher/qml/View.qml:102
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Flag"
 msgctxt "View|"
 msgid "Flag!"
 msgstr "Vlajka"
@@ -1533,7 +1417,7 @@ msgstr "(hlavné)"
 #: views/people/qml/MailListEditor.qml:102
 msgctxt "MailListEditor|"
 msgid "Add email"
-msgstr ""
+msgstr "Pridať email"
 
 #: views/people/qml/People.qml:53
 msgctxt "People|"
@@ -1601,9 +1485,6 @@ msgid "Add"
 msgstr "Pridať"
 
 #: views/search/qml/View.qml:59
-#, fuzzy
-#| msgctxt "View_new|"
-#| msgid "Search"
 msgctxt "View|"
 msgid "Search"
 msgstr "Hľadať"
@@ -1614,9 +1495,6 @@ msgid "Unread"
 msgstr ""
 
 #: views/search/qml/View.qml:100
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Account:"
 msgctxt "View|"
 msgid "Accounts"
 msgstr "Účet:"
@@ -1637,12 +1515,9 @@ msgid "Search..."
 msgstr "Hľadať..."
 
 #: views/todo/qml/TodoEditor.qml:113
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "New Event"
 msgctxt "TodoEditor|"
 msgid "Create in:"
-msgstr "Nová udalosť"
+msgstr "Vytvoriť v:"
 
 #: views/todo/qml/TodoEditor.qml:143
 msgctxt "TodoEditor|"
@@ -1660,9 +1535,6 @@ msgid "Add subtodo"
 msgstr ""
 
 #: views/todo/qml/TodoEditor.qml:227
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "Delete"
 msgctxt "TodoEditor|"
 msgid "Delete"
 msgstr "Vymazať"
@@ -1670,15 +1542,12 @@ msgstr "Vymazať"
 #: views/todo/qml/TodoEditor.qml:236
 msgctxt "TodoEditor|"
 msgid "Abort"
-msgstr ""
+msgstr "Prerušiť"
 
 #: views/todo/qml/TodoEditor.qml:249
-#, fuzzy
-#| msgctxt "AccountWizardPage|"
-#| msgid "Discard"
 msgctxt "TodoEditor|"
 msgid "Discard Changes"
-msgstr "Zahodiť"
+msgstr "Zahodiť zmeny"
 
 #: views/todo/qml/TodoEditor.qml:256
 msgctxt "TodoEditor|"
@@ -1688,7 +1557,7 @@ msgstr ""
 #: views/todo/qml/TodoEditor.qml:262
 msgctxt "TodoEditor|"
 msgid "Create Todo"
-msgstr ""
+msgstr "Vytvoriť úlohu"
 
 #: views/todo/qml/View.qml:102
 msgctxt "View|"
@@ -1721,9 +1590,6 @@ msgid "Edit todo:"
 msgstr ""
 
 #: views/todo/qml/View.qml:167
-#, fuzzy
-#| msgctxt "View|"
-#| msgid "New Task"
 msgctxt "View|"
 msgid "New Todo"
 msgstr "Nová úloha"
@@ -1731,7 +1597,7 @@ msgstr "Nová úloha"
 #: views/todo/qml/View.qml:175
 msgctxt "View|"
 msgid "Inbox"
-msgstr ""
+msgstr "Inbox"
 
 #: views/todo/qml/View.qml:186
 msgctxt "View|"
@@ -1756,7 +1622,7 @@ msgstr ""
 #: views/todo/qml/View.qml:262
 msgctxt "View|"
 msgid "Add a new task"
-msgstr ""
+msgstr "Pridá novú úlohu"
 
 #: views/todo/qml/View.qml:280
 #, qt-format
@@ -1765,8 +1631,6 @@ msgid "This list is longer than %1 tasks. Focus on the top %1?"
 msgstr ""
 
 #, fuzzy
-#~| msgctxt "MailViewer|"
-#~| msgid "Edit"
 #~ msgctxt "TodoView|"
 #~ msgid "Edit"
 #~ msgstr "Upraviť"
