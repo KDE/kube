@@ -1,8 +1,8 @@
-# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
+# SPDX-FileCopyrightText: 2022, 2023, 2026 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2023-09-03 21:30+0300\n"
+"PO-Revision-Date: 2026-05-02 18:45+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Qt-Contexts: true\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: accounts/fastmail/qml/AccountSettings.qml:26
 msgctxt "AccountSettings|"
@@ -795,8 +795,8 @@ msgstr[1] "%n anahtar içe aktarıldı"
 msgctxt "AttachmentModel|"
 msgid "%n key(s) were already imported"
 msgid_plural "%n key(s) were already imported"
-msgstr[0] "%n anahtar halihazırda içe aktarılmış"
-msgstr[1] "%n anahtar halihazırda içe aktarılmış"
+msgstr[0] "%n anahtar hâlihazırda içe aktarılmış"
+msgstr[1] "%n anahtar hâlihazırda içe aktarılmış"
 
 #: framework/src/domain/mime/mailtemplates.cpp:127
 msgctxt "QObject|"
